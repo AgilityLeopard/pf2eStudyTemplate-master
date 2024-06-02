@@ -16,7 +16,7 @@ module.exports = {
       lang: "en",
     },
     titleTemplate: "%s",
-    title: "Doctors of Doom" || "",
+    title: "Shadow" || "",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
