@@ -85,7 +85,7 @@
                     icon
                     :disabled="
                       4 - characterBoost == 4 ||
-                      characterAttributesBoost[attribute.key] > 0
+                      characterAttributesBoost[attribute.key] < 1
                     "
                     @click="decrementAttribute(attribute.key)"
                   >
@@ -112,12 +112,8 @@
                     </v-icon>
                   </v-btn>
                 </td>
-                 <td><v-checkbox
-                      v-model="characterAttributes"
-                      :label="`Checkbox 1:`"
-                      @click= "if(checked == true) incrementAttribute(attribute.key) else decrementAttribute(attribute.key)"
-                    ></v-checkbox></td>
-                <!-- <td>{{ characterAttributesEnhanced[attribute.key] }}</td> -->
+    
+                <td>{{ characterAttributesEnhanced[attribute.key] }}</td>
               </tr>
 
               <!-- <tr v-for="trait in traitRepository" :key="trait.key">
@@ -187,7 +183,7 @@ export default {
   data() {
     return {
       selectedAncestryBoost: undefined,
-      selectedAncestryBoost: { },
+      selectedBoost: { },
       showAlerts: false,
       archetype: undefined,
       species: undefined,
@@ -369,7 +365,7 @@ export default {
             this.selectedAncestryBoost = boost;
         }
       )
-
+      this.selectedBoost = this.characterAttributesBoost;
      // this.species.attributeBoost.forEach(boost => this.AncestryAttribute.push(boost));
 
     },
@@ -386,11 +382,13 @@ export default {
     },
     incrementAttribute(attribute) {
       const newValue = this.characterAttributes[attribute] + 2;
+      this.$store.commit('characters/setCharacterAttributeBoost', { id: this.characterId, payload: { key: attribute, value: 1 } });
       this.$store.commit('characters/setCharacterBoost', { id: this.characterId, payload: { key: attribute, value: +1 } });
       this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
     },
     decrementAttribute(attribute) {
       const newValue = this.characterAttributes[attribute] - 2;
+      this.$store.commit('characters/setCharacterAttributeBoost', { id: this.characterId, payload: { key: attribute, value: 0 } });
       this.$store.commit('characters/setCharacterBoost', { id: this.characterId, payload: { key: attribute, value: -1 } });
       this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
     },
