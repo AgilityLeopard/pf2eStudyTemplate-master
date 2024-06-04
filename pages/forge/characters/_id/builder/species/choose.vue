@@ -224,7 +224,7 @@ export default {
 
       species.attributeFlaw.forEach((t) => {
         if (t.value !== 0)
-          this.$store.commit("characters/setCharacterAncestryBoostForAl", {
+          this.$store.commit("characters/setCharacterAncestryBoostForAll", {
             id: this.characterId,
             payload: { key: t.key, value: -1 },
           });

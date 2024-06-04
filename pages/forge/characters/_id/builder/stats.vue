@@ -112,14 +112,19 @@
                     </v-icon>
                   </v-btn>
                 </td>
-                <td>{{ characterAttributesEnhanced[attribute.key] }}</td>
+                 <td><v-checkbox
+                      v-model="characterAttributes"
+                      :label="`Checkbox 1:`"
+                      @click= "if(checked == true) incrementAttribute(attribute.key) else decrementAttribute(attribute.key)"
+                    ></v-checkbox></td>
+                <!-- <td>{{ characterAttributesEnhanced[attribute.key] }}</td> -->
               </tr>
 
-              <tr v-for="trait in traitRepository" :key="trait.key">
+              <!-- <tr v-for="trait in traitRepository" :key="trait.key">
                 <td>{{ trait.name }}:</td>
                 <td>{{ characterTraits[trait.key] }}</td>
                 <td>{{ characterTraitsEnhanced[trait.key] }}</td>
-              </tr>
+              </tr> -->
             </tbody>
           </template>
         </v-simple-table>
@@ -182,6 +187,7 @@ export default {
   data() {
     return {
       selectedAncestryBoost: undefined,
+      selectedAncestryBoost: { },
       showAlerts: false,
       archetype: undefined,
       species: undefined,
