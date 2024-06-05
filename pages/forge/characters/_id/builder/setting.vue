@@ -86,13 +86,13 @@
       <v-text-field
         :value="characterCustomRank"
         class="pb-2"
-        label="Rank"
+        label="Уровень"
         hint="Set your Characters Rank, usually between 1-3."
         dense
         outlined
         persistent-hint
         type="number"
-        @input="setCustomRank"
+        @input="setLevel"
       />
 
       <v-slider
@@ -677,8 +677,8 @@ export default {
     setCustomXp(xp) {
       this.$store.commit('characters/setCustomXp', { id: this.characterId, xp });
     },
-    setCustomRank(rank) {
-      this.$store.commit('characters/setCustomRank', { id: this.characterId, rank });
+    setLevel(rank) {
+      this.$store.commit('characters/setLevel', { id: this.characterId, rank });
     },
     setSettingTier(tier) {
       this.$store.commit('characters/setSettingTier', { id: this.characterId, tier });

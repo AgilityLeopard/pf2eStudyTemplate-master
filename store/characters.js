@@ -266,8 +266,10 @@ export const getters = {
     });
     return enhanced;
   },
+
   characterSkillsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].skills : {},
+
   characterTraitsById: (state, getters) => (id) => {
     const character = state.characters[id];
     const enhancedAttributes = getters.characterAttributesEnhancedById(id);
@@ -376,11 +378,14 @@ export const getters = {
     const keywords = state.characters[id] ? state.characters[id].keywords : [];
     return keywords.map((k) => (k.replacement ? k.replacement : k.name));
   },
-
+  characterLevelById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].level : 1,
   // Mutations
   characterMutationsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].mutations : [],
-
+  characterSkillPointsById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].SkillPoints : 0,
+  
   characterBackgroundById: (state) => (id) =>
     state.characters[id]
       ? state.characters[id].background
@@ -514,9 +519,9 @@ export const mutations = {
   setCustomXp(state, payload) {
     state.characters[payload.id].customXp = payload.xp;
   },
-  setCustomRank(state, payload) {
-    console.info(`Set Rank manually to ${payload.rank}.`);
-    state.characters[payload.id].customRank = payload.rank;
+  setLevel(state, payload) {
+    // console.info(`Set Rank manually to ${payload.rank}.`);
+    state.characters[payload.id].level = payload.rank;
   },
   setCharacterSpecies(state, payload) {
     state.characters[payload.id].species = payload.species;
@@ -541,19 +546,53 @@ export const mutations = {
   setCharacterFaction(state, payload) {
     state.characters[payload.id].faction = payload.faction;
   },
+  setCharacterAncestryFreeBoost(state, payload) {
+    const character = state.characters[payload.id];
+    if(character.AncestryFreeBoost != "") 
+      {
+        character.attributesAncestryBoost[character.AncestryFreeBoost] -= 1;
+        character.attributes[character.AncestryFreeBoost] -= 2;
+      
+      }
+
+      character.AncestryFreeBoost = payload.payload.key;
+      if(payload.payload.key != "")
+        {
+          character.attributesAncestryBoost[payload.payload.key] = payload.payload.value;
+          character.attributes[character.AncestryFreeBoost] += 2;
+        }
+
+    
+  },
   resetCharacterStats(state, payload) {
     const character = state.characters[payload.id];
+    // Object.keys(character.attributesBoost).forEach((key, index) => {
+    //   character.attributesBoost[key] =
+    //     0;
+    // });
+
+    character.AncestryFreeBoost = "";
     Object.keys(character.attributes).forEach((key, index) => {
+      character.attributesBoost[key] = 0;
       character.attributes[key] =
         10 +
         2 * character.attributesBoost[key] +
-        2 * character.attributesAncestryBoost[key];
-    });
-    Object.keys(character.skills).forEach((key, index) => {
-      character.skills[key] = 0;
+        2 * character.attributesAncestryBoost[key] + 2 * character.attributesAncestryFlaw[key];
     });
 
     character.Boost = 0;
+    character.SkillPoints = (character.attributes["intellect"] - 10) / 2;
+    if(character.SkillPoints < 0) character.SkillPoints = 0;
+
+    Object.keys(character.skills).forEach((key, index) => {
+      character.skills[key] = "U";
+    });
+
+    character.Boost = 0;
+  },
+  setCharacterSkillPoints(state, payload) {
+    state.characters[payload.id].SkillPoints =
+      payload.payload.value;
   },
   setCharacterSkill(state, payload) {
     state.characters[payload.id].skills[payload.payload.key] =
@@ -609,7 +648,15 @@ export const mutations = {
     state.characters[payload.id].attributesAncestryBoost[payload.payload.key] =
       payload.payload.value;
   },
+  setCharacterAncestryFlawForAll(state, payload) {
+    const char = state.characters[payload.id];
 
+    let theAttribute =
+      state.characters[payload.id].attributesAncestryFlaw[payload.key];
+    theAttribute = payload.payload.value;
+    state.characters[payload.id].attributesAncestryFlaw[payload.payload.key] =
+      payload.payload.value;
+  },
   addCharacterCustomSkill(state, payload) {
     let { id, skill } = payload;
     const character = state.characters[id];
@@ -1257,6 +1304,7 @@ const getDefaultState = () => ({
   },
   customXp: 0,
   customRank: 1,
+  level: 1,
   name: "Simsel Simselman",
   avatarUrl: undefined,
   species: {
@@ -1275,6 +1323,8 @@ const getDefaultState = () => ({
     cost: 0,
   },
   Boost: 0,
+  SkillPoints: 0,
+  AncestryFreeBoost: "",
   attributesBoost: {
     strength: 0,
     dexterity: 0,
@@ -1291,6 +1341,14 @@ const getDefaultState = () => ({
     wisdom: 0,
     charisma: 0,
   },
+  attributesAncestryFlaw: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intellect: 0,
+    wisdom: 0,
+    charisma: 0,
+  },
   attributes: {
     strength: 10,
     dexterity: 10,
@@ -1300,24 +1358,21 @@ const getDefaultState = () => ({
     charisma: 10,
   },
   skills: {
-    athletics: 0,
-    awareness: 0,
-    ballisticSkill: 0,
-    cunning: 0,
-    deception: 0,
-    insight: 0,
-    intimidation: 0,
-    investigation: 0,
-    leadership: 0,
-    medicae: 0,
-    persuasion: 0,
-    pilot: 0,
-    psychicMastery: 0,
-    scholar: 0,
-    stealth: 0,
-    survival: 0,
-    tech: 0,
-    weaponSkill: 0,
+    acrobatics: "U",
+    arcana: "U",
+    athletics: "U",
+    crafting: "U",
+    deception: "U",
+    diplomacy: "U",
+    intimidation: "U",
+    medicine: "U",
+    occultism: "U",
+    perfomance: "U",
+    religion: "U",
+    society: "U",
+    stealth: "U",
+    survival: "U",
+    thievery: "U",
   },
   customSkills: [],
   languages: [{ name: "Low Gothic", cost: 0, source: "" }],
