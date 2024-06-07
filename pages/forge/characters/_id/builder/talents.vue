@@ -678,6 +678,7 @@ export default {
             prerequisitesHtml,
           }
         });
+
       }
       {
         const { data } = await this.$axios.get('/api/wargear/', config);
@@ -744,11 +745,11 @@ export default {
             break;
 
           case 'attribute':
-            text = `${this.getAttributeByKey(p.key).name} Rating ${p.value}+`;
+            //text = `${this.getAttributeByKey(p.key).name} Rating ${p.value}+`;
             break;
 
           case 'skill':
-            text = `${this.getSkillByKey(p.key).name} Rating ${p.value}+`;
+            //text = `${this.getSkillByKey(p.key).name} Rating ${p.value}+`;
             break;
 
           case 'character':

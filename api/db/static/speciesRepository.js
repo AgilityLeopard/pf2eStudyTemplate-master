@@ -130,6 +130,9 @@ const coreRep = [
     abilityBoost: 2,
     exampleName:
       "Аэрэль, Амрунэлара, Каладрэль, Дардлара, Фанра, Хэлдалэль, Ятхэль, Ланлисс, Опарэль, Сэлдлон, Сумрэль, Талатэль, Тессара, Вариэль, Яландлара, Зордлон",
+      modifications: [
+        { targetGroup: "keywords", targetValue: "elf" },
+      ],
     Description: [
       {
         name: "Faith",

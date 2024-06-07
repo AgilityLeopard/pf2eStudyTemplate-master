@@ -521,7 +521,7 @@ export const mutations = {
   },
   setLevel(state, payload) {
     // console.info(`Set Rank manually to ${payload.rank}.`);
-    state.characters[payload.id].level = payload.rank;
+    state.characters[payload.id].level = payload.level;
   },
   setCharacterSpecies(state, payload) {
     state.characters[payload.id].species = payload.species;

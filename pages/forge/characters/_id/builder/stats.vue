@@ -176,7 +176,7 @@
                     </v-icon>
                   </v-btn>
                 </td>
-                <td>{{ SkillsTrained[characterSkills[skill.key]] + ModAttribute(skill.attribute) + characterLevel() }}</td>
+                <td>{{ SkillsTrained[characterSkills[skill.key]] + ModAttribute(skill.attribute, skill.key) + characterLevel() }}</td>
               </tr>
             </tbody>
           </template>
@@ -476,8 +476,12 @@ export default {
 
         return false;
     },
-    ModAttribute(attribute){
-      return (this.characterAttributes[attribute] - 10) / 2;
+    ModAttribute(attribute, skill){
+      const char1 = this.SkillsTrained[this.characterSkills[skill]];
+      const char2 = (this.characterAttributes[attribute] - 10) / 2;
+      const char3 = this.characterLevel();
+       
+      return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     MaxSkillPoints(){
       const Max = (this.characterAttributes["intellect"] - 10) / 2

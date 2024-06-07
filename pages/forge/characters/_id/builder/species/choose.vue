@@ -238,11 +238,12 @@ export default {
         id: this.characterId,
         source: "species",
       });
-      modifications
-        .filter((m) => m.targetGroup === "keywords")
+      // modifications
+      //   .filter((m) => m.targetGroup === "keywords")
+      species.trait
         .forEach((k) => {
           const payload = {
-            name: k.targetValue,
+            name: k,
             source: "species",
             type: "keyword",
             replacement: undefined,

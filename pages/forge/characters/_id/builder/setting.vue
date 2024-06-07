@@ -84,7 +84,7 @@
       />
 
       <v-text-field
-        :value="characterCustomRank"
+        :value="characterCustomLevel"
         class="pb-2"
         label="Уровень"
         hint="Set your Characters Rank, usually between 1-3."
@@ -617,6 +617,10 @@ export default {
     characterCustomRank() {
       return this.$store.getters['characters/characterCampaignCustomRankById'](this.characterId);
     },
+    characterCustomLevel() {
+      const t = this.$store.getters['characters/characterLevelById'](this.characterId);
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
     characterAvatarUrl() {
       return this.$store.getters['characters/characterAvatarUrlById'](this.characterId);
     },
@@ -678,7 +682,8 @@ export default {
       this.$store.commit('characters/setCustomXp', { id: this.characterId, xp });
     },
     setLevel(rank) {
-      this.$store.commit('characters/setLevel', { id: this.characterId, rank });
+      const level =  parseInt(rank);
+      this.$store.commit('characters/setLevel', { id: this.characterId, level });
     },
     setSettingTier(tier) {
       this.$store.commit('characters/setSettingTier', { id: this.characterId, tier });

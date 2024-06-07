@@ -167,6 +167,7 @@ const core = [
     ],
     allowedMultipleTimes: true,
   },*/
+
   {
     ...talent('core',129,'Augmetic, One Very Rare',20,'Wargear'),
     key: 'core-augmetic-very-rare',
@@ -245,6 +246,19 @@ const core = [
       '<p>Whenever you see an individual within 30 metres of you suffer a Critical Hit or the Bleeding Condition, you gain 1 point of Wrath.</p>' +
       '<p>The GM may require a Corruption Test whenever this Talent is activated.</p>',
     requirements: [],
+  },
+  {
+    ...talent('core',130,'fleet',20,'эльф'),
+    snippet: 'Вы получаете плюс 5 футов к скорости',
+    name: "Эльфийские ноги",
+    description:
+      '<p>The very sight of blood energises you in battle.</p>' +
+      '<p>Whenever you see an individual within 30 metres of you suffer a Critical Hit or the Bleeding Condition, you gain 1 point of Wrath.</p>' +
+      '<p>The GM may require a Corruption Test whenever this Talent is activated.</p>',
+    requirements: [],
+    modifications: [
+      { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
+    ],
   },
   {
     ...talent('core',130,'Binary Chatter',20,'Utility'),
