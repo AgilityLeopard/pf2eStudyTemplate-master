@@ -5,7 +5,7 @@
 
       <v-col :cols="12">
         <h1 class="headline">
-          Manage Talents
+          Выбор черт
         </h1>
       </v-col>
 
@@ -17,8 +17,10 @@
             v-for="talent in characterTalentsEnriched"
             :key="talent.id"
           >
+         
             <v-expansion-panel-header>
               <template v-slot:default="{ open }">
+               
                 <v-row no-gutters>
                   <v-col :cols="8" :sm="10" class="subtitle-1">
                     <span v-html="talent.label" />
@@ -91,7 +93,8 @@
                   @input="talentUpdateSelected($event, talent)"
                 />
               </div>
-
+              
+              
               <div v-if="talent.key && talent.key.startsWith('core-augmetic')">
                 <wargear-select
                   v-if="wargearList"
@@ -138,7 +141,10 @@
 
         </v-expansion-panels>
       </v-col>
+      <v-expansion-panels>
 
+      <v-expansion-panel
+    title="1 уровень">
       <v-col :cols="12" v-if="visibleTalentGroups.length > 1">
         <h3>
           Filter by Talent Group
@@ -185,7 +191,7 @@
               dense
               prepend-inner-icon="search"
               clearable
-              label="Search"
+              label="Поиск"
             />
 
             <v-switch
@@ -195,6 +201,27 @@
               class="pl-2"
             />
           </v-card-title>
+          
+          <v-card-title>
+                <v-chip-group
+                  v-model="selectedTagsFilters"
+                  active-class="primary--text"
+                  column
+                  multiple
+                >
+                  <v-chip
+                    v-for="filter in tagFilters"
+                    :key="filter.name"
+                    :value="filter.name"
+                    filter
+                    small
+                    label
+                  >
+                    {{ filter.name }}
+                  </v-chip>
+                </v-chip-group>
+
+              </v-card-title>
 
           <v-data-table
             :headers="headers"
@@ -260,6 +287,8 @@
       </v-col>
 
       <issue-list :items="issues" />
+    </v-expansion-panel>
+    </v-expansion-panels>
     </v-row>
   </div>
 </template>
@@ -301,6 +330,13 @@ export default {
         'Allow to pick some talents multiple times.',
       ],
       searchQuery: '',
+      selectedTagsFilters: [],
+      filters: {
+        tags: {
+          model: [],
+          label: 'Filter by Tags',
+        },
+      },
       filterOnlyPrerequisites: false,
       pagination: {
         page: 1,
@@ -390,6 +426,44 @@ export default {
   computed: {
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
+    },
+    searchResult() {
+      if (this.talentList === undefined) {
+        return [];
+      }
+      let searchResult = this.talentList;
+
+      if (this.selectedTagsFilters.length > 0) {
+        searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
+      }
+
+      let filter;
+
+      filter = this.filters.source;
+      if (filter.model.length > 0) {
+        searchResult = searchResult.filter((i) => filter.model.includes(i.source.key));
+      }
+
+      return searchResult;
+    },
+    tagFilters() {
+      if (this.talentList === undefined) {
+        return [];
+      }
+      let filteredTalents = this.talentList;
+      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      // only show those whose prerequisites are met
+      // if () {
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
+      let reduced = [];
+      filteredTalents.forEach((item) => {
+        if (item.tags) {
+          reduced.push(...item.tags);
+        }
+      });
+      reduced = reduced.filter(item => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((tag) => ({ name: tag }));
     },
     sources() {
       return [
@@ -542,18 +616,22 @@ export default {
 
       let filteredTalents = this.talentList;
 
-      if (this.selectedTalentGroups.length > 0) {
-        filteredTalents = filteredTalents.filter((t) => {
-          return this.selectedTalentGroups.includes(t.talentGroup) || (t.talentGroup === undefined && this.selectedTalentGroups.includes('Talents'))
-        });
+      if (this.selectedTagsFilters.length > 0) {
+        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
       }
+
+      // if (this.selectedTalentGroups.length > 0) {
+      //   filteredTalents = filteredTalents.filter((t) => {
+      //     return this.selectedTalentGroups.includes(t.talentGroup) || (t.talentGroup === undefined && this.selectedTalentGroups.includes('Talents'))
+      //   });
+      // }
 
       // exclude those already picked
       //filteredTalents = filteredTalents.filter((t) => t.allowedMultipleTimes || !this.characterTalentLabels.includes(t.name));
 
       filteredTalents = filteredTalents.map((talent) => {
         let fulfilled = true;
-
+        let TagsFilter = true;
         // has prerequisites
         if (talent.requirements && talent.requirements.length > 0) {
           talent.requirements.forEach((requirement) => {
@@ -566,8 +644,9 @@ export default {
                   return lowercaseKeywords.includes(k.toString().toUpperCase());
                 });
                 if (
-                  (requirement.condition === 'must' && !found)
-                  || (requirement.condition === 'mustNot' && found)
+                  // (requirement.condition === 'must' && !found)
+                  // || (requirement.condition === 'mustNot' && found)
+                  found
                 ) {
                   fulfilled = false;
                 }
@@ -623,10 +702,11 @@ export default {
         return talent;
       });
 
+      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
-      if (this.filterOnlyPrerequisites) {
-        filteredTalents = filteredTalents.filter((talent) => talent.prerequisitesFulfilled === true);
-      }
+      // if () {
+        filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
+      // }
 
       return filteredTalents;
     },
@@ -672,6 +752,8 @@ export default {
       {
         const { data } = await this.$axios.get('/api/talents/', config);
         this.talentList = data.map(talent => {
+                       
+          
           const prerequisitesHtml = this.requirementsToText(talent).join(', ');
           return {
             ...talent,
@@ -679,7 +761,19 @@ export default {
           }
         });
 
+        // this.talentList.filter(talent =>{
+          
+        //   const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+        //   return lowercaseKeywords.includes(talent.tags.toString().toUpperCase());
+              
+
+        //    }
+        //   )
+      
+
+
       }
+      
       {
         const { data } = await this.$axios.get('/api/wargear/', config);
         this.wargearList = data;
@@ -772,7 +866,13 @@ export default {
 
       return texts;
     },
-
+    toggleTypeFilter(name) {
+      if (this.selectedTypeFilters.includes(name)) {
+        this.selectedTypeFilters = this.selectedTypeFilters.filter((d) => d != name);
+      } else {
+        this.selectedTypeFilters.push(name);
+      }
+    },
     /** Special Talent Selections */
     talentUpdateSelected(selectedValue, talent) {
       const id = this.characterId;
