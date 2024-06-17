@@ -247,7 +247,10 @@ export const getters = {
     state.characters[id] ? state.characters[id].attributesBoost : {},
   characterAncestryBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesAncestryBoost : {},
-
+  characterAncestryFreeBoostById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].AncestryFreeBoost : {},
+  characterAncestryFreeBoost2ById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].AncestryFreeBoost2 : {},
   characterAttributesById: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributes : {},
   characterAttributesEnhancedById: (state) => (id) => {
@@ -548,7 +551,7 @@ export const mutations = {
   },
   setCharacterAncestryFreeBoost(state, payload) {
     const character = state.characters[payload.id];
-    if(character.AncestryFreeBoost != "") 
+    if(character.AncestryFreeBoost != ""  && character.AncestryFreeBoost2 != character.AncestryFreeBoost ) 
       {
         character.attributesAncestryBoost[character.AncestryFreeBoost] -= 1;
         character.attributes[character.AncestryFreeBoost] -= 2;
@@ -556,10 +559,28 @@ export const mutations = {
       }
 
       character.AncestryFreeBoost = payload.payload.key;
-      if(payload.payload.key != "")
+      if(payload.payload.key != "" & payload.payload.key != character.AncestryFreeBoost2)
         {
           character.attributesAncestryBoost[payload.payload.key] = payload.payload.value;
           character.attributes[character.AncestryFreeBoost] += 2;
+        }
+
+    
+  },
+  setCharacterAncestryFreeBoost2(state, payload) {
+    const character = state.characters[payload.id];
+    if(character.AncestryFreeBoost2 != "" && character.AncestryFreeBoost2 != character.AncestryFreeBoost ) 
+      {
+        character.attributesAncestryBoost[character.AncestryFreeBoost2] -= 1;
+        character.attributes[character.AncestryFreeBoost2] -= 2;
+      
+      }
+
+      character.AncestryFreeBoost2 = payload.payload.key;
+      if(payload.payload.key != "" && payload.payload.key != character.AncestryFreeBoost)
+        {
+          character.attributesAncestryBoost[payload.payload.key] = payload.payload.value;
+          character.attributes[character.AncestryFreeBoost2] += 2;
         }
 
     
@@ -572,6 +593,7 @@ export const mutations = {
     // });
 
     character.AncestryFreeBoost = "";
+    character.AncestryFreeBoost2 = "";
     Object.keys(character.attributes).forEach((key, index) => {
       character.attributesBoost[key] = 0;
       character.attributes[key] =
@@ -796,7 +818,15 @@ export const mutations = {
     character.talents = character.talents.filter((t) => t); // cleanup
     const hasTalent =
       character.talents.find((t) => t.id === payload.talentId) !== undefined;
+      
     if (hasTalent) {
+      const talent = character.talents.find((t) => t.id === payload.talentId);
+      if(talent.choice == "skill")
+        if(character.skills[talent.selected] == "T")
+          character.skills[talent.selected] = "U"
+        else 
+          character.SkillPoints = character.SkillPoints - 1;
+
       character.talents = character.talents.filter(
         (t) => t.id !== payload.talentId
       );
@@ -822,12 +852,18 @@ export const mutations = {
   },
   setCharacterTalentSelected(state, payload) {
     const character = state.characters[payload.id];
-    const { id, key, name, selected } = payload.talent;
+    const { id, key, name, choice, selected } = payload.talent;
     character.talents = character.talents.filter((t) => t); // cleanup
 
     console.info(`Update [${id}] ${name} with choice -> ${selected}`);
     const theTalent = character.talents.find((t) => t.id === id);
     const theOtherTalents = character.talents.filter((t) => t.id !== id);
+
+    if(choice == "skill" && theTalent.selected)
+      if(character.skills[theTalent.selected] == "T")
+        character.skills[theTalent.selected] = "U"
+      else 
+        character.SkillPoints = character.SkillPoints - 1;
 
     if (theTalent) {
       // the character has a talent with the given uniqueID, thus we set the talents selected value accordingly
@@ -835,6 +871,11 @@ export const mutations = {
     }
 
     character.talents = [...theOtherTalents, theTalent];
+    if(choice == "skill")
+      if(character.skills[selected] == "U")
+        character.skills[selected] = "T"
+      else 
+        character.SkillPoints = character.SkillPoints + 1;
   },
   setCharacterTalentExtraCost(state, payload) {
     const character = state.characters[payload.charId];
@@ -1325,6 +1366,7 @@ const getDefaultState = () => ({
   Boost: 0,
   SkillPoints: 0,
   AncestryFreeBoost: "",
+  AncestryFreeBoost2: "",
   attributesBoost: {
     strength: 0,
     dexterity: 0,

@@ -23,10 +23,13 @@
                
                 <v-row no-gutters>
                   <v-col :cols="8" :sm="10" class="subtitle-1">
+                    <span v-html="placeText[talent.place]" />
+                  </v-col>
+                  <v-col :cols="8" :sm="10" class="subtitle-2">
                     <span v-html="talent.label" />
                   </v-col>
                   <v-col :cols="4" :sm="2">
-                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(talent)">remove</v-btn>
+                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(talent)">Удалить</v-btn>
                   </v-col>
                   <v-col v-if="!open" :cols="8" :sm="10" class="caption grey--text">
                     {{ talent.snippet }}
@@ -68,7 +71,7 @@
                 />
               </div>
 
-              <div v-if="['core-loremaster','core-hatred'].includes(talent.key)">
+              <!-- <div v-if="['core-loremaster','core-hatred'].includes(talent.key)">
                 <v-select
                   :value="talent.selected"
                   :items="selectableKeywordOptions"
@@ -79,9 +82,9 @@
                   dense
                   @input="talentUpdateSelected($event, talent)"
                 />
-              </div>
+              </div> -->
 
-              <div v-if="talent.key === 'core-trademark-weapon'">
+              <!-- <div v-if="talent.key === 'core-trademark-weapon'">
                 <v-select
                   :value="talent.selected"
                   :items="talentTrademarkWeaponOptions.filter( w => ['Melee Weapon','Ranged Weapon'].includes(w.type))"
@@ -133,7 +136,7 @@
                   dense
                   @input="talentSpecialWeaponTrooperUpdateWeaponChoiceLabel($event, talent)"
                 />
-              </div>
+              </div> -->
 
             </v-expansion-panel-content>
 
@@ -141,10 +144,122 @@
 
         </v-expansion-panels>
       </v-col>
-      <v-expansion-panels>
 
-      <v-expansion-panel
-    title="1 уровень">
+      
+    <v-expansion-panels>
+      <v-expansion-panel  >
+        <v-expansion-panel-header>1-й уровень</v-expansion-panel-header> 
+
+      <v-expansion-panel-content :key="1">
+      <v-col :cols="12">
+        <v-card>
+          <v-card-title>
+            <v-text-field
+              v-model="searchQuery"
+              filled
+              dense
+              prepend-inner-icon="search"
+              clearable
+              label="Поиск"
+            />
+
+            <!-- <v-switch
+              v-model="filterOnlyPrerequisites"
+              color="primary"
+              label="Show only fulfilled prerequisites"
+              class="pl-2"
+            /> -->
+          </v-card-title>
+          
+          <v-card-title>
+                <v-chip-group
+                  v-model="selectedTagsFilters"
+                  active-class="primary--text"
+                  column
+                  multiple
+                >
+                  <v-chip
+                    v-for="filter in tagFilters"
+                    :key="filter.name"
+                    :value="filter.name"
+                    filter
+                    small
+                    label
+                  >
+                    {{ filter.name }}
+                  </v-chip>
+                </v-chip-group>
+
+              </v-card-title>
+
+          <v-data-table
+            :headers="headers"
+            :items="filteredTalents"
+            :search="searchQuery"
+            :page.sync="pagination.page"
+            show-expand
+            item-key="name"
+            hide-default-footer
+            :loading="!talentList"
+            loading-text="Loading Talents... Please Wait"
+            @page-count="pagination.pageCount = $event"
+          >
+            <template v-slot:no-data />
+
+            <template v-slot:item.name="{ item }">
+              <span>{{ item.name }}</span>
+            </template>
+
+            <template v-slot:item.cost="{ item }">
+              <v-chip v-if="isAffordable(item.cost)" label x-small>
+                {{ item.cost }}
+              </v-chip>
+              <v-chip v-else label x-small color="warning">
+                {{ item.cost }}
+              </v-chip>
+            </template>
+
+            <template v-slot:item.prerequisitesHtml="{ item }">
+              <span v-html="item.prerequisitesHtml" />
+            </template>
+
+            <template v-slot:item.effect="{ item }">
+              <span>{{ item.effect }}</span>
+            </template>
+
+            <template v-slot:item.buy="{ item }">
+              <v-btn
+                :color="'success'"
+                :disabled="characterTalentLabels.includes(item.name) && !item.allowedMultipleTimes"
+                x-small
+                @click="addTalent(item, 'ancestry1')"
+              >
+                add
+              </v-btn>
+            </template>
+
+            <template v-slot:expanded-item="{ headers, item }">
+              <td :colspan="headers.length">
+                <div class="pt-4 pb-2" v-html="item.snippet">
+                </div>
+              </td>
+            </template>
+
+            <template v-slot:no-results>
+              <span class="text-center">Your search for "{{ searchQuery }}" found no results.</span>
+            </template>
+          </v-data-table>
+          <div class="text-center pt-2">
+            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
+          </div>
+        </v-card>
+      </v-col>
+
+      <issue-list :items="issues" />
+    </v-expansion-panel-content>
+    </v-expansion-panel>
+
+    <v-expansion-panel :key="2" >
       <v-col :cols="12" v-if="visibleTalentGroups.length > 1">
         <h3>
           Filter by Talent Group
@@ -158,6 +273,7 @@
           </v-btn>
         </span>
         </h3>
+        <h3>2 уровень</h3>
         <div v-show="talentGroupFilterHelp">
           <v-alert
             v-for="group in talentGroupList" :key="group.key"
@@ -181,7 +297,8 @@
           {{ item.name }}
         </v-chip>
       </v-col>
-
+      <v-expansion-panel-header>2-й уровень</v-expansion-panel-header> 
+      <v-expansion-panel-content :key="2">
       <v-col :cols="12">
         <v-card>
           <v-card-title>
@@ -263,7 +380,7 @@
                 :color="'success'"
                 :disabled="characterTalentLabels.includes(item.name) && !item.allowedMultipleTimes"
                 x-small
-                @click="addTalent(item)"
+                @click="addTalent(item, 'ancestry2')"
               >
                 add
               </v-btn>
@@ -287,6 +404,7 @@
       </v-col>
 
       <issue-list :items="issues" />
+    </v-expansion-panel-content>
     </v-expansion-panel>
     </v-expansion-panels>
     </v-row>
@@ -343,6 +461,10 @@ export default {
         pageCount: 0,
         sortBy: 'name',
         rowsPerPage: 25,
+      },
+      placeText: {
+        ancestry1: "Черта родословной 1 Уровня",
+        ancestry2: "Черта родословной 2 Уровня",
       },
       headers: [
         {
@@ -535,7 +657,7 @@ export default {
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
-
+        aggregatedTalent.place = talent.place;
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
@@ -756,8 +878,7 @@ export default {
           
           const prerequisitesHtml = this.requirementsToText(talent).join(', ');
           return {
-            ...talent,
-            prerequisitesHtml,
+            ...talent
           }
         });
 
@@ -797,7 +918,7 @@ export default {
     isAffordable(cost) {
       return cost <= this.remainingBuildPoints;
     },
-    addTalent(talent) {
+    addTalent(talent, place) {
       const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
       const payload = {
@@ -805,8 +926,10 @@ export default {
         name: talent.name,
         key: talent.key,
         cost: talent.cost,
+        place: place,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
+        choice: talent.optionsKey,
         source: `talent.${talentUniqueId}`,
       };
       this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
@@ -829,7 +952,7 @@ export default {
         let text = '';
 
         switch (p.type) {
-          case 'keyword':
+          case 'keyword': text = ''; break;
           case 'talent':
             if (p.condition === 'mustNot') {
               text = `<strong>must not</strong> possess the ${p.key.join(' or ')} ${p.type}`;
@@ -880,6 +1003,7 @@ export default {
         id: talent.id,
         key: talent.key,
         name: talent.name,
+        choice: talent.optionsKey,
         selected: selectedValue,
       };
       /*

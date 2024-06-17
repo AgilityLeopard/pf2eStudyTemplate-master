@@ -60,10 +60,15 @@
       </v-alert>
     </v-col>
 
+    <v-col :cols="12">
+      <h3 class="headline">
+          Повышение от Наследия
+      </h3>
+    </v-col>
 
-    <v-col :cols="12" :md="6">
+    <v-col v-if="boost == 2"  :cols="12" :md="6">
       <v-select  
-        label="Повышение от Наследия"
+        label="Свободное повышение"
         v-model="selectedAncestryBoost"
         :items="AncestryAttribute"
         item-text="name"
@@ -72,14 +77,25 @@
       ></v-select>
     </v-col>
 
-    <v-col :cols="12" :md="6">
+    <v-col v-else :cols="12" :md="12">
       <v-select  
-        label="Повышение от Наследия"
+        label="Свободное повышение"
         v-model="selectedAncestryBoost"
         :items="AncestryAttribute"
         item-text="name"
         item-value="key"
         @change="updateSelect(selectedAncestryBoost)"
+      ></v-select>
+    </v-col>
+
+    <v-col v-if="boost == 2"  :cols="12" :md="6">
+      <v-select  
+        label="Повышение от Наследия"
+        v-model="selectedAncestryBoost2"
+        :items="AncestryAttribute2"
+        item-text="name"
+        item-value="key"
+        @change="updateSelect2(selectedAncestryBoost2)"
       ></v-select>
     </v-col>
 
@@ -92,10 +108,17 @@
         <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
         <v-simple-table dense>
           <template v-slot:default>
+            <thead>
+                <tr>
+                  <th v-for="header in attributeHeaders" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead>
             <tbody>
               <tr v-for="attribute in attributeRepository" :key="attribute.key">
-                <td>{{ attribute.name }}</td>
-                <td>
+                <td >{{ attribute.name }}</td>
+                <td class="text-center pa-1 small">
                   <v-btn
                     icon
                     :disabled="
@@ -128,7 +151,7 @@
                   </v-btn>
                 </td>
     
-                <td>  {{ (characterAttributesEnhanced[attribute.key] - 10) / 2 }}</td>
+                <td class="text-center pa-1 small">  {{ (characterAttributesEnhanced[attribute.key] - 10) / 2 }}</td>
               </tr>
 
               <!-- <tr v-for="trait in traitRepository" :key="trait.key">
@@ -162,10 +185,10 @@
                   >
                     <v-icon color="red"> remove_circle </v-icon>
                   </v-btn>
-                  {{ characterSkills[skill.key] }}
+                   {{  ModAttribute(skill.attribute, skill.key)  }}
                   <v-btn
                     icon
-                    :disabled="characterSkills[skill.key] == 'L' || RestrictionLevel(characterSkills[skill.key]) == true || characterSkillPoints == 0"
+                    :disabled="characterSkills[skill.key] == 'L' || RestrictionLevel(characterSkills[skill.key]) == true || characterSkillPoints <= 0"
                     
                     @click="incrementSkill(skill.key)"
                   >
@@ -176,7 +199,7 @@
                     </v-icon>
                   </v-btn>
                 </td>
-                <td>{{ SkillsTrained[characterSkills[skill.key]] + ModAttribute(skill.attribute, skill.key) + characterLevel() }}</td>
+                <td>{{ characterlabel(characterSkills[skill.key]) }}</td>
               </tr>
             </tbody>
           </template>
@@ -207,7 +230,15 @@ export default {
   },
   data() {
     return {
+      attributeHeaders: [
+        { text: 'Характеристика', sortable: false, align: 'left', class: 'text-left small pa-1' },
+        { text: 'Значение', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Модификатор', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        // { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
+      ],
+
       selectedAncestryBoost: undefined,
+      selectedAncestryBoost2: undefined,
       selectedBoost: { },
       showAlerts: false,
       archetype: undefined,
@@ -215,6 +246,7 @@ export default {
       loading: false,
       select: { },
       AncestryAttribute: [],
+      AncestryAttribute2: [],
       boost : 0,
       SkillsTrained: {
         U: 0,
@@ -330,6 +362,12 @@ export default {
     characterAncestryBoost() {
       return this.$store.getters['characters/characterAncestryBoostById'](this.characterId);
     },
+    characterAncestryFreeBoost() {
+      return this.$store.getters['characters/characterAncestryFreeBoostById'](this.characterId);
+    },
+    characterAncestryFreeBoost2() {
+      return this.$store.getters['characters/characterAncestryFreeBoost2ById'](this.characterId);
+    },
     characterAttributesBoost() {
       return this.$store.getters['characters/characterAttributeBoost'](this.characterId);
     },
@@ -395,23 +433,25 @@ export default {
       const { data } = await this.$axios.get(`/api/species/${key}`);
       this.loading = false;
       this.species = data;
-      this.boost = this.species.abilityBoost;
-      this.AncestryAttribute = [];
-      this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
-      // this.species.attributeBoost.forEach(boost =>
-      //   {
-      //     if(this.characterAncestryBoost[boost.key] > 0)
-      //       this.selectedAncestryBoost = boost;
-      //   }
-      // )
+      this.boost = this.species ? this.species.abilityBoost : 0;
+      // this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.key == this.species.AncestryAttribute);
+      // this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.key == this.species.AncestryAttribute2);
+       this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
+       this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
+
+       this.selectedAncestryBoost = this.characterAncestryFreeBoost;
+       this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2; 
       this.selectedBoost = this.AncestryFreeBoost;
      // this.species.attributeBoost.forEach(boost => this.AncestryAttribute.push(boost));
 
     },
     resetStats() {
       const key = this.selectedAncestryBoost ? this.selectedAncestryBoost.key : "";
+      const key2 = this.selectedAncestryBoost2 ? this.selectedAncestryBoost2.key : "";
       this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: key , value: 0 } });
+      this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: key2 , value: 0 } });
       this.selectedAncestryBoost = "";
+      this.selectedAncestryBoost2 = "";
       this.$store.commit('characters/resetCharacterStats', { id: this.characterId });
     },
     incrementSkill(skill) {
@@ -459,6 +499,27 @@ export default {
       }
       return [];
     },
+    characterlabel(key){
+        switch (key) {
+          case "U":
+            return "Нетренирован"
+            break;
+         case "T":
+            return "Тренирован"
+            break;
+         case "E":
+            return "Эксперт"
+            break;
+          case "M":
+            return "Мастер"
+            break;
+          case "L":
+            return "Легенда"
+            break;
+          default:
+            break;
+        }
+    },
     characterLevel(){
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
@@ -494,6 +555,10 @@ export default {
         this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
 
     },
+    updateSelect2(boost) {
+        this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
+
+    },
     affordableAttributeColor(currentValue) {
       const attributeNewValueCost = {
         //   [0, 1, 2, 3,  4,  5,  6,  7,  8,  9, 10, 11, 12],
@@ -526,10 +591,10 @@ export default {
     },
     computeSkillPool(skill) {
       const attribute = this.characterAttributesEnhanced[skill.attribute.toLowerCase()];
-      if (attribute) {
+   
         return attribute + this.characterSkills[skill.key];
-      }
-      return this.characterSkills[skill.key];
+      
+      // return this.characterSkills[skill.key];
     },
     ensurePrerequisites() {
       const archetype = this.archetype;
@@ -558,4 +623,99 @@ export default {
 };
 </script>
 
-<style scoped lang="css"></style>
+<style scoped lang="scss">
+
+  .page-title {
+  }
+
+  .small {
+    height: 24px;
+  }
+
+  td.small {
+    font-size: 12px;
+  }
+
+  .my-tabs-container {
+    height: 620px;
+    overflow: hidden;
+  }
+
+  .my-tab-item {
+    height: 705px;
+    overflow-y: auto;
+  }
+
+  .sexy_line{
+    display:block;
+    border:none;
+    color:white;
+    height:1px;
+    background:black;
+    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 350, from(#000), to(#fff));
+  }
+
+  .resource-box {
+    $size: 12px;
+    min-height: $size;
+    max-height: $size;
+    min-width: $size;
+    max-width: $size;
+    border: 1px solid hsl(0, 0%, 85%);
+    box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
+    cursor: pointer;
+
+    box-sizing: inherit;
+    margin: 2px;
+
+    &--filled {
+
+      &:before {
+        content: "";
+        display: block;
+        height: 7px;
+        width: 7px;
+        margin-top: 1.5px;
+        margin-left: 1.5px;
+      }
+
+      &::before {
+        background-color: hsl(0, 100%, 37%);
+      }
+    }
+
+    &--filled-light::before {
+      background-color: hsl(62, 70%, 44%) !important;
+    }
+  }
+
+  .faith-box {
+    min-height: 20px;
+    max-height: 20px;
+    min-width: 20px;
+    max-width: 20px;
+    border: 1px solid hsl(0, 0%, 85%);
+    box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
+    cursor: pointer;
+
+    box-sizing: inherit;
+    margin: 2px;
+
+    &--filled {
+
+      &:before {
+        content: "";
+        display: block;
+        height: 10px;
+        width: 10px;
+        margin-top: 4px;
+        margin-left: 4px;
+      }
+
+      &::before {
+        background-color: hsl(0, 100%, 37%);
+      }
+    }
+
+  }
+</style>

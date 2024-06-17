@@ -124,15 +124,17 @@ const coreRep = [
     //   "Adrielle, Alaric, Barus, Castus, Celeste, Diana, Dar, Davian, Ephrael, Erith, Estebus, Felicia, Gaius, Gezrael, Halo, Harken, Haveloch, Hestia, Iris, Jestilla, Kamir, Katrina, Lukas, Lyta, Mikel, Mira, Nura, Ophelia, Poul, Quitus, Ravenna, Rossel, Ruby, Silvana, Skyv, Steele, Taur, Titus, Tyanna, Ursa, Undine, Verbal, Victor, Waynoka, Wilhemina, Xavier, Yvette, Zane, Zellith, Zek"
     // ),
     trait: ["гуманоид", "человек"],
+
     nameAncestry: "Человек",
     ...statBoost(0, 0, 0, 0, 0, 0),
     ...statFlaw(0, 0, 0, 0, 0, 0),
+    speed: 25,
+    language: ["Всеобщий"],
+    freeLanguage: 1,
     abilityBoost: 2,
     exampleName:
-      "Аэрэль, Амрунэлара, Каладрэль, Дардлара, Фанра, Хэлдалэль, Ятхэль, Ланлисс, Опарэль, Сэлдлон, Сумрэль, Талатэль, Тессара, Вариэль, Яландлара, Зордлон",
-      modifications: [
-        { targetGroup: "keywords", targetValue: "elf" },
-      ],
+      "",
+    ancestryHitPoint: 8,
     Description: [
       {
         name: "Faith",
@@ -170,7 +172,7 @@ const coreRep = [
     previewText:
       "<p><em>Как древний народ, эльфы видели большие перемены и имеют точку зрения, которая может появиться только от наблюдения за ходом истории. Покинув мир в древние времена, они вернулись на измененную землю, и все еще борются, чтобы восстановить свои родовые дома, в особенности от ужасных демонов наводнивших части их земель. Для некоторых эльфы это объект изумления, изящные и красивые, с обширными талантами и знаниями. Среди своих же, эльфы уделяют больше внимания личной свободе, чем жизни в соответствии с этими идеалами.</em></p>",
     ...statBoost(0, 1, 0, 1, 0, 0),
-    ...statFlaw(0, 0, 1, 0, 0, 0),
+    ...statFlaw(0, 0, -1, 0, 0, 0),
     abilityBoost: 1,
     exampleName:
       "Аэрэль, Амрунэлара, Каладрэль, Дардлара, Фанра, Хэлдалэль, Ятхэль, Ланлисс, Опарэль, Сэлдлон, Сумрэль, Талатэль, Тессара, Вариэль, Яландлара, Зордлон",

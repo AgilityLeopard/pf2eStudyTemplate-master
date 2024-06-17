@@ -215,18 +215,18 @@ export default {
       });
 
       species.attributeBoost.forEach((t) => {
-        if (t.value !== 0)
+        
           this.$store.commit("characters/setCharacterAncestryBoostForAll", {
             id: this.characterId,
-            payload: { key: t.key, value: 1 },
+            payload: { key: t.key, value: t.value },
           });
       });
 
       species.attributeFlaw.forEach((t) => {
-        if (t.value !== 0)
+        
           this.$store.commit("characters/setCharacterAncestryFlawForAll", {
             id: this.characterId,
-            payload: { key: t.key, value: -1 },
+            payload: { key: t.key, value: t.value },
           });
       });
 

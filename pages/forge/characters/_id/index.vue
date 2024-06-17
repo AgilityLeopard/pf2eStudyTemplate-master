@@ -181,7 +181,7 @@
          <v-col :cols="12" class="pa-1">
           <v-card>
             <v-card-title style="background-color: hsl(4, 90%, 58%); color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Attributes</h2>
+              <h2 class="subtitle-1">Характеристики</h2>
             </v-card-title>
 
             <v-simple-table dense>
@@ -195,10 +195,10 @@
               <tbody>
               <tr v-for="item in attributes" :key="item.key">
                 <td class="text-left pa-1 small">{{ item.name }}</td>
-                <td class="text-center pa-1 small">{{ item.rating }}</td>
-                <td class="text-center pa-1 small">{{ item.adjustedRating }}</td>
-                <td class="text-center pa-1 small">
-                  <v-tooltip bottom v-if="item.modifiers.length > 0">
+                <td class="text-center pa-1 small">{{ item.short }}</td>
+                <td class="text-center pa-1 small">{{ item.value }}</td>
+                <td class="text-center pa-1 small"> {{ item.mod }}
+                  <!-- <v-tooltip bottom v-if="item.modifiers.length > 0">
                     <template v-slot:activator="{ on }">
                       <v-avatar
                         :color="valueHintColor(item)"
@@ -209,7 +209,7 @@
                       </v-avatar>
                     </template>
                     <div v-for="(modifier, index) in item.modifiers" :key="index">{{modifier}}</div>
-                  </v-tooltip>
+                  </v-tooltip> -->
                 </td>
               </tr>
               </tbody>
@@ -218,90 +218,7 @@
         </v-col>
         </v-row>
 
-        <v-row no-gutters>
-          <v-col :cols="12" class="pa-1">
-          <v-card>
-            <v-card-title style="background-color: hsl(4, 90%, 58%); color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Traits</h2>
-            </v-card-title>
 
-            <v-simple-table
-              :headers="traitHeaders"
-              :items="groupedTraits"
-              dense
-            >
-              <tbody>
-                <tr v-for="item in groupedTraits">
-                  <td class="text-left pa-1 small">
-                    <span>
-                      {{ item.name }}
-                    </span>
-                    <span v-if="['Corruption'].includes(item.name)">
-                      <v-btn x-small icon @click="showCorruptionManagerDialog = true">
-                        <v-hover>
-                          <v-icon
-                            slot-scope="{ hover }"
-                            :color="`${ hover ? 'primary' : '' }`"
-                          >settings</v-icon>
-                        </v-hover>
-                      </v-btn>
-                    </span>
-                    <span v-if="['Wealth', 'Influence'].includes(item.name)">
-                      <v-btn x-small icon @click="showContext(item.key)">
-                        <v-hover>
-                          <v-icon
-                              slot-scope="{ hover }"
-                              :color="`${ hover ? 'primary' : '' }`"
-                          >settings</v-icon>
-                        </v-hover>
-                      </v-btn>
-                    </span>
-                    <div v-if="['Wealth','Max Shock','Max Wounds'].includes(item.name)" style="float: right;">
-                      <div style="flex-wrap: wrap; display: flex;" v-if="item.adjustedRating > 0">
-                          <div
-                            v-for="pointIndex in item.adjustedRating"
-                            class="resource-box"
-                            :class="{ 'resource-box--filled': pointIndex <= item.spend }"
-                            @click="toggleResource(item, pointIndex)"
-                          ></div>
-                        </div>
-                    </div>
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{ item.adjustedRating }}<span v-if="item.alternativeRating">/{{ item.alternativeRating }}</span><span v-if="item.conditionalAdjustment !== 0">/{{ item.adjustedRating+item.conditionalAdjustment }}</span>
-                  </td>
-                  <td>
-                    <!-- each modifier contains the BASE of the compution, thus we begin at > 1 -->
-                    <v-tooltip bottom v-if="item.modifiers.length > 0 || item.alternativeRating">
-                      <template v-slot:activator="{ on }">
-                        <v-avatar
-                          :color="valueHintColor(item)"
-                          size="12"
-                          v-on="on"
-                        >
-                          <v-icon dark small>{{valueHintIcon(item)}}</v-icon>
-                        </v-avatar>
-                      </template>
-                      <div>{{item.baseHelp}}</div>
-                      <div v-for="modifier in item.modifiers.filter((m) => m.condition === null)">
-                        {{modifier.valueString}} • {{modifier.provider}} ({{modifier.category}})
-                      </div>
-                      <div v-if="item.modifiers.find((m) => m.condition !== null)">
-                        <div><strong>Conditional modifiers:</strong></div>
-                        <div v-for="modifier in item.modifiers.filter((m) => m.condition !== null)">
-                          {{modifier.valueString}} {{modifier.condition}} • {{modifier.provider}} ({{modifier.category}})
-                        </div>
-                      </div>
-                    </v-tooltip>
-                  </td>
-                </tr>
-              </tbody>
-
-            </v-simple-table>
-
-          </v-card>
-        </v-col>
-        </v-row>
 
       </v-col>
 
@@ -311,7 +228,7 @@
           <v-col :cols="12" class="pa-1">
           <v-card style="height: 755px; display: flex; flex-flow: column;">
             <v-card-title style="background-color: hsl(4, 90%, 58%); color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Skills</h2>
+              <h2 class="subtitle-1">Навыки</h2>
             </v-card-title>
 
             <v-simple-table
@@ -341,17 +258,17 @@
                   </span>
                 </td>
                 <td class="text-center pa-1 small">
-                  {{ item.value }}
+                  {{ item.attributeName.substring(0,3) }}
                 </td>
                 <td class="text-center pa-1 small">
-                  <span v-if="item.attribute">
-                    {{ item.attribute.substring(0,3) }}
-                  </span>
+                  
+                    {{ characterlabel(item) }}
+                  
                 </td>
                 <td class="text-center pa-1 small">
-                  {{ computeSkillPool(item) }}<span v-if="item.conditionalAdjustment !== 0">/{{ computeSkillPool(item)+item.conditionalAdjustment }}</span>
+                  {{ computeSkillPool(item) }}
                 </td>
-                <td class="text-center pa-1 small">
+                <!-- <td class="text-center pa-1 small">
                   <v-tooltip bottom v-if="item.modifiers.length > 0">
                     <template v-slot:activator="{ on }">
                       <v-avatar
@@ -373,7 +290,7 @@
                       </div>
                     </div>
                   </v-tooltip>
-                </td>
+                </td> -->
               </tr>
               </tbody>
             </v-simple-table>
@@ -1103,21 +1020,21 @@ export default {
   data() {
     return {
       attributeHeaders: [
-        { text: 'Attribute', sortable: false, align: 'left', class: 'text-left small pa-1' },
-        { text: 'Rating', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Enhanced', sortable: false, align: 'right', class: 'text-center small pa-1' },
-        { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
+        { text: 'Название', sortable: false, align: 'left', class: 'text-left small pa-1' },
+        { text: 'Сокращение', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Значение', sortable: false, align: 'right', class: 'text-center small pa-1' },
+        { text: 'Модификатор', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
       traitHeaders: [
         { text: 'Trait', sortable: false, align: 'left', class: 'small pa-1' },
         { text: 'Rating', sortable: false, align: 'center', class: 'small pa-1' },
       ],
       skillHeaders: [
-        { text: 'Skill', sortable: false, align: 'left', class: 'text-left small pa-1' },
-        { text: 'Rating', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Att', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Total', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
+        { text: 'Навык', sortable: false, align: 'left', class: 'text-left small pa-1' },
+        { text: 'Характеристика', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Владение', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Значение', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        // { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
       weaponHeaders: [
         { text: 'Name', sortable: false, align: 'left', class: 'small pa-1' },
@@ -1157,6 +1074,13 @@ export default {
         name: 'Custom Skill',
         attribute: '',
         description: '',
+      },
+      SkillsTrained: {
+        U: 0,
+        T: 2,
+        E: 4,
+        M: 6,
+        L: 8,
       },
       customKeyword: {
         key: undefined,
@@ -1313,6 +1237,8 @@ export default {
           rating: characterAttributes[repositoryAttribute.key],
           adjustedRating: parseInt(characterAttributes[repositoryAttribute.key]),
           adjustment: 0,
+          short: repositoryAttribute.short,
+          mod: (characterAttributes[repositoryAttribute.key] - 10) / 2,
           modifiers: [],
           conditionalAdjustment: 0,
         };
@@ -1546,6 +1472,7 @@ export default {
       ];
 
       const characterSkills = this.$store.getters['characters/characterSkillsById'](this.characterId);
+      const characterAttributes = this.attributeRepository;
 
       let skills = adHocSkillRepository.map((repositorySkill) => {
         const skill = {
@@ -1556,6 +1483,7 @@ export default {
           adjustedRating: parseInt(characterSkills[repositorySkill.key]),
           adjustment: 0,
           conditionalAdjustment: 0,
+          attributeName: characterAttributes.find((a) => a.key === repositorySkill.attribute).name,
           dnPenalty: 0,
           modifiers: [],
           adjustedAttributeValue: 0,
@@ -2392,11 +2320,40 @@ export default {
       return this.wargearTraitRepository.find((item) => item.name === traitName);
     },
     computeSkillPool(skill) {
-      const attribute = this.attributes.find((a) => a.name === skill.attribute);
-      if (attribute) {
-          return attribute.adjustedRating + skill.adjustedRating;
-      }
-      return skill.adjustedRating;
+       //const attribute = this.attributes.find((a) => a.name === skill.attribute);
+      // if (attribute) {
+      //     return attribute.adjustedRating + skill.adjustedRating;
+      // }
+      // return skill.adjustedRating;
+      const attribute = (this.characterAttributesEnhanced[skill.attribute.toLowerCase()] - 10) / 2;
+   
+      return attribute + this.SkillsTrained[skill.value] + this.characterLevel();
+      
+
+    },
+    characterLevel(){
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
+    characterlabel(key){
+        switch (key.value) {
+          case "U":
+            return "Нетренирован"
+            break;
+         case "T":
+            return "Тренирован"
+            break;
+         case "E":
+            return "Эксперт"
+            break;
+          case "M":
+            return "Мастер"
+            break;
+          case "L":
+            return "Легенда"
+            break;
+          default:
+            break;
+        }
     },
     getTalentOption(talent, choiceKey) {
       return talent.options.find((t) => t.key === choiceKey);

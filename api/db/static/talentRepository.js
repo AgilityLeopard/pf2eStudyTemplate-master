@@ -251,6 +251,7 @@ const core = [
     ...talent('core',130,'fleet',20,'эльф'),
     snippet: 'Вы получаете плюс 5 футов к скорости',
     name: "Эльфийские ноги",
+    level: 1,
     description:
       '<p>The very sight of blood energises you in battle.</p>' +
       '<p>Whenever you see an individual within 30 metres of you suffer a Critical Hit or the Bleeding Condition, you gain 1 point of Wrath.</p>' +
@@ -261,12 +262,28 @@ const core = [
     ],
   },
   {
-    ...talent('core',130,'Binary Chatter',20,'Utility'),
-    snippet: 'Add +Double Rank when you instruct/program/question a servitor (or similar).',
+    ...talent('core',130,'nature-ambition',20,'человек'),
+    name: "Природные амбиции",
+    snippet: 'Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор',
+    level: 1,
+    requirements: [],
     description:
-      '<p>You are adept at controlling mechanical constructs.</p>' +
-      '<p>You gain +Double Rank bonus dice whenever you attempt to instruct, program, or question a servitor or a similar construct, such as a cherub, or a servo-skull.</p>',
-    requirements: [ requireKeyword('ADEPTUS MECHANICUS') ],
+      '<p>Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор</p>',
+      modifications: [
+        { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
+      ],
+      selected: '',
+    optionsPlaceholder: 'Select a skill',
+    optionsKey: 'skill',
+    options: [
+      { key: 'deception', name: 'Обман', choice: 'skill' },
+      { key: 'society', name: 'Общество', choice: 'skill' },
+    //   { key: 'pilot', name: 'Pilot' },
+    //   { key: 'scholar', name: 'Scholar' },
+    //   { key: 'survival', name: 'Survival' },
+    //   { key: 'tech', name: 'Tech' },
+    //   { key: 'weapon-skill', name: 'Weapon Skill' },
+    ],
   },
   {
     ...talent('core',130,'Blindfighter',20,'Melee,Combat'),
