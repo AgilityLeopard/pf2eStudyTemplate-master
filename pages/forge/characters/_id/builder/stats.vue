@@ -4,24 +4,8 @@
       <h1 class="headline">
         Выберите характеристики и навыки
         <span>
-          <v-icon v-if="alerts && alerts.length <= 0">error_outline</v-icon>
-          <v-btn
-            color="warning"
-            v-else-if="showAlerts"
-            @click="showAlerts = !showAlerts"
-            small
-            ><v-icon small left>error</v-icon> Hide warnings</v-btn
-          >
-          <v-btn
-            color="warning"
-            v-else
-            @click="showAlerts = !showAlerts"
-            outlined
-            small
-          >
-            <v-icon small left>error_outline</v-icon>show
-            {{ alerts.length }} warning{{ alerts.length > 1 ? "s" : "" }}
-          </v-btn>
+
+
           <v-btn color="primary" @click="resetStats" outlined small
             >Сброс статов</v-btn
           >
@@ -29,36 +13,9 @@
       </h1>
     </v-col>
 
-    <v-progress-circular
-      v-if="archetype"
-      indeterminate
-      color="success"
-      size="128"
-      width="12"
-    />
 
-    <v-col :cols="12" v-if="showAlerts">
-      <v-alert
-        v-for="alert in alerts"
-        :key="alert.key"
-        :type="alert.type"
-        :value="true"
-        text
-        dense
-        border="left"
-      >
-        {{ alert.text }}
-        <v-btn
-          v-if="alert.key === 'prerequisites'"
-          color="primary"
-          @click="ensurePrerequisites"
-          small
-        >
-          Increase stats to fit the archetype.
-          <v-icon right small> library_add </v-icon>
-        </v-btn>
-      </v-alert>
-    </v-col>
+
+
 
     <v-col :cols="12">
       <h3 class="headline">
@@ -103,7 +60,7 @@
       <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
     </v-card-text> -->
 
-    <v-col :cols="12" :md="6">
+    <v-col :cols="12" :md="5">
       <v-card>
         <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
         <v-simple-table dense>
@@ -169,7 +126,7 @@
       <p>Количество свободных очков навыка: {{ 4 - characterSkillPoints }}</p>
     </v-card-text> -->
 
-    <v-col :cols="12" :md="6">
+    <v-col :cols="12" :md="7">
       <v-card>
         <p>Количество свободных очков навыка: {{  characterSkillPoints }}</p>
         <v-simple-table dense>
@@ -180,7 +137,7 @@
                 <td>
                   <v-btn
                     icon
-                    :disabled="characterSkills[skill.key] == 'U' || characterSkillPoints == MaxSkillPoints()"
+                    :disabled="characterSkills[skill.key] == 'U' || characterSkillPoints == MaxSkillPoints() || skill.custom"
                     @click="decrementSkill(skill.key)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
@@ -200,27 +157,177 @@
                   </v-btn>
                 </td>
                 <td>{{ characterlabel(characterSkills[skill.key]) }}</td>
+                <span v-if="skill.custom">
+                    <v-hover>
+                      <v-icon
+                        small
+                        @click="removeCustomSkill(skill.key)"
+                        slot-scope="{ hover }"
+                        :color="`${ hover ? 'error' : '' }`"
+                      >delete</v-icon>
+                    </v-hover>
+                  </span>
               </tr>
+            
             </tbody>
           </template>
+
+          
         </v-simple-table>
+
+        
+        <v-spacer></v-spacer>
+
+<v-card-actions style="justify-content: center;">
+  <v-btn x-small text @click="openSkillsSettings">Дополнительное Знание <v-icon small>settings</v-icon></v-btn>
+</v-card-actions>
+
+            <!-- Custom Skills -->
+            <v-dialog
+      v-model="skillsEditorDialog"
+      width="600px"
+      scrollable
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+    >
+      <v-card>
+        <v-alert
+               :value="alert"
+               type="error"
+               text
+               dense
+               border="left"
+       
+               >
+       Знание уже существует
+      </v-alert>
+      <v-alert
+               :value="characterSkillPoints <= 0"
+               type="info"
+               text
+               dense
+               border="left"
+       
+               >
+       Недостаточно очков Навыка для добавления нового Знания
+      </v-alert>
+        <v-card-title style="background-color: #262e37; color: #fff;">
+          Редактирование Знаний
+          <v-spacer />
+          <v-icon dark @click="closeSkillsSettings">close</v-icon>
+        </v-card-title>
+        <v-card-text class="pt-4">
+          <v-text-field v-model="customSkill.name" dense label="Имя Знания"></v-text-field>
+          <v-textarea v-model="customSkill.description" dense label="Описание"></v-textarea>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn small right color="success" 
+          :disabled="characterSkillPoints <= 0"
+          @click="saveCustomSkill">Save</v-btn>
+
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
       </v-card>
     </v-col>
+  
+    <v-col :cols="12" :md="6">
+      <v-card>
+      
+        <v-simple-table dense>
+      
+          Внимательность
+            <tbody>
+          <tr>
+                
+                <td>{{ Perception.name }}</td>
+                  <td>{{ ModAttributePerception(Perception.attribute, Perception.key) }}</td>
+                  <td>{{ characterlabel(characterPerseption) }}</td>
+                </tr>
+            
+            </tbody>
+        </v-simple-table>
 
+        <v-simple-table dense>
+      
+      Спасброски
+        <tbody>
+      <tr v-for="saving in SavingRepository" :key="saving.key">
+            
+            <td>{{ saving.name }}</td>
+              <td>{{ ModAttributeSaving(saving.attribute, saving.key) }}</td>
+              <td>{{ characterlabel(characterSaving[saving.key]) }}</td>
+            </tr>
+        
+        </tbody>
+    </v-simple-table>
+      </v-card>
+    </v-col>
+ 
+    <v-col :cols="12" :md="6">
+      <v-card>
+      
+        <v-simple-table dense>
+      
+          Оружие
+            <tbody>
+          <tr v-for="attack in WeaponRepository" :key="attack.key">
+                
+                <td>{{ attack.name }}</td>
 
+                  <td>{{ characterlabel(skillAttack[attack.key]) }}</td>
+                </tr>
+                
+                <!-- <tr v-for="defence in DefenceRepository" :key="defence.key">
+                
+                <td>{{ defence.name }}</td>
 
+                  <td>{{ characterlabel(skillDefence[defence.key]) }}</td>
+                </tr> -->
+            </tbody>
+        </v-simple-table>
+
+        <v-spacer></v-spacer>
+
+        <v-simple-table dense>
+      
+          
+      Доспехи
+        <tbody>
+      <!-- <tr v-for="attack in WeaponRepository" :key="attack.key">
+            
+            <td>{{ attack.name }}</td>
+            
+              <td>{{ characterlabel(skillAttack[attack.key]) }}</td>
+            </tr> -->
+
+            <tr v-for="defence in DefenceRepository" :key="defence.key">
+            
+            <td>{{ defence.name }}</td>
+            
+              <td>{{ characterlabel(skillDefence[defence.key]) }}</td>
+            </tr>
+        </tbody>
+    </v-simple-table>
+      </v-card>
+    </v-col>
+    
   </v-row>
 
 </template>
 
 <script lang="js">
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
+import SluggerMixin from '~/mixins/SluggerMixin';
 
 export default {
   name: 'Stats',
   layout: 'forge',
   mixins: [
     StatRepositoryMixin,
+    SluggerMixin
   ],
   props: [],
   async asyncData({ params }) {
@@ -236,10 +343,17 @@ export default {
         { text: 'Модификатор', sortable: false, align: 'center', class: 'text-center small pa-1' },
         // { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
-
+      alert: false,
+      skillsEditorDialog: false,
       selectedAncestryBoost: undefined,
       selectedAncestryBoost2: undefined,
       selectedBoost: { },
+      customSkill: {
+        key: undefined,
+        name: 'Знание',
+        attribute: 'intellect',
+        description: '',
+      },
       showAlerts: false,
       archetype: undefined,
       species: undefined,
@@ -377,6 +491,12 @@ export default {
     characterSkills() {
       return this.$store.getters['characters/characterSkillsById'](this.characterId);
     },
+    characterPerseption() {
+      return this.$store.getters['characters/characterPerseptionById'](this.characterId);
+    },
+    characterSaving() {
+      return this.$store.getters['characters/characterSavingById'](this.characterId);
+    },
     characterTraits() {
       return this.$store.getters['characters/characterTraitsById'](this.characterId);
     },
@@ -389,12 +509,34 @@ export default {
     characterCustomSkills() {
       return this.$store.getters['characters/characterCustomSkillsById'](this.characterId);
     },
+    skills() {
+      return this.$store.getters['characters/characterCustomSkillsById'](this.characterId);
+    },
+    skillAttack() {
+      return this.$store.getters['characters/characterskillAttackById'](this.characterId);
+    },
+    skillDefence() {
+      return this.$store.getters['characters/characterskillDefenceById'](this.characterId);
+    },
     finalSkillRepository() {
       return [
         ...this.skillRepository,
         ...this.characterCustomSkills,
       ];
     },
+    finalWDRepository() {
+      return [
+        ...this.skillAttack,
+        ...this.skillDefence,
+      ];
+    },
+    
+    // Perception() {
+    //   return [
+    //     ...this.Perception,
+       
+    //   ];
+    // },
     settingHouserules() {
       return this.$store.getters['characters/characterSettingHouserulesById'](this.characterId);
     },
@@ -485,6 +627,7 @@ export default {
       this.$store.commit('characters/setCharacterBoost', { id: this.characterId, payload: { key: attribute, value: -1 } });
       this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
     },
+
     skillsByAttribute(attribute) {
       if (this.finalSkillRepository !== undefined) {
   
@@ -544,6 +687,20 @@ export default {
        
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
+    ModAttributeSaving(attribute, skill){
+      const char1 = this.SkillsTrained[this.characterSaving[skill]];
+      const char2 = (this.characterAttributes[attribute] - 10) / 2;
+      const char3 = this.characterLevel();
+       
+      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    ModAttributePerception(attribute, skill){
+      const char1 = this.SkillsTrained[this.SkillPerception()];
+      const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
+      const char3 = this.characterLevel();
+       
+      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
     MaxSkillPoints(){
       const Max = (this.characterAttributes["intellect"] - 10) / 2
       if(Max < 0)
@@ -559,6 +716,10 @@ export default {
         this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
 
     },
+    SkillPerception(){
+      return this.$store.getters['characters/characterPerseptionById'](this.characterId);
+    },
+    
     affordableAttributeColor(currentValue) {
       const attributeNewValueCost = {
         //   [0, 1, 2, 3,  4,  5,  6,  7,  8,  9, 10, 11, 12],
@@ -595,6 +756,47 @@ export default {
         return attribute + this.characterSkills[skill.key];
       
       // return this.characterSkills[skill.key];
+    },
+    openSkillsSettings(){
+      this.skillsEditorDialog = true;
+    },
+    closeSkillsSettings() {
+      this.customSkill = {
+        key: undefined,
+        name: 'Знание',
+        atttribute: 'intellect',
+        description: '',
+      };
+      this.skillsEditorDialog = false;
+      this.alert = false;
+    },
+    saveCustomSkill() {
+      // validate
+      this.alert = false;
+      const skill = {
+        key: this.textToCamel(this.customSkill.name),
+        name: this.customSkill.name,
+        attribute: 'intellect',
+        description: this.customSkill.description,
+      };
+      const doExist = this.skills.find((s)=>s.key===skill.key);
+      if ( doExist ) {
+        this.alert = true;
+        console.warn(`Skill ${skill.name} already exists.`);
+      } else {
+        this.addCustomSkill(skill);
+        this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
+        this.closeSkillsSettings();
+      }
+    },
+    addCustomSkill(skill) {
+      const id = this.characterId;
+      this.$store.commit('characters/addCharacterCustomSkill', { id, skill });
+    },
+    removeCustomSkill(key) {
+      const id = this.characterId;
+      this.$store.commit('characters/removeCharacterCustomSkill', { id, key });
+      this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: key, value: this.characterSkillPoints + 1} });
     },
     ensurePrerequisites() {
       const archetype = this.archetype;

@@ -179,14 +179,42 @@ const wargearz = function(wargearString) {
 const core = [
   // Adeptus Ministorum
   {
-    ...archetype(source.core.key,92,'Adeptus Ministorum','Ministorum Priest',1,'Human'),
+    ...archetype(source.core.key,92,'Adeptus Ministorum','Fighter',1,'Human'),
     ...cost(12,0,12, 0, 0),
     hint: 'A zealous preacher of the Imperial Creed.',
     keywords: 'Imperium,Adeptus Ministorum',
-    prerequisites: [
-      reqAttribute(ATTRIBUTES.WILLPOWER, 3),
-      reqSkill(SKILLS.SCHOLAR, 1),
-    ],
+    hitpoints: 10,
+    keyAbility: ["dexterity", "strength"],
+    trait: ["воин"],
+    skillTrainedChoice: ["acrobatics", "athletic"],
+    skillTrained: [],
+    skillTrainedPoints: 3,
+    Perception: "E",
+    skillAttack:
+    {
+      simple: "T",
+      martial: "T",
+      advanced: "T",
+      unarmed: "T"
+    },
+    skillDefence:
+    {
+      light: "T",
+      medium: "T",
+      heavy: "T",
+      unarmored: "T"
+    },
+    skillClass: "T",
+    saving:
+    {
+      reflex: "E",
+      fortitude: "E",
+      will: "T",
+    },
+    // prerequisites: [
+    //   reqAttribute(ATTRIBUTES.WILLPOWER, 3),
+    //   reqSkill(SKILLS.SCHOLAR, 1),
+    // ],
     archetypeFeatures: [
       {
         name: 'Fiery Invective',

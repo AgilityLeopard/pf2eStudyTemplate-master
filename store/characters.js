@@ -272,6 +272,10 @@ export const getters = {
 
   characterSkillsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].skills : {},
+  characterSavingById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].saving : {},
+  characterPerseptionById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].Perception : "U",
 
   characterTraitsById: (state, getters) => (id) => {
     const character = state.characters[id];
@@ -388,7 +392,11 @@ export const getters = {
     state.characters[id] ? state.characters[id].mutations : [],
   characterSkillPointsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].SkillPoints : 0,
-  
+
+  characterskillAttackById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].skillAttack : {},
+  characterskillDefenceById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].skillDefence : {},
   characterBackgroundById: (state) => (id) =>
     state.characters[id]
       ? state.characters[id].background
@@ -537,7 +545,9 @@ export const mutations = {
       payload.speciesAstartesChapter;
   },
   setCharacterArchetype(state, payload) {
+    const character = state.characters[payload.id];
     state.characters[payload.id].archetype = payload.archetype;
+
   },
   setCharacterArchetypeCost(state, payload) {
     const { id, cost } = payload;
@@ -607,7 +617,10 @@ export const mutations = {
     if(character.SkillPoints < 0) character.SkillPoints = 0;
 
     Object.keys(character.skills).forEach((key, index) => {
-      character.skills[key] = "U";
+      if(character.customSkills.find(s => s.key == key) !== undefined)
+        character.SkillPoints = character.SkillPoints  - 1;
+      else
+        character.skills[key] = "U";
     });
 
     character.Boost = 0;
@@ -684,7 +697,7 @@ export const mutations = {
     const character = state.characters[id];
 
     let newSkill = {};
-    newSkill[skill.key] = 0;
+    newSkill[skill.key] = 'T';
     character.skills = {
       ...character.skills,
       ...newSkill,
@@ -1416,8 +1429,28 @@ const getDefaultState = () => ({
     survival: "U",
     thievery: "U",
   },
+  saving: {
+    reflex: "U",
+    fortitude: "U",
+    will: "U",
+  },
+  skillAttack:
+  {
+    simple: "U",
+    martial: "U",
+    advanced: "U",
+    unarmed: "U"
+  },
+  skillDefence:
+  {
+    light: "U",
+    medium: "U",
+    heavy: "U",
+    unarmored: "U"
+  },
+  Perception: "U",
   customSkills: [],
-  languages: [{ name: "Low Gothic", cost: 0, source: "" }],
+  languages: [{ name: "Всеобщий", cost: 0, source: "", trait: "Обычный" }],
   keywords: [],
   talents: [],
   mutations: [],

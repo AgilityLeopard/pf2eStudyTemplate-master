@@ -118,6 +118,85 @@ export default {
           traitMaximums: [{ name: "Speed", value: 9 }],
         },
       ],
+      Perception: 
+        {
+          key: "perception",
+          name: "Внимательность",
+          attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+      WeaponRepository: [
+        {
+          key: "simple",
+          name: "Простое оружие",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+        {
+          key: "martial",
+          name: "Воинское оружие",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+        {
+          key: "advanced",
+          name: "продвинутое оружие",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+        {
+          key: "unarmed",
+          name: "Безоружная атака",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+      ],
+      DefenceRepository: [
+        {
+          key: "light",
+          name: "Легкий доспех",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+        {
+          key: "medium",
+          name: "Средний доспех",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+        {
+          key: "heavy",
+          name: "Тяжелый доспех",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+        {
+          key: "unarmored",
+          name: "Защита без доспехов",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+      ],
+      SavingRepository: [
+        {
+          key: "reflex",
+          name: "Рефлекс",
+          attribute: "dexterity",
+          description: "A character’s overall physical prowess",
+        },
+        {
+          key: "fortitude",
+          name: "Стойкость",
+          attribute: "constitution",
+          description: "A character’s overall physical prowess",
+        },        
+        {
+          key: "will",
+          name: "Воля",
+          attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+      ],
       // https://api.sheety.co/669365df-fa15-4003-ad7d-21d86e11b69a
       skillRepository: [
         {
