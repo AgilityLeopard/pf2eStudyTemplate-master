@@ -182,6 +182,7 @@ const core = [
     ...archetype(source.core.key,92,'Adeptus Ministorum','Fighter',1,'Human'),
     ...cost(12,0,12, 0, 0),
     hint: 'A zealous preacher of the Imperial Creed.',
+    name: 'Воин',
     keywords: 'Imperium,Adeptus Ministorum',
     hitpoints: 10,
     keyAbility: ["dexterity", "strength"],

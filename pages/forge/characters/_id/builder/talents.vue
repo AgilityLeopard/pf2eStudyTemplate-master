@@ -11,28 +11,63 @@
 
       <v-progress-circular v-if="!talentList && !wargearList" indeterminate color="success" size="128" width="12" />
 
-      <v-col :cols="12">
-        <v-expansion-panels multiple>
+
+      <v-col :cols="8" :sm="10" class="subtitle-1">
+                    Черты родословной
+                  </v-col>
+                  
+    <v-expansion-panels multiple>
+      <v-expansion-panel   
+      v-for="level in 20"
+      :key="level"
+      v-if="level <= characterLevel() && (level == 1 || (level - 1) % 4 == 0)"
+      >
+        <v-expansion-panel-header>{{level}} уровень</v-expansion-panel-header> 
+
+      <v-expansion-panel-content :key="level" >
+
+        
+        <v-dialog
+      v-model="talentsDialog"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
+    >
+      <talents-preview
+        
+        :character-id="characterId"
+        :talents="selectedTalentsAncestry"
+        :level="levelAncestry"
+        type="ancestry"
+        choose-mode
+
+        @cancel="talentsDialog = false"
+      />
+    </v-dialog>
+
+    <v-btn @click="updatePreview(level)" v-if="!characterAncestryTalent(level)">
+        Выберите черту {{ level }}
+      </v-btn>
+
+      <v-expansion-panels multiple v-if="characterAncestryTalent(level)">
           <v-expansion-panel
-            v-for="talent in characterTalentsEnriched"
-            :key="talent.id"
           >
          
             <v-expansion-panel-header>
               <template v-slot:default="{ open }">
-               
+           
                 <v-row no-gutters>
                   <v-col :cols="8" :sm="10" class="subtitle-1">
-                    <span v-html="placeText[talent.place]" />
+                    <span v-html="placeText[characterAncestryTalent(level).place]" />
                   </v-col>
                   <v-col :cols="8" :sm="10" class="subtitle-2">
-                    <span v-html="talent.label" />
+                    <span v-html="characterAncestryTalent(level).label" />
                   </v-col>
                   <v-col :cols="4" :sm="2">
-                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(talent)">Удалить</v-btn>
+                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterAncestryTalent(level))">Удалить</v-btn>
                   </v-col>
                   <v-col v-if="!open" :cols="8" :sm="10" class="caption grey--text">
-                    {{ talent.snippet }}
+                    {{ characterAncestryTalent(level).snippet }}
                   </v-col>
                 </v-row>
               </template>
@@ -41,372 +76,150 @@
             <v-expansion-panel-content>
               <div class="mb-4">
                 <span>Cost:</span>
-                <v-chip v-if="talent.extraCost" label x-small>
-                  {{ talent.cost+talent.extraCost }} XP
+                <v-chip v-if="characterAncestryTalent(level).extraCost" label x-small>
+                  {{ characterAncestryTalent(level).cost+characterAncestryTalent(level).extraCost }} XP
                 </v-chip>
                 <v-chip v-else label x-small>
-                  {{ talent.cost }} XP
+                  {{ characterAncestryTalent(level).cost }} XP
                 </v-chip>
               </div>
 
-              <div class="body-2 mb-2" v-html="talent.snippet"></div>
+              <div class="body-2 mb-2" v-html="characterAncestryTalent(level).snippet"></div>
 
               <v-alert
-                v-if="talent.alert"
-                :type="talent.alert.type"
+                v-if="characterAncestryTalent(level).alert"
+                :type="characterAncestryTalent(level).alert.type"
                 dense
                 text
-              >{{talent.alert.text}}</v-alert>
+              >{{characterAncestryTalent(level).alert.text}}</v-alert>
 
-              <div v-if="talent.options">
+              <div v-if="characterAncestryTalent(level).options">
                 <v-select
-                  :value="talent.selected"
-                  :items="talent.options"
+                  :value="characterAncestryTalent(level).selected"
+                  :items="characterAncestryTalent(level).options"
                   item-text="name"
                   item-value="key"
-                  :placeholder="talent.optionsPlaceholder"
+                  :placeholder="characterAncestryTalent(level).optionsPlaceholder"
                   filled
                   dense
-                  @input="talentUpdateSelected($event, talent)"
+                  @input="talentUpdateSelected($event, characterAncestryTalent(level))"
                 />
               </div>
-
-              <!-- <div v-if="['core-loremaster','core-hatred'].includes(talent.key)">
-                <v-select
-                  :value="talent.selected"
-                  :items="selectableKeywordOptions"
-                  item-text="name"
-                  item-value="name"
-                  label="Select a keyword, you know much about those dudes, like really much"
-                  filled
-                  dense
-                  @input="talentUpdateSelected($event, talent)"
-                />
-              </div> -->
-
-              <!-- <div v-if="talent.key === 'core-trademark-weapon'">
-                <v-select
-                  :value="talent.selected"
-                  :items="talentTrademarkWeaponOptions.filter( w => ['Melee Weapon','Ranged Weapon'].includes(w.type))"
-                  item-text="name"
-                  item-value="name"
-                  label="This weapon and you are good pals"
-                  filled
-                  dense
-                  @input="talentUpdateSelected($event, talent)"
-                />
-              </div>
-              
-              
-              <div v-if="talent.key && talent.key.startsWith('core-augmetic')">
-                <wargear-select
-                  v-if="wargearList"
-                  v-for="(gearOptions, index) in talent.wargear"
-                  :key="index"
-                  :item="gearOptions.selected"
-                  :repository="computeWargearOptionsByFilter(gearOptions.options[0])"
-                  class="mb-4"
-                  @input="talentAugmeticImplantsUpdateImplantChoice($event, gearOptions.key, talent)"
-                />
-              </div>
-
-              <div v-if="talent.key === 'red1-devastator-doctrine'">
-                <v-select
-                  v-if="wargearList"
-                  :value="talent.selected"
-                  :items="wargearList.filter((gear) => ['Heavy Bolter','Heavy Flamer','Lascannon','Missile Launcher','Multi-Melta','Plasma Cannon'].includes(gear.name))"
-                  item-text="name"
-                  item-value="key"
-                  label="Select your big big heretic purging tool"
-                  filled
-                  dense
-                  @input="talentDevastatorDoctrineWeaponChoiceLabel($event, talent)"
-                />
-              </div>
-
-              <div v-if="talent.key === 'core-special-weapons-trooper'">
-                <v-select
-                  v-if="wargearList"
-                  :value="talent.selected"
-                  :items="wargearList.filter((gear) => ['Combat Shotgun','Flamer','Hot-Shot Lasgun','Meltagun','Plasma Gun','Voss Pattern Grenade Launcher', 'Astartes Sniper Rifle'].includes(gear.name))"
-                  item-text="name"
-                  item-value="key"
-                  label="Select a Special Weapon to make YOU special"
-                  filled
-                  dense
-                  @input="talentSpecialWeaponTrooperUpdateWeaponChoiceLabel($event, talent)"
-                />
-              </div> -->
 
             </v-expansion-panel-content>
 
           </v-expansion-panel>
 
         </v-expansion-panels>
-      </v-col>
 
-      
-    <v-expansion-panels>
-      <v-expansion-panel  >
-        <v-expansion-panel-header>1-й уровень</v-expansion-panel-header> 
-
-      <v-expansion-panel-content :key="1">
-      <v-col :cols="12">
-        <v-card>
-          <v-card-title>
-            <v-text-field
-              v-model="searchQuery"
-              filled
-              dense
-              prepend-inner-icon="search"
-              clearable
-              label="Поиск"
-            />
-
-            <!-- <v-switch
-              v-model="filterOnlyPrerequisites"
-              color="primary"
-              label="Show only fulfilled prerequisites"
-              class="pl-2"
-            /> -->
-          </v-card-title>
-          
-          <v-card-title>
-                <v-chip-group
-                  v-model="selectedTagsFilters"
-                  active-class="primary--text"
-                  column
-                  multiple
-                >
-                  <v-chip
-                    v-for="filter in tagFilters"
-                    :key="filter.name"
-                    :value="filter.name"
-                    filter
-                    small
-                    label
-                  >
-                    {{ filter.name }}
-                  </v-chip>
-                </v-chip-group>
-
-              </v-card-title>
-
-          <v-data-table
-            :headers="headers"
-            :items="filteredTalents"
-            :search="searchQuery"
-            :page.sync="pagination.page"
-            show-expand
-            item-key="name"
-            hide-default-footer
-            :loading="!talentList"
-            loading-text="Loading Talents... Please Wait"
-            @page-count="pagination.pageCount = $event"
-          >
-            <template v-slot:no-data />
-
-            <template v-slot:item.name="{ item }">
-              <span>{{ item.name }}</span>
-            </template>
-
-            <template v-slot:item.cost="{ item }">
-              <v-chip v-if="isAffordable(item.cost)" label x-small>
-                {{ item.cost }}
-              </v-chip>
-              <v-chip v-else label x-small color="warning">
-                {{ item.cost }}
-              </v-chip>
-            </template>
-
-            <template v-slot:item.prerequisitesHtml="{ item }">
-              <span v-html="item.prerequisitesHtml" />
-            </template>
-
-            <template v-slot:item.effect="{ item }">
-              <span>{{ item.effect }}</span>
-            </template>
-
-            <template v-slot:item.buy="{ item }">
-              <v-btn
-                :color="'success'"
-                :disabled="characterTalentLabels.includes(item.name) && !item.allowedMultipleTimes"
-                x-small
-                @click="addTalent(item, 'ancestry1')"
-              >
-                add
-              </v-btn>
-            </template>
-
-            <template v-slot:expanded-item="{ headers, item }">
-              <td :colspan="headers.length">
-                <div class="pt-4 pb-2" v-html="item.snippet">
-                </div>
-              </td>
-            </template>
-
-            <template v-slot:no-results>
-              <span class="text-center">Your search for "{{ searchQuery }}" found no results.</span>
-            </template>
-          </v-data-table>
-          <div class="text-center pt-2">
-            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
-          </div>
-        </v-card>
-      </v-col>
-
-      <issue-list :items="issues" />
     </v-expansion-panel-content>
     </v-expansion-panel>
+    </v-expansion-panels> 
 
-    <v-expansion-panel :key="2" >
-      <v-col :cols="12" v-if="visibleTalentGroups.length > 1">
-        <h3>
-          Filter by Talent Group
-          <span>
-          <v-btn
-            icon
-            @click="talentGroupFilterHelp = !talentGroupFilterHelp"
-            :color="talentGroupFilterHelp ? 'info' : ''"
+    <v-col :cols="8" :sm="10" class="subtitle-1">
+                    Черты Класса
+                  </v-col>
+                  
+    <v-expansion-panels multiple>
+      <v-expansion-panel   
+      v-for="level in 20"
+      :key="level"
+      v-if="level <= characterLevel() && (level == 1 || (level) % 2 == 0)"
+      >
+        <v-expansion-panel-header>{{level}} уровень</v-expansion-panel-header> 
+
+      <v-expansion-panel-content :key="level" >
+
+        
+        <v-dialog
+      v-model="talentsDialogClass"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
+    >
+      <talents-preview
+        
+        :character-id="characterId"
+        :talents="selectedTalentsClass"
+        :level="levelClass"
+        type="class"
+        choose-mode
+
+        @cancel="talentsDialogClass = false"
+      />
+    </v-dialog>
+
+    <v-btn @click="updatePreviewClass(level)" v-if="!characterAncestryTalent(level)">
+        Выберите черту {{ level }}
+      </v-btn>
+
+      <v-expansion-panels multiple v-if="characterAncestryTalent(level)">
+          <v-expansion-panel
           >
-            <v-icon>{{talentGroupFilterHelp ? 'help' : 'help_outline'}}</v-icon>
-          </v-btn>
-        </span>
-        </h3>
-        <h3>2 уровень</h3>
-        <div v-show="talentGroupFilterHelp">
-          <v-alert
-            v-for="group in talentGroupList" :key="group.key"
-            color="info"
-            dense text
-          >
-            <strong>{{group.name}}</strong>
-            <em class="caption"> • <abbr :title="group.source.book">{{ group.source.key }}</abbr> • pg. {{ group.source.page }}</em>
-            <div v-html="group.description" class="caption"></div>
-          </v-alert>
-        </div>
-        <v-chip
-          v-for="item in visibleTalentGroups"
-          :key="item.key"
-          :color="selectedTalentGroups.includes(item.name) ? 'green' : ''"
-          small
-          label
-          class="mr-2"
-          @click="toggleTalentGroupsFilter(item.name)"
-        >
-          {{ item.name }}
-        </v-chip>
-      </v-col>
-      <v-expansion-panel-header>2-й уровень</v-expansion-panel-header> 
-      <v-expansion-panel-content :key="2">
-      <v-col :cols="12">
-        <v-card>
-          <v-card-title>
-            <v-text-field
-              v-model="searchQuery"
-              filled
-              dense
-              prepend-inner-icon="search"
-              clearable
-              label="Поиск"
-            />
+         
+            <v-expansion-panel-header>
+              <template v-slot:default="{ open }">
+           
+                <v-row no-gutters>
+                  <v-col :cols="8" :sm="10" class="subtitle-1">
+                    <span v-html="placeText[characterAncestryTalent(level).place]" />
+                  </v-col>
+                  <v-col :cols="8" :sm="10" class="subtitle-2">
+                    <span v-html="characterAncestryTalent(level).label" />
+                  </v-col>
+                  <v-col :cols="4" :sm="2">
+                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterAncestryTalent(level))">Удалить</v-btn>
+                  </v-col>
+                  <v-col v-if="!open" :cols="8" :sm="10" class="caption grey--text">
+                    {{ characterAncestryTalent(level).snippet }}
+                  </v-col>
+                </v-row>
+              </template>
+            </v-expansion-panel-header>
 
-            <v-switch
-              v-model="filterOnlyPrerequisites"
-              color="primary"
-              label="Show only fulfilled prerequisites"
-              class="pl-2"
-            />
-          </v-card-title>
-          
-          <v-card-title>
-                <v-chip-group
-                  v-model="selectedTagsFilters"
-                  active-class="primary--text"
-                  column
-                  multiple
-                >
-                  <v-chip
-                    v-for="filter in tagFilters"
-                    :key="filter.name"
-                    :value="filter.name"
-                    filter
-                    small
-                    label
-                  >
-                    {{ filter.name }}
-                  </v-chip>
-                </v-chip-group>
+            <v-expansion-panel-content>
+              <div class="mb-4">
+                <span>Cost:</span>
+                <v-chip v-if="characterAncestryTalent(level).extraCost" label x-small>
+                  {{ characterAncestryTalent(level).cost+characterAncestryTalent(level).extraCost }} XP
+                </v-chip>
+                <v-chip v-else label x-small>
+                  {{ characterAncestryTalent(level).cost }} XP
+                </v-chip>
+              </div>
 
-              </v-card-title>
+              <div class="body-2 mb-2" v-html="characterAncestryTalent(level).snippet"></div>
 
-          <v-data-table
-            :headers="headers"
-            :items="filteredTalents"
-            :search="searchQuery"
-            :page.sync="pagination.page"
-            show-expand
-            item-key="name"
-            hide-default-footer
-            :loading="!talentList"
-            loading-text="Loading Talents... Please Wait"
-            @page-count="pagination.pageCount = $event"
-          >
-            <template v-slot:no-data />
+              <v-alert
+                v-if="characterAncestryTalent(level).alert"
+                :type="characterAncestryTalent(level).alert.type"
+                dense
+                text
+              >{{characterAncestryTalent(level).alert.text}}</v-alert>
 
-            <template v-slot:item.name="{ item }">
-              <span>{{ item.name }}</span>
-            </template>
+              <div v-if="characterAncestryTalent(level).options">
+                <v-select
+                  :value="characterAncestryTalent(level).selected"
+                  :items="characterAncestryTalent(level).options"
+                  item-text="name"
+                  item-value="key"
+                  :placeholder="characterAncestryTalent(level).optionsPlaceholder"
+                  filled
+                  dense
+                  @input="talentUpdateSelected($event, characterAncestryTalent(level))"
+                />
+              </div>
 
-            <template v-slot:item.cost="{ item }">
-              <v-chip v-if="isAffordable(item.cost)" label x-small>
-                {{ item.cost }}
-              </v-chip>
-              <v-chip v-else label x-small color="warning">
-                {{ item.cost }}
-              </v-chip>
-            </template>
+            </v-expansion-panel-content>
 
-            <template v-slot:item.prerequisitesHtml="{ item }">
-              <span v-html="item.prerequisitesHtml" />
-            </template>
+          </v-expansion-panel>
 
-            <template v-slot:item.effect="{ item }">
-              <span>{{ item.effect }}</span>
-            </template>
+        </v-expansion-panels>
 
-            <template v-slot:item.buy="{ item }">
-              <v-btn
-                :color="'success'"
-                :disabled="characterTalentLabels.includes(item.name) && !item.allowedMultipleTimes"
-                x-small
-                @click="addTalent(item, 'ancestry2')"
-              >
-                add
-              </v-btn>
-            </template>
-
-            <template v-slot:expanded-item="{ headers, item }">
-              <td :colspan="headers.length">
-                <div class="pt-4 pb-2" v-html="item.snippet">
-                </div>
-              </td>
-            </template>
-
-            <template v-slot:no-results>
-              <span class="text-center">Your search for "{{ searchQuery }}" found no results.</span>
-            </template>
-          </v-data-table>
-          <div class="text-center pt-2">
-            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
-          </div>
-        </v-card>
-      </v-col>
-
-      <issue-list :items="issues" />
     </v-expansion-panel-content>
     </v-expansion-panel>
-    </v-expansion-panels>
+    </v-expansion-panels> 
+
     </v-row>
   </div>
 </template>
@@ -417,13 +230,16 @@ import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import WargearMixin from '~/mixins/WargearMixin';
 import IssueList from '~/components/IssueList.vue';
 import WargearSelect from '~/components/forge/WargearSelect.vue';
+import TalentsPreview from "~/components/forge/TalentsPreview.vue";
 
 export default {
   name: 'Talents',
   layout: 'forge',
+  
   components: {
     WargearSelect,
     IssueList,
+    TalentsPreview,
   },
   mixins: [
     KeywordRepositoryMixin,
@@ -433,7 +249,7 @@ export default {
   props: [],
   head() {
     return {
-      title: 'Select Talents',
+      title: 'Выбор Таланта',
     };
   },
   async asyncData({ params, error }) {
@@ -447,6 +263,13 @@ export default {
         'Allow to pick "Augments", add them to the wargear and compute the cost accordingly.',
         'Allow to pick some talents multiple times.',
       ],
+      // TalentsList: undefined,
+      selectedTalentsAncestry: undefined, // for he preview dialog box
+      selectedTalentsClass: undefined, // for he preview dialog box
+      talentsDialog: false,
+      talentsDialogClass: false,
+      levelAncestry: 0,
+      levelClass: 0,
       searchQuery: '',
       selectedTagsFilters: [],
       filters: {
@@ -496,7 +319,7 @@ export default {
           sortable: false,
         },
       ],
-      talentDialog: false,
+   
       talentList: undefined,
       wargearList: undefined,
       loading: false,
@@ -516,7 +339,7 @@ export default {
             '<p>Talents represent a knack that a character possesses. Many grant characters a ' +
             'special ability, which others cannot undertake. Other talents provide situational ' +
             'benefits to a character. Each talent has an associated build point cost, and may have ' +
-            'prerequisite attributes, keywords, skills, or species. Players are not required to ' +
+            'prerequisite attributes, keywords, skills, or Talents. Players are not required to ' +
             'select any talents for their characters. The maximum number of talents that may be ' +
             'purchased is limited by Tier.</p>',
         },
@@ -568,6 +391,7 @@ export default {
 
       return searchResult;
     },
+    
     tagFilters() {
       if (this.talentList === undefined) {
         return [];
@@ -587,6 +411,7 @@ export default {
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
     },
+
     sources() {
       return [
         'core',
@@ -600,8 +425,8 @@ export default {
     remainingBuildPoints() {
       return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
     },
-    speciesLabel() {
-      return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
+    TalentsLabel() {
+      return this.$store.getters['characters/characterTalentsLabelById'](this.characterId);
     },
     finalKeywords() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
@@ -811,8 +636,8 @@ export default {
                 }
                 break;
 
-              case 'species':
-                fulfilled = requirement.value.some((s) => s.toString() === this.speciesLabel);
+              case 'Talents':
+                fulfilled = requirement.value.some((s) => s.toString() === this.TalentsLabel);
                 break;
 
               default:
@@ -866,6 +691,42 @@ export default {
     },
   },
   methods: {
+    async updatePreview(level) {
+      
+      const config = {
+        params: { source: this.sources.join(','), },
+      };
+      
+      const TalentsDetails = await this.$axios.get('/api/talents/', config);
+      this.levelAncestry = level;
+      this.selectedTalentsAncestry = TalentsDetails.data.filter(s => s.type == 'ancestry').map(talent => {
+                       
+          
+                       const prerequisitesHtml = this.requirementsToText(talent).join(', ');
+                       return {
+                         ...talent
+                       }
+                      });
+      this.talentsDialog = true;
+    },
+    async updatePreviewClass(level) {
+      
+      const config = {
+        params: { source: this.sources.join(','), },
+      };
+      
+      const TalentsDetails = await this.$axios.get('/api/talents/', config);
+      this.levelClass = level;
+      this.selectedTalentsClass = TalentsDetails.data.filter(s => s.type == 'class').map(talent => {
+                       
+          
+                       const prerequisitesHtml = this.requirementsToText(talent).join(', ');
+                       return {
+                         ...talent
+                       }
+                      });
+      this.talentsDialogClass = true;
+    },
     async getTalents(sources) {
       this.loading = true;
       const config = {
@@ -917,6 +778,116 @@ export default {
     },
     isAffordable(cost) {
       return cost <= this.remainingBuildPoints;
+    },
+    characterAncestryTalent(level)
+    {
+    // { id, name, cost, selection}
+    if (this.talentList === undefined) {
+        return false;
+      }
+
+      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
+
+      const talents = characterTalents.filter((t) => t).map((talent) => {
+
+        // find the plain talent by key
+        const rawTalent = this.talentList.find((r) => r.key === talent.key);
+
+        // not found? return a custom talent without special properties and no cost
+        if (rawTalent === undefined) {
+          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
+          return {
+            id: talent.id,
+            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
+            name: talent.name,
+            key: talent.key,
+            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
+            cost: 0,
+          }
+        }
+
+        const aggregatedTalent = Object.assign({}, rawTalent);
+        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
+        aggregatedTalent.id = talent.id;
+        aggregatedTalent.cost = talent.cost;
+        aggregatedTalent.label = aggregatedTalent.name;
+        aggregatedTalent.place = talent.place;
+        // for each special talent, check respectively
+        if (talent.selected) {
+          aggregatedTalent.selected = talent.selected;
+          aggregatedTalent.extraCost = 0;
+          if (talent.extraCost && typeof talent.extraCost === 'object') {
+            Object.keys(talent.extraCost).forEach((extraCostKey) => {
+              aggregatedTalent.extraCost  += talent.extraCost[extraCostKey] ? talent.extraCost[extraCostKey] : 0;
+            });
+          } else {
+            aggregatedTalent.extraCost += talent.extraCost && parseInt(talent.extraCost) ? talent.extraCost : 0;
+          }
+          if (aggregatedTalent.options) {
+            const replacementTargetString = aggregatedTalent.options.find((t) => t.key === talent.selected).name;
+            aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${replacementTargetString})</em>`);
+            console.info(`[${talent.id}] Compute label ${aggregatedTalent.label} from ${talent.selected}/${replacementTargetString}`);
+          } else {
+            aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${talent.selected})</em>`);
+          }
+        }
+
+        // Fetch gear for selected weapon trooper
+        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
+          const sourceKey = `talent.${aggregatedTalent.id}`;
+          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+          if (charGear && charGear.length > 0 && this.wargearList) {
+            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+            aggregatedTalent.selected = wargear.key;
+            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
+            /*
+            charGear.forEach( g => {
+              characterPackage
+              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
+              .selectList.find(s=> g.source.endsWith(s.key))
+                .itemChoice = g.name
+            });
+            */
+          }
+        }
+
+        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
+          const sourceKey = `talent.${aggregatedTalent.id}`;
+          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+          if (charGear && charGear.length > 0 && this.wargearList) {
+            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+            aggregatedTalent.selected = wargear.key;
+            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
+          }
+        }
+
+        // Fetch gear for selected augmetis
+        if (aggregatedTalent.key.startsWith('core-augmetic')) {
+          console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
+          aggregatedTalent.wargear.forEach((g, i, warArray) => {
+            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
+            console.info(`[${aggregatedTalent.id}] Searching for <${sourceKey}>...`);
+            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+            if (charGear && charGear.length > 0 && this.wargearList) {
+              console.info(`[${aggregatedTalent.id}] Found ${charGear.length} gears ${charGear[0].name} for the source...`);
+              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+              console.info(`[${aggregatedTalent.id}] found ${wargear.name}...`);
+              g.selected = wargear.name;
+              console.info(g.selected)
+
+            }
+          });
+          console.info(`[${aggregatedTalent.id}] DONE.`);
+        }
+
+        return aggregatedTalent;
+      }).sort((a, b) => a.id.localeCompare(b.id));
+      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
+      return talents.find(s => s.place === 'ancestry'+level);
+
+
+
     },
     addTalent(talent, place) {
       const match = talent.name.match(/(<.*>)/);
@@ -973,11 +944,11 @@ export default {
             text = `${p.key} ${p.value}+`;
             break;
 
-          case 'species':
+          case 'Talents':
             if (p.condition === 'mustNot') {
-              text = `<strong>must not</strong> ${p.value} Species`;
+              text = `<strong>must not</strong> ${p.value} Talents`;
             } else {
-              text = `${p.value} Species`
+              text = `${p.value} Talents`
             }
             break;
 
@@ -1062,6 +1033,13 @@ export default {
         extraCost: parseInt(wargear.value),
       };
       this.$store.commit('characters/setCharacterTalentExtraCost', talentPayload);
+    },
+    characterLevel(){
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
+    startLevel(){
+      return 1;
+      //return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     talentDevastatorDoctrineWeaponChoiceLabel(key, talent) {
       const wargear = this.wargearList.find((gear) => gear.key === key);

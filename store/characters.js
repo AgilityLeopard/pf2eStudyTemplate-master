@@ -559,6 +559,19 @@ export const mutations = {
   setCharacterFaction(state, payload) {
     state.characters[payload.id].faction = payload.faction;
   },
+  setCharacterSaving(state, payload) {
+    state.characters[payload.id].saving = payload.payload.saving;
+
+  },
+  setCharacterPerception(state, payload) {
+    state.characters[payload.id].Perception = payload.payload.Perception;
+  },
+  setCharacterskillAttack(state, payload) {
+    state.characters[payload.id].skillAttack = payload.payload.skillAttack;
+  },
+  setCharacterskillDefence(state, payload) {
+    state.characters[payload.id].skillDefence = payload.payload.skillDefence;
+  },
   setCharacterAncestryFreeBoost(state, payload) {
     const character = state.characters[payload.id];
     if(character.AncestryFreeBoost != ""  && character.AncestryFreeBoost2 != character.AncestryFreeBoost ) 

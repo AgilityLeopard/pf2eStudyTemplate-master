@@ -140,7 +140,7 @@ export default {
         },
         {
           key: "advanced",
-          name: "продвинутое оружие",
+          name: "Продвинутое оружие",
           // attribute: "wisdom",
           description: "A character’s overall physical prowess",
         },

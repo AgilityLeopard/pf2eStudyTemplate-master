@@ -508,7 +508,24 @@ export default {
 
       this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { modifications: mods, source: 'archetype' } });
 
-
+  
+        this.$store.commit("characters/setCharacterSaving", {
+          id: this.characterId,
+          payload: { key: 1, saving: item.saving },
+        });
+ 
+        this.$store.commit("characters/setCharacterPerception", {
+          id: this.characterId,
+          payload: { key: 1, Perception: item.Perception },
+        });
+        this.$store.commit("characters/setCharacterskillAttack", {
+          id: this.characterId,
+          payload: { key: 1, skillAttack: item.skillAttack },
+        });
+        this.$store.commit("characters/setCharacterskillDefence", {
+          id: this.characterId,
+          payload: { key: 1, skillDefence: item.skillDefence },
+        });
       this.$store.commit('characters/clearCharacterTalentsBySource', { id: this.characterId, source: 'archetype', cascade: true });
       item.archetypeFeatures
           // get all features with modifications

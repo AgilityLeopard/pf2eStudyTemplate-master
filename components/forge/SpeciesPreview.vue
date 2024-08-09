@@ -4,7 +4,7 @@
       v-if="chooseMode"
       style="background-color: #262e37; color: #fff"
     >
-      <span>Confirm Species</span>
+      <span>Подтвердите выбор Расы</span>
       <v-spacer />
       <v-icon dark @click="$emit('cancel')"> close </v-icon>
     </v-card-title>

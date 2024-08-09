@@ -15,7 +15,7 @@
             @click="doChangeMode"
           >
             <v-icon small>settings</v-icon>
-            change archetype
+            Сменить архетип
           </v-btn>
         </div>
         <v-avatar size="96" tile><img :src="avatar"></v-avatar>
@@ -38,7 +38,7 @@
           dense text
         >{{alert.text}}</v-alert>
 
-        <p><strong>Tier:</strong> {{ item.tier }}</p>
+        <p><strong>Навыки:</strong> {{ item.tier }}</p>
 
         <p><strong>Species:</strong> {{ item.species.map((s)=>s.name).join(', ') }}</p>
 
@@ -58,20 +58,15 @@
 
         <v-divider class="mb-2"></v-divider>
 
-        <p v-if="attributePrerequisites"><strong>Attributes:</strong> {{ attributePrerequisites }}</p>
-
-        <p v-if="(skillPrerequisites && skillPrerequisites.length > 0) || item.prerequisitesSkillString">
-          <strong>Skills:</strong>
-          <span v-for="(skill, index) in skillPrerequisites">
-            {{ skill.name }} {{ skill.threshold }}<!--
-            <v-icon x-small color="success" v-if="skill.fulfilled">check_circle</v-icon>
-            <v-icon x-small color="warning" v-else-if="!skill.fulfilled">check_circle</v-icon>
-            -->{{ index < skillPrerequisites.length-1 ? ', ' : '' }}
+        <p v-if="item.skillAttack">
+          <span v-for="item in WeaponRepository">
+            <p>{{ item.name }} : {{ characterlabel(skillAttack[item.key]) }}</p>
+        
+     
           </span>
-          <span v-if="item.prerequisitesSkillString">{{item.prerequisitesSkillString}}</span>
         </p>
 
-        <p v-if="item.influence && item.influence != 0">
+        <!-- <p v-if="item.influence && item.influence != 0">
           <strong>Influence Modifier: </strong>
           {{ `${item.influence > 0 ? '+' : ''}${item.influence}` }}
         </p>
@@ -113,10 +108,11 @@
             class="ma-4"
           >
             <strong>Effect: </strong>{{ keywordEffect(selectedKeywords[placeholder.name]) }}
-          </p>
+          </p> -->
+
         </div>
 
-        <div
+        <!-- <div
           v-for="feature in item.archetypeFeatures"
           class="text-lg-justify"
         >
@@ -161,52 +157,11 @@
             </div>
           </div>
 
-          <!-- features with CORRUPTION -->
-          <div v-if="feature.corruption">
-            <!-- corruption: { static: 0, diceCount: 1, diceSides: 3, multiply: 1 }, -->
-            {{ feature.corruption }}
-            <v-text-field
-              type="number"
-              dense solo
-              style="width: 50%;"
-              prepend-icon="filter_none"
-              @click:prepend="rollCorruption(feature.corruption, feature)"
-            ></v-text-field>
-          </div>
-
-          <div v-if="feature.psychicPowers">
-
-            <div v-for="selections in feature.psychicPowers" :key="selections.name">
-              <v-select
-                v-if="selections.query && !selections.query.name"
-                v-model="selections.selected"
-                :readonly="selections.options.length <= 1"
-                :items="selections.options"
-                item-value="name"
-                item-text="name"
-                persistent-hint
-                dense
-                solo
-                class="ml-2 mr-2"
-                @change="updatePsychicPowers(selections)"
-              />
-              <v-checkbox
-                v-else
-                class="ml-2 mr-2"
-                v-model="selections.query.name"
-                :label="selections.query.name"
-                :hint="psychicPowerHint(selections.query.name)"
-                persistent-hint
-                dense
-                disabled
-              ></v-checkbox>
-            </div>
-          </div>
 
         </div>
 
         <!-- Wargear -->
-        <div>
+        <!-- <div>
           <strong>Wargear</strong>
           <p>{{ wargearText }}</p>
         </div>
@@ -226,7 +181,7 @@
         </div>
 
 
-      </div>
+      </div> -->
 
     </v-col>
 
@@ -287,6 +242,9 @@ export default {
     },
     characterArchetypeKeywords() {
       return this.$store.getters['characters/characterArchetypeKeywordsById'](this.characterId);
+    },
+    skillAttack() {
+      return this.$store.getters['characters/characterskillAttackById'](this.characterId);
     },
     characterArchetypeMimic() {
       return this.$store.getters['characters/characterArchetypeMimicById'](this.characterId);
@@ -419,6 +377,27 @@ export default {
     },
   },
   methods: {
+    characterlabel(key){
+        switch (key) {
+          case "U":
+            return "Нетренирован"
+            break;
+         case "T":
+            return "Тренирован"
+            break;
+         case "E":
+            return "Эксперт"
+            break;
+          case "M":
+            return "Мастер"
+            break;
+          case "L":
+            return "Легенда"
+            break;
+          default:
+            break;
+        }
+    },
     async loadAdvancedArchetype(){
       this.loading = true;
       console.info(`loading advanced character pseudo archetype...`);
