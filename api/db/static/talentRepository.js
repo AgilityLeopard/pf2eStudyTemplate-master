@@ -262,7 +262,7 @@ const core = [
     ],
   },
   {
-    ...talent('core',130,'nature-ambition',20,'человек'),
+    ...talent('',130,'nature-ambition',20,'человек'),
     type: "ancestry",
     name: "Природные амбиции",
     snippet: 'Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор',
@@ -279,11 +279,6 @@ const core = [
     options: [
       { key: 'deception', name: 'Обман', choice: 'skill' },
       { key: 'society', name: 'Общество', choice: 'skill' },
-    //   { key: 'pilot', name: 'Pilot' },
-    //   { key: 'scholar', name: 'Scholar' },
-    //   { key: 'survival', name: 'Survival' },
-    //   { key: 'tech', name: 'Tech' },
-    //   { key: 'weapon-skill', name: 'Weapon Skill' },
     ],
   },
   {

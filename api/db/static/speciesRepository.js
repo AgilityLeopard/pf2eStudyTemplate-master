@@ -119,7 +119,7 @@ const commonNames = function (namesString) {
 
 const coreRep = [
   {
-    ...species("core", 29, "Гуманоид", "Human", 25),
+    ...species("player-core", 29, "Гуманоид", "Human", 25),
     // ...commonNames(
     //   "Adrielle, Alaric, Barus, Castus, Celeste, Diana, Dar, Davian, Ephrael, Erith, Estebus, Felicia, Gaius, Gezrael, Halo, Harken, Haveloch, Hestia, Iris, Jestilla, Kamir, Katrina, Lukas, Lyta, Mikel, Mira, Nura, Ophelia, Poul, Quitus, Ravenna, Rossel, Ruby, Silvana, Skyv, Steele, Taur, Titus, Tyanna, Ursa, Undine, Verbal, Victor, Waynoka, Wilhemina, Xavier, Yvette, Zane, Zellith, Zek"
     // ),
@@ -139,11 +139,11 @@ const coreRep = [
       {
         name: "Faith",
         about:
-          "<p>Эльфы часто эмоциональны и капризны, но при этом придерживаются высоких идеалов, близких их сердцам. Они предпочитают божеств, разделяющих их любовь ко всему мистическому и художественному. Дезна и Шелин особые фавориты, первая за ее чувство чуда, а вторая за то, что она ценит артистизм. Калистрия - самое печатльно известное из эльфийских божеств, поскольку она олицетворяет многие эльфийские идеалы, доведенные до крайности.</p>",
+          "<p>Человеческое разнообразие также проявляется в их правительствах, отношениях и социальных нормах. Хотя древнейшие человеческие культуры могут проследить свою общую историю на тысячи лет в прошлое, по сравнению с обществами эльфов или гномов, человеческие цивилизации кажутся находящимися в состоянии постоянного изменения, поскольку империи распадаются, а новые королевства поглощают старые.</p>",
         edicts:
-          "Находить красоту в природе и искусстве; Исследовать то, что другие скрывают; Демонстрировать превосходство перед соперником",
+          "исследуй мир, стремись к величию, посвяти себя моральным взглядам",
         anathema:
-          "Отказаться от своего пути; Заставить другое существо сделать что-то",
+          "трата времени, которое у вас есть",
       },
       {
         name: "avanturist",
@@ -153,7 +153,7 @@ const coreRep = [
       {
         name: "name",
         about:
-          "<p>Эльф держит свое личное имя в секрете среди своей семьи, беря прозвище при встрече с другими людьми. Это прозвище может меняться со временем, из-за событий в жизни эльфа или даже по прихоти. Один эльф, мог быть известен, своим окружением, под многими именами в разных возрастах и регионах. Эльфийские имена состоят из нескольких слогов и должны лирически звучать - по крайней мере, на эльфийском языке. Они часто заканчиваются на '-эль' или '-ара', поэтому другие культуры иногда избегают имен, заканчивающихся на эти слоги, чтобы не звучать слишком эльфийски.</p>",
+          "<p>Unlike many ancestral cultures, which generally cleave to specific traditions and shared histories, humanity’s diversity has resulted in a near-infinite set of names. The humans of northern tribes have different names than those dwelling in southern nation-states. Humans throughout much of the world speak Common (though some continents on Golarion have their own regional common languages), yet their names are as varied as their beliefs and appearances.</p>",
       },
       {
         name: "society",
@@ -163,10 +163,7 @@ const coreRep = [
     ],
   },
   {
-    ...species("core", 29, "Гуманоид", "Elf", 30),
-    // ...commonNames(
-    //   "Adrielle, Alaric, Barus, Castus, Celeste, Diana, Dar, Davian, Ephrael, Erith, Estebus, Felicia, Gaius, Gezrael, Halo, Harken, Haveloch, Hestia, Iris, Jestilla, Kamir, Katrina, Lukas, Lyta, Mikel, Mira, Nura, Ophelia, Poul, Quitus, Ravenna, Rossel, Ruby, Silvana, Skyv, Steele, Taur, Titus, Tyanna, Ursa, Undine, Verbal, Victor, Waynoka, Wilhemina, Xavier, Yvette, Zane, Zellith, Zek"
-    // ),
+    ...species("player-core", 29, "Гуманоид", "Elf", 30),
     trait: ["гуманоид", "эльф"],
     nameAncestry: "Эльф",
     previewText:
