@@ -119,12 +119,9 @@ const commonNames = function (namesString) {
 
 const coreRep = [
   {
-    ...species("player-core", 29, "Гуманоид", "Human", 25),
-    // ...commonNames(
-    //   "Adrielle, Alaric, Barus, Castus, Celeste, Diana, Dar, Davian, Ephrael, Erith, Estebus, Felicia, Gaius, Gezrael, Halo, Harken, Haveloch, Hestia, Iris, Jestilla, Kamir, Katrina, Lukas, Lyta, Mikel, Mira, Nura, Ophelia, Poul, Quitus, Ravenna, Rossel, Ruby, Silvana, Skyv, Steele, Taur, Titus, Tyanna, Ursa, Undine, Verbal, Victor, Waynoka, Wilhemina, Xavier, Yvette, Zane, Zellith, Zek"
-    // ),
+    ...species("playerCore", 29, "Гуманоид", "Human", 25),
     trait: ["гуманоид", "человек"],
-
+    size: "Medium",
     nameAncestry: "Человек",
     ...statBoost(0, 0, 0, 0, 0, 0),
     ...statFlaw(0, 0, 0, 0, 0, 0),
@@ -132,6 +129,7 @@ const coreRep = [
     language: ["Всеобщий"],
     freeLanguage: 1,
     abilityBoost: 2,
+    ancestryAbility: [],
     exampleName:
       "",
     ancestryHitPoint: 8,
@@ -141,36 +139,43 @@ const coreRep = [
         about:
           "<p>Человеческое разнообразие также проявляется в их правительствах, отношениях и социальных нормах. Хотя древнейшие человеческие культуры могут проследить свою общую историю на тысячи лет в прошлое, по сравнению с обществами эльфов или гномов, человеческие цивилизации кажутся находящимися в состоянии постоянного изменения, поскольку империи распадаются, а новые королевства поглощают старые.</p>",
         edicts:
-          "исследуй мир, стремись к величию, посвяти себя моральным взглядам",
+          "<p>исследуй мир, стремись к величию, посвяти себя моральным взглядам</p>",
         anathema:
-          "трата времени, которое у вас есть",
+          "<p>трата времени, которое у вас есть</p>",
       },
       {
-        name: "avanturist",
+        name: "physical",
         about:
-          "<p>Многие эльфы отправляются в приключения, чтобы найти красоту и открыть для себя что-то новое. Типичная предыстория для эльфа - Эмиссар, Охотник, Дворянин, Ученый или Разведчик. Эльфы часто становятся Рейнджерами или Плутами, пользуясь своей ловкостью, либо Алхимиками или Волшебниками, исследуя свое интеллектуальное любопытство.</p>",
+          "<p>Физические характеристики людей столь же разнообразны, как и климат мира. У людей самые разные цвета кожи и волос, типы телосложения и черты лица. Как правило, чем ближе к экватору жили они или их предки, тем темнее становится их кожа.</p><p>Физической зрелости люди достигают примерно в 15 лет, хотя умственная зрелость наступает на несколько лет позже. Типичный человек может прожить около 90 лет. У людей исключительно изменчивые физические характеристики по сравнению с другими предками, с большей вариабельностью роста, веса и других физических параметров.</p>",
       },
       {
         name: "name",
         about:
-          "<p>Unlike many ancestral cultures, which generally cleave to specific traditions and shared histories, humanity’s diversity has resulted in a near-infinite set of names. The humans of northern tribes have different names than those dwelling in southern nation-states. Humans throughout much of the world speak Common (though some continents on Golarion have their own regional common languages), yet their names are as varied as their beliefs and appearances.</p>",
+          "<p>В отличие от многих культур предков, которые обычно придерживаются определенных традиций и общей истории, разнообразие человечества привело к почти бесконечному набору имен. У людей северных племен имена отличаются от имен тех, кто живет в южных национальных государствах. Люди во всем мире говорят на Общем (хотя некоторые континенты на Голарионе имеют свои собственные региональные общие языки), но их имена столь же разнообразны, как их верования и внешность.</p>",
       },
       {
         name: "society",
         about:
-          "<p>Эльфийская культура глубока, богата и находится в упадке. Их общество достигло пика тысячелетия назад, задолго до того, как они покинули мир, спасаясь от великого бедствия. Они вернулись, но восстановление - нелегкая задача. Их врожденное терпение и живость ума, делают эльфов превосходными мудрецами, философами и волшебниками, а их общества построены на врожденном чувстве чуда и знания. Эльфийская архитектура демонстрирует их глубокое понимание красоты, а эльфийские города - удивительные произведения искусства.</p><p>Эльфы придерживаются глубоко укоренившихся идеалов индивидуализма, позволяя каждому эльфу изучить несколько профессий, прежде чем остановиться на конкретном стремлении или страсти, которая подходит им лучше всего. Эльфы держат печально известные обиды на соперников, которых эльфы называют илдулиэль, но эти враждебные отношения иногда могут перерасти в дружбу со временем.</p>",
+          "<p>Разнообразные человеческие этнические группы населяют континенты в регионе Внутреннего моря Голариона и земли за его пределами. Человеческие персонажи могут быть любой этнической принадлежности, независимо от того, какие земли они называют домом. Некоторые примеры этнических групп Голариона представлены ниже.</p>",
       },
     ],
   },
   {
-    ...species("player-core", 29, "Гуманоид", "Elf", 30),
+    ...species("playerCore", 29, "Гуманоид", "Elf", 30),
     trait: ["гуманоид", "эльф"],
     nameAncestry: "Эльф",
+    language: ["Всеобщий", "Эльфийский"],
+    freeLanguage: 0,
     previewText:
       "<p><em>Как древний народ, эльфы видели большие перемены и имеют точку зрения, которая может появиться только от наблюдения за ходом истории. Покинув мир в древние времена, они вернулись на измененную землю, и все еще борются, чтобы восстановить свои родовые дома, в особенности от ужасных демонов наводнивших части их земель. Для некоторых эльфы это объект изумления, изящные и красивые, с обширными талантами и знаниями. Среди своих же, эльфы уделяют больше внимания личной свободе, чем жизни в соответствии с этими идеалами.</em></p>",
     ...statBoost(0, 1, 0, 1, 0, 0),
     ...statFlaw(0, 0, -1, 0, 0, 0),
     abilityBoost: 1,
+    ancestryHitPoint: 6,
+    size: "Medium",
+    ancestryAbility: [
+      "low-light"
+    ],
     exampleName:
       "Аэрэль, Амрунэлара, Каладрэль, Дардлара, Фанра, Хэлдалэль, Ятхэль, Ланлисс, Опарэль, Сэлдлон, Сумрэль, Талатэль, Тессара, Вариэль, Яландлара, Зордлон",
     Description: [
@@ -184,7 +189,7 @@ const coreRep = [
           "Отказаться от своего пути; Заставить другое существо сделать что-то",
       },
       {
-        name: "avanturist",
+        name: "physical",
         about:
           "<p>Многие эльфы отправляются в приключения, чтобы найти красоту и открыть для себя что-то новое. Типичная предыстория для эльфа - Эмиссар, Охотник, Дворянин, Ученый или Разведчик. Эльфы часто становятся Рейнджерами или Плутами, пользуясь своей ловкостью, либо Алхимиками или Волшебниками, исследуя свое интеллектуальное любопытство.</p>",
       },
@@ -200,1112 +205,84 @@ const coreRep = [
       },
     ],
   },
+  {
+    ...species("playerCore", 29, "Гуманоид", "Dwarf", 20),
+    trait: ["гуманоид", "дварф"],
+    nameAncestry: "Дварф",
+    previewText:
+      "<p><em>Дварфы имеют заслуженную репутацию стойких и суровых людей, но они также обладают необузданным рвением и глубоко ценят мастерство. Чужаку они могут показаться недоверчивыми и клановыми, но для своих друзей и семьи они теплые и заботливые. Хотя доверие гнома завоевывается с трудом, однажды завоеванное оно прочно, как железо.</em></p><p><em>Если вы хотите играть за персонажа, который тверд как гвозди, упрямый и неумолимый искатель приключений, с сочетанием грубой выносливости и глубокой мудрости, вам следует играть за дварфа.</em></p>",
+    ...statBoost(0, 0, 1, 0, 1, 0),
+    ...statFlaw(0, 0, 0, 0, 0, -1),
+    abilityBoost: 1,
+    ancestryHitPoint: 10,
+    ancestryAbility: [
+      "darkvision", "clann dagger"
+    ],
+    language: ["Всеобщий", "Дварфийский"],
+    freeLanguage: 1,
+    exampleName:
+      "Агна, Бодилл, Эрукк, Груньяр, Ингра, Котри, Моргрим, Рогар, Торра, Янгрит",
+    Description: [
+      {
+        name: "Faith",
+        about:
+          "<p>Дварфы склонны ценить честь и строго следовать традициям своих кланов и королевств. У них сильное чувство дружбы и справедливости, хотя они часто очень разборчивы в том, кого они считают другом. Они много работают и усерднее отдыхают — особенно когда речь идет о крепком эле. Тораг, бог дварфов, является главным божеством дварфа, хотя поклонение членам семьи Торага также распространено.</p>",
+        edicts:
+          "создавайте полезное искусство, защищайте свое сообщество от тех, кто может ему навредить, держите свой клановый кинжал близко",
+        anathema:
+          "оставить дело или обещание невыполненным, оставить свою семью",
+      },
+      {
+        name: "physical",
+        about:
+          "<p>Дварфы невысокие и коренастые, ростом примерно на фут ниже большинства людей. У них широкие, компактные и крепкие тела. Дварфы всех полов гордятся длиной своих волос и бород, которые они часто заплетают в замысловатые узоры, некоторые из которых представляют определенные кланы. Длинная борода является признаком зрелости и чести среди многих кланов дварфов.</p><p>Дварфы обычно достигают физической зрелости около 25 лет, хотя их традиционная культура придает большее значение завершению церемоний совершеннолетия, уникальных для каждого клана, чем достижение определенного возраста. Типичный дварф может прожить около 350 лет.</p>",
+      },
+      {
+        name: "society",
+        about:
+          "<p>Хотя древняя империя дварфов пала давно, побежденная врагами орками и гоблиноидами, дварфы сегодня сохраняют многие качества, которые когда-то привели их к величию: свирепость, смекалку и упрямство в своих начинаниях. Дварфы живут в горных Небесных Цитаделях, разбросанных по поверхности, что может создавать огромные культурные различия между кланами дварфов. Тем не менее, почти все народы дварфов разделяют страсть к камнеобработке, металлообработке и семье.</p><p>Мало кто из дварфов может увидеть без своего кланового кинжала, привязанного к поясу. Этот кинжал выковывается непосредственно перед рождением дварфа и является отличительной чертой его клана. Дварфы чтят своих детей именами предков или героев дварфов. Представляясь, дварфы склонны перечислять свою семью и клан, а также любое количество других семейных связей и почетных званий.</p>",
+      },
+    ],
+  },
+  {
+    ...species("playerCore", 29, "Гуманоид", "gnome", 20),
+    trait: ["гуманоид", "дварф"],
+    nameAncestry: "Дварф",
+    previewText:
+      "<p><em>Дварфы имеют заслуженную репутацию стойких и суровых людей, но они также обладают необузданным рвением и глубоко ценят мастерство. Чужаку они могут показаться недоверчивыми и клановыми, но для своих друзей и семьи они теплые и заботливые. Хотя доверие гнома завоевывается с трудом, однажды завоеванное оно прочно, как железо.</em></p><p><em>Если вы хотите играть за персонажа, который тверд как гвозди, упрямый и неумолимый искатель приключений, с сочетанием грубой выносливости и глубокой мудрости, вам следует играть за дварфа.</em></p>",
+    ...statBoost(0, 0, 1, 0, 1, 0),
+    ...statFlaw(0, 0, 0, 0, 0, -1),
+    abilityBoost: 1,
+    ancestryHitPoint: 10,
+    ancestryAbility: [
+      "darkvision", "clann dagger"
+    ],
+    language: ["Всеобщий", "Дварфийский"],
+    freeLanguage: 1,
+    exampleName:
+      "Агна, Бодилл, Эрукк, Груньяр, Ингра, Котри, Моргрим, Рогар, Торра, Янгрит",
+    Description: [
+      {
+        name: "Faith",
+        about:
+          "<p>Дварфы склонны ценить честь и строго следовать традициям своих кланов и королевств. У них сильное чувство дружбы и справедливости, хотя они часто очень разборчивы в том, кого они считают другом. Они много работают и усерднее отдыхают — особенно когда речь идет о крепком эле. Тораг, бог дварфов, является главным божеством дварфа, хотя поклонение членам семьи Торага также распространено.</p>",
+        edicts:
+          "создавайте полезное искусство, защищайте свое сообщество от тех, кто может ему навредить, держите свой клановый кинжал близко",
+        anathema:
+          "оставить дело или обещание невыполненным, оставить свою семью",
+      },
+      {
+        name: "physical",
+        about:
+          "<p>Дварфы невысокие и коренастые, ростом примерно на фут ниже большинства людей. У них широкие, компактные и крепкие тела. Дварфы всех полов гордятся длиной своих волос и бород, которые они часто заплетают в замысловатые узоры, некоторые из которых представляют определенные кланы. Длинная борода является признаком зрелости и чести среди многих кланов дварфов.</p><p>Дварфы обычно достигают физической зрелости около 25 лет, хотя их традиционная культура придает большее значение завершению церемоний совершеннолетия, уникальных для каждого клана, чем достижение определенного возраста. Типичный дварф может прожить около 350 лет.</p>",
+      },
+      {
+        name: "society",
+        about:
+          "<p>Хотя древняя империя дварфов пала давно, побежденная врагами орками и гоблиноидами, дварфы сегодня сохраняют многие качества, которые когда-то привели их к величию: свирепость, смекалку и упрямство в своих начинаниях. Дварфы живут в горных Небесных Цитаделях, разбросанных по поверхности, что может создавать огромные культурные различия между кланами дварфов. Тем не менее, почти все народы дварфов разделяют страсть к камнеобработке, металлообработке и семье.</p><p>Мало кто из дварфов может увидеть без своего кланового кинжала, привязанного к поясу. Этот кинжал выковывается непосредственно перед рождением дварфа и является отличительной чертой его клана. Дварфы чтят своих детей именами предков или героев дварфов. Представляясь, дварфы склонны перечислять свою семью и клан, а также любое количество других семейных связей и почетных званий.</p>",
+      },
+    ],
+  },
 ];
-
-// const fspg = [
-//   {
-//     ...species("fspg", 93, "Mankind", "Ogryn", "The simple mind", 76, 6),
-//     ...cost(76, 76, 0, 0),
-//     ...commonNames(
-//       "Ank, Brok, Berta, Chukka, Dent, Frug, Grok, Hak, Igor, Jab, Karg, Kront, Lokk, Munt, Nork, Okka, Orod, Punt, Rakka, Smasha, Tock, Tug, Urok, Vohn, Wakka, Yarp."
-//     ),
-//     ...statMax(12, 12, 7, 4, 8, 1, 4, 8),
-//     prerequisites: [
-//       { group: "attributes", value: "strength", threshold: 5 },
-//       { group: "attributes", value: "toughness", threshold: 5 },
-//       { group: "skills", value: "survival", threshold: 2 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Avalanche of Muscle",
-//         snippet:
-//           "When you Charge you gain an additional +Rank Bonus Dice to your melee attack Test.",
-//         modifications: [
-//           {
-//             targetGroup: "skill",
-//             targetValue: "weaponSkill",
-//             rank: 1,
-//             condition: "when charging.",
-//           },
-//         ],
-//       },
-//       {
-//         name: "Claustrophobic",
-//         snippet:
-//           "Whenever you enter an enclosed area you must make a Fear Test (default DN 2). Additionally, whenever you roll a Complication in an enclosed space, the GM can spend 1 Ruin to force you to repeat this Fear Test.",
-//       },
-//       {
-//         name: "Simple Loyalty",
-//         snippet:
-//           "Whenever an ally with the IMPERIUM Keyword makes a Leadership Test targeting an Ogryn they gain Bonus Dice equal to the Ogryn’s Rank ( +Rank ).",
-//       },
-//       {
-//         name: "Abhuman",
-//         snippet:
-//           "You suffer a +1 DN penalty to social tests with Humans, modified by the target`s Keywords.",
-//       },
-//       {
-//         name: "No recored Psykers",
-//         snippet:
-//           "There are no recorded instances of Ogryns with psychic abilities. You cannot have the PSYKER Keyword.",
-//       },
-//       {
-//         name: "Armour for Abhumans",
-//         snippet:
-//           "For abhumans like Ogryns, the Rarity of any Armour is increased by +1.",
-//       },
-//     ],
-//     backgroundSection: [
-//       // ORIGIN
-//       background(
-//         "Cloned: You are a vat-grown replicae, created to serve the Imperium. Your conscious life may have only begun very recently, and you are eager to fulfill your purpose.",
-//         "Max Shock",
-//         "Origin"
-//       ),
-//       background(
-//         "High Gravity: World A harsh life of survival is all you have known, and you’ve fought for everything you’ve ever had. Imperial society is a strange but not unwelcome world.",
-//         "Determination",
-//         "Origin"
-//       ),
-//       background(
-//         "Legion Born: War in the Emperor’s name is an Ogryn’s purpose — that’s what everyone tells you, and you have no reason to disagree. The Militarum Auxilla is your home, and the Emperor protects!",
-//         "Resolve",
-//         "Origin"
-//       ),
-//       // ACCOMPLISHNMENT
-//       background(
-//         "Followed Orders: You executed a series of suicidal orders with unflinching loyalty, surviving against the odds. Your mental and physical fortitude are unquestionable.",
-//         "Conviction",
-//         "Accomplishment"
-//       ),
-//       background(
-//         "Body Shield: Your tremendous bulk protected a superior officer from a deadly blow (this may have been accidental). Your reputation for being almost impenetrable to bullets is well earned.",
-//         "Max Wounds",
-//         "Accomplishment"
-//       ),
-//       background(
-//         "Sanctioned Creativity: Shocking your peers and superiors, you experienced a rare moment of creativity. The strange story of your brief higher function has spread and precedes you.",
-//         "Influence",
-//         "Accomplishment"
-//       ),
-//       // GOAL
-//       background(
-//         "Promotion: You want to get to the top — be it status, proof of your prowess, or to earn a Bone’ead augmetic, your goal is to be promoted.",
-//         "Influence",
-//         "Goal"
-//       ),
-//       background(
-//         "Medal: You’ve seen other soldiers get shiny medals, and you want one too! Accruing wealth and other shiny things in the pursuit of commendation has become your obsession.",
-//         "Wealth",
-//         "Goal"
-//       ),
-//       background(
-//         "Ward-bound: There is someone you must protect, an individual you value above all others. You may not even have met them yet, but you know your life’s purpose is to defend your ward.",
-//         "Conviction",
-//         "Goal"
-//       ),
-//     ],
-//     objectives: [
-//       "Follow a superior’s orders to the letter.",
-//       "Use your tremendous bulk to dominate a social situation.",
-//       "Display the strength found in ignorance.",
-//       "Apply your unique understanding of the Emperor’s will to the current situation.",
-//       "Solve a problem through the judicious application of brute force.",
-//       "Charge the enemies of the Imperium!",
-//     ],
-//   },
-//   {
-//     ...species("fspg", 95, "Mankind", "Ratling", "The slippery raskal", 30, 5),
-//     ...cost(30, 30, 0, 0),
-//     ...commonNames(
-//       "Arble, Bigby, Chansey, Doc, Edegar, Fingers, Gormo, Helli, Irma, Jolli, Kelli, Kurds, Lobe, Malgoy, Merrin, Norm, Obbs, Pietra, Rally, Stumper, Talia, Ulto, Vinn, Wanda, Wisp, Yanush."
-//     ),
-//     ...statMax(6, 6, 10, 10, 8, 8, 10, 7),
-//     prerequisites: [
-//       { group: "attributes", value: "agility", threshold: 2 },
-//       { group: "attributes", value: "fellowship", threshold: 2 },
-//       { group: "skills", value: "awareness", threshold: 2 },
-//       { group: "skills", value: "ballisticSkill", threshold: 1 },
-//       { group: "skills", value: "cunning", threshold: 1 },
-//       { group: "skills", value: "deception", threshold: 2 },
-//       { group: "skills", value: "stealth", threshold: 2 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Gourmand",
-//         snippet:
-//           "+Double Rank Bonus Dice to any Test made to prepare food. Prepared food can be used during a Regroup to recover +Rank Shock.",
-//       },
-//       {
-//         name: "Abhuman",
-//         snippet:
-//           "You suffer a +1 DN penalty to social tests with Humans, modified by the target`s Keywords.",
-//       },
-//       {
-//         name: "No recored Psykers",
-//         snippet:
-//           "There are no recorded instances of Ratlings with psychic abilities. You cannot have the PSYKER Keyword.",
-//       },
-//       {
-//         name: "Armour for Abhumans",
-//         snippet:
-//           "For abhumans like Ratlings, the Rarity of any Armour is increased by +1.",
-//       },
-//     ],
-//     backgroundSection: [
-//       // ORIGIN
-//       background(
-//         "Penal Legionnaire: Your sharp eye and sly movements served you well as a thief, but now after only a modicum of torture — they will serve you as a soldier.",
-//         "Max Shock",
-//         "Origin"
-//       ),
-//       background(
-//         "Miniature Technician: You used to spend days at a time trapped in coffin-like chambers to ensure machinery you didn’t understand kept working. You proved your value and got out — now you’re eager to see the galaxy.",
-//         "Resolve",
-//         "Origin"
-//       ),
-//       background(
-//         "Fast Talker: You’ve talked, tricked, and bamboozled your way out of (and into) more scrapes than you care to count. You’ve earned a reputation for charm and deviousness, and are eager to put it to good use.",
-//         "Influence",
-//         "Origin"
-//       ),
-//       // ACCOMPLISHNMENT
-//       background(
-//         "Big Score: Be it a cache of armaments, a prized collection of relics, or the stock of an entire manufactorum, you managed to liquidate someone else’s assets — let’s hope it never comes back to haunt you.",
-//         "Wealth",
-//         "Accomplishment"
-//       ),
-//       background(
-//         "Sharp Shot: You assassinated an important enemy at improbable range or under difficult conditions. News of a deadeye Ratling spread quickly, and you’re likely to be in high demand.",
-//         "Influence",
-//         "Accomplishment"
-//       ),
-//       background(
-//         "Unnoticeable: You managed to survive a hopeless mission that martyred the remainder of your regiment — you managed to hide and survive. Some laud you as a hero, others a coward.",
-//         "Conviction",
-//         "Accomplishment"
-//       ),
-//       // GOAL
-//       background(
-//         "Fame & Fortune: You’ve got the skills to be a hero of the Imperium, and you intend to be well rewarded for using them. Rise through the ranks and take what is due.",
-//         "Determination",
-//         "Goal"
-//       ),
-//       background(
-//         "The Good Life: Land, food, and friendship — what else could you possibly want? You intend to survive everything the galaxy has to throw at you, then find a way to discreetly abandon your post and get back to basics.",
-//         "Conviction",
-//         "Goal"
-//       ),
-//       background(
-//         "Acceptance: You’re sick of Humans looking down on you. You want to ensure Ratlings are accepted, building elite units and industrial efforts that serve the Emperor and prove your peoples’ worth.",
-//         "Resolve",
-//         "Goal"
-//       ),
-//     ],
-//     objectives: [
-//       "Fill your stomach with some high-quality grub.",
-//       "Redirect imperial resources to your own advantage.",
-//       "Loot supplies from your ignoble enemies.",
-//       "Show the advantages of a smaller size.",
-//       "Avoid danger using your natural stealth.",
-//       "Use your precise eyesight to aid the party (or yourself).",
-//     ],
-//   },
-//   {
-//     ...species("fspg", 97, "Kroot", "Kroot", "The mutating gourmet", 22, 5),
-//     ...cost(22, 22, 0, 0),
-//     ...commonNames(
-//       "Anghkor, Braztyk, Cechkala, Dahyak, Enghok, Fenya, Gorok, Harbyx, Ixilla, Jiynko, Khort, Lucu, Meyzek, Nhatalla, Ortazk, Pechallai, Quon, Razick, Senghak, Tovrick, Ula, Vhey, Wihn, Xala, Yulu, Zhorick."
-//     ),
-//     ...statMax(12, 12, 12, 12, 10, 6, 6, 10),
-//     prerequisites: [
-//       { group: "skills", value: "athletics", threshold: 1 },
-//       { group: "skills", value: "awareness", threshold: 1 },
-//       { group: "skills", value: "stealth", threshold: 2 },
-//       { group: "skills", value: "survival", threshold: 2 },
-//       { group: "skills", value: "weaponSkill", threshold: 2 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Kroot Mutations",
-//         snippet:
-//           "You have a number of Kroot Mutations equal to your Tier, and may gain additional Kroot Mutations as part of Ascension.",
-//         alerts: [
-//           {
-//             type: "info",
-//             text: "Only select the amount of mutations that you are allowed to.",
-//           },
-//         ],
-//         selected: ["", "", "", ""],
-//         options: [
-//           {
-//             name: "Maneater (Strength)",
-//             snippet: "+1 to your lowest Attribute (Strength).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.STRENGTH, 1)],
-//           },
-//           {
-//             name: "Maneater (Toughness)",
-//             snippet: "+1 to your lowest Attribute (Toughness).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.TOUGHNESS, 1)],
-//           },
-//           {
-//             name: "Maneater (Agility)",
-//             snippet: "+1 to your lowest Attribute (Agility).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.AGILITY, 1)],
-//           },
-//           {
-//             name: "Maneater (Initiative)",
-//             snippet: "+1 to your lowest Attribute (Initiative).",
-//             modifications: [
-//               addModifier("attributes", ATTRIBUTES.INITIATIVE, 1),
-//             ],
-//           },
-//           {
-//             name: "Maneater (Willpower)",
-//             snippet: "+1 to your lowest Attribute (Willpower).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.WILLPOWER, 1)],
-//           },
-//           {
-//             name: "Maneater (Intellect)",
-//             snippet: "+1 to your lowest Attribute (Intellect).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.INTELLECT, 1)],
-//           },
-//           {
-//             name: "Maneater (Fellowship)",
-//             snippet: "+1 to your lowest Attribute (Fellowship).",
-//             modifications: [
-//               addModifier("attributes", ATTRIBUTES.FELLOWSHIP, 1),
-//             ],
-//           },
-//           {
-//             name: "Astartes Eater (Strength)",
-//             snippet: "+2 to any Attribute (Strength).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.STRENGTH, 2)],
-//           },
-//           {
-//             name: "Astartes Eater (Toughness)",
-//             snippet: "+2 to any Attribute (Toughness).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.TOUGHNESS, 2)],
-//           },
-//           {
-//             name: "Astartes Eater (Agility)",
-//             snippet: "+2 to any Attribute (Agility).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.AGILITY, 2)],
-//           },
-//           {
-//             name: "Astartes Eater (Initiative)",
-//             snippet: "+2 to any Attribute (Initiative).",
-//             modifications: [
-//               addModifier("attributes", ATTRIBUTES.INITIATIVE, 2),
-//             ],
-//           },
-//           {
-//             name: "Astartes Eater (Willpower)",
-//             snippet: "+2 to any Attribute (Willpower).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.WILLPOWER, 2)],
-//           },
-//           {
-//             name: "Astartes Eater (Intellect)",
-//             snippet: "+2 to any Attribute (Intellect).",
-//             modifications: [addModifier("attributes", ATTRIBUTES.INTELLECT, 2)],
-//           },
-//           {
-//             name: "Astartes Eater (Fellowship)",
-//             snippet: "+2 to any Attribute (Fellowship).",
-//             modifications: [
-//               addModifier("attributes", ATTRIBUTES.FELLOWSHIP, 2),
-//             ],
-//           },
-//           {
-//             name: "Aeldari Eater (Agility)",
-//             snippet: "+1 to Agility.",
-//             modifications: [addModifier("attributes", ATTRIBUTES.AGILITY, 1)],
-//           },
-//           {
-//             name: "Aeldari Eater (Willpower)",
-//             snippet: "+1 to Willpower.",
-//             modifications: [addModifier("attributes", ATTRIBUTES.WILLPOWER, 1)],
-//           },
-//           {
-//             name: "Ork Eater (Strength)",
-//             snippet: "+1 to Strength.",
-//             modifications: [addModifier("attributes", ATTRIBUTES.STRENGTH, 1)],
-//           },
-//           {
-//             name: "Ork Eater (Toughness)",
-//             snippet: "+1 to Toughness.",
-//             modifications: [addModifier("attributes", ATTRIBUTES.TOUGHNESS, 1)],
-//           },
-//           {
-//             name: "Armoured Hide",
-//             snippet: "You gain +Rank to your Base Resilience.",
-//             modifications: [addModifier("traits", TRAITS.RESILIENCE, 0, 1)],
-//           },
-//           {
-//             name: "Bioluminescence",
-//             snippet:
-//               "You may cause any part of your body to glow with light. If your entire body is emitting light, it sheds enough light to see in a 10m radius.",
-//           },
-//           {
-//             name: "Camouflage",
-//             snippet:
-//               "As a Simple Action you can control the appearance of your hide, with the same effects as a Cameleoline Cloak (core, pg. 237).",
-//           },
-//           {
-//             name: "Facultative Bipedalism",
-//             snippet:
-//               "You may Sprint twice as fast as normal and make Athletics (S) Tests to jump or climb with +Double Rank Bonus Dice.",
-//             modifications: [
-//               addModifier(
-//                 "skills",
-//                 SKILLS.ATHLETICS,
-//                 0,
-//                 2,
-//                 "when jumping or climbing."
-//               ),
-//             ],
-//           },
-//           {
-//             name: "Hypersensetive Quills",
-//             snippet:
-//               "Your quills act as an Auspex (core, pg. 236) with a range of 30m.",
-//           },
-//           {
-//             name: "Wings",
-//             snippet: "You can Fly at Speed 7",
-//           },
-//           {
-//             name: "Weaponised Biology",
-//             snippet: "",
-//             description:
-//               "<p>Your Unarmed Strikes deal (S)+4 Damage / +3 ED, and have one of the following Traits:</p>" +
-//               "<ul>" +
-//               "<li>Brutal</li>" +
-//               "<li>Rending (Rank)</li>" +
-//               "<li>Inflict (Poison (Rank))</li>" +
-//               "<li>Parry</li>" +
-//               "</ul>",
-//           },
-//         ],
-//       },
-//       {
-//         name: "Despise for Armour",
-//         snippet:
-//           "If a Kroot wears armour with an AR of 4 or more, the DN of all Tests using the Strength, Agility, or Initiative Attribute increase by an amount equal to the AR of the armour.",
-//       },
-//     ],
-//     backgroundSection: [
-//       background(
-//         "Pech Native: Raised amongst the jungles of the Kroot homeworld Pech, you are accustomed to a primitive life, and may have fought alongside the enigmatic T’au.",
-//         "Max Wounds",
-//         "Origin"
-//       ),
-//       background(
-//         "Void Born: Born aboard a warsphere, your nomadic life has been one of constant excursions on strange worlds and bizarre meals. You have met (and devoured) many minor Species, and now little surprises you.",
-//         "Max Shock",
-//         "Origin"
-//       ),
-//       background(
-//         "Prodigal Carnivore: Mercenary work has been lucrative and has offered many opportunities to improve yourself, though you long for the day you can return to your kindred and pass on the rich genetic traits you have gained.",
-//         "Wealth",
-//         "Origin"
-//       ),
-//       //
-//       background(
-//         "Primitive Victor: Relying on your mutations, you managed to defeat a more technologically advanced foe. You are staunch in your beliefs that biological strength far outweighs any mechanical advantage.",
-//         "Determination",
-//         "Accomplishment"
-//       ),
-//       background(
-//         "Sole Survivor: Through caution, courage, cowardice, or simple luck, you survived when the rest of your kindred was slain. You have been made strong by survival and are now free to consume any prey you find.",
-//         "Resolve",
-//         "Accomplishment"
-//       ),
-//       background(
-//         "Contract Secured: Through shrewd diplomacy (and likely a little intimidation) you negotiated a deal that allowed you to fight alongside another Species against powerful foes.",
-//         "Influence",
-//         "Accomplishment"
-//       ),
-//       //
-//       background(
-//         "Return Home: Though you have learned much and consumed many foes on your sojourn from your homeworld, you long to return to Pech, and will stop at nothing to do so.",
-//         "Conviction",
-//         "Goal"
-//       ),
-//       background(
-//         "Become Strong: You have the utmost respect for the goals of your Species. You will journey to any location and fight any foe in your quest to become stronger.",
-//         "Max Wounds",
-//         "Goal"
-//       ),
-//       background(
-//         "Discovery: You have had a small taste of the vastness of the galaxy, and believe that there are secrets still hidden that could further advance the Kroot — you will be the one to discover them.",
-//         "Determination",
-//         "Goal"
-//       ),
-//     ],
-//     objectives: [
-//       "Speculate on how you could evolve to better cope with the current situation.",
-//       "Point out how the advanced technology of another Species has made them weak.",
-//       "Relate the wisdom of your Shaper to the current situation.",
-//       "Use the environment to put yourself in a more advantageous situation.",
-//       "Make an evaluation on how someone you meet would taste.",
-//       "Consume the flesh of the strong.",
-//     ],
-//   },
-// ];
-
-// const aioe = [
-//   {
-//     ...species(
-//       "aioe",
-//       10,
-//       "Aeldari",
-//       "Aeldari",
-//       "The Mysterious Aeldari",
-//       10,
-//       8
-//     ),
-//     ...cost(10, 10, 0, 0),
-//     ...commonNames(
-//       "Aethon, Anthrillien, Ashkalla, Aulirel, Auran, Avenelle, Baharroth, Caerys, Culyan, Elashbel, Elarique, Eldorath, Elessar, Erandel, Gilead, Gilvas, Hrythar, Hyrne, Idranel, Illic, Iyanna, Kaelith, Kelmon, Micha, Meliniel, Mirehn, Morwyn, Naudhu, Naguan, Quillindral, Requiel, Salaine, Sylandri, Taladin, Taldeer, Talyesin, Ullarion, Ulthos, Yriel"
-//     ),
-//     ...statMax(7, 7, 12, 12, 12, 10, 6, 10),
-//     replaces: "core-aeldari",
-//     prerequisites: [{ group: "attributes", value: "agility", threshold: 3 }],
-//     speciesFeatures: [
-//       {
-//         name: "Intense Emotion",
-//         snippet:
-//           "+1DN to all Resolve Tests. If you fail a Willpower based test in a scene involving emotion, the GM gains +1 Ruin.",
-//       },
-//       {
-//         name: "Psychosensitive",
-//         snippet: "You may choose to take the PSYKER Keyword.",
-//         description:
-//           "<p>You may choose to take the <strong>PSYKER</strong> Keyword.</p>",
-//         selected: ["Mundane"],
-//         options: [
-//           {
-//             key: "mundane",
-//             name: "Mundane",
-//             snippet: "Your Psyker potential did not manifest.",
-//           },
-//           {
-//             key: "psyker",
-//             name: "Psyker",
-//             unlocks: "Psychosensitive Psyker",
-//             snippet:
-//               "You gain access to the Minor, Universal, Divination and Runes of Battle Disciplines. ",
-//             modifications: [
-//               { targetGroup: "keywords", targetValue: "Psyker" },
-//               { targetGroup: "psychicDisciplines", targetValue: "Minor" },
-//               { targetGroup: "psychicDisciplines", targetValue: "Universal" },
-//               { targetGroup: "psychicDisciplines", targetValue: "Divination" },
-//               {
-//                 targetGroup: "psychicDisciplines",
-//                 targetValue: "Runes of Battle",
-//               },
-//               { targetGroup: "psychicPowers", targetValue: "Smite" },
-//             ],
-//           },
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     ...species(
-//       "aioe",
-//       10,
-//       "Aeldari",
-//       "Drukhari",
-//       "The Sinister Drukhari",
-//       10,
-//       8
-//     ),
-//     ...cost(10, 10, 0, 0),
-//     ...commonNames(
-//       "Aestra, Araqir, Atreixes, Barakhar, Drekarth, Drisella, Iridivyst, Jalaxlar, Korai, Kruellagh, Maelik, Melandyr, Mydilian, Orinth, Salaine, Skechara, Tarsidhe, Vhane, Vorl, Xethis, Xynariis, Yesyr, Zharokh, Zuol"
-//     ),
-//     ...statMax(7, 7, 12, 12, 12, 10, 6, 10),
-//     prerequisites: [{ group: "attributes", value: "agility", threshold: 3 }],
-//     speciesFeatures: [
-//       {
-//         name: "Intense Emotion",
-//         snippet:
-//           "+1DN to all Resolve Tests. If you fail a Willpower based test in a scene involving emotion, the GM gains +1 Ruin.",
-//       },
-//       {
-//         name: "Night Vision",
-//         snippet:
-//           "You do not suffer vision penalties for low-light or darkness.",
-//       },
-//       {
-//         name: "Soul Debt",
-//         snippet:
-//           "Make a DN Tier+1 Corruption Test at the end of any session in which you did not inflict Wounds on an unwilling creature. You never make Corruption Tests for inflicting pain. Drukhari with the ASURYANI, HARLEQUIN, or YNNARI Keyword lose this ability.",
-//       },
-//     ],
-//   },
-//   {
-//     ...species(
-//       "aioe",
-//       10,
-//       "Aeldari",
-//       "Wraith Construct",
-//       "The Constructed Souls",
-//       90,
-//       8
-//     ),
-//     ...cost(90, 90, 0, 0),
-//     ...commonNames(
-//       "Adamant, Bastion, Contender, Diligence, Endurance, Eternity, Gatekeeper, Gravitas, Hereafter, Immutable, Infinity, Intransigence, Mirthless, Monument, Penumbra, Pinnacle, Profundity, Rampart, Sentinel, Severity, Steadfast, Solace, Vengeance, Vigilance, Warden, Zenith"
-//     ),
-//     ...statMax(7, 7, 12, 12, 12, 10, 6, 10),
-//     prerequisites: [
-//       { group: "attributes", value: "strength", threshold: 5 },
-//       { group: "attributes", value: "toughness", threshold: 6 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Wraithbone Form",
-//         snippet:
-//           "Wraith Constructs are immune to the Blinded, Bleeding, and Poisoned Conditions, and cannot Suffocate. They cannot wear armour, but always count as having an Armour Rating (AR) of 5",
-//       },
-//       {
-//         name: "Wraithsight",
-//         snippet:
-//           "Wraith Constructs can communicate telepathically with Spiritseers and other psychically attuned Aeldari, and perceive the presence of psychic powers and warp phenomena, as well as strong thoughts and feelings at the GM’s discretion. Unless a living Aeldari character is within line of sight, they suffer from the Hindered Condition.",
-//       },
-//     ],
-//   },
-// ];
-
-// const aaoa = [
-//   // Human Origins
-//   {
-//     ...species(
-//       "aaoa",
-//       8,
-//       "Mankind",
-//       "Death World Origin",
-//       "Survivor of endless hostility",
-//       0,
-//       6
-//     ),
-//     variant: "core-human",
-//     description:
-//       "<p>Born to harsh, savage worlds, which are hostile to human life. To survive in such places creates people as fierce and unforgiving as the worlds that raised them, and many of the mightiest defenders of the Imperium hail from worlds where existence is a daily struggle for survival.</p>" +
-//       "<p><em>Note: It`s recommended to increase the following Attributes and Skills at least once, to reflect the homeworld`s origin: Strength, Toughness, Stealth, Survival.</em></p>",
-//     speciesFeatures: [
-//       {
-//         name: "Bitter Survivor",
-//         snippet: "You add +1 bonus die to Determination Tests.",
-//         description:
-//           "The character clings onto life and is well-versed in eluding death’s grasp. The character adds +1 to Determination.",
-//       },
-//       {
-//         name: "Not One of Us",
-//         snippet:
-//           "You suffer +1 DN to Interaction Tests with non-Deathworldlers.",
-//         description:
-//           "DeathDeathworlders don’t easily trust those who haven’t endured the same kind of hostile environments. They suffer +1DN to all Interaction tests with those who aren’t Deathworlders.",
-//       },
-//     ],
-//   },
-//   {
-//     ...species(
-//       "aaoa",
-//       8,
-//       "Mankind",
-//       "Hive World Origin",
-//       "One in a bazzilion",
-//       0,
-//       6
-//     ),
-//     variant: "core-human",
-//     description:
-//       "<p>Towering, overcrowded megacities dominating polluted worlds, even the smallest hive city is home to billions of souls. These people toil in obscurity, slaving away for their entire lives in vast manufactories, or battling for survival in breadline riots or territorial skirmishes. For most, the only hope of seeing open sky is to leave their homes and fight for the Imperium.</p>" +
-//       "<p><em>Note: It`s recommended to increase the following Attributes and Skills at least once, to reflect the homeworld`s origin: Agility, Initative, Cunning, Tech.</em></p>",
-//     speciesFeatures: [
-//       {
-//         name: "Caves of Steel",
-//         snippet: "You gain +1 dice to Tech tests.",
-//         description:
-//           "<p>The character has been surrounded by technology, some of which may be centuries or millennia old, for their entire lives. The character gains +1d to Tech tests.</p>",
-//       },
-//       {
-//         name: "Hivebound",
-//         snippet:
-//           "You suffer +1 DN to Survival tests not made within urban or manufactured environments.",
-//         description:
-//           "<p>Hivers are unaccustomed to the ways of wild, untamed places. Even the wilderness of underhive levels and abandoned habs is still built around artificial structures. Hiveworlders suffer +1DN on all Survival tests made when not in an urban or manufactured environment.</p>",
-//       },
-//     ],
-//   },
-//   {
-//     ...species(
-//       "aaoa",
-//       9,
-//       "Mankind",
-//       "Voidborn Origin",
-//       "Born into darkness",
-//       0,
-//       6
-//     ),
-//     variant: "core-human",
-//     description:
-//       "<p>Born and raised in the darkness between the stars, the voidborn are a strange breed. Accustomed to the peculiar life aboard city-sized voidships and vast orbital stations, they are often seen as warp-touched, and the weird, insular customs of life in space often set them apart from planetborn people.</p>" +
-//       "<p><em>Note: It`s recommended to increase the following Attributes and Skills at least once, to reflect the homeworld`s origin: Initiative, Willpower, Pilot, Tech.</em></p>",
-//     speciesFeatures: [
-//       {
-//         name: "Voidwise",
-//         snippet:
-//           "You gain +1 dice to Tests ti resist radiation. You also ignore all penalties to actions due to low- or zero-gravity.",
-//         description:
-//           "<p>The character is accustomed to the vagaries of life aboard ship or station and is well-versed in protective rites and emergency doctrines. The character gains +1d on all tests to resist radiation and ignores all penalties to action caused by low- or zero-gravity environments.</p>",
-//       },
-//       {
-//         name: "Ill-Omened",
-//         snippet:
-//           "Interaction tests with non-Voidborn must use two Wrath dice and can`t score criticals.",
-//         description:
-//           "<p>Voidborn are considered strange and inauspicious by others, who look for even the slightest sign of ill-fortune. When attempting an interaction test with a non-Voidborn, two dice are treated as Wrath dice, rather than one, and the character is unable to score criticals on these tests.</p>",
-//       },
-//     ],
-//   },
-//   {
-//     ...species(
-//       "aaoa",
-//       9,
-//       "Mankind",
-//       "Forge World Origin",
-//       "Under the Omnissiahs watch",
-//       0,
-//       6
-//     ),
-//     variant: "core-human",
-//     description:
-//       "<p>You hail from a domain of the Adeptus Mechanicus and were raised invoking psalms to the Omnissiah rather than prayers to the God-Emperor. You are a cog within a grand machine that contains trillions of souls, honed to serve your specific purpose.</p>" +
-//       "<p><em>Note: It`s recommended to increase the following Attributes and Skills at least once, to reflect the homeworld`s origin: Strength, Intelligence, Scholar, Tech.</em></p>",
-//     speciesFeatures: [
-//       {
-//         name: "Ave Omnissiah",
-//         snippet:
-//           "You add +1 die to all Tech and Scholar tests related to the Adeptus Mechanicus.",
-//         description:
-//           "<p>The character has memorised countless operation litanies and maintenance hymnals, giving them an innate familiarity with machines and the Cult Mechanicus. They receive +1d on all Tech tests and Scholar tests relating to the Adeptus Mechanicus.</p>",
-//       },
-//       {
-//         name: "Stranger to the Church",
-//         snippet:
-//           "You suffer a +2 DN Penalty to Scholar tests related to the Imparial Creed. You may not choose an Archetype with the ADEPTUS MINISTORUM keyword.",
-//         description:
-//           "<p>Forgeworlders are unfamiliar with the ways of the Ministorum and the Imperial Creed and suffer +2DN on all Scholar tests relating to the Imperial Creed. The character may not take any archetypes with the ADEPTUS MINISTORUM keyword.</p>",
-//       },
-//     ],
-//   },
-//   {
-//     ...species(
-//       "aaoa",
-//       10,
-//       "Mankind",
-//       "Scholar Progenium Origin",
-//       "Orphaned but not without family",
-//       0,
-//       6
-//     ),
-//     variant: "core-human",
-//     description:
-//       "<p>You were an orphaned child of a notable servant of the Imperium, raised in one of the Schola Progenium abbeys scattered across the galaxy. Under the tutelage of Drill-Abbots and other stern teachers, young Progena are honed into devout, highly capable servants of Him-on-Terra. Many of the most renowned figures in Imperial history are former Progena, recruited into positions of status and power.</p>" +
-//       "<p><em>Note: It`s recommended to increase the following Attributes and Skills at least once, to reflect the homeworld`s origin: Toughness, Willpower, Athletics, Leadership.</em></p>",
-//     speciesFeatures: [
-//       {
-//         name: "Schola Education",
-//         snippet:
-//           "You gain +1 die to any two of the following skills: Insight, Intimidation, Leadership, Scholar",
-//         description:
-//           "<p>The character was groomed from a young age to be an example to others. You gain +1d on any two of the following skills, chosen during character creation: Insight, Intimidation, Leadership, Scholar.</p>",
-//       },
-//       {
-//         name: "Cloistered Upbringing",
-//         snippet:
-//           "You suffer a +2 DN penalty to non-hostile Interaction tests when dealing with SCUM.",
-//         description:
-//           "<p>Progena have little patience for, or understanding of, the dregs of society. The character suffers +2DN on all non-hostile Interaction tests made when dealing with characters who have the SCUM keyword.</p>",
-//       },
-//     ],
-//   },
-//   {
-//     ...species(
-//       "aaoa",
-//       10,
-//       "Mankind",
-//       "Shrine World Origin",
-//       "Children of Faith",
-//       0,
-//       6
-//     ),
-//     variant: "core-human",
-//     description:
-//       "<p>You were raised on a world which exists to exalt the God-Emperor. You were raised amidst faith and fury, exposed to lore of saints and martyrs and the Emperor’s righteousness at every moment of every day.</p>" +
-//       "<p><em>Note: It`s recommended to increase the following Attributes and Skills at least once, to reflect the homeworld`s origin: Willpower, Fellowship, Insight, Scholar.</em></p>",
-//     speciesFeatures: [
-//       {
-//         name: "The Scorn of the Devout",
-//         snippet:
-//           "You increase Resolve and Conviction by 1. You gain +1 die to Weapon Skill tests when attacking HERETICs.",
-//         description:
-//           "<p>The character is filled with holy hatred and fury. They receive +1 to Resolve and Conviction, and +1d on all Weapon Skill tests made to attack enemies with the Heretic keyword.</p>",
-//         modifications: [
-//           { targetGroup: "traits", targetValue: "resolve", modifier: 1 },
-//           { targetGroup: "traits", targetValue: "conviction", modifier: 1 },
-//         ],
-//       },
-//       {
-//         name: "Abhor the Unhallowed",
-//         snippet:
-//           "You suffer a +1 DN penalty to Scholar and Tech tests related to HERETIC, CHAOS or Xenos items or characters.",
-//         description:
-//           "<p>The character is filled with an instinctive revulsion for the unholy or unclean. They suffer +1DN on all Scholar or Tech tests relating to items or characters with the HERETIC or CHAOS keywords, or with any keyword belonging to a Xenos species.</p>",
-//       },
-//     ],
-//   },
-//   // Pariah
-//   {
-//     ...species("aaoa", 12, "Mankind", "Pariah", "The blank, the void", 30, 8),
-//     ...cost(30, 0, 30, 0),
-//     ...statMax(7, 7, 12, 12, 12, 10, 6, 10),
-//     variant: "core-human",
-//     speciesFeatures: [
-//       {
-//         name: "Abhorrent Presence",
-//         snippet:
-//           "You suffer +2 DN to all Interaction tests with non-Pariahs. You suffer +4 DN to all Interaction tests with Psykers. You Influence is reduced by 1.",
-//         description:
-//           "<p>+2DN to all interaction tests with non-pariah characters. +4DN to interaction tests with psykers. Pariahs reduce their Influence by 1.</p>",
-//         modifications: [
-//           { targetGroup: "traits", targetValue: "influence", modifier: -1 },
-//         ],
-//       },
-//       {
-//         name: "Psychic Abomination",
-//         snippet:
-//           "You may never be a PSYKER nor gain Faith points or abilities that draw from the warp. Any psychic powers attempted or targeted within a number of metres of you  equal to your Willpower increase their DN by +Double Rank.",
-//         description:
-//           "<p>A pariah cannot be directly affected by psychic powers or other warp phenomena, whether positive or negative. A pariah can never gain the PSYKER keyword, nor can they ever gain Faith points or any other ability that requires drawing upon the Warp for power. Any psychic powers attempted or targeted within a number of metres of the Pariah equal to their Willpower increase their DN by twice the Pariah’s Rank.</p>",
-//       },
-//     ],
-//   },
-//   // Aeldarie
-//   {
-//     ...species("aaoa", 13, "Drukhari", "Drukhari", "The Sinister Kin", 20, 8),
-//     ...cost(20, 20, 0, 0),
-//     ...commonNames(
-//       "Akhirion, Anarkyss, Anielyn, Bekliel, Ethrilliac, Grendett, Grevyth, Kylos, Laelanyel, Madrax, Melikka, Mellyx, Monsatos, Narlek, Nyktos, Peiythia, Phyrix, Selithrian, Theskril, Thessa, Thraed, Thresyn, Thrixxesh, Quaez, Uless, Vrexith, Vylekh, Vypus, Xela, Xurul"
-//     ),
-//     ...statMax(7, 7, 12, 12, 12, 10, 6, 8),
-//     prerequisites: [
-//       { group: "attributes", value: "agility", threshold: 3 },
-//       { group: "attributes", value: "strength", threshold: 2 },
-//       { group: "skills", value: "intimidation", threshold: 2 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Blade Artist",
-//         snippet:
-//           "When you make an attack with a melee weapon, increase the weapon’s AP by 1 (i.e., from -1 to -2) if you shift one or more Icons on the attack. This stacks with effects such as the Rending weapon trait.",
-//       },
-//       {
-//         name: "The Thirst",
-//         snippet:
-//           "You cannot recover Shock by spending Wrath or the use of Medicae. You recover 1d3+Rank Shock when you inflict Shock on or kill an opponent, when you succeed at an Intimidation Interaction Attack, or when an enemy fails a Resolve test. The GM gains +1 Ruin whenever you become Exhausted.",
-//       },
-//       {
-//         name: "She Who Thirsts",
-//         snippet: "Your Max Shock is reduced by your Corruption Level.",
-//       },
-//     ],
-//   },
-//   // Squats
-//   {
-//     ...species("aaoa", 13, "Squats", "Squat", "The forgotten", 28, 5),
-//     ...cost(28, 28, 0, 0),
-//     ...commonNames(
-//       "Algunella, Athgni, Athlun, Balgrimella, Beladokina, Burnir, Burzin, Drokgrimella, Dronglin, Elanya, Elruna, Fimagrin, Fimarun, Gadrinella, Gimzin, Grendl, Grimgrund, Grimtoka, Hakakin, Harmin, Harnina, Kazgrond, Lundor, Moranina, Mori, Odaskina,Olfmir, Ollagona, Ollanya, Ragni, Rorangona, Rorgar, Skagromina, Skoraskina, Skordokina, Snoragund, Throngana, Thuramin, Uthagrund, Zakgni"
-//     ),
-//     prerequisites: [
-//       { group: "attributes", value: "toughness", threshold: 3 },
-//       { group: "attributes", value: "willpower", threshold: 3 },
-//       { group: "skills", value: "tech", threshold: 1 },
-//       { group: "skills", value: "weaponSkill", threshold: 2 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Abhuman",
-//         snippet: "+1DN to all Interaction tests with the IMPERIUM.",
-//         description:
-//           "<p>+1DN to all Interaction tests with characters possessing the IMPERIUM keyword.</p>",
-//       },
-//       {
-//         name: "Grudges",
-//         snippet:
-//           "You gain +1 die to melee attacks against ORK and CHAOS. You suffer +2 DN to non-hostile Interaction skill tests with ORKs and CHAOS.",
-//         description:
-//           "<p>+1d to all melee attacks against characters possessing the ORK or CHAOS keywords. +2DN penalty on all non-hostile Interaction skill tests vs. targets possessing the ORK or CHAOS keywords.</p>",
-//       },
-//       {
-//         name: "Legacy of the Cataclysm",
-//         snippet:
-//           "Your Resolve and Conviction is increased by 1. You suffer +3 Corruption.",
-//         description:
-//           "<p>Your Resolve and Conviction increase by +1 each. You begin play with +3 corruption.</p>",
-//         modifications: [
-//           { targetGroup: "traits", targetValue: "resolve", modifier: 1 },
-//           { targetGroup: "traits", targetValue: "conviction", modifier: 1 },
-//           { targetGroup: "traits", targetValue: "corruption", modifier: 3 },
-//         ],
-//       },
-//     ],
-//   },
-//   // Beastman
-//   {
-//     ...species("aaoa", 15, "Chaos", "Beastman", "Servants of Chaos", 20, 7),
-//     prerequisites: [
-//       { group: "attributes", value: "strength", threshold: 3 },
-//       { group: "attributes", value: "toughness", threshold: 3 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Reviled Abhuman",
-//         snippet: "You suffer +2 DN to Interaction tests with CHAOS.",
-//         description:
-//           "<p>+2DN to all Interaction tests with characters who do not possess the Chaos keyword.</p>",
-//       },
-//       {
-//         name: "Horns",
-//         snippet: "You may attack with your Horns (5 +2 ED).",
-//         description:
-//           "<p>You may make melee attacks with your horns (5+2ED; AP 0). Thus, you are always armed.</p>",
-//       },
-//       {
-//         name: "Bestial Savagery",
-//         snippet: "You gain +1 die to Intimidation tests.",
-//         description: "<p>+1d to all Intimidation tests.</p>",
-//       },
-//       {
-//         name: "Child of Chaos",
-//         snippet: "You gain +3 Corruption.",
-//         description: "<p>You begin play with +3 corruption.</p>",
-//         modifications: [
-//           { targetGroup: "traits", targetValue: "corruption", modifier: 3 },
-//         ],
-//       },
-//     ],
-//   },
-//   // T'au
-//   {
-//     ...species("aaoa", 19, "T’au", "Shas T’au", "The Warrior", 4, 6),
-//     ...cost(4, 4, 0, 0),
-//     ...commonNames(""),
-//     prerequisites: [
-//       { group: "skills", value: "ballisticSkill", threshold: 1 },
-//       { group: "skills", value: "tech", threshold: 1 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "For the Greater Good (Shas)",
-//         snippet:
-//           "When you assist an ally using Awareness, Ballistic Skill, or Stealth, you may halve the number of dice you would add and add that many Icons to the test you are assisting.",
-//       },
-//       {
-//         name: "Dull Soul",
-//         snippet: "You cannot gain the PSYKER keyword under any circumstances.",
-//       },
-//     ],
-//   },
-//   {
-//     ...species("aaoa", 21, "T’au", "Fio T’au", "The Builder", 14, 5),
-//     ...cost(14, 14, 0, 0),
-//     ...commonNames(""),
-//     prerequisites: [
-//       { group: "attributes", value: "intellect", threshold: 3 },
-//       { group: "skills", value: "scholar", threshold: 1 },
-//       { group: "skills", value: "tech", threshold: 1 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "For the Greater Good (Fio)",
-//         snippet:
-//           "When you assist an ally using Medicae, Scholar, or Tech , you may halve the number of dice you would add and add that many Icons to the test you are assisting.",
-//       },
-//       {
-//         name: "Dull Soul",
-//         snippet: "You cannot gain the PSYKER keyword under any circumstances.",
-//       },
-//     ],
-//   },
-//   {
-//     ...species("aaoa", 21, "T’au", "Kor T’au", "The Flyer", 14, 6),
-//     ...cost(14, 14, 0, 0),
-//     ...commonNames(""),
-//     prerequisites: [
-//       { group: "attributes", value: "agility", threshold: 3 },
-//       { group: "skills", value: "awareness", threshold: 1 },
-//       { group: "skills", value: "pilot", threshold: 1 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "For the Greater Good (Kor)",
-//         snippet:
-//           "When you assist an ally using Awareness, Pilot, or Tech, you may halve the number of dice you would add and add that many Icons to the test you are assisting.",
-//       },
-//       {
-//         name: "Grav-Adapted",
-//         snippet:
-//           "You ignore all DN increases for high, low, or zero-gravity, and you gain a Flying Speed equal to your normal Speed when in zero gravity.",
-//       },
-//       {
-//         name: "Dull Soul",
-//         snippet: "You cannot gain the PSYKER keyword under any circumstances.",
-//       },
-//     ],
-//   },
-//   {
-//     ...species("aaoa", 21, "T’au", "Por T’au", "The Bureaucrat", 14, 6),
-//     ...cost(14, 14, 0, 0),
-//     ...commonNames(""),
-//     prerequisites: [
-//       { group: "attributes", value: "fellowship", threshold: 3 },
-//       { group: "skills", value: "insight", threshold: 1 },
-//       { group: "skills", value: "persuasion", threshold: 1 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "For the Greater Good (Por)",
-//         snippet:
-//           "When you assist an ally using Cunning, Deception, or Persuasion, you may halve the number of dice you would add and add that many Icons to the test you are assisting.",
-//       },
-//       {
-//         name: "Polyglot",
-//         snippet:
-//           "You know additional languages equal to your Scholar rank. When you encounter an unfamiliar language, you gain +Double Rank on Scholar tests to learn or translate that language.",
-//       },
-//       {
-//         name: "Dull Soul",
-//         snippet: "You cannot gain the PSYKER keyword under any circumstances.",
-//       },
-//     ],
-//   },
-//   {
-//     ...species("aaoa", 21, "T’au", "Aun T’au", "The Lord", 40, 6),
-//     ...cost(40, 40, 0, 0),
-//     ...commonNames(""),
-//     prerequisites: [
-//       { group: "attributes", value: "agility", threshold: 3 },
-//       { group: "attributes", value: "willpower", threshold: 3 },
-//       { group: "skills", value: "leadership", threshold: 2 },
-//       { group: "skills", value: "scholar", threshold: 3 },
-//       { group: "skills", value: "weaponSkill", threshold: 1 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Ethereal Presence",
-//         snippet:
-//           "T’AU characters within 12m always add bonus dice equal to twice the Ethereal’s Rank to their Resolve and Conviction tests. T’AU characters cannot willingly harm an Ethereal, and must pass a DN 5 Resolve test or become Pinned if their actions allow an Ethereal to be harmed.",
-//       },
-//       {
-//         name: "Dull Soul",
-//         snippet: "You cannot gain the PSYKER keyword under any circumstances.",
-//       },
-//     ],
-//   },
-// ];
-
-// const dod = [
-//   // Tau
-//   {
-//     ...species(
-//       "dod",
-//       1,
-//       "Tau Empire",
-//       "Shas T'au",
-//       "The Offspring of Fire",
-//       0,
-//       6
-//     ),
-//     ...cost(9, 4, 5, 0),
-//     description:
-//       "<p>Born into the Fire Caste. Your life is determined by war and combat.</p>",
-//     prerequisites: [{ group: "attributes", value: "agility", threshold: 2 }],
-//     speciesFeatures: [
-//       {
-//         name: "Bound by Caste",
-//         snippet: "You gain +1 to athletic and survival tests.",
-//         description:
-//           "Fire (Shas) form the military and are capable survivors and hunters. You gain +1 to athletic and survival tests.",
-//         modifications: [
-//           { targetGroup: "skill", targetValue: "athletics", modifier: 1 },
-//           { targetGroup: "skill", targetValue: "survival", modifier: 1 },
-//         ],
-//       },
-//       {
-//         name: "Warp Presence",
-//         snippet:
-//           "Never a Psyker. You gain +1 to resist telephatic powers or for Conviction tests.",
-//         description:
-//           "Tau can never have the PSYKER keyword or learn Psychic Powers. Their low presence in the warp also gives them +1 bonus dice when resiting telephatic powers or for Conviction tests.",
-//         modifications: [
-//           { targetGroup: "trait", targetValue: "conviction", modifier: 1 },
-//         ],
-//       },
-//       {
-//         name: "For the Greater Good",
-//         snippet:
-//           "Once per combat round, you may allow that an ally within 15 meters spend a Wrath Token from your pool as if it was theirs.",
-//         description:
-//           "Once per combat round, you may allow that an ally within 15 meters spend a Wrath Token from your pool as if it was theirs.",
-//       },
-//     ],
-//   },
-// ];
-
-// const gohe = [
-//   {
-//     ...species("gohe", 5, "Mankind", "Jokaero", "Simian Forgers", 10, 6),
-//     ...cost(58, 48, 10, 0),
-//     description:
-//       "<p>Born into the Fire Caste. Your life is determined by war and combat.</p>",
-//     prerequisites: [
-//       { group: "attributes", value: "intellect", threshold: 4 },
-//       { group: "attributes", value: "fellowship", threshold: 3 },
-//       { group: "skills", value: "tech", threshold: 3 },
-//     ],
-//     speciesFeatures: [
-//       {
-//         name: "Simple Simian",
-//         snippet:
-//           "You gain +Rank to deception tests when convincing other species that you are not sentient and cannot speak.",
-//         description:
-//           "You gain +Rank to deception tests when convincing other species that you are not sentient and cannot speak.",
-//       },
-//       {
-//         name: "Designed for success",
-//         snippet:
-//           "You gain +Rank to tech tests when building new machines or operating existing ones.",
-//         description:
-//           "You gain +Rank to tech tests when building new machines or operating existing ones.",
-//         modifications: [
-//           {
-//             targetGroup: "skills",
-//             targetValue: "tech",
-//             modifier: 0,
-//             rank: 1,
-//             condition: "when building new machines or operating existing ones",
-//           },
-//         ],
-//       },
-//     ],
-//   },
-// ];
 
 module.exports = [...coreRep /*, ...fspg, ...aioe, ...aaoa, ...dod, ...gohe*/];

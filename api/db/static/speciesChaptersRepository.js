@@ -35,9 +35,9 @@ const chapterz = function (sourceKey, sourcePage, name, primarch, affiliation, f
   };
 };
 
-const core = [
+const playerCore =  [
   {
-    ...chapterz('core',95,'Blood Angels','Sanguinius','Imperium','First Founding (IX Legion)'),
+    ...chapterz('playerCore',95,'Blood Angels','Sanguinius','Imperium','First Founding (IX Legion)'),
     hint: 'Masters of Melee, compelled to drink the enemies blood.',
     beliefsAndTraditions: [
       {
@@ -54,7 +54,7 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',95,'Dark Angels','Lion El`Jonson','Imperium','First Founding (I Legion)'),
+    ...chapterz('playerCore',95,'Dark Angels','Lion El`Jonson','Imperium','First Founding (I Legion)'),
     beliefsAndTraditions: [
       {
         name: 'Grim Resolve',
@@ -68,7 +68,7 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',95,'Imperial Fists','Regal Dorn','Imperium','First Founding (VII Legion)'),
+    ...chapterz('playerCore',95,'Imperial Fists','Regal Dorn','Imperium','First Founding (VII Legion)'),
     beliefsAndTraditions: [
       {
         name: 'Siege Masters',
@@ -82,7 +82,7 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',96,'Iron Hands','Ferrus Manus','Imperium','First Founding (X Legion)'),
+    ...chapterz('playerCore',96,'Iron Hands','Ferrus Manus','Imperium','First Founding (X Legion)'),
     beliefsAndTraditions: [
       {
         name: 'The Flesh is Weak',
@@ -96,7 +96,7 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',96,'Raven Guard','Corvus Corax','Imperium','First Founding (XIX Legion)'),
+    ...chapterz('playerCore',96,'Raven Guard','Corvus Corax','Imperium','First Founding (XIX Legion)'),
     beliefsAndTraditions: [
       {
         name: 'Master of Shadows',
@@ -110,7 +110,7 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',96,'Salamander','Vulkan','Imperium','First Founding (XVIII Legion)'),
+    ...chapterz('playerCore',96,'Salamander','Vulkan','Imperium','First Founding (XVIII Legion)'),
     beliefsAndTraditions: [
       {
         name: 'Promethian Cult',
@@ -124,14 +124,14 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',96,'Space Wolves','Lemon Russ','Imperium','First Founding (VI Legion)'),
+    ...chapterz('playerCore',96,'Space Wolves','Lemon Russ','Imperium','First Founding (VI Legion)'),
     beliefsAndTraditions: [
       {
         name: 'Hunters Unleashed',
         effect: 'You have the Acute Sense Talent (p.129) and the Dual Wield Talent (p.133).',
         modifications: [
-          { targetGroup: 'talents', targetValue: 'core-acute-sense', meta: { name: 'Acute Sense' } },
-          { targetGroup: 'talents', targetValue: 'core-dual-wield', meta: { name: 'Dual Wield' } },
+          { targetGroup: 'talents', targetValue: 'playerCore-acute-sense', meta: { name: 'Acute Sense' } },
+          { targetGroup: 'talents', targetValue: 'playerCore-dual-wield', meta: { name: 'Dual Wield' } },
         ],
       },
       {
@@ -142,7 +142,7 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',96,'Ultramarines','Roboute Guilliman','Imperium','First Founding (XIII Legion)'),
+    ...chapterz('playerCore',96,'Ultramarines','Roboute Guilliman','Imperium','First Founding (XIII Legion)'),
     beliefsAndTraditions: [
       {
         name: 'Tactical Versatility',
@@ -156,7 +156,7 @@ const core = [
     ],
   },
   {
-    ...chapterz('core',97,'White Scars','Jaghatai Khan','Imperium','First Founding (V Legion)'),
+    ...chapterz('playerCore',97,'White Scars','Jaghatai Khan','Imperium','First Founding (V Legion)'),
     beliefsAndTraditions: [
       {
         name: 'Lightning Assault',
@@ -241,7 +241,7 @@ const aaoa = [
         name: 'The Rubric',
         snippet: 'You gain the Favoured By The Warp talent.',
         modifications: [
-          { targetGroup: 'talents', targetValue: 'core-favoured-by-the-warp-talent', meta: { name: 'Favoured By The Warp talent' } },
+          { targetGroup: 'talents', targetValue: 'playerCore-favoured-by-the-warp-talent', meta: { name: 'Favoured By The Warp talent' } },
         ],
       },
       simpleEffect('Gift of Mutation (Gene-Seed): You gain an additional +1 Corruption whenever you would gain one or more Corruption points. You also increase the DN of all tests to resist Corruption or Malignancy by +1.', 'Geen-Seed'),
@@ -468,7 +468,7 @@ const dod = [
 ];
 
 module.exports = [
-  ...core,
+  ...playerCore,
   ...aaoa,
   //...dod,
   //...ltgb,

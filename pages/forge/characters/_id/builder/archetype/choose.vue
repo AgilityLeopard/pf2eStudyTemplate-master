@@ -172,17 +172,17 @@
             </v-list-item>
           </v-list>
         </div>
-        <div
+        <!-- <div
           v-for="(group, key) in archetypeFaction"
           :key="key"
         >
-          <v-divider />
+          <v-divider /> -->
 
-          <v-list v-if="archetypesByFaction(group).length > 0" subheader>
-            <v-subheader>{{ group }}</v-subheader>
+          <v-list>
+            <!-- <v-subheader>{{ group }}</v-subheader> -->
 
             <v-list-item
-              v-for="item in archetypesByFaction(group)"
+              v-for="item in archetypeFaction"
               :key="item.key"
               two-line
               :disabled="item.tier > characterSettingTier"
@@ -234,7 +234,7 @@
               </v-list-item-action>
             </v-list-item>
           </v-list>
-        </div>
+        <!-- </div> -->
       </v-card>
     </v-col>
   </v-row>
@@ -282,7 +282,7 @@ export default {
   computed: {
     sources() {
       return [
-        'core',
+        'playerCore',
         'fspg',
         'red1',
         'cos',
@@ -318,7 +318,7 @@ export default {
           }
         }
 
-        return [ 'Unaligned', ...new Set(archetypes.map((item) => item.faction))];
+        return [ 'Unaligned', ...new Set(archetypes)];
       }
 
       return [];
@@ -327,23 +327,24 @@ export default {
       if (this.itemList !== undefined) {
         let archetypes = this.itemList;
 
-        if (this.characterSpecies) {
-          archetypes = archetypes.filter((a) => {
-            if ( a.species.some((s) => s.key.includes(this.characterSpecies.key) ) ) return true;
-            if ( a.species.some((s) => s.key.includes(this.characterSpecies.variant) ) ) return true;
-            return false;
-          });
+        // if (this.characterSpecies) {
+        //   archetypes = archetypes.filter((a) => {
+        //     if ( a.species.some((s) => s.key.includes(this.characterSpecies.key) ) ) return true;
+        //     if ( a.species.some((s) => s.key.includes(this.characterSpecies.variant) ) ) return true;
+        //     return false;
+        //   });
 
-          if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-            archetypes = archetypes.filter((a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier);
-          }
-        }
+        //   if (this.characterSpecies.archetypeRestrictionsMaxTier) {
+        //     archetypes = archetypes.filter((a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier);
+        //   }
+        // }
 
-        if (this.characterSettingTier !== undefined) {
-          archetypes = archetypes.filter((a) => a.tier <= this.characterSettingTier);
-        }
+        // if (this.characterSettingTier !== undefined) {
+        //   archetypes = archetypes.filter((a) => a.tier <= this.characterSettingTier);
+        // }
 
-        return [ 'Unaligned', ...new Set(archetypes.map((item) => item.faction))];
+        
+        return [  ...new Set(archetypes)];
       }
 
       return [];
@@ -408,8 +409,9 @@ export default {
     archetypesByFaction(groupName) {
       let archetypes = this.itemList;
 
+      if(archetypes === undefined) return []
       /* filter by archetype group */
-      archetypes = archetypes.filter((a) => a.faction === groupName);
+     archetypes = archetypes.filter((a) => a.faction === groupName);
 
       if (this.characterSpecies) {
         archetypes = archetypes.filter((a) => {

@@ -114,11 +114,7 @@ export default {
   computed: {
     sources() {
       return [
-        "core",
-        "fspg",
-        "red1",
-        "cos",
-        // 'tnh',
+        "playerCore",
         ...this.settingHomebrews,
       ];
     },

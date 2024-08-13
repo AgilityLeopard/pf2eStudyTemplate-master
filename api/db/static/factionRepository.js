@@ -44,10 +44,10 @@ const background = function (text, plusOne, type) {
   };
 };
 
-const core = [
+const playerCore =  [
   {
     name: 'Adepta Sororitas',
-    ...faction('core',52,'Imperium','Adepta Sororitas'),
+    ...faction('playerCore',52,'Imperium','Adepta Sororitas'),
     backgroundSection: [
       // ORIGIN
       background('Holy Inspiration: You followed in the footsteps of an Imperial Saint on a pilgrimage, an interstellar voyage, or a military campaign. Your idol inspired your faith to new heights.', 'Resolve', 'Origin'),
@@ -74,7 +74,7 @@ const core = [
   },
   {
     name: 'Adeptus Astra Telephatica',
-    ...faction('core',54,'Imperium','Adeptus Astra Telephatica'),
+    ...faction('playerCore',54,'Imperium','Adeptus Astra Telephatica'),
     backgroundSection: [
       // ORIGIN
       background('Shipbound Sickness: Tithed to a Black Ship at a very early age, you are still marked by the torturous time you spent on the voyage to your tutelage.', 'Max Wounds', 'Origin'),
@@ -102,7 +102,7 @@ const core = [
   },
   {
     name: 'Adeptus Mechanicus',
-    ...faction('core',57,'Imperium','Adeptus Mechanicus'),
+    ...faction('playerCore',57,'Imperium','Adeptus Mechanicus'),
     backgroundSection: [
       // ORIGIN
       background('Forge Born: You were born in the Cult Mechanicus, raised by steel and choir. The rhythms of the forge, the manufactorum, and the data-loom beat in your heart, whether natural or artificial.','Resolve','Origin'),
@@ -130,7 +130,7 @@ const core = [
   },
   {
     name: 'Adeptus Ministorum',
-    ...faction('core',59,'Imperium','Adeptus Ministorum'),
+    ...faction('playerCore',59,'Imperium','Adeptus Ministorum'),
     backgroundSection: [
       background('Tithed: As a child you were given unto the Ecclesiarchy’s charge as part of a family tradition.You have spent your cloistered life in devout study of the Imperial Cult.','Conviction','Origin'),
       background('Penitent: Confession and prayer are not enough; you believe you sinned, and this stains your very soul. You seek penance with your every act — but for what sin?','Resolve','Origin'),
@@ -154,7 +154,7 @@ const core = [
   },
   {
     name: 'Astra Militarum',
-    ...faction('core',62,'Imperium','Astra Militarum'),
+    ...faction('playerCore',62,'Imperium','Astra Militarum'),
     backgroundSection: [
       //d3 Origin +1
       background('Recent Recruit: You’re still getting used to the Astra Militarum; until recently, your life was very different. You’re surrounded by strangers and unused to the horrors of war.',' Conviction','Origin'),
@@ -182,7 +182,7 @@ const core = [
   },
   {
     name: 'The Inquisition',
-    ...faction('core',65,'Imperium','The Inquisition'),
+    ...faction('playerCore',65,'Imperium','The Inquisition'),
     backgroundSection: [
       background('Chosen: You were hand-picked to join the Inquisition; an Inquisitor saw your potential or specific skill set and hired you, or employed you for your contacts or resources.','Wealth','Origin'),
       background('Fickle Fortune: Caught in horrors hidden from the populace, you were forced to join the Inquisition. Your life was redacted from Administratum records, now a half-forgotten shadow.','Determination','Origin'),
@@ -207,7 +207,7 @@ const core = [
   },
   {
     name: 'Rogue Trader Dynasties',
-    ...faction('core',67,'Imperium','Rogue Trader Dynasties'),
+    ...faction('playerCore',67,'Imperium','Rogue Trader Dynasties'),
     backgroundSection: [
       background('Dynastic Scion: You were born into a Rogue Trader dynasty, heir to the family’s prestigious Warrant of Trade. Your lineage may be renowned, or darkly infamous.','Conviction','Origin'),
       background('Merchant Prince: You bargained your wealth — legitimate or ill-gotten — into the acquisition of a far more thrilling and adventurous Warrant of Trade.','Wealth','Origin'),
@@ -232,7 +232,7 @@ const core = [
   },
   {
     name: 'Scum',
-    ...faction('core',69,'Imperium','Scum'),
+    ...faction('playerCore',69,'Imperium','Scum'),
     backgroundSection: [
       background('Downtrodden: Every memory you have is painful; for you, life in the Imperium means violence, toxic conditions, and slavery. You’ve developed strong willpower to combat this.','Determination','Origin'),
     background('Born Scummy: You’ve got a natural knack for the dangerous life of Scum, barely affected by its daily trials. That, or you just love life off the Imperial grid.','Max Shock','Origin'),
@@ -257,7 +257,7 @@ const core = [
   },
   {
     name: 'Adeptus Astartes',
-    ...faction('core',72,'Imperium','Adeptus Astartes'),
+    ...faction('playerCore',72,'Imperium','Adeptus Astartes'),
     backgroundSection: [
       background('Killer Instinct: Aggression and fury fueled your Aspirant trials. You overcame every challenger with bloody-minded savagery, impressing your betters.','Max Wounds','Origin'),
       background('Courage: You faced every Aspirant trial with grit and determination, pushing through exhaustion, fear, and uncertainty with conviction and bravery.','Resolve','Origin'),
@@ -282,7 +282,7 @@ const core = [
   },
   {
     name: 'Aeldari',
-    ...faction('core',72,'Aeldari','Aeldari'),
+    ...faction('playerCore',72,'Aeldari','Aeldari'),
     backgroundSection: [
       background('Denied Destiny: Where the Farseers foresaw death, you prevailed, defeating an incredible foe or accomplishing an impossible task.','Determination','Accomplishment'),
       background('Communed with Infinity: You have devoted considerable time to meditation with the spirits of the departed; they have taught you much of life and death.','Resolve','Accomplishment'),
@@ -310,7 +310,7 @@ const core = [
   },
   {
     name: 'Orks',
-    ...faction('core',80,'Orks','Orks'),
+    ...faction('playerCore',80,'Orks','Orks'),
     backgroundSection: [
       background('Squig Brain Transfer: Your earliest memory is awakening from surgery, covered in scars, and the Mad Dok telling you you’re ready to fight again. Who were you before? Does it matter?','Max Shock','Origin'),
       background('Endless WAAAGH!: The best time of your life — so far — was on the frontlines of a WAAAGH! You kept fighting until there was no one left… including your allies.','Resolve','Origin'),
@@ -343,7 +343,7 @@ const core = [
   },
   {
     name: 'Chaos',
-    ...faction('core',84,'Chaos','Chaos'),
+    ...faction('playerCore',84,'Chaos','Chaos'),
     backgroundSection: [
       background('Born Evil: For as long as you remember you have served the Chaos Gods; somehow, your very soul was created tainted.','Corruption','Origin'),
       background('Converted: An agent of the Chaos Gods seduced or coerced you with heresy, luring you to an immoral descent. Are they still an ally? Or a mortal enemy?','Resolve','Origin'),
@@ -544,7 +544,7 @@ const aaoa = [
 ];
 
 const factionRepository = [
-  ...core,
+  ...playerCore,
   ...fspg,
   ...aaoa,
   ...aioe,

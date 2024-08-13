@@ -1,6 +1,6 @@
 const source = {
   // Official
-  core: { book: 'Core Rules', key: 'core', version: 'v2.1', link: 'https://www.drivethrurpg.com/product/249388/Wrath--Glory-Core-Rules?affiliate_id=466959' },
+  playerCore: { book: 'Core Rules', key: 'playerCore', version: 'v2.1', link: 'https://www.drivethrurpg.com/product/249388/Wrath--Glory-Core-Rules?affiliate_id=466959' },
   fspg: { book: 'Forsaken System Player`s Guide', key: 'fspg', version: 'v2.0', link: 'https://www.drivethrurpg.com/product/303930/Wrath--Glory--Forsaken-System-Players-Guide?affiliate_id=466959' },
   red1: { book: 'Redacted Records I', key: 'red1', version: 'v1.0', link: 'https://www.drivethrurpg.com/product/343896/Wrath--Glory--Redacted-Records?affiliate_id=466959' },
   red2: { book: 'Redacted Records II', key: 'red2', version: 'v1.0', link: 'https://www.drivethrurpg.com/de/product/388102/warhammer-40-000-wrath-glory-redacted-records-2?affiliate_id=466959' },

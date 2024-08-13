@@ -23,10 +23,10 @@ const simpleStub = function (sourceKey, sourcePage, name, hint, stub = true) {
   };
 };
 
-const core = [
+const playerCore =  [
   {
     name: 'Back From The Brink',
-    ...simpleStub('core',150,'Back From The Brink','Dead, forgotten, found, rebuild.',false),
+    ...simpleStub('playerCore',150,'Back From The Brink','Dead, forgotten, found, rebuild.',false),
     cost: 0,
     costPerTier: 10,
     minimumCampaignTier: 2,
@@ -68,7 +68,7 @@ const core = [
         optionsPlaceholder: 'Roll d6 and select a Injury',
         options: [
           {
-            key: 'core-injury-one-hand',
+            key: 'playerCore-injury-one-hand',
             name: 'Hand',
             snippet: 'You suffer a severe hand injury; you can no longer use that hand. Losing both hands means you are unable to hold any weapons or similar gear.',
             wargear: [
@@ -86,7 +86,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-one-arm',
+            key: 'playerCore-injury-one-arm',
             name: 'Arm',
             snippet: 'You suffer a severe injury to your arm. Losing both arms means you are unable to hold any weapons or similar gear.',
             wargear: [
@@ -104,7 +104,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-one-foot',
+            key: 'playerCore-injury-one-foot',
             name: 'Foot',
             snippet: 'You suffer a severe foot injury. Losing both feet means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
             wargear: [
@@ -122,7 +122,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-one-leg',
+            key: 'playerCore-injury-one-leg',
             name: 'Leg',
             snippet: 'You suffer a severe leg injury. Losing both legs means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
             wargear: [
@@ -140,7 +140,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-one-torso',
+            key: 'playerCore-injury-one-torso',
             name: 'Torso',
             snippet: 'You suffer a severe injury that impairs your organs, like the heart, lungs, or liver. Any Toughness based Tests may become more difficult.',
             wargear: [
@@ -158,7 +158,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-one-eye',
+            key: 'playerCore-injury-one-eye',
             name: 'Eye',
             snippet: 'One of your eyes is damaged beyond repair. A single injured eye may add a penalty, such as +2 DN, to any Tests that require sight. Losing both eyes leaves you Blinded (p.199).',
             wargear: [
@@ -185,7 +185,7 @@ const core = [
         optionsPlaceholder: 'Roll d6 and select a Injury',
         options: [
           {
-            key: 'core-injury-two-hand',
+            key: 'playerCore-injury-two-hand',
             name: 'Hand',
             snippet: 'You suffer a severe hand injury; you can no longer use that hand. Losing both hands means you are unable to hold any weapons or similar gear.',
             wargear: [
@@ -203,7 +203,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-two-arm',
+            key: 'playerCore-injury-two-arm',
             name: 'Arm',
             snippet: 'You suffer a severe injury to your arm. Losing both arms means you are unable to hold any weapons or similar gear.',
             wargear: [
@@ -221,7 +221,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-two-foot',
+            key: 'playerCore-injury-two-foot',
             name: 'Foot',
             snippet: 'You suffer a severe foot injury. Losing both feet means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
             wargear: [
@@ -239,7 +239,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-two-leg',
+            key: 'playerCore-injury-two-leg',
             name: 'Leg',
             snippet: 'You suffer a severe leg injury. Losing both legs means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
             wargear: [
@@ -257,7 +257,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-two-torso',
+            key: 'playerCore-injury-two-torso',
             name: 'Torso',
             snippet: 'You suffer a severe injury that impairs your organs, like the heart, lungs, or liver. Any Toughness based Tests may become more difficult.',
             wargear: [
@@ -275,7 +275,7 @@ const core = [
             ],
           },
           {
-            key: 'core-injury-two-eye',
+            key: 'playerCore-injury-two-eye',
             name: 'Eye',
             snippet: 'One of your eyes is damaged beyond repair. A single injured eye may add a penalty, such as +2 DN, to any Tests that require sight. Losing both eyes leaves you Blinded (p.199).',
             wargear: [
@@ -298,7 +298,7 @@ const core = [
   },
   {
     name: 'Dauntless Reputation',
-    ...simpleStub('core', 151,'Dauntless Reputation','Acknowledged, praised, wellcomed, hated.', false),
+    ...simpleStub('playerCore', 151,'Dauntless Reputation','Acknowledged, praised, wellcomed, hated.', false),
     cost: 0,
     costPerTier: 30,
     minimumCampaignTier: 2,
@@ -329,7 +329,7 @@ const core = [
         snippet: 'You gain the Devotees talent.',
         description: '<p>You gain the Devotees talent. You do not need to meet the Leadership Skill prerequisites.</p>',
         modifications: [
-          { targetGroup: 'talents', targetValue: 'core-devotees', meta: { name: 'Devotees' } },
+          { targetGroup: 'talents', targetValue: 'playerCore-devotees', meta: { name: 'Devotees' } },
         ],
       },
       {
@@ -342,7 +342,7 @@ const core = [
   },
   {
     name: 'Demanding Patron',
-    ...simpleStub('core', 151,'Demanding Patron','Watched, promoted, demanded.', false),
+    ...simpleStub('playerCore', 151,'Demanding Patron','Watched, promoted, demanded.', false),
     cost: 0,
     costPerTier: 10,
     minimumCampaignTier: 2,
@@ -417,7 +417,7 @@ const core = [
   },
   {
     name: 'Perfidious Wretch',
-    ...simpleStub('core', 152,'Perfidious Wretch','Overseen, baited, convinced, turned.', false),
+    ...simpleStub('playerCore', 152,'Perfidious Wretch','Overseen, baited, convinced, turned.', false),
     cost: 0,
     costPerTier: 5,
     minimumCampaignTier: 2,
@@ -473,7 +473,7 @@ const core = [
   },
   {
     name: 'Psychic Revelations',
-    ...simpleStub('core', 152, 'Psychic Revelations', 'Tap into the warp, awaken powers, lure the Immaterium.', false),
+    ...simpleStub('playerCore', 152, 'Psychic Revelations', 'Tap into the warp, awaken powers, lure the Immaterium.', false),
     cost: 0,
     costPerTier: 10,
     // Prerequisites
@@ -509,15 +509,15 @@ const core = [
         selected: '',
         optionsPlaceholder: 'Choose a Psychic Discipline',
         options: [
-          //{ key: 'core-minor', name: 'Minor', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Minor' }] },
-          //{ key: 'core-universal', name: 'Universal', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Universal' }] },
-          { key: 'core-biomancy', name: 'Biomancy', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Biomancy' }] },
-          { key: 'core-divination', name: 'Divination', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Divination' }] },
-          { key: 'core-pyromancy', name: 'Pyromancy', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Pyromancy' }] },
-          { key: 'core-telekinesis', name: 'Telekinesis', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Telekinesis' }] },
-          { key: 'core-telepathy', name: 'Telepathy', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Telepathy' }] },
-          { key: 'core-maleficarum', name: 'Maleficarum', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Maleficarum' }] },
-          { key: 'core-runes-of-battle', name: 'Runes of Battle', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Runes of Battle' }] },
+          //{ key: 'playerCore-minor', name: 'Minor', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Minor' }] },
+          //{ key: 'playerCore-universal', name: 'Universal', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Universal' }] },
+          { key: 'playerCore-biomancy', name: 'Biomancy', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Biomancy' }] },
+          { key: 'playerCore-divination', name: 'Divination', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Divination' }] },
+          { key: 'playerCore-pyromancy', name: 'Pyromancy', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Pyromancy' }] },
+          { key: 'playerCore-telekinesis', name: 'Telekinesis', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Telekinesis' }] },
+          { key: 'playerCore-telepathy', name: 'Telepathy', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Telepathy' }] },
+          { key: 'playerCore-maleficarum', name: 'Maleficarum', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Maleficarum' }] },
+          { key: 'playerCore-runes-of-battle', name: 'Runes of Battle', modifications: [{ targetGroup: 'psychicDisciplines', targetValue: 'Runes of Battle' }] },
           // todo, handle homebrew disciplines
         ],
         modifications: [
@@ -542,7 +542,7 @@ const core = [
   },
   {
     name: 'Stay The Course',
-    ...simpleStub('core', 154, 'Stay The Course', 'Overcome struggles, build alliances, acquire equipment.', false),
+    ...simpleStub('playerCore', 154, 'Stay The Course', 'Overcome struggles, build alliances, acquire equipment.', false),
     cost: 0,
     costPerTier: 10,
     minimumCampaignTier: 2,
@@ -701,7 +701,7 @@ const red2 = [
         snippet: 'You gain the Devotees talent. If your Devotees die, you get -1 Influence.',
         description: '<p>You gain the Devotees talent. You do not need to meet the Leadership (Wil) Skill prerequisite. However, if your Devotees die, you get -1 Influence.</p>',
         modifications: [
-          { targetGroup: 'talents', targetValue: 'core-devotees', meta: { name: 'Devotees' } },
+          { targetGroup: 'talents', targetValue: 'playerCore-devotees', meta: { name: 'Devotees' } },
         ],
       },
       {
@@ -1092,7 +1092,7 @@ const aaoa = [
         description:
           '<p>You gain followers as per the Devotees talent, without needing to meet the Leadership requirement. These followers are Aspect Warriors from your shrine.</p>',
         modifications: [
-          { targetGroup: 'talents', targetValue: 'core-devotees', meta: { name: 'Devotees' } },
+          { targetGroup: 'talents', targetValue: 'playerCore-devotees', meta: { name: 'Devotees' } },
         ],
       },
       {
@@ -1744,7 +1744,7 @@ const goen = [
 ];
 
 module.exports = [
-  ...core,
+  ...playerCore,
   ...red2,
   ...aaoa,
   ...tog,
