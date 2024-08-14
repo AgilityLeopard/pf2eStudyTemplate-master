@@ -88,7 +88,7 @@
                 :color="'success'"
                 :disabled="characterTalentLabels.includes(item.name) && !item.allowedMultipleTimes"
                 x-small
-                @click="addTalent(item, 'ancestry', level)"
+                @click="addTalent(item, type, level)"
               >
                 add
               </v-btn>
@@ -96,13 +96,13 @@
 
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">
-                <div class="pt-4 pb-2" v-html="item.snippet">
+                <div class="pt-4 pb-2" v-html="item.description">
                 </div>
               </td>
             </template>
 
             <template v-slot:no-results>
-              <span class="text-center">Your search for "{{ searchQuery }}" found no results.</span>
+              <span class="text-center">Ваш поиск по "{{ searchQuery }}" found no results.</span>
             </template>
           </v-data-table>
 
@@ -225,7 +225,7 @@ export default {
         {
           source: {
             book: 'Core Rules',
-            key: 'core',
+            key: 'playerCore',
             page: 169,
           },
           key: 'core-talents',
@@ -331,10 +331,11 @@ export default {
       let filteredTalents = this.talents;
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
-      // if () {
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
+
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.tags.toString().toUpperCase().includes(lw)));
+      //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
       let reduced = [];
-      filteredTalents.forEach((item) => {
+      filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
         if (item.tags) {
           reduced.push(...item.tags);
         }
@@ -361,72 +362,7 @@ export default {
       filteredTalents = filteredTalents.map((talent) => {
         let fulfilled = true;
         let TagsFilter = true;
-        // has prerequisites
-        // if (talent.requirements && talent.requirements.length > 0) {
-        //   talent.requirements.forEach((requirement) => {
-        //     switch (requirement.type) {
-
-        //       // condition: 'must', type: 'keyword', key: ['Adeptus Ministorum', 'Adepta Sororitas'],
-        //       case 'keyword':
-        //         const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
-        //         const found = requirement.key.some((k) => {
-        //           return lowercaseKeywords.includes(k.toString().toUpperCase());
-        //         });
-        //         if (
-        //           // (requirement.condition === 'must' && !found)
-        //           // || (requirement.condition === 'mustNot' && found)
-        //           found
-        //         ) {
-        //           fulfilled = false;
-        //         }
-        //         break;
-
-        //       // condition: 'must', type: 'attribute', key: 'Willpower', value: '3+',
-        //       // case 'attribute':
-        //       //   const attribute = this.attributeRepository.find((a) => a.key == requirement.key);
-        //       //   if (attribute) {
-        //       //     const charAttributeValue = this.characterAttributesEnhanced[attribute.key];
-        //       //     if (charAttributeValue < requirement.value) {
-        //       //       fulfilled = false;
-        //       //     }
-        //       //   } else {
-        //       //     console.warn(`No attribute found for ${requirement.key}.`);
-        //       //   }
-        //       //   break;
-
-        //       // condition: 'must', type: 'skill', key: 'Ballistic Skill', value: '4+',
-        //       case 'skill':
-        //         const skill = this.skillRepository.find((a) => a.key == requirement.key);
-        //         if (skill) {
-        //           const charSkillValue = this.characterSkills[skill.key];
-        //           if (charSkillValue < requirement.value) {
-        //             fulfilled = false;
-        //           }
-        //         } else {
-        //           console.warn(`No skill found for ${requirement.key}.`);
-        //         }
-        //         break;
-
-        //       case 'character':
-        //         switch (requirement.key) {
-        //           case 'Tier':
-        //             fulfilled = (this.effectiveCharacterTier <= requirement.value)
-        //             break;
-        //           case 'Rank':
-        //             fulfilled = (this.characterRank <= requirement.value)
-        //             break;
-        //         }
-        //         break;
-
-        //       case 'Talents':
-        //         fulfilled = requirement.value.some((s) => s.toString() === this.TalentsLabel);
-        //         break;
-
-        //       default:
-        //         console.info(`Unexpected requirement -> ${JSON.stringify(requirement)}`);
-        //     }
-        //   });
-        // }
+        
         talent.prerequisitesFulfilled = fulfilled;
         return talent;
       });
@@ -434,10 +370,11 @@ export default {
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
       // if () {
-        filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
+       // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
       // }
-
-      return filteredTalents;
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.tags.toString().toUpperCase().includes(lw)));
+      
+      return filteredTalents.filter(talent => talent.level <= this.level);
     },
   }
 };

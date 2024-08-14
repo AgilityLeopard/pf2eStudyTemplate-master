@@ -1251,41 +1251,85 @@ const requireTier = function(value) {
 //   },
 // ];
 const playerCore = [
-{
-  ...talent('playerCore',130,'fleet',20,'эльф'),
-  snippet: 'Вы получаете плюс 5 футов к скорости',
-  type: "ancestry",
-  name: "Эльфийские ноги",
-  level: 1,
-  description:
-    '<p>The very sight of blood energises you in battle.</p>' +
-    '<p>Whenever you see an individual within 30 metres of you suffer a Critical Hit or the Bleeding Condition, you gain 1 point of Wrath.</p>' +
-    '<p>The GM may require a Corruption Test whenever this Talent is activated.</p>',
-  requirements: [],
-  modifications: [
-    { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
-  ],
-},
-{
-  ...talent('playerCore',130,'nature-ambition',20,'человек'),
-  type: "ancestry",
-  name: "Природные амбиции",
-  snippet: 'Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор',
-  level: 1,
-  requirements: [],
-  description:
-    '<p>Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор</p>',
-    modifications: [
-      { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
-    ],
-    selected: '',
-  optionsPlaceholder: 'Select a skill',
-  optionsKey: 'skill',
-  options: [
-    { key: 'deception', name: 'Обман', choice: 'skill' },
-    { key: 'society', name: 'Общество', choice: 'skill' },
-  ],
-},
+    {
+      ...talent('playerCore',130,'fleet',20,'эльф'),
+      snippet: 'Вы получаете плюс 5 футов к скорости',
+      type: "ancestry",
+      name: "Эльфийские ноги",
+      level: 1,
+      description:
+        '<p>The very sight of blood energises you in battle.</p>' +
+        '<p>Whenever you see an individual within 30 metres of you suffer a Critical Hit or the Bleeding Condition, you gain 1 point of Wrath.</p>' +
+        '<p>The GM may require a Corruption Test whenever this Talent is activated.</p>',
+      requirements: [],
+      modifications: [
+        { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
+      ],
+    },
+    {
+      ...talent('playerCore',130,'nature-ambition',20,'человек'),
+      type: "ancestry",
+      name: "Природные амбиции",
+      snippet: 'Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор',
+      level: 1,
+      requirements: [],
+      description:
+        '<p>Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор</p>',
+        modifications: [
+          { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
+        ],
+        selected: '',
+      optionsPlaceholder: 'Select a skill',
+      optionsKey: 'skill',
+      options: [
+        { key: 'deception', name: 'Обман', choice: 'skill' },
+        { key: 'society', name: 'Общество', choice: 'skill' },
+      ],
+    },
+    {
+      ...talent('playerCore',130,'double-slice',20,'воин'),
+      type: "class",
+      name: "Двойной разрез",
+      snippet: 'Вы набрасываетесь на врага с обоими оружиями',
+      level: 1,
+      requirements: [],
+      requirementsText: "Вы владеете двумя оружиями ближнего боя, каждое в отдельной руке",
+      description:
+        '<p>Вы набрасываетесь на врага с обоими оружиями. Сделайте 2 Удара (Strikes), по одному удару каждым из требуемых оружий ближнего боя, и для каждого используя ваш текущий штраф множественной атаки. Оба Удара должны быть по одной и той же цели. Если второй Удар сделан оружием, без признака быстрое, то он получает штраф -2. </p><p>Если обе атаки попадают, объедините их урон и потом добавляйте любые другие применимые эффекты от обоих оружий. Вы добавляете любой точный урон только один раз, к атаке на свой выбор. Объедините урон от обоих Ударов и примените сопротивления и слабости только один раз. При расчете штрафа множественной атаки, это считается как 2 атаки.</p>',
+     
+        // modifications: [
+        //   { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
+        // ],
+      //   selected: '',
+      // optionsPlaceholder: 'Select a skill',
+      // optionsKey: 'skill',
+      // options: [
+      //   { key: 'deception', name: 'Обман', choice: 'skill' },
+      //   { key: 'society', name: 'Общество', choice: 'skill' },
+      // ],
+    },
+    {
+      ...talent('playerCore',130,'combat-grab',20,'воин, натиск'),
+      type: "class",
+      name: "Боевой захват",
+      snippet: 'Вы бьете противника и хватаете его',
+      level: 2,
+      requirements: [],
+      requirementsText: "У вас есть одна свободная рука, и цель в досягаемости этой руки",
+      description:
+        '<p>Вы бьете противника и хватаете его. Сделайте Удар (Strike) ближнего боя, имея одну свободную руку. Если атака попадает, то вы хватаете цель свободной рукой. Существо остается схвачено до конца вашего следующего хода или пока не сможет Вырваться (Escape) , в зависимости от того, что произойдет раньше.</p>',
+     
+        // modifications: [
+        //   { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
+        // ],
+      //   selected: '',
+      // optionsPlaceholder: 'Select a skill',
+      // optionsKey: 'skill',
+      // options: [
+      //   { key: 'deception', name: 'Обман', choice: 'skill' },
+      //   { key: 'society', name: 'Общество', choice: 'skill' },
+      // ],
+    },
 ]
 // Redacted Records volume 1
 // const red1 = [

@@ -11,10 +11,10 @@
       <v-card class="pa-0">
 
         <v-card-title style="background-color: #262e37; color: #fff;">
-          <span>Confirm Portrait</span>
+          <span>Подтвердите аватар</span>
           <v-spacer />
           <v-icon dark @click="selectAvatarDialog = false">
-            close
+            закрыть
           </v-icon>
         </v-card-title>
 
@@ -31,12 +31,12 @@
               ></croppa>
             </client-only>
           </div>
-          <span class="caption">Drag and zoom (by scrolling) until it fits.</span>
+          <span class="caption">Перетаскивайте и масштабируйте (прокручивая) до тех пор, пока изображение не впишется в размер.</span>
 
           <div>
             <v-switch
               v-model="myCroppaConfig.preventWhiteSpace"
-              label="Prevent whitespace, thus the image must be within borders."
+              label="Не допускайте наличия пробелов, поэтому изображение должно находиться в пределах границ."
               dense
             ></v-switch>
           </div>
@@ -50,7 +50,7 @@
           </v-btn>
           <v-spacer />
           <v-btn right color="green" @click="setNewAvatar">
-            Select Portrait
+            Выбрать аватар
           </v-btn>
         </v-card-actions>
 
@@ -60,18 +60,18 @@
 
     <v-col :cols="12" :sm="7">
       <h2 class="title mb-2">
-        <strong>Character</strong>
+        <strong>Персонаж</strong>
       </h2>
 
       <v-text-field
-        label="Character Name"
+        label="Имя персонажа"
         :value="characterName"
         dense
         outlined
         @input="setCharacterName"
       />
 
-      <v-text-field
+      <!-- <v-text-field
         :value="customXp"
         class="pb-2"
         label="Additional eXperience Points"
@@ -81,13 +81,18 @@
         persistent-hint
         type="number"
         @input="setCustomXp"
-      />
+      /> -->
 
-      <v-text-field
+      <v-slider
         :value="characterCustomLevel"
+        :min="1"
+        :max="20"
         class="pb-2"
         label="Уровень"
-        hint="Set your Characters Rank, usually between 1-3."
+        hint="Установите уровень персонажа"
+        step="1"
+        ticks
+        thumb-label="always"
         dense
         outlined
         persistent-hint
@@ -95,8 +100,8 @@
         @input="setLevel"
       />
 
-      <v-slider
-        v-if="false"
+      <!-- <v-slider
+        
         :min="1"
         :max="5"
         :thumb-size="24"
@@ -107,7 +112,7 @@
         ticks
         thumb-label="always"
         @input="setCustomRank"
-      />
+      /> -->
 
 
 
@@ -146,11 +151,11 @@
         </v-avatar>
 
         <em class="d-none">{{ characterAvatarUrl ? characterAvatarUrl.length : 0 }}</em>
-        <div><a @click="selectAvatarDialog = true">change picture</a></div>
+        <div><a @click="selectAvatarDialog = true">изменить аватар</a></div>
       </div>
     </v-col>
 
-    <v-col :cols="12" :sm="7">
+    <!-- <v-col :cols="12" :sm="7">
       <h3 class="subtitle-1"><strong>Framework</strong></h3>
       <p class="body-2">Define your campaign framework.</p>
 
@@ -206,9 +211,9 @@
         persistent-hint
       />
 
-    </v-col>
+    </v-col> -->
 
-    <v-col :cols="12" :sm="7">
+    <!-- <v-col :cols="12" :sm="7">
       <div>
         <h3 class="subtitle-1"><strong>House Rules</strong></h3>
         <p class="body-2">Allow specific house rules for this character.</p>
@@ -230,14 +235,14 @@
           </div>
         </div>
       </div>
-    </v-col>
+    </v-col> -->
 
     <v-col :cols="12">
       <div>
 
-        <h3 class="subtitle-1"><strong>Official Publications</strong></h3>
+        <h3 class="subtitle-1"><strong>Источники</strong></h3>
 
-        <p class="body-2">Enable specific content from official publications. (Some are auto-enabled)</p>
+        <p class="body-2">Включить контент из других источников</p>
 
         <div
             v-for="homebrew in settingOfficialOptions.filter(i => i.show === true)"
@@ -274,7 +279,7 @@
       </div>
     </v-col>
 
-    <v-col :cols="12">
+    <!-- <v-col :cols="12">
       <div>
 
         <h3 class="subtitle-1"><strong>Homebrews</strong></h3>
@@ -333,11 +338,11 @@
           </v-switch>
         </div>
       </div>
-    </v-col>
+    </v-col> -->
 
     <v-col :cols="12" />
 
-    <v-col
+    <!-- <v-col
       v-for="item in settingTemplateOptions"
       v-if="false"
       :key="item.name"
@@ -360,7 +365,7 @@
           <v-btn>Select</v-btn>
         </v-card-actions>
       </v-card>
-    </v-col>
+    </v-col> -->
   </v-row>
 </template>
 
@@ -417,72 +422,72 @@ export default {
           show: true,
           disabled: true,
           optional: false, // always active
-          key: 'core',
-          name: 'Wrath & Glory Core Rules',
-          hint: 'Core Factions',
+          key: 'playerCore',
+          name: 'Основная книга игрока (Ремастер)',
+          hint: 'Основные правил',
           nuxt: '',
           source: 'https://www.drivethrurpg.com/en/product/249388/warhammer-40-000-wrath-glory-core-rulebook?affiliate_id=466959',
         },
-        {
-          show: true,
-          disabled: true,
-          optional: false, // always active
-          key: 'fspg',
-          name: 'Forsaken System Player Guide',
-          hint: 'Imperial Archeytypes',
-          nuxt: 'https://www.drivethrurpg.com/en/product/303930/warhammer-40-000-wrath-glory-forsaken-system-player-s-guide?affiliate_id=466959',
-          source: '',
-        },
-        {
-          show: true,
-          disabled: true,
-          optional: false, // always active
-          key: 'red1',
-          name: 'Redacted Records I',
-          hint: 'Some Talents',
-          nuxt: 'https://www.drivethrurpg.com/en/product/343896/warhammer-40-000-wrath-glory-redacted-records?affiliate_id=466959',
-          source: '',
-        },
-        {
-          show: true,
-          disabled: false,
-          optional: true,
-          key: 'red2',
-          name: 'Redacted Records II',
-          hint: 'More Talents',
-          nuxt: 'https://www.drivethrurpg.com/en/product/388102/warhammer-40-000-wrath-glory-redacted-records-2?affiliate_id=466959',
-          source: '',
-        },
-        {
-          show: true,
-          disabled: true, // do not allow for now, but tease
-          optional: true,
-          key: 'aioe',
-          name: 'Aeldari - Inheritance of Ember',
-          hint: 'Aledari & Drukhari Content',
-          nuxt: 'https://www.drivethrurpg.com/en/product/305327/warhammer-40-000-wrath-and-glory-aeldari-inheritance-of-embers?affiliate_id=466959',
-          source: '',
-        },
-        {
-          show: false,
-          disabled: true,
-          optional: true,
-          key: 'afas',
-          name: 'Affliction Ascendant',
-          hint: '1st Company Veteran',
-          nuxt: 'https://www.drivethrurpg.com/en/product/343904/Wrath--Glory--Affliction-Ascendant?affiliate_id=466959',
-          source: '',
-        },
-        {
-          show: true,
-          disabled: false,
-          optional: true,
-          key: 'tnh',
-          name: 'The Null Hypothesis',
-          hint: 'Add Sisters of Silence and gear.',
-          nuxt: 'https://www.drivethrurpg.com/product/343894/Wrath--Glory--The-Null-Hypothesis?affiliate_id=466959',
-          source: '',
-        },
+        // {
+        //   show: true,
+        //   disabled: true,
+        //   optional: false, // always active
+        //   key: 'fspg',
+        //   name: 'Forsaken System Player Guide',
+        //   hint: 'Imperial Archeytypes',
+        //   nuxt: 'https://www.drivethrurpg.com/en/product/303930/warhammer-40-000-wrath-glory-forsaken-system-player-s-guide?affiliate_id=466959',
+        //   source: '',
+        // },
+        // {
+        //   show: true,
+        //   disabled: true,
+        //   optional: false, // always active
+        //   key: 'red1',
+        //   name: 'Redacted Records I',
+        //   hint: 'Some Talents',
+        //   nuxt: 'https://www.drivethrurpg.com/en/product/343896/warhammer-40-000-wrath-glory-redacted-records?affiliate_id=466959',
+        //   source: '',
+        // },
+        // {
+        //   show: true,
+        //   disabled: false,
+        //   optional: true,
+        //   key: 'red2',
+        //   name: 'Redacted Records II',
+        //   hint: 'More Talents',
+        //   nuxt: 'https://www.drivethrurpg.com/en/product/388102/warhammer-40-000-wrath-glory-redacted-records-2?affiliate_id=466959',
+        //   source: '',
+        // },
+        // {
+        //   show: true,
+        //   disabled: true, // do not allow for now, but tease
+        //   optional: true,
+        //   key: 'aioe',
+        //   name: 'Aeldari - Inheritance of Ember',
+        //   hint: 'Aledari & Drukhari Content',
+        //   nuxt: 'https://www.drivethrurpg.com/en/product/305327/warhammer-40-000-wrath-and-glory-aeldari-inheritance-of-embers?affiliate_id=466959',
+        //   source: '',
+        // },
+        // {
+        //   show: false,
+        //   disabled: true,
+        //   optional: true,
+        //   key: 'afas',
+        //   name: 'Affliction Ascendant',
+        //   hint: '1st Company Veteran',
+        //   nuxt: 'https://www.drivethrurpg.com/en/product/343904/Wrath--Glory--Affliction-Ascendant?affiliate_id=466959',
+        //   source: '',
+        // },
+        // {
+        //   show: true,
+        //   disabled: false,
+        //   optional: true,
+        //   key: 'tnh',
+        //   name: 'The Null Hypothesis',
+        //   hint: 'Add Sisters of Silence and gear.',
+        //   nuxt: 'https://www.drivethrurpg.com/product/343894/Wrath--Glory--The-Null-Hypothesis?affiliate_id=466959',
+        //   source: '',
+        // },
       ],
       settingHomebrewOptions: [
         {

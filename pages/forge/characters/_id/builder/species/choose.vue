@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-col :cols="12">
-      <h1 class="headline">Select a Species</h1>
+      <h1 class="headline">Выберите наследие</h1>
     </v-col>
 
     <v-dialog
@@ -43,7 +43,7 @@
 
             <v-list-item-content>
               <v-list-item-title>
-                {{ item.name }}
+                {{ item.nameAncestry }}
                 <v-chip
                   v-if="
                     item.source && !['core', 'coreab'].includes(item.source.key)
@@ -60,28 +60,28 @@
               <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
             </v-list-item-content>
 
-            <v-list-item-action class="d-none d-sm-inline">
+            <!-- <v-list-item-action class="d-none d-sm-inline">
               <v-chip pill color="green" text-color="white">
                 <v-avatar left class="green darken-4">
-                  {{ item.cost }}
+                  {{ item.rarity }}
                 </v-avatar>
-                XP
+                {{ item.rarity }}
               </v-chip>
-            </v-list-item-action>
+            </v-list-item-action> -->
 
-            <v-list-item-action class="d-none d-sm-inline" v-if="false">
+            <!-- <v-list-item-action class="d-none d-sm-inline" v-if="false">
               <v-chip pill color="red" text-color="white">
                 <v-avatar left class="red darken-4">
                   {{ item.baseTier }}
                 </v-avatar>
                 Tier
               </v-chip>
-            </v-list-item-action>
+            </v-list-item-action> -->
           </v-list-item>
         </v-list>
       </v-card>
 
-      <v-card class="mt-4">
+      <!-- <v-card class="mt-4">
         <v-card-text>
           <p>
             You can add your own <strong>custom species</strong>
@@ -89,7 +89,7 @@
             it here.
           </p>
         </v-card-text>
-      </v-card>
+      </v-card> -->
     </v-col>
   </v-row>
 </template>

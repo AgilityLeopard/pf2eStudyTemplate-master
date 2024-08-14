@@ -778,6 +778,7 @@ export default {
         name: this.customSkill.name,
         attribute: 'intellect',
         description: this.customSkill.description,
+        optional: false,
       };
       const doExist = this.skills.find((s)=>s.key===skill.key);
       if ( doExist ) {

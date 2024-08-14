@@ -3,7 +3,7 @@
 
     <v-col>
       <h1 class="headline">
-        Manage Ascension Package(s)
+        Добавьте предысторию
       </h1>
     </v-col>
 
@@ -33,7 +33,7 @@
               <v-icon left>
                 remove_circle
               </v-icon>
-              remove package
+              Удалите предысторию
             </v-btn>
           </div>
 
@@ -231,10 +231,10 @@
         @click="choosePackage"
         color="success"
         text
-        :disabled="effectiveCharacterTier >= settingTier"
+        
       >
         <v-icon>add</v-icon>
-        Add an Ascension Package
+        Добавьте предысторию
       </v-btn>
     </v-col>
 
@@ -279,7 +279,7 @@ export default {
   computed: {
     sources() {
       return [
-        'core',
+        'playerCore',
         'fspg',
         'red1',
         'cos',
@@ -341,8 +341,8 @@ export default {
       return this.$store.getters['characters/characterAscensionPackagesById'](this.characterId);
     },
     characterAscensionPackages() {
-      if ( !this.characterSelectedPackages || this.characterSelectedPackages.length <= 0 ) return [];
-      if ( !this.ascensionPackagesRepository || this.ascensionPackagesRepository.length <= 0 ) return [];
+      // if ( !this.characterSelectedPackages || this.characterSelectedPackages.length <= 0 ) return [];
+      // if ( !this.ascensionPackagesRepository || this.ascensionPackagesRepository.length <= 0 ) return [];
 
       return this.characterSelectedPackages.map((ascensionPackage) => {
 
@@ -474,6 +474,7 @@ export default {
         if (newVal) {
           this.getWargearList(newVal);
           this.getPsychicPowers(newVal);
+          this.choosePackage();
         }
       },
       immediate: true, // make this watch function is called when component created

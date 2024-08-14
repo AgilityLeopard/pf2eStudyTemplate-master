@@ -84,7 +84,7 @@
                 </v-chip>
               </div>
 
-              <div class="body-2 mb-2" v-html="characterAncestryTalent(level).snippet"></div>
+              <div class="body-2 mb-2" v-html="characterAncestryTalent(level).description"></div>
 
               <v-alert
                 v-if="characterAncestryTalent(level).alert"
@@ -188,7 +188,7 @@
                 </v-chip>
               </div>
 
-              <div class="body-2 mb-2" v-html="characterClassTalent(level).snippet"></div>
+              <div class="body-2 mb-2" v-html="characterClassTalent(level).description"></div>
 
               <v-alert
                 v-if="characterClassTalent(level).alert"
@@ -993,6 +993,8 @@ export default {
 
         return aggregatedTalent;
       }).sort((a, b) => a.id.localeCompare(b.id));
+
+      
       //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
       return talents.find(s => s.place === 'class'+level);
 

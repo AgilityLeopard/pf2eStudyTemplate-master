@@ -23,7 +23,7 @@
     <!-- ascension headline -->
     <v-col>
       <h1 class="headline">
-        Select an Ascension Package
+        Выберите предысторию
       </h1>
 
       <v-alert
@@ -109,7 +109,7 @@ export default {
   computed: {
     sources() {
       return [
-        'core',
+        'playerCore',
         'fspg',
         'red1',
         'cos',

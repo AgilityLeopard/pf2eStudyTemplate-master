@@ -626,7 +626,7 @@ export const mutations = {
     });
 
     character.Boost = 0;
-    character.SkillPoints = (character.attributes["intellect"] - 10) / 2;
+    character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
     if(character.SkillPoints < 0) character.SkillPoints = 0;
 
     Object.keys(character.skills).forEach((key, index) => {
@@ -642,6 +642,11 @@ export const mutations = {
     state.characters[payload.id].SkillPoints =
       payload.payload.value;
   },
+  setCharacterSkillPointsClass(state, payload) {
+    state.characters[payload.id].SkillPointsClass =
+      payload.payload.value;
+  },
+  
   setCharacterSkill(state, payload) {
     state.characters[payload.id].skills[payload.payload.key] =
       payload.payload.value;
@@ -1391,6 +1396,7 @@ const getDefaultState = () => ({
   },
   Boost: 0,
   SkillPoints: 0,
+  SkillPointsClass: 0,
   AncestryFreeBoost: "",
   AncestryFreeBoost2: "",
   attributesBoost: {

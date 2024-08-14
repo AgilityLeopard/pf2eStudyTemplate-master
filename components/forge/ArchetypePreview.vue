@@ -1,10 +1,10 @@
 <template lang="html">
   <v-card v-if="item" class="pa-0">
     <v-card-title v-if="chooseMode" style="background-color: #262e37; color: #fff;">
-      <span>Confirm Archetype</span>
+      <span>Подтвердите класс</span>
       <v-spacer />
       <v-icon dark @click="$emit('cancel')">
-        close
+        Закрыть
       </v-icon>
     </v-card-title>
 
@@ -85,11 +85,11 @@
     <v-divider v-if="chooseMode" />
     <v-card-actions v-if="chooseMode">
       <v-btn left outlined color="red" @click="$emit('cancel')">
-        Cancel
+        Отмена
       </v-btn>
       <v-spacer />
       <v-btn right color="green" @click="$emit('select', item)">
-        Select Archetype
+        Выберите класс
       </v-btn>
     </v-card-actions>
   </v-card>

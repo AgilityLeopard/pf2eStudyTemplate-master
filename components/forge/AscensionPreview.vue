@@ -161,12 +161,12 @@ export default {
   },
   computed: {
     alertText() {
-      if (this.item.minimumCampaignTier > this.maxTargetTier) {
-        return `The Campaign tier [${this.maxTargetTier}] does not meet the Ascensions prerequisites minimum tier [${this.item.minimumCampaignTier}]+`;
-      }
-      if (this.currentCharacterTier >= this.maxTargetTier) {
-        return `Your character tier [${this.currentCharacterTier}] already matches the campaign tier [${this.maxTargetTier}]`;
-      }
+      // if (this.item.minimumCampaignTier > this.maxTargetTier) {
+      //   return `The Campaign tier [${this.maxTargetTier}] does not meet the Ascensions prerequisites minimum tier [${this.item.minimumCampaignTier}]+`;
+      // }
+      // if (this.currentCharacterTier >= this.maxTargetTier) {
+      //   return `Your character tier [${this.currentCharacterTier}] already matches the campaign tier [${this.maxTargetTier}]`;
+      // }
       return false;
     },
     hasValidTierPrerequisites() {

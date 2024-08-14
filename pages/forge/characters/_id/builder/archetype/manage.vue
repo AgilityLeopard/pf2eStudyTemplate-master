@@ -38,13 +38,19 @@
           dense text
         >{{alert.text}}</v-alert>
 
-        <p><strong>Навыки:</strong> {{ item.tier }}</p>
+        <p><strong>Ключевая характеристика:</strong> {{ characterLabelAttribute(item.keyAbility) }}</p>
+        <p>На 1-м уровне ваш класс дает повышение характеристики на ваш выбор. </p>
 
-        <p><strong>Species:</strong> {{ item.species.map((s)=>s.name).join(', ') }}</p>
+        <p><strong>Обучен в навыке (на выбор):</strong> {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}</p>
 
-        <p><strong>XP Cost:</strong> {{ item.cost }}, incl. Archetype ({{ item.costs.archetype }} XP) and Stats ({{ item.costs.stats }} XP)</p>
+        <p><strong>Обучен дополнительным навыкам, в кол-ве равном:</strong> {{ item.skillTrainedPoints}} + мод Интеллекта</p>
+        
+        <p><strong>Очки здоровья:</strong>  {{ item.hitpoints}} + мод Телосложения</p>
+        <!-- <p><strong>Species:</strong> {{ item.species.map((s)=>s.name).join(', ') }}</p> -->
 
-        <v-alert
+        <!-- <p><strong>XP Cost:</strong> {{ item.cost }}, incl. Archetype ({{ item.costs.archetype }} XP) and Stats ({{ item.costs.stats }} XP)</p> -->
+
+        <!-- <v-alert
           v-if="item.costs.archetype !== characterArchetypeCost"
           type="warning"
           class="caption ml-4 mr-4"
@@ -54,18 +60,69 @@
             It seems that the cost that you payed for this archetype ({{characterArchetypeCost}} XP) are not in line with the latest Errata ({{item.costs.archetype}} XP). This will probably <strong>free up {{ characterArchetypeCost - item.costs.archetype }} XP</strong>.
           </p>
           <v-btn color="success" @click="updateArchetypeCost()">Update XP Cost</v-btn>
-        </v-alert>
+        </v-alert> -->
 
         <v-divider class="mb-2"></v-divider>
 
         <p v-if="item.skillAttack">
-          <span v-for="item in WeaponRepository">
+          <h3 class="headline">Атаки</h3>
+          <span v-for="item in WeaponRepository" v-bind:key="item.key">
             <p>{{ item.name }} : {{ characterlabel(skillAttack[item.key]) }}</p>
-        
-     
           </span>
+          
         </p>
 
+        <p v-if="item.skillDefence">
+          <h3 class="headline">Защиты</h3>
+          <span v-for="item in DefenceRepository" v-bind:key="item.key">
+            <p>{{ item.name }} : {{ characterlabel(skillDefence[item.key]) }}</p>
+          </span>
+          
+        </p>
+
+        
+        <p v-if="item.saving">
+
+          <h3 class="headline">Спасброски</h3>
+          <span v-for="item in SavingRepository" v-bind:key="item.key">
+            <p>{{ item.name }} : {{ characterlabel(characterSaving[item.key]) }}</p>
+          </span>
+        </p>
+       
+        <p v-if="item.Perception">
+
+        <h3 class="headline">Внимательность</h3>
+ 
+          <p>Внимательность: {{  characterlabel(characterPerseption) }}</p>
+
+        </p>
+       
+        <p v-if="item.skillClass">
+
+          <h3 class="headline">КС класса</h3>
+
+            <p>КС класса {{ item.name }}: {{  characterlabel(item.skillClass) }}</p>
+
+          </p>
+
+          <h3 class="headline">Классовые особенности</h3>
+          <div
+        v-for="feature in item.archetypeFeatures"
+        class="text-lg-justify" v-bind:key="feature.name"
+      >
+        <div>
+          <strong>{{ feature.name }}</strong>
+          <div v-if="feature.description" v-html="feature.description"></div>
+          <p v-else>{{ feature.snippet }}</p>
+          <v-alert
+            v-if="feature.alert"
+            :type="feature.alert.type"
+            dense
+            text
+          >{{feature.alert.text}}</v-alert>
+        </div>
+
+      </div>
         <!-- <p v-if="item.influence && item.influence != 0">
           <strong>Influence Modifier: </strong>
           {{ `${item.influence > 0 ? '+' : ''}${item.influence}` }}
@@ -246,6 +303,15 @@ export default {
     skillAttack() {
       return this.$store.getters['characters/characterskillAttackById'](this.characterId);
     },
+    skillDefence() {
+      return this.$store.getters['characters/characterskillDefenceById'](this.characterId);
+    },
+    characterSaving() {
+      return this.$store.getters['characters/characterSavingById'](this.characterId);
+    },
+    characterPerseption() {
+      return this.$store.getters['characters/characterPerseptionById'](this.characterId);
+    },
     characterArchetypeMimic() {
       return this.$store.getters['characters/characterArchetypeMimicById'](this.characterId);
     },
@@ -357,6 +423,7 @@ export default {
       }
       return this.item.wargear;
     },
+ 
   },
   watch: {
     characterArchetypeKey: {
@@ -398,6 +465,13 @@ export default {
             break;
         }
     },
+    characterLabelAttribute(keyAbility){
+      return this.attributeRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
+    },
+    characterLabelSkillTrainedChoice(keyAbility){
+      return this.skillRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
+    },
+    
     async loadAdvancedArchetype(){
       this.loading = true;
       console.info(`loading advanced character pseudo archetype...`);

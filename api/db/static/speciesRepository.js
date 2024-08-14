@@ -126,6 +126,7 @@ const coreRep = [
     ...statBoost(0, 0, 0, 0, 0, 0),
     ...statFlaw(0, 0, 0, 0, 0, 0),
     speed: 25,
+    rarity: "Common",
     language: ["Всеобщий"],
     freeLanguage: 1,
     abilityBoost: 2,

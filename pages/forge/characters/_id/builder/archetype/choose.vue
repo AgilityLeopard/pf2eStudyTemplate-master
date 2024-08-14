@@ -16,7 +16,7 @@
       />
     </v-dialog>
 
-    <v-dialog
+    <!-- <v-dialog
       v-model="advancedKeywordsDialog"
       width="600px"
       scrollable
@@ -124,35 +124,35 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <v-col>
       <h1 class="headline">
-        Select an Archetype
+        Выберите класс
       </h1>
 
-      <v-alert
+      <!-- <v-alert
         :value="!characterSpeciesLabel"
         type="warning"
         dense
       >
         You need to select a Species first.
-      </v-alert>
+      </v-alert> -->
     </v-col>
 
     <v-col :cols="12">
       <v-text-field
         v-model="searchQuery"
         solo
-        placeholder="Search..."
+        placeholder="Поиск..."
         prepend-inner-icon="search"
         clearable
       />
     </v-col>
 
-    <v-col :cols="12">
-      <v-card>
-        <div>
+    <v-col :cols="12" >
+      <v-card >
+        <!-- <div>
           <v-divider />
           <v-list subheader>
             <v-subheader>Advanced Character Creation</v-subheader>
@@ -171,14 +171,14 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
-        </div>
+        </div> -->
         <!-- <div
           v-for="(group, key) in archetypeFaction"
           :key="key"
         >
           <v-divider /> -->
 
-          <v-list>
+          <v-list  v-if="archetypeFaction">
             <!-- <v-subheader>{{ group }}</v-subheader> -->
 
             <v-list-item
@@ -342,7 +342,13 @@ export default {
         // if (this.characterSettingTier !== undefined) {
         //   archetypes = archetypes.filter((a) => a.tier <= this.characterSettingTier);
         // }
-
+        if (this.searchQuery) {
+        const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
+        archetypes = archetypes.filter((a) => {
+          const lowerCaseArchetype = a.name.toLowerCase();
+          return lowerCaseArchetype.startsWith(lowerCaseSearchQuery);
+        });
+      }
         
         return [  ...new Set(archetypes)];
       }
@@ -515,7 +521,14 @@ export default {
           id: this.characterId,
           payload: { key: 1, saving: item.saving },
         });
- 
+        this.$store.commit('characters/setCharacterSkillPointsClass', 
+        { id: this.characterId, payload: { key: 1, 
+          value: item.skillTrainedPoints } });
+
+        // this.$store.commit('characters/setCharacterSkillPoints', 
+        // { id: this.characterId, payload: { key: 1, 
+        //   value: item.skillTrainedPoints } });
+
         this.$store.commit("characters/setCharacterPerception", {
           id: this.characterId,
           payload: { key: 1, Perception: item.Perception },

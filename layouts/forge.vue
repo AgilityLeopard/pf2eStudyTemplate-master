@@ -95,31 +95,31 @@
             <v-icon>supervisor_account</v-icon>
           </v-btn>
           <v-btn small text nuxt :to="`/forge/characters/${$route.params.id}/builder/setting`">
-            Setting
+            Главная
           </v-btn>
           <v-btn small text nuxt :to="routes.species" :disabled="!settingSelected">
-            1. Species
+            1. Наследие
           </v-btn>
           <v-btn small text nuxt :to="routes.archetype" :disabled="!settingSelected">
-            2. Archetype
+            2. Класс
           </v-btn>
           <v-btn small text nuxt :to="routes.ascension" :disabled="!settingSelected">
-            3. Ascension
+            3. Предыстория
           </v-btn>
           <v-btn small text nuxt :to="routes.stats" :disabled="!settingSelected">
-            4. Stats
+            4. Навыки и характеристики
           </v-btn>
           <v-btn small text nuxt :to="routes.talents" :disabled="!settingSelected">
-            5. Talents
+            5. Черты
           </v-btn>
           <v-btn small text nuxt :to="routes.wargear" :disabled="!settingSelected">
-            6. Wargear
+            6. Снаряжение
           </v-btn>
           <v-btn small text nuxt :to="routes.psychic" :disabled="!settingSelected">
-            7. Psychic Powers
+            7. Заклинания
           </v-btn>
           <v-btn small text nuxt :to="routes.background" :disabled="!settingSelected">
-            8. Background
+            8. Языки
           </v-btn>
           <v-btn
             small

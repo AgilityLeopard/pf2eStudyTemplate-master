@@ -25,8 +25,16 @@ const simpleStub = function (sourceKey, sourcePage, name, hint, stub = true) {
 
 const playerCore =  [
   {
-    name: 'Back From The Brink',
-    ...simpleStub('playerCore',150,'Back From The Brink','Dead, forgotten, found, rebuild.',false),
+    name: 'Послушник',
+    ...simpleStub('playerCore',150,'Acolyte','Вы провели свои ранние годы в религиозном монастыре или в уединении. ',false),
+    nameBackground: 'Послушник',
+    boost1: ['intellect', 'wisdom'],
+    boost2: true,
+    skill: 'religion',
+    lore: 'Знание письменности',
+    desccription: 'Вы провели свои ранние годы в религиозном монастыре или в уединении. Возможно, вы отправились в этот мир, чтобы распространять слово своей религии, или потому, что вы отвергли учения своей веры, но в глубине души, те уроки, которые вы извлекли, всегда будут с вами.',
+    feat: 'Student of the Canon',
+
     cost: 0,
     costPerTier: 10,
     minimumCampaignTier: 2,
@@ -1745,12 +1753,12 @@ const goen = [
 
 module.exports = [
   ...playerCore,
-  ...red2,
-  ...aaoa,
-  ...tog,
-  ...ltgb,
-  ...aotgt,
-  ...thaot,
-  ...sotah,
-  ...goen,
+  // ...red2,
+  // ...aaoa,
+  // ...tog,
+  // ...ltgb,
+  // ...aotgt,
+  // ...thaot,
+  // ...sotah,
+  // ...goen,
 ];
