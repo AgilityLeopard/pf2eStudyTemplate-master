@@ -32,277 +32,277 @@ const playerCore =  [
     boost2: true,
     skill: 'religion',
     lore: 'Знание письменности',
-    desccription: 'Вы провели свои ранние годы в религиозном монастыре или в уединении. Возможно, вы отправились в этот мир, чтобы распространять слово своей религии, или потому, что вы отвергли учения своей веры, но в глубине души, те уроки, которые вы извлекли, всегда будут с вами.',
-    feat: 'Student of the Canon',
+    description: 'Вы провели свои ранние годы в религиозном монастыре или в уединении. Возможно, вы отправились в этот мир, чтобы распространять слово своей религии, или потому, что вы отвергли учения своей веры, но в глубине души, те уроки, которые вы извлекли, всегда будут с вами.',
+    feat: stringToKebab(`${'playerCore'} ${'Student of the Canon'}`),
 
-    cost: 0,
-    costPerTier: 10,
-    minimumCampaignTier: 2,
-    prerequisites: [],
-    // Benefits
-    influenceBonus: 0,
-    influencePerTier: 1,
-    keywordString: '[Any] (representing the Faction who saved you)',
-    storyElementDescription:
-      '<p>After a horrific encounter, you were somehow reconstructed by the marvels of holy (or unholy) technology.</p>' +
-      '<ol>' +
-      '<li>Roll on the Memorable Injury table (p.194) twice.</li>' +
-      '<li>Roll on the Traumatic Injury (p.195) twice.</li>' +
-      '<li>Replace any lost body parts with the appropriate augmetics; you may choose an option of any Rarity the GM deems appropriate.</li>' +
-      '</ol>',
-    ascensionFeatures: [
-      {
-        key: 'keywords',
-        name: 'Keywords',
-        snippet: 'You gain the [Any] keyword, representing the Faction who saved you.',
-        modifications: [
-          { targetGroup: 'keywords', targetValue: '[ANY]' },
-        ],
-      },
-      {
-        key: 'memorableInjury',
-        name: 'Memorable Injury',
-        snippet: 'Grants +1 die to Intimidation when revealed.',
-        modifications: [
-          { name: 'Memorable Injury', targetGroup: 'abilities', targetValue: '', effect: 'You add +1 die to Intimidation Tests.' },
-          { name: 'Memorable Injury', targetGroup: 'skills', targetValue: 'intimidation', modifier: 1, condition: 'when revealed' },
-        ],
-      },
-      {
-        key: 'traumatic-injury-one',
-        name: 'Traumatic Injury',
-        snippet: 'Your roll on the Traumatic Injury Table',
-        selected: '',
-        optionsPlaceholder: 'Roll d6 and select a Injury',
-        options: [
-          {
-            key: 'playerCore-injury-one-hand',
-            name: 'Hand',
-            snippet: 'You suffer a severe hand injury; you can no longer use that hand. Losing both hands means you are unable to hold any weapons or similar gear.',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-hand',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-one-arm',
-            name: 'Arm',
-            snippet: 'You suffer a severe injury to your arm. Losing both arms means you are unable to hold any weapons or similar gear.',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-arm',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-one-foot',
-            name: 'Foot',
-            snippet: 'You suffer a severe foot injury. Losing both feet means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-foot',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-one-leg',
-            name: 'Leg',
-            snippet: 'You suffer a severe leg injury. Losing both legs means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-leg',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-one-torso',
-            name: 'Torso',
-            snippet: 'You suffer a severe injury that impairs your organs, like the heart, lungs, or liver. Any Toughness based Tests may become more difficult.',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-torso',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-one-eye',
-            name: 'Eye',
-            snippet: 'One of your eyes is damaged beyond repair. A single injured eye may add a penalty, such as +2 DN, to any Tests that require sight. Losing both eyes leaves you Blinded (p.199).',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-eye',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        key: 'traumatic-injury-two',
-        name: 'Traumatic Injury',
-        snippet: 'Your roll on the Traumatic Injury Table',
-        selected: '',
-        optionsPlaceholder: 'Roll d6 and select a Injury',
-        options: [
-          {
-            key: 'playerCore-injury-two-hand',
-            name: 'Hand',
-            snippet: 'You suffer a severe hand injury; you can no longer use that hand. Losing both hands means you are unable to hold any weapons or similar gear.',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-hand',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-two-arm',
-            name: 'Arm',
-            snippet: 'You suffer a severe injury to your arm. Losing both arms means you are unable to hold any weapons or similar gear.',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-arm',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-two-foot',
-            name: 'Foot',
-            snippet: 'You suffer a severe foot injury. Losing both feet means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-foot',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-two-leg',
-            name: 'Leg',
-            snippet: 'You suffer a severe leg injury. Losing both legs means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-leg',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-two-torso',
-            name: 'Torso',
-            snippet: 'You suffer a severe injury that impairs your organs, like the heart, lungs, or liver. Any Toughness based Tests may become more difficult.',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-torso',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            key: 'playerCore-injury-two-eye',
-            name: 'Eye',
-            snippet: 'One of your eyes is damaged beyond repair. A single injured eye may add a penalty, such as +2 DN, to any Tests that require sight. Losing both eyes leaves you Blinded (p.199).',
-            wargear: [
-              {
-                key: 'appropriate-augmetics-eye',
-                name: 'Any option that the Gm deems appropriate',
-                selected: '',
-                options: [
-                  {
-                    filter: true,
-                    typeFilter: ['Augmetics'],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
+    // cost: 0,
+    // costPerTier: 10,
+    // minimumCampaignTier: 2,
+    // prerequisites: [],
+    // // Benefits
+    // influenceBonus: 0,
+    // influencePerTier: 1,
+    // keywordString: '[Any] (representing the Faction who saved you)',
+    // storyElementDescription:
+    //   '<p>After a horrific encounter, you were somehow reconstructed by the marvels of holy (or unholy) technology.</p>' +
+    //   '<ol>' +
+    //   '<li>Roll on the Memorable Injury table (p.194) twice.</li>' +
+    //   '<li>Roll on the Traumatic Injury (p.195) twice.</li>' +
+    //   '<li>Replace any lost body parts with the appropriate augmetics; you may choose an option of any Rarity the GM deems appropriate.</li>' +
+    //   '</ol>',
+    // ascensionFeatures: [
+    //   {
+    //     key: 'keywords',
+    //     name: 'Keywords',
+    //     snippet: 'You gain the [Any] keyword, representing the Faction who saved you.',
+    //     modifications: [
+    //       { targetGroup: 'keywords', targetValue: '[ANY]' },
+    //     ],
+    //   },
+    //   {
+    //     key: 'memorableInjury',
+    //     name: 'Memorable Injury',
+    //     snippet: 'Grants +1 die to Intimidation when revealed.',
+    //     modifications: [
+    //       { name: 'Memorable Injury', targetGroup: 'abilities', targetValue: '', effect: 'You add +1 die to Intimidation Tests.' },
+    //       { name: 'Memorable Injury', targetGroup: 'skills', targetValue: 'intimidation', modifier: 1, condition: 'when revealed' },
+    //     ],
+    //   },
+    //   {
+    //     key: 'traumatic-injury-one',
+    //     name: 'Traumatic Injury',
+    //     snippet: 'Your roll on the Traumatic Injury Table',
+    //     selected: '',
+    //     optionsPlaceholder: 'Roll d6 and select a Injury',
+    //     options: [
+    //       {
+    //         key: 'playerCore-injury-one-hand',
+    //         name: 'Hand',
+    //         snippet: 'You suffer a severe hand injury; you can no longer use that hand. Losing both hands means you are unable to hold any weapons or similar gear.',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-hand',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-one-arm',
+    //         name: 'Arm',
+    //         snippet: 'You suffer a severe injury to your arm. Losing both arms means you are unable to hold any weapons or similar gear.',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-arm',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-one-foot',
+    //         name: 'Foot',
+    //         snippet: 'You suffer a severe foot injury. Losing both feet means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-foot',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-one-leg',
+    //         name: 'Leg',
+    //         snippet: 'You suffer a severe leg injury. Losing both legs means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-leg',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-one-torso',
+    //         name: 'Torso',
+    //         snippet: 'You suffer a severe injury that impairs your organs, like the heart, lungs, or liver. Any Toughness based Tests may become more difficult.',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-torso',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-one-eye',
+    //         name: 'Eye',
+    //         snippet: 'One of your eyes is damaged beyond repair. A single injured eye may add a penalty, such as +2 DN, to any Tests that require sight. Losing both eyes leaves you Blinded (p.199).',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-eye',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     key: 'traumatic-injury-two',
+    //     name: 'Traumatic Injury',
+    //     snippet: 'Your roll on the Traumatic Injury Table',
+    //     selected: '',
+    //     optionsPlaceholder: 'Roll d6 and select a Injury',
+    //     options: [
+    //       {
+    //         key: 'playerCore-injury-two-hand',
+    //         name: 'Hand',
+    //         snippet: 'You suffer a severe hand injury; you can no longer use that hand. Losing both hands means you are unable to hold any weapons or similar gear.',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-hand',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-two-arm',
+    //         name: 'Arm',
+    //         snippet: 'You suffer a severe injury to your arm. Losing both arms means you are unable to hold any weapons or similar gear.',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-arm',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-two-foot',
+    //         name: 'Foot',
+    //         snippet: 'You suffer a severe foot injury. Losing both feet means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-foot',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-two-leg',
+    //         name: 'Leg',
+    //         snippet: 'You suffer a severe leg injury. Losing both legs means you are unable to walk, Run, or Sprint, and may only Crawl (p.180).',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-leg',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-two-torso',
+    //         name: 'Torso',
+    //         snippet: 'You suffer a severe injury that impairs your organs, like the heart, lungs, or liver. Any Toughness based Tests may become more difficult.',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-torso',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         key: 'playerCore-injury-two-eye',
+    //         name: 'Eye',
+    //         snippet: 'One of your eyes is damaged beyond repair. A single injured eye may add a penalty, such as +2 DN, to any Tests that require sight. Losing both eyes leaves you Blinded (p.199).',
+    //         wargear: [
+    //           {
+    //             key: 'appropriate-augmetics-eye',
+    //             name: 'Any option that the Gm deems appropriate',
+    //             selected: '',
+    //             options: [
+    //               {
+    //                 filter: true,
+    //                 typeFilter: ['Augmetics'],
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    // ],
   },
   {
     name: 'Dauntless Reputation',

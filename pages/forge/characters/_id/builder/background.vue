@@ -5,59 +5,26 @@
     <!-- headline -->
     <v-col :cols="12">
 
-      <h2>Manage Backgrounds</h2>
-      <span>Select a background for each Section and choose a single Trait bonus.</span>
+      <h2>Управление языками</h2>
 
-      <v-alert v-if="selectedPlusOne" type="info" text dense>
-        <strong>{{selectedPlusOne.title}}: </strong>You add +1 to your {{selectedPlusOne.plusOne}}
-      </v-alert>
 
     </v-col>
 
-    <!-- Backgrounds -->
-    <v-col :cols="12">
-      <v-alert
-          v-if="backgroundSectionTypes.length <= 0"
-          type="warning"
-          dense text
-      >
-        No fitting associated faction found for <strong>{{characterFactionKey}}</strong>. Check with your GM what background options are available.
-      </v-alert>
-      <div v-for="type in backgroundSectionTypes" class="mt-2 mb-4">
-        <h3>{{type}}</h3>
-        <v-select
-            v-model="selectedBackgrounds[type.toLowerCase()]"
-            :items="backgroundsByType(type)"
-            outlined
-            dense
-            @change="changeBackground"
-            item-value="key"
-            item-text="label"
-            persistent-hint
-            :hint="backgroundHint(selectedBackgrounds[type.toLowerCase()])"
-        ></v-select>
-        <v-btn
-            small
-            :disabled="!selectedBackgrounds[type.toLowerCase()] || (selectedPlusOne && selectedPlusOne.key === selectedBackgrounds[type.toLowerCase()])"
-            :color="selectedPlusOne && selectedPlusOne.key === selectedBackgrounds[type.toLowerCase()] ? 'success' : ''"
-            @click="selectPlusOne(selectedBackgrounds[type.toLowerCase()])"
-        >Use this bonus</v-btn>
-      </div>
-    </v-col>
+
 
     <!-- Languages -->
     <v-col :cols="12">
       <v-card>
-        <v-card-title>Manage Languages</v-card-title>
+        <v-card-title>Управление языками</v-card-title>
         <v-card-text>
-          <p><em>Learned languages:</em></p>
+          <p><em>Изученные языки:</em></p>
           <v-chip-group column>
             <v-chip
               v-for="language in characterLanguages"
               :key="language.name"
               label
               small
-              :close="language.name != 'Low Gothic'"
+              :close="language.name != 'Всеобщий'"
               @click:close="removeLanguage(language.name)"
             >
               <strong>{{language.name}}</strong>&nbsp;
@@ -68,17 +35,15 @@
         <v-divider></v-divider>
         <v-card-text>
           <p>
-            Every character starts with <strong>Low Gothic</strong> and an additional language, common to your homeworld or origin.
-          </p>
-          <p>
-            You can learn additional languages for 1 XP each. Exotic languages might cost more. Check with your GM.
+            Каждый персонаж владеет <strong>Общим языком</strong> и дополнительными языками в количестве {{ MaxIntellectLanguage() }}.
           </p>
           <v-text-field
             v-model="languageInput"
             persistent-hint
-            hint="Enter a custom language and hit enter or click the [+] icon. Toggle the [$] for 0/1 XP."
-            :prepend-icon="languageCostMarker ? 'attach_money' : 'money_off'"
-            @click:prepend="languageCostMarker = !languageCostMarker"
+            hint="Введите язык"
+        
+            
+            :disabled="MaxIntellectLanguage() < 1"
             append-outer-icon="add_box"
             @click:append-outer="addLanguage(languageInput)"
             @keypress.enter="addLanguage(languageInput)"
@@ -94,6 +59,7 @@
 <script lang="js">
 import BackgroundPreview from '~/components/forge/BackgroundPreview.vue';
 import IssueList from '~/components/IssueList.vue';
+
 
 export default {
   name: 'Background',
@@ -149,6 +115,9 @@ export default {
         return this.characterBackgrounds.plusOne;
       }
       return undefined;
+    },
+    characterAttributes() {
+      return this.$store.getters['characters/characterAttributesById'](this.characterId);
     },
     characterLanguages() {
       return this.$store.getters['characters/characterLanguagesById'](this.characterId);
@@ -233,6 +202,12 @@ export default {
         return background ? background.snippet : 'Could not load background hint.';
       }
       return '';
+    },
+    MaxIntellectLanguage() {
+        const modInt = (this.characterAttributes['intellect'] - 10) / 2;
+        const modLang = this.characterLanguages.length - 1;
+        const modAncestry = this.characterSpecies ? this.characterSpecies.freeLanguage : 0;
+        return modInt - (modLang + modAncestry);
     },
     changeBackground(key) {
       const item = this.getBackgroundBySectionByKey(key);

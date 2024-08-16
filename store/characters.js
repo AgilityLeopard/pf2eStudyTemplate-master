@@ -141,9 +141,9 @@ export const getters = {
       return 0;
     }
     let spending = 0;
-    character.ascensionPackages.forEach((ascensionPackage) => {
-      spending += ascensionPackage.cost;
-    });
+    // character.ascensionPackages.forEach((ascensionPackage) => {
+    //   spending += ascensionPackage.cost;
+    // });
     return spending;
   },
   characterPsychicPowerCostsById: (state) => (id) => {
@@ -247,10 +247,16 @@ export const getters = {
     state.characters[id] ? state.characters[id].attributesBoost : {},
   characterAncestryBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesAncestryBoost : {},
+  characterAncestryBoostById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].attributesBackgroundBoost : {},
   characterAncestryFreeBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].AncestryFreeBoost : {},
   characterAncestryFreeBoost2ById: (state) => (id) =>
     state.characters[id] ? state.characters[id].AncestryFreeBoost2 : {},
+  characterBackgroundFreeBoostById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].BackgroundFreeBoost : {},
+  characterBackgroundFreeBoost2ById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].BackgroundFreeBoost2 : {},
   characterAttributesById: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributes : {},
   characterAttributesEnhancedById: (state) => (id) => {
@@ -376,7 +382,8 @@ export const getters = {
 
   // Ascensions
   characterAscensionPackagesById: (state) => (id) =>
-    state.characters[id] ? state.characters[id].ascensionPackages : [],
+    state.characters[id] ? state.characters[id].ascensionPackages.key
+  : getDefaultState().ascensionPackages.key,
 
   // Keywords
   characterKeywordsRawById: (state) => (id) =>
@@ -608,6 +615,42 @@ export const mutations = {
 
     
   },
+  setCharacterBackgroundFreeBoost(state, payload) {
+    const character = state.characters[payload.id];
+    if(character.BackgroundFreeBoost != ""  && character.BackgroundFreeBoost2 != character.BackgroundFreeBoost ) 
+      {
+        character.attributesBackgroundBoost[character.BackgroundFreeBoost] -= 1;
+        character.attributes[character.BackgroundFreeBoost] -= 2;
+      
+      }
+
+      character.BackgroundFreeBoost = payload.payload.key;
+      if(payload.payload.key != "" & payload.payload.key != character.BackgroundFreeBoost2)
+        {
+          character.attributesBackgroundBoost[payload.payload.key] = payload.payload.value;
+          character.attributes[character.BackgroundFreeBoost] += 2;
+        }
+
+    
+  },
+  setCharacterBackgroundFreeBoost2(state, payload) {
+    const character = state.characters[payload.id];
+    if(character.BackgroundFreeBoost2 != "" && character.BackgroundFreeBoost2 != character.BackgroundFreeBoost ) 
+      {
+        character.attributesBackgroundBoost[character.BackgroundFreeBoost2] -= 1;
+        character.attributes[character.BackgroundFreeBoost2] -= 2;
+      
+      }
+
+      character.BackgroundFreeBoost2 = payload.payload.key;
+      if(payload.payload.key != "" && payload.payload.key != character.BackgroundFreeBoost)
+        {
+          character.attributesBackgroundBoost[payload.payload.key] = payload.payload.value;
+          character.attributes[character.BackgroundFreeBoost2] += 2;
+        }
+
+    
+  },
   resetCharacterStats(state, payload) {
     const character = state.characters[payload.id];
     // Object.keys(character.attributesBoost).forEach((key, index) => {
@@ -617,6 +660,9 @@ export const mutations = {
 
     character.AncestryFreeBoost = "";
     character.AncestryFreeBoost2 = "";
+    character.BackgroundFreeBoost = "";
+    character.BackgroundFreeBoost2 = "";
+  
     Object.keys(character.attributes).forEach((key, index) => {
       character.attributesBoost[key] = 0;
       character.attributes[key] =
@@ -631,7 +677,8 @@ export const mutations = {
 
     Object.keys(character.skills).forEach((key, index) => {
       if(character.customSkills.find(s => s.key == key) !== undefined)
-        character.SkillPoints = character.SkillPoints  - 1;
+        if(character.customSkills.find(s => s.key == key).optional != true )
+            character.SkillPoints = character.SkillPoints  - 1;
       else
         character.skills[key] = "U";
     });
@@ -692,6 +739,15 @@ export const mutations = {
     state.characters[payload.id].attributesBoost[payload.payload.key] =
       payload.payload.value;
   },
+  setCharacterBackgroundBoostForAll(state, payload) {
+    const char = state.characters[payload.id];
+
+    let theAttribute =
+      state.characters[payload.id].attributesBackgroundBoost[payload.key];
+    theAttribute = payload.payload.value;
+    state.characters[payload.id].attributesBackgroundBoost[payload.payload.key] =
+      payload.payload.value;
+  },
   setCharacterAncestryBoostForAll(state, payload) {
     const char = state.characters[payload.id];
 
@@ -725,6 +781,29 @@ export const mutations = {
     console.info(`Adding ${skill.name} Skill:`);
     console.info(skill);
     character.customSkills.push(skill);
+  },
+  removeBackgroundCustomSkill(state, payload) {
+     const { id, key1 } = payload;
+    const character = state.characters[id];
+
+    character.customSkills.forEach(
+      
+      t => 
+        {
+            if(t.background === true)
+            {
+              const key = t.key;
+              delete character.skills[key];
+              character.customSkills.pop(
+                (s) => s.key === key
+              );
+            }
+
+        }
+    
+    );
+
+
   },
   removeCharacterCustomSkill(state, payload) {
     const { id, key } = payload;
@@ -1033,14 +1112,15 @@ export const mutations = {
   // Ascension & Ascension Packages
   addCharacterAscensionPackage(state, payload) {
     const character = state.characters[payload.id];
-    character.ascensionPackages.push({
-      key: payload.key,
-      value: payload.value,
-      cost: payload.cost,
-      storyElementChoice: undefined,
-      sourceTier: payload.sourceTier,
-      targetTier: payload.targetTier,
-    });
+    character.ascensionPackages = payload;
+    // character.ascensionPackages.push({
+    //   key: payload.key,
+    //   value: payload.value,
+    //   cost: payload.cost,
+    //   storyElementChoice: undefined,
+    //   sourceTier: payload.sourceTier,
+    //   targetTier: payload.targetTier,
+    // });
   },
   setCharacterAscensionPackageStoryElement(state, payload) {
     const character = state.characters[payload.id];
@@ -1399,7 +1479,17 @@ const getDefaultState = () => ({
   SkillPointsClass: 0,
   AncestryFreeBoost: "",
   AncestryFreeBoost2: "",
+  BackgroundFreeBoost: "",
+  BackgroundFreeBoost2: "",
   attributesBoost: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intellect: 0,
+    wisdom: 0,
+    charisma: 0,
+  },
+  attributesBackgroundBoost: {
     strength: 0,
     dexterity: 0,
     constitution: 0,
@@ -1469,12 +1559,16 @@ const getDefaultState = () => ({
   },
   Perception: "U",
   customSkills: [],
-  languages: [{ name: "Всеобщий", cost: 0, source: "", trait: "Обычный" }],
+  languages: [{ name: "Всеобщий", cost: 0, source: "", trait: "Common" }],
   keywords: [],
   talents: [],
   mutations: [],
   psychicPowers: [],
-  ascensionPackages: [],
+  ascensionPackages: {   
+    key: undefined,
+    label: "",
+    cost: 0,
+  },
   wargear: [],
   background: {
     origin: undefined,

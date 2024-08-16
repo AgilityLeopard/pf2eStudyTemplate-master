@@ -1251,6 +1251,44 @@ const requireTier = function(value) {
 //   },
 // ];
 const playerCore = [
+  {
+    ...talent('playerCore',130,'Battle Medicine',20,'навык, общая, исцеление, воздействие'),
+    type: "skill",
+    name: "Боевая Медицина",
+    snippet: 'Вы можете подлатать раны даже в бою.',
+    level: 1,
+    requirements: [
+      {
+        type: 'skill',
+        key: 'medicine',
+        value: 'T',
+      }
+    ],
+    requirementsText: "Вы держите Набор лекаря (Healer's Tools), или он надет и у вас есть свободная рука",
+    reqOptionalText: "Обучены Медицине",
+    description:
+      '<p>Вы можете подлатать раны даже в бою. Совершите проверку Медицины с таким же КС как для Лечение ран (Treat Wounds) и восстановите соответствующее количество ОЗ; это не убирает состояние ранен. Как и для Лечение ран (Treat Wounds), вы можете выполнить проверку с более высоким КС, если у вас есть минимальный уровень мастерства. После этого, цель временно иммунна к вашей "Боевой медицине" на 1 день.</p>',
+   
+  },
+  {
+    ...talent('playerCore',130,'Student of the Canon',20,'навык, общая'),
+    type: "skill",
+    name: "Ученик Канона",
+    snippet: 'Вы изучили достаточно много верований, чтобы узнавать о них признаки, которые вряд ли верны.',
+    level: 1,
+    reqOptionalText: "Обучены Религии",
+    requirements: [
+      {
+        type: 'skill',
+        key: 'religion',
+        value: 'T',
+      }
+    ],
+    // requirementsText: "Вы держите Набор лекаря (Healer's Tools), или он надет и у вас есть свободная рука",
+    description:
+      '<p>Вы изучили достаточно много верований, чтобы узнавать о них признаки, которые вряд ли верны. Если при броске проверки Религии для Расшифровка текста (Decipher Writing) религиозного происхождения, или Вспомнить информацию (Recall Knowledge) о принципах веры вы получили крит.провал, то вместо этого получаете просто провал. Когда выполняете Вспомнить информацию (Recall Knowledge) о принципах своей веры и при броске получаете провал, то вместо этого получаете успех, а если при броске получаете успех, то вместо этого получаете крит.успех.</p>',
+   
+  },
     {
       ...talent('playerCore',130,'fleet',20,'эльф'),
       snippet: 'Вы получаете плюс 5 футов к скорости',
@@ -1261,7 +1299,9 @@ const playerCore = [
         '<p>The very sight of blood energises you in battle.</p>' +
         '<p>Whenever you see an individual within 30 metres of you suffer a Critical Hit or the Bleeding Condition, you gain 1 point of Wrath.</p>' +
         '<p>The GM may require a Corruption Test whenever this Talent is activated.</p>',
-      requirements: [],
+      requirements: [
+
+      ],
       modifications: [
         { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
       ],

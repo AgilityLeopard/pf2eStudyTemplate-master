@@ -134,6 +134,7 @@
 </template>
 
 <script lang="js">
+import { lowerCase } from 'lodash';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 
@@ -329,7 +330,8 @@ export default {
         return [];
       }
       let filteredTalents = this.talents;
-      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
+      // const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
 
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.tags.toString().toUpperCase().includes(lw)));
@@ -366,8 +368,9 @@ export default {
         talent.prerequisitesFulfilled = fulfilled;
         return talent;
       });
-
-      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      
+      const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
+      //const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
       // if () {
        // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));

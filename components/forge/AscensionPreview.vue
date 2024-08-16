@@ -3,7 +3,7 @@
   <v-card v-if="item">
 
     <v-card-title v-if="chooseMode" style="background-color: #262e37; color: #fff;">
-      <span>Confirm Ascension</span>
+      <span>Подтвердите Предысторию</span>
       <v-spacer />
       <v-icon dark @click="$emit('cancel')">
         close
@@ -13,7 +13,7 @@
     <v-card-title primary-title>
       <div>
         <h3 class="headline md0">
-          {{ item.name }}
+          {{ item.nameBackground }}
         </h3>
         <span class="subtitle-1 grey--text">{{ item.teaser }}</span>
       </div>
@@ -31,17 +31,22 @@
 
       <v-alert v-if="item.alert" type="info" text dense class="caption" v-html="item.alert"></v-alert>
 
-      <p class="text-lg-justify">
+      <p><v-divider /></p>
+        <blockquote class="blockquote font-italic">
+          <p>"{{ item.description }}"</p>
+          <!-- <span class="float-right">- from the Wrath & Glory Corerules -</span> -->
+        </blockquote>
+      <!-- <p class="text-lg-justify">
         <strong>Build Point Cost:</strong>
         <span v-if="item.costPerTier > 0">(New Tier x {{ item.costPerTier }})</span>
         <span v-if="item.costPerTier > 0 && item.cost > 0">+</span>
         <span v-if="item.cost > 0">{{item.cost}}</span>
-      </p>
+      </p> -->
 
-      <span class="mt-2 grey--text">Prerequisites</span>
+      <!-- <span class="mt-2 grey--text">Prerequisites</span> -->
       <v-divider class="mb-2" />
 
-      <p class="text-lg-justify">
+      <!-- <p class="text-lg-justify">
         <strong>Minimum Campaign Tier:</strong> {{ item.minimumCampaignTier }}+
       </p>
 
@@ -74,15 +79,16 @@
       <div class="text-lg-justify mb-2">
         <strong>Story Element:</strong>
         <div v-html="item.storyElementDescription"></div>
-      </div>
+      </div> -->
     </v-card-text>
 
     <v-divider />
 
+
     <v-card-actions v-if="chooseMode">
 
       <v-row v-if="!alertText" justify="center" no-gutters>
-        <v-col :cols="2">
+        <!-- <v-col :cols="2">
           <v-select
             :items="[currentCharacterTier]"
             :value="currentCharacterTier"
@@ -90,8 +96,8 @@
             dense
             disabled
             readonly
-          />
-        </v-col>
+          /> -->
+        <!-- </v-col> -->
 
         <v-col class="justify" :cols="2" style="text-align:center;">
           <v-avatar size="32" color="primary">
@@ -101,14 +107,14 @@
           </v-avatar>
         </v-col>
 
-        <v-col cols="2">
+        <!-- <v-col cols="2">
           <v-select
             v-model="targetTier"
             :items="targetTierOptions"
             dense
             label="Target Tier"
           />
-        </v-col>
+        </v-col> -->
       </v-row>
 
       <v-alert dense text type="warning" class="caption" style="width: 100%" v-if="alertText">
@@ -122,7 +128,7 @@
         Cancel
       </v-btn>
       <v-spacer />
-      <v-btn right color="green" @click="$emit('select', item, targetTier)" :disabled="alertText">
+      <v-btn right color="green" @click="$emit('select', item)" :disabled="alertText">
         Select Package
       </v-btn>
     </v-card-actions>
@@ -133,14 +139,14 @@
 export default {
   name: 'AscensionPreview',
   props: {
-    currentCharacterTier: {
-      type: Number,
-      required: true,
-    },
-    maxTargetTier: {
-      type: Number,
-      required: true,
-    },
+    // currentCharacterTier: {
+    //   type: Number,
+    //   required: true,
+    // },
+    // maxTargetTier: {
+    //   type: Number,
+    //   required: true,
+    // },
     item: {
       type: Object,
       required: true,
@@ -156,7 +162,7 @@ export default {
   },
   data() {
     return {
-      targetTier: this.maxTargetTier,
+      targetTier: 0,
     };
   },
   computed: {
@@ -173,9 +179,9 @@ export default {
       return this.item.minimumCampaignTier <= this.maxTargetTier;
     },
     targetTierOptions() {
-      const from = Math.max(this.currentCharacterTier + 1, this.item.minimumCampaignTier);
-      const to = this.maxTargetTier;
-      return from <= to ? this.range(from, to) : [];
+      // const from = Math.max(this.currentCharacterTier + 1, this.item.minimumCampaignTier);
+      // const to = this.maxTargetTier;
+      return [];
     },
   },
   methods: {

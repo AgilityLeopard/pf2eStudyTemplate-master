@@ -1,288 +1,320 @@
 <template>
+  <v-row justify="center">
+    <v-col :cols="12">
+      <h1 class="headline">Выберите Предыстория</h1>
 
-  <v-row>
+    </v-col>
 
-    <!-- Ascension Dialog -->
     <v-dialog
-      v-model="dialog"
+      v-model="ascensionDialog"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
       width="600px"
       scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
     >
       <ascension-preview
-        v-if="selectedPreview"
-        :item="selectedPreview"
-        :current-character-tier="effectiveCharacterTier"
-        :max-target-tier="settingTier"
+        v-if="selectedAscension"
+        :character-id="characterId"
+        :item="selectedAscension"
         choose-mode
-        @select="selectPackageForChar"
-        @cancel="dialog = false"
+        @select="selectAscensionForChar"
+        @cancel="ascensionDialog = false"
       />
     </v-dialog>
 
-    <!-- ascension headline -->
-    <v-col>
-      <h1 class="headline">
-        Выберите предысторию
-      </h1>
+    <v-col cols="12">
+      <v-progress-circular
+        v-if="!ascensionList"
+        indeterminate
+        color="success"
+        size="128"
+        width="12"
+      />
 
-      <v-alert
-        v-for="alert in alerts"
-        :key="alert.key"
-        :value="true"
-        :type="alert.type"
-        text dense
-      >
-        {{ alert.text }}
-      </v-alert>
-    </v-col>
-
-    <!-- ascension options -->
-    <v-col
-      :cols="12"
-    >
-      <v-card>
+      <v-card v-if="ascensionList">
         <v-list>
           <v-list-item
-            v-for="item in ascensionPackagesList"
+            v-for="item in ascensionList"
             :key="item.key"
-            two-line
-            @click.stop="openDialog(item)"
+            
+            @click.stop="updatePreview(item)"
           >
-            <v-list-item-avatar tile size="64">
-              <img :alt="item.name" :src="`/img/avatars/ascension/${item.key}.png`" />
+            <v-list-item-avatar tile>
+              <img :src="getAvatar(item.key)" />
             </v-list-item-avatar>
 
             <v-list-item-content>
               <v-list-item-title>
-                {{ item.name }}
+                {{ item.nameAncestry }}
                 <v-chip
-                  v-if="item.source && !['core', 'coreab'].includes(item.source.key)"
+                  v-if="
+                    item.source && !['core', 'coreab'].includes(item.source.key)
+                  "
                   color="info"
                   outlined
                   tags
                   x-small
                   label
                 >
-                  {{item.source.key.toUpperCase()}}
+                  {{ item.source.key.toUpperCase() }}
                 </v-chip>
               </v-list-item-title>
               <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
             </v-list-item-content>
-
-            <v-list-item-action>
-              <v-btn dense icon>
-                <v-icon color="primary">
-                  arrow_forward_ios
-                </v-icon>
-              </v-btn>
-            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-card>
-    </v-col>
 
+   
+    </v-col>
   </v-row>
+</template>
+
+
+
+
 
 </template>
 
-<script lang="js">
-import AscensionPreview from '~/components/forge/AscensionPreview.vue';
+<script>
+import AscensionPreview from "~/components/forge/AscensionPreview.vue";
+import SluggerMixin from "~/mixins/SluggerMixin";
 
 export default {
-  name: 'ascension-choose',
+  name: "Choose",
   components: {
     AscensionPreview,
   },
-  asyncData({ params }) {
-    return {
-      characterId: params.id,
-    };
-  },
+  mixins: [SluggerMixin],
   data() {
     return {
-      dialog: false,
-      ascensionPackagesList: undefined,
-      selectedPreview: undefined,
+      ascensionList: undefined,
+      selectedAscension: undefined, // for he preview dialog box
+      ascensionDialog: false,
     };
   },
   computed: {
     sources() {
       return [
-        'playerCore',
-        'fspg',
-        'red1',
-        'cos',
-        ...this.settingHomebrews
+        "playerCore",
+        ...this.settingHomebrews,
       ];
     },
     settingHomebrews() {
-      return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
+      return this.$store.getters["characters/characterSettingHomebrewsById"](
+        this.characterId
+      );
     },
-    settingTier() {
-      return this.$store.getters['characters/characterSettingTierById'](this.characterId);
+    characterSettingTier() {
+      return this.$store.getters["characters/characterSettingTierById"](
+        this.characterId
+      );
     },
-    characterArchetypeLabel() {
-      return this.$store.getters['characters/characterArchetypeLabelById'](this.characterId);
+    characterAttributes() {
+      return this.$store.getters["characters/characterAttributesById"](
+        this.characterId
+      );
     },
-    effectiveCharacterTier() {
-      return this.$store.getters['characters/characterEffectiveTierById'](this.characterId);
+    characterSkillPoints() {
+      return this.$store.getters['characters/characterSkillPointsById'](this.characterId);
     },
-    alerts() {
-      const alerts = [];
-      if (!this.characterArchetypeLabel) {
-        alerts.push({ type: 'warning', text: 'You need to select an Archetype first.' });
-      }
-      if (this.effectiveCharacterTier >= this.settingTier) {
-        alerts.push({ type: 'warning', text: 'Your character already has reached a tier sufficient for the Campaign Tier.' });
-      }
-      return alerts;
+
+    characterSkills() {
+      return this.$store.getters["characters/characterSkillsById"](
+        this.characterId
+      );
     },
   },
   watch: {
     sources: {
       handler(newVal) {
         if (newVal) {
-          this.getAscensionPackageList(newVal);
+          this.getAscensionList(newVal);
+          this.getTalents(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
     },
   },
+  asyncData({ params }) {
+    return {
+      characterId: params.id,
+    };
+  },
   methods: {
-    async getAscensionPackageList(sources) {
+    async getAscensionList(sources) {
       const config = {
         params: {
-          source: sources.join(','),
+          source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get('/api/ascension-packages/', config);
-      this.ascensionPackagesList = data.filter((item) => item.stub === undefined || item.stub === false);
-    },
-    openDialog(item) {
-      this.selectedPreview = item;
-      this.dialog = true;
-    },
+      const { data } = await this.$axios.get("/api/ascension-packages/", config);
+      this.ascensionList = data;
 
-    /**
-     * SET ASCENSION CHOICE
-     */
-    selectPackageForChar(ascensionPackage, targetTier) {
+      // if (sources.includes("custom")) {
+      //   const customSpecies = this.$store.getters["species/speciesSets"];
+      //   this.speciesList.push(...customSpecies);
+      // }
+    },
+    async getTalents(sources) {
+      this.loading = true;
+      const config = {
+        params: { source: this.sources.join(','), },
+      };
+      {
+        const { data } = await this.$axios.get('/api/talents/', config);
+        this.talentList = data.map(talent => {
+                       
+          
+          // const prerequisitesHtml = this.requirementsToText(talent).join(', ');
+          return {
+            ...talent
+          }
+        });
+
+        // this.talentList.filter(talent =>{
+          
+        //   const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+        //   return lowercaseKeywords.includes(talent.tags.toString().toUpperCase());
+              
+
+        //    }
+        //   )
+      
+
+
+      }
+      
+      this.loading = false;
+    },
+    getAvatar(key) {
+      return `/img/avatars/ascension/${key}.png`;
+    },
+    async updatePreview(item) {
+      const slug = this.camelToKebab(item.key);
+      // if (item.key.startsWith("custom-")) {
+      //   const speciesDetails = this.$store.getters["species/getSpecies"](
+      //     item.key
+      //   );
+      //   this.selectedSpecies = speciesDetails;
+      // } else {
+        const ascensionDetails = await this.$axios.get(`/api/ascension-packages/${slug}`);
+        this.selectedAscension = ascensionDetails.data;
+      // }
+      this.ascensionDialog = true;
+    },
+    selectAscensionForChar(ascensionPackage) {
       const id = this.characterId;
 
-      ascensionPackage.sourceTier = this.effectiveCharacterTier;
-      ascensionPackage.targetTier = targetTier;
 
-      const cost = ( ascensionPackage.costPerTier * targetTier ) + ascensionPackage.cost;
       const payload = {
         id,
         key: ascensionPackage.key,
         value: ascensionPackage.name,
-        cost,
+       // cost,
         sourceTier: ascensionPackage.sourceTier,
-        targetTier,
+        // targetTier,
       };
       this.$store.commit('characters/addCharacterAscensionPackage', payload);
 
-      if (ascensionPackage.influenceBonus !== 0 || ascensionPackage.influencePerTier !== 0) {
-        const tierDifference = ascensionPackage.targetTier - ascensionPackage.sourceTier;
-        let influenceModifier = 0;
-        if (ascensionPackage.influenceBonus !== 0) {
-          influenceModifier += ascensionPackage.influenceBonus;
-        }
-        if (ascensionPackage.influencePerTier !== 0) {
-          influenceModifier += tierDifference * ascensionPackage.influencePerTier;
-        }
-        if (influenceModifier > 0) {
-          const modificationPayload = {
-            name: ascensionPackage.name,
-            targetGroup: 'traits',
-            targetValue: 'influence',
-            modifier: influenceModifier,
+      const talent = this.talentList.find(s => s.key === ascensionPackage.feat);
+      const match = talent.name.match(/(<.*>)/);
+      const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+      
+      const payloadSkill = {
+        id: talentUniqueId,
+        name: talent.name,
+        key: talent.key,
+        cost: talent.cost,
+        place: "background",
+        placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
+        selected: undefined,
+        choice: talent.optionsKey,
+        source: `talent.${talentUniqueId}`,
+      }
+
+      this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payloadSkill });
+   
+    
+      //добавляем лоры
+      
+      this.$store.commit('characters/removeBackgroundCustomSkill', { id, payload });
+
+      if(ascensionPackage.lore)
+      {
+            const skill = {
+                key: this.textToCamel(ascensionPackage.lore),
+                name: ascensionPackage.lore,
+                attribute: 'intellect',
+                background: true,
+                description: "",
+                optional: true,
           };
-          const content = { modifications: [modificationPayload], source: `ascension.${ascensionPackage.key}.influence`, };
-          this.$store.commit('characters/setCharacterModifications', { id, content });
-        }
+          this.$store.commit('characters/addCharacterCustomSkill', { id, skill });
+          //this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
       }
-
-      let modifications = [];
-
-      ascensionPackage.ascensionFeatures
-      .filter( (feature) => feature.modifications !== undefined )
-      .forEach( (feature) => {
-          modifications = [ ...modifications, ...feature.modifications ];
-      });
-
-      modifications
-      .filter( (m) => m.targetGroup === 'keywords' )
-      .forEach( (k) => {
-        const payload = {
-          name: k.targetValue,
-          source: `ascension.${ascensionPackage.key}.keywords`,
-          type: 'keyword',
-          replacement: undefined,
-        };
-        this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
-      });
-
-      modifications
-      .filter( (m) => m.targetGroup === 'talents' )
-      .forEach( (t) => {
-        const payload = {
-          name: t.meta.name,
-          key: t.targetValue,
-          cost: 0,
-          placeholder: undefined,
-          selected: undefined,
-          source: `ascension.${ascensionPackage.key}`,
-        };
-        this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
-      });
-
+      
+      if(ascensionPackage.skill)
       {
-        ascensionPackage.ascensionFeatures
-        .filter( (feature) => feature.wargear !== undefined )
-        .forEach( (feature) => {
-          feature.wargear.forEach((wargear)=> {
-            if ( wargear.options === undefined) {
-              const payload = {
-                id,
-                name: wargear.name,
-                source: `ascension.${ascensionPackage.key}.${feature.key}`,
-              };
-              this.$store.commit('characters/addCharacterWargear', payload);
-            }
-          });
-        });
+        if(this.characterSkills[ascensionPackage.skill] === "U" )
+            this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: ascensionPackage.skill, value: "T" } });
       }
 
-      {
-        ascensionPackage.ascensionFeatures
-        .filter( (feature) => feature.psychicPowers !== undefined )
-        .forEach( (feature) => {
-          feature.psychicPowers.forEach((psychicPower)=>{
-            if ( psychicPower.query && psychicPower.query.name ) {
-              const payload = {
-                id,
-                name: psychicPower.query.name,
-                cost: 0, // TODO for non free powers
-                source: `ascension.${ascensionPackage.key}.${feature.key}`,
-              };
-              this.$store.commit('characters/addCharacterPsychicPower', payload);
-            }
-          });
-        });
-      }
 
-      this.dialog = false;
+
+      this.ascensionDialog = false;
       this.$router.push({
-        name: 'forge-characters-id-builder-ascension-manage',
-        params: { id },
+        name: "forge-characters-id-builder-ascension-manage",
+        params: { id: this.characterId },
       });
     },
+    addCustomSkill(skill) {
+      const id = this.characterId;
+      this.$store.commit('characters/addCharacterCustomSkill', { id, skill });
+    },
+    openCustomEditor() {
+      this.$router.push({
+        name: "forge-characters-id-builder-species-edit",
+        params: { id: this.characterId, speciesKey: undefined },
+      });
+    },
+    ensurePrerequisites(prerequisites) {
+      const id = this.characterId;
+
+      if (prerequisites && prerequisites.length > 0) {
+        prerequisites.forEach((prerequisite) => {
+          // { group: 'attributes', value: 'willpower', threshold: 3, }
+          switch (prerequisite.group) {
+            case "attributes":
+              const attributeValue =
+                this.characterAttributes[prerequisite.value];
+              if (attributeValue < prerequisite.threshold) {
+                this.$store.commit("characters/setCharacterAttribute", {
+                  id,
+                  payload: {
+                    key: prerequisite.value,
+                    value: prerequisite.threshold,
+                  },
+                });
+              }
+              break;
+            case "skills":
+              const skillValue = this.characterSkills[prerequisite.value];
+              if (skillValue < prerequisite.threshold) {
+                this.$store.commit("characters/setCharacterSkill", {
+                  id,
+                  payload: {
+                    key: prerequisite.value,
+                    value: prerequisite.threshold,
+                  },
+                });
+              }
+              break;
+          }
+        });
+      }
+    },
   },
-}
+};
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped></style>

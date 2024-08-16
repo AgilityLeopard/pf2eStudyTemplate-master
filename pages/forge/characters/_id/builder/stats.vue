@@ -23,7 +23,7 @@
       </h3>
     </v-col>
 
-    <v-col v-if="boost == 2"  :cols="12" :md="6">
+    <!-- <v-col v-if="boost == 2"  :cols="12" :md="6">
       <v-select  
         label="Свободное повышение"
         v-model="selectedAncestryBoost"
@@ -32,20 +32,9 @@
         item-value="key"
         @change="updateSelect(selectedAncestryBoost)"
       ></v-select>
-    </v-col>
+    </v-col> -->
 
-    <v-col v-else :cols="12" :md="12">
-      <v-select  
-        label="Свободное повышение"
-        v-model="selectedAncestryBoost"
-        :items="AncestryAttribute"
-        item-text="name"
-        item-value="key"
-        @change="updateSelect(selectedAncestryBoost)"
-      ></v-select>
-    </v-col>
-
-    <v-col v-if="boost == 2"  :cols="12" :md="6">
+    <v-col v-if="boost == 2"  :cols="12" :md="6" >
       <v-select  
         label="Повышение от Наследия"
         v-model="selectedAncestryBoost2"
@@ -55,12 +44,55 @@
         @change="updateSelect2(selectedAncestryBoost2)"
       ></v-select>
     </v-col>
+    
+    <v-col :cols="12" :md="6">
+      <v-select  
+        label="Свободное повышение"
+        v-model="selectedAncestryBoost"
+        :items="AncestryAttribute"
+        item-text="name"
+        item-value="key"
+        @change="updateSelect(selectedAncestryBoost)"
+      ></v-select>
+    </v-col>
+
+    <v-col :cols="12">
+      <h3 class="headline">
+          Повышение от Предыстории
+      </h3>
+    </v-col>
+
+    <v-col  :cols="6" :md="6">
+      <!-- <v-sheet class="pa-2 ma-2"> -->
+      <v-select  
+        label="Повышение от предыстории"
+        v-model="selectedBackgroundBoost"
+        :items="BackgroundAttribute"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectBackground(selectedBackgroundBoost)"
+      ></v-select>
+      <!-- </v-sheet> -->
+    </v-col>
+
+
+
+    <v-col  :cols="6" :md="6">
+      <v-select  
+        label="Повышение от предыстории"
+        v-model="selectedBackgroundBoost2"
+        :items="BackgroundAttribute2"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectBackground2(selectedBackgroundBoost2)"
+      ></v-select>
+    </v-col>
 
     <!-- <v-card-text>
       <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
     </v-card-text> -->
 
-    <v-col :cols="12" :md="5">
+    <v-col :cols="12" :md="5" >
       <v-card>
         <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
         <v-simple-table dense>
@@ -137,7 +169,7 @@
                 <td>
                   <v-btn
                     icon
-                    :disabled="characterSkills[skill.key] == 'U' || characterSkillPoints == MaxSkillPoints() || skill.custom"
+                    :disabled="characterSkills[skill.key] == 'U' || RestrictionSkill(skill) == true || characterSkillPoints == MaxSkillPoints() || skill.custom"
                     @click="decrementSkill(skill.key)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
@@ -163,6 +195,7 @@
                         small
                         @click="removeCustomSkill(skill.key)"
                         slot-scope="{ hover }"
+                        :disabled="skill.optional"
                         :color="`${ hover ? 'error' : '' }`"
                       >delete</v-icon>
                     </v-hover>
@@ -347,6 +380,8 @@ export default {
       skillsEditorDialog: false,
       selectedAncestryBoost: undefined,
       selectedAncestryBoost2: undefined,
+      selectedBackgroundBoost: undefined,
+      selectedBackgroundBoost2: undefined,
       selectedBoost: { },
       customSkill: {
         key: undefined,
@@ -357,10 +392,13 @@ export default {
       showAlerts: false,
       archetype: undefined,
       species: undefined,
+      ascension: undefined,
       loading: false,
       select: { },
       AncestryAttribute: [],
       AncestryAttribute2: [],
+      BackgroundAttribute: [],
+      BackgroundAttribute2: [],
       boost : 0,
       SkillsTrained: {
         U: 0,
@@ -458,6 +496,11 @@ export default {
     characterSpeciesKey() {
       return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
     },
+    characterAscensionKey() {
+      return this.$store.getters["characters/characterAscensionPackagesById"](
+        this.characterId
+      );
+    },
     characterArchetypeKey() {
       return this.$store.getters['characters/characterArchetypeKeyById'](this.characterId);
     },
@@ -481,6 +524,12 @@ export default {
     },
     characterAncestryFreeBoost2() {
       return this.$store.getters['characters/characterAncestryFreeBoost2ById'](this.characterId);
+    },
+    characterBackgroundFreeBoost() {
+      return this.$store.getters['characters/characterBackgroundFreeBoostById'](this.characterId);
+    },
+    characterBackgroundFreeBoost2() {
+      return this.$store.getters['characters/characterBackgroundFreeBoost2ById'](this.characterId);
     },
     characterAttributesBoost() {
       return this.$store.getters['characters/characterAttributeBoost'](this.characterId);
@@ -558,6 +607,14 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+    characterAscensionKey: {
+      handler(newVal) {
+        if (newVal && newVal !== 'unknown') {
+          this.loadAscension(newVal);
+        }
+      },
+      immediate: true, // make this watch function is called when component created
+    },
   },
   methods: {
     async loadArchetype(key) {
@@ -569,6 +626,23 @@ export default {
         this.archetype = data;
       }
       this.loading = false;
+    },
+    async loadAscension(key) {
+      this.loading = true;
+      let finalData = {};
+      const { data } = await this.$axios.get(`/api/ascension-packages/${key}`);
+      finalData = data;
+      this.ascension = finalData;
+
+      this.BackgroundAttribute = this.attributeRepository.filter(boost => this.ascension.boost1.some((m) => boost.key.includes(m)));
+       this.BackgroundAttribute2 =  this.attributeRepository;
+
+        this.selectedBackgroundBoost = this.characterBackgroundFreeBoost;
+        this.selectedBackgroundBoost2 = this.characterBackgroundFreeBoost2; 
+
+      //this.selectedBackgroundBoost = this.characterBackgroundFreeBoost;
+      this.loading = false;
+      
     },
     async loadSpecies(key) {
       this.loading = true;
@@ -590,10 +664,14 @@ export default {
     resetStats() {
       const key = this.selectedAncestryBoost ? this.selectedAncestryBoost.key : "";
       const key2 = this.selectedAncestryBoost2 ? this.selectedAncestryBoost2.key : "";
+      const key3 = this.selectedBackgroundBoost ? this.selectedBackgroundBoost.key : "";
+      const key4 = this.selectedBackgroundBoost2 ? this.selectedBackgroundBoost2.key : "";
       this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: key , value: 0 } });
       this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: key2 , value: 0 } });
       this.selectedAncestryBoost = "";
       this.selectedAncestryBoost2 = "";
+      this.selectedBackgroundBoost = "";
+      this.selectedBackgroundBoost2 = "";
       this.$store.commit('characters/resetCharacterStats', { id: this.characterId });
     },
     incrementSkill(skill) {
@@ -680,6 +758,24 @@ export default {
 
         return false;
     },
+    RestrictionSkill(skill){
+      if(this.ascension === undefined) return false;
+      const level = this.$store.getters['characters/characterLevelById'](this.characterId);
+
+      if(this.ascension.skill === skill.key  && this.characterSkills[skill.key] === 'T')
+        return true;
+
+      // if(level < 3 && skill == 'T')
+      //   return true;
+
+      // if(level < 7 && skill == 'E')
+      //   return true;
+
+      // if(level < 15 && skill == 'M')
+      //   return true;
+
+        return false;
+    },
     ModAttribute(attribute, skill){
       const char1 = this.SkillsTrained[this.characterSkills[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
@@ -714,6 +810,14 @@ export default {
     },
     updateSelect2(boost) {
         this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
+
+    },
+    updateSelectBackground(boost) {
+        this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
+
+    },
+    updateSelectBackground2(boost) {
+        this.$store.commit('characters/setCharacterBackgroundFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
 
     },
     SkillPerception(){
