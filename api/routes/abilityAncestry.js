@@ -1,6 +1,6 @@
 const Router = require('express-promise-router');
 
-const repository = require('../db/static/talentRepository');
+const repository = require('../db/static/abilityAncestryRepository');
 
 const router = new Router();
 

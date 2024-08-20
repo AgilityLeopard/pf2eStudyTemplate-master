@@ -15,7 +15,7 @@
           <h4 class="subtitle-1 grey--text">{{ species.hint }}</h4>
           <v-btn small outlined color="primary" @click="doChangeSpeciesMode">
             <v-icon small>settings</v-icon>
-            change species
+            изменить наследие
           </v-btn>
         </div>
         <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
@@ -102,6 +102,7 @@ export default {
     return {
       loading: false,
       species: undefined,
+      abilityList: undefined,
       chapterList: undefined,
     };
   },
@@ -174,6 +175,7 @@ export default {
     characterSpeciesKey: {
       handler(newVal) {
         if (newVal) {
+          this.getAbilityList(newVal);
           this.getSpecies(newVal);
         }
       },
@@ -203,6 +205,17 @@ export default {
       const { data } = await this.$axios.get("/api/species/chapters/", config);
       this.chapterList = data;
     },
+    async getAbilityList(key) {
+      this.loading = true;
+      // const config = {
+      //   params: {
+      //     source: sources.join(","),
+      //   },
+      // };
+      const { data } = await this.$axios.get(`/api/abilityAncestry/"${key}`);
+      this.abilityList = data;
+      this.loading = false;
+    },
     getSpecies: async function (key) {
       this.loading = true;
       let finalData = {};
@@ -214,6 +227,12 @@ export default {
         const { data } = await this.$axios.get(`/api/species/${key}`);
         finalData = data;
       }
+
+      // if(this.abilityList !== undefined) 
+      //   {
+      //     const ability = this.abilityList.filter(key => key.includes(this.finalData.ancestryAbility));
+      //     this.selectedSpecies.push(abilityList);
+      //   }
 
       finalData.speciesFeatures
         .filter((feature) => feature.options)

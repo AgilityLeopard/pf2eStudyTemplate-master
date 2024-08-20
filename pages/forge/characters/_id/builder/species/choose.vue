@@ -107,6 +107,7 @@ export default {
   data() {
     return {
       speciesList: undefined,
+      abilityList: undefined,
       selectedSpecies: undefined, // for he preview dialog box
       speciesDialog: false,
     };
@@ -143,6 +144,7 @@ export default {
     sources: {
       handler(newVal) {
         if (newVal) {
+          this.getAbilityList(newVal);
           this.getSpeciesList(newVal);
         }
       },
@@ -162,12 +164,51 @@ export default {
         },
       };
       const { data } = await this.$axios.get("/api/species/", config);
-      this.speciesList = data;
+      
 
-      if (sources.includes("custom")) {
-        const customSpecies = this.$store.getters["species/speciesSets"];
-        this.speciesList.push(...customSpecies);
-      }
+     
+      if(this.abilityList !== undefined) 
+        {
+          data.forEach(species => {
+                      const lowercaseKeywords = species.ancestryAbility.map(s => s.toUpperCase());
+                      
+                      const List = this.abilityList;
+                      const ability = List.filter(talent => lowercaseKeywords.includes(talent.key.toString().toUpperCase()));
+                      if(ability.length > 0) 
+                      {
+                        const listAbilities = [];
+                        ability.forEach( talent => 
+                        {
+                          const ability1 = {
+                              name: talent.name,
+                              key : talent.key,
+                              description  : talent.description,
+                              modification: talent.modification,
+                         };
+                      
+                         listAbilities.push(talent);
+
+                        }
+                        )
+                        species.speciesFeatures =  listAbilities;
+                      }
+                 
+                  })
+         
+          
+        }
+
+        this.speciesList = data;
+    },
+    async getAbilityList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get("/api/abilityAncestry/", config.source);
+      this.abilityList = data;
+
     },
     getAvatar(key) {
       return `/img/avatars/species/${key}.png`;
@@ -182,6 +223,8 @@ export default {
       } else {
         const speciesDetails = await this.$axios.get(`/api/species/${slug}`);
         this.selectedSpecies = speciesDetails.data;
+
+          
       }
       this.speciesDialog = true;
     },

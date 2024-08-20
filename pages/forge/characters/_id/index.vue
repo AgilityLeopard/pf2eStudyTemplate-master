@@ -1609,25 +1609,25 @@ export default {
 
       // from ascensions
       const ascensionRepository = this.ascensionPackagesRepository;
-      if (ascensionRepository && ascensionRepository.length > 0) {
-        ascensionRepository.forEach((ascension) => {
-          const ascendedTiers = ascension.targetTier - ascension.sourceTier;
-          ascension.ascensionFeatures.forEach((feature) => {
-            if (feature.modifications) {
-              feature.modifications.forEach((mod) => {
-                const newMod = {
-                  ...mod,
-                  ascendedTiers,
-                  provider: feature.name,
-                  category: ascension.name,
-                  source: ascension.source,
-                };
-                finalEnhancements.push(newMod);
-              });
-            }
-          });
-        });
-      }
+      // if (ascensionRepository && ascensionRepository.length > 0) {
+      //   ascensionRepository.forEach((ascension) => {
+      //     const ascendedTiers = ascension.targetTier - ascension.sourceTier;
+      //     ascension.ascensionFeatures.forEach((feature) => {
+      //       if (feature.modifications) {
+      //         feature.modifications.forEach((mod) => {
+      //           const newMod = {
+      //             ...mod,
+      //             ascendedTiers,
+      //             provider: feature.name,
+      //             category: ascension.name,
+      //             source: ascension.source,
+      //           };
+      //           finalEnhancements.push(newMod);
+      //         });
+      //       }
+      //     });
+      //   });
+      // }
 
       // existing enhancements (Excluding those from the RAW package)
       if (this.characterEnhancements) {
@@ -1832,43 +1832,43 @@ export default {
       const ascensionPackages = this.characterAscensionPackages;
       const ascensionRepository = this.ascensionPackagesRepository;
 
-      if (ascensionRepository && ascensionRepository.length > 0) {
+      // if (ascensionRepository && ascensionRepository.length > 0) {
 
-        ascensionRepository.forEach((ascension) => {
+      //   ascensionRepository.forEach((ascension) => {
 
-          ascension.ascensionFeatures
-          .filter((feature) => feature.hideInSheet === undefined || feature.hideInSheet === false)
-          .forEach((feature) => {
-            const ability = {
-              name: feature.name,
-              effect: feature.snippet ? feature.snippet : feature.description, // todo deprecated
-              snippet: feature.snippet,
-              description: feature.description,
-              source: ascension.name,
-              hint: ascension.name,
-            };
+      //     ascension.ascensionFeatures
+      //     .filter((feature) => feature.hideInSheet === undefined || feature.hideInSheet === false)
+      //     .forEach((feature) => {
+      //       const ability = {
+      //         name: feature.name,
+      //         effect: feature.snippet ? feature.snippet : feature.description, // todo deprecated
+      //         snippet: feature.snippet,
+      //         description: feature.description,
+      //         source: ascension.name,
+      //         hint: ascension.name,
+      //       };
 
-            if ( feature.options ) {
-              const featureOption = this.characterEnhancements.find( (e) => e.source.startsWith(`ascension.${ascension.key}.${feature.key}.`));
-              if ( featureOption ) {
-                if ( featureOption.targetValue ) {
-                  ability['selectedOption'] = {
-                    effect: featureOption.targetValue, // todo e.g. corruption
-                    snippet: featureOption.targetValue,
-                  };
-                } else { // e.g. memorabie injury
-                  ability['selectedOption'] = {
-                    name: featureOption.name,
-                    effect: featureOption.effect,
-                    snippet: featureOption.effect,
-                  };
-                }
-              }
-            }
-            abilities.push(ability);
-          });
-        });
-      }
+      //       if ( feature.options ) {
+      //         const featureOption = this.characterEnhancements.find( (e) => e.source.startsWith(`ascension.${ascension.key}.${feature.key}.`));
+      //         if ( featureOption ) {
+      //           if ( featureOption.targetValue ) {
+      //             ability['selectedOption'] = {
+      //               effect: featureOption.targetValue, // todo e.g. corruption
+      //               snippet: featureOption.targetValue,
+      //             };
+      //           } else { // e.g. memorabie injury
+      //             ability['selectedOption'] = {
+      //               name: featureOption.name,
+      //               effect: featureOption.effect,
+      //               snippet: featureOption.effect,
+      //             };
+      //           }
+      //         }
+      //       }
+      //       abilities.push(ability);
+      //     });
+      //   });
+      // }
 
       return abilities;
     },

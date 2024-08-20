@@ -500,6 +500,7 @@ export default {
       ],
    
       talentList: undefined,
+      abilityList: undefined,
       wargearList: undefined,
       loading: false,
       talentGroupFilterHelp: false,
@@ -868,6 +869,7 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.getTalents(newVal);
+          this.getAbility(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -954,6 +956,30 @@ export default {
         //   )
       
 
+
+      }
+      
+      {
+        const { data } = await this.$axios.get('/api/wargear/', config);
+        this.wargearList = data;
+      }
+      this.loading = false;
+    },
+    async getAbility(sources) {
+      this.loading = true;
+      const config = {
+        params: { source: this.sources.join(','), },
+      };
+      {
+        const { data } = await this.$axios.get('/api/abilityAncestry/', config);
+        this.abilityList = data.map(talent => {
+                       
+          
+          const prerequisitesHtml = this.requirementsToText(talent).join(', ');
+          return {
+            ...talent
+          }
+        });
 
       }
       

@@ -34,7 +34,11 @@
       ></v-select>
     </v-col> -->
 
-    <v-col v-if="boost == 2"  :cols="12" :md="6" >
+    <v-col v-if="species"  :cols="12" :md="6" >
+
+    
+
+    <v-col v-if="boost == 2 "  :cols="12" :md="6" >
       <v-select  
         label="Повышение от Наследия"
         v-model="selectedAncestryBoost2"
@@ -45,7 +49,7 @@
       ></v-select>
     </v-col>
     
-    <v-col :cols="12" :md="6">
+    <v-col cols="12" :md="6">
       <v-select  
         label="Свободное повышение"
         v-model="selectedAncestryBoost"
@@ -56,14 +60,37 @@
       ></v-select>
     </v-col>
 
+  </v-col>
+
+  <v-col v-else>
+  <v-alert
+          
+          type="warning"
+          class="caption ml-4 mr-4"
+          dense outlined border="left"
+        >
+        Выберите наследие
+      </v-alert>
+
+    </v-col>
     <v-col :cols="12">
       <h3 class="headline">
           Повышение от Предыстории
       </h3>
     </v-col>
 
-    <v-col  :cols="6" :md="6">
-      <!-- <v-sheet class="pa-2 ma-2"> -->
+    <v-col v-if="!ascension" :cols="12">
+        <v-alert
+          
+          type="warning"
+          class="caption ml-4 mr-4"
+          dense outlined border="left"
+        >
+        Выберите предысторию
+      </v-alert>
+    </v-col>
+    
+    <v-col  v-if="ascension" :cols="6" :md="6">
       <v-select  
         label="Повышение от предыстории"
         v-model="selectedBackgroundBoost"
@@ -77,7 +104,7 @@
 
 
 
-    <v-col  :cols="6" :md="6">
+    <v-col  v-if="ascension" :cols="6" :md="6">
       <v-select  
         label="Повышение от предыстории"
         v-model="selectedBackgroundBoost2"
@@ -92,6 +119,11 @@
       <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
     </v-card-text> -->
 
+    <v-col :cols="12">
+      <h3 class="headline">
+          Общие повышения
+      </h3>
+    </v-col>
     <v-col :cols="12" :md="5" >
       <v-card>
         <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
