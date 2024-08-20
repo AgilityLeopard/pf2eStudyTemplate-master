@@ -211,6 +211,10 @@ export const getters = {
     state.characters[id]
       ? state.characters[id].species.label
       : getDefaultState().species.label,
+      characterHeritageLabelById: (state) => (id) =>
+        state.characters[id]
+          ? state.characters[id].heritage.label
+          : getDefaultState().heritage.label,
   characterSpeciesAstartesChapterById: (state) => (id) =>
     state.characters[id]
       ? state.characters[id].speciesAstartesChapter
@@ -1460,6 +1464,11 @@ const getDefaultState = () => ({
   name: "Simsel Simselman",
   avatarUrl: undefined,
   species: {
+    key: undefined,
+    label: "",
+    cost: 0,
+  },
+  heritage: {
     key: undefined,
     label: "",
     cost: 0,

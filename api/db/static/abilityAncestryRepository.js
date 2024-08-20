@@ -131,6 +131,13 @@ const coreRep =
         ...sourceMod("playerCore"),
         key: "darkvision",
         name: "Ночное зрение",
+        modification:
+        [
+            {
+                key: "darkvision",
+                group: "sense",
+            },
+        ],
         description: "Вы можете видеть в темноте и при тусклом свете, как если бы это был яркий свет, однако ваше зрение в темноте - черно-белое.",
     },
     {
@@ -143,6 +150,13 @@ const coreRep =
     {
         ...sourceMod("playerCore"),
         key: "low-light vision",
+        modification:
+        [
+            {
+                key: "low-light",
+                group: "sense",
+            },
+        ],
         name: "Сумеречное зрение",
         description: "Вы можете видеть при тусклом свете как если бы это был яркий свет, так что вы игнорируете состояние скрыт из-за тусклого света.",
     },

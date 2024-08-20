@@ -100,23 +100,26 @@
           <v-btn small text nuxt :to="routes.species" :disabled="!settingSelected">
             1. Наследие
           </v-btn>
+          <v-btn small text nuxt :to="routes.heritage" :disabled="!settingSelected">
+            2. Родословная
+          </v-btn>
           <v-btn small text nuxt :to="routes.archetype" :disabled="!settingSelected">
-            2. Класс
+            3. Класс
           </v-btn>
           <v-btn small text nuxt :to="routes.ascension" :disabled="!settingSelected">
-            3. Предыстория
+            4. Предыстория
           </v-btn>
           <v-btn small text nuxt :to="routes.stats" :disabled="!settingSelected">
-            4. Навыки и характеристики
+            5. Навыки и характеристики
           </v-btn>
           <v-btn small text nuxt :to="routes.talents" :disabled="!settingSelected">
-            5. Черты
+            6. Черты
           </v-btn>
           <v-btn small text nuxt :to="routes.wargear" :disabled="!settingSelected">
-            6. Снаряжение
+            7. Снаряжение
           </v-btn>
           <v-btn small text nuxt :to="routes.psychic" :disabled="!settingSelected">
-            7. Заклинания
+            8. Заклинания
           </v-btn>
           <v-btn small text nuxt :to="routes.background" :disabled="!settingSelected">
             8. Языки
@@ -259,6 +262,7 @@ export default {
     routes() {
       return {
         species: this.routeBuilder('species', this.characterSpeciesLabel ? 'manage' : 'choose'),
+        heritage: this.routeBuilder('heritage', this.characterHeritageLabel ? 'manage' : 'choose'),
         archetype: this.routeBuilder('archetype', this.characterArchetype ? 'manage' : 'choose'),
         ascension: this.routeBuilder('ascension', this.characterAscension ? 'manage' : 'choose'),
         stats: this.routeBuilder('stats'),
@@ -280,27 +284,34 @@ export default {
         },
         {
           id: 2,
+          path: this.routes.heritage,
+          hint: 'Наследие',
+          text: this.characterHeritageLabel,
+          // cost: this.characterSpeciesCost,
+        },
+        {
+          id: 3,
           path: this.routes.archetype,
           hint: 'Archetype',
           text: this.characterArchetype,
           cost: this.characterArchetypeCost,
         },
         {
-          id: 3,
+          id: 4,
           path: this.routes.ascension,
           hint: 'Ascension Packages',
           text: this.characterAscension,
           cost: this.characterAscensionCost,
         },
         {
-          id: 4,
+          id: 5,
           path: this.routes.stats,
           hint: 'Stats',
           text: 'Attributes & Skills',
           cost: this.characterAttributeCost + this.characterSkillCost,
         },
         {
-          id: 5,
+          id: 6,
           path: this.routes.talents,
           hint: `Talents`,
           text: `${this.characterTalents.length} Talents learned`,
@@ -315,14 +326,14 @@ export default {
         },
         { divider: true },
         {
-          id: 6,
+          id: 8,
           path: this.routes.wargear,
           hint: '',
           text: 'Wargear',
           cost: null,
         },
         {
-          id: 8,
+          id: 9,
           path: this.routes.background,
           hint: 'Background / Faction',
           text: this.characterFaction ? this.characterFaction.name : undefined,
@@ -396,6 +407,9 @@ export default {
     },
     characterSpeciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.$route.params.id);
+    },
+    characterHeritageLabel() {
+      return this.$store.getters['characters/characterHeritageLabelById'](this.$route.params.id);
     },
 
     characterFactionKey() {
