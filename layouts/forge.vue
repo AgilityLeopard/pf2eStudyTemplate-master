@@ -64,7 +64,7 @@
 
       <v-toolbar-title>
         <nuxt-link to="/" class="title brand-logo brand-logo__text">
-          Doctors of Doom
+          Shadow Tales
         </nuxt-link>
       </v-toolbar-title>
 
@@ -262,6 +262,7 @@ export default {
     routes() {
       return {
         species: this.routeBuilder('species', this.characterSpeciesLabel ? 'manage' : 'choose'),
+        // heritage: this.routeBuilder('heritage', this.characterHeritageLabel ? 'manage' : 'choose'),
         heritage: this.routeBuilder('heritage', this.characterHeritageLabel ? 'manage' : 'choose'),
         archetype: this.routeBuilder('archetype', this.characterArchetype ? 'manage' : 'choose'),
         ascension: this.routeBuilder('ascension', this.characterAscension ? 'manage' : 'choose'),
@@ -287,7 +288,7 @@ export default {
           path: this.routes.heritage,
           hint: 'Наследие',
           text: this.characterHeritageLabel,
-          // cost: this.characterSpeciesCost,
+           cost: this.characterSpeciesCost,
         },
         {
           id: 3,

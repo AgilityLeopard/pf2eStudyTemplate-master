@@ -99,7 +99,7 @@ import SpeciesPreview from "~/components/forge/SpeciesPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
 
 export default {
-  name: "Choose",
+  name: "choose",
   components: {
     SpeciesPreview,
   },
@@ -168,7 +168,7 @@ export default {
       
 
   
-        this.heritageList = data;
+        this.speciesList = data;
     },
     async getAbilityList(sources) {
       const config = {
