@@ -209,7 +209,8 @@ export default {
       const payload = {
         id,
         key: ascensionPackage.key,
-        value: ascensionPackage.name,
+        value: ascensionPackage.nameBackground,
+        
        // cost,
         sourceTier: ascensionPackage.sourceTier,
         // targetTier,

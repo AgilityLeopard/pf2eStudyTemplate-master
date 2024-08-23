@@ -13,21 +13,21 @@
 
       <v-col :cols="12">
         <h2 class="headline">
-          My Characters: <span style="color: #1976d2;">{{ characterSets.filter(i=>i !== undefined).length }} Slots</span>
+          Мои персонажи: <span style="color: #1976d2;">{{ characterSets.filter(i=>i !== undefined).length }} Персонаж</span>
         </h2>
 
         <v-btn large color="primary" @click="newCharacter">
-          Create a Character
+          Создать персонажа
         </v-btn>
 
         <v-btn large color="primary" outlined @click="importDialog = true">
           <v-icon left>cloud_upload</v-icon>
-          Import a Character
+          Импортировать персонажа
         </v-btn>
 
-        <v-btn large color="primary" outlined nuxt to="/forge/species">
+        <!-- <v-btn large color="primary" outlined nuxt to="/forge/species">
           Custom Species
-        </v-btn>
+        </v-btn> -->
 
         <v-dialog
           v-model="importDialog"
@@ -38,7 +38,7 @@
           <v-card class="pa-0">
 
             <v-card-title style="background-color: #262e37; color: #fff;">
-              <span>Import Character</span>
+              <span>Импорт персонажа</span>
               <v-spacer />
               <v-icon dark @click="importDialog = false">close</v-icon>
             </v-card-title>
@@ -48,7 +48,7 @@
                 v-model="importSnippet"
                 persistent-hint
                 dense
-                hint="Paste the exported character string into the field and hit the 'import' button."
+                hint="Вставьте строчку экспоритруемого персонажа сюда"
               ></v-textarea>
             </v-card-text>
             <v-card-actions>
@@ -68,7 +68,7 @@
           border="left"
           color="primary"
         >
-          Just hit <strong>Create a Character</strong> and start building.
+          Осталось только <strong>Создать персонажа</strong>и начать его билдить
         </v-alert>
         <v-alert
           v-if="false"
@@ -291,7 +291,7 @@
             <v-card class="pa-0">
 
               <v-card-title style="background-color: #262e37; color: #fff;">
-                <span>Export Character</span>
+                <span>Экспортировать персонажа</span>
                 <v-spacer />
                 <v-icon dark @click="exportDialog = false">
                   close
@@ -305,13 +305,13 @@
                   class="mt-4"
                   persistent-hint
                   dense
-                  hint="The character is exported without his custom image."
+                  hint="Персонаж импортируется без аватара"
                   v-model="exportSnippet"
                 ></v-textarea>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn outlined block color="primary" @click="copyToClipboard"><v-icon>file_copy</v-icon>Copy to clipboard</v-btn>
+                <v-btn outlined block color="primary" @click="copyToClipboard"><v-icon>file_copy</v-icon>Скопируйте и сохраните</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -323,18 +323,18 @@
           >
             <v-card>
               <v-card-title style="background-color: #262e37; color: #fff;">
-                <span>Delete Character confirmation</span>
+                <span>Удалить персонажа</span>
                 <v-spacer />
                 <v-icon dark @click="deleteDialog = false">close</v-icon>
               </v-card-title>
               <v-card-text>
                 <div class="pt-2 pb-2">
-                  <p>Do you really want to delete the character permanently?</p>
+                  <p>Вы уверены? Персонаж удалится навсегда</p>
                 </div>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn block color="primary" @click="deleteCharacter">Delete permanently</v-btn>
+                <v-btn block color="primary" @click="deleteCharacter">Удалить</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -389,8 +389,8 @@ export default {
       deleteId: undefined,
       breadcrumbItems: [
         { text: '', nuxt: true, exact: true, to: '/' },
-        { text: 'Forge', nuxt: true, exact: true, to: '/forge' },
-        { text: 'Characters', nuxt: true, exact: true, to: '/forge/my-characters' },
+        { text: 'Билдодельня', nuxt: true, exact: true, to: '/forge' },
+        { text: 'Персонажи', nuxt: true, exact: true, to: '/forge/my-characters' },
       ],
       howTo: {
         steps: [

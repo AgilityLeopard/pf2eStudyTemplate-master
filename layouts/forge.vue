@@ -16,8 +16,8 @@
           :to="`/forge/characters/${$route.params.id}/builder/setting`"
         >
           <v-list-item-content>
-            <v-list-item-title>Tier {{ settingTier }} Campaign</v-list-item-title>
-            <v-list-item-subtitle>Setting</v-list-item-subtitle>
+            <!-- <v-list-item-title>Tier {{ settingTier }} Campaign</v-list-item-title> -->
+            <v-list-item-subtitle>Главная</v-list-item-subtitle>
           </v-list-item-content>
 
           <!-- <v-list-item-action>
@@ -279,50 +279,50 @@ export default {
         {
           id: 1,
           path: this.routes.species,
-          hint: 'Species',
+          hint: 'Наследие',
           text: this.characterSpeciesLabel,
           cost: this.characterSpeciesCost,
         },
         {
           id: 2,
           path: this.routes.heritage,
-          hint: 'Наследие',
+          hint: 'Родословная',
           text: this.characterHeritageLabel,
            cost: this.characterSpeciesCost,
         },
         {
           id: 3,
           path: this.routes.archetype,
-          hint: 'Archetype',
+          hint: 'Класс',
           text: this.characterArchetype,
           cost: this.characterArchetypeCost,
         },
         {
           id: 4,
           path: this.routes.ascension,
-          hint: 'Ascension Packages',
+          hint: 'Предыстория',
           text: this.characterAscension,
           cost: this.characterAscensionCost,
         },
         {
           id: 5,
           path: this.routes.stats,
-          hint: 'Stats',
-          text: 'Attributes & Skills',
+          // hint: 'Навыки и Характеристики',
+          text: 'Навыки и Характеристики',
           cost: this.characterAttributeCost + this.characterSkillCost,
         },
         {
           id: 6,
           path: this.routes.talents,
-          hint: `Talents`,
-          text: `${this.characterTalents.length} Talents learned`,
+          hint: `Черты`,
+          // text: `${this.characterTalents.length} Черт взято`,
           cost: this.characterTalentCost,
         },
         {
           id: 7,
           path: this.routes.psychic,
-          hint: `Powers`,
-          text: `${this.characterPsychicPowers.length} Powers learned`,
+          hint: `Заклинания`,
+          // text: `${this.characterPsychicPowers.length}Зак`,
           cost: this.characterPsychicPowerCost,
         },
         { divider: true },
@@ -330,14 +330,14 @@ export default {
           id: 8,
           path: this.routes.wargear,
           hint: '',
-          text: 'Wargear',
+          text: 'Снаряжение',
           cost: null,
         },
         {
           id: 9,
           path: this.routes.background,
-          hint: 'Background / Faction',
-          text: this.characterFaction ? this.characterFaction.name : undefined,
+          hint: 'Языки',
+          // text: this.characterFaction ? this.characterFaction.name : undefined,
           cost: null,
         },
       ];
@@ -426,16 +426,7 @@ export default {
       return this.$store.getters['characters/characterPsychicPowersById'](this.$route.params.id);
     },
     characterAscension() {
-      const packages = this.$store.getters['characters/characterAscensionPackagesById'](this.$route.params.id);
-      if (packages !== undefined) {
-        if (packages.length > 1) {
-          return `${packages.length} Ascensions selected`;
-        }
-        if (packages.length === 1) {
-          return packages[0].value;
-        }
-      }
-      return '';
+      return this.$store.getters['characters/characterAscensionLabelById'](this.$route.params.id);
     },
     characterBackground() {
       return this.$store.getters['characters/characterBackgroundLabelById'](this.$route.params.id);
@@ -474,14 +465,12 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: 'Build you Wrath & Glory Character and explore the Warhammer 40k Universe. '
-            + 'Select Species and Archetype, learn some Talents, acquire Wargear and (if needed) '
-            + 'tap into the warp powers.',
+          content: '',
         },
         { hid: 'robots', name: 'robots', content: 'noindex,nofollow' },
       ],
       link: [
-        { rel: 'canonical', href: `https://www.doctors-of-doom.com${this.$route.path}` },
+        // { rel: 'canonical', href: `https://www.doctors-of-doom.com${this.$route.path}` },
       ],
     };
   },

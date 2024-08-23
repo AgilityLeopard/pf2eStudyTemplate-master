@@ -236,6 +236,8 @@ export const getters = {
       : getDefaultState().faction.key,
   characterArchetypeLabelById: (state) => (id) =>
     state.characters[id] ? state.characters[id].archetype.value : "unknown",
+  characterAscensionLabelById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].ascensionPackages.value : "unknown",
   characterArchetypeTierById: (state) => (id) =>
     state.characters[id] ? state.characters[id].archetype.tier : undefined,
   characterArchetypeKeywordsById: (state) => (id) =>
@@ -1510,7 +1512,7 @@ const getDefaultState = () => ({
   customXp: 0,
   customRank: 1,
   level: 1,
-  name: "Simsel Simselman",
+  name: "Сеони",
   avatarUrl: undefined,
   species: {
     key: undefined,
@@ -1628,6 +1630,7 @@ const getDefaultState = () => ({
     key: undefined,
     label: "",
     cost: 0,
+
   },
   wargear: [],
   background: {
