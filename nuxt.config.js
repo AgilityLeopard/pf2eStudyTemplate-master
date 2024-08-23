@@ -42,7 +42,7 @@ module.exports = {
       /**
        *  Open Graph, used in facebook
        */
-      { hid: "og:site_name", name: "og:site_name", content: "Doctors of Doom" },
+      { hid: "og:site_name", name: "og:site_name", content: "Shadow Tales" },
       {
         hid: "og:image",
         name: "og:image",

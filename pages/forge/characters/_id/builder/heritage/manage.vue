@@ -88,14 +88,14 @@
 </template>
 
 <script>
-import SpeciesPreview from "~/components/forge/SpeciesPreview.vue";
+import HeritagePreview from "~/components/forge/HeritagePreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
   name: "Manage",
   components: {
-    SpeciesPreview,
+    HeritagePreview,
   },
   mixins: [SluggerMixin, StatRepositoryMixin],
   data() {
@@ -107,8 +107,8 @@ export default {
     };
   },
   computed: {
-    characterSpeciesKey() {
-      return this.$store.getters["characters/characterSpeciesKeyById"](
+    characterHeritageKey() {
+      return this.$store.getters["characters/characterHeritageKeyById"](
         this.characterId
       );
     },
@@ -172,11 +172,11 @@ export default {
     },
   },
   watch: {
-    characterSpeciesKey: {
+    characterHeritageKey: {
       handler(newVal) {
         if (newVal) {
           this.getAbilityList(newVal);
-          this.getSpecies(newVal);
+           this.getHeritage(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -216,17 +216,14 @@ export default {
       this.abilityList = data;
       this.loading = false;
     },
-    getSpecies: async function (key) {
+    getHeritage: async function (key) {
       this.loading = true;
       let finalData = {};
 
-      if (key.startsWith("custom-")) {
-        const speciesDetails = this.$store.getters["species/getSpecies"](key);
-        finalData = speciesDetails;
-      } else {
-        const { data } = await this.$axios.get(`/api/species/${key}`);
+
+        const { data } = await this.$axios.get(`/api/heritage/${key}`);
         finalData = data;
-      }
+
 
       // if(this.abilityList !== undefined) 
       //   {
@@ -234,53 +231,53 @@ export default {
       //     this.selectedSpecies.push(abilityList);
       //   }
 
-      finalData.speciesFeatures
-        .filter((feature) => feature.options)
-        .forEach((feature) => {
-          const enhancements = this.enhancements.filter((modifier) =>
-            modifier.source.startsWith(`species.${feature.name}`)
-          );
-          if (enhancements) {
-            enhancements.forEach((e) => {
-              let foundInd = /\.(\d)\./.exec(e.source);
-              if (foundInd) {
-                feature.selected[foundInd[1]] = e.source.split(".").pop();
-              }
-            });
-          } else {
-            const enhancement = this.enhancements.find((modifier) =>
-              modifier.source.startsWith(`species.${feature.name}`)
-            );
-            if (enhancement) {
-              feature.selected = enhancement.source.split(".").pop();
-            }
-          }
-        });
+      // finalData.speciesFeatures
+      //   .filter((feature) => feature.options)
+      //   .forEach((feature) => {
+      //     const enhancements = this.enhancements.filter((modifier) =>
+      //       modifier.source.startsWith(`species.${feature.name}`)
+      //     );
+      //     if (enhancements) {
+      //       enhancements.forEach((e) => {
+      //         let foundInd = /\.(\d)\./.exec(e.source);
+      //         if (foundInd) {
+      //           feature.selected[foundInd[1]] = e.source.split(".").pop();
+      //         }
+      //       });
+      //     } else {
+      //       const enhancement = this.enhancements.find((modifier) =>
+      //         modifier.source.startsWith(`heritage.${feature.name}`)
+      //       );
+      //       if (enhancement) {
+      //         feature.selected = enhancement.source.split(".").pop();
+      //       }
+      //     }
+      //   });
 
-      const chapter = this.characterSpeciesAstartesChapter;
-      if (chapter) {
-        finalData.chapter = chapter;
-      }
+      // const chapter = this.characterSpeciesAstartesChapter;
+      // if (chapter) {
+      //   finalData.chapter = chapter;
+      // }
 
-      const featuresWithPowers = finalData.speciesFeatures.filter(
-        (f) => f.psychicPowers !== undefined
-      );
-      if (featuresWithPowers) {
-        featuresWithPowers.forEach((feature) => {
-          feature.psychicPowers.forEach((powerSelections) => {
-            this.getPsychicPowerOptions(powerSelections);
-            const found = this.psychicPowers.find(
-              (p) => p.source && p.source === `species.${powerSelections.name}`
-            );
-            if (found) {
-              console.info(
-                `Power ${found.name} found for the species feature ${feature.name} / power ${powerSelections.name}.`
-              );
-              powerSelections.selected = found.name;
-            }
-          });
-        });
-      }
+      // const featuresWithPowers = finalData.speciesFeatures.filter(
+      //   (f) => f.psychicPowers !== undefined
+      // );
+      // if (featuresWithPowers) {
+      //   featuresWithPowers.forEach((feature) => {
+      //     feature.psychicPowers.forEach((powerSelections) => {
+      //       this.getPsychicPowerOptions(powerSelections);
+      //       const found = this.psychicPowers.find(
+      //         (p) => p.source && p.source === `species.${powerSelections.name}`
+      //       );
+      //       if (found) {
+      //         console.info(
+      //           `Power ${found.name} found for the species feature ${feature.name} / power ${powerSelections.name}.`
+      //         );
+      //         powerSelections.selected = found.name;
+      //       }
+      //     });
+      //   });
+      // }
 
       this.loading = false;
       this.species = finalData;

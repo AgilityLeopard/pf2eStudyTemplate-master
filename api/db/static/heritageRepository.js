@@ -148,7 +148,7 @@ const coreRep = [
 
   },
   {
-    ...species("playerCore", 29, "Гуманоид", "Gnome", 25),
+    ...species("playerCore", 29, "Гуманоид", "Chameleon Gnome", 25),
     isUniversal: false,
     type: "Гном",
     trait: [],
@@ -173,7 +173,7 @@ const coreRep = [
 
   },
   {
-    ...species("playerCore", 29, "Гуманоид", "Gnome", 25),
+    ...species("playerCore", 29, "Гуманоид", "Fey-touched Gnomeome", 25),
     isUniversal: false,
     type: "Гном",
     trait: ["фея"],
@@ -198,7 +198,7 @@ const coreRep = [
 
   },
   {
-    ...species("playerCore", 29, "Гуманоид", "Gnome", 25),
+    ...species("playerCore", 29, "Гуманоид", "Sensate Gnome", 25),
     isUniversal: false,
     type: "Гном",
     trait: [],
@@ -231,7 +231,7 @@ const coreRep = [
 
   },
   {
-    ...species("playerCore", 29, "Гуманоид", "Gnome", 25),
+    ...species("playerCore", 29, "Гуманоид", "Umbral Gnome", 25),
     isUniversal: false,
     type: "Гном",
     trait: [],
@@ -246,7 +246,7 @@ const coreRep = [
 
   },
   {
-    ...species("playerCore", 29, "Гуманоид", "Gnome", 25),
+    ...species("playerCore", 29, "Гуманоид", "Wellspring Gnome", 25),
     isUniversal: false,
     type: "Гном",
     trait: [],

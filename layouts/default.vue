@@ -74,7 +74,7 @@
       <v-container class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
         <v-toolbar-title>
           <nuxt-link to="/" class="title brand-logo brand-logo__text">
-            Doctors of Doom
+            Shadow Tales
           </nuxt-link>
         </v-toolbar-title>
 

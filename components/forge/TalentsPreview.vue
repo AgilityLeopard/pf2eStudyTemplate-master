@@ -330,8 +330,8 @@ export default {
         return [];
       }
       let filteredTalents = this.talents;
-      const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
-      // const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
+      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
 
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.tags.toString().toUpperCase().includes(lw)));
@@ -351,10 +351,11 @@ export default {
     },
 
     filteredTalents() {
-      if (this.talents === undefined) {
+      if (this.talents === undefined || this.tagFilters.length == 0) {
         return [];
       }
 
+      
       let filteredTalents = this.talents;
 
       if (this.selectedTagsFilters.length > 0) {
@@ -369,8 +370,8 @@ export default {
         return talent;
       });
       
-      const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
-      //const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
+      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
       // if () {
        // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));

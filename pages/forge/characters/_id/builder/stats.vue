@@ -73,6 +73,7 @@
       </v-alert>
 
     </v-col>
+    
     <v-col :cols="12">
       <h3 class="headline">
           Повышение от Предыстории
@@ -102,18 +103,46 @@
       <!-- </v-sheet> -->
     </v-col>
 
+    <v-col :cols="12">
+      <h3 class="headline">
+          Выберите навык от Класса {{ archetype ? archetype.name : "" }}
+      </h3>
+    </v-col>
 
-
-    <v-col  v-if="ascension" :cols="6" :md="6">
+    <v-col  v-if="archetype && archetype.keyAbility.length > 1" :cols="6" :md="6">
       <v-select  
-        label="Повышение от предыстории"
-        v-model="selectedBackgroundBoost2"
-        :items="BackgroundAttribute2"
+        label="Повышение Характеристики от класса"
+        v-model="selectedClassBoost"
+        :items="ClassAttribute"
         item-text="name"
         item-value="key"
-        @change="updateSelectBackground2(selectedBackgroundBoost2)"
+        @change="updateSelectClassAttribute(selectedClassBoost)"
       ></v-select>
     </v-col>
+
+    <v-col  v-if="archetype && archetype.skillTrainedChoice.length > 1" :cols="6" :md="6">
+      <v-select  
+        label="Повышение Навыка от класса"
+        v-model="selectedClassSkill"
+        :items="ClassSkill"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkill(selectedClassSkill)"
+      ></v-select>
+    </v-col>
+
+    <v-col v-if="!archetype" :cols="12">
+        <v-alert
+          
+          type="warning"
+          class="caption ml-4 mr-4"
+          dense outlined border="left"
+        >
+        Выберите Класс
+      </v-alert>
+    </v-col>
+    
+
 
     <!-- <v-card-text>
       <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
@@ -201,7 +230,7 @@
                 <td>
                   <v-btn
                     icon
-                    :disabled="characterSkills[skill.key] == 'U' || RestrictionSkill(skill) == true || characterSkillPoints == MaxSkillPoints() || skill.custom"
+                    :disabled="characterSkills[skill.key] == 'U' || RestrictionSkill(skill) == true || skill.optional === true || characterSkillPoints == MaxSkillPoints() || skill.custom"
                     @click="decrementSkill(skill.key)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
@@ -411,6 +440,8 @@ export default {
       alert: false,
       skillsEditorDialog: false,
       selectedAncestryBoost: undefined,
+      selectedClassBoost: undefined,
+      selectedClassSkill: undefined,
       selectedAncestryBoost2: undefined,
       selectedBackgroundBoost: undefined,
       selectedBackgroundBoost2: undefined,
@@ -429,6 +460,7 @@ export default {
       select: { },
       AncestryAttribute: [],
       AncestryAttribute2: [],
+      ClassAttribute: [],
       BackgroundAttribute: [],
       BackgroundAttribute2: [],
       boost : 0,
@@ -560,6 +592,12 @@ export default {
     characterBackgroundFreeBoost() {
       return this.$store.getters['characters/characterBackgroundFreeBoostById'](this.characterId);
     },
+    characterClassBoost() {
+      return this.$store.getters['characters/characterClassBoostById'](this.characterId);
+    },
+    characterClassSkill() {
+      return this.$store.getters['characters/characterClassSkillById'](this.characterId);
+    },
     characterBackgroundFreeBoost2() {
       return this.$store.getters['characters/characterBackgroundFreeBoost2ById'](this.characterId);
     },
@@ -657,6 +695,11 @@ export default {
         const { data } = await this.$axios.get(`/api/archetypes/${key}`);
         this.archetype = data;
       }
+      this.selectedClassBoost = this.characterClassBoost;
+      this.selectedClassSkill= this.characterClassSkill;
+      this.ClassAttribute = this.attributeRepository.filter(boost => this.archetype.keyAbility.some((m) => boost.key.includes(m)));
+      this.ClassSkill = this.skillRepository.filter(boost => this.archetype.skillTrainedChoice.some((m) => boost.key.includes(m)));
+
       this.loading = false;
     },
     async loadAscension(key) {
@@ -791,12 +834,18 @@ export default {
         return false;
     },
     RestrictionSkill(skill){
-      if(this.ascension === undefined) return false;
+      // if(this.ascension === undefined) return false;
       const level = this.$store.getters['characters/characterLevelById'](this.characterId);
+      if(this.ascension !== undefined)
+        if(this.ascension.skill === skill.key  && this.characterSkills[skill.key] === 'T')
+          return true;
 
-      if(this.ascension.skill === skill.key  && this.characterSkills[skill.key] === 'T')
-        return true;
 
+        if(this.characterClassSkill != ""  && this.characterClassSkill === skill.key)
+        {
+          
+          return true;
+        }
       // if(level < 3 && skill == 'T')
       //   return true;
 
@@ -846,7 +895,12 @@ export default {
     },
     updateSelectBackground(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
-
+    },
+    updateSelectClassAttribute(boost) {
+        this.$store.commit('characters/setCharacterClassAttribute', { id: this.characterId, payload: { key: boost, value: 1 } });
+    },
+    updateSelectClassSkill(boost) {
+        this.$store.commit('characters/setCharacterClassSkill', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
     updateSelectBackground2(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
@@ -964,8 +1018,6 @@ export default {
 
 <style scoped lang="scss">
 
-  .page-title {
-  }
 
   .small {
     height: 24px;

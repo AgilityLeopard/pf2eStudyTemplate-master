@@ -20,9 +20,9 @@
             <v-list-item-subtitle>Setting</v-list-item-subtitle>
           </v-list-item-content>
 
-          <v-list-item-action>
+          <!-- <v-list-item-action>
             <span>{{ spendBuildingPoints }} / {{ totalBuildPoints }} XP</span>
-          </v-list-item-action>
+          </v-list-item-action> -->
         </v-list-item>
 
         <div
@@ -41,12 +41,12 @@
               <v-list-item-subtitle>{{ entry.hint }}</v-list-item-subtitle>
             </v-list-item-content>
 
-            <v-list-item-action>
+            <!-- <v-list-item-action>
               <span v-if="entry.cost !== null">{{ entry.cost }} XP</span>
               <span v-else-if="entry.cost === null"></span>
               <v-icon v-else>info</v-icon>
 
-            </v-list-item-action>
+            </v-list-item-action> -->
           </v-list-item>
         </div>
       </v-list>
@@ -214,7 +214,7 @@
         </v-btn>
       </div>
       <v-spacer />
-      <span>&copy; {{ new Date().getFullYear() }}</span><span class="d-none d-md-block">&nbsp;Doctors of Doom</span>
+      <span>&copy; {{ new Date().getFullYear() }}</span><span class="d-none d-md-block">&nbsp;Shadow Tales</span>
     </v-footer>
 
   </v-app>

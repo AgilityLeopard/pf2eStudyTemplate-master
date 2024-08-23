@@ -10,7 +10,7 @@
       width="600px"
       scrollable
     >
-      <species-preview
+      <heritage-preview
         v-if="selectedSpecies"
         :character-id="characterId"
         :species="selectedSpecies"
@@ -95,13 +95,13 @@
 </template>
 
 <script>
-import SpeciesPreview from "~/components/forge/SpeciesPreview.vue";
+import HeritagePreview from "~/components/forge/HeritagePreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
 
 export default {
-  name: "choose",
+  name: "Choose",
   components: {
-    SpeciesPreview,
+    HeritagePreview,
   },
   mixins: [SluggerMixin],
   data() {
@@ -140,6 +140,12 @@ export default {
         this.characterId
       );
     },
+    characterSpeciesLabel() {
+      return this.$store.getters["characters/characterSpeciesLabelById"](
+        this.characterId
+      );
+    },
+    
   },
   watch: {
     sources: {
@@ -165,10 +171,15 @@ export default {
         },
       };
       const { data } = await this.$axios.get("/api/heritage/", config);
-      
+      const speciesLabel = this.characterSpeciesLabel.toUpperCase();
 
-  
-        this.speciesList = data;
+
+      
+       if(speciesLabel)
+        this.speciesList = data.filter(s => s.isUniversal === true || s.type.toUpperCase() === speciesLabel)
+      else
+        this.speciesList = data.filter(s => s.isUniversal === true);
+
     },
     async getAbilityList(sources) {
       const config = {
@@ -191,7 +202,7 @@ export default {
         );
         this.selectedSpecies = speciesDetails;
       } else {
-        const speciesDetails = await this.$axios.get(`/api/species/${slug}`);
+        const speciesDetails = await this.$axios.get(`/api/heritage/${slug}`);
         this.selectedSpecies = speciesDetails.data;
 
           
@@ -212,40 +223,40 @@ export default {
 
       this.$store.commit("characters/clearCharacterEnhancementsBySource", {
         id: this.characterId,
-        source: "species",
+        source: "heritage",
       });
-      this.$store.commit("characters/setCharacterSpecies", {
+      this.$store.commit("characters/setCharacterHeritage", {
         id: this.characterId,
-        species: { key: species.key, label: species.nameAncestry },
+        heritage: { key: species.key, label: species.nameAncestry },
       });
       this.$store.commit("characters/setCharacterModifications", {
         id: this.characterId,
-        content: { modifications: modifications, source: "species" },
+        content: { modifications: modifications, source: "heritage" },
       });
 
-      species.attributeBoost.forEach((t) => {
+      // species.attributeBoost.forEach((t) => {
         
-          this.$store.commit("characters/setCharacterAncestryBoostForAll", {
-            id: this.characterId,
-            payload: { key: t.key, value: t.value },
-          });
-      });
+      //     this.$store.commit("characters/setCharacterAncestryBoostForAll", {
+      //       id: this.characterId,
+      //       payload: { key: t.key, value: t.value },
+      //     });
+      // });
 
-      species.attributeFlaw.forEach((t) => {
+      // species.attributeFlaw.forEach((t) => {
         
-          this.$store.commit("characters/setCharacterAncestryFlawForAll", {
-            id: this.characterId,
-            payload: { key: t.key, value: t.value },
-          });
-      });
+      //     this.$store.commit("characters/setCharacterAncestryFlawForAll", {
+      //       id: this.characterId,
+      //       payload: { key: t.key, value: t.value },
+      //     });
+      // });
 
-      this.$store.commit("characters/resetCharacterStats", {
-        id: this.characterId,
-      });
+      // this.$store.commit("characters/resetCharacterStats", {
+      //   id: this.characterId,
+      // });
 
       this.$store.commit("characters/clearCharacterKeywordsBySource", {
         id: this.characterId,
-        source: "species",
+        source: "heritage",
       });
       // modifications
       //   .filter((m) => m.targetGroup === "keywords")
@@ -253,7 +264,7 @@ export default {
         .forEach((k) => {
           const payload = {
             name: k,
-            source: "species",
+            source: "heritage",
             type: "keyword",
             replacement: undefined,
           };
@@ -265,7 +276,7 @@ export default {
 
       this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
         id: this.characterId,
-        source: "species",
+        source: "heritage",
       });
       const featuresWithPowers = species.speciesFeatures.filter(
         (f) => f.psychicPowers !== undefined
@@ -278,7 +289,7 @@ export default {
                 id: this.characterId,
                 name: powerSelections.selected,
                 cost: 0,
-                source: `species.${powerSelections.selected.name}`,
+                source: `heritage.${powerSelections.selected.name}`,
               };
               this.$store.commit(
                 "characters/addCharacterPsychicPower",

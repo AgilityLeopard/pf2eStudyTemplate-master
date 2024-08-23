@@ -15,7 +15,7 @@ export default {
         },
         "publisher": {
           "@type": "Organization",
-          "name": "Doctors of Doom",
+          "name": "ShadowTales",
           "logo": {
             "@type": "ImageObject",
             "url": "https://www.doctors-of-doom.com/android-chrome-192x192.png"

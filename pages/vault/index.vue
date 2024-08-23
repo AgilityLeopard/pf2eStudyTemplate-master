@@ -276,7 +276,7 @@ export default {
       itemListElement: this.breadcrumbItems.map((item, index) => ({
         '@type': 'ListItem',
         position: index + 1,
-        name: (index === 0 ? 'Doctors of Doom' : item.text),
+        name: (index === 0 ? 'Shadow Tales' : item.text),
         item: `https://www.doctors-of-doom.com${item.to}`,
       })),
     };

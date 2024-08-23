@@ -342,7 +342,7 @@
         </v-row>
       </v-col>
 
-      <v-col :cols="12">
+      <!-- <v-col :cols="12">
         <v-card>
           <v-card-text>
             <h1 class="headline">
@@ -362,7 +362,7 @@
             </p>
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
     </v-row>
   </div>
 </template>

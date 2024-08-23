@@ -61,7 +61,7 @@
 export default {
   head() {
     return {
-      title: 'About the Doctors of Doom',
+      title: '',
       meta: [
         {
           hid: 'description',

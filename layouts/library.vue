@@ -16,7 +16,7 @@
       </v-toolbar-items>
 
       <v-toolbar-title class="pl-4">
-        Doctors of Doom
+        DShadow Tales
       </v-toolbar-title>
 
       <v-spacer />
