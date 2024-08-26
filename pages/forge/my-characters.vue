@@ -68,9 +68,9 @@
           border="left"
           color="primary"
         >
-          Осталось только <strong>Создать персонажа</strong>и начать его билдить
+          Осталось только <strong>Создать персонажа</strong> и начать его билдить
         </v-alert>
-        <v-alert
+        <!-- <v-alert
           v-if="false"
           type="info"
           prominent
@@ -85,12 +85,12 @@
             So, after some considerations, I decided to skip the migration.
             However, due to changes within the code, upcoming migrations are feasible.
           </p>
-        </v-alert>
+        </v-alert> -->
       </v-col>
 
       <v-col :cols="12">
 
-        <v-alert
+        <!-- <v-alert
           v-if="hasLegacyCharacters"
           color="warning"
           border="left"
@@ -109,7 +109,7 @@
             <li>if all works like before, consider <strong>deleting</strong> the transfered characters here.</li>
           </ol>
           <p>Alternatively, just rebuild the character using the new revision. Or, hit delete and never look back.</p>
-        </v-alert>
+        </v-alert> -->
 
         <v-row v-if="hasUnmigratedCharacters">
 
@@ -120,7 +120,7 @@
             :lg="8"
           >
 
-            <v-card>
+            <!-- <v-card>
               <v-card-title>Updates Available</v-card-title>
               <v-card-text>
                 <p>This characters were build with an older version and need to be updated to ensure all fields are up to date. Just hit the <strong>update button</strong> to bring all  characters back in line.</p>
@@ -135,10 +135,10 @@
                   <v-icon left small>
                     cloud_upload
                   </v-icon>
-                  Update all Characters
+                  Обновить всех персонажей
                 </v-btn>
               </v-card-actions>
-            </v-card>
+            </v-card> -->
 
 
 
@@ -181,7 +181,7 @@
                         small
                       >
                         <v-icon left small>cloud_download</v-icon>
-                        Export Legacy
+                        Экспортировать Легаси
                       </v-btn>
                     </div>
                     <div
@@ -195,16 +195,16 @@
                         <v-icon left small>
                           cloud_upload
                         </v-icon>
-                        Migrate (v{{characterVersion(character.id)}})
+                        Импорт (v{{characterVersion(character.id)}})
                       </v-btn>
                     </div>
 
-                    <div>
+                    <div v-if="characterSpeciesLabel(character.id) && characterArchetypeLabel(character.id)">
                       <span>{{ characterSpeciesLabel(character.id) }} • {{ characterArchetypeLabel(character.id) }}</span>
                     </div>
 
                     <div>
-                      <span>Rank {{ characterRank(character.id) }} • {{ characterSpendBp(character.id) }} / {{ characterTotalBp(character.id) }} XP</span>
+                      <span>Уровень {{ characterRank(character.id) }} </span>
                     </div>
                   </div>
                 </v-card-text>
@@ -212,9 +212,9 @@
 
               <v-divider />
 
-              <v-card-text class="pa-2 card__campaign-container">
+              <!-- <v-card-text class="pa-2 card__campaign-container">
                 <strong>Tier {{ characterSettingTier(character.id) }}:</strong> <em>{{ characterSettingTitle(character.id) }}</em>
-              </v-card-text>
+              </v-card-text> -->
 
               <v-divider />
 
@@ -230,7 +230,7 @@
                   <v-icon left small>
                     edit
                   </v-icon>
-                  Edit
+                  Изменить
                 </v-btn>
                 <v-btn
                   nuxt
@@ -243,7 +243,7 @@
                   <v-icon small left>
                     description
                   </v-icon>
-                  View
+                  Просмотр
                 </v-btn>
                 <v-btn
                   nuxt
@@ -266,7 +266,7 @@
                   @click="openExportDialog(character.id)"
                 >
                   <v-icon small left>cloud_download</v-icon>
-                  Export
+                  Экспорт
                 </v-btn>
 
                 <v-btn
@@ -275,7 +275,7 @@
                   small
                   @click="openDeleteDialog(character.id)"
                 >
-                  <v-icon small>delete</v-icon>Delete
+                  <v-icon small>delete</v-icon>Удалить
                 </v-btn>
 
               </v-card-actions>
@@ -404,18 +404,17 @@ export default {
     };
   },
   head() {
-    const title = 'Character Builder for Wrath & Glory | Forge';
+    const title = 'Создание персонажа для Pathfinder 2e | Билдодельня';
     const description =
-      'The Forge allows you to create and organize multiple characters for the Wrath and Glory' +
-      'Roleplaying game. Create, manage and view your characters online.';
+      '';
     const image = 'https://www.doctors-of-doom.com/img/artwork_abstract.jpg';
     const imageTwitter = 'https://www.doctors-of-doom.com/img/artwork_forge_twitter.jpg';
 
     const howToSchema = {
       '@context': 'http://schema.org',
       '@type': 'HowTo',
-      name: 'How to create a Wrath and Glory Character',
-      description: 'Creating a Character is quite easy. Pick a Setting Tier, select species and archetype and spend your remaining build points.',
+      name: '',
+      description: '',
       image: 'https://www.doctors-of-doom.com/img/artwork_abstract.jpg',
       tool: [
         {
@@ -507,7 +506,7 @@ export default {
       return this.$store.getters['characters/characterArchetypeLabelById'](id);
     },
     characterRank(id) {
-      return this.$store.getters['characters/characterCampaignCustomRankById'](id);
+      return this.$store.getters['characters/characterLevelById'](id);
     },
     characterTotalBp(id) {
       return this.$store.getters['characters/characterTotalBuildPointsById'](id);

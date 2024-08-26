@@ -6,7 +6,7 @@
   >
     <span>&copy; {{ new Date().getFullYear() }}&nbsp;Shadow Tales</span>
     <v-spacer />
-    <span><a href="/about">About & Private Policy</a></span>
+    <span><a href="/about">Об этом</a></span>
   </v-footer>
 </template>
 

@@ -16,7 +16,7 @@
       </v-toolbar-items>
 
       <v-toolbar-title class="pl-4">
-        DShadow Tales
+        Shadow Tales
       </v-toolbar-title>
 
       <v-spacer />

@@ -75,12 +75,12 @@
           offline_bolt
         </v-icon>
 
-        <v-btn class="d-none d-md-inline-flex" icon href="https://discordapp.com/channels/256930339878993920/600107858486493193">
+        <!-- <v-btn class="d-none d-md-inline-flex" icon href="https://discordapp.com/channels/256930339878993920/600107858486493193">
           <v-icon>mdi-discord</v-icon>
         </v-btn>
         <v-btn class="d-none d-md-inline-flex" icon href="https://twitter.com/doctors_of_doom">
           <v-icon color="#1DA1F2">mdi-twitter</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-btn icon @click="toggleDarkTheme">
           <v-icon>mdi-brightness-6</v-icon>
         </v-btn>
@@ -459,8 +459,8 @@ export default {
   },
   head() {
     return {
-      titleTemplate: '%s | Character Builder',
-      title: 'Create your Character',
+      titleTemplate: '%s | Билдодельня',
+      title: 'Создай своего персонажа',
       meta: [
         {
           hid: 'description',
