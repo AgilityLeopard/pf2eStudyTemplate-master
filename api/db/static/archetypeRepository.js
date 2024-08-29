@@ -174,16 +174,30 @@ const wargearz = function(wargearString) {
   return gears;
 }
 
+const statBoost = function (str, dex, con, int, wis, cha) {
+  return {
+    attributeBoost: [
+      { name: "Сила", key: "strength", value: str },
+      { name: "Ловкость", key: "dexterity", value: dex },
+      { name: "Телосложение", key: "constitution", value: con },
+      { name: "Интеллект", key: "intellect", value: int },
+      { name: "Мудрость", key: "wisdom", value: wis },
+      { name: "Харизма", key: "charisma", value: cha },
+    ],
+  };
+};
+
 const playerCore =  [
   // Adeptus Ministorum
   {
     ...archetype(source.playerCore.key,92,'Fighter',1,'Human'),
     ...cost(12,0,12, 0, 0),
+    ...statBoost(0, 0, 0, 0, 0, 0),
     hint: 'Сражаясь ради чести, жадности, верности или просто ради азарта битвы, вы бесспорно являетесь мастером владения оружием и боевыми техниками. Вы сочетаете свои действия в комбинациях открывающих движений, завершающих ударов, и контратак, когда ваши враги по неосторожности ослабят защиту. Являетесь ли вы рыцарем, наемником, снайпером или мастером клинка, вы искусно отточили свои боевые навыки и обрушиваете сокрушительные критические атаки на своих врагов.',
     name: 'Воин',
     keywords: 'воин',
     hitpoints: 10,
-    keyAbility: ["dexterity", "strength"],
+    keyAbilityChoice: ["dexterity", "strength"],
     trait: ["воин"],
     rarity: "Common",
     skillTrainedChoice: ["acrobatics", "athletics"],
@@ -256,30 +270,448 @@ const playerCore =  [
         item: {key: 'Shield Block', type: 'general'},
         key: 'fighterAbility',
         level: 1 
+      },
+      {
+        name: 'Оценка противника',
+        snippet: 'Независимо от того, осматриваете ли вы вражескую армию или просто стоите на страже, вы преуспеваете в наблюдении за своими врагами. Ваш уровень мастерства Восприятия увеличивается до мастера. Дополнительно, вы получаете бонус обстоятельства +2 к проверкам Восприятия для инициативы, что позволяет вам быстрее реагировать в бою.',
+        // item: {key: 'Shield Block', type: 'general'},
+        key: 'fighterAbility',
+        level: 7 
+      },
+        ],
+    modification:
+    [      
+      {
+        key: "will",
+        upgrade: "E",
+        type: "Saving",
+        level: 3,
+      },
+
+      {
+        key: "weapon-specialization",
+        // upgrade: "M",
+        type: "weapon-specialization",
+        level: 7, 
+        bonusDamage: {
+          E: 2,
+          M: 3,
+          L: 4,
+        }
+        // valueBonus: 2,
+        // typeBonus: "damage"
+      },
+      {
+        key: "Perception",
+        upgrade: "M",
+        type: "Perception",
+        level: 7,
+        valueBonus: 2,
+        typeBonus: "circumstance"
+      },
+      {
+        key: "fortitude",
+        upgrade: "M",
+        type: "Saving",
+        level: 9,
+      },
+      {
+        key: "light",
+        upgrade: "E",
+        type: "Defence",
+        level: 11,
+      },
+      {
+        key: "class",
+        upgrade: "E",
+        type: "DC Class",
+        level: 11,
+      },
+      {
+        key: "medium",
+        upgrade: "E",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 11,
+      },
+      {
+        key: "heavy",
+        upgrade: "E",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 11,
+      },
+      {
+        key: "unarmored",
+        upgrade: "E",
+        type: "Defence",
+        level: 11,
+      },
+      {
+        key: "simple",
+        upgrade: "M",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "martial",
+        upgrade: "M",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "advanced",
+        upgrade: "E",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "unarmed",
+        upgrade: "M",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "reflex",
+        upgrade: "M",
+        type: "Saving",
+        level: 15,
+      },
+      {
+        key: "greater-weapon-specialization",
+        // upgrade: "M",
+        type: "greater-weapon-specialization",
+        level: 15, 
+        bonusDamage: {
+          E: 4,
+          M: 6,
+          L: 8,
+        }
+        // valueBonus: 2,
+        // typeBonus: "damage"
+      },
+      {
+        key: "light",
+        upgrade: "M",
+        type: "Defence",
+        level: 17,
+      },
+      {
+        key: "medium",
+        upgrade: "M",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 17,
+      },
+      {
+        key: "heavy",
+        upgrade: "M",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 17,
+      },
+      {
+        key: "unarmored",
+        upgrade: "M",
+        type: "Defence",
+        level: 17,
+      },
+      {
+        key: "simple",
+        upgrade: "L",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "martial",
+        upgrade: "L",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "advanced",
+        upgrade: "M",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "unarmed",
+        upgrade: "L",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "class",
+        upgrade: "M",
+        type: "DC Class",
+        level: 19,
+      },
+    ]
+  },
+  {
+    ...archetype(source.playerCore.key,92,'Oracle',1,'Human'),
+    ...cost(12,0,12, 0, 0),
+    ...statBoost(0, 0, 0, 0, 0, 1),
+    hint: 'Ваш проводник божественной силы сторонится традиционных каналов молитвы и служения - вместо этого вы собираете сакральные истины, которые выходят за рамки любого отдельного божества. Вы понимаете великие тайны вселенной, воплощенные во всеобъемлющих концепциях, которые превосходят добро и зло или хаос и порядок, независимо от того, воспринимаете ли вы общую связь между несколькими божествами или полностью обходите стороной их силу. Вы исследуете одну из этих тайн и используете ее силу, чтобы творить чудесные заклинания, но эта сила стоит ужасную цену: чем больше вы ее используете, тем сильнее становится проклятие. Ваши умения - обоюдоострый меч, который вы можете поддерживать как божественный инструмент или как проклятие богов.',
+    name: 'Оракул',
+    keywords: 'оракул',
+    hitpoints: 8,
+    // keyAbility: ["dexterity", "strength"],
+     keyAbility: [],
+    trait: ["оракул"],
+    rarity: "сommon",
+    skillTrainedChoice: [],
+    skillTrained: ['religion'],
+    skillTrainedPoints: 3,
+    spellsClass:
+    {
+      attack: "T",
+      class: "T"
+    },
+    Perception: "T",
+    skillAttack:
+    {
+      simple: "T",
+      martial: "U",
+      advanced: "U",
+      unarmed: "T"
+    },
+    skillDefence:
+    {
+      light: "T",
+      medium: "U",
+      heavy: "U",
+      unarmored: "T"
+    },
+    skillClass: "T",
+    saving:
+    {
+      reflex: "T",
+      fortitude: "T",
+      will: "E",
+    },
+    isFeatLevelOne: false,
+    description: [
+      {
+        name: 'encounter',
+        text: '<p>Вы наносите удары с непревзойденной точностью и используете специализированные боевые приемы. Воин ближнего боя стоит между союзниками и врагами, атакуя врагов, которые пытаются пройти мимо. Воин дальнего боя производит точные выстрелы с расстояния.</p>'
+
+      },
+      {
+        name: 'social',
+        text: '<p>Вы можете быть устрашающим фактором. Это может быть полезно при переговорах с врагами, но иногда является помехой при более деликатных взаимодействиях.</p>'
+
+      },
+      {
+        name: 'exporation',
+        text: '<p>Вы на чеку, поддерживаете свою оборону, и следите за скрытыми угрозами. Еще вы преодолеваете физические трудности на своем пути, ломая двери, поднимая препятствия, ловко взбираясь и перепрыгивая через ямы.</p>'
+
+      },
+      {
+        name: 'downtime',
+        text: '<p>Вы можете заниматься ручным трудом или создавать и ремонтировать оружие. Если вы знаете приемы, которые вам больше не нравятся, то можете обучиться новым. Если вы имеете авторитет, то можете основать собственную организацию или крепость.</p>'
+
+      },
+      {
+        name: 'you',
+        text: '<li><p>Знать назначение и качество каждого оружия и части доспеха, которыми владеете</p></li><li><p>Признавать, что опасность жизни авантюриста должна быть уравновешена отличной попойкой или амбициозными делами</p></li><li><p>Быть нетерпеливым при решении головоломок или проблем, требующих обстоятельной логики или обучения</p></li>'
+      },
+      {
+        name: 'other',
+        text: '<li><p>Считать вас пугающим, пока не узнают вас поближе, а возможно, и даже после того, как узнают</p></li><li><p>Ожидать, что вы лишь грубая сила без мозгов</p></li><li><p>Уважать ваш опыт в военном искусстве и ценят ваше мнение о качестве вооружения</p></li>'
       }
     ],
-    wargear: [
-      { name: 'Chainsword' },
-      { name: 'Laspistol' },
-      { name: 'Rosarius' },
-      { name: 'Knife' },
-      { name: 'Clothing', variant: 'Ministorum Robes' },
-      { name: 'Missionary Kit' },
-    ],
-    suggested: {
-      attributes: [],
-      skills: [],
-      talents: [ 'playerCore-flagellant', 'playerCore-in-his-name', 'playerCore-repent-' ],
-    },
-    suggestedStats: [
-      ...suggestedAttributes(1,2,2,2,3,2,3),
-      reqSkill(SKILLS.AWARENESS, 2),
-      reqSkill(SKILLS.BALLISTIC_SKILL, 2),
-      reqSkill(SKILLS.INSIGHT, 1),
-      reqSkill(SKILLS.INTIMIDATION, 1),
-      reqSkill(SKILLS.LEADERSHIP, 2),
-      reqSkill(SKILLS.SCHOLAR, 2),
-    ],
+    archetypeFeatures: [
+      {
+        name: 'Возможность для атаки',
+        snippet: 'Всегда внимательный к уязвимостям, вы можете быстро атаковать неприятеля, который оставляет брешь в своей защите. Вы получаете реакцию "Возможность для атаки".',
+        item: {key: 'Attack of the Opportunity', type: 'action'},
+        key: 'fighterAbility',
+        level: 1
+      },
+      {
+        name: 'Блок щитом',
+        snippet: 'Вы получаете общую черту Блок щитом / 1, это реакция для уменьшения урона с помощью щита.',
+        item: {key: 'Shield Block', type: 'general'},
+        key: 'fighterAbility',
+        level: 1 
+      },
+      {
+        name: 'Оценка противника',
+        snippet: 'Независимо от того, осматриваете ли вы вражескую армию или просто стоите на страже, вы преуспеваете в наблюдении за своими врагами. Ваш уровень мастерства Восприятия увеличивается до мастера. Дополнительно, вы получаете бонус обстоятельства +2 к проверкам Восприятия для инициативы, что позволяет вам быстрее реагировать в бою.',
+        // item: {key: 'Shield Block', type: 'general'},
+        key: 'fighterAbility',
+        level: 7 
+      },
+        ],
+    modification:
+    [      
+      {
+        key: "will",
+        upgrade: "E",
+        type: "Saving",
+        level: 3,
+      },
+
+      {
+        key: "weapon-specialization",
+        // upgrade: "M",
+        type: "weapon-specialization",
+        level: 7, 
+        bonusDamage: {
+          E: 2,
+          M: 3,
+          L: 4,
+        }
+        // valueBonus: 2,
+        // typeBonus: "damage"
+      },
+      {
+        key: "Perception",
+        upgrade: "M",
+        type: "Perception",
+        level: 7,
+        valueBonus: 2,
+        typeBonus: "circumstance"
+      },
+      {
+        key: "fortitude",
+        upgrade: "M",
+        type: "Saving",
+        level: 9,
+      },
+      {
+        key: "light",
+        upgrade: "E",
+        type: "Defence",
+        level: 11,
+      },
+      {
+        key: "class",
+        upgrade: "E",
+        type: "DC Class",
+        level: 11,
+      },
+      {
+        key: "medium",
+        upgrade: "E",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 11,
+      },
+      {
+        key: "heavy",
+        upgrade: "E",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 11,
+      },
+      {
+        key: "unarmored",
+        upgrade: "E",
+        type: "Defence",
+        level: 11,
+      },
+      {
+        key: "simple",
+        upgrade: "M",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "martial",
+        upgrade: "M",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "advanced",
+        upgrade: "E",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "unarmed",
+        upgrade: "M",
+        type: "Attack",
+        level: 13,
+      },
+      {
+        key: "reflex",
+        upgrade: "M",
+        type: "Saving",
+        level: 15,
+      },
+      {
+        key: "greater-weapon-specialization",
+        // upgrade: "M",
+        type: "greater-weapon-specialization",
+        level: 15, 
+        bonusDamage: {
+          E: 4,
+          M: 6,
+          L: 8,
+        }
+        // valueBonus: 2,
+        // typeBonus: "damage"
+      },
+      {
+        key: "light",
+        upgrade: "M",
+        type: "Defence",
+        level: 17,
+      },
+      {
+        key: "medium",
+        upgrade: "M",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 17,
+      },
+      {
+        key: "heavy",
+        upgrade: "M",
+        type: "Defence",
+        criticalSpecialization: true,
+        level: 17,
+      },
+      {
+        key: "unarmored",
+        upgrade: "M",
+        type: "Defence",
+        level: 17,
+      },
+      {
+        key: "simple",
+        upgrade: "L",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "martial",
+        upgrade: "L",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "advanced",
+        upgrade: "M",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "unarmed",
+        upgrade: "L",
+        type: "Attack",
+        level: 19,
+      },
+      {
+        key: "class",
+        upgrade: "M",
+        type: "DC Class",
+        level: 19,
+      },
+    ]
   },
   // {
   //   ...archetype(source.playerCore.key, 102,'Adeptus Ministorum','Death Cult Assassin',2,'Human'),

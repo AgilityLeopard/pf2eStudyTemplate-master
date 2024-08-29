@@ -294,6 +294,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].skills : {},
   characterSavingById: (state) => (id) =>
     state.characters[id] ? state.characters[id].saving : {},
+  characterSkillClassById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].skillClass : "U",
   characterPerseptionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Perception : "U",
 
@@ -553,7 +555,108 @@ export const mutations = {
   },
   setLevel(state, payload) {
     // console.info(`Set Rank manually to ${payload.rank}.`);
+    //this.setModification(state, payload);
     state.characters[payload.id].level = payload.level;
+  },
+  setModification(state, payload) {
+    // console.info(`Set Rank manually to ${payload.rank}.`);
+    const modification = state.characters[payload.id].enhancements.sort().reverse().filter(s=> s.level <= payload.level);
+    const character = state.characters[payload.id];
+
+
+    if(modification)
+    {
+        modification.forEach(item =>
+        {
+         
+          switch (item.type) {
+            case("Perception"):
+            {
+              character.Perception = item.upgrade;
+              break;
+            }
+            case("Saving"):
+            {
+                character.saving[item.key] = item.upgrade;
+              break;
+        
+            }
+            case("Defence"):
+            {
+                character.skillDefence[item.key] = item.upgrade;
+                break;
+            }
+            case("Attack"):
+            {
+                character.skillAttack[item.key] = item.upgrade;
+                break;
+            }
+            case("DC Class"):
+            {
+                character.skillClass = item.upgrade;
+                break;
+            }
+          }
+        
+        }
+        )
+    }
+
+  },
+  clearModification(state, payload) {
+    const modification = state.characters[payload.id].enhancements.sort().reverse();
+    const character = state.characters[payload.id];
+
+
+    if(modification)
+    {
+        modification.forEach(item =>
+        {
+         
+          switch (item.type) {
+              case("Perception"):
+              {
+                var keys = Object.keys(character.SkillsTrained);
+                var loc = keys.indexOf(item.upgrade);
+                character.Perception = keys[loc-1];
+                break;
+              }
+              case("Saving"):
+              {
+                var keys = Object.keys(character.SkillsTrained);
+                var loc = keys.indexOf(item.upgrade);
+                character.saving[item.key] = keys[loc-1];
+                break;
+          
+              }
+              case("Defence"):
+              {
+                var keys = Object.keys(character.SkillsTrained);
+                var loc = keys.indexOf(item.upgrade);
+                character.skillDefence[item.key] = keys[loc-1];
+                break;
+                  
+              }
+              case("Attack"):
+              {
+                var keys = Object.keys(character.SkillsTrained);
+                var loc = keys.indexOf(item.upgrade);
+                character.skillAttack[item.key] = keys[loc-1];
+                break;
+              }
+              case("DC Class"):
+              {
+                var keys = Object.keys(character.SkillsTrained);
+                var loc = keys.indexOf(item.upgrade);
+                character.skillClass = keys[loc-1];
+                break;
+              }
+            }
+          
+          }
+          )
+    }
+
   },
   setCharacterHeritage(state, payload) {
     state.characters[payload.id].heritage = payload.heritage;
@@ -595,6 +698,9 @@ export const mutations = {
   },
   setCharacterskillDefence(state, payload) {
     state.characters[payload.id].skillDefence = payload.payload.skillDefence;
+  },
+  setCharacterskillClass(state, payload) {
+    state.characters[payload.id].skillClass = payload.payload.skillClass;
   },
   setCharacterAncestryFreeBoost(state, payload) {
     const character = state.characters[payload.id];
@@ -723,7 +829,7 @@ export const mutations = {
       character.attributes[key] =
         10 +
         2 * character.attributesBoost[key] +
-        2 * character.attributesAncestryBoost[key] + 2 * character.attributesAncestryFlaw[key];
+        2 * character.attributesAncestryBoost[key] + 2 * character.attributesAncestryFlaw[key]+ 2 * character.attributesClassBoost[key] ;
     });
 
     character.Boost = 0;
@@ -810,6 +916,15 @@ export const mutations = {
       state.characters[payload.id].attributesAncestryBoost[payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesAncestryBoost[payload.payload.key] =
+      payload.payload.value;
+  },
+  setCharacterClassBoostForAll(state, payload) {
+    const char = state.characters[payload.id];
+
+    let theAttribute =
+      state.characters[payload.id].attributesClassBoost[payload.key];
+    theAttribute = payload.payload.value;
+    state.characters[payload.id].attributesClassBoost[payload.payload.key] =
       payload.payload.value;
   },
   setCharacterAncestryFlawForAll(state, payload) {
@@ -1542,7 +1657,7 @@ const getDefaultState = () => ({
   BackgroundFreeBoost: "",
   BackgroundFreeBoost2: "",
   ClassBoost: "",
-  ClassSkill: "",
+  skillClass: "",
   attributesBoost: {
     strength: 0,
     dexterity: 0,
@@ -1560,6 +1675,14 @@ const getDefaultState = () => ({
     charisma: 0,
   },
   attributesAncestryBoost: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intellect: 0,
+    wisdom: 0,
+    charisma: 0,
+  },
+  attributesClassBoost: {
     strength: 0,
     dexterity: 0,
     constitution: 0,
@@ -1620,6 +1743,13 @@ const getDefaultState = () => ({
     unarmored: "U"
   },
   Perception: "U",
+  SkillsTrained: {
+    U: 0,
+    T: 2,
+    E: 4,
+    M: 6,
+    L: 8,
+  },
   customSkills: [],
   languages: [{ name: "Всеобщий", cost: 0, source: "", trait: "Common" }],
   keywords: [],
@@ -1683,4 +1813,5 @@ const getDefaultState = () => ({
   fluff: {
     notes: "",
   },
+
 });

@@ -18,31 +18,33 @@
         <tbody>
           <tr>
             <td class="text-left">
-              {{ name }}
+              {{ stats.nameGear }}
             </td>
             <td class="text-center">
-              <span v-if="['*','-'].includes(stats.range)">*</span>
+              <span >{{ stats.group }}</span>
+              <!-- <span v-if="['*','-'].includes(stats.range)">*</span>
               <span v-else-if="stats.range === 0">melee</span>
               <span v-else-if="stats.range === 1">melee</span>
               <span v-else-if="stats.range === 2">2</span>
-              <span v-else>{{ stats.range/2 }} | {{ stats.range }} | {{ stats.range*1.5 }}</span>
+              <span v-else>{{ stats.range/2 }} | {{ stats.range }} | {{ stats.range*1.5 }}</span> -->
             </td>
             <td class="text-center">
               <div v-if="stats.damage.static === '*'">
                 <span>*</span>
               </div>
               <div v-else-if="stats.damage">
-                <span v-if="isMelee">STR+{{ stats.damage.static }}</span>
+                <span>{{ stats.damage }}  {{ stats.typeDamage }}</span>
+                <!-- <span v-if="isMelee">STR+{{ stats.damage }}</span>
                 <span v-else>{{ stats.damage.static }}</span>
                 <span> + </span>
-                <span>{{ stats.damage.ed }} ED</span>
+                <span>{{ stats.damage.ed }} ED</span> -->
               </div>
             </td>
             <td class="text-center">
-              <span>{{ stats.ap }}</span>
+              <span>{{ stats.category }}</span>
             </td>
-            <td v-if="!isMelee" class="text-center">
-              <span>{{ stats.salvo }}</span>
+            <td  class="text-center">
+              <span>{{ stats.hands }}</span>
             </td>
             <td class="text-left">
               <span v-if="stats.traits && stats.traits.length >0">{{ stats.traits.join(', ') }}</span>
@@ -91,22 +93,22 @@ export default {
     return {
       headers: [
         {
-          text: 'Name', value: 'name', class: 'text-left', align: 'left',
+          text: 'Название', value: 'name', class: 'text-left', align: 'left',
         },
         {
-          text: 'Range', value: 'range', class: 'text-center', align: 'center',
+          text: 'Группа', value: 'range', class: 'text-center', align: 'center',
         },
         {
-          text: 'Damage', value: 'damage', class: 'text-center', align: 'center',
+          text: 'Урон', value: 'damage', class: 'text-center', align: 'center',
         },
         {
-          text: 'AP', value: 'ap', class: 'text-center', align: 'center',
+          text: 'Категория', value: 'ap', class: 'text-center', align: 'center',
         },
         {
-          text: 'Salvo', value: 'salvo', class: 'text-center', align: 'center',
+          text: 'Руки', value: 'salvo', class: 'text-center', align: 'center',
         },
         {
-          text: 'Traits', value: 'traits', class: 'text-left', align: 'left',
+          text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
         },
       ],
     };

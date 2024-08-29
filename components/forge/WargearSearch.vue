@@ -39,12 +39,16 @@
         @page-count="pagination.pageCount = $event"
       >
         <template v-slot:item.name="{ item }">
-          {{ item.name }} <br>
+          {{ item.nameGear }} <br>
           <span class="grey--text caption">{{ wargearSubtitle(item) }}</span>
         </template>
 
-        <template v-slot:item.value="{ item }">
-          {{ item.value }} {{ item.rarity }}
+        <template v-slot:item.price="{ item }">
+          {{ wargearPrice(item) }}
+        </template>
+
+        <template v-slot:item.rarity="{ item }">
+           {{ item.rarity }}
         </template>
 
         <template v-slot:item.action-add="{ item }">
@@ -62,15 +66,15 @@
 
               <dod-simple-weapon-stats
                 v-if="item.meta !== undefined && item.meta.length > 0 && ['ranged-weapon','melee-weapon'].includes(item.meta[0].type)"
-                :name="item.name"
-                :stats="item.meta[0]"
+                :name="item.nameGear"
+                :stats="item"
                 :show-traits="false"
                 class="mb-2"
               />
               <dod-simple-armour-stats
                 v-if="item.meta !== undefined && item.meta.length > 0 && ['armour'].includes(item.meta[0].type)"
                 :name="item.name"
-                :stats="item.meta[0]"
+                :stats="item"
                 :show-traits="false"
                 class="mb-2"
               />
@@ -110,8 +114,9 @@ export default {
         rowsPerPage: 25,
       },
       headers: [
-        { text: 'Name', align: 'left', value: 'name', class: '' },
-        { text: 'Value', align: 'left', value: 'value', class: '' },
+        { text: 'Название', align: 'left', value: 'name', class: '' },
+        { text: 'Цена', align: 'left', value: 'price', class: '' },
+        { text: 'Редкость', align: 'left', value: 'rarity', class: '' },
         { text: '', align: 'right', value: 'action-add', class: '' },
       ],
     };
@@ -121,7 +126,7 @@ export default {
       if (this.repository === undefined) {
         return [];
       }
-      const reduceToType = this.repository.map((item) => item.type);
+      const reduceToType = this.repository.map((item) => item.traits);
       const distinctTypes = [...new Set(reduceToType)];
       const types = distinctTypes.map((t) => ({ name: t }));
       return types;
@@ -133,7 +138,7 @@ export default {
       let searchResult = this.repository;
 
       if (this.selectedTypeFilters.length > 0) {
-        searchResult = searchResult.filter((item) => this.selectedTypeFilters.includes(item.type));
+        searchResult = searchResult.filter((item) => this.selectedTypeFilters.includes(item.traits));
       }
 
       return searchResult;
@@ -150,14 +155,25 @@ export default {
     wargearSubtitle(item) {
       // const item = this.wargearRepository.find(i => i.name === gear);
       if (item) {
-        const tags = [item.type];
-        if (item.subtype) {
-          tags.push(item.subtype);
-        }
-        return tags.filter((t) => t !== undefined).join(' • ');
+        return item.category;
+        // const tags = [item.type];
+        // if (item.subtype) {
+        //   tags.push(item.subtype);
+        // }
+        // return tags.filter((t) => t !== undefined).join(' • ');
       }
       return '';
     },
+    wargearPrice(item)
+    {
+      if (item) {
+        const pp = item.pp !== 0 ? item.pp + " пм" : '';
+        const gp = item.gp !== 0 ? item.gp + " зм" : '';
+        const sp = item.sp !== 0 ? item.sp + " см" : '';
+        const cp = item.cp !== 0 ? item.cp + " мм" : '';
+        return pp + gp + sp + cp;
+     }
+    }
   },
 };
 </script>

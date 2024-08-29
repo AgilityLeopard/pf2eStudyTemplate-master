@@ -103,7 +103,7 @@
       <!-- </v-sheet> -->
     </v-col>
 
-    <v-col :cols="12">
+    <v-col v-if="archetype && archetype.keyAbility.length > 1"  :cols="12">
       <h3 class="headline">
           Выберите навык от Класса {{ archetype ? archetype.name : "" }}
       </h3>
@@ -339,6 +339,17 @@
                 <td>{{ Perception.name }}</td>
                   <td>{{ ModAttributePerception(Perception.attribute, Perception.key) }}</td>
                   <td>{{ characterlabel(characterPerseption) }}</td>
+                </tr>
+            
+            </tbody>
+            
+          Сложность Класса
+            <tbody>
+          <tr>
+                
+                <td> Сложность Класса</td>
+                  <td>{{ ModAttributeClass() }}</td>
+                  <td>{{ characterlabel(characterSkillClass) }}</td>
                 </tr>
             
             </tbody>
@@ -616,6 +627,9 @@ export default {
     characterSaving() {
       return this.$store.getters['characters/characterSavingById'](this.characterId);
     },
+    characterSkillClass() {
+      return this.$store.getters['characters/characterSkillClassById'](this.characterId);
+    },
     characterTraits() {
       return this.$store.getters['characters/characterTraitsById'](this.characterId);
     },
@@ -871,6 +885,13 @@ export default {
        
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
+    ModAttributeClass(){
+      const char1 = this.SkillsTrained[this.SkillClass()];
+      // const char2 = (this.characterAttributes[attribute] - 10) / 2;
+      const char3 = this.characterLevel();
+       
+      return parseInt(char1) + parseInt(char3);
+    },
     ModAttributePerception(attribute, skill){
       const char1 = this.SkillsTrained[this.SkillPerception()];
       const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
@@ -908,6 +929,9 @@ export default {
     },
     SkillPerception(){
       return this.$store.getters['characters/characterPerseptionById'](this.characterId);
+    },
+    SkillClass() {
+      return this.$store.getters['characters/characterSkillClassById'](this.characterId);
     },
     
     affordableAttributeColor(currentValue) {

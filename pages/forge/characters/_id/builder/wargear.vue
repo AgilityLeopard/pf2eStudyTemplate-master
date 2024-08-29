@@ -352,7 +352,7 @@ export default {
     },
     sources() {
       return [
-        'core',
+        'playerCore',
         'fspg',
         'red1',
         'cos',

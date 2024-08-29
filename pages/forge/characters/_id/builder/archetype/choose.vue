@@ -503,8 +503,8 @@ export default {
           targetGroup: 'traits', targetValue: 'influence', modifier: item.influence, hint: item.name, source: 'archetype',
         });
       }
-      if (item.modifications){
-        mods.push(...item.modifications);
+      if (item.modification){
+        mods.push(...item.modification);
       }
       item.archetypeFeatures
         .filter((feature) => feature.modifications)
@@ -529,6 +529,14 @@ export default {
         // { id: this.characterId, payload: { key: 1, 
         //   value: item.skillTrainedPoints } });
 
+        item.attributeBoost.forEach((t) => {
+        
+        this.$store.commit("characters/setCharacterClassBoostForAll", {
+          id: this.characterId,
+          payload: { key: t.key, value: t.value },
+        });
+    });
+
         this.$store.commit("characters/setCharacterPerception", {
           id: this.characterId,
           payload: { key: 1, Perception: item.Perception },
@@ -540,6 +548,10 @@ export default {
         this.$store.commit("characters/setCharacterskillDefence", {
           id: this.characterId,
           payload: { key: 1, skillDefence: item.skillDefence },
+        });
+        this.$store.commit("characters/setCharacterskillClass", {
+          id: this.characterId,
+          payload: { key: 1, skillClass: item.skillClass },
         });
       this.$store.commit('characters/clearCharacterTalentsBySource', { id: this.characterId, source: 'archetype', cascade: true });
       item.archetypeFeatures

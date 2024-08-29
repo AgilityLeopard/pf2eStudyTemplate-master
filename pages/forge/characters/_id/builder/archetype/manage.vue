@@ -38,10 +38,12 @@
           dense text
         >{{alert.text}}</v-alert>
 
-        <p><strong>Ключевая характеристика:</strong> {{ characterLabelAttribute(item.keyAbility) }}</p>
-        <p>На 1-м уровне ваш класс дает повышение характеристики на ваш выбор. </p>
+        <p v-if="item.keyAbility.length > 0"><strong>Ключевая характеристика на выбор:</strong> {{ characterLabelAttribute(item.keyAbility) }}</p>
+        <p><strong>Ключевая характеристика:</strong> {{ characterLabelAttributeBoost(item.attributeBoost) }}</p>
 
-        <p><strong>Обучен в навыке (на выбор):</strong> {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}</p>
+        <p v-if="item.skillTrainedChoice.length > 0"><strong>Обучен в навыке (на выбор):</strong> {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}</p>
+
+        <p v-if="item.skillTrained.length > 0"><strong>Обучен в навыке:</strong> {{ characterLabelSkillTrainedChoice(item.skillTrained) }}</p>
 
         <p><strong>Обучен дополнительным навыкам, в кол-ве равном:</strong> {{ item.skillTrainedPoints}} + мод Интеллекта</p>
         
@@ -467,6 +469,9 @@ export default {
     },
     characterLabelAttribute(keyAbility){
       return this.attributeRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
+    },
+    characterLabelAttributeBoost(item){
+      return item.filter((a) => a.value > 0).map(s => s.name).join(', ')
     },
     characterLabelSkillTrainedChoice(keyAbility){
       return this.skillRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
