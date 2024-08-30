@@ -29,15 +29,14 @@
       <v-divider />
 
       <div class="mt-2 body-2 text-lg-justify">
-        <!-- <p>
-          <strong>XP Cost:</strong> {{ species.cost }}, incl. Stats ({{ species.costs.stats }} XP)
-        </p> -->
-
-        <p v-if="attributes"><strong>Attributes:</strong> {{ attributes }}</p>
-
-        <p v-if="skills"><strong>Skills:</strong> {{ skills }}</p>
 
         <p><strong>Скорость:</strong> {{ species.speed }}</p>
+
+        <p><strong>Хитов:</strong> {{ species.ancestryHitPoint }}</p>
+
+        <p><strong>Доступные языки:</strong> {{ species.language.join(', ') }} + {{species.freeLanguage}} на выбор + количество языков, равнео вашему модификатору Интеллекта (если положительный)</p>
+
+        <p><strong>Размер:</strong> {{ size(species.size) }}</p>
       </div>
 
       <div v-if="species.Description" class="body-2">
@@ -112,6 +111,7 @@ export default {
         this.characterId
       );
     },
+
     characterSpeciesAstartesChapter() {
       return this.$store.getters[
         "characters/characterSpeciesAstartesChapterById"
@@ -284,6 +284,12 @@ export default {
 
       this.loading = false;
       this.species = finalData;
+    },
+    size(size)
+    {
+      if(!size) return ""
+      const s = this.sizeRepository.find(s => s.key === size);
+      return s ? s.name : "" ;
     },
     resetSpecies() {
       this.selectedSpecies = undefined;

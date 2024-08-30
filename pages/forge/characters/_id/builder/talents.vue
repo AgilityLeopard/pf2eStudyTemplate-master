@@ -18,12 +18,11 @@
                   
     <v-expansion-panels multiple>
       <v-expansion-panel   
-      v-for="level in 20"
-      :key="level"
-      v-if="level <= characterLevel() && (level == 1 || (level - 1) % 4 == 0)"
-      >
+          v-for="level in 20"
+          :key="level"
+          v-if="level <= characterLevel() && (level == 1 || (level - 1) % 4 == 0)"
+          >
         <v-expansion-panel-header>{{level}} уровень</v-expansion-panel-header> 
-
       <v-expansion-panel-content :key="level" >
 
         
@@ -52,7 +51,6 @@
       <v-expansion-panels multiple v-if="characterAncestryTalent(level)">
           <v-expansion-panel
           >
-         
             <v-expansion-panel-header>
               <template v-slot:default="{ open }">
            
@@ -105,11 +103,8 @@
                   @input="talentUpdateSelected($event, characterAncestryTalent(level))"
                 />
               </div>
-
             </v-expansion-panel-content>
-
           </v-expansion-panel>
-
         </v-expansion-panels>
 
     </v-expansion-panel-content>
@@ -211,9 +206,7 @@
               </div>
 
             </v-expansion-panel-content>
-
           </v-expansion-panel>
-
         </v-expansion-panels>
 
     </v-expansion-panel-content>
@@ -386,16 +379,11 @@
               </div>
 
             </v-expansion-panel-content>
-
           </v-expansion-panel>
-
         </v-expansion-panels>
-
     </v-expansion-panel-content>
     </v-expansion-panel>
-    </v-expansion-panels> 
-
-                  
+    </v-expansion-panels>              
     </v-row>
   </div>
 </template>
@@ -436,13 +424,12 @@ export default {
   data() {
     return {
       issues: [
-        'Allow to pick "Augments", add them to the wargear and compute the cost accordingly.',
-        'Allow to pick some talents multiple times.',
+        '.',
+        '.',
       ],
-      // TalentsList: undefined,
-      selectedTalentsAncestry: undefined, // for he preview dialog box
+      selectedTalentsAncestry: undefined, 
       selectedTalentsClass: undefined,
-      selectedTalentsSkill: undefined,  // for he preview dialog box
+      selectedTalentsSkill: undefined,  
       talentsDialog: false,
       talentsDialogClass: false,
       talentsDialogSkill: false,
@@ -454,7 +441,7 @@ export default {
       filters: {
         tags: {
           model: [],
-          label: 'Filter by Tags',
+          label: 'Фильтры',
         },
       },
       filterOnlyPrerequisites: false,
@@ -486,11 +473,6 @@ export default {
           value: 'prerequisitesHtml',
           sortable: false,
         },
-        /*{
-          text: 'Effect',
-          value: 'effect',
-          sortable: false,
-        },*/
         {
           text: 'Buy',
           value: 'buy',
@@ -505,7 +487,6 @@ export default {
       loading: false,
       talentGroupFilterHelp: false,
       selectedTalentGroups: ['Talents'],
-      // Exarch Powers, Priest Prayers & Litanies, Chaos Rituals, ...
       talentGroupList: [
         {
           source: {
@@ -516,35 +497,8 @@ export default {
           key: 'playerCore-talents',
           name: 'Talents',
           description:
-            '<p>Talents represent a knack that a character possesses. Many grant characters a ' +
-            'special ability, which others cannot undertake. Other talents provide situational ' +
-            'benefits to a character. Each talent has an associated build point cost, and may have ' +
-            'prerequisite attributes, keywords, skills, or Talents. Players are not required to ' +
-            'select any talents for their characters. The maximum number of talents that may be ' +
-            'purchased is limited by Tier.</p>',
+            '<',
         },
-        /*
-        {
-          source: {
-            book: 'An Abundance of Apocrypha',
-            key: 'aaoa',
-            page: 147,
-          },
-          key: 'aaoa-exarch-powers',
-          name: 'Exarch Powers',
-          description:
-            '<p>The following abilities are unique powers and combat techniques exhibited by Exarchs, ' +
-            'mighty Aeldari warriors who lead the Aspect Warrior shrines into battle and maintain ' +
-            'those shrines during the all-too-rare times of peace.</p>' +
-            '<p>An Exarch may <strong>purchase up to two of these powers</strong>, at the costs ' +
-            'listed, so long as the Exarch meets the listed prerequisites. Some of the powers in ' +
-            'this section are distinct to Exarchs of particular Aspect Temples, and they may only ' +
-            'be selected by an Exarch of that temple.</p>' +
-            '<p>Many of the powers in this section affect the Exarch’s students as well, granting a ' +
-            'benefit to the Aspect Warriors under their command. An Exarch may <strong>consider all Aspect ' +
-            'Warriors of the same type as the Exarch within 10m as being part of the Exarch’s squad.</strong></p>',
-        },
-        */
       ],
     };
   },
@@ -561,7 +515,6 @@ export default {
       if (this.selectedTagsFilters.length > 0) {
         searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
       }
-
       let filter;
 
       filter = this.filters.source;
@@ -577,13 +530,8 @@ export default {
         return [];
       }
       let filteredTalents = this.talentList;
-      
-      //const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       const lowercaseKeywords = filteredTalents.map(s => s.tags.toUpperCase());
-      
-
-      // only show those whose prerequisites are met
-      // if () {
+    
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
       let reduced = [];
       filteredTalents.forEach((item) => {
@@ -599,10 +547,6 @@ export default {
     sources() {
       return [
         'playerCore',
-        'fspg',
-        'red1',
-        'cos',
-        // 'tnh',
         ...this.settingHomebrews,
       ];
     },
@@ -634,20 +578,15 @@ export default {
       return this.$store.getters['characters/characterWargearById'](this.characterId);
     },
     characterTalentsEnriched() {
-
-      // { id, name, cost, selection}
       if (this.talentList === undefined) {
         return [];
       }
 
       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
       const talents = characterTalents.filter((t) => t).map((talent) => {
 
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
+      const rawTalent = this.talentList.find((r) => r.key === talent.key);
 
-        // not found? return a custom talent without special properties and no cost
         if (rawTalent === undefined) {
           console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
           return {
@@ -667,7 +606,6 @@ export default {
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
-        // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
           aggregatedTalent.extraCost = 0;
@@ -687,7 +625,6 @@ export default {
           }
         }
 
-        // Fetch gear for selected weapon trooper
         if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
           const sourceKey = `talent.${aggregatedTalent.id}`;
           const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
@@ -695,14 +632,6 @@ export default {
             const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
             aggregatedTalent.selected = wargear.key;
             aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-            /*
-            charGear.forEach( g => {
-              characterPackage
-              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
-              .selectList.find(s=> g.source.endsWith(s.key))
-                .itemChoice = g.name
-            });
-            */
           }
         }
 
@@ -716,7 +645,6 @@ export default {
           }
         }
 
-        // Fetch gear for selected augmetis
         if (aggregatedTalent.key.startsWith('core-augmetic')) {
           console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
           aggregatedTalent.wargear.forEach((g, i, warArray) => {
@@ -737,7 +665,6 @@ export default {
 
         return aggregatedTalent;
       }).sort((a, b) => a.id.localeCompare(b.id));
-      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
       return talents;
     },
     filteredTalents() {
@@ -751,39 +678,24 @@ export default {
         filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
       }
 
-      // if (this.selectedTalentGroups.length > 0) {
-      //   filteredTalents = filteredTalents.filter((t) => {
-      //     return this.selectedTalentGroups.includes(t.talentGroup) || (t.talentGroup === undefined && this.selectedTalentGroups.includes('Talents'))
-      //   });
-      // }
-
-      // exclude those already picked
-      //filteredTalents = filteredTalents.filter((t) => t.allowedMultipleTimes || !this.characterTalentLabels.includes(t.name));
-
       filteredTalents = filteredTalents.map((talent) => {
         let fulfilled = true;
         let TagsFilter = true;
-        // has prerequisites
         if (talent.requirements && talent.requirements.length > 0) {
           talent.requirements.forEach((requirement) => {
             switch (requirement.type) {
-
-              // condition: 'must', type: 'keyword', key: ['Adeptus Ministorum', 'Adepta Sororitas'],
               case 'keyword':
                 const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
                 const found = requirement.key.some((k) => {
                   return lowercaseKeywords.includes(k.toString().toUpperCase());
                 });
                 if (
-                  // (requirement.condition === 'must' && !found)
-                  // || (requirement.condition === 'mustNot' && found)
                   found
                 ) {
                   fulfilled = false;
                 }
                 break;
-
-              // condition: 'must', type: 'attribute', key: 'Willpower', value: '3+',
+      
               case 'attribute':
                 const attribute = this.attributeRepository.find((a) => a.key == requirement.key);
                 if (attribute) {
@@ -795,8 +707,6 @@ export default {
                   console.warn(`No attribute found for ${requirement.key}.`);
                 }
                 break;
-
-              // condition: 'must', type: 'skill', key: 'Ballistic Skill', value: '4+',
               case 'skill':
                 const skill = this.skillRepository.find((a) => a.key == requirement.key);
                 if (skill) {
@@ -808,7 +718,6 @@ export default {
                   console.warn(`No skill found for ${requirement.key}.`);
                 }
                 break;
-
               case 'character':
                 switch (requirement.key) {
                   case 'Tier':
@@ -819,7 +728,6 @@ export default {
                     break;
                 }
                 break;
-
               case 'Talents':
                 fulfilled = requirement.value.some((s) => s.toString() === this.TalentsLabel);
                 break;
@@ -834,11 +742,7 @@ export default {
       });
 
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
-      // only show those whose prerequisites are met
-      // if () {
-        filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
-      // }
-
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
       return filteredTalents;
     },
     talentHatredKeywordOptions() {
@@ -872,7 +776,7 @@ export default {
           this.getAbility(newVal);
         }
       },
-      immediate: true, // make this watch function is called when component created
+      immediate: true, 
     },
   },
   methods: {
@@ -885,8 +789,6 @@ export default {
       const TalentsDetails = await this.$axios.get('/api/talents/', config);
       this.levelAncestry = level;
       this.selectedTalentsAncestry = TalentsDetails.data.filter(s => s.type == 'ancestry').map(talent => {
-                       
-          
                        const prerequisitesHtml = this.requirementsToText(talent).join(', ');
                        return {
                          ...talent
@@ -903,8 +805,7 @@ export default {
       const TalentsDetails = await this.$axios.get('/api/talents/', config);
       this.levelSkill = level;
       this.selectedTalentsSkill = TalentsDetails.data.filter(s => s.type == 'skill').map(talent => {
-                       
-          
+ 
                        const prerequisitesHtml = this.requirementsToText(talent).join(', ');
                        return {
                          ...talent
@@ -921,8 +822,7 @@ export default {
       const TalentsDetails = await this.$axios.get('/api/talents/', config);
       this.levelClass = level;
       this.selectedTalentsClass = TalentsDetails.data.filter(s => s.type == 'class').map(talent => {
-                       
-          
+
                        const prerequisitesHtml = this.requirementsToText(talent).join(', ');
                        return {
                          ...talent
@@ -938,25 +838,12 @@ export default {
       {
         const { data } = await this.$axios.get('/api/talents/', config);
         this.talentList = data.map(talent => {
-                       
-          
+
           const prerequisitesHtml = this.requirementsToText(talent).join(', ');
           return {
             ...talent
           }
         });
-
-        // this.talentList.filter(talent =>{
-          
-        //   const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
-        //   return lowercaseKeywords.includes(talent.tags.toString().toUpperCase());
-              
-
-        //    }
-        //   )
-      
-
-
       }
       
       {
@@ -973,8 +860,6 @@ export default {
       {
         const { data } = await this.$axios.get('/api/abilityAncestry/', config);
         this.abilityList = data.map(talent => {
-                       
-          
           const prerequisitesHtml = this.requirementsToText(talent).join(', ');
           return {
             ...talent

@@ -4,8 +4,6 @@
       <h1 class="headline">
         Выберите характеристики и навыки
         <span>
-
-
           <v-btn color="primary" @click="resetStats" outlined small
             >Сброс статов</v-btn
           >
@@ -13,66 +11,48 @@
       </h1>
     </v-col>
 
-
-
-
-
     <v-col :cols="12">
       <h3 class="headline">
           Повышение от Наследия
       </h3>
     </v-col>
 
-    <!-- <v-col v-if="boost == 2"  :cols="12" :md="6">
-      <v-select  
-        label="Свободное повышение"
-        v-model="selectedAncestryBoost"
-        :items="AncestryAttribute"
-        item-text="name"
-        item-value="key"
-        @change="updateSelect(selectedAncestryBoost)"
-      ></v-select>
-    </v-col> -->
-
     <v-col v-if="species"  :cols="12" :md="6" >
 
-    
+      <v-col v-if="boost == 2 "  :cols="12" :md="6" >
+        <v-select  
+          label="Повышение от Наследия"
+          v-model="selectedAncestryBoost2"
+          :items="AncestryAttribute2"
+          item-text="name"
+          item-value="key"
+          @change="updateSelect2(selectedAncestryBoost2)"
+        ></v-select>
+      </v-col>
+      
+      <v-col cols="12" :md="6">
+        <v-select  
+          label="Свободное повышение"
+          v-model="selectedAncestryBoost"
+          :items="AncestryAttribute"
+          item-text="name"
+          item-value="key"
+          @change="updateSelect(selectedAncestryBoost)"
+        ></v-select>
+      </v-col>
 
-    <v-col v-if="boost == 2 "  :cols="12" :md="6" >
-      <v-select  
-        label="Повышение от Наследия"
-        v-model="selectedAncestryBoost2"
-        :items="AncestryAttribute2"
-        item-text="name"
-        item-value="key"
-        @change="updateSelect2(selectedAncestryBoost2)"
-      ></v-select>
     </v-col>
-    
-    <v-col cols="12" :md="6">
-      <v-select  
-        label="Свободное повышение"
-        v-model="selectedAncestryBoost"
-        :items="AncestryAttribute"
-        item-text="name"
-        item-value="key"
-        @change="updateSelect(selectedAncestryBoost)"
-      ></v-select>
-    </v-col>
 
-  </v-col>
-
-  <v-col v-else>
-  <v-alert
-          
+    <v-col v-else>
+      <v-alert  
           type="warning"
           class="caption ml-4 mr-4"
           dense outlined border="left"
-        >
-        Выберите наследие
-      </v-alert>
+            >
+          Выберите наследие
+        </v-alert>
 
-    </v-col>
+      </v-col>
     
     <v-col :cols="12">
       <h3 class="headline">
@@ -82,7 +62,6 @@
 
     <v-col v-if="!ascension" :cols="12">
         <v-alert
-          
           type="warning"
           class="caption ml-4 mr-4"
           dense outlined border="left"
@@ -132,8 +111,7 @@
     </v-col>
 
     <v-col v-if="!archetype" :cols="12">
-        <v-alert
-          
+        <v-alert  
           type="warning"
           class="caption ml-4 mr-4"
           dense outlined border="left"
@@ -141,12 +119,6 @@
         Выберите Класс
       </v-alert>
     </v-col>
-    
-
-
-    <!-- <v-card-text>
-      <p>Количество свободных повышений: {{ 4 - characterBoost }}</p>
-    </v-card-text> -->
 
     <v-col :cols="12">
       <h3 class="headline">
@@ -200,24 +172,13 @@
                     </v-icon>
                   </v-btn>
                 </td>
-    
                 <td class="text-center pa-1 small">  {{ (characterAttributesEnhanced[attribute.key] - 10) / 2 }}</td>
               </tr>
-
-              <!-- <tr v-for="trait in traitRepository" :key="trait.key">
-                <td>{{ trait.name }}:</td>
-                <td>{{ characterTraits[trait.key] }}</td>
-                <td>{{ characterTraitsEnhanced[trait.key] }}</td>
-              </tr> -->
             </tbody>
           </template>
         </v-simple-table>
       </v-card>
     </v-col>
-
-    <!-- <v-card-text>
-      <p>Количество свободных очков навыка: {{ 4 - characterSkillPoints }}</p>
-    </v-card-text> -->
 
     <v-col :cols="12" :md="7">
       <v-card>
@@ -262,95 +223,88 @@
                     </v-hover>
                   </span>
               </tr>
-            
             </tbody>
           </template>
-
-          
         </v-simple-table>
-
         
         <v-spacer></v-spacer>
 
-<v-card-actions style="justify-content: center;">
-  <v-btn x-small text @click="openSkillsSettings">Дополнительное Знание <v-icon small>settings</v-icon></v-btn>
-</v-card-actions>
+        <v-card-actions style="justify-content: center;">
+          <v-btn x-small text @click="openSkillsSettings">Дополнительное Знание <v-icon small>settings</v-icon></v-btn>
+        </v-card-actions>
 
             <!-- Custom Skills -->
             <v-dialog
-      v-model="skillsEditorDialog"
-      width="600px"
-      scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
-      <v-card>
-        <v-alert
-               :value="alert"
-               type="error"
-               text
-               dense
-               border="left"
-       
-               >
-       Знание уже существует
-      </v-alert>
-      <v-alert
-               :value="characterSkillPoints <= 0"
-               type="info"
-               text
-               dense
-               border="left"
-       
-               >
-       Недостаточно очков Навыка для добавления нового Знания
-      </v-alert>
-        <v-card-title style="background-color: #262e37; color: #fff;">
-          Редактирование Знаний
-          <v-spacer />
-          <v-icon dark @click="closeSkillsSettings">close</v-icon>
-        </v-card-title>
-        <v-card-text class="pt-4">
-          <v-text-field v-model="customSkill.name" dense label="Имя Знания"></v-text-field>
-          <v-textarea v-model="customSkill.description" dense label="Описание"></v-textarea>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn small right color="success" 
-          :disabled="characterSkillPoints <= 0"
-          @click="saveCustomSkill">Save</v-btn>
+              v-model="skillsEditorDialog"
+              width="600px"
+              scrollable
+              :fullscreen="$vuetify.breakpoint.xsOnly"
+            >
+              <v-card>
+                <v-alert
+                      :value="alert"
+                      type="error"
+                      text
+                      dense
+                      border="left"
+              
+                      >
+              Знание уже существует
+              </v-alert>
+              <v-alert
+                      :value="characterSkillPoints <= 0"
+                      type="info"
+                      text
+                      dense
+                      border="left"
+              
+                              >
+              Недостаточно очков Навыка для добавления нового Знания
+              </v-alert>
+                <v-card-title style="background-color: #262e37; color: #fff;">
+                  Редактирование Знаний
+                  <v-spacer />
+                  <v-icon dark @click="closeSkillsSettings">close</v-icon>
+                </v-card-title>
 
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+                <v-card-text class="pt-4">
+                  <v-text-field v-model="customSkill.name" dense label="Имя Знания"></v-text-field>
+                  <v-textarea v-model="customSkill.description" dense label="Описание"></v-textarea>
+                </v-card-text>
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn small right color="success" 
+                  :disabled="characterSkillPoints <= 0"
+                  @click="saveCustomSkill">Save</v-btn>
+
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
 
       </v-card>
     </v-col>
   
     <v-col :cols="12" :md="6">
       <v-card>
-      
         <v-simple-table dense>
-      
           Внимательность
             <tbody>
-          <tr>
-                
+            <tr> 
                 <td>{{ Perception.name }}</td>
-                  <td>{{ ModAttributePerception(Perception.attribute, Perception.key) }}</td>
-                  <td>{{ characterlabel(characterPerseption) }}</td>
+                <td>{{ ModAttributePerception(Perception.attribute, Perception.key) }}</td>
+                <td>{{ characterlabel(characterPerseption) }}</td>
                 </tr>
-            
             </tbody>
             
           Сложность Класса
             <tbody>
-          <tr>
-                
+              <tr>  
                 <td> Сложность Класса</td>
-                  <td>{{ ModAttributeClass() }}</td>
-                  <td>{{ characterlabel(characterSkillClass) }}</td>
-                </tr>
+                <td>{{ ModAttributeClass() }}</td>
+                <td>{{ characterlabel(characterSkillClass) }}</td>
+              </tr>
             
             </tbody>
         </v-simple-table>
@@ -367,7 +321,7 @@
             </tr>
         
         </tbody>
-    </v-simple-table>
+        </v-simple-table>
       </v-card>
     </v-col>
  
@@ -415,7 +369,7 @@
               <td>{{ characterlabel(skillDefence[defence.key]) }}</td>
             </tr>
         </tbody>
-    </v-simple-table>
+        </v-simple-table>
       </v-card>
     </v-col>
     
@@ -446,7 +400,6 @@ export default {
         { text: 'Характеристика', sortable: false, align: 'left', class: 'text-left small pa-1' },
         { text: 'Значение', sortable: false, align: 'center', class: 'text-center small pa-1' },
         { text: 'Модификатор', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        // { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
       alert: false,
       skillsEditorDialog: false,
@@ -493,7 +446,6 @@ export default {
     alerts() {
       const alerts = [];
 
-      // archetype prerequisites matched?
       if (!this.archetypePrerequisitesValid) {
         alerts.push({
           key: 'prerequisites',
@@ -502,7 +454,6 @@ export default {
         });
       }
 
-      // tree of learning valid?
       if (!this.treeOfLearningValid) {
         alerts.push({
           key: 'tree',
@@ -519,7 +470,6 @@ export default {
       let fulfilled = true;
       if (archetype && archetype.prerequisites.length > 0) {
         archetype.prerequisites.forEach((prerequisite) => {
-          // { group: 'attributes', value: 'willpower', threshold: 3, }
           switch (prerequisite.group) {
             case 'attributes':
               const attributeValue = this.characterAttributesEnhanced[prerequisite.value];
@@ -540,7 +490,6 @@ export default {
       if (this.ascensionPackages) {
         // this.ascensionPackages.
       }
-      // const ascensions = this.
 
       return fulfilled;
     },
@@ -561,7 +510,6 @@ export default {
       return 8;
     },
 
-    // Character Data
     remainingBuildPoints() {
       return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
     },
@@ -636,9 +584,6 @@ export default {
     characterTraitsEnhanced() {
       return this.$store.getters['characters/characterTraitsEnhancedById'](this.characterId);
     },
-    // characterLevel() {
-    //   return this.$store.getters['characters/characterLevelbyId'](this.characterId);
-    // },
     characterCustomSkills() {
       return this.$store.getters['characters/characterCustomSkillsById'](this.characterId);
     },
@@ -663,13 +608,6 @@ export default {
         ...this.skillDefence,
       ];
     },
-    
-    // Perception() {
-    //   return [
-    //     ...this.Perception,
-       
-    //   ];
-    // },
     settingHouserules() {
       return this.$store.getters['characters/characterSettingHouserulesById'](this.characterId);
     },
@@ -689,7 +627,7 @@ export default {
           this.loadArchetype(newVal);
         }
       },
-      immediate: true, // make this watch function is called when component created
+      immediate: true, 
     },
     characterAscensionKey: {
       handler(newVal) {
@@ -697,7 +635,7 @@ export default {
           this.loadAscension(newVal);
         }
       },
-      immediate: true, // make this watch function is called when component created
+      immediate: true, 
     },
   },
   methods: {
@@ -724,12 +662,9 @@ export default {
       this.ascension = finalData;
 
       this.BackgroundAttribute = this.attributeRepository.filter(boost => this.ascension.boost1.some((m) => boost.key.includes(m)));
-       this.BackgroundAttribute2 =  this.attributeRepository;
-
-        this.selectedBackgroundBoost = this.characterBackgroundFreeBoost;
-        this.selectedBackgroundBoost2 = this.characterBackgroundFreeBoost2; 
-
-      //this.selectedBackgroundBoost = this.characterBackgroundFreeBoost;
+      this.BackgroundAttribute2 =  this.attributeRepository;
+      this.selectedBackgroundBoost = this.characterBackgroundFreeBoost;
+      this.selectedBackgroundBoost2 = this.characterBackgroundFreeBoost2; 
       this.loading = false;
       
     },
@@ -739,15 +674,12 @@ export default {
       this.loading = false;
       this.species = data;
       this.boost = this.species ? this.species.abilityBoost : 0;
-      // this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.key == this.species.AncestryAttribute);
-      // this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.key == this.species.AncestryAttribute2);
-       this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
-       this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
+      this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
+      this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
 
-       this.selectedAncestryBoost = this.characterAncestryFreeBoost;
-       this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2; 
+      this.selectedAncestryBoost = this.characterAncestryFreeBoost;
+      this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2; 
       this.selectedBoost = this.AncestryFreeBoost;
-     // this.species.attributeBoost.forEach(boost => this.AncestryAttribute.push(boost));
 
     },
     resetStats() {
@@ -797,8 +729,6 @@ export default {
 
     skillsByAttribute(attribute) {
       if (this.finalSkillRepository !== undefined) {
-  
-
         return this.finalSkillRepository.filter((s) => s.attribute === attribute);
       }
       return [];
@@ -813,21 +743,16 @@ export default {
         switch (key) {
           case "U":
             return "Нетренирован"
-            break;
          case "T":
             return "Тренирован"
-            break;
          case "E":
             return "Эксперт"
-            break;
           case "M":
             return "Мастер"
-            break;
           case "L":
             return "Легенда"
-            break;
           default:
-            break;
+            return "Нетренирован"
         }
     },
     characterLevel(){
@@ -848,71 +773,50 @@ export default {
         return false;
     },
     RestrictionSkill(skill){
-      // if(this.ascension === undefined) return false;
       const level = this.$store.getters['characters/characterLevelById'](this.characterId);
       if(this.ascension !== undefined)
         if(this.ascension.skill === skill.key  && this.characterSkills[skill.key] === 'T')
           return true;
-
-
         if(this.characterClassSkill != ""  && this.characterClassSkill === skill.key)
         {
-          
           return true;
         }
-      // if(level < 3 && skill == 'T')
-      //   return true;
-
-      // if(level < 7 && skill == 'E')
-      //   return true;
-
-      // if(level < 15 && skill == 'M')
-      //   return true;
-
         return false;
     },
     ModAttribute(attribute, skill){
       const char1 = this.SkillsTrained[this.characterSkills[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
       const char3 = this.characterLevel();
-       
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     ModAttributeSaving(attribute, skill){
       const char1 = this.SkillsTrained[this.characterSaving[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
       const char3 = this.characterLevel();
-       
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     ModAttributeClass(){
       const char1 = this.SkillsTrained[this.SkillClass()];
-      // const char2 = (this.characterAttributes[attribute] - 10) / 2;
       const char3 = this.characterLevel();
-       
       return parseInt(char1) + parseInt(char3);
     },
     ModAttributePerception(attribute, skill){
       const char1 = this.SkillsTrained[this.SkillPerception()];
       const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
       const char3 = this.characterLevel();
-       
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     MaxSkillPoints(){
       const Max = (this.characterAttributes["intellect"] - 10) / 2
       if(Max < 0)
         return 0;
-      
       return Max;
     },
     updateSelect(boost) {
         this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
-
     },
     updateSelect2(boost) {
         this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
-
     },
     updateSelectBackground(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
@@ -925,7 +829,6 @@ export default {
     },
     updateSelectBackground2(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
-
     },
     SkillPerception(){
       return this.$store.getters['characters/characterPerseptionById'](this.characterId);
@@ -936,7 +839,6 @@ export default {
     
     affordableAttributeColor(currentValue) {
       const attributeNewValueCost = {
-        //   [0, 1, 2, 3,  4,  5,  6,  7,  8,  9, 10, 11, 12],
         v10: [0, 0, 4, 6,  8, 15, 18, 21, 32, 36, 40, 55, 72],
         v15: [0, 0, 4, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50],
       };
@@ -946,7 +848,6 @@ export default {
     },
     affordableSkillColor(currentSkillValue) {
       const skillNewValueCost = {
-        //   [0, 1, 2, 3, 4,  5,  6,  7,  8],
         v10: [0, 1, 2, 3, 4, 10, 12, 14, 24],
         v15: [0, 2, 4, 6, 8, 10, 12, 14, 16],
       };
@@ -958,18 +859,12 @@ export default {
       return cost <= this.remainingBuildPoints;
     },
     freeBoost(name) {
-    this.boost =  this.boost - 1;
-      // if (this.species && this.species.attributeMaximums) {
-      //   return this.species.attributeMaximums.find((attribute) => attribute.name === name).value;
-      // }
+      this.boost =  this.boost - 1;
       return this.boost;
     },
     computeSkillPool(skill) {
       const attribute = this.characterAttributesEnhanced[skill.attribute.toLowerCase()];
-   
-        return attribute + this.characterSkills[skill.key];
-      
-      // return this.characterSkills[skill.key];
+      return attribute + this.characterSkills[skill.key];
     },
     openSkillsSettings(){
       this.skillsEditorDialog = true;
@@ -985,7 +880,6 @@ export default {
       this.alert = false;
     },
     saveCustomSkill() {
-      // validate
       this.alert = false;
       const skill = {
         key: this.textToCamel(this.customSkill.name),
@@ -1018,7 +912,6 @@ export default {
 
       if (archetype && archetype.prerequisites.length > 0) {
         archetype.prerequisites.forEach((prerequisite) => {
-          // { group: 'attributes', value: 'willpower', threshold: 3, }
           switch (prerequisite.group) {
             case 'attributes':
               const attributeValue = this.characterAttributesEnhanced[prerequisite.value];

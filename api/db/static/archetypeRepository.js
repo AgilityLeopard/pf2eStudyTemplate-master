@@ -491,6 +491,11 @@ const playerCore =  [
       will: "E",
     },
     isFeatLevelOne: false,
+    // option: [
+    //   {
+    //     level
+    //   }
+    // ],
     description: [
       {
         name: 'encounter',

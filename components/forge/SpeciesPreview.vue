@@ -56,7 +56,7 @@
       </p>
 
       <span class="mt-2 grey--text">Повышение характеристик</span>
-      <p><v-divider /></p>
+      <v-divider />
 
       <div v-for="boost in species.attributeBoost" class="text-lg-justify">
         <div v-if="boost.value > 0">
@@ -64,16 +64,27 @@
         </div>
       </div>
 
+      <div v-for="boost in species.abilityBoost" class="text-lg-justify">
+        <div>
+          <strong> Свободное повышение </strong>
+        </div>
+      </div>
+
       <p></p>
 
       <span class="mt-2 grey--text">Понижение характеристик</span>
-      <p><v-divider /></p>
+      <v-divider />
+ 
 
       <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
-        <div v-if="flaw.value > 0">
+        <div v-if="flaw.value < 0">
           <strong>{{ flaw.name }}</strong>
         </div>
       </div>
+
+      <p></p>
+      <span class="mt-2 grey--text">Особенности Родословной</span>
+      <v-divider />
 
       <div v-if="species.speciesFeatures">
         <div v-for="feature in species.speciesFeatures" class="text-lg-justify">
@@ -84,16 +95,17 @@
           <p v-else>
             <strong>{{ feature.name }}: </strong>{{ feature.snippet }}
           </p>
+          <p></p>
         </div>
       </div>
     </v-card-text>
 
     <v-divider v-if="chooseMode" />
     <v-card-actions v-if="chooseMode">
-      <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
+      <v-btn outlined color="red" left @click="$emit('cancel')"> Отменить </v-btn>
       <v-spacer />
       <v-btn color="success" right @click="$emit('select', species)">
-        Select Species
+        Выберите наследие
       </v-btn>
     </v-card-actions>
   </v-card>

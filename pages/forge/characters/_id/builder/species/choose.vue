@@ -60,36 +60,10 @@
               <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
             </v-list-item-content>
 
-            <!-- <v-list-item-action class="d-none d-sm-inline">
-              <v-chip pill color="green" text-color="white">
-                <v-avatar left class="green darken-4">
-                  {{ item.rarity }}
-                </v-avatar>
-                {{ item.rarity }}
-              </v-chip>
-            </v-list-item-action> -->
-
-            <!-- <v-list-item-action class="d-none d-sm-inline" v-if="false">
-              <v-chip pill color="red" text-color="white">
-                <v-avatar left class="red darken-4">
-                  {{ item.baseTier }}
-                </v-avatar>
-                Tier
-              </v-chip>
-            </v-list-item-action> -->
           </v-list-item>
         </v-list>
       </v-card>
 
-      <!-- <v-card class="mt-4">
-        <v-card-text>
-          <p>
-            You can add your own <strong>custom species</strong>
-            <nuxt-link to="/forge/species">here</nuxt-link>. You can then select
-            it here.
-          </p>
-        </v-card-text>
-      </v-card> -->
     </v-col>
   </v-row>
 </template>
@@ -226,6 +200,7 @@ export default {
 
           
       }
+      this.selectedSpecies = item;
       this.speciesDialog = true;
     },
     selectSpeciesForChar(species) {
