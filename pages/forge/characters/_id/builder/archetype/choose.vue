@@ -16,128 +16,10 @@
       />
     </v-dialog>
 
-    <!-- <v-dialog
-      v-model="advancedKeywordsDialog"
-      width="600px"
-      scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
-      <v-card class="pa-0">
-        <v-card-title style="background-color: #262e37; color: #fff;">
-          <span>Build Advanced Character</span>
-          <v-spacer />
-          <v-icon dark @click="advancedKeywordsDialog = false">
-            close
-          </v-icon>
-        </v-card-title>
-        <v-card-text class="pt-8">
-
-          <v-alert
-            type="info"
-            dense outlined border="left"
-            class="caption pb-4"
-          >Advanced Character Creation is described on CORE pg. 38 and allows for more influence on Keywords and Wargear at the cost of a dedicated archetype ability.</v-alert>
-
-          <v-select
-            dense outlined
-            label="Select the tier, defining your access to wargear"
-            v-model="advancedTier"
-            :items="advancedTierOptions"
-          />
-
-          <v-select
-            dense outlined
-            label="Select a faction or stay unaligned"
-            v-model="advancedFaction"
-            :items="allArchetypeFactions"
-          ></v-select>
-
-          <v-autocomplete
-            outlined
-            label="Select fitting keywords"
-            persistent-hint
-            class="mb-4"
-            hint="Work with your GM/Group to define keywords"
-            v-model="advancedKeywords"
-            :items="keywordCombinedRepository.filter((k) => !k.name.startsWith('['))"
-            item-text="name"
-            item-value="key"
-            multiple
-            chips
-          >
-            <template v-slot:selection="data">
-              <v-chip
-                v-bind="data.attrs"
-                :input-value="data.selected"
-                close
-                @click="data.select"
-                @click:close="remove(data.item)"
-              >
-                {{ data.item.name }}
-              </v-chip>
-            </template>
-            <template v-slot:item="data">
-              <v-list-item-content>
-                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                <v-list-item-subtitle>{{data.item.type}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete>
-
-          <v-text-field
-            dense outlined
-            placeholder="Unaligned Rascal"
-            v-model="advancedName"
-            label="A short name, describing this 'Archetype'"
-          >
-          </v-text-field>
-
-          <v-autocomplete
-            outlined
-            label="Select Archetype Ability (optional)"
-            persistent-hint
-            class="mb-4"
-            hint="You may buy (ask your GM) one Archetype Ability for it`s tier x 10 XP"
-            v-model="advancedArchetype"
-            :items="itemList"
-            item-text="name"
-            item-value="key"
-            return-object
-            clearable
-          >
-            <template v-slot:item="data">
-              <v-list-item-content>
-                <v-list-item-title>{{data.item.name}} {{data.item.tier*10}} XP</v-list-item-title>
-                <v-list-item-subtitle>{{data.item.archetypeFeatures.map((f) => f.name).join(' • ')}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete>
-
-        </v-card-text>
-        <v-card-actions>
-          <v-btn left outlined color="red" @click="advancedKeywordsDialog = false">
-            Cancel
-          </v-btn>
-          <v-spacer />
-          <v-btn right color="success" @click="createAdvancedArchetype(advancedName, advancedFaction, advancedKeywords, advancedTier, advancedArchetype)">
-            Confirm choices
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
-
     <v-col>
       <h1 class="headline">
         Выберите класс
       </h1>
-
-      <!-- <v-alert
-        :value="!characterSpeciesLabel"
-        type="warning"
-        dense
-      >
-        You need to select a Species first.
-      </v-alert> -->
     </v-col>
 
     <v-col :cols="12">
@@ -152,35 +34,8 @@
 
     <v-col :cols="12" >
       <v-card >
-        <!-- <div>
-          <v-divider />
-          <v-list subheader>
-            <v-subheader>Advanced Character Creation</v-subheader>
-            <v-list-item
-              two-line
-              @click.stop="advancedKeywordsDialog = true"
-            >
-              <v-list-item-avatar tile>
-                <img :src="getAvatar()">
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  Unaligned Rascal
-                </v-list-item-title>
-                <v-list-item-subtitle>Select a faction, keywords and tier...</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </div> -->
-        <!-- <div
-          v-for="(group, key) in archetypeFaction"
-          :key="key"
-        >
-          <v-divider /> -->
 
           <v-list  v-if="archetypeFaction">
-            <!-- <v-subheader>{{ group }}</v-subheader> -->
-
             <v-list-item
               v-for="item in archetypeFaction"
               :key="item.key"

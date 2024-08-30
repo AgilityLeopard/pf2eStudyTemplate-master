@@ -457,7 +457,7 @@ const playerCore = [
   name: "Парное парирование",
   snippet: 'Вы можете использовать два оружия, чтобы парировать атаки',
   level: 4,
-   requirementsText: "Вы владеете двумя оружиями ближнего боя, по одному в каждой руке",
+  requirementsText: "Вы владеете двумя оружиями ближнего боя, по одному в каждой руке",
   requirements: [
     // {
     //   type: 'skill',
@@ -540,49 +540,497 @@ const playerCore = [
       '<p>Вы изучили достаточно много верований, чтобы узнавать о них признаки, которые вряд ли верны. Если при броске проверки Религии для Расшифровка текста (Decipher Writing) религиозного происхождения, или Вспомнить информацию (Recall Knowledge) о принципах веры вы получили крит.провал, то вместо этого получаете просто провал. Когда выполняете Вспомнить информацию (Recall Knowledge) о принципах своей веры и при броске получаете провал, то вместо этого получаете успех, а если при броске получаете успех, то вместо этого получаете крит.успех.</p>',
    
   },
-    {
-      ...talent('playerCore',130,'fleet',20,'эльф'),
-      snippet: 'Вы получаете плюс 5 футов к скорости',
-      type: "ancestry",
-      name: "Эльфийские ноги",
-      level: 1,
-      description:
-        '<p>The very sight of blood energises you in battle.</p>' +
-        '<p>Whenever you see an individual within 30 metres of you suffer a Critical Hit or the Bleeding Condition, you gain 1 point of Wrath.</p>' +
-        '<p>The GM may require a Corruption Test whenever this Talent is activated.</p>',
-      requirements: [
 
-      ],
+]
+
+const playerCoreAncestry = [
+  //Эльф
+  {
+    ...talent('playerCore',130,'Ancestral Longevity',20,'эльф'),
+    snippet: 'Вы накопили огромный багаж знаний в течение прожитых лет',
+    type: "ancestry",
+    name: "Родовое долголетие",
+    level: 1,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    optionsKey: 'skill',
+    options: [
+      {
+        key: "all",
+        restriction: "T"
+      }
+    ],
+    requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p> Вы накопили огромный багаж знаний в течение прожитых лет. Во время своих ежедневных приготовлений, вы можете поразмышлять о своем жизненном опыте, чтобы стать обученным одному навыку на свой выбор. Этот уровень мастерства остается до вашего следующего ежедневного приготовления. Так как это мастерство временное, вы не можете использовать его как предварительное условие для увеличения навыка или постоянного выбора персонажа, такого как способность.</p>',
+    // modifications: [
+    //   { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
+    // ],
+  },
+  {
+    ...talent('playerCore',130,'Elven Lore',20,'эльф'),
+    snippet: 'Вы обучались традиционным эльфийским искусствам, узнавали о арканной магии и окружающем вас мире',
+    type: "ancestry",
+    name: "Эльфийские знания",
+    level: 1,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p> Вы обучались традиционным эльфийским искусствам, узнавали о арканной магии и окружающем вас мире. Вы становитесь обучены Аркане и Природе. Если вы автоматически становитесь обученным одному из этих навыков (например, из-за предыстории или класса), то обучаетесь другому навыку на свой выбор.</p>'
+
+      + '<p>Также вы получаете общую способность Дополнительные знания / Additional Lore для Эльфийских знаний (Elf).</p>',
+    modifications: [
+      { 
+        targetGroup: 'Skill', 
+        targetValue: 'Upgrade', 
+        isChoiceAll: false,
+        type: 'arcana',
+        // option: ['all'],
+        modifier: "T", 
+      },
+      { 
+        targetGroup: 'Skill', 
+        targetValue: 'Upgrade', 
+        type: 'nature', 
+        isChoiceAll: false,
+        // option: ['all'],
+        modifier: "T", 
+      },
+      { 
+        targetGroup: 'Feat', 
+        targetValue: 'Additional Lore', 
+        value: 'Знания эльфов',
+        isChoiceAll: false,
+        // option: ['all'],
+        // modifier: "T",  
+      },
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Elven Lore',20,'эльф'),
+    snippet: 'Вы получаете доступ ко всему необычному оружию с признаком эльф',
+    type: "ancestry",
+    name: "Эльфийские знания",
+    level: 1,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p> Вы получаете доступ ко всему необычному оружию с признаком эльф. Вы учитесь обращаться со всем оружием с признаком эльф, а также с Длинными луками, Композитными длинными луками, Рапирами, Короткими луками и Композитными короткими луками - для определения мастерства владения этими видами оружия вы считаете воинское оружие простым, а продвинутое - воинским.</p>'
+
+      + '<p>Начиная с 5-го уровня, когда вы наносите критический удар одним из перечисленных видов оружия, вы получаете эффект его критической специализации.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Ancestry weapon', 
+        targetValue: 'Weapon', 
+        isChoiceAll: false,
+        value: 'Composite Shortbow',
+        // option: ['all'],
+        // modifier: "T", 
+      },
+      { 
+        targetGroup: 'Ancestry weapon', 
+        targetValue: 'Weapon', 
+        isChoiceAll: false,
+        value: 'Composite Longbow',
+      },
+      { 
+        targetGroup: 'Ancestry weapon', 
+        targetValue: 'Weapon', 
+        isChoiceAll: false,
+        value: 'Longbow', 
+      },
+      { 
+        targetGroup: 'Ancestry weapon', 
+        targetValue: 'Weapon', 
+        isChoiceAll: false,
+        value: 'Rapier', 
+      },
+      { 
+        targetGroup: 'Ancestry weapon', 
+        targetValue: 'Weapon', 
+        isChoiceAll: false,
+        value: 'Shortbow', 
+      },
+      { 
+        targetGroup: 'Ancestry weapon', 
+        targetValue: 'trait', 
+        isChoiceAll: false,
+        value: 'эльф', 
+      },
+      
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Forlorn',20,'эльф'),
+    snippet: 'Наблюдение за тем, как ваши друзья стареют и умирают, делает вас более угрюмым, что защищает от вредных эмоций',
+    type: "ancestry",
+    name: "Покинутый",
+    level: 1,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p> Наблюдение за тем, как ваши друзья стареют и умирают, делает вас более угрюмым, что защищает от вредных эмоций. Вы получаете бонус обстоятельства +1 к спасброскам против эмоциональных эффектов. Если при броске, вы получаете успех спасброска против эмоционального эффекта, то вместо этого вы получаете крит.успех.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Saving', 
+        targetValue: 'Bonus', 
+        isChoiceAll: true,
+        valueBonus: 1,
+        typeBonus: 'circumstance',
+        trait: 'эмоция',
+        // option: ['all'],
+        // modifier: "T", 
+      },
+      { 
+        targetGroup: 'Saving', 
+        targetValue: 'Grade', 
+        isChoiceAll: true,
+        value: "success",
+        trait: 'эмоция',
+        // valueBonus: 1,,
+        // typeBonus: 'circumstance'
+        // option: ['all'],
+        // modifier: "T", 
+      },
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Nimble Elf',20,'эльф'),
+    snippet: 'Ваши движения хорошо отточены',
+    type: "ancestry",
+    name: "Проворный эльф",
+    level: 1,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p> Ваши движения хорошо отточены. Ваша Скорость увеличивается на 5 футов.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Speed', 
+        targetValue: 'Bonus', 
+        isChoiceAll: false,
+        valueBonus: 5,
+        typeBonus: 'untyped'
+        // option: ['all'],
+        // modifier: "T", 
+      },
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Otherworldly Magic',20,'эльф'),
+    snippet: 'Ваша эльфийская магия проявляется как простое арканное заклинание, даже если вы формально не обучены магии',
+    type: "ancestry",
+    name: "Потусторонняя магия",
+    level: 1,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p> Ваша эльфийская магия проявляется как простое арканное заклинание, даже если вы формально не обучены магии. Выберите одни чары из списка арканных (см. Арканные чары). Вы можете сотворять эти чары по желанию, как врожденное арканное заклинание. Эти чары усиливаются до ранга заклинания, равного половине вашего уровня округленного до большего целого.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Spell', 
+        targetValue: 'Innate', 
+        isChoiceAll: false,
+        spell:{
+          tradition: "Arcane",
+          level: 0,
+          item: [],
+        }
+      },
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Unwavering Mien',20,'эльф'),
+    snippet: 'Ваш мистический контроль и медитации позволяют вам противостоять внешним воздействиям на ваше сознание',
+    type: "ancestry",
+    name: "Непоколебимая наружность",
+    level: 5,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p> Ваш мистический контроль и медитации позволяют вам противостоять внешним воздействиям на ваше сознание. Каждый раз, когда на вас воздействует ментальный эффект длящийся как минимум 2 раунда, вы можете уменьшить длительность на 1 раунд.</p>'
++
+'<p> Против эффектов, которые погрузят вас в сон, вы считате свои спасброски на одну ступень успешнее, но вам все еще требуется естественный сон. Это защищает только от эффектов сна, а не от других форм Потери сознания.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Saving', 
+        targetValue: 'Grade', 
+        isChoiceAll: true,
+        trait: 'sleep'
+        // value: "success",
+        // valueBonus: 1,,
+        // typeBonus: 'circumstance'
+        // option: ['all'],
+        // modifier: "T", 
+      },
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Ageless Patience',20,'эльф'),
+    snippet: 'Вы работаете в темпе, приобретенном из-за долголетия, который повышает вашу тщательность',
+    type: "ancestry",
+    name: "Вечное терпение",
+    level: 1,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p>Вы работаете в темпе, приобретенном из-за долголетия, который повышает вашу тщательность. Вы можете добровольно потратить в два раза больше времени на проверку Восприятия или проверку навыка, чтобы получить бонус обстоятельства +2 к этой проверке. Так же, для этих проверок, вы не считаете натуральную 1 на кости как понижение степени успешности; вы получаете критический провал только, если ваш результат на 10 меньше КС. Например, вы можете получить эти преимущества если потратите два действия (2) на Поиск, что обычно занимает 1 действие. Вы можете получить эти преимущества во время исследования, потратив в два раза больше времени, чем обычно требуется, или во время режима отдыха, потратив в два раза больше времени отдыха.</p>'
++
+      '<p>Мастер может решить, что ситуация не дает вам преимущества, если промедление, наоборот, негативно отразится на результате, как например при напряженных переговорах с нетерпеливым существом.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Option', 
+        targetValue: 'Skill', 
+        isChoiceAll: true,
+        value: 'Perception',
+        // value: "success",
+        valueBonus: 2,
+        typeBonus: 'circumstance',
+        // option: ['all'],
+        // modifier: "T", 
+      },
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Ancestral Suspicion',20,'эльф'),
+    snippet: 'Долгоживущие эльфы видели, как возникали и погибали цивилизации, часто от рук внешних сил',
+    type: "ancestry",
+    name: "Родовая настороженность",
+    level: 5,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p>Долгоживущие эльфы видели, как возникали и погибали цивилизации, часто от рук внешних сил. В результате, у них развилась настороженность по отношению к другим, кто может пытаться влиять на них или контролировать.</p>'
+      +
+      '<p>Вас учили сопротивляться подобным манипуляциям, получая бонус обстоятельства +2 к спасброскам против эффектов, которые сделают вас контролируемым, как Подчинение, и к проверкам Восприятия для Понимания намерения, когда пытаетесь определить находится ли существо под влиянием подобного эффекта.</p>'
+      +
+      '<p>Когда при броске спасброска, против такого эффекта вы получаете успех, то вместо этого получаете крит.успех.</p>'
+      +
+      '<p>Мастер может решить, что ситуация не дает вам преимущества, если промедление, наоборот, негативно отразится на результате, как например при напряженных переговорах с нетерпеливым существом.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Saving', 
+        targetValue: 'Bonus', 
+        isChoiceAll: false,
+        trait: 'control',
+        // value: "success",
+        valueBonus: 2,
+        typeBonus: 'circumstance',
+        // option: ['all'],
+        // modifier: "T", 
+      },
+      { 
+        targetGroup: 'Skill', 
+        targetValue: 'Bonus', 
+        isChoiceAll: false,
+        type: 'Perception',
+        // trait: 'control'
+        action: "Sense motive",
+        valueBonus: 2,
+        typeBonus: 'circumstance',
+        // valueBonus: 1,,
+        // typeBonus: 'circumstance'
+        // option: ['all'],
+        // modifier: "T", 
+      },
+    ],
+  },
+  {
+    ...talent('playerCore',130,'Martial Experience',20,'эльф'),
+    snippet: 'Вы скрестили клинки с самыми разными противниками, владеющими самым разнообразным оружием, и вы изучили основы борьбы почти с любым из них',
+    type: "ancestry",
+    name: "Воинский опыт",
+    level: 5,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p>Вы скрестили клинки с самыми разными противниками, владеющими самым разнообразным оружием, и вы изучили основы борьбы почти с любым из них. Когда вы владеете оружием, для которого у вас нет уровня мастерства, считайте свой уровень бонусом мастерства. На 11-м уровне вы становитесь обучены обращению со всем оружием.</p>',
+    modifications: [
+      { 
+        targetGroup: 'Weapon', 
+        targetValue: 'Bonus', 
+        isChoiceAll: true,
+        level: 5,
+        // trait: 'control',
+        // value: "success",
+        valueBonus: 'level',
+        typeBonus: 'profiency',
+        // option: ['all'],
+        // modifier: "T", 
+      },
+      { 
+        targetGroup: 'Weapon', 
+        targetValue: 'Upgrade', 
+        isChoiceAll: false,
+        level: 11,
+        // type: 'Perception',
+        // trait: 'control'
+        // action: "Sense motive",
+        // valueBonus: 2,
+        // typeBonus: 'circumstance',
+        // valueBonus: 1,,
+        // typeBonus: 'circumstance'
+        // option: ['all'],
+         modifier: "T", 
+      },
+    ],
+  },
+   ///////
+  {
+    ...talent('playerCore',130,'nature-ambition',20,'человек'),
+    type: "ancestry",
+    name: "Природные амбиции",
+    snippet: 'Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор',
+    level: 1,
+    requirements: [],
+    description:
+      '<p>Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор</p>',
       modifications: [
         { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
       ],
-    },
-    {
-      ...talent('playerCore',130,'nature-ambition',20,'человек'),
-      type: "ancestry",
-      name: "Природные амбиции",
-      snippet: 'Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор',
-      level: 1,
-      requirements: [],
-      description:
-        '<p>Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор</p>',
-        modifications: [
-          { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
-        ],
-        selected: '',
-      optionsPlaceholder: 'Select a skill',
-      optionsKey: 'skill',
-      options: [
-        { key: 'deception', name: 'Обман', choice: 'skill' },
-        { key: 'society', name: 'Общество', choice: 'skill' },
-      ],
-    },
-
+      selected: '',
+    optionsPlaceholder: 'Select a skill',
+    optionsKey: 'skill',
+    options: [
+      { key: 'deception', name: 'Обман', choice: 'skill' },
+      { key: 'society', name: 'Общество', choice: 'skill' },
+    ],
+  },
 ]
 
 module.exports = [
   ...playerCore,
-  // ...red1,
-  // ...red2,
-  // ...aaoa,
+  ...playerCoreAncestry
 ];

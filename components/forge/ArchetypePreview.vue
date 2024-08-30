@@ -4,52 +4,49 @@
       <span>Подтвердите класс</span>
       <v-spacer />
       <v-icon dark @click="$emit('cancel')">
-        Закрыть
+        close
       </v-icon>
     </v-card-title>
 
-    <v-card-text class="pt-4">
-      <div class="hidden-xs-only" style="float: right;">
-        <img :src="avatar" style="width:96px">
-      </div>
-
-      <div style="width: 75%">
+ 
+      <v-card-title primary-title>
+      <div>
         <h3 class="headline md0">
           {{ item.name }}
         </h3>
-        <span class="subtitle-1 grey--text">{{ item.hint }}</span>
       </div>
+      <v-spacer />
+      <div>
+        <img :src="avatar" style="width: 96px" />
+      </div>
+    </v-card-title>
 
-      <p class="text-lg-justify"><strong>Tier:</strong> {{ item.tier }}</p>
-
-      <p class="text-lg-justify"><strong>Species:</strong> {{ item.species.map((s)=>s.name).join(', ') }}</p>
-
-      <p class="text-lg-justify"><strong>XP Cost:</strong> {{ item.cost }}, incl. Archetype ({{ item.costs.archetype }} XP) and Stats ({{ item.costs.stats }} XP)</p>
+      <v-divider />
+      <v-card-text class="pt-4">
+      <ul class="simple">
+        <li v-if="item.trait" v-for="trait in item.trait" class="traits">
+          <p class="trait">{{ trait }}</p>
+        </li>
+      </ul>
+      
+      <p class="text-lg-justify">
+          <i><div v-html="item.hint"></div> </i>
+      </p>
 
       <p><v-divider /></p>
 
-      <p class="text-lg-justify" v-if="attributePrerequisites">
-        <strong>Attributes:</strong> {{ attributePrerequisites }}
-      </p>
-
-      <p class="text-lg-justify" v-if="skillPrerequisites">
-        <strong>Skills:</strong> {{ skillPrerequisites }}
-      </p>
-
-      <p class="text-lg-justify" v-if="item.prerequisiteText">
-        <strong>Others:</strong> {{ item.prerequisiteText }}
-      </p>
-
-      <p class="text-lg-justify">
+      <!-- <p class="text-lg-justify">
         <strong>Keywords: </strong>
         <span style="text-transform: uppercase; color: #F44336;">{{ item.keywords.split(',').map((i)=>i.trim()).join(', ') }}</span>
-      </p>
+      </p> -->
+      <p>Классовые особенности</p>
 
       <div
         v-for="feature in item.archetypeFeatures"
         class="text-lg-justify"
       >
         <div>
+          
           <strong>{{ feature.name }}</strong>
           <div v-if="feature.description" v-html="feature.description"></div>
           <p v-else>{{ feature.snippet }}</p>
@@ -183,5 +180,25 @@ export default {
 </script>
 
 <style scoped lang="css">
+.traits {
+  background-color: #d9c484;
+  display: inline-block;
+  margin: 0.1em 0.15em !important;
+  padding: 0.1em 0.25em;
+  list-style-type: none !important;
+}
+.trait {
+  background-color: #5e0000;
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+}
 
+.simple {
+  display: inherit;
+  margin-bottom: 0;
+  padding-inline-start: 0.2em;
+}
 </style>

@@ -16,7 +16,6 @@
         <h3 class="headline md0">
           {{ species.nameAncestry }}
         </h3>
-        <!-- <span class="subtitle-1 grey--text">{{ species.hint }}</span> -->
       </div>
       <v-spacer />
       <div>
@@ -27,21 +26,6 @@
     <v-divider v-if="chooseMode" />
 
     <v-card-text class="pa-6">
-      <!-- <p class="text-lg-justify">
-        <strong>XP Cost:</strong> {{ species.cost }}, incl. Stats ({{ species.costs.stats }} XP)
-      </p> -->
-
-      <!-- <p><v-divider /></p> -->
-
-      <p class="text-lg-justify" v-if="attributes">
-        <strong>Attributes:</strong> {{ attributes }}
-      </p>
-
-      <p class="text-lg-justify" v-if="skills">
-        <strong>Skills:</strong> {{ skills }}
-      </p>
-
-      <!-- <div v-for="trait in species.trait" class="simple"> -->
       <ul class="simple">
         <li v-if="species.trait" v-for="trait in species.trait" class="traits">
           <p class="trait">{{ trait }}</p>
