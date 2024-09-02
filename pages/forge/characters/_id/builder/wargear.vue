@@ -13,7 +13,7 @@
       >
         <v-card-text class="pa-1">
           <v-icon>{{ manageWargear ? 'expand_less' : 'expand_more' }}</v-icon>
-          Manage Wargear ({{characterWargear.length}})
+          Управление снаряжением ({{characterWargear.length}})
         </v-card-text>
       </v-card>
 
@@ -33,14 +33,14 @@
 
           <v-list-item-content>
             <v-list-item-title>{{ gear.name }}</v-list-item-title>
-            <v-list-item-subtitle>{{ gear.subtitle }}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ gear.group }}</v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>
             <v-btn outlined x-small color="error" @click="remove(gear)">
               <v-icon left>
                 delete
-              </v-icon>Remove
+              </v-icon>Удалить
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -48,7 +48,7 @@
     </v-col>
 
     <!-- starting gear -->
-    <v-col :cols="12">
+    <!-- <v-col :cols="12">
       <v-card
         class="mb-4"
         dark
@@ -65,7 +65,7 @@
 
       <div v-if="startingWargearExpand && !loading">
 
-        <!-- show ADVANCED creation options -->
+   
         <div v-if="showAdvancedStartingWargearSection && advancedWargearRestrictions">
 
           <div v-if="characterWargear.filter(g => g.source.startsWith('archetype.advanced')).length <= 0">
@@ -166,7 +166,7 @@
 
         </div>
 
-        <!-- show ARCHETYPE wargear options -->
+   
         <div v-if="showArchetypeStartingWargearSection">
           <div v-if="characterWargear.filter(g => g.source.startsWith('archetype')).length <= 0" align="center">
             <v-card
@@ -228,7 +228,7 @@
 
       </div>
 
-    </v-col>
+    </v-col> -->
 
     <!-- add additional Wargear -->
     <v-col :cols="12">
@@ -241,7 +241,7 @@
       >
         <v-card-text class="pa-1">
           <v-icon>{{ wargearSearchActive ? 'expand_less' : 'expand_more' }}</v-icon>
-          Add additional Wargear
+          Добавить снаряжение
         </v-card-text>
       </v-card>
 
@@ -260,6 +260,7 @@ import WargearSelect from '~/components/forge/WargearSelect.vue';
 import CharacterCreationMixin from '~/mixins/CharacterCreationMixin';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import WargearMixin from '~/mixins/WargearMixin';
+import WargearTrait from '~/mixins/WargearTraitRepositoryMixin';
 
 export default {
   name: 'Wargear',
@@ -272,6 +273,7 @@ export default {
     CharacterCreationMixin,
     SluggerMixin,
     WargearMixin,
+    WargearTrait
   ],
   props: [],
   head() {
@@ -384,6 +386,7 @@ export default {
       }
       return [];
     },
+
     characterWargear() {
       const characterWargear = [];
       if (this.wargearList){
@@ -395,7 +398,8 @@ export default {
             gear.source = chargear.source;
             characterWargear.push({
               id: chargear.id,
-              name: gear.name,
+              name: gear.nameGear,
+              group: this.groupLabel(gear.group),
               subtitle: this.wargearSubtitle(gear),
               type: gear.type,
               avatar: this.getAvatar(gear.type),
@@ -463,6 +467,9 @@ export default {
     },
     getAvatar(type) {
       return `/img/icon/wargear/${this.textToKebab(type)}.svg`;
+    },
+    groupLabel(group){
+      return this.wargearGroup.find(a => a.group == group) ? this.wargearGroup.find(a => a.group == group).name : "";
     },
     addToBasket(gear) {
       this.advancedShoppingChart.push(gear);

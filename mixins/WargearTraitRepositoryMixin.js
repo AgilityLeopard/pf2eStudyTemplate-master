@@ -359,6 +359,12 @@ export default {
             '<p>The weapon discharges in arcs of crackling lightning, which leap from foe to foe. When you shift Exalted Icons from a successful attack, you may shift Exalted Icons to hit enemies within 3m of an existing target as well as the main target, using the weapon’s normal damage and AP. Each Exalted Icon shifted may only be used to hit additional enemies or to gain +ED, not both.</p>',
         },
       ],
+      wargearGroup :[
+        {
+          group: "sword",
+          name: "Меч"
+        },
+      ],
     };
   },
 };

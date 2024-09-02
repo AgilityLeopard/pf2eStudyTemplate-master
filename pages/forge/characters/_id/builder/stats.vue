@@ -82,9 +82,9 @@
       <!-- </v-sheet> -->
     </v-col>
 
-    <v-col v-if="archetype && archetype.keyAbility.length > 1"  :cols="12">
+    <v-col   :cols="12">
       <h3 class="headline">
-          Выберите навык от Класса {{ archetype ? archetype.name : "" }}
+          Повышения Класса {{ archetype ? archetype.name : "" }}
       </h3>
     </v-col>
 
@@ -117,6 +117,16 @@
           dense outlined border="left"
         >
         Выберите Класс
+      </v-alert>
+    </v-col>
+
+    <v-col v-if="archetype && archetype.skillTrainedChoice.length == 0 &&  archetype.keyAbility.length == 0" :cols="12">
+        <v-alert  
+          type="warning"
+          class="caption ml-4 mr-4"
+          dense outlined border="left"
+        >
+        У класса нет повышений на выбор
       </v-alert>
     </v-col>
 

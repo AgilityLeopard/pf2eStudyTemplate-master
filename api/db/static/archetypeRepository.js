@@ -197,7 +197,7 @@ const playerCore =  [
     name: 'Воин',
     keywords: 'воин',
     hitpoints: 10,
-    keyAbilityChoice: ["dexterity", "strength"],
+    keyAbility: ["dexterity", "strength"],
     trait: ["воин"],
     rarity: "Common",
     skillTrainedChoice: ["acrobatics", "athletics"],

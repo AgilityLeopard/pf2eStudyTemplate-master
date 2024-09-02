@@ -39,7 +39,7 @@
         >{{alert.text}}</v-alert>
 
         <p v-if="item.keyAbility.length > 0"><strong>Ключевая характеристика на выбор:</strong> {{ characterLabelAttribute(item.keyAbility) }}</p>
-        <p><strong>Ключевая характеристика:</strong> {{ characterLabelAttributeBoost(item.attributeBoost) }}</p>
+        <p v-if="characterLabelAttributeBoost(item.attributeBoost)"><strong>Ключевая характеристика:</strong> {{ characterLabelAttributeBoost(item.attributeBoost) }}</p>
 
         <p v-if="item.skillTrainedChoice.length > 0"><strong>Обучен в навыке (на выбор):</strong> {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}</p>
 

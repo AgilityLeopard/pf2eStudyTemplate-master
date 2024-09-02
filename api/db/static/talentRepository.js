@@ -1007,6 +1007,124 @@ const playerCoreAncestry = [
       },
     ],
   },
+  {
+    ...talent('playerCore',130,'Elf Step',20,'эльф'),
+    snippet: 'Вы двигаетесь будто в грациозном танце, и даже ваши шаги длиннее обычных',
+    type: "ancestry",
+    name: "Эльфийский шаг",
+    level: 9,
+    // reqOptionalText: "Обучены Религии",
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'religion',
+    //     value: 'T',
+    //   }
+    // ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p>Вы двигаетесь будто в грациозном танце, и даже ваши шаги длиннее обычных. Вы Шагаете дважды на 5 футов.</p>',
+    // modifications: [
+    //   { 
+    //     targetGroup: 'Speed', 
+    //     targetValue: 'Bonus', 
+    //     isChoiceAll: true,
+    //     level: 9,
+    //     // trait: 'control',
+    //     // value: "success",
+    //     valueBonus: 'level',
+    //     typeBonus: 'untyped',
+    //     // option: ['all'],
+    //     // modifier: "T", 
+    //   },
+    //   { 
+    //     targetGroup: 'Weapon', 
+    //     targetValue: 'Upgrade', 
+    //     isChoiceAll: false,
+    //     level: 11,
+    //     // type: 'Perception',
+    //     // trait: 'control'
+    //     // action: "Sense motive",
+    //     // valueBonus: 2,
+    //     // typeBonus: 'circumstance',
+    //     // valueBonus: 1,,
+    //     // typeBonus: 'circumstance'
+    //     // option: ['all'],
+    //      modifier: "T", 
+    //   },
+    // ],
+  },
+  {
+    ...talent('playerCore',130,'Expert Longevity',20,'эльф'),
+    snippet: '>Вы продолжаете конкретизировать знания и навыки, которым научились за свою жизнь',
+    type: "ancestry",
+    name: "Эксперт долголетия",
+    level: 9,
+    reqOptionalText: "Родовое долголетие",
+    requirements: [
+      {
+        type: 'feat',
+        key: 'Ancestral Longevity',
+        // value: 'T',
+      }
+    ],
+    // optionsKey: 'skill',
+    // options: [
+    //   {
+    //     key: "all",
+    //     restriction: "T"
+    //   }
+    // ],
+    // requirementsText: "Ваш возраст по крайней мере 100 лет",
+    description:
+      '<p>Вы продолжаете конкретизировать знания и навыки, которым научились за свою жизнь. Когда вы выбираете навык, которому становитесь обучены с помощью Родового долголетия, вы так же можете выбрать навык которому вы уже обучены и стать в нем экспертом. Это длится до окончания действия "Родового долголетия".</p>'
+      +
+      '<p>Когда эффекты "Родового долголетия" и "Эксперта долголетия" заканчивается, вы можете переобучиться одному из ваших увеличений навыка. Увеличение навыка, которое вы получаете от этого переобучения, либо должно сделать вас обученным навыку, который вы выбрали с "Родовым долголетием", либо сделать вас экспертом в навыке, который вы выбрали для "Эксперта долголетия".</p>',
+  
+      optionsKey: 'skill',
+      options: [
+        {
+          key: "all",
+          restriction: "E"
+        }
+      ],
+// modifications: [
+    //   { 
+    //     targetGroup: 'Speed', 
+    //     targetValue: 'Bonus', 
+    //     isChoiceAll: true,
+    //     level: 9,
+    //     // trait: 'control',
+    //     // value: "success",
+    //     valueBonus: 'level',
+    //     typeBonus: 'untyped',
+    //     // option: ['all'],
+    //     // modifier: "T", 
+    //   },
+    //   { 
+    //     targetGroup: 'Weapon', 
+    //     targetValue: 'Upgrade', 
+    //     isChoiceAll: false,
+    //     level: 11,
+    //     // type: 'Perception',
+    //     // trait: 'control'
+    //     // action: "Sense motive",
+    //     // valueBonus: 2,
+    //     // typeBonus: 'circumstance',
+    //     // valueBonus: 1,,
+    //     // typeBonus: 'circumstance'
+    //     // option: ['all'],
+    //      modifier: "T", 
+    //   },
+    // ],
+  },
    ///////
   {
     ...talent('playerCore',130,'nature-ambition',20,'человек'),
