@@ -1089,6 +1089,8 @@ export const mutations = {
     console.info(`Adding Talent [${talentUniqueId}] ${talent.name}.`);
     talent.id = talent.id || talentUniqueId;
     character.talents.push(talent);
+
+    
     //const hasTalent = character.talents.find((t) => t.id === talent.id) !== undefined;
     //if (!hasTalent) {
     //}
@@ -1760,7 +1762,13 @@ const getDefaultState = () => ({
     key: undefined,
     label: "",
     cost: 0,
-
+  },
+  modificatorsBonus: [],
+  speed: {
+    land: 25,
+    climb: 0,
+    burrow: 0,
+    swim: 0,
   },
   wargear: [],
   background: {

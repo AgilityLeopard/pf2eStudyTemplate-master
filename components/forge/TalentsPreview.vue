@@ -288,6 +288,7 @@ export default {
         key: talent.key,
         cost: talent.cost,
         place: place+level,
+        modifications: talent.modifications,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
         choice: talent.optionsKey,
