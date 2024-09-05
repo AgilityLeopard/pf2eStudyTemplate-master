@@ -160,7 +160,7 @@ export default {
             { to: '/library/psychic-powers', title: 'Psychic Powers', subtitle: 'Browse ', icon: '', },
           ],
         },
-        { to: '/codex', title: 'Правила', subtitle: 'Просмтр правил', icon: '' },
+        { to: '/codex', title: 'Правила', subtitle: 'Просмотр правил', icon: '' },
       ],
       drawer: {
         // sets the open status of the drawer

@@ -3,7 +3,7 @@
   <div>
 
     <!-- Keyword editor -->
-    <v-dialog
+    <!-- <v-dialog
       v-model="keywordsEditorDialog"
       width="600px"
       scrollable
@@ -43,10 +43,10 @@
           </v-card-actions>
         </v-card>
       </v-form>
-    </v-dialog>
+    </v-dialog> -->
 
     <!-- Custom Skills -->
-    <v-dialog
+    <!-- <v-dialog
       v-model="skillsEditorDialog"
       width="600px"
       scrollable
@@ -74,10 +74,10 @@
           <v-btn small right color="success" @click="saveCustomSkill">Save</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <!-- Corruption -->
-    <v-dialog
+    <!-- <v-dialog
       v-model="showCorruptionManagerDialog"
       width="800px"
       scrollable
@@ -89,10 +89,10 @@
         :modifiers="characterEnhancements.filter((e) => e.targetValue === 'corruption')"
         @cancel="showCorruptionManagerDialog = false"
       ></dod-corruption-manager>
-    </v-dialog>
+    </v-dialog> -->
 
     <!-- Wealth -->
-    <v-dialog
+    <!-- <v-dialog
         v-model="showContextDialog"
         width="800px"
         scrollable
@@ -109,7 +109,7 @@
             @cancel="hideContextDialog"
         ></component>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
@@ -127,7 +127,7 @@
           <v-col :cols="12">{{ characterName }}</v-col>
           <v-col :cols="12" class="caption">{{ [ archetypeLabel, speciesLabel ].join(' • ')  }}</v-col>
           <v-col :cols="12" class="caption">
-            <span>{{ [ `Tier ${characterSettingTier}`, `Rank ${characterRank}`, `${campaignCustomXp} XP`].join(' • ') }}</span>
+            <span>{{ [ `Уровень ${characterRank}`].join(' • ') }}</span>
           </v-col>
           <v-col :cols="12" class="caption">
             <v-progress-linear :value="campaignCustomXp" height="2" color="red"></v-progress-linear>
@@ -138,19 +138,19 @@
 
       <!-- actions -->
       <v-col :cols="12" :sm="4" :md="5" align="right">
-        <v-btn small outlined color="success" v-if="false">share</v-btn>
+        <!-- <v-btn small outlined color="success" v-if="false">share</v-btn>
         <v-btn small outlined color="success" v-if="false">campaign</v-btn>
         <v-btn small outlined color="primary" v-if="false">
           <v-icon left small>group</v-icon> Regroup
-        </v-btn>
-        <v-btn
+        </v-btn> -->
+        <!-- <v-btn
           color="primary"
           outlined small
           @click="doRespite"
         >
           <v-icon left small>fireplace</v-icon>
           Respite
-        </v-btn>
+        </v-btn> -->
         <v-btn
           nuxt :to="`/forge/characters/${characterId}/builder/print`"
           color="success"
@@ -158,7 +158,7 @@
           outlined small
         >
           <v-icon left small>print</v-icon>
-          Print
+          Печать
         </v-btn>
         <v-btn
           nuxt :to="`/forge/characters/${characterId}/builder/setting`"
@@ -166,7 +166,7 @@
           small
         >
           <v-icon left small>edit</v-icon>
-          Edit
+          Изменить
         </v-btn>
       </v-col>
 
@@ -348,7 +348,7 @@
 
             <v-tab class="caption" key="actions" :href="`#tab-actions`"><h2 class="subtitle-2">Weapons</h2></v-tab>
             <v-tab class="caption" key="wargear" :href="`#tab-wargear`"><h2 class="subtitle-2">Wargear</h2></v-tab>
-            <v-tab class="caption" key="abilities-talents" :href="`#tab-abilities-talents`"><h2 class="subtitle-2">Abilities</h2></v-tab>
+            <v-tab class="caption" key="abilities-talents" :href="`#tab-abilities-talents`"><h2 class="subtitle-2">Способности</h2></v-tab>
             <v-tab class="caption" key="psychic-powers" :href="`#tab-psychic-powers`" v-if="psychicPowers.length > 0"><h2 class="subtitle-2">Powers</h2></v-tab>
             <v-tab class="caption" key="objectives" :href="`#tab-objectives`"><h2 class="subtitle-2">Description</h2></v-tab>
 
@@ -409,10 +409,10 @@
                         <span>{{ isNaN(meta.salvo) ? '-' : meta.salvo }}</span>
                       </td>
 
-                      <td class="text-left pa-1 small">
+                      <!-- <td class="text-left pa-1 small">
                         <span v-if="meta.traits && meta.traits.length >0">{{ meta.traits.join(', ') }}</span>
                         <span v-else>-</span>
-                      </td>
+                      </td> -->
 
                     </tr>
                   </template>
@@ -502,7 +502,7 @@
                   <v-chip
                     label
                     small
-                    v-for="item in [`All`,`Species`, `Archetype`, `Ascension`, `Talents`, `Other`]"
+                    v-for="item in [`Все`,`Наследие`, `Класс`, `Предыстория`, `Черты`, `Другое`]"
                     :key="item.toLowerCase()"
                     :value="item.toLowerCase()"
                   >
@@ -513,7 +513,7 @@
                 <div style="height: 505px; overflow-y: auto;">
 
                   <!-- species < abilities -->
-                  <div v-show="abilitySection.selection === 'species' || (abilitySection.selection === 'all' && speciesAbilities.length > 0 )">
+                  <div v-show="abilitySection.selection === 'наследие' || (abilitySection.selection === 'все' && speciesAbilities.length > 0 )">
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
                       <span class="body-2 red--text">Species</span>
                     </div>
@@ -533,22 +533,22 @@
                       </div>
                     </div>
                     <div v-if="speciesAbilities.length === 0" align="center" class="mt-2 mb-2">
-                      <em>No abilities? Human eh?</em>
+                      <em>Нет особенностей? Выберите наследие и все увидите!</em>
                     </div>
                   </div>
 
                   <!-- archetype < abilities -->
-                  <div v-show="['all', 'archetype'].some(i=>i===abilitySection.selection)">
+                  <div v-show="['все', 'класс'].some(i=>i===abilitySection.selection)">
 
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
-                      <span class="body-2 red--text">Archetype</span>
+                      <span class="body-2 red--text">Класс</span>
                     </div>
 
                     <div v-for="ability in archetypeAbilities" :key="ability.name" class="caption mb-2">
 
                       <strong>{{ ability.name }}</strong>
                       <em v-if="ability.source"> • {{ ability.source }}</em>
-
+                      <em v-if="ability.level"> {{ ability.level }}</em>
                       <div v-if="ability.snippet"><p class="mb-1" v-html="computeFormatedText(ability.snippet)"></p></div>
                       <div v-else v-html="computeFormatedText(ability.description)"></div>
 
@@ -567,10 +567,10 @@
                   </div>
 
                   <!-- Ascensions < abilities (Background, Other) -->
-                  <div v-show="abilitySection.selection === 'ascension' || (abilitySection.selection === 'all' && ascensionAbilities.length > 0 )">
+                  <div v-show="abilitySection.selection === 'предыстория' || (abilitySection.selection === 'все' && ascensionAbilities.length > 0 )">
 
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
-                      <span class="body-2 red--text">Ascension</span>
+                      <span class="body-2 red--text">Предыстория</span>
                     </div>
 
                     <div v-for="ability in ascensionAbilities" :key="ability.name" class="caption mb-2">
@@ -591,11 +591,11 @@
                   </div>
 
                   <!-- talents < abilities -->
-                  <div v-show="['all', 'talents'].some(i=>i===abilitySection.selection)" >
+                  <div v-show="['все', 'черты'].some(i=>i===abilitySection.selection)" >
 
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12); display: flex;">
-                      <span class="body-2 red--text" style="flex: 1;">Talents</span>
-                      <div style="flex-wrap: wrap; display: flex;" v-if="characterFaith.points > 0">
+                      <span class="body-2 red--text" style="flex: 1;">Черты</span>
+                      <!-- <div style="flex-wrap: wrap; display: flex;" v-if="characterFaith.points > 0">
                         <div
                           v-for="pointIndex in characterFaith.points"
                           class="faith-box"
@@ -603,15 +603,15 @@
                           @click="toggleResourceFaith(pointIndex)"
                         ></div>
                         <span class="caption ml-2">/ Faith Points</span>
-                      </div>
+                      </div> -->
                     </div>
 
                     <div v-if="talents.length > 0" v-for="talent in talents" :key="talent.name" class="caption mb-2">
 
                       <strong>{{ talent.name }}</strong>
-                      <em> • Talent</em>
-                      <span v-if="talent.source">
-                        <em v-if="talent.source.key"> • {{ talent.source.key }}</em><em v-if="!isNaN(talent.source.page)">, pg. {{ talent.source.page }}</em>
+                      <em> • Черта </em>
+                      <span v-if="talent.type && talent.level">
+                        <em v-if="talent.type"> • {{ talent.type }}</em><em v-if="talent.level"> • {{  talent.level }}</em>
                       </span>
                       <div v-if="talent.snippet"><p class="mb-1" v-html="computeFormatedText(talent.snippet)"></p></div>
                       <div v-else v-html="computeFormatedText(talent.description)"></div>
@@ -645,7 +645,7 @@
                   </div>
 
                   <!-- talents (with faith) < abilities -->
-                  <div v-if="false" v-show="['all', 'faith'].some(i=>i===abilitySection.selection)" class="caption">
+                  <!-- <div v-if="false" v-show="['all', 'faith'].some(i=>i===abilitySection.selection)" class="caption">
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12); display: flex;">
                       <span class="body-2 red--text" style="flex: 1;">Faith</span>
                       <div style="flex-wrap: wrap; display: flex;">
@@ -665,10 +665,10 @@
                     <div v-if="talentsForFaith.length === 0" align="center" class="mt-2 mb-2">
                       <em>The heretic does not live the imperial creed.</em>
                     </div>
-                  </div>
+                  </div> -->
 
                   <!-- other < abilities (Ascensions, Background, Other) -->
-                  <div v-show="abilitySection.selection === 'other' || (abilitySection.selection === 'all' && otherAbilities.length > 0 )">
+                  <div v-show="abilitySection.selection === 'другое' || (abilitySection.selection === 'все' && otherAbilities.length > 0 )">
 
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
                       <span class="body-2 red--text">Other</span>
@@ -1012,8 +1012,8 @@ export default {
       talentRepository: talentResponse.data,
       breadcrumbItems: [
         { text: '', nuxt: true, exact: true, to: '/' },
-        { text: 'Forge', nuxt: true, exact: true, to: '/forge/my-characters' },
-        { text: 'Character', nuxt: true, exact: true, to: `/forge/characters/${params.id}` },
+        { text: 'Билдодельня', nuxt: true, exact: true, to: '/forge/my-characters' },
+        { text: 'Персонаж', nuxt: true, exact: true, to: `/forge/characters/${params.id}` },
       ],
     };
   },
@@ -1116,7 +1116,7 @@ export default {
       return this.$store.getters['characters/characterSettingTierById'](this.characterId);
     },
     characterRank() {
-      return this.$store.getters['characters/characterCampaignCustomRankById'](this.characterId);
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     campaignCustomXp() {
       return this.$store.getters['characters/characterCampaignCustomXpById'](this.characterId);
@@ -1434,9 +1434,9 @@ export default {
     },
     groupedTraits() {
       return [
-        ...this.traits.filter((i) => i.type === 'Combat'),
-        ...this.traits.filter((i) => i.type === 'Mental'),
-        ...this.traits.filter((i) => i.type === 'Social'),
+        // ...this.traits.filter((i) => i.type === 'Combat'),
+        // ...this.traits.filter((i) => i.type === 'Mental'),
+        // ...this.traits.filter((i) => i.type === 'Social'),
       ];
     },
     characterReloads() {
@@ -1794,11 +1794,12 @@ export default {
       const archetype = this.characterArchetype;
 
       if (archetype && archetype.archetypeFeatures) {
-        archetype.archetypeFeatures.forEach((feature) => {
+        archetype.archetypeFeatures.filter(s=> s.level <= this.characterLevel()).forEach((feature) => {
           const ability = {
             name: feature.name,
             effect: feature.snippet ? feature.snippet : feature.description,
             snippet: feature.snippet,
+            level: feature.level,
             description: feature.description,
             source: archetype.name,
             hint: archetype.name,
@@ -1970,6 +1971,8 @@ export default {
             snippet: rawTalent.snippet,
             description: rawTalent.description,
             source: rawTalent.source,
+            level: charTalent.place.replace(/[a-z]/gi, '') ,
+            type: rawTalent.type,
             hint: rawTalent.name,
             selectedOptions: [],
             modifications: rawTalent.modifications || [],
@@ -2006,7 +2009,7 @@ export default {
           console.info(`No talent found for ${charTalent.key}`);
         }
       });
-      return finalTalents.sort((a, b) => a.name.localeCompare(b.name));
+      return finalTalents.sort(a => a.level);
     },
     talentsForFaith() {
       if ( this.enrichedTalents.length > 0 ) {

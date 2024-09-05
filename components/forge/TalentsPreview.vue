@@ -68,15 +68,15 @@
               <span>{{ item.name }}</span>
             </template>
 
-            <template v-slot:item.cost="{ item }">
+            <template v-slot:item.level="{ item }">
               <v-chip>
-                {{ item.cost }}
+                {{ item.level }}
               </v-chip>
 
             </template>
 
             <template v-slot:item.prerequisitesHtml="{ item }">
-              <span v-html="item.prerequisitesHtml" />
+              <span v-if="item.requirementsText" v-html="item.requirementsText" />
             </template>
 
             <template v-slot:item.effect="{ item }">
@@ -188,19 +188,19 @@ export default {
       },
       headers: [
         {
-          text: 'Name',
+          text: 'Название',
           value: 'name',
           align: 'left',
           sortable: true,
         },
         {
-          text: 'Cost',
-          value: 'cost',
+          text: 'Уровень',
+          value: 'level',
           align: 'center',
           sortable: true,
         },
         {
-          text: 'Prerequisites',
+          text: 'Требование',
           value: 'prerequisitesHtml',
           sortable: false,
         },
@@ -210,7 +210,7 @@ export default {
           sortable: false,
         },*/
         {
-          text: 'Buy',
+          text: 'Добавить',
           value: 'buy',
           align: 'center',
           sortable: false,
