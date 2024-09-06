@@ -1753,7 +1753,7 @@ const getDefaultState = () => ({
     L: 8,
   },
   customSkills: [],
-  languages: [{ name: "Всеобщий", cost: 0, source: "", trait: "Common" }],
+  languages: [{ name: "Всеобщий", cost: 0, source: "", trait: "common" }],
   keywords: [],
   talents: [],
   mutations: [],
@@ -1778,46 +1778,8 @@ const getDefaultState = () => ({
     plusOne: undefined,
   },
   enhancements: [],
-  /**
-   * spendable resources are:
-   * > Faith, granted by talents, long rest
-   * > wrath, 2 plus talents and objectives, long rest
-   * > shock, by trait and boni
-   * > wounds, by trait and boni
-   * > wealth, by trait and boni
-   * > reloads, 3 + gear
-   */
   objectives: [],
   objectiveArchived: false,
-  faith: {
-    points: 0, // computed from obtained talents
-    spend: 0,
-  },
-  maxWounds: {
-    spend: 0,
-  },
-  maxShock: {
-    spend: 0,
-  },
-  assets: {
-    points: 0, // aka trait
-  },
-  wealth: {
-    points: 0, // aka trait
-    spend: 0,
-  },
-  wrath: {
-    points: 2, // or more, if objective is fullfiled or talents
-    spend: 0,
-  },
-  reloads: {
-    points: 3, // or more, buy gear
-    spend: 0,
-  },
-  defiance: {
-    passed: 0,
-    failed: 0,
-  },
   fluff: {
     notes: "",
   },

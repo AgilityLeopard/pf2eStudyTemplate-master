@@ -297,9 +297,9 @@
 
             <v-spacer></v-spacer>
 
-            <v-card-actions style="justify-content: center;">
+            <!-- <v-card-actions style="justify-content: center;">
               <v-btn x-small text @click="openSkillsSettings">Additional Skill <v-icon small>settings</v-icon></v-btn>
-            </v-card-actions>
+            </v-card-actions> -->
 
             </v-card>
           </v-col>
@@ -312,40 +312,7 @@
 
           <v-tabs centered grow color="red">
 
-            <!--  DNDBYOND
-              Actions
-                All, Attack, Action, Bonus Action, Reaction, Others, Limited Use
-              Equipment
-                All, Inventory, Attunement, Other Possessions
-              Features & Traits
-                All, Class, Race, Feats
-              Description
-                All, Background, Characteritics, Apperance
-              Notes
-                All, Orgs, Enemies, Backstory, other
-              Extras
-                Creatures na Vehicles
-            -->
-
-            <!-- W&G
-
-              Actions
-                All, Weapon, Powers, Other
-
-              Wargear
-                All, Weapons, Armour, Gear, Other Possessions
-
-              Abilities & Traits
-                All, Race, Archetype, Talents, Other
-
-              Psychic Powers
-                All, <Disciplines>
-
-              Description
-                All, (Background), Languages, Objectives, Keywords,
-
-            -->
-
+          
             <v-tab class="caption" key="actions" :href="`#tab-actions`"><h2 class="subtitle-2">Weapons</h2></v-tab>
             <v-tab class="caption" key="wargear" :href="`#tab-wargear`"><h2 class="subtitle-2">Wargear</h2></v-tab>
             <v-tab class="caption" key="abilities-talents" :href="`#tab-abilities-talents`"><h2 class="subtitle-2">Способности</h2></v-tab>
@@ -375,8 +342,8 @@
                       <td class="text-left pa-1 small">
                         {{ item.name }}
                         <template v-if="item.meta.length > 1">
-                          <span v-if="meta.type === 'melee-weapon'">(Melee)</span>
-                          <span v-else-if="meta.type === 'ranged-weapon'">(Ranged)</span>
+                          <span v-if="meta.type === 'melee-weapon'">Ближний бой</span>
+                          <span v-else-if="meta.type === 'ranged-weapon'">Дальний бой</span>
                         </template>
                       </td>
 
@@ -394,9 +361,9 @@
                           <div v-if="meta.damage.static === '*'">*</div>
                           <div v-else>
                             <span v-if="meta.type==='melee-weapon'">{{ meta.damage.static + attributes.find((a)=>a.key==='strength').adjustedRating }}*</span>
-                            <span v-else>{{ meta.damage.static }}</span>
+                            <span v-else>{{ meta.damage }}</span>
                             <span> + </span>
-                            <span>{{ meta.damage.ed }} ED</span>
+                            <span>{{ item.damage }} ED</span>
                           </div>
                         </div>
                       </td>
@@ -418,7 +385,7 @@
                   </template>
                 </v-data-table>
 
-                <div class="mb-1 mt-2">
+                <!-- <div class="mb-1 mt-2">
                   <span class="body-2 red--text">Reloads:</span>
                   <span class="body-2">{{ characterReloads.points - characterReloads.spend }} remaining.</span>
                   <div class="pl-2" style="flex-wrap: wrap; display: flex;" v-if="characterReloads.points > 0">
@@ -432,7 +399,7 @@
                       <v-icon color="primary" v-else>sd_storage</v-icon>
                     </v-btn>
                   </div>
-                </div>
+                </div> -->
 
                 <div class="mt-4">
                   <div
@@ -595,15 +562,6 @@
 
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12); display: flex;">
                       <span class="body-2 red--text" style="flex: 1;">Черты</span>
-                      <!-- <div style="flex-wrap: wrap; display: flex;" v-if="characterFaith.points > 0">
-                        <div
-                          v-for="pointIndex in characterFaith.points"
-                          class="faith-box"
-                          :class="{ 'faith-box--filled': pointIndex <= characterFaith.spend }"
-                          @click="toggleResourceFaith(pointIndex)"
-                        ></div>
-                        <span class="caption ml-2">/ Faith Points</span>
-                      </div> -->
                     </div>
 
                     <div v-if="talents.length > 0" v-for="talent in talents" :key="talent.name" class="caption mb-2">
@@ -643,29 +601,6 @@
                       <em>Knowledge is treason.</em>
                     </div>
                   </div>
-
-                  <!-- talents (with faith) < abilities -->
-                  <!-- <div v-if="false" v-show="['all', 'faith'].some(i=>i===abilitySection.selection)" class="caption">
-                    <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12); display: flex;">
-                      <span class="body-2 red--text" style="flex: 1;">Faith</span>
-                      <div style="flex-wrap: wrap; display: flex;">
-                        <div
-                          v-for="pointIndex in characterFaith.points"
-                          class="faith-box"
-                          :class="{ 'faith-box--filled': pointIndex <= characterFaith.spend }"
-                          @click="toggleResourceFaith(pointIndex)"
-                        ></div>
-                        <span class="body-2 ml-2">Faith Points</span>
-                      </div>
-                    </div>
-                    <div v-if="talentsForFaith.length > 0" v-for="talent in talentsForFaith" :key="talent.name" >
-                      <strong>{{ talent.name }}</strong><em> • Talent</em>
-                      <p v-html="computeFormatedText(talent.description)" />
-                    </div>
-                    <div v-if="talentsForFaith.length === 0" align="center" class="mt-2 mb-2">
-                      <em>The heretic does not live the imperial creed.</em>
-                    </div>
-                  </div> -->
 
                   <!-- other < abilities (Ascensions, Background, Other) -->
                   <div v-show="abilitySection.selection === 'другое' || (abilitySection.selection === 'все' && otherAbilities.length > 0 )">
@@ -760,20 +695,6 @@
               </div>
 
               <!-- notes, bound, others -->
-              <div class="pa-2" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
-                <div class="caption mb-2">
-                  <strong>Power Levels</strong><em> • core, pg. 260</em>
-                  <div>You may cast <em>Bound</em>, <em>Unbound</em> or <em>Transcendent</em>.</div>
-                </div>
-                <div v-if="speciesKey && speciesKey.endsWith('aeldari')" class="caption mb-2">
-                  <strong>Aeldari Psyker</strong><em> • core, pg. 282</em>
-                  <div>If you trigger Perils of the Warp you must roll 2d6; the highest is always the ‘tens’ digit of the d66 roll, and the lower result is the units digit.</div>
-                </div>
-                <div v-if="speciesKey && speciesKey.endsWith('aeldari') && keywordStrings && keywordStrings.includes('Asuryani')" class="caption mb-2">
-                  <strong>Asuryani Psyker</strong><em> • core, pg. 282</em>
-                  <div>You may reroll a single Wrath Dice that rolled a Complication once per Test.</div>
-                </div>
-              </div>
             </v-tab-item>
 
             <!-- objectives -->
@@ -802,7 +723,7 @@
                   <div v-show="['all', 'objectives'].some(i=>i===descriptionSection.selection)">
                     <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);">
                       <span class="body-2 red--text">Objectives</span>
-                      <v-icon small v-if="false" @click="objectiveEditorOpen">edit</v-icon>
+                      <v-icon small v-if="false" @click="objectiveEditorOpen">редактировать</v-icon>
                     </div>
                     <div
                       v-for="(objective, index) in objectives"
@@ -896,7 +817,7 @@
 
               </div>
 
-              <v-row v-if="false" no-gutters>
+              <!-- <v-row v-if="false" no-gutters>
                 <v-col :cols="6" class="pa-1">
                   <v-card height="100%" class="flexcard">
                     <v-card-text>
@@ -947,7 +868,7 @@
                     </v-card-text>
                   </v-card>
                 </v-col>
-              </v-row>
+              </v-row> -->
 
             </v-tab-item>
 
@@ -1037,12 +958,12 @@ export default {
         // { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
       weaponHeaders: [
-        { text: 'Name', sortable: false, align: 'left', class: 'small pa-1' },
-        { text: 'Range', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Damage', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'AP', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Salvo', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Traits', sortable: false, align: 'left', class: 'small pa-1' },
+        { text: 'Название', sortable: false, align: 'left', class: 'small pa-1' },
+        { text: 'Дальность', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Урон', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Категория', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Группа', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
       ],
       psychicPowersHeaders: [
         { text: 'Name', sortable: false, align: 'left', class: 'small pa-1' },
@@ -1098,10 +1019,8 @@ export default {
   computed: {
     sources() {
       return [
-        'core',
-        'fspg',
-        'red1',
-        'cos',
+        'playerCore',
+
         // 'tnh',
         ...this.settingHomebrews
       ];

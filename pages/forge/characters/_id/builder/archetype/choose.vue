@@ -138,9 +138,7 @@ export default {
     sources() {
       return [
         'playerCore',
-        'fspg',
-        'red1',
-        'cos',
+
         // 'tnh',
         ...this.settingHomebrews
       ];
