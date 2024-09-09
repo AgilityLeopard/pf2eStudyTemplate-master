@@ -246,7 +246,35 @@ export default {
           key: "medium",
           name: "Средний",
         },
-      ]
+        {
+          key: "small",
+          name: "Маленький",
+        },
+        {
+          key: "Large",
+          name: "Большой",
+        },
+      ],
+      rarityRepository: [
+        
+          {
+            key: "common",
+            name: "Обычный",
+          },
+          {
+            key: "uncommon",
+            name: "Необычный",
+          },
+          {
+            key: "rare",
+            name: "Редкий",
+          },
+          {
+            key: "unique",
+            name: "Уникальный"
+          },
+        
+      ],
     };
   },
   methods: {

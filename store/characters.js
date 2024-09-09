@@ -1753,7 +1753,13 @@ const getDefaultState = () => ({
     L: 8,
   },
   customSkills: [],
-  languages: [{ name: "Всеобщий", cost: 0, source: "", trait: "common" }],
+  languages: [
+    { 
+      name: "Всеобщий", 
+      source: "", 
+      trait: "common" 
+    }
+  ],
   keywords: [],
   talents: [],
   mutations: [],

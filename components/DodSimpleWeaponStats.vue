@@ -21,7 +21,7 @@
               {{ stats.nameGear }}
             </td>
             <td class="text-center">
-              <span >{{ stats.group }}</span>
+              <span >{{ groupName(stats.group) }}</span>
               <!-- <span v-if="['*','-'].includes(stats.range)">*</span>
               <span v-else-if="stats.range === 0">melee</span>
               <span v-else-if="stats.range === 1">melee</span>
@@ -117,13 +117,19 @@ export default {
     isMelee() {
       return this.stats.type === 'melee-weapon';
     },
+
+
   },
   methods: {
     traitByName(name) {
       const prefix = name.split('(')[0];
       return this.wargearTraitRepository.find((item) => item.name.includes(prefix));
     },
+    groupName(name){
+      return this.wargearGroup.find(item => item.group === name).name;
+    }
   },
+
 };
 </script>
 
