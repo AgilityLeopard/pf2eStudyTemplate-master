@@ -1216,11 +1216,17 @@ export const mutations = {
     );
     if (payload.gear && payload.gear.modifiers) {
     }
+    const wargear = payload.gear;
     character.wargear.push({
       id: wargearUniqueId,
       name: payload.name,
-      variant: payload.variant,
       source: payload.source,
+      variant: payload.variant,
+      ...wargear
+      // group: payload.gear.group,
+      // category: payload.gear.category,
+      
+     
     });
   },
   removeCharacterWargear(state, payload) {

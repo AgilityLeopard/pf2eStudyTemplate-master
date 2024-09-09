@@ -13,226 +13,97 @@
       >
         <v-card-text class="pa-1">
           <v-icon>{{ manageWargear ? 'expand_less' : 'expand_more' }}</v-icon>
-          Управление снаряжением ({{characterWargear.length}})
+          Управление Оружием ({{characterWeapon.length}})
         </v-card-text>
       </v-card>
 
-      <v-list
-        v-if="manageWargear && characterWargear"
-        two-line
-        avatar
-        dense
-      >
-        <v-list-item
-          v-for="gear in characterWargear"
-          :key="gear.id"
-        >
-          <v-list-item-avatar tile>
-            <img :src="gear.avatar">
-          </v-list-item-avatar>
+      <v-simple-table  v-if="manageWargear && characterWeapon" dense>
+          <template v-slot:default>
+            <thead>
+                <tr>
+                  <th v-for="header in headers" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead>
+            <tbody>
+              <tr  v-for="gear in characterWeapon"
+              :key="gear.id">
+                <td >{{ gear.nameGear }}</td>
+                <td  class="text-center pa-1 small">{{ attackModifier(gear) }}</td>
+                <td  class="text-center pa-1 small">{{ damageModifier(gear) }}</td>
+                <td >                
+                  <v-btn outlined x-small color="info" @click="openWeaponSettings(gear)">
+                    <v-icon left>
+                      edit
+                    </v-icon>Изменить
+                  </v-btn>
+                </td>
+                <td >                
+                  <v-btn outlined x-small color="error" @click="remove(gear)">
+                    <v-icon left>
+                      delete
+                    </v-icon>Удалить
+                  </v-btn>
+                </td>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ gear.name }}</v-list-item-title>
-            <v-list-item-subtitle>{{ gear.group }}</v-list-item-subtitle>
-          </v-list-item-content>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
 
-          <v-list-item-action>
-            <v-btn outlined x-small color="error" @click="remove(gear)">
-              <v-icon left>
-                delete
-              </v-icon>Удалить
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
-    </v-col>
-
-    <!-- starting gear -->
-    <!-- <v-col :cols="12">
-      <v-card
-        class="mb-4"
-        dark
-        dense
-        outlined
-        :color=" startingWargearExpand ? 'info' : '' "
-        @click="startingWargearExpand = !startingWargearExpand"
-      >
-        <v-card-text class="pa-1">
-          <v-icon>{{ startingWargearExpand ? 'expand_less' : 'expand_more' }}</v-icon>
-          Add Starting Wargear
-        </v-card-text>
-      </v-card>
-
-      <div v-if="startingWargearExpand && !loading">
-
-   
-        <div v-if="showAdvancedStartingWargearSection && advancedWargearRestrictions">
-
-          <div v-if="characterWargear.filter(g => g.source.startsWith('archetype.advanced')).length <= 0">
-
-            <v-alert
-              color="warning"
-              border="left"
-              dense text
-              v-if="advancedShoppingChart.length <= 0"
+        <v-dialog
+              v-model="weaponEditorDialog"
+              :value="Weapon" 
+              width="600px"
+              scrollable
+              :fullscreen="$vuetify.breakpoint.xsOnly"
             >
-              {{getAdvancedWargearOptionByTier(this.characterArchetypeTier).wargearString}}
-            </v-alert>
+              <v-card>
+                <!-- <v-alert
+                      :value="alert"
+                      type="error"
+                      text
+                      dense
+                      border="left"
+              
+                      >
+              Знание уже существует
+              </v-alert>
+              <v-alert
+                      :value="characterSkillPoints <= 0"
+                      type="info"
+                      text
+                      dense
+                      border="left"
+              
+                              >
+              Недостаточно очков Навыка для добавления нового Знания
+              </v-alert> -->
+                <v-card-title style="background-color: #262e37; color: #fff;">
+                  Редактирование оружия
+                  <v-spacer />
+                  <v-icon dark @click="closeWeaponSettings">close</v-icon>
+                </v-card-title>
 
-            <v-alert
-              color="success"
-              border="left"
-              dense text
-              v-if="advancedShoppingChart.length > 0 && advancedWargearViolations.length <= 0"
-            >
-              You spend {{advancedWargearSpend}} / {{advancedWargearRestrictions.total}} points.
-            </v-alert>
+                <v-card-text v-if="Weapon" class="pt-4">
+                  <v-text-field v-if="Weapon" v-model="Weapon.runeWeapon.striking" dense label="Имя Знания">{{ Weapon.striking }}</v-text-field>
+                  <!-- <v-textarea v-model="customSkill.description" dense label="Описание"></v-textarea> -->
+                </v-card-text>
+                <v-divider></v-divider>
 
-            <v-alert
-              v-show="advancedWargearViolations.length > 0"
-              color="error"
-              class="caption"
-              border="left"
-              text dense
-            >
-              <ul>
-                <li v-for="item in advancedWargearViolations">{{item}}</li>
-              </ul>
-            </v-alert>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn small right color="success" 
+                  
+                  @click="saveCustomSkill">Save</v-btn>
 
-            <div v-if="advancedShoppingChart.length > 0">
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
 
-              <v-list
-                v-if="advancedShoppingChart"
-                two-line
-                avatar
-                dense
-              >
-                <v-list-item
-                  three-line
-                  v-for="(gear, index) in advancedShoppingChart"
-                  :key="index"
-                >
-                  <v-list-item-avatar tile>
-                    <img :src="getAvatar(gear.type)">
-                  </v-list-item-avatar>
-
-                  <v-list-item-content>
-                    <v-list-item-title>{{ gear.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ wargearSubtitle(gear) }}</v-list-item-subtitle>
-                    <v-list-item-subtitle>{{ gear.value }} {{ gear.rarity }}</v-list-item-subtitle>
-                  </v-list-item-content>
-
-                  <v-list-item-action>
-                    <v-btn
-                      outlined x-small
-                      color="error"
-                      @click="removeFromBasket(index)"
-                    >
-                      <v-icon left>
-                        delete
-                      </v-icon>Remove
-                    </v-btn>
-                  </v-list-item-action>
-                </v-list-item>
-              </v-list>
-
-              <div align="center">
-                <v-btn
-                  small dense dark
-                  color="green"
-                  @click="addWargearToCharacter(advancedShoppingChart, 'archetype.advanced')"
-                >
-                  Add starting wargear
-                </v-btn>
-              </div>
-            </div>
-
-            <wargear-search
-              v-if="startingWargearExpand && wargearList"
-              :repository="wargearList"
-              @select="addToBasket"
-            />
-          </div>
-
-          <div v-else>
-            <v-card>
-              <v-card-text>
-                <v-icon>help</v-icon>
-                Starting Wargear has been added, remove all starting wargear from your inventory to re-select the starting wargear
-              </v-card-text>
-            </v-card>
-          </div>
-
-        </div>
-
-   
-        <div v-if="showArchetypeStartingWargearSection">
-          <div v-if="characterWargear.filter(g => g.source.startsWith('archetype')).length <= 0" align="center">
-            <v-card
-              v-for="gear in startingWargear"
-              :key="gear.key"
-              outlined
-              dense
-              class="mb-2"
-            >
-              <v-card-title class="pa-2">
-                <span class="subtitle-1 mb-0">{{ gear.name }}</span>
-              </v-card-title>
-
-              <v-card-text v-if="gear.options && gear.options.length == 1 && gear.options[0].filter" >
-                <wargear-select
-                  :item="gear.selected"
-                  :repository="computeWargearOptionsByFilter(gear.options[0])"
-                  class="mb-4"
-                  @input="gear.selected = $event.name"
-                />
-              </v-card-text>
-
-              <v-card-text v-else-if="gear.options">
-                <v-radio-group
-                  v-model="gear.selected"
-                  class="mt-0"
-                >
-                  <v-radio
-                    v-for="option in gear.options"
-                    :key="option.key"
-                    :label="option.name"
-                    :value="option.name"
-                  />
-                </v-radio-group>
-              </v-card-text>
-            </v-card>
-
-            <v-btn
-              v-if="startingWargearExpand"
-              small
-              dense
-              color="green"
-              @click="addWargearToCharacter(startingWargear, 'archetype')"
-              dark
-            >
-              Add starting wargear
-            </v-btn>
-          </div>
-
-          <div v-else>
-            <v-card>
-              <v-card-text>
-                <v-icon>help</v-icon>
-                Starting Wargear has been added, remove all starting wargear from your inventory to reselct the starting wargear
-              </v-card-text>
-            </v-card>
-          </div>
-        </div>
-
-      </div>
-
-    </v-col> -->
-
-    <!-- add additional Wargear -->
-    <v-col :cols="12">
-      <v-card
+        <v-col :cols="12" v-if="manageWargear && characterWeapon">
+      <v-card 
         class="mb-4"
         dark
         outlined
@@ -246,10 +117,12 @@
       </v-card>
 
       <wargear-search
-        v-if="wargearSearchActive && wargearList"
+        v-if="wargearSearchActive && wargearList && manageWargear && characterWeapon"
         :repository="wargearList"
         @select="add"
       />
+    </v-col>
+    
     </v-col>
   </v-row>
 </template>
@@ -261,6 +134,7 @@ import CharacterCreationMixin from '~/mixins/CharacterCreationMixin';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import WargearMixin from '~/mixins/WargearMixin';
 import WargearTrait from '~/mixins/WargearTraitRepositoryMixin';
+import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 
 export default {
   name: 'Wargear',
@@ -273,7 +147,8 @@ export default {
     CharacterCreationMixin,
     SluggerMixin,
     WargearMixin,
-    WargearTrait
+    WargearTrait,
+    StatRepositoryMixin
   ],
   props: [],
   head() {
@@ -289,12 +164,39 @@ export default {
   data() {
     return {
       manageWargear: true,
+      weaponEditorDialog: false,
       startingWargearExpand: true,
       wargearSearchActive: false,
       loading: false,
       archetype: undefined,
       wargearList: undefined,
       advancedShoppingChart: [],
+      Weapon: undefined,
+      runeWeapon:{
+        property: 0,
+        striking: 'none',
+        property: [],
+      }  ,  
+      headers: [
+        {
+          text: 'Название', value: 'name', class: 'text-left', align: 'left',
+        },
+        {
+          text: 'Попадание', value: 'range', class: 'text-center', align: 'center',
+        },
+        {
+          text: 'Урон', value: 'damage', class: 'text-center', align: 'center',
+        },
+        {
+          text: 'Категория', value: 'ap', class: 'text-center', align: 'center',
+        },
+        {
+          text: 'Руки', value: 'salvo', class: 'text-center', align: 'center',
+        },
+        {
+          text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
+        },
+      ],
     };
   },
   computed: {
@@ -315,16 +217,16 @@ export default {
       });
       return spend;
     },
-    advancedWargearByRarity() {
-      const rarityCount = {
-        uncommon: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Uncommon').length,
-        common: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Common').length,
-        rare: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Rare').length,
-        veryRare: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Very Rare').length,
-        unique: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Unique').length,
-      };
-      return rarityCount;
-    },
+    // advancedWargearByRarity() {
+    //   const rarityCount = {
+    //     uncommon: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Uncommon').length,
+    //     common: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Common').length,
+    //     rare: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Rare').length,
+    //     veryRare: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Very Rare').length,
+    //     unique: this.advancedShoppingChart.filter((gear) => gear.rarity === 'Unique').length,
+    //   };
+    //   return rarityCount;
+    // },
     advancedWargearViolations() {
       const alerts = [];
       const restrictions = this.advancedWargearRestrictions;
@@ -380,17 +282,28 @@ export default {
     characterWargearRaw() {
       return this.$store.getters['characters/characterWargearById'](this.characterId);
     },
+    skillAttack() {
+      return this.$store.getters['characters/characterskillAttackById'](this.characterId);
+    },
+    skillDefence() {
+      return this.$store.getters['characters/characterskillDefenceById'](this.characterId);
+    },
     startingWargear() {
       if ( this.archetype ) {
         return this.archetype.wargear;
       }
       return [];
     },
-
+    characterAttributes() {
+      return this.$store.getters['characters/characterAttributesById'](this.characterId);
+    },
     characterWargear() {
       const characterWargear = [];
+      
       if (this.wargearList){
-        this.characterWargearRaw.forEach((chargear) => {
+        const Category = this.weaponCategoryRepository.map(item => item.category);
+        this.characterWargearRaw.filter(item => Category.includes(item.category)).forEach((chargear) => {
+          // this.characterWargearRaw.forEach((chargear) => {
           let gear = {};
           gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);
           if (gear) {
@@ -419,6 +332,41 @@ export default {
       }
       return characterWargear;
     },
+    characterWeapon() {
+      const characterWargear = [];
+      
+      if (this.wargearList){
+        const Category = this.weaponCategoryRepository.map(item => item.category);
+        this.characterWargearRaw.filter(item => Category.includes(item.category)).forEach((chargear) => {
+          // this.characterWargearRaw.forEach((chargear) => {
+          let gear = {};
+          gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);
+          if (gear) {
+            gear.id = chargear.id;
+            gear.source = chargear.source;
+            characterWargear.push({
+              id: chargear.id,
+              name: gear.nameGear,
+              source: chargear.source,
+              ...gear,
+              subtitle: this.wargearSubtitle(gear),
+              avatar: this.getAvatar(gear.type),
+              
+            });
+          } else {
+            characterWargear.push({
+              id: chargear.id,
+              name: chargear.name,
+              type: 'Misc',
+              subtitle: 'Misc',
+              avatar: this.getAvatar('Misc'),
+              source: chargear.source,
+            });
+          }
+        });
+      }
+      return characterWargear;
+    }
   },
   watch: {
     characterArchetypeKey: {
@@ -452,6 +400,14 @@ export default {
         },
       };
       const { data } = await this.$axios.get('/api/wargear/', config);
+      const rune = this.runeWeapon;
+      data.forEach(item => {
+        if(!item.runeWeapon) 
+          {
+            item.runeWeapon = rune;
+          }
+       
+      });
       this.wargearList = data.filter((i) => i.stub === undefined || i.stub === false);
     },
     wargearSubtitle(item) {
@@ -469,7 +425,7 @@ export default {
       return `/img/icon/wargear/${this.textToKebab(type)}.svg`;
     },
     groupLabel(group){
-      return this.wargearGroup.find(a => a.group == group) ? this.wargearGroup.find(a => a.group == group).name : "";
+      return this.weaponGroup.find(a => a.group == group) ? this.weaponGroup.find(a => a.group == group).name : "";
     },
     addToBasket(gear) {
       this.advancedShoppingChart.push(gear);
@@ -478,6 +434,21 @@ export default {
       console.info(index)
       this.advancedShoppingChart.splice(index, 1);
     },
+
+    attackModifier(gear){
+    
+      const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+     
+       const modProfiency = this.archetype ? this.skillAttack[gear.category] : "U";
+         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2;
+    },
+    damageModifier(gear){
+    
+    const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+    const mod = (modAbility - 10) / 2
+   
+       return gear.damage.toString() + " + " + mod.toString();
+  },
     addWargearToCharacter(wargearOptions, source) {
       const finalWargear = [];
 
@@ -497,7 +468,7 @@ export default {
         }
       });
       finalWargear.forEach((w) => {
-        this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: w.name, variant: w.variant, source });
+        this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: w.name, variant: w.variant, source, group: w.group, category: w.category });
       });
 
       this.advancedShoppingChart.length = 0;
@@ -507,6 +478,39 @@ export default {
     },
     remove(gear) {
       this.$store.commit('characters/removeCharacterWargear', { id: this.characterId, gearId: gear.id });
+    },
+    openWeaponSettings(gear){
+      this.weaponEditorDialog = true;
+      this.Weapon = gear;
+    },
+    closeWeaponSettings() {
+      this.customSkill = {
+        key: undefined,
+        name: 'Знание',
+        atttribute: 'intellect',
+        description: '',
+      };
+      this.skillsEditorDialog = false;
+      this.alert = false;
+    },
+    saveCustomSkill() {
+      this.alert = false;
+      const skill = {
+        key: this.textToCamel(this.customSkill.name),
+        name: this.customSkill.name,
+        attribute: 'intellect',
+        description: this.customSkill.description,
+        optional: false,
+      };
+      const doExist = this.skills.find((s)=>s.key===skill.key);
+      if ( doExist ) {
+        this.alert = true;
+        console.warn(`Skill ${skill.name} already exists.`);
+      } else {
+        this.addCustomSkill(skill);
+        this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
+        this.closeSkillsSettings();
+      }
     },
     /**
      * {

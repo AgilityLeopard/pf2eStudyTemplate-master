@@ -255,8 +255,7 @@ export default {
           name: "Большой",
         },
       ],
-      rarityRepository: [
-        
+      rarityRepository: [        
           {
             key: "common",
             name: "Обычный",
@@ -273,8 +272,15 @@ export default {
             key: "unique",
             name: "Уникальный"
           },
-        
       ],
+      profiencyRepository: {
+          U: 0,
+          T: 2,
+          E: 4,
+          M: 6,
+          L: 8,
+        },
+  
     };
   },
   methods: {

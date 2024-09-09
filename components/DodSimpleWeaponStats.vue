@@ -126,7 +126,7 @@ export default {
       return this.wargearTraitRepository.find((item) => item.name.includes(prefix));
     },
     groupName(name){
-      return this.wargearGroup.find(item => item.group === name).name;
+      return this.weaponGroup.find(item => item.group === name).name;
     }
   },
 

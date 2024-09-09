@@ -359,7 +359,7 @@ export default {
             '<p>The weapon discharges in arcs of crackling lightning, which leap from foe to foe. When you shift Exalted Icons from a successful attack, you may shift Exalted Icons to hit enemies within 3m of an existing target as well as the main target, using the weapon’s normal damage and AP. Each Exalted Icon shifted may only be used to hit additional enemies or to gain +ED, not both.</p>',
         },
       ],
-      wargearGroup :[
+      weaponGroup :[
         {
           group: "axe",
           name: "Топор",
@@ -437,6 +437,24 @@ export default {
           crit: "Цель теряет равновесие от вашей атаки, становясь застигнутой врасплох до начала вашего следующего хода.",
         },
       ],
+      weaponCategoryRepository: [
+        {
+          category: "martial",
+          name: "Воинское оружие"
+        },
+        {
+          category: "simple",
+          name: "Простое оружие"
+        },
+        {
+          category: "unarmed",
+          name: "Безоружная атака"
+        },
+        {
+          category: "advanced",
+          name: "Продвинутое оружие"
+        }
+      ]
     };
   },
 };

@@ -26,10 +26,10 @@ const gear = function (sourceKey, sourcePage, name, value, keywords, stub = fals
     key: `${stringToKebab(`${sourceKey} ${name}`)}`,
     name,
     hint: '',
-    type: 'Misc',
+    // type: 'Misc',
     subtype: '',
     value: valuePart,
-    rarity: rarity[rarityPart],
+    // rarity: rarity[rarityPart],
     keywords: keywords.split(',').map((k)=>k.trim()),
     stub: stub,
     meta: [],
@@ -81,75 +81,7 @@ const armour = function (subtype, armourRating, traits) {
   };
 };
 
-const simpleRange = function (subtype, range, damageStatic, damageEd, ap, salvo, traits, specialTrait) {
 
-  let finalTraits = traits ? traits.split(',').map((k)=>k.trim()) : [];
-
-  if (specialTrait) {
-    finalTraits.push('Special*');
-  }
-
-  return {
-    type: 'Ranged Weapon',
-    subtype: subtype,
-    meta: [
-      {
-        type: 'ranged-weapon',
-        range: range,
-        damage: {
-          static: parseInt(damageStatic),
-          ed: parseInt(damageEd),
-        },
-        ap: ap,
-        salvo: salvo,
-        traits: finalTraits,
-        special: specialTrait,
-      }
-    ],
-  };
-};
-
-const toolz = function(subtype, snippet) {
-  return {
-    type: 'Tools & Equipment',
-    subtype: subtype ? subtype : undefined,
-    snippet
-  };
-}
-
-
-/**
- *
- * @param staticPart
- * @param ed
- * @param ap
- * @param range
- * @param salvo
- * @param traits
- * @param label
- * @returns {{damage: {static: *, ed: *}, traits: *, salvo: *, range: *, label: undefined, type: string, ap: *}}
- */
-const metaRange = function(staticPart, ed, ap, range, salvo, traits, label = undefined) {
-  return {
-    type: 'ranged-weapon',
-    range,
-    damage: { static: staticPart, ed },
-    ap,
-    salvo,
-    traits,
-    label,
-  };
-}
-
-const rangez = function (subtype, damage, ed, ap, range, salvo, traits) {
-  return {
-    type: 'Ranged Weapon',
-    subtype: subtype ? subtype : undefined,
-    meta: [
-      metaRange(damage, ed, ap, range < 1 ? 1 : range, salvo, traits ? traits.split(',').map((k)=>k.trim()) : []),
-    ],
-  };
-};
 
 const metaMelee = function(staticPart, ed, ap, range, traits) {
   return {
@@ -171,50 +103,6 @@ const meleez = function (subtype, damage, ed, ap, range, traits = undefined) {
   };
 };
 
-/**
- * 16+2ED; AP -3; Range 48m; Salvo 1; Assault, Supercharge, Waaagh!
- *
- * @param brewString
- * @param subtype
- * @returns {{subtype: string, meta: [{damage: {static: *, ed: *}, traits: (*|[]), range: (number|*), type: string, ap: *}], type: string}|{subtype: *, meta: [{damage: {static: *, ed: *}, traits: (*|[]), salvo: *, range: *, type: string, ap: *}], type: string}}
- */
-const rangeAaoa = function (brewString, subtype = '', specialTrait = '') {
-  const parts = brewString.split(';').map((k)=>k.trim());
-
-  const damageString = parts[0]; // 4+1ED
-  const ap = parts[1].split(' ')[1]; // AP -1
-  const rangeValue = parts[2].split(' ')[1].split('m')[0]; // Range 48m
-  const salvo = parts[3].split(' ')[1];
-  const traitString = parts[4];
-
-  const damageParts = damageString.split('+');
-  const damageStatic = damageParts[0];
-  const damageEd = damageParts[1].split('ED')[0];
-  const traits = traitString ? traitString.split(',').map((k)=>k.trim()) : [];
-
-  return simpleRange(subtype, rangeValue, damageStatic, damageEd, ap, salvo, traitString, specialTrait);
-};
-
-/**
- *
- * @param brewString -> 4+2ED; AP 0; Toxic [4], Waaagh!
- * @param subtype
- * @returns {{subtype: *, meta: [{damage: {static: *, ed: *}, traits: (*|[]), salvo: *, range: *, type: string, ap: *}], type: string}}
- */
-const meleeAaoa = function (brewString, subtype = '') {
-  const parts = brewString.split(';').map((k)=>k.trim());
-
-  const damageString = parts[0]; // 4+1ED
-  const ap = parts[1].split(' ')[1]; // AP -1
-  const traitString = parts[2]; // a, b, c
-
-  const damageParts = damageString.split('+'); // 4+1ED -> 4 1ED
-  const damageStatic = damageParts[0];
-  const damageEd = damageParts[1].split('ED')[0];
-  const traits = traitString ? traitString.split(',').map((k)=>k.trim()) : [];
-
-  return meleez(subtype, 1, damageStatic, damageEd, ap, traitString);
-};
 
 /**
  * Damage 2+1ED; AP 0; Range M; Steadfast
@@ -258,11 +146,28 @@ const meleePax = function (paxString, subtype = '') {
 const playerCore =  [
   {
     ...gear(source.playerCore.key,211,'Short Sword','2C','Blade,[Any]'),
-    ...meleez(undefined,2,2,0,0),
+    // ...meleez(undefined,2,2,0,0),
     ...price(0,9,0,0),
     nameGear: "Короткий меч",
     traits: ["быстрое", "точное", "универсальное рубящий"],
+    type: "melee",
     category: "martial",
+    price: "9S",
+    damage: "1d6",
+    typeDamage: "piercing",
+    rarity: "common",
+    hands: 1,
+    group: "sword",
+    description: "Эти клинки бывают разных форм и стилей, но они обычно 2 фута длиной."
+  },
+  {
+    ...gear(source.playerCore.key,211,'plate mail','2C','Blade,[Any]'),
+    ...meleez(undefined,2,2,0,0),
+    ...price(0,9,0,0),
+    nameGear: "Не меч",
+    traits: ["быстрое", "точное", "универсальное рубящий"],
+    type: "melee",
+    category: "heavy",
     price: "9S",
     damage: "1d6",
     typeDamage: "piercing",
