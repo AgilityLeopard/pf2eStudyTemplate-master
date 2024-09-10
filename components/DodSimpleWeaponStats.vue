@@ -6,7 +6,7 @@
           <tr>
             <th
               v-for="header in headers"
-              v-if="header.value !== 'salvo' || !isMelee"
+         
               :key="header.value"
               :class="header.class"
             >

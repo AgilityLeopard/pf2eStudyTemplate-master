@@ -1204,6 +1204,31 @@ export const mutations = {
     }
   },
 
+  updateCharacterWargear(state, payload) {
+    const character = state.characters[payload.id];
+    const  gearId  = payload.gear.id;
+    const rune = payload.gear.runeWeapon;
+    const Wargear =
+      character.wargear.find((t) => t.id === gearId);
+      if(Wargear)
+      {
+        Wargear.runeWeapon.striking = payload.striking;
+        Wargear.damage = payload.damage;
+      }
+        
+    // character.wargear.push({
+    //   id: wargearUniqueId,
+    //   name: payload.name,
+    //   source: payload.source,
+    //   variant: payload.variant,
+    //   ...wargear
+    //   // group: payload.gear.group,
+    //   // category: payload.gear.category,
+      
+     
+    // });
+  },
+
   // Wargear { id, name, source, (variant) }
   addCharacterWargear(state, payload) {
     const character = state.characters[payload.id];
@@ -1217,17 +1242,15 @@ export const mutations = {
     if (payload.gear && payload.gear.modifiers) {
     }
     const wargear = payload.gear;
+    wargear.id = wargearUniqueId;
     character.wargear.push({
-      id: wargearUniqueId,
+      // id: wargearUniqueId,
       name: payload.name,
       source: payload.source,
       variant: payload.variant,
       ...wargear
-      // group: payload.gear.group,
-      // category: payload.gear.category,
-      
-     
     });
+
   },
   removeCharacterWargear(state, payload) {
     const character = state.characters[payload.id];

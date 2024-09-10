@@ -60,26 +60,6 @@
               :fullscreen="$vuetify.breakpoint.xsOnly"
             >
               <v-card>
-                <!-- <v-alert
-                      :value="alert"
-                      type="error"
-                      text
-                      dense
-                      border="left"
-              
-                      >
-              Знание уже существует
-              </v-alert>
-              <v-alert
-                      :value="characterSkillPoints <= 0"
-                      type="info"
-                      text
-                      dense
-                      border="left"
-              
-                              >
-              Недостаточно очков Навыка для добавления нового Знания
-              </v-alert> -->
                 <v-card-title style="background-color: #262e37; color: #fff;">
                   Редактирование оружия
                   <v-spacer />
@@ -87,7 +67,16 @@
                 </v-card-title>
 
                 <v-card-text v-if="Weapon" class="pt-4">
-                  <v-text-field v-if="Weapon" v-model="Weapon.runeWeapon.striking" dense label="Имя Знания">{{ Weapon.striking }}</v-text-field>
+
+                  <v-select  
+                    label="Руны"
+                    v-model="Striking"
+                    :items="weaponRuneStriking"
+                    item-text="name"
+                    item-value="key"
+                    
+                  ></v-select>
+                  <!-- <v-text-field v-if="Weapon" v-model="weaponRuneStriking" dense label="Имя Знания">{{ weaponRuneStriking.key }}</v-text-field> -->
                   <!-- <v-textarea v-model="customSkill.description" dense label="Описание"></v-textarea> -->
                 </v-card-text>
                 <v-divider></v-divider>
@@ -171,6 +160,7 @@ export default {
       archetype: undefined,
       wargearList: undefined,
       advancedShoppingChart: [],
+      Striking:  "",
       Weapon: undefined,
       runeWeapon:{
         property: 0,
@@ -312,6 +302,7 @@ export default {
             characterWargear.push({
               id: chargear.id,
               name: gear.nameGear,
+              damage: gear.damage,
               group: this.groupLabel(gear.group),
               subtitle: this.wargearSubtitle(gear),
               type: gear.type,
@@ -346,11 +337,11 @@ export default {
             gear.source = chargear.source;
             characterWargear.push({
               id: chargear.id,
-              name: gear.nameGear,
-              source: chargear.source,
-              ...gear,
-              subtitle: this.wargearSubtitle(gear),
-              avatar: this.getAvatar(gear.type),
+              // name: gear.nameGear,
+              // source: chargear.source,
+              ...chargear,
+              // subtitle: this.wargearSubtitle(gear),
+              // avatar: this.getAvatar(gear.type),
               
             });
           } else {
@@ -481,36 +472,26 @@ export default {
     },
     openWeaponSettings(gear){
       this.weaponEditorDialog = true;
+      const weapon = this.characterWargearRaw.find(t => t.id === gear.id);
+      this.Striking = this.weaponRuneStriking.find(item => weapon.runeWeapon.striking === item.key);
       this.Weapon = gear;
     },
+    updateRune(Striking){
+      this.Weapon.runeWeapon.striking = Striking;
+    },
     closeWeaponSettings() {
-      this.customSkill = {
-        key: undefined,
-        name: 'Знание',
-        atttribute: 'intellect',
-        description: '',
-      };
-      this.skillsEditorDialog = false;
-      this.alert = false;
+      this.weaponEditorDialog = false;
+      // this.alert = false;
     },
     saveCustomSkill() {
       this.alert = false;
-      const skill = {
-        key: this.textToCamel(this.customSkill.name),
-        name: this.customSkill.name,
-        attribute: 'intellect',
-        description: this.customSkill.description,
-        optional: false,
-      };
-      const doExist = this.skills.find((s)=>s.key===skill.key);
-      if ( doExist ) {
-        this.alert = true;
-        console.warn(`Skill ${skill.name} already exists.`);
-      } else {
-        this.addCustomSkill(skill);
-        this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
-        this.closeSkillsSettings();
-      }
+      const weapon =  this.Striking;
+      const runeStriking = this.weaponRuneStriking.find(item => weapon === item.key).addDice;
+      const weaponDamage = this.wargearList.find(t => t.key === this.Weapon.key).damage;
+      const dice = (parseInt(weaponDamage.slice(0, 1)) + runeStriking) + weaponDamage.slice(1, 4);
+      this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, striking: this.Striking, gear: this.Weapon });
+      // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
+      this.weaponEditorDialog = false;
     },
     /**
      * {

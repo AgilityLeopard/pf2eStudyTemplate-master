@@ -454,6 +454,28 @@ export default {
           category: "advanced",
           name: "Продвинутое оружие"
         }
+      ],
+      weaponRuneStriking: [
+        {
+          key: "none",
+          name: "Нет",
+          addDice: 0
+        },
+        {
+          key: "striking",
+          name: "Разящая",
+          addDice: 1
+        },
+        {
+          key: "greater striking",
+          name: "Отличная разящая",
+          addDice: 2
+        },
+        {
+          key: "Major striking",
+          name: "Cтаршая разящая",
+          addDice: 3
+        }
       ]
     };
   },

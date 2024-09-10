@@ -48,7 +48,7 @@
         </template>
 
         <template v-slot:item.rarity="{ item }">
-           {{ item.rarity }}
+           {{ rarity(item.rarity) }}
         </template>
 
         <template v-slot:item.action-add="{ item }">
@@ -93,6 +93,7 @@
 <script>
 import DodSimpleWeaponStats from '~/components/DodSimpleWeaponStats';
 import DodSimpleArmourStats from '~/components/DodSimpleArmourStats';
+import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 
 export default {
   name: 'WargearSearch',
@@ -100,6 +101,9 @@ export default {
     DodSimpleArmourStats,
     DodSimpleWeaponStats,
   },
+  mixins: [
+    StatRepositoryMixin
+  ],
   props: {
     repository: Array,
   },
@@ -126,7 +130,7 @@ export default {
       if (this.repository === undefined) {
         return [];
       }
-      const reduceToType = this.repository.map((item) => item.traits);
+      const reduceToType = this.repository.flatMap((item) => item.traits);
       const distinctTypes = [...new Set(reduceToType)];
       const types = distinctTypes.map((t) => ({ name: t }));
       return types;
@@ -138,7 +142,7 @@ export default {
       let searchResult = this.repository;
 
       if (this.selectedTypeFilters.length > 0) {
-        searchResult = searchResult.filter((item) => this.selectedTypeFilters.includes(item.traits));
+        searchResult = searchResult.filter((item) => this.selectedTypeFilters.some(r=> item.traits.includes(r)));
       }
 
       return searchResult;
@@ -151,6 +155,9 @@ export default {
       } else {
         this.selectedTypeFilters.push(name);
       }
+    },
+    rarity(item){
+      return this.rarityRepository.find(t => t.key = item).name
     },
     wargearSubtitle(item) {
       // const item = this.wargearRepository.find(i => i.name === gear);

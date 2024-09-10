@@ -165,7 +165,7 @@ const playerCore =  [
     ...meleez(undefined,2,2,0,0),
     ...price(0,9,0,0),
     nameGear: "Не меч",
-    traits: ["быстрое", "точное", "универсальное рубящий"],
+    traits: ["тяжелое", "ручное", "точное"],
     type: "melee",
     category: "heavy",
     price: "9S",
