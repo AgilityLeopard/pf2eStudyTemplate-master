@@ -41,7 +41,7 @@
               </div>
             </td>
             <td class="text-center">
-              <span>{{ stats.category }}</span>
+              <span>{{ category(stats.category) }}</span>
             </td>
             <td  class="text-center">
               <span>{{ stats.hands }}</span>
@@ -127,6 +127,10 @@ export default {
     },
     groupName(name){
       return this.weaponGroup.find(item => item.group === name).name;
+    },
+    category(category)
+    {
+      return this.weaponCategoryRepository.find(t => t.category === category).name;
     }
   },
 

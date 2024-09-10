@@ -65,7 +65,7 @@
               <div v-else-if="item.description" v-html="item.description"></div>
 
               <dod-simple-weapon-stats
-                v-if="item.meta !== undefined && item.meta.length > 0 && ['ranged-weapon','melee-weapon'].includes(item.meta[0].type)"
+                v-if="item.category !== undefined && weaponCategoryRepository.map(t=> t.category).includes(item.category)"
                 :name="item.nameGear"
                 :stats="item"
                 :show-traits="false"
@@ -94,6 +94,7 @@
 import DodSimpleWeaponStats from '~/components/DodSimpleWeaponStats';
 import DodSimpleArmourStats from '~/components/DodSimpleArmourStats';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
+import WargearTraitRepositoryMixin from '~/mixins/WargearTraitRepositoryMixin';
 
 export default {
   name: 'WargearSearch',
@@ -102,7 +103,8 @@ export default {
     DodSimpleWeaponStats,
   },
   mixins: [
-    StatRepositoryMixin
+    StatRepositoryMixin,
+    WargearTraitRepositoryMixin
   ],
   props: {
     repository: Array,
