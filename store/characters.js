@@ -1213,7 +1213,9 @@ export const mutations = {
       if(Wargear)
       {
         Wargear.runeWeapon.striking = payload.striking;
+        Wargear.runeWeapon.potency = payload.potency;
         Wargear.damage = payload.damage;
+        Wargear.runeWeapon.property = payload.property;
       }
         
     // character.wargear.push({

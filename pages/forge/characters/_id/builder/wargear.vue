@@ -30,7 +30,7 @@
               <tr  v-for="gear in characterWeapon"
               :key="gear.id">
                 <td >{{ gear.nameGear }}</td>
-                <td  class="text-center pa-1 small">{{ attackModifier(gear) }}</td>
+                <td  class="text-center pa-1 small"> + {{ attackModifier(gear) }} / {{ attackModifier(gear) - 5 }} / {{ attackModifier(gear) - 10 }}</td>
                 <td  class="text-center pa-1 small">{{ damageModifier(gear) }}</td>
                 <td >                
                   <v-btn outlined x-small color="info" @click="openWeaponSettings(gear)">
@@ -59,7 +59,18 @@
               scrollable
               :fullscreen="$vuetify.breakpoint.xsOnly"
             >
+
               <v-card>
+                <v-alert
+                      :value="alert"
+                      type="error"
+                      text
+                      dense
+                      border="left"
+              
+                      >
+              Количество рун больше мощи оружия
+              </v-alert>
                 <v-card-title style="background-color: #262e37; color: #fff;">
                   Редактирование оружия
                   <v-spacer />
@@ -67,17 +78,63 @@
                 </v-card-title>
 
                 <v-card-text v-if="Weapon" class="pt-4">
+                  <v-row>
+          
+                    <!-- <v-sheet class="ma-2 pa-2"> -->
+        
+                      <v-col         
+                          cols="6"
+                          sm="6" >
+                    <v-select  
+                      label="Разящая руна"
+                      v-model="Striking"
+                      :items="weaponRuneStriking"
+                      item-text="name"
+                      item-value="key"
+                      
+                    ></v-select>
+                      </v-col>
 
-                  <v-select  
-                    label="Руны"
-                    v-model="Striking"
-                    :items="weaponRuneStriking"
-                    item-text="name"
-                    item-value="key"
-                    
-                  ></v-select>
-                  <!-- <v-text-field v-if="Weapon" v-model="weaponRuneStriking" dense label="Имя Знания">{{ weaponRuneStriking.key }}</v-text-field> -->
-                  <!-- <v-textarea v-model="customSkill.description" dense label="Описание"></v-textarea> -->
+                      <v-col         
+                          cols="6"
+                          sm="6" >
+                    <v-select  
+                      label="Руна мощи"
+                      v-model="Potency"
+                      :items="weaponRunePotency"
+                      item-text="name"
+                      item-value="key"
+                     
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                  <v-row>
+                  <v-col         
+                          cols="6"
+                          sm="12" >
+                    <v-select  
+                      label="Руны свойств"
+                      v-model="Property"
+                      :items="WeaponRuneProperty"
+                      item-text="name"
+                      item-value="key"
+                      multiple
+                      
+                      return-object
+                    >
+                    <template #selection="{ item }">
+                        <v-chip color="blue" 
+                        :close="true"
+                        @click:close="Property.pop(item)"
+                        >
+                        {{item.name}}   
+                      </v-chip>
+                      </template>
+                  </v-select>
+                  </v-col>
+                  <!-- </v-sheet> -->
+                 
+                  </v-row>
                 </v-card-text>
                 <v-divider></v-divider>
 
@@ -85,7 +142,7 @@
                   <v-spacer />
                   <v-btn small right color="success" 
                   
-                  @click="saveCustomSkill">Save</v-btn>
+                  @click="saveWeapon">Save</v-btn>
 
                 </v-card-actions>
               </v-card>
@@ -101,13 +158,13 @@
       >
         <v-card-text class="pa-1">
           <v-icon>{{ wargearSearchActive ? 'expand_less' : 'expand_more' }}</v-icon>
-          Добавить снаряжение
+          Добавить оружие
         </v-card-text>
       </v-card>
 
       <wargear-search
         v-if="wargearSearchActive && wargearList && manageWargear && characterWeapon"
-        :repository="wargearList"
+        :repository="wargearList.filter(item => weaponCategoryRepository.map(t=> t.category).includes(item.category))"
         @select="add"
       />
     </v-col>
@@ -157,13 +214,16 @@ export default {
       startingWargearExpand: true,
       wargearSearchActive: false,
       loading: false,
+      alert: false,
       archetype: undefined,
       wargearList: undefined,
       advancedShoppingChart: [],
-      Striking:  "",
+      Striking:  "none",
+      Potency:  "none",
+      Property: [],
       Weapon: undefined,
       runeWeapon:{
-        property: 0,
+        potency: 'none',
         striking: 'none',
         property: [],
       }  ,  
@@ -178,14 +238,14 @@ export default {
           text: 'Урон', value: 'damage', class: 'text-center', align: 'center',
         },
         {
-          text: 'Категория', value: 'ap', class: 'text-center', align: 'center',
+          text: '', value: 'ap', class: 'text-center', align: 'center',
         },
         {
-          text: 'Руки', value: 'salvo', class: 'text-center', align: 'center',
+          text: '', value: 'salvo', class: 'text-center', align: 'center',
         },
-        {
-          text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
-        },
+        // {
+        //   text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
+        // },
       ],
     };
   },
@@ -431,13 +491,14 @@ export default {
       const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
      
        const modProfiency = this.archetype ? this.skillAttack[gear.category] : "U";
-         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2;
+       const modLevel =  modProfiency !== "U" ? this.characterLevel() : 0;
+         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel;
     },
     damageModifier(gear){
     
     const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
-    const mod = (modAbility - 10) / 2
-   
+    const mod = (modAbility - 10) / 2 + this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus;
+    
        return gear.damage.toString() + " + " + mod.toString();
   },
     addWargearToCharacter(wargearOptions, source) {
@@ -464,6 +525,9 @@ export default {
 
       this.advancedShoppingChart.length = 0;
     },
+    characterLevel(){
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
     add(gear) {
       this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
     },
@@ -473,25 +537,38 @@ export default {
     openWeaponSettings(gear){
       this.weaponEditorDialog = true;
       const weapon = this.characterWargearRaw.find(t => t.id === gear.id);
-      this.Striking = this.weaponRuneStriking.find(item => weapon.runeWeapon.striking === item.key);
+      this.Striking = this.weaponRuneStriking.find(item => weapon.runeWeapon.striking === item.key).key;
+      this.Potency = this.weaponRunePotency.find(item => weapon.runeWeapon.potency === item.key).key;
+      const PropertyMap = weapon.runeWeapon.property.map(item => item.key)
+      this.Property = this.WeaponRuneProperty.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
       this.Weapon = gear;
-    },
-    updateRune(Striking){
-      this.Weapon.runeWeapon.striking = Striking;
     },
     closeWeaponSettings() {
       this.weaponEditorDialog = false;
       // this.alert = false;
     },
-    saveCustomSkill() {
+    PotencyCap(potency){
+
+      const mod = this.weaponRunePotency.find(item => potency === item.key).addItemBonus;
+      return mod;
+    },
+    saveWeapon() {
       this.alert = false;
       const weapon =  this.Striking;
       const runeStriking = this.weaponRuneStriking.find(item => weapon === item.key).addDice;
+      const PropertyMap = this.Property.map(item => item.key);
+      const Property =  this.WeaponRuneProperty.filter(item => PropertyMap.includes(item.key));
       const weaponDamage = this.wargearList.find(t => t.key === this.Weapon.key).damage;
       const dice = (parseInt(weaponDamage.slice(0, 1)) + runeStriking) + weaponDamage.slice(1, 4);
-      this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, striking: this.Striking, gear: this.Weapon });
-      // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
-      this.weaponEditorDialog = false;
+      if ( this.PotencyCap(this.Potency) < this.Property.length) {
+        this.alert = true;
+        // console.warn(`Skill ${skill.name} already exists.`);
+      }
+      else{
+        this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon });
+        // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
+        this.weaponEditorDialog = false;
+      }
     },
     /**
      * {

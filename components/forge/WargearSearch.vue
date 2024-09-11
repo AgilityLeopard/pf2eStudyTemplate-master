@@ -2,28 +2,67 @@
   <div>
     <v-card class="mb-4">
       <v-card-text>
+       
+        <v-row>
+        <v-col         
+                          cols="6"
+                          sm="6" >
+        <v-select  
+                      label="Трейты"
+                      v-model="selectedTypeFilters"
+                      :items="typeFilters"
+                      item-text="name"
+                      item-value="name"
+                      multiple
+                     
+                      
+                    >
+
+        </v-select>
+        </v-col>
+
+        <v-col         
+                          cols="6"
+                          sm="6" >
+        <v-select  
+                      label="Категория"
+                      v-model="selectedCategoryFilters"
+                      :items="weaponCategoryRepository"
+                      item-text="name"
+                      item-value="category"
+                      multiple
+                     
+                      
+                    >
+
+        </v-select>
+        </v-col>
+      </v-row>
+
+      
+        <v-chip
+          v-for="filter in typeFilters"
+          v-if="typeFilters.length > 1 && selectedTypeFilters.includes(filter.name)"
+          :key="filter.key"
+          :color="selectedTypeFilters.includes(filter.name) ? 'primary' : ''"
+          small
+          label
+
+          class="mr-2 mb-2"
+          @click="toggleTypeFilter(filter.name)"
+        >
+          {{ filter.name }}
+        </v-chip>
+
         <v-text-field
           v-model="searchQuery"
           filled
           dense
           clearable
           prepend-inner-icon="search"
-          clearable
-          label="Search"
+        
+          label="Поиск"
         />
-
-        <v-chip
-          v-for="filter in typeFilters"
-          v-if="typeFilters.length > 1"
-          :key="filter.key"
-          :color="selectedTypeFilters.includes(filter.name) ? 'primary' : ''"
-          small
-          label
-          class="mr-2 mb-2"
-          @click="toggleTypeFilter(filter.name)"
-        >
-          {{ filter.name }}
-        </v-chip>
       </v-card-text>
     </v-card>
 
@@ -38,9 +77,9 @@
         show-expand
         @page-count="pagination.pageCount = $event"
       >
-        <template v-slot:item.name="{ item }">
+        <template v-slot:item.nameGear="{ item }">
           {{ item.nameGear }} <br>
-          <span class="grey--text caption">{{ wargearSubtitle(item) }}</span>
+          <!-- <span class="grey--text caption">{{ wargearSubtitle(item) }}</span> -->
         </template>
 
         <template v-slot:item.price="{ item }">
@@ -57,7 +96,7 @@
           </v-btn>
         </template>
 
-        <template v-slot:expanded-item="{ headers, item }">
+        <template v-slot:expanded-item="{ headers, item,  }">
           <td :colspan="headers.length">
             <div class="pa-2 pt-4 pb-4">
               <span>{{ item.hint }}</span>
@@ -113,6 +152,7 @@ export default {
     return {
       searchQuery: '',
       selectedTypeFilters: [],
+      selectedCategoryFilters: [],
       pagination: {
         page: 1,
         pageCount: 0,
@@ -120,7 +160,7 @@ export default {
         rowsPerPage: 25,
       },
       headers: [
-        { text: 'Название', align: 'left', value: 'name', class: '' },
+        { text: 'Название', align: 'left', value: 'nameGear', class: '' },
         { text: 'Цена', align: 'left', value: 'price', class: '' },
         { text: 'Редкость', align: 'left', value: 'rarity', class: '' },
         { text: '', align: 'right', value: 'action-add', class: '' },
@@ -137,6 +177,15 @@ export default {
       const types = distinctTypes.map((t) => ({ name: t }));
       return types;
     },
+    categoryFilters() {
+      if (this.repository === undefined) {
+        return [];
+      }
+      const reduceToType = this.repository.flatMap((item) => item.category);
+      const distinctTypes = [...new Set(reduceToType)];
+      const types = distinctTypes.map((t) => ({ name: t }));
+      return types;
+    },
     searchResult() {
       if (this.repository === undefined) {
         return [];
@@ -145,6 +194,10 @@ export default {
 
       if (this.selectedTypeFilters.length > 0) {
         searchResult = searchResult.filter((item) => this.selectedTypeFilters.some(r=> item.traits.includes(r)));
+      }
+
+      if (this.selectedCategoryFilters.length > 0) {
+        searchResult = searchResult.filter((item) => this.selectedCategoryFilters.some(r=> item.category.includes(r)));
       }
 
       return searchResult;

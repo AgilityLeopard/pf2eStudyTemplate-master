@@ -476,6 +476,50 @@ export default {
           name: "Cтаршая разящая",
           addDice: 3
         }
+      ],
+      weaponRunePotency: [
+        {
+          key: "none",
+          name: "Нет",
+          addItemBonus: 0
+        },
+        {
+          key: "potency-1",
+          name: "Мощи оружия +1",
+          addItemBonus: 1
+        },
+        {
+          key: "potency-2",
+          name: "Мощи оружия +2",
+          addItemBonus: 2
+        },
+        {
+          key: "potency-3",
+          name: "Мощи оружия +3",
+          addItemBonus: 3
+        }
+      ],
+      WeaponRuneProperty: [
+        {
+          key: "returning",
+          name: "Возвращающаяся",
+          addItemBonus: 0
+        },
+        {
+          key: "ghost touch",
+          name: "Призрачного касания",
+          addItemBonus: 0
+        },
+        {
+          key: "disrupting",
+          name: "Разрушающаяся",
+          addItemBonus: 0
+        },
+        {
+          key: "shifting",
+          name: "Изменяющаяся",
+          addItemBonus: 0
+        },
       ]
     };
   },

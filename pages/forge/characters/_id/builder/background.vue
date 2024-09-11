@@ -28,7 +28,7 @@
               @click:close="removeLanguage(language.name)"
             >
               <strong>{{language.name}}</strong>&nbsp;
-              <span v-if="language.cost > 0">({{ language.cost }} XP)</span>
+              <!-- <span v-if="language.cost > 0">({{ language.cost }} XP)</span> -->
             </v-chip>
           </v-chip-group>
         </v-card-text>
