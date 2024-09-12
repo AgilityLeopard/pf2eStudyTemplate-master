@@ -246,6 +246,7 @@ export default {
 
       this.$store.commit("characters/resetCharacterStats", {
         id: this.characterId,
+         optional: 'ancestry'
       });
 
       this.$store.commit("characters/clearCharacterKeywordsBySource", {

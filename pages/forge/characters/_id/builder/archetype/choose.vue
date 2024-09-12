@@ -125,6 +125,13 @@ export default {
       advancedKeywords: [],
       advancedArchetype: undefined,
       advancedTier: 1,
+      SkillsTrained: {
+        U: 0,
+        T: 2,
+        E: 4,
+        M: 6,
+        L: 8,
+      },
       advancedTierOptions: [
         { text: '1 - One among billions', value: 1, naming: 'Unknown' },
         { text: '2 - Stalwart Defenders', value: 2, naming: 'Tested' },
@@ -374,6 +381,7 @@ export default {
           id: this.characterId,
           payload: { key: 1, saving: item.saving },
         });
+        
         this.$store.commit('characters/setCharacterSkillPointsClass', 
         { id: this.characterId, payload: { key: 1, 
           value: item.skillTrainedPoints } });
@@ -390,6 +398,17 @@ export default {
         });
     });
 
+    this.$store.commit("characters/resetCharacterStats", {
+        id: this.characterId,
+        optional: 'class'
+      });
+
+      // if(item.skillTrained.length > 0)
+        this.$store.commit('characters/setCharacterTrainedClassSkill', { id: this.characterId, payload: { key: 1, value: item.skillTrained } });
+      
+ 
+
+      
         this.$store.commit("characters/setCharacterPerception", {
           id: this.characterId,
           payload: { key: 1, Perception: item.Perception },

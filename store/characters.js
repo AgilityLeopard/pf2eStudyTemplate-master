@@ -249,12 +249,29 @@ export const getters = {
     state.characters[id]?.fluff?.notes
       ? state.characters[id].fluff.notes
       : getDefaultState().fluff.notes,
-
+  characterSkillPointsLevelById: (state) => (id) =>
+        state.characters[id] ? state.characters[id].SkillPointsLevel : {},
+      
   characterBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Boost : 0,
-
+  characterBoost5ById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].Boost5 : 0,
+  characterBoost10ById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].Boost10 : 0,
+  characterBoost15ById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].Boost15 : 0,
+  characterBoost20ById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].Boost20 : 0,
   characterAttributeBoost: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesBoost : {},
+  characterAttributeBoost5: (state) => (id) =>
+    state.characters[id] ? state.characters[id].attributesBoost5 : {},
+  characterAttributeBoost10: (state) => (id) =>
+    state.characters[id] ? state.characters[id].attributesBoost10 : {},
+  characterAttributeBoost15: (state) => (id) =>
+    state.characters[id] ? state.characters[id].attributesBoost15 : {},
+  characterAttributeBoost20: (state) => (id) =>
+    state.characters[id] ? state.characters[id].attributesBoost20 : {},
   characterAncestryBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesAncestryBoost : {},
   characterAncestryBoostById: (state) => (id) =>
@@ -269,6 +286,9 @@ export const getters = {
     state.characters[id] ? state.characters[id].ClassBoost : {},
   characterClassSkillById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ClassSkill : {},
+  characterTrainedSkillClassById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].TrainedSkillClass : [],
+  
   characterBackgroundFreeBoost2ById: (state) => (id) =>
     state.characters[id] ? state.characters[id].BackgroundFreeBoost2 : {},
   characterAttributesById: (state) => (id) =>
@@ -556,6 +576,8 @@ export const mutations = {
   setLevel(state, payload) {
     // console.info(`Set Rank manually to ${payload.rank}.`);
     //this.setModification(state, payload);
+
+    
     state.characters[payload.id].level = payload.level;
   },
   setModification(state, payload) {
@@ -699,8 +721,41 @@ export const mutations = {
   setCharacterskillDefence(state, payload) {
     state.characters[payload.id].skillDefence = payload.payload.skillDefence;
   },
+  setCharacterSkillPointsLevel(state, payload) {
+    state.characters[payload.id].SkillPointsLevel[payload.payload.level] = payload.payload.value;
+  },
+  
   setCharacterskillClass(state, payload) {
     state.characters[payload.id].skillClass = payload.payload.skillClass;
+  },
+  setCharacterTrainedClassSkill(state, payload) {
+    const characterSkills = state.characters[payload.id].skills;
+
+    const trained = state.characters[payload.id].TrainedSkillClass;
+    const SkillProf = state.characters[payload.id].SkillsTrained;
+    const keys = Object.keys(SkillProf);
+
+    trained.forEach(skill =>
+    {
+      
+      var loc = keys.indexOf(characterSkills[skill]);
+      const newValue = keys[loc-1];
+      characterSkills[skill] = newValue;
+    }
+  );
+    
+    payload.payload.value.forEach(skill =>
+      {
+        
+        var loc = keys.indexOf(characterSkills[skill]);
+        const newValue = keys[loc+1];
+        characterSkills[skill] = newValue;
+      }
+    );
+
+    state.characters[payload.id].TrainedSkillClass = payload.payload.value;
+    //this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
+
   },
   setCharacterAncestryFreeBoost(state, payload) {
     const character = state.characters[payload.id];
@@ -815,24 +870,52 @@ export const mutations = {
   },
   resetCharacterStats(state, payload) {
     const character = state.characters[payload.id];
+    const skill = character.ClassSkill;
 
-
+    if(payload.optional == "ancestry" || payload.optional == "all" )
+      {
     character.AncestryFreeBoost = "";
     character.AncestryFreeBoost2 = "";
-    character.BackgroundFreeBoost = "";
-    character.BackgroundFreeBoost2 = "";
-    character.ClassBoost = "";
-    character.ClassSkill = "";
+      }
+
+    if(payload.optional == "background" || payload.optional == "all" )
+      {
+        character.BackgroundFreeBoost = "";
+        character.BackgroundFreeBoost2 = "";
+      }
+
+    if(payload.optional == "class" || payload.optional == "all" )
+    {
+      character.ClassBoost = "";
+      
+    }
+
+    if( payload.optional == "all" )
+    {
+          character.Boost = 0;
+          character.Boost5 = 0;
+          character.Boost10 = 0;
+          character.Boost15 = 0;
+          character.Boost20 = 0;
+    }
 
     Object.keys(character.attributes).forEach((key, index) => {
       character.attributesBoost[key] = 0;
       character.attributes[key] =
         10 +
         2 * character.attributesBoost[key] +
-        2 * character.attributesAncestryBoost[key] + 2 * character.attributesAncestryFlaw[key]+ 2 * character.attributesClassBoost[key] ;
+        2 * character.attributesAncestryBoost[key] + 2 * character.attributesAncestryFlaw[key]+ 2 * character.attributesClassBoost[key];
+
+        if( payload.optional == "all" )
+          {
+            character.attributesBoost5[key] = 0;
+            character.attributesBoost10[key] = 0;
+            character.attributesBoost15[key] = 0;
+            character.attributesBoost20[key] = 0;
+          }
     });
 
-    character.Boost = 0;
+  
     character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
     if(character.SkillPoints < 0) character.SkillPoints = 0;
 
@@ -840,8 +923,23 @@ export const mutations = {
       if(character.customSkills.find(s => s.key == key) !== undefined)
         if(character.customSkills.find(s => s.key == key).optional != true )
             character.SkillPoints = character.SkillPoints  - 1;
-      
-        character.skills[key] = "U";
+
+      if(payload.optional == "class" )
+        {
+          if(character.TrainedSkillClass.find(item => item !== key) !== undefined)
+            character.skills[key] = "U";
+
+          if(character.ClassSkill == key) 
+          {
+            character.ClassSkill = "";
+            character.skills[key] = "U";
+          }
+        }
+
+          if(payload.optional == "all")
+            character.skills[key]= "U";
+
+        
     });
 
     character.Boost = 0;
@@ -861,7 +959,7 @@ export const mutations = {
   },
   setCharacterAttribute(state, payload) {
     const char = state.characters[payload.id];
-    const attribute = char.attributes[payload.payload.key];
+
     let theAttribute = state.characters[payload.id].attributes[payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributes[payload.payload.key] =
@@ -873,6 +971,34 @@ export const mutations = {
     const theBoost = payload.payload.value;
     state.characters[payload.id].Boost =
       state.characters[payload.id].Boost + payload.payload.value;
+  },
+  setCharacterBoost5(state, payload) {
+    const char = state.characters[payload.id];
+
+    const theBoost = payload.payload.value;
+    state.characters[payload.id].Boost5 =
+      state.characters[payload.id].Boost5 + payload.payload.value;
+  },
+  setCharacterBoost10(state, payload) {
+    const char = state.characters[payload.id];
+
+    const theBoost = payload.payload.value;
+    state.characters[payload.id].Boost10 =
+      state.characters[payload.id].Boost10 + payload.payload.value;
+  },
+  setCharacterBoost15(state, payload) {
+    const char = state.characters[payload.id];
+
+    const theBoost = payload.payload.value;
+    state.characters[payload.id].Boost15 =
+      state.characters[payload.id].Boost15 + payload.payload.value;
+  },
+  setCharacterBoost20(state, payload) {
+    const char = state.characters[payload.id];
+
+    const theBoost = payload.payload.value;
+    state.characters[payload.id].Boost20 =
+      state.characters[payload.id].Boost20 + payload.payload.value;
   },
   setCharacterAncestryBoost(state, payload) {
     const character = state.characters[payload.id];
@@ -900,6 +1026,39 @@ export const mutations = {
     state.characters[payload.id].attributesBoost[payload.payload.key] =
       payload.payload.value;
   },
+  setCharacterAttributeBoost5(state, payload) {
+    const char = state.characters[payload.id];
+
+    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    theAttribute = payload.payload.value;
+    state.characters[payload.id].attributesBoost5[payload.payload.key] =
+      payload.payload.value;
+  },
+
+  setCharacterAttributeBoost10(state, payload) {
+    const char = state.characters[payload.id];
+
+    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    theAttribute = payload.payload.value;
+    state.characters[payload.id].attributesBoost10[payload.payload.key] =
+      payload.payload.value;
+  },
+  setCharacterAttributeBoost15(state, payload) {
+    const char = state.characters[payload.id];
+
+    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    theAttribute = payload.payload.value;
+    state.characters[payload.id].attributesBoost15[payload.payload.key] =
+      payload.payload.value;
+  },
+  setCharacterAttributeBoost20(state, payload) {
+    const char = state.characters[payload.id];
+
+    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    theAttribute = payload.payload.value;
+    state.characters[payload.id].attributesBoost20[payload.payload.key] =
+      payload.payload.value;
+  },
   setCharacterBackgroundBoostForAll(state, payload) {
     const char = state.characters[payload.id];
 
@@ -919,8 +1078,9 @@ export const mutations = {
       payload.payload.value;
   },
   setCharacterClassBoostForAll(state, payload) {
-    const char = state.characters[payload.id];
+    const char = state.characters[payload.id].attributesClassBoost[payload.key];
 
+  
     let theAttribute =
       state.characters[payload.id].attributesClassBoost[payload.key];
     theAttribute = payload.payload.value;
@@ -1218,17 +1378,7 @@ export const mutations = {
         Wargear.runeWeapon.property = payload.property;
       }
         
-    // character.wargear.push({
-    //   id: wargearUniqueId,
-    //   name: payload.name,
-    //   source: payload.source,
-    //   variant: payload.variant,
-    //   ...wargear
-    //   // group: payload.gear.group,
-    //   // category: payload.gear.category,
-      
-     
-    // });
+
   },
 
   // Wargear { id, name, source, (variant) }
@@ -1316,14 +1466,6 @@ export const mutations = {
   addCharacterAscensionPackage(state, payload) {
     const character = state.characters[payload.id];
     character.ascensionPackages = payload;
-    // character.ascensionPackages.push({
-    //   key: payload.key,
-    //   value: payload.value,
-    //   cost: payload.cost,
-    //   storyElementChoice: undefined,
-    //   sourceTier: payload.sourceTier,
-    //   targetTier: payload.targetTier,
-    // });
   },
   setCharacterAscensionPackageStoryElement(state, payload) {
     const character = state.characters[payload.id];
@@ -1682,15 +1824,9 @@ const getDefaultState = () => ({
     label: "",
     cost: 0,
   },
-  Boost: 0,
-  SkillPoints: 0,
-  SkillPointsClass: 0,
-  AncestryFreeBoost: "",
-  AncestryFreeBoost2: "",
-  BackgroundFreeBoost: "",
-  BackgroundFreeBoost2: "",
-  ClassBoost: "",
-  skillClass: "",
+
+  //Бусты и Понижения
+  //1-й уровень, стандартный
   attributesBoost: {
     strength: 0,
     dexterity: 0,
@@ -1731,6 +1867,59 @@ const getDefaultState = () => ({
     wisdom: 0,
     charisma: 0,
   },
+
+  Boost: 0,
+  AncestryFreeBoost: "",
+  AncestryFreeBoost2: "",
+  BackgroundFreeBoost: "",
+  BackgroundFreeBoost2: "",
+  ClassBoost: "",
+
+  //5-й уровень
+  attributesBoost5: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intellect: 0,
+    wisdom: 0,
+    charisma: 0,
+  },
+  Boost5: 0,
+
+  //10-й уровень
+  attributesBoost10: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intellect: 0,
+    wisdom: 0,
+    charisma: 0,
+  },
+  Boost10: 0,
+
+    //15-й уровень
+    attributesBoost15: {
+      strength: 0,
+      dexterity: 0,
+      constitution: 0,
+      intellect: 0,
+      wisdom: 0,
+      charisma: 0,
+    },
+    Boost15: 0,
+
+  //20-й уровень
+  attributesBoost20: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intellect: 0,
+    wisdom: 0,
+    charisma: 0,
+  },
+  Boost20: 0,
+
+
   attributes: {
     strength: 10,
     dexterity: 10,
@@ -1739,6 +1928,33 @@ const getDefaultState = () => ({
     wisdom: 10,
     charisma: 10,
   },
+  SkillPoints: 0,
+  SkillPointsLevel: {
+    level1: 1,
+    level2: 1,
+    level3: 1,
+    level4: 1,
+    level5: 1,
+    level6: 1,
+    level7: 1,
+    level8: 1,
+    level9: 1,
+    level10: 1,
+    level11: 1,
+    level12: 1,
+    level13: 1,
+    level14: 1,
+    level15: 1,
+    level16: 1,
+    level17: 1,
+    level18: 1,
+    level19: 1,
+    level20: 1,
+  },
+
+  SkillPointsClass: 0,
+  skillClass: "",
+  TrainedSkillClass: [],
   skills: {
     acrobatics: "U",
     arcana: "U",

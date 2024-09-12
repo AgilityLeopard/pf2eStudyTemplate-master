@@ -68,7 +68,7 @@ export default {
     return {
       headers: [
         {
-          text: 'Name', value: 'name', class: 'text-left', align: 'left',
+          text: 'Название', value: 'name', class: 'text-left', align: 'left',
         },
         {
           text: 'Armour Rating', value: 'range', class: 'text-center', align: 'center',
