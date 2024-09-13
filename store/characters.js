@@ -251,7 +251,8 @@ export const getters = {
       : getDefaultState().fluff.notes,
   characterSkillPointsLevelById: (state) => (id) =>
         state.characters[id] ? state.characters[id].SkillPointsLevel : {},
-      
+  characterSkillTableLevelById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].SkillTableLevel : [], 
   characterBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Boost : 0,
   characterBoost5ById: (state) => (id) =>
@@ -722,9 +723,15 @@ export const mutations = {
     state.characters[payload.id].skillDefence = payload.payload.skillDefence;
   },
   setCharacterSkillPointsLevel(state, payload) {
-    state.characters[payload.id].SkillPointsLevel[payload.payload.level] = payload.payload.value;
+    const pay = payload.payload;
+    // const level = "level"+pay.level;
+    state.characters[payload.id].SkillPointsLevel[pay.level] = pay.value;
   },
-  
+  setCharacterSkillTableLevel(state, payload) {
+    const pay = payload.payload;
+    // const level = "level"+pay.level;
+    state.characters[payload.id].SkillTableLevel[pay.level] = pay.value;
+  },
   setCharacterskillClass(state, payload) {
     state.characters[payload.id].skillClass = payload.payload.skillClass;
   },
@@ -1929,29 +1936,35 @@ const getDefaultState = () => ({
     charisma: 10,
   },
   SkillPoints: 0,
+  SkillTableLevel: [],
   SkillPointsLevel: {
-    level1: 1,
-    level2: 1,
-    level3: 1,
-    level4: 1,
-    level5: 1,
-    level6: 1,
-    level7: 1,
-    level8: 1,
-    level9: 1,
-    level10: 1,
-    level11: 1,
-    level12: 1,
-    level13: 1,
-    level14: 1,
-    level15: 1,
-    level16: 1,
-    level17: 1,
-    level18: 1,
-    level19: 1,
-    level20: 1,
-  },
 
+    level0: "",
+    level1: "",
+    level2: "",
+    level3: "",
+    level4: "",
+
+    level5: "",
+    level6: "",
+    level7: "",
+    level8: "",
+    level9: "",
+
+    level10: "",
+    level11: "",
+    level12: "",
+    level13: "",
+    level14: "",
+
+    level15: "",
+    level16: "",
+    level17: "",
+    level18: "",
+    level19: "",
+
+    level20: "",
+  },
   SkillPointsClass: 0,
   skillClass: "",
   TrainedSkillClass: [],
