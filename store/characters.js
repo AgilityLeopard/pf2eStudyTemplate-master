@@ -310,7 +310,8 @@ export const getters = {
     });
     return enhanced;
   },
-
+  characterHitPointsById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].MaxHitPoints : {},
   characterSkillsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].skills : {},
   characterSavingById: (state) => (id) =>
@@ -1093,6 +1094,14 @@ export const mutations = {
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesClassBoost[payload.payload.key] =
       payload.payload.value;
+  },
+  setCharacterHitPoints(state, payload) {
+    const char = state.characters[payload.id];
+    if(payload.payload.type === "ancestry")
+      char.MaxHitPoints["species"] = payload.payload.value;
+    if(payload.payload.type === "class")
+      char.MaxHitPoints["class"] = payload.payload.value;
+
   },
   setCharacterAncestryFlawForAll(state, payload) {
     const char = state.characters[payload.id];
@@ -1926,7 +1935,11 @@ const getDefaultState = () => ({
   },
   Boost20: 0,
 
-
+  MaxHitPoints: 
+  {
+    species: 0,
+    class: 0,
+  },
   attributes: {
     strength: 10,
     dexterity: 10,

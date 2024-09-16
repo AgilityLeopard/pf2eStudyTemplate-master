@@ -376,7 +376,11 @@ export default {
 
       this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { modifications: mods, source: 'archetype' } });
 
-  
+      this.$store.commit("characters/setCharacterHitPoints", {
+        id: this.characterId,
+        payload: { value: item.hitpoints, type: "class" },
+      });
+
         this.$store.commit("characters/setCharacterSaving", {
           id: this.characterId,
           payload: { key: 1, saving: item.saving },

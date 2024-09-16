@@ -234,6 +234,8 @@ export default {
         content: { modifications: modifications, source: "heritage" },
       });
 
+
+
       // species.attributeBoost.forEach((t) => {
         
       //     this.$store.commit("characters/setCharacterAncestryBoostForAll", {

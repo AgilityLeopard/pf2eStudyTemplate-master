@@ -249,6 +249,12 @@ export default {
          optional: 'ancestry'
       });
 
+      this.$store.commit("characters/setCharacterHitPoints", {
+        id: this.characterId,
+        payload: { value: species.ancestryHitPoint, type: "ancestry" },
+      });
+
+
       this.$store.commit("characters/clearCharacterKeywordsBySource", {
         id: this.characterId,
         source: "species",

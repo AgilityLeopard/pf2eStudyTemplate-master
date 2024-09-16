@@ -744,16 +744,17 @@
               <h2 class="subtitle-1">{{level}} уровень </h2>
             </v-card-title>
        
-        <v-data-table dense 
+        <!-- <v-data-table dense 
         :items="SkillLeveL(finalSkillRepository, level)" 
          
          @click:row="rowClick"
-         v-model="skillChoice[level]"
+        
        
           hide-default-footer
           item-key="name"
           :items-per-page=-1
           single-select
+          show-select
          :headers="skillHeaders"
         >
  
@@ -769,7 +770,7 @@
               <span>{{ characterlabel(characterSkills[item.key]) }}</span>
             </template>
 
-            <!-- <template v-slot:item.actions="{  item }">
+             <template v-slot:item.actions="{  item }">
               <v-checkbox
                 class="me-2"
                 size="small"
@@ -777,11 +778,20 @@
               >
               mdi-pencil
               </v-checkbox>
-            </template> -->
+            </template>
 
 
-        </v-data-table>
+        </v-data-table> -->
         
+        <!-- <v-select
+            :items="[currentCharacterTier]"
+            :value="currentCharacterTier"
+            :label="Выберите навык"
+            dense
+            disabled
+            readonly
+          />  -->
+
         <v-spacer></v-spacer>
 
 
@@ -1327,7 +1337,7 @@ export default {
     },
     rowClick(item, row)
     {
-      this.skillChoice[item.level] = item;
+      // this.skillChoice[item.level] = item;
       this.$store.commit('characters/setCharacterSkillTableLevel', { id: this.characterId, payload: { level: item.level, value: item } });
 
       row.select(true);
@@ -1384,7 +1394,7 @@ export default {
     ModAttribute(attribute, skill){
       const char1 = this.SkillsTrained[this.characterSkills[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
-      const char3 = this.characterLevel();
+      const char3 = char1 === 0 ? 0 : this.characterLevel();
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     ModAttributeSaving(attribute, skill){
@@ -1529,13 +1539,14 @@ export default {
     {
   
       let finalEnhancements = [];
-      this.skillChoice = this.characterSkillTableLevel;
+      const skillChoice = this.characterSkillTableLevel;
       finalSkillRepository.forEach(item => 
             {
+            
               const newMod = {
                       ...item,
                       level: level,
-                  
+                      
                     };    
                     // const cur = skillTrainedPoints[Object.keys(skillTrainedPoints)[Object.keys(skillTrainedPoints).indexOf('level'+level)]];
                     // if(cur === item.key)
