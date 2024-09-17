@@ -9,21 +9,19 @@
         </h1>
       </v-col>
 
-      <v-progress-circular v-if="!talentList && !wargearList" indeterminate color="success" size="128" width="12" />
-
-
       <v-col :cols="8" :sm="10" class="subtitle-1">
                     Черты родословной
                   </v-col>
                   
-    <v-expansion-panels multiple>
+    <v-expansion-panels multiple   
+>
       <v-expansion-panel   
-          v-for="level in 20"
-          :key="level"
-          v-if="level <= characterLevel() && (level == 1 || (level - 1) % 4 == 0)"
+      v-for="levelAncestry in 20"
+          :key="levelAncestry"
+          v-if="levelAncestry <= characterLevel() && (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)"
           >
-        <v-expansion-panel-header>{{level}} уровень</v-expansion-panel-header> 
-      <v-expansion-panel-content :key="level" >
+        <v-expansion-panel-header>{{levelAncestry}} уровень</v-expansion-panel-header> 
+      <v-expansion-panel-content :key="levelAncestry" >
 
         
         <v-dialog
@@ -44,11 +42,11 @@
       />
     </v-dialog>
 
-    <v-btn @click="updatePreview(level)" v-if="!characterAncestryTalent(level)">
-        Выберите черту {{ level }}
+    <v-btn @click="updatePreview()" v-if="!characterAncestryTalent(levelAncestry)">
+        Выберите черту {{ levelAncestry }}
       </v-btn>
 
-      <v-expansion-panels multiple v-if="characterAncestryTalent(level)">
+      <v-expansion-panels multiple v-if="characterAncestryTalent(levelAncestry)">
           <v-expansion-panel
           >
             <v-expansion-panel-header>
@@ -56,51 +54,35 @@
            
                 <v-row no-gutters>
                   <v-col :cols="8" :sm="10" class="subtitle-1">
-                    <span v-html="placeText[characterAncestryTalent(level).place]" />
+                    <span v-html="placeText[characterAncestryTalent(levelAncestry).place]" />
                   </v-col>
                   <v-col :cols="8" :sm="10" class="subtitle-2">
-                    <span v-html="characterAncestryTalent(level).label" />
+                    <span v-html="characterAncestryTalent(levelAncestry).label" />
                   </v-col>
                   <v-col :cols="4" :sm="2">
-                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterAncestryTalent(level))">Удалить</v-btn>
+                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterAncestryTalent(levelAncestry))">Удалить</v-btn>
                   </v-col>
                   <v-col v-if="!open" :cols="8" :sm="10" class="caption grey--text">
-                    {{ characterAncestryTalent(level).snippet }}
+                    {{ characterAncestryTalent(levelAncestry).snippet }}
                   </v-col>
                 </v-row>
               </template>
             </v-expansion-panel-header>
 
             <v-expansion-panel-content>
-              <div class="mb-4">
-                <span>Cost:</span>
-                <v-chip v-if="characterAncestryTalent(level).extraCost" label x-small>
-                  {{ characterAncestryTalent(level).cost+characterAncestryTalent(level).extraCost }} XP
-                </v-chip>
-                <v-chip v-else label x-small>
-                  {{ characterAncestryTalent(level).cost }} XP
-                </v-chip>
-              </div>
 
-              <div class="body-2 mb-2" v-html="characterAncestryTalent(level).description"></div>
+              <div class="body-2 mb-2" v-html="characterAncestryTalent(levelAncestry).description"></div>
 
-              <v-alert
-                v-if="characterAncestryTalent(level).alert"
-                :type="characterAncestryTalent(level).alert.type"
-                dense
-                text
-              >{{characterAncestryTalent(level).alert.text}}</v-alert>
-
-              <div v-if="characterAncestryTalent(level).options">
+              <div v-if="characterAncestryTalent(levelAncestry).options">
                 <v-select
-                  :value="characterAncestryTalent(level).selected"
-                  :items="characterAncestryTalent(level).options"
+                  :value="characterAncestryTalent(levelAncestry).selected"
+                  :items="characterAncestryTalent(levelAncestry).options"
                   item-text="name"
                   item-value="key"
-                  :placeholder="characterAncestryTalent(level).optionsPlaceholder"
+                  :placeholder="characterAncestryTalent(levelAncestry).optionsPlaceholder"
                   filled
                   dense
-                  @input="talentUpdateSelected($event, characterAncestryTalent(level))"
+                  @input="talentUpdateSelected($event, characterAncestryTalent(levelAncestry))"
                 />
               </div>
             </v-expansion-panel-content>
@@ -111,19 +93,21 @@
     </v-expansion-panel>
     </v-expansion-panels> 
 
+
     <v-col :cols="8" :sm="10" class="subtitle-1">
                     Черты Класса
-                  </v-col>
-                  
-    <v-expansion-panels multiple>
-      <v-expansion-panel   
-      v-for="level in 20"
-      :key="level"
-      v-if="level <= characterLevel() && (level == 1 || (level) % 2 == 0)"
-      >
-        <v-expansion-panel-header>{{level}} уровень</v-expansion-panel-header> 
+                  </v-col> 
 
-      <v-expansion-panel-content :key="level" >
+
+    <v-expansion-panels multiple   
+>
+      <v-expansion-panel   
+      v-for="levelAncestry in 20"
+          :key="levelAncestry"
+          v-if="levelAncestry <= characterLevel() && (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)"
+          >
+        <v-expansion-panel-header>{{levelAncestry}} уровень</v-expansion-panel-header> 
+      <v-expansion-panel-content :key="levelAncestry" >
 
         
         <v-dialog
@@ -136,75 +120,67 @@
         
         :character-id="characterId"
         :talents="selectedTalentsClass"
-        :level="levelClass"
-        type="class"
+        :level="levelAncestry"
+        type="ancestry"
         choose-mode
 
         @cancel="talentsDialogClass = false"
       />
     </v-dialog>
 
-    <v-btn @click="updatePreviewClass(level)" v-if="!characterClassTalent(level)">
-        Выберите черту {{ level }}
+    <v-btn @click="updatePreviewClass()" v-if="!characterClassTalent(levelAncestry)">
+        Выберите черту {{ levelAncestry }}
       </v-btn>
 
-      <v-expansion-panels multiple v-if="characterClassTalent(level)">
+      <v-expansion-panels multiple v-if="characterClassTalent(levelAncestry)">
+        
           <v-expansion-panel
           >
-         
             <v-expansion-panel-header>
               <template v-slot:default="{ open }">
            
                 <v-row no-gutters>
                   <v-col :cols="8" :sm="10" class="subtitle-1">
-                    <span v-html="placeText[characterClassTalent(level).place]" />
+                    <span v-html="placeText[characterClassTalent(levelAncestry).place]" />
                   </v-col>
                   <v-col :cols="8" :sm="10" class="subtitle-2">
-                    <span v-html="characterClassTalent(level).label" />
+                    <span v-html="characterClassTalent(levelAncestry).label" />
                   </v-col>
                   <v-col :cols="4" :sm="2">
-                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterClassTalent(level))">Удалить</v-btn>
+                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterClassTalent(levelAncestry))">Удалить</v-btn>
                   </v-col>
                   <v-col v-if="!open" :cols="8" :sm="10" class="caption grey--text">
-                    {{ characterClassTalent(level).snippet }}
+                    {{ characterClassTalent(levelAncestry).snippet }}
                   </v-col>
                 </v-row>
               </template>
+              
             </v-expansion-panel-header>
 
             <v-expansion-panel-content>
-              <div class="mb-4">
-                <span>Cost:</span>
-                <v-chip v-if="characterClassTalent(level).extraCost" label x-small>
-                  {{ characterClassTalent(level).cost+characterClassTalent(level).extraCost }} XP
-                </v-chip>
-                <v-chip v-else label x-small>
-                  {{ characterClassTalent(level).cost }} XP
-                </v-chip>
-              </div>
 
-              <div class="body-2 mb-2" v-html="characterClassTalent(level).description"></div>
+
+              <div class="body-2 mb-2" v-html="characterClassTalent(levelAncestry).description"></div>
 
               <v-alert
-                v-if="characterClassTalent(level).alert"
-                :type="characterClassTalent(level).alert.type"
+                v-if="characterClassTalent(levelAncestry).alert"
+                :type="characterClassTalent(levelAncestry).alert.type"
                 dense
                 text
-              >{{characterClassTalent(level).alert.text}}</v-alert>
+              >{{characterClassTalent(levelAncestry).alert.text}}</v-alert>
 
-              <div v-if="characterClassTalent(level).options">
+              <div v-if="characterClassTalent(levelAncestry).options">
                 <v-select
-                  :value="characterClassTalent(level).selected"
-                  :items="characterClassTalent(level).options"
+                  :value="characterClassTalent(levelAncestry).selected"
+                  :items="characterClassTalent(levelAncestry).options"
                   item-text="name"
                   item-value="key"
-                  :placeholder="characterClassTalent(level).optionsPlaceholder"
+                  :placeholder="characterClassTalent(levelAncestry).optionsPlaceholder"
                   filled
                   dense
-                  @input="talentUpdateSelected($event, characterClassTalent(level))"
+                  @input="talentUpdateSelected($event, characterClassTalent(levelAncestry))"
                 />
               </div>
-
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -213,16 +189,17 @@
     </v-expansion-panel>
     </v-expansion-panels> 
 
+    
     <v-col :cols="8" :sm="10" class="subtitle-1">
                     Черты Навыков
                   </v-col>
 
 
-    <v-expansion-panels multiple>
-      <v-expansion-panel  >
+   <v-expansion-panels multiple   
+> <v-expansion-panel  >
         <v-expansion-panel-header>Черта Предыстории</v-expansion-panel-header> 
         <v-expansion-panel-content >
-          <v-expansion-panels multiple v-if="characterBackgroundTalent(level)">
+          <v-expansion-panels multiple v-if="characterBackgroundTalent(1)">
           <v-expansion-panel
           >
          
@@ -231,51 +208,41 @@
            
                 <v-row no-gutters>
                   <v-col :cols="8" :sm="10" class="subtitle-1">
-                    <span v-html="placeText[characterBackgroundTalent(level).place]" />
+                    <span v-html="placeText[characterBackgroundTalent(1).place]" />
                   </v-col>
                   <v-col :cols="8" :sm="10" class="subtitle-2">
-                    <span v-html="characterBackgroundTalent(level).label" />
+                    <span v-html="characterBackgroundTalent(1).label" />
                   </v-col>
-                  <!-- <v-col :cols="4" :sm="2">
-                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterSkillTalent(level))">Удалить</v-btn>
-                  </v-col> -->
+  
                   <v-col v-if="!open" :cols="8" :sm="10" class="caption grey--text">
-                    {{ characterBackgroundTalent(level).snippet }}
+                    {{ characterBackgroundTalent(1).snippet }}
                   </v-col>
                 </v-row>
               </template>
             </v-expansion-panel-header>
 
             <v-expansion-panel-content>
-              <div class="mb-4">
-                <span>Cost:</span>
-                <v-chip v-if="characterBackgroundTalent(level).extraCost" label x-small>
-                  {{ characterBackgroundTalent(level).cost+characterBackgroundTalent(level).extraCost }} XP
-                </v-chip>
-                <v-chip v-else label x-small>
-                  {{ characterBackgroundTalent(level).cost }} XP
-                </v-chip>
-              </div>
 
-              <div class="body-2 mb-2" v-html="characterBackgroundTalent(level).description"></div>
+
+              <div class="body-2 mb-2" v-html="characterBackgroundTalent(1).description"></div>
 
               <v-alert
-                v-if="characterBackgroundTalent(level).alert"
-                :type="characterBackgroundTalent(level).alert.type"
+                v-if="characterBackgroundTalent(1).alert"
+                :type="characterBackgroundTalent(1).alert.type"
                 dense
                 text
-              >{{characterBackgroundTalent(level).alert.text}}</v-alert>
+              >{{characterBackgroundTalent(1).alert.text}}</v-alert>
 
-              <div v-if="characterBackgroundTalent(level).options">
+              <div v-if="characterBackgroundTalent(1).options">
                 <v-select
-                  :value="characterBackgroundTalent(level).selected"
-                  :items="characterBackgroundTalent(level).options"
+                  :value="characterBackgroundTalent(1).selected"
+                  :items="characterBackgroundTalent(1).options"
                   item-text="name"
                   item-value="key"
-                  :placeholder="characterBackgroundTalent(level).optionsPlaceholder"
+                  :placeholder="characterBackgroundTalent(1).optionsPlaceholder"
                   filled
                   dense
-                  @input="talentSkillUpdateSelected($event, characterBackgroundTalent(level))"
+                  @input="talentSkillUpdateSelected($event, characterBackgroundTalent(1))"
                 />
               </div>
 
@@ -286,15 +253,14 @@
         </v-expansion-panels>
         </v-expansion-panel-content>
       </v-expansion-panel>
-
       <v-expansion-panel   
-      v-for="level in 20"
-      :key="level"
-      v-if="level <= characterLevel() && (level == 1 || (level - 1) % 4 == 0)"
-      >
-        <v-expansion-panel-header>{{level}} уровень</v-expansion-panel-header> 
+      v-for="levelAncestry in 20"
+          :key="levelAncestry"
+          v-if="levelAncestry <= characterLevel() && (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)"
+          >
+        <v-expansion-panel-header>{{levelAncestry}} уровень</v-expansion-panel-header> 
 
-      <v-expansion-panel-content :key="level" >
+      <v-expansion-panel-content :key="levelAncestry" >
 
         
         <v-dialog
@@ -307,83 +273,71 @@
         
         :character-id="characterId"
         :talents="selectedTalentsSkill"
-        :level="levelSkill"
-        type="skill"
+        :level="levelAncestry"
+        type="ancestry"
         choose-mode
 
         @cancel="talentsDialogSkill = false"
       />
     </v-dialog>
 
-    <v-btn @click="updatePreviewSkill(level)" v-if="!characterSkillTalent(level)">
-        Выберите черту {{ level }}
+    <v-btn @click="updatePreviewSkill()" v-if="!characterSkillTalent(levelAncestry)">
+        Выберите черту {{ levelAncestry }}
       </v-btn>
 
-
-
-      <v-expansion-panels multiple v-if="characterSkillTalent(level)">
+      <v-expansion-panels multiple v-if="characterSkillTalent(levelAncestry)">
           <v-expansion-panel
           >
-         
             <v-expansion-panel-header>
               <template v-slot:default="{ open }">
            
                 <v-row no-gutters>
                   <v-col :cols="8" :sm="10" class="subtitle-1">
-                    <span v-html="placeText[characterSkillTalent(level).place]" />
+                    <span v-html="placeText[characterSkillTalent(levelAncestry).place]" />
                   </v-col>
                   <v-col :cols="8" :sm="10" class="subtitle-2">
-                    <span v-html="characterSkillTalent(level).label" />
+                    <span v-html="characterSkillTalent(levelAncestry).label" />
                   </v-col>
                   <v-col :cols="4" :sm="2">
-                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterSkillTalent(level))">Удалить</v-btn>
+                    <v-btn color="error" x-small @click.stop.prevent="removeTalent(characterSkillTalent(levelAncestry))">Удалить</v-btn>
                   </v-col>
                   <v-col v-if="!open" :cols="8" :sm="10" class="caption grey--text">
-                    {{ characterSkillTalent(level).snippet }}
+                    {{ characterSkillTalent(levelAncestry).snippet }}
                   </v-col>
                 </v-row>
               </template>
             </v-expansion-panel-header>
 
             <v-expansion-panel-content>
-              <div class="mb-4">
-                <span>Cost:</span>
-                <v-chip v-if="characterSkillTalent(level).extraCost" label x-small>
-                  {{ characterSkillTalent(level).cost+characterSkillTalent(level).extraCost }} XP
-                </v-chip>
-                <v-chip v-else label x-small>
-                  {{ characterSkillTalent(level).cost }} XP
-                </v-chip>
-              </div>
 
-              <div class="body-2 mb-2" v-html="characterSkillTalent(level).description"></div>
+              <div class="body-2 mb-2" v-html="characterSkillTalent(levelAncestry).description"></div>
 
               <v-alert
-                v-if="characterSkillTalent(level).alert"
-                :type="characterSkillTalent(level).alert.type"
+                v-if="characterSkillTalent(levelAncestry).alert"
+                :type="characterSkillTalent(levelAncestry).alert.type"
                 dense
                 text
-              >{{characterSkillTalent(level).alert.text}}</v-alert>
+              >{{characterSkillTalent(levelAncestry).alert.text}}</v-alert>
 
-              <div v-if="characterSkillTalent(level).options">
+              <div v-if="characterSkillTalent(levelAncestry).options">
                 <v-select
-                  :value="characterSkillTalent(level).selected"
-                  :items="characterSkillTalent(level).options"
+                  :value="characterSkillTalent(levelAncestry).selected"
+                  :items="characterSkillTalent(levelAncestry).options"
                   item-text="name"
                   item-value="key"
-                  :placeholder="characterSkillTalent(level).optionsPlaceholder"
+                  :placeholder="characterSkillTalent(levelAncestry).optionsPlaceholder"
                   filled
                   dense
-                  @input="talentSkillUpdateSelected($event, characterSkillTalent(level))"
+                  @input="talentUpdateSelected($event, characterSkillTalent(levelAncestry))"
                 />
               </div>
-
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
+
     </v-expansion-panel-content>
     </v-expansion-panel>
-    </v-expansion-panels>              
+    </v-expansion-panels> 
     </v-row>
   </div>
 </template>
@@ -780,15 +734,15 @@ export default {
     },
   },
   methods: {
-    async updatePreview(level) {
+     updatePreview() {
       
       const config = {
         params: { source: this.sources.join(','), },
       };
       
-      const TalentsDetails = await this.$axios.get('/api/talents/', config);
-      this.levelAncestry = level;
-      this.selectedTalentsAncestry = TalentsDetails.data.filter(s => s.type == 'ancestry').map(talent => {
+      // const TalentsDetails = await this.$axios.get('/api/talents/', config);
+   
+      this.selectedTalentsAncestry = this.talentList.filter(s => s.type == 'ancestry').map(talent => {
                        const prerequisitesHtml = this.requirementsToText(talent).join(', ');
                        return {
                          ...talent
@@ -796,15 +750,15 @@ export default {
                       });
       this.talentsDialog = true;
     },
-    async updatePreviewSkill(level) {
+     updatePreviewSkill() {
       
       const config = {
         params: { source: this.sources.join(','), },
       };
       
-      const TalentsDetails = await this.$axios.get('/api/talents/', config);
-      this.levelSkill = level;
-      this.selectedTalentsSkill = TalentsDetails.data.filter(s => s.type == 'skill').map(talent => {
+      // const TalentsDetails = await this.$axios.get('/api/talents/', config);
+ 
+      this.selectedTalentsSkill = this.talentList.filter(s => s.type == 'skill').map(talent => {
  
                        const prerequisitesHtml = this.requirementsToText(talent).join(', ');
                        return {
@@ -813,15 +767,15 @@ export default {
                       });
       this.talentsDialogSkill = true;
     },
-    async updatePreviewClass(level) {
+     updatePreviewClass() {
       
       const config = {
         params: { source: this.sources.join(','), },
       };
       
-      const TalentsDetails = await this.$axios.get('/api/talents/', config);
-      this.levelClass = level;
-      this.selectedTalentsClass = TalentsDetails.data.filter(s => s.type == 'class').map(talent => {
+
+   
+      this.selectedTalentsClass = this.talentList.filter(s => s.type == 'class').map(talent => {
 
                        const prerequisitesHtml = this.requirementsToText(talent).join(', ');
                        return {
@@ -1333,28 +1287,11 @@ export default {
 
 
     },
-    addTalent(talent, place) {
-      const match = talent.name.match(/(<.*>)/);
-      const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-      const payload = {
-        id: talentUniqueId,
-        name: talent.name,
-        key: talent.key,
-        cost: talent.cost,
-        place: place,
-        modification: talent.modification,
-        placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
-        selected: undefined,
-        choice: talent.optionsKey,
-        source: `talent.${talentUniqueId}`,
-      };
-      this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
-    },
     removeTalent(talent) {
       const id = this.characterId;
       const source = `talent.${talent.id}`;
       this.$store.commit('characters/clearCharacterEnhancementsBySource', { id, source });
-      this.$store.commit('characters/removeCharacterWargearBySource', { id, source });
+      // this.$store.commit('characters/removeCharacterWargearBySource', { id, source });
       this.$store.commit('characters/removeCharacterTalent', { id, talentId: talent.id });
     },
     requirementsToText(item) {

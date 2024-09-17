@@ -321,7 +321,8 @@
                 <td>
                   <v-btn
                     icon
-                    :disabled="skill.key == characterClassSkill  || characterSkills[skill.key] == 'U' || RestrictionSkill(skill) == true || skill.optional === true || characterSkillPoints == MaxSkillPoints() || skill.custom"
+                    :disabled="skill.key == characterClassSkill  || characterSkills[skill.key] == 'U' || skill.optional === true 
+                    || characterSkillPoints == MaxSkillPoints() || skill.custom || skillChoiceInitial.find(item => item === skill.key) !== skill.key"
                     @click="decrementSkill(skill.key)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
@@ -329,7 +330,7 @@
                    {{  ModAttribute(skill.attribute, skill.key)  }}
                   <v-btn
                     icon
-                    :disabled="characterSkills[skill.key] == 'L' || RestrictionLevel(characterSkills[skill.key], 1) == true || characterSkillPoints <= 0"
+                    :disabled=" characterSkillPoints <= 0 || characterSkills[skill.key] !== 'U' || skillChoiceInitial.find(item => item === skill.key) === skill.key"
                     
                     @click="incrementSkill(skill.key)"
                   >
@@ -343,7 +344,7 @@
                 <td>{{ characterlabel(characterSkills[skill.key]) }}</td>
                 <span v-if="skill.custom">
                     <v-hover>
-                      <v-icon
+                      <v-icon v-if="skill.optional !== true"
                         small
                         @click="removeCustomSkill(skill.key)"
                         slot-scope="{ hover }"
@@ -736,14 +737,190 @@
 
   <v-row>
   <v-col  v-for="(level, index) in 20"
-          :key="level"
-        
+          :key="level"   
           v-if="level <= characterLevel() && level != 1 && (level - 1) % 2 == 0" :cols="12" :md="7">
       <v-card>
         <v-card-title style="background-color: green; color: #fff;" class="body-1 pt-1 pb-1">
               <h2 class="subtitle-1">{{level}} уровень </h2>
             </v-card-title>
        
+
+            <v-select  v-if="level ===2"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice2"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice2, level)"
+      > </v-select>
+            
+      <v-select  v-if="level ===3"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice3"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice3, level)"
+      > </v-select>
+
+      <v-select  v-if="level ===4"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice4"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice4, level)"
+      > </v-select>
+
+      <v-select  v-if="level ===5"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice5"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice5, level)"
+      > </v-select>
+
+      <v-select  v-if="level ===6"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice6"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice6, level)"
+      > </v-select>
+
+      <v-select  v-if="level ===7"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice7"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice7, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===8"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice8"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice8, level)"
+      >
+
+    </v-select>
+      <v-select  v-if="level ===9"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice9"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice9, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===10"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice10"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice10, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===11"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice11"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice11, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===12"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice12"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice12, level)"
+      >
+    </v-select>
+
+
+                  <v-select  v-if="level ===13"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice13"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice13, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===14"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice14"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice14, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===15"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice15"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice15, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===16"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice16"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice16, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===17"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice17"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice17, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===18"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice18"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice18, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===19"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice19"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice19, level)"
+      >
+    </v-select>
+      <v-select  v-if="level ===20"
+        label="Повышение Навыка от класса"
+        v-model="skillChoice20"
+        :items="finalSkillRepository"
+        item-text="name"
+        item-value="key"
+        @change="updateSelectClassSkillLevel(skillChoice20, level)"
+      >
+ </v-select>
+
+   
         <!-- <v-data-table dense 
         :items="SkillLeveL(finalSkillRepository, level)" 
          
@@ -783,16 +960,6 @@
 
         </v-data-table> -->
         
-        <!-- <v-select
-            :items="[currentCharacterTier]"
-            :value="currentCharacterTier"
-            :label="Выберите навык"
-            dense
-            disabled
-            readonly
-          />  -->
-
-        <v-spacer></v-spacer>
 
 
       </v-card>
@@ -837,6 +1004,7 @@ export default {
       manageBoost1: true,
       manageBoost5: true,
       manageBoost10: true,
+      modifications: [],
       manageBoost15: true,
       manageBoost20: true,
       skillsEditorDialog: false,
@@ -859,7 +1027,32 @@ export default {
       species: undefined,
       ascension: undefined,
       loading: false,
-      skillChoice : undefined,
+      // skillChoiceInitial : [],
+      //Выбор навыков
+      skillChoice1 : "",
+      skillChoice2 : "",
+      skillChoice3 : "",
+      skillChoice4 : "",
+      skillChoice5 : "",
+      skillChoice6 : "",
+      skillChoice7 : "",
+
+
+      skillChoice8 : "",
+      skillChoice9 : "",
+      skillChoice10 : "",
+      skillChoice11 : "",
+      skillChoice12 : "",
+      skillChoice13 : "",
+      skillChoice14 : "",
+
+      skillChoice15 : "",
+      skillChoice16 : "",
+      skillChoice17 : "",
+      skillChoice18 : "",
+      skillChoice19 : "",
+      skillChoice20 : "",
+      ///
       select: { },
       AncestryAttribute: [],
       AncestryAttribute2: [],
@@ -978,6 +1171,9 @@ export default {
     characterSkillTableLevel() {
       return this.$store.getters['characters/characterSkillTableLevelById'](this.characterId);
     },
+    CharacterskillInitial() {
+      return this.$store.getters['characters/CharacterskillInitialById'](this.characterId);
+    },
     characterBoost() {
       return this.$store.getters['characters/characterBoostById'](this.characterId);
     },
@@ -1017,7 +1213,11 @@ export default {
     characterTrainedSkillClass() {
       return this.$store.getters['characters/characterTrainedSkillClassById'](this.characterId);
     },
-    
+    enhancements() {
+      return this.$store.getters["characters/characterEnhancementsById"](
+        this.characterId
+      );
+    },
     characterBackgroundFreeBoost2() {
       return this.$store.getters['characters/characterBackgroundFreeBoost2ById'](this.characterId);
     },
@@ -1033,6 +1233,10 @@ export default {
     characterAttributesBoost15() {
       return this.$store.getters['characters/characterAttributeBoost15'](this.characterId);
     },
+    characterSkillPointClass() {
+      return this.$store.getters['characters/characterSkillPointsClassId'](this.characterId);
+    },
+    
     characterAttributesBoost20() {
       return this.$store.getters['characters/characterAttributeBoost20'](this.characterId);
     },
@@ -1075,6 +1279,11 @@ export default {
         ...this.characterCustomSkills,
       ];
     },
+    skillChoiceInitial(){
+      return [
+        ...this.CharacterskillInitial
+      ]
+    },
     finalWDRepository() {
       return [
         ...this.skillAttack,
@@ -1110,12 +1319,13 @@ export default {
       },
       immediate: true, 
     },
-    characterSkillTableLevel: {
+    characterSkillPointsLevel: {
       handler(newVal) {
         if (newVal && newVal !== 'unknown') {
           this.loadSkillTable(newVal);
         }
-      }
+      },
+      immediate: true, 
     }
   },
   methods: {
@@ -1165,9 +1375,37 @@ export default {
     },
     async loadSkillTable(key) {
       this.loading = true;
-      // this.skillChoice = key;
+      this.skillChoice = key;
 
+      //this.skillChoiceInitial = this.CharacterskillInitial;
+
+      this.skillChoice1 = this.skillChoice[this.label(1)];
+      this.skillChoice2 = this.skillChoice[this.label(2)];
+      this.skillChoice3 = this.skillChoice[this.label(3)];
+      this.skillChoice4 = this.skillChoice[this.label(4)];
+      this.skillChoice5 = this.skillChoice[this.label(5)];
+      this.skillChoice6= this.skillChoice[this.label(6)];
+      this.skillChoice7 = this.skillChoice[this.label(7)];
+      this.modifications = this.enhancements;
+
+      this.skillChoice8 = this.skillChoice[this.label(8)];
+      this.skillChoice9 = this.skillChoice[this.label(9)];
+      this.skillChoice10= this.skillChoice[this.label(10)];
+      this.skillChoice11 = this.skillChoice[this.label(11)];
+      this.skillChoice12 = this.skillChoice[this.label(12)];
+      this.skillChoice13 = this.skillChoice[this.label(13)];
+      this.skillChoice14= this.skillChoice[this.label(14)];
+
+      this.skillChoice15= this.skillChoice[this.label(15)];
+      this.skillChoice16= this.skillChoice[this.label(16)];
+      this.skillChoice17 = this.skillChoice[this.label(17)];
+      this.skillChoice18= this.skillChoice[this.label(18)];
+      this.skillChoice19 = this.skillChoice[this.label(19)];
+      this.skillChoice120 = this.skillChoice[this.label(20)];
       this.loading = false;
+    },
+    skillChoiceModel(level){
+      return this.skillChoice[this.label(level)];
     },
     resetStats() {
       const key = this.selectedAncestryBoost ? this.selectedAncestryBoost.key : "";
@@ -1183,6 +1421,8 @@ export default {
       this.$store.commit('characters/resetCharacterStats', { id: this.characterId, optional: 'all' });
     },
     incrementSkill(skill) {
+      
+      this.$store.commit('characters/setCharacterskillInitial', { id: this.characterId, payload: { value: 1, skill: skill } });
       var keys = Object.keys(this.SkillsTrained);
       var loc = keys.indexOf(this.characterSkills[skill]);
       const newValue = keys[loc+1];
@@ -1190,6 +1430,8 @@ export default {
       this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
     },
     decrementSkill(skill) {
+      this.skillChoiceInitial.filter(item => item !== skill);
+      this.$store.commit('characters/setCharacterskillInitial', { id: this.characterId, payload: { value: -1, skill: skill } });
       var keys = Object.keys(this.SkillsTrained);
       var loc = keys.indexOf(this.characterSkills[skill]);
       const newValue = keys[loc-1];
@@ -1418,7 +1660,7 @@ export default {
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     MaxSkillPoints(){
-      const Max = (this.characterAttributes["intellect"] - 10) / 2 + this.characterSkillPoints;
+      const Max = (this.characterAttributes["intellect"] - 10) / 2 + this.characterSkillPointClass;
       if(Max < 0)
         return 0;
       return Max;
@@ -1440,6 +1682,10 @@ export default {
     },
     updateSelectBackground2(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
+    },
+    updateSelectClassSkillLevel(boost, level) {
+        // this.$store.commit('characters/setCharacterClassSkill', { id: this.characterId, payload: { key: boost, value: 1 } });
+        this.$store.commit('characters/setCharacterClassSkillLevel', { id: this.characterId, payload: { key: boost, level: level } });
     },
     SkillPerception(){
       return this.$store.getters['characters/characterPerseptionById'](this.characterId);

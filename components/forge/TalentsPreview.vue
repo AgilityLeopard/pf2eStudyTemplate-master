@@ -1,7 +1,7 @@
 <template lang="html">
   <v-card>
     <v-card-title
-      v-if="chooseMode"
+
       style="background-color: #262e37; color: #fff"
     >
       <span>Подтвердите выбор Таланта</span>
@@ -9,12 +9,9 @@
       <v-icon dark @click="$emit('cancel')"> close </v-icon>
     </v-card-title>
 
-    <v-divider v-if="chooseMode" />
+    <v-divider />
 
-    
-    <v-col :cols="12"  >
-        <v-card>
-          <v-card-title>
+    <v-card-title>
             <v-text-field
               v-model="searchQuery"
               filled
@@ -25,7 +22,8 @@
             />
 
           </v-card-title>
-          
+          <v-divider />
+
           <v-card-title>
                 <v-chip-group
                   v-model="selectedTagsFilters"
@@ -47,8 +45,14 @@
 
               </v-card-title>
 
-     
+              <v-divider />
+              <v-card-text class="pa-6">
 
+          
+
+
+     
+          
           <v-data-table
             :headers="headers"
             
@@ -84,9 +88,11 @@
             </template>
 
             <template v-slot:item.buy="{ item }">
-              <v-btn
-                :color="'success'"
-                :disabled="characterTalentLabels.includes(item.name) && !item.allowedMultipleTimes"
+              <v-btn 
+              
+              :disabled="item.level > level || characterTalentLabels.includes(item.name)"
+                :color="item.level <= level ? 'success' : 'red'"
+             
                 x-small
                 @click="addTalent(item, type, level)"
               >
@@ -110,25 +116,15 @@
           <div class="text-center pt-2">
             <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
           </div>
-        </v-card>
-
+       
+        </v-card-text>
+ 
+          <v-divider />
+    <v-card-actions >
         <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
-      </v-col>
+      </v-card-actions>
 
-
-
-
-    <!-- <v-card-title primary-title>
-      <div>
-        <h3 class="headline md0">
-          {{ talents.nameAncestry }}
-        </h3>
-      </div>
-      <v-spacer />
-      <div>
-        <img :src="avatar" style="width: 96px" />
-      </div>
-    </v-card-title> -->
+     
 
   </v-card>
 </template>
@@ -150,7 +146,12 @@ export default {
       required: true,
     },
     talents: {},
-    level: undefined,
+        // Number
+    level: {
+      type: Number,
+      required: false,
+    },
+
     type: undefined,
     psychicPowers: {
       type: Array,
@@ -294,8 +295,13 @@ export default {
         choice: talent.optionsKey,
         source: `talent.${talentUniqueId}`,
       };
+
+      // this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { modifications: payload.modifications, source: 'feat'+place } });
       this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
       this.$emit('cancel');
+    },
+    characterLevel(){
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
   },
     computed:
@@ -379,7 +385,7 @@ export default {
       // }
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.tags.toString().toUpperCase().includes(lw)));
       
-      return filteredTalents.filter(talent => talent.level <= this.level);
+      return filteredTalents//filteredTalents.filter(talent => talent.level <= this.level);
     },
   }
 };

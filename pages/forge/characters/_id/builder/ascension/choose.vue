@@ -258,9 +258,19 @@ export default {
       {
         if(this.characterSkills[ascensionPackage.skill] === "U" )
             this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: ascensionPackage.skill, value: "T" } });
+        else
+          {
+            const back = this.$store.getters['characters/characterBackSkillById'](this.characterId); 
+            if(back != ascensionPackage.skill)
+          {
+            const point = this.$store.getters['characters/characterSkillPointsById'](this.characterId);
+            this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: ascensionPackage.skill, value: point + 1} });
+          }
+
+          }
       }
-
-
+      this.$store.commit('characters/setCharacterBackSkill', { id: this.characterId, payload: { value: ascensionPackage.skill } });
+      
 
       this.ascensionDialog = false;
       this.$router.push({

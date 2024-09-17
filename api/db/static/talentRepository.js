@@ -627,10 +627,10 @@ const playerCoreAncestry = [
     ],
   },
   {
-    ...talent('playerCore',130,'Elven Lore',20,'эльф'),
+    ...talent('playerCore',130,'Elven Weapon Familiarity',20,'эльф'),
     snippet: 'Вы получаете доступ ко всему необычному оружию с признаком эльф',
     type: "ancestry",
-    name: "Эльфийские знания",
+    name: "Знакомство с оружием эльфов",
     level: 1,
     // reqOptionalText: "Обучены Религии",
     // requirements: [
