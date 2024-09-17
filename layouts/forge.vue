@@ -239,7 +239,7 @@
               </v-card>
             </v-dialog>
 
-            <!-- <v-dialog
+             <v-dialog
               v-model="savesDialog"
               width="600px"
               scrollable
@@ -275,7 +275,7 @@
 
                             </v-sheet>
                             <v-sheet class="text-center pa-2 ma-2"> 
-                              {{ (characterAttributes[saving.attribute] - 10) / 2}}
+                              {{ (characterAttributes[save.attribute] - 10) / 2}}
 
                             </v-sheet>
                           </v-col>
@@ -319,7 +319,7 @@
 
                 </v-card-actions>
               </v-card>
-            </v-dialog> -->
+            </v-dialog> 
       
 
 
