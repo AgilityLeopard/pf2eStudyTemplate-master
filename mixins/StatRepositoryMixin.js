@@ -226,6 +226,13 @@ export default {
           optional: false,
         },
         {
+          key: "nature",
+          name: "Природа",
+          attribute: "wisdom",
+          description: undefined,
+          optional: false,
+        },
+        {
           key: "survival",
           name: "Выживание",
           attribute: "wisdom",

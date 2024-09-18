@@ -25,7 +25,29 @@
           <v-divider />
 
           <v-card-title>
-                <v-chip-group
+
+            
+            <v-select  
+        label="Трейты"
+        v-model="selectedTagsFilters"
+        multiple
+        :items="tagFilters"
+        item-text="name"
+        item-value="name"
+        
+      > </v-select>
+
+      <!-- <v-select  
+        label="Источник"
+        v-model="selectedTagsFilters"
+        multiple
+        :items="tagFilters"
+        item-text="name"
+        item-value="name"
+        
+      > </v-select> -->
+
+                <!-- <v-chip-group
                   v-model="selectedTagsFilters"
                   active-class="primary--text"
                   column
@@ -41,7 +63,7 @@
                   >
                     {{ filter.name }}
                   </v-chip>
-                </v-chip-group>
+                </v-chip-group> -->
 
               </v-card-title>
 
@@ -296,8 +318,10 @@ export default {
         source: `talent.${talentUniqueId}`,
       };
 
-      // this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { modifications: payload.modifications, source: 'feat'+place } });
+      // this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, modifications: payload.modifications, source: 'feat'+place } });
       this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
+      this.$store.commit('characters/clearModification', { id: this.characterId, level });
+      this.$store.commit('characters/setModification', { id: this.characterId, level });
       this.$emit('cancel');
     },
     characterLevel(){

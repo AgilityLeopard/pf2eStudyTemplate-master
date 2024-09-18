@@ -44,10 +44,10 @@
 
             <v-list-item-content>
               <v-list-item-title>
-                {{ item.nameAncestry }}
+                {{ item.nameBackground }}
                 <v-chip
                   v-if="
-                    item.source && !['core', 'coreab'].includes(item.source.key)
+                    item.source
                   "
                   color="info"
                   outlined
@@ -187,7 +187,7 @@ export default {
       this.loading = false;
     },
     getAvatar(key) {
-      return `/img/avatars/ascension/${key}.png`;
+      return `/img/avatars/species/playerCore-dwarf.png` 
     },
     async updatePreview(item) {
       const slug = this.camelToKebab(item.key);
@@ -218,7 +218,9 @@ export default {
       this.$store.commit('characters/addCharacterAscensionPackage', payload);
 
       const talent = this.talentList.find(s => s.key === ascensionPackage.feat);
-      const match = talent.name.match(/(<.*>)/);
+      if(talent)
+      {
+        const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
       
       const payloadSkill = {
@@ -234,6 +236,8 @@ export default {
       }
 
       this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payloadSkill });
+      }
+
    
     
       //добавляем лоры
@@ -254,13 +258,25 @@ export default {
           //this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
       }
       
+      const back = this.$store.getters['characters/characterBackSkillById'](this.characterId); 
+
+      //Убрать скилл
+      const class1 = this.$store.getters['characters/characterTrainedSkillClassById'](this.characterId);
+      
+
+      
       if(ascensionPackage.skill)
       {
+       // Если не классовый скилл
+        if(this.characterSkills[back] === "T" && class1.find(item => item === back) === undefined)
+           this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: back, value: "U" } });
+
+        //Добавить скилл
         if(this.characterSkills[ascensionPackage.skill] === "U" )
             this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: ascensionPackage.skill, value: "T" } });
         else
           {
-            const back = this.$store.getters['characters/characterBackSkillById'](this.characterId); 
+           
             if(back != ascensionPackage.skill)
           {
             const point = this.$store.getters['characters/characterSkillPointsById'](this.characterId);

@@ -594,7 +594,6 @@ export const mutations = {
     const modification = state.characters[payload.id].enhancements.sort().reverse().filter(s=> s.level <= payload.level);
     const character = state.characters[payload.id];
 
-
     if(modification)
     {
         modification.forEach(item =>
@@ -608,7 +607,7 @@ export const mutations = {
             }
             case("Saving"):
             {
-                character.saving[item.key] = item.upgrade;
+              character.saving[item.key] = item.upgrade;
               break;
         
             }
@@ -627,6 +626,8 @@ export const mutations = {
                 character.skillClass = item.upgrade;
                 break;
             }
+
+
           }
         
         }
@@ -641,6 +642,7 @@ export const mutations = {
 
     if(modification)
     {
+        //для класса
         modification.forEach(item =>
         {
          
@@ -1028,8 +1030,7 @@ export const mutations = {
                 character.Boost15 = 0;
                 character.Boost20 = 0;
 
-                character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
-                if(character.SkillPoints < 0) character.SkillPoints = 0;
+
 
                 Object.keys(character.attributes).forEach((key, index) => {
                   
@@ -1081,28 +1082,37 @@ export const mutations = {
           if(payload.optional == "all" || payload.optional == "class")
             {
               character.customSkills = character.customSkills.filter(item => item.optional === true);
+            }
+
+          if(payload.optional == "all" )
+          {
+            character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
+            if(character.SkillPoints < 0) character.SkillPoints = 0;
           }
-    
+          
     Object.keys(character.skills).forEach((key, index) => {
       if( character.customSkills.find(item => item.key === key) === undefined)
       {
       if(payload.optional == "class" )
         {
-          if(character.TrainedSkillClass.find(item => item !== key) !== undefined)
-            character.skills[key] = "U";
 
-          if(character.ClassSkill == key) 
+          character.skills[key] = "U";
+
+        }
+
+        if(payload.optional == "all")
           {
-            character.ClassSkill = "";
-            character.skills[key] = "U";
+            if(character.TrainedSkillClass.find(item => item === key) === undefined)
+              character.skills[key] = "U";
+
+            if(character.TrainedSkillClass.find(item => item === key) !== undefined)
+              character.skills[key] = "T";
+
           }
         }
 
-          if(payload.optional == "all" || payload.optional == "class")
-          {
-            character.skills[key]= "U";
-          }
-        }
+        if(character.customSkills.find(item => item.key === key) !== undefined)
+          character.skills[key] = "T";
 
     });
 
@@ -1342,6 +1352,7 @@ export const mutations = {
     const { modifications } = payload.content;
     const source = payload.content.source || undefined;
 
+    //payload.item - черта, особенность, предмет
     console.info(
       `Enhance/Modify: Adding ${modifications.length} from '${source}'.`
     );
@@ -1374,15 +1385,43 @@ export const mutations = {
       item.id = uuid;
       item.source = source;
       character.enhancements.push(item);
+
+
+
       console.info(`Enhance/Modify: Adding ${item.targetValue} by '${source}'`);
     });
   },
+  removeModification(modRemove){
+    console.log("sdadad");
+    // switch (requirement.type) {
+    //   case 'keyword':
+    //     const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+    //     const found = requirement.key.some((k) => {
+    //       return lowercaseKeywords.includes(k.toString().toUpperCase());
+    //     });
+    //     if (
+    //       found
+    //     ) {
+    //       fulfilled = false;
+    //     }
+    //     break;
+    //   }
+  },
   removeCharacterModificationById(state, payload) {
     const character = state.characters[payload.id];
+    const modRemove = character.enhancements.filter(
+      (e) => e.id === payload.modificationId
+    );
+
+    //нужно добавить удаление применениz
+    character.removeModification(modRemove);
+
     character.enhancements = character.enhancements.filter(
       (e) => e.id !== payload.modificationId
     );
   },
+
+  
   clearCharacterEnhancementsBySource(state, payload) {
     const { id, source, exact } = payload;
     const character = state.characters[id];
@@ -2151,6 +2190,7 @@ const getDefaultState = () => ({
     acrobatics: "U",
     arcana: "U",
     athletics: "U",
+    nature: "U",
     crafting: "U",
     deception: "U",
     diplomacy: "U",

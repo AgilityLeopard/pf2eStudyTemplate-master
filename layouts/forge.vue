@@ -11,6 +11,96 @@
       width="320"
  
     >
+
+    
+    <v-list>
+            <v-list-item
+             
+            >
+
+              <v-list-item-content>
+                <v-list-item-title>
+                  Максимальные хиты
+                </v-list-item-title>
+              </v-list-item-content>
+  
+
+
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="green" text-color="white">
+                
+                     {{ characterHitPointsMax() }}
+               
+                
+                </v-chip>
+              </v-list-item-action>
+             
+            </v-list-item>
+
+            <v-list-item
+             
+             >
+ 
+             <v-list-item-content>
+                <v-list-item-title>
+                  Внимательность
+                </v-list-item-title>
+              </v-list-item-content>
+
+
+
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="green" text-color="white">
+                  <v-avatar left class="green darken-4">
+                    {{ModAttributePerception(Perception.attribute, Perception.key)}}
+                  </v-avatar>
+                
+                </v-chip>
+              </v-list-item-action>
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="red" text-color="white">
+                  <v-avatar left class="red darken-4">
+                    {{characterlabel(characterPerseption) }}
+                  </v-avatar>
+                 
+                </v-chip>
+              </v-list-item-action>
+              
+             </v-list-item>
+
+             
+            <v-list-item
+             
+             >
+ 
+             <v-list-item-content>
+                <v-list-item-title>
+                  Сложность класса
+                </v-list-item-title>
+              </v-list-item-content>
+
+
+
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="green" text-color="white">
+                  <v-avatar left class="green darken-4">
+                    {{ModAttributeClass()}}
+                  </v-avatar>
+                
+                </v-chip>
+              </v-list-item-action>
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="red" text-color="white">
+                  <v-avatar left class="red darken-4">
+                    {{characterlabel(characterSkillClass) }}
+                  </v-avatar>
+                 
+                </v-chip>
+              </v-list-item-action>
+              
+             </v-list-item>
+          </v-list>
+
     <v-expansion-panels multiple>
       <!-- Характеристики -->
       <v-expansion-panel>
@@ -144,6 +234,78 @@
       <v-expansion-panel> 
             <v-expansion-panel-header class="pa-4 pt-2 pb-2">
 
+              Владение оружием
+            </v-expansion-panel-header>
+          <v-expansion-panel-content >
+        
+            <v-list>
+            <v-list-item
+              v-for="attack in WeaponRepository"
+              :key="attack.key"
+              two-line
+             
+            >
+
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ attack.name }}
+                </v-list-item-title>
+              </v-list-item-content>
+
+
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="red" text-color="white">
+                  <v-avatar left class="red darken-4">
+                    {{characterlabel(skillAttack[attack.key]) }}
+                  </v-avatar>
+                 
+                </v-chip>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+
+      <v-expansion-panel> 
+            <v-expansion-panel-header class="pa-4 pt-2 pb-2">
+
+              Владение доспехами
+            </v-expansion-panel-header>
+          <v-expansion-panel-content >
+        
+            <v-list>
+            <v-list-item
+              v-for="defence in DefenceRepository"
+              :key="defence.key"
+              two-line
+             
+            >
+
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ defence.name }}
+                </v-list-item-title>
+              </v-list-item-content>
+
+
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="red" text-color="white">
+                  <v-avatar left class="red darken-4">
+                    {{characterlabel(skillDefence[defence.key]) }}
+                  </v-avatar>
+                 
+                </v-chip>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+
+      <!-- <v-expansion-panel> 
+            <v-expansion-panel-header class="pa-4 pt-2 pb-2">
+
               Хит-поинты
             </v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -153,6 +315,44 @@
 
         </div>
         </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel> -->
+
+      <v-expansion-panel> 
+            <v-expansion-panel-header class="pa-4 pt-2 pb-2">
+
+              Языки
+            </v-expansion-panel-header>
+          <v-expansion-panel-content >
+        
+            <v-list>
+            <v-list-item
+              v-for="lang in characterLanguages"
+              :key="lang.name"
+              two-line
+            
+            >
+
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ lang.name }}
+                </v-list-item-title>
+              </v-list-item-content>
+
+            </v-list-item>
+          </v-list>
+        <!-- <div class="group_rec">
+          <div   v-for="skill in finalSkillRepository">
+         
+
+                <v-btn class = "group_skill" style="width: 100%" @click="openSkills(skill)">
+                  
+                  <div>{{ skill.name }}</div> <div> {{ModAttribute(skill.attribute, skill.key)}}</div> <div>  {{characterSkills[skill.key] }}</div>
+
+                </v-btn> 
+
+        </div> 
+      </div>-->
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -710,6 +910,15 @@ export default {
     totalBuildPoints() {
       return this.$store.getters['characters/characterTotalBuildPointsById'](this.$route.params.id);
     },
+    skillAttack() {
+      return this.$store.getters['characters/characterskillAttackById'](this.$route.params.id);
+    },
+    skillDefence() {
+      return this.$store.getters['characters/characterskillDefenceById'](this.$route.params.id);
+    },
+    characterSkillClass() {
+      return this.$store.getters['characters/characterSkillClassById'](this.$route.params.id);
+    },
     spendBuildingPoints() {
       return this.$store.getters['characters/characterSpendBuildPointsById'](this.$route.params.id);
     },
@@ -737,6 +946,9 @@ export default {
     },
     characterVersion(id) {
       return this.$store.getters['characters/characterVersionById'](this.$route.params.id);
+    },
+    characterLanguages() {
+      return this.$store.getters['characters/characterLanguagesById'](this.$route.params.id);
     },
     characterSpeciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.$route.params.id);
@@ -784,7 +996,10 @@ export default {
     characterHitPoints() {
       return this.$store.getters['characters/characterHitPointsById'](this.$route.params.id);
     },
-    
+    characterPerseption() {
+      return this.$store.getters['characters/characterPerseptionById'](this.$route.params.id);
+    },
+
     characterSpeciesCost() {
       return this.$store.getters['characters/characterSpeciesCostsById'](this.$route.params.id);
     },
@@ -864,6 +1079,26 @@ export default {
       const char3 = this.characterLevel();
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
+    ModAttributePerception(attribute, skill){
+      const char1 = this.profiencyRepository[this.SkillPerception()];
+      const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
+      const char3 = this.characterLevel();
+      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    ModAttributeClass(){
+      const char1 = this.profiencyRepository[this.SkillClass()];
+      const char3 = this.characterLevel();
+      if(this.characterArchetype)
+        return 10 + parseInt(char1) + parseInt(char3);
+      else  
+        0
+    },
+    SkillClass() {
+      return this.$store.getters['characters/characterSkillClassById'](this.$route.params.id);
+    },
+    SkillPerception(){
+      return this.$store.getters['characters/characterPerseptionById'](this.$route.params.id);
+    },
     // changes the drawer to permanent
     makeDrawerPermanent() {
       this.drawer.permanent = true;
@@ -874,8 +1109,12 @@ export default {
     characterHitPointsMax(){
       const species = this.characterHitPoints["species"] ? this.characterHitPoints["species"] : 0;
       const classh = this.characterHitPoints["class"] ? this.characterHitPoints["class"] : 0;
+
       const levelClass =  (classh + (this.characterAttributes["constitution"] - 10) / 2) * this.characterLevel();
-      return species + levelClass;
+      if(levelClass <= 0)
+        return species
+      else
+        return species + levelClass;
     },
     // toggles the drawer variant (mini/full)
     toggleMiniDrawer() {
@@ -887,6 +1126,7 @@ export default {
       this.$store.commit('setTheme', theme);
       this.$ga.event('Settings', 'Change Theme', theme, 1);
     },
+    
     // toggles the drawer type (permanent vs temporary) or shows/hides the drawer
     toggleDrawer() {
       if (this.drawer.permanent) {

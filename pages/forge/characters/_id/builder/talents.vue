@@ -24,6 +24,7 @@
       <v-expansion-panel-content :key="levelAncestry" >
 
         
+
         <v-dialog
       v-model="talentsDialog"
       :fullscreen="$vuetify.breakpoint.xsOnly"
@@ -391,6 +392,7 @@ export default {
       levelSkill: 0,
       levelClass: 0,
       searchQuery: '',
+      modifications :[],
       selectedTagsFilters: [],
       filters: {
         tags: {
@@ -503,6 +505,11 @@ export default {
         'playerCore',
         ...this.settingHomebrews,
       ];
+    },
+    enhancements() {
+      return this.$store.getters["characters/characterEnhancementsById"](
+        this.characterId
+      );
     },
     remainingBuildPoints() {
       return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
@@ -804,6 +811,7 @@ export default {
         const { data } = await this.$axios.get('/api/wargear/', config);
         this.wargearList = data;
       }
+      this.modifications = this.enhancements;
       this.loading = false;
     },
     async getAbility(sources) {
@@ -1290,9 +1298,12 @@ export default {
     removeTalent(talent) {
       const id = this.characterId;
       const source = `talent.${talent.id}`;
-      this.$store.commit('characters/clearCharacterEnhancementsBySource', { id, source });
+      const level = this.characterLevel;
+      // this.$store.commit('characters/clearCharacterEnhancementsBySource', { id, source });
       // this.$store.commit('characters/removeCharacterWargearBySource', { id, source });
       this.$store.commit('characters/removeCharacterTalent', { id, talentId: talent.id });
+      this.$store.commit('characters/clearModification', { id: this.characterId, level });
+      this.$store.commit('characters/setModification', { id: this.characterId, level });
     },
     requirementsToText(item) {
       const texts = [];

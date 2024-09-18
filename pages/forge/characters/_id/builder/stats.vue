@@ -11,7 +11,7 @@
       </h1>
     </v-col>
 
-    <v-col :cols="12" :md="6">
+    <!-- <v-col :cols="12" :md="6">
       <v-card>
         <v-card-title style="background-color: green; color: #fff;" class="body-1 pt-1 pb-1">
               <h2 class="subtitle-1">Внимательность</h2>
@@ -71,13 +71,7 @@
 
                 <td>{{ characterlabel(skillAttack[attack.key]) }}</td>
                 </tr>
-                
-                <!-- <tr v-for="defence in DefenceRepository" :key="defence.key">
-                
-                <td>{{ defence.name }}</td>
 
-                  <td>{{ characterlabel(skillDefence[defence.key]) }}</td>
-                </tr> -->
             </tbody>
         </v-simple-table>
 
@@ -90,12 +84,6 @@
           
   
         <tbody>
-      <!-- <tr v-for="attack in WeaponRepository" :key="attack.key">
-            
-            <td>{{ attack.name }}</td>
-            
-              <td>{{ characterlabel(skillAttack[attack.key]) }}</td>
-            </tr> -->
 
             <tr v-for="defence in DefenceRepository" :key="defence.key">
             
@@ -106,7 +94,7 @@
         </tbody>
         </v-simple-table>
       </v-card>
-    </v-col>
+    </v-col> -->
 
     <v-col :cols="12">
       <h3 class="headline">
@@ -114,8 +102,9 @@
       </h3>
     </v-col>
 
-    <v-col v-if="species" :cols="12" :md="6" >
-
+  
+      <v-container v-if="species" class="bg-surface-variant">
+        <v-row>
       <v-col v-if="boost == 2 "  :cols="12" :md="6" >
         <v-select  
           label="Повышение от Наследия"
@@ -127,7 +116,7 @@
         ></v-select>
       </v-col>
       
-      <v-col cols="12" :md="6">
+      <v-col :cols="12" :md="6">
         <v-select  
           label="Свободное повышение"
           v-model="selectedAncestryBoost"
@@ -137,8 +126,9 @@
           @change="updateSelect(selectedAncestryBoost)"
         ></v-select>
       </v-col>
+  </v-row>
+    </v-container>  
 
-    </v-col>
 
     <v-col v-else>
       <v-alert  
@@ -167,18 +157,33 @@
       </v-alert>
     </v-col>
     
-    <v-col  v-if="ascension" :cols="6" :md="6">
-      <v-select  
-        label="Повышение от предыстории"
-        v-model="selectedBackgroundBoost"
-        :items="BackgroundAttribute"
-        item-text="name"
-        item-value="key"
-        @change="updateSelectBackground(selectedBackgroundBoost)"
-      ></v-select>
-      <!--  -->
-    </v-col>
+    <v-container v-if="ascension" class="bg-surface-variant">
+      <v-row>
+      <v-col  :cols="6" :md="6">
+        <v-select  
+          label="Повышение от предыстории"
+          v-model="selectedBackgroundBoost"
+          :items="BackgroundAttribute"
+          item-text="name"
+          item-value="key"
+          @change="updateSelectBackground(selectedBackgroundBoost)"
+        ></v-select>
+       
+      </v-col>
 
+      <v-col  :cols="6" :md="6">
+        <v-select  
+          label="Свободное повышение"
+          v-model="selectedBackgroundBoost2"
+          :items="AncestryAttribute"
+          item-text="name"
+          item-value="key"
+          @change="updateSelectBackground2(selectedBackgroundBoost2)"
+        ></v-select>
+      
+      </v-col>
+</v-row>
+    </v-container>  
     <v-col   :cols="12">
       <h3 class="headline">
           Повышения Класса {{ archetype ? archetype.name : "" }}
@@ -1672,6 +1677,9 @@ export default {
         this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
     updateSelectBackground(boost) {
+        this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
+    },
+    updateSelectBackground2(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
     updateSelectClassAttribute(boost) {

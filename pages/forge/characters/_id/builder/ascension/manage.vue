@@ -33,55 +33,25 @@
           <strong>XP Cost:</strong> {{ species.cost }}, incl. Stats ({{ species.costs.stats }} XP)
         </p> -->
 
-        <p v-if="attributes"><strong>Attributes:</strong> {{ attributes }}</p>
+        <p ><strong>Характеристика на выбор:</strong> {{ characterLabelAttribute(ascension.boost1) }}</p>
 
-        <p v-if="skills"><strong>Skills:</strong> {{ skills }}</p>
+        <p ><strong>Характеристика на выбор 2:</strong> Свободное повышение</p>
+       
 
+        <p v-if="ascension.skill"><strong>Навык от предыстории:</strong> {{ characterLabelSkillTrainedChoice(ascension.skill) }} </p>
+
+        <p v-if="ascension.lore"><strong>Знание от предыстории:</strong> {{ ascension.lore }} </p>
+
+        <p v-if="ascension.description"><strong>Описание</strong>  {{ ascension.description }}</p>
+       
         <!-- <p><strong>Скорость:</strong> {{ ascension.speed }}</p> -->
       </div>
 
-      <div v-if="ascension.Description" class="body-2">
+      <div class="body-2">
         <p><v-divider /></p>
 
-        <div v-for="description in ascension.Description" class="text-lg-justify" v-bind:key="description.name">
-          <div v-if="description.name == 'Faith'">
-            <span class="subtitle-1 mt-2">Верование</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-            <strong> Популярные эдикты</strong>
-            <div v-if="description.edicts" v-html="description.edicts"></div>
 
-            <p></p>
-
-            <strong> Популярные анафемы</strong>
-            <div
-              v-if="description.anathema"
-              v-html="description.anathema"
-            ></div>
-          </div>
-
-          <p></p>
-
-          <div v-if="description.name == 'avanturist'">
-            <span class="subtitle-1 mt-2">Авантюристы</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-          </div>
-
-          <div v-if="description.name == 'name'">
-            <span class="subtitle-1 mt-2">Имена</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-            <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
-            <div v-if="ascension.exampleName" v-html="ascension.exampleName"></div>
-          </div>
-
-          <div v-if="description.name == 'society'">
-            <span class="subtitle-1 mt-2">Общество</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-          </div>
-        </div>
+          
       </div>
     </v-col>
   </v-row>
@@ -111,6 +81,7 @@ export default {
         this.characterId
       );
     },
+
     characterSpeciesAstartesChapter() {
       return this.$store.getters[
         "characters/characterSpeciesAstartesChapterById"
@@ -166,8 +137,8 @@ export default {
         .join(", ");
     },
     avatar() {
-      if (this.species === undefined) return "";
-      return `/img/avatars/species/${this.species.key}.png`;
+      //if (this.species === undefined) return "";
+      return `/img/avatars/species/playerCore-dwarf.png` ;
     },
   },
   watch: {
@@ -194,6 +165,15 @@ export default {
     };
   },
   methods: {
+    characterLabelAttribute(keyAbility){
+      return this.attributeRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
+    },
+    characterLabelAttributeBoost(item){
+      return item.filter((a) => a.value > 0).map(s => s.name).join(', ')
+    },
+    characterLabelSkillTrainedChoice(keyAbility){
+      return this.skillRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
+    },
     async getChapterList(sources) {
       const config = {
         params: {
