@@ -37,33 +37,6 @@
         
       > </v-select>
 
-      <!-- <v-select  
-        label="Источник"
-        v-model="selectedTagsFilters"
-        multiple
-        :items="tagFilters"
-        item-text="name"
-        item-value="name"
-        
-      > </v-select> -->
-
-                <!-- <v-chip-group
-                  v-model="selectedTagsFilters"
-                  active-class="primary--text"
-                  column
-                  multiple
-                >
-                  <v-chip
-                    v-for="filter in tagFilters"
-                    :key="filter.name"
-                    :value="filter.name"
-                    filter
-                    small
-                    label
-                  >
-                    {{ filter.name }}
-                  </v-chip>
-                </v-chip-group> -->
 
               </v-card-title>
 
@@ -168,6 +141,7 @@ export default {
       required: true,
     },
     talents: {},
+    list: {},
         // Number
     level: {
       type: Number,
@@ -305,6 +279,7 @@ export default {
     addTalent(talent, place, level) {
       const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+      const list = this.list;
       const payload = {
         id: talentUniqueId,
         name: talent.name,
@@ -318,7 +293,35 @@ export default {
         source: `talent.${talentUniqueId}`,
       };
 
-      // this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, modifications: payload.modifications, source: 'feat'+place } });
+      const linkedFeat = talent.modifications.filter(item => item.type === 'Feat');
+      if(linkedFeat)
+        linkedFeat.forEach(item =>
+        {
+          if(key === 'Additional Lore')
+          {
+          
+            const LoreUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+            const Lore = list.find(item => item.name === 'Дополнительные знание');
+
+            const loreTalent = {
+              id: LoreUniqueId,
+              name: Lore.name,
+              key: Lore.key,
+              cost: Lore.cost,
+              place: 'free',
+            
+              link: talentUniqueId,
+              selected: undefined,
+              choice: Lore.optionsKey,
+              source: `talent.${talentUniqueId}`,
+            };
+
+            this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
+          }
+        }
+      )
+
+      this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: level, modifications: payload.modifications, talentId:talentUniqueId, source: 'feat'+place } });
       this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
       this.$store.commit('characters/clearModification', { id: this.characterId, level });
       this.$store.commit('characters/setModification', { id: this.characterId, level });

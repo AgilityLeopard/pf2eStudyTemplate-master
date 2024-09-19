@@ -688,9 +688,11 @@ export default {
     },
     setLevel(rank) {
       const level =  parseInt(rank);
+
+      this.$store.commit('characters/setLevel', { id: this.characterId, level });
+      this.$store.commit('characters/resetCharacterStats', { id: this.characterId, optional: 'level' });
       this.$store.commit('characters/clearModification', { id: this.characterId, level });
       this.$store.commit('characters/setModification', { id: this.characterId, level });
-      this.$store.commit('characters/setLevel', { id: this.characterId, level });
     },
     setSettingTier(tier) {
       this.$store.commit('characters/setSettingTier', { id: this.characterId, tier });

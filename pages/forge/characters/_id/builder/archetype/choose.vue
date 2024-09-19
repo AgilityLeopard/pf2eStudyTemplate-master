@@ -376,6 +376,8 @@ export default {
 
       this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { modifications: mods, source: 'archetype' } });
 
+
+
       this.$store.commit("characters/setCharacterHitPoints", {
         id: this.characterId,
         payload: { value: item.hitpoints, type: "class" },
@@ -390,10 +392,6 @@ export default {
         { id: this.characterId, payload: { key: 1, 
           value: item.skillTrainedPoints } });
 
-        // this.$store.commit('characters/setCharacterSkillPoints', 
-        // { id: this.characterId, payload: { key: 1, 
-        //   value: item.skillTrainedPoints } });
-
         item.attributeBoost.forEach((t) => {
         
         this.$store.commit("characters/setCharacterClassBoostForAll", {
@@ -406,6 +404,10 @@ export default {
         id: this.characterId,
         optional: 'class'
       });
+
+      const level = this.$store.getters['characters/characterLevelById'](this.characterId);
+      this.$store.commit('characters/clearModification', { id: this.characterId, level });
+      this.$store.commit('characters/setModification', { id: this.characterId, level });
 
       // if(item.skillTrained.length > 0)
         this.$store.commit('characters/setCharacterTrainedClassSkill', { id: this.characterId, payload: { key: 1, value: item.skillTrained } });

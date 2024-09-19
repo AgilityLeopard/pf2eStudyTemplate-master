@@ -11,91 +11,6 @@
       </h1>
     </v-col>
 
-    <!-- <v-col :cols="12" :md="6">
-      <v-card>
-        <v-card-title style="background-color: green; color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Внимательность</h2>
-            </v-card-title>
-        <v-simple-table dense>
-          
-            <tbody>
-            <tr> 
-                <td>{{ Perception.name }}</td>
-                <td>{{ ModAttributePerception(Perception.attribute, Perception.key) }}</td>
-                <td>{{ characterlabel(characterPerseption) }}</td>
-                </tr>
-            </tbody>
-            
-          
-            <tbody>
-              <tr>  
-                <td> Сложность Класса</td>
-                <td>{{ ModAttributeClass() }}</td>
-                <td>{{ characterlabel(characterSkillClass)  }}</td>
-              </tr>
-            
-            </tbody>
-        </v-simple-table>
-
-        <v-card-title style="background-color: green; color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Спасброски</h2>
-            </v-card-title>
-        <v-simple-table dense>
-      
-
-        <tbody>
-      <tr v-for="saving in SavingRepository" :key="saving.key">
-            
-            <td>{{ saving.name }}</td>
-              <td>{{ ModAttributeSaving(saving.attribute, saving.key) }}</td>
-              <td>{{ characterlabel(characterSaving[saving.key]) }}</td>
-            </tr>
-        
-        </tbody>
-        </v-simple-table>
-      </v-card>
-    </v-col>
- 
-    <v-col :cols="12" :md="6" left>
-      <v-card>
-        <v-card-title style="background-color: green; color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Оружие</h2>
-            </v-card-title>
-        <v-simple-table dense>
-      
-          
-            <tbody>
-          <tr v-for="attack in WeaponRepository" :key="attack.key">
-                
-                <td>{{ attack.name }}</td>
-
-                <td>{{ characterlabel(skillAttack[attack.key]) }}</td>
-                </tr>
-
-            </tbody>
-        </v-simple-table>
-
-        <v-spacer></v-spacer>
-        <v-card-title style="background-color: green; color: #fff;" class="body-1 pt-1 pb-1">
-              <h2 class="subtitle-1">Доспехи</h2>
-            </v-card-title>
-        <v-simple-table dense>
-      
-          
-  
-        <tbody>
-
-            <tr v-for="defence in DefenceRepository" :key="defence.key">
-            
-            <td>{{ defence.name }}</td>
-            
-              <td>{{ characterlabel(skillDefence[defence.key]) }}</td>
-            </tr>
-        </tbody>
-        </v-simple-table>
-      </v-card>
-    </v-col> -->
-
     <v-col :cols="12">
       <h3 class="headline">
           Повышение от Наследия
@@ -327,7 +242,8 @@
                   <v-btn
                     icon
                     :disabled="skill.key == characterClassSkill  || characterSkills[skill.key] == 'U' || skill.optional === true 
-                    || characterSkillPoints == MaxSkillPoints() || skill.custom || skillChoiceInitial.find(item => item === skill.key) !== skill.key"
+                    || characterSkillPoints == MaxSkillPoints() || skill.custom || skillChoiceInitial.find(item => item === skill.key) !== skill.key
+                    || CharacterskillFromModification.find(item => item === skill.key) === skill.key"
                     @click="decrementSkill(skill.key)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
@@ -335,7 +251,7 @@
                    {{  ModAttribute(skill.attribute, skill.key)  }}
                   <v-btn
                     icon
-                    :disabled=" characterSkillPoints <= 0 || characterSkills[skill.key] !== 'U' || skillChoiceInitial.find(item => item === skill.key) === skill.key"
+                    :disabled=" characterSkillPoints <= 0 || characterSkills[skill.key] !== 'U' "
                     
                     @click="incrementSkill(skill.key)"
                   >
@@ -1298,6 +1214,9 @@ export default {
     settingHouserules() {
       return this.$store.getters['characters/characterSettingHouserulesById'](this.characterId);
     },
+    CharacterskillFromModification() {
+      return this.$store.getters['characters/CharacterskillFromModificationById'](this.characterId);
+    },
   },
   watch: {
     characterSpeciesKey: {
@@ -1423,7 +1342,10 @@ export default {
       this.selectedAncestryBoost2 = "";
       this.selectedBackgroundBoost = "";
       this.selectedBackgroundBoost2 = "";
+      const level = this.$store.getters['characters/characterLevelById'](this.characterId);
       this.$store.commit('characters/resetCharacterStats', { id: this.characterId, optional: 'all' });
+      this.$store.commit('characters/clearModification', { id: this.characterId, level });
+      this.$store.commit('characters/setModification', { id: this.characterId, level });
     },
     incrementSkill(skill) {
       

@@ -21,42 +21,6 @@ const talent = function (sourceKey, sourcePage, name, cost, tags = '') {
   };
 };
 
-const requireAttribute = function(key, value) {
-  return { condition: 'must', type: 'attribute', key, value };
-};
-
-const requireSkill = function(key, value) {
-  return { condition: 'must', type: 'skill', key, value };
-};
-const requireTrait = function(key, value) {
-  return { condition: 'must', type: 'trait', key, value };
-};
-
-const requireRank = function(value) {
-  return { condition: 'must', type: 'character', key: 'Rank', value: value };
-};
-
-const requireSpecies = function(species, not = false) {
-  return {
-    condition: 'must',
-    type: 'species',
-    value: [ species ],
-  };
-};
-
-const requireKeyword = function(keywords, not = false) {
-  return {
-    condition: not ? 'mustNot' : 'must',
-    type: 'keyword',
-    key: [ ...keywords.split(',') ],
-  };
-};
-
-const requireTier = function(value) {
-  return { condition: 'must', type: 'character', key: 'Tier', value: value };
-};
-
-
 const playerCore = [
   // Воин
   {
@@ -500,8 +464,27 @@ const playerCore = [
   description:
     '<p>Вы научились искусству владения продвинутым оружием. Выберите группу оружия. Вы получаете мастерство для всего продвинутого оружия в этой группе, как если бы оно было воинским оружием этой группы.</p>'
 },
-  ////
-
+  ////скиллы
+  {
+    ...talent('playerCore',130,'Additional Lore',20,'навык, общая'),
+    type: "skill",
+    name: "Дополнительные знание",
+    snippet: 'Ваши знания расширились, чтобы охватить новую область.',
+    level: 1,
+    // requirements: [
+    //   {
+    //     type: 'skill',
+    //     key: 'medicine',
+    //     value: 'T',
+    //   }
+    // ],
+    // requirementsText: "Вы держите Набор лекаря (Healer's Tools), или он надет и у вас есть свободная рука",
+    // reqOptionalText: "Обучены Медицине",
+    special: 'Вы можете выбрать эту способность больше одного раза. Каждый раз вы должны выбрать новый подраздел Знаний, и на перечисленных выше уровнях вы получаете дополнительные увеличения навыка к этому подразделу знаний.',
+    description:
+      '<p>Ваши знания расширились, чтобы охватить новую область. Выберите дополнительный подраздел Знаний. Вы становитесь обучены ему. На 3-м, 7-м и 15-м уровнях вы получаете дополнительное увеличение навыка, которое можете применить только к выбранному подразделу Знаний.</p>',
+   
+  },
   {
     ...talent('playerCore',130,'Battle Medicine',20,'навык, общая, исцеление, воздействие'),
     type: "skill",
@@ -601,27 +584,27 @@ const playerCoreAncestry = [
       + '<p>Также вы получаете общую способность Дополнительные знания / Additional Lore для Эльфийских знаний (Elf).</p>',
     modifications: [
       { 
-        targetGroup: 'Skill', 
-        targetValue: 'Upgrade', 
+        type: 'Skill', 
+        mode: 'Upgrade', 
+        key: 'arcana',
         isChoiceAll: false,
-        type: 'arcana',
         // option: ['all'],
-        modifier: "T", 
+        value: "T", 
       },
       { 
         
-        targetGroup: 'Skill', 
-        targetValue: 'Upgrade', 
-        type: 'nature', 
+        type: 'Skill', 
+        mode: 'Upgrade', 
+        key: 'nature', 
         isChoiceAll: false,
         // option: ['all'],
-        modifier: "T", 
+        value: "T", 
       },
       { 
-        targetGroup: 'Feat', 
-        targetValue: 'Additional Lore', 
+        type: 'Feat', 
+        key: 'Additional Lore', 
         value: 'Знания эльфов',
-        isChoiceAll: false,
+        isValueModify: false,
         // option: ['all'],
         // modifier: "T",  
       },

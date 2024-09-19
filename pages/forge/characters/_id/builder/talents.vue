@@ -274,6 +274,7 @@
         
         :character-id="characterId"
         :talents="selectedTalentsSkill"
+        :list="talentList"
         :level="levelAncestry"
         type="ancestry"
         choose-mode
@@ -1301,8 +1302,12 @@ export default {
       const level = this.characterLevel;
       // this.$store.commit('characters/clearCharacterEnhancementsBySource', { id, source });
       // this.$store.commit('characters/removeCharacterWargearBySource', { id, source });
-      this.$store.commit('characters/removeCharacterTalent', { id, talentId: talent.id });
+
       this.$store.commit('characters/clearModification', { id: this.characterId, level });
+      this.$store.commit('characters/removeModification', { id: this.characterId,   talentId: talent.id });
+
+      this.$store.commit('characters/removeCharacterTalent', { id, talentId: talent.id });
+
       this.$store.commit('characters/setModification', { id: this.characterId, level });
     },
     requirementsToText(item) {
