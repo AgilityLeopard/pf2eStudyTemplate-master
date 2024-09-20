@@ -294,15 +294,16 @@ export default {
       };
 
       const linkedFeat = talent.modifications.filter(item => item.type === 'Feat');
+
       if(linkedFeat)
         linkedFeat.forEach(item =>
         {
-          if(key === 'Additional Lore')
+          if(item.key === 'Additional Lore')
           {
           
             const LoreUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
             const Lore = list.find(item => item.name === 'Дополнительные знание');
-
+            
             const loreTalent = {
               id: LoreUniqueId,
               name: Lore.name,
@@ -316,7 +317,27 @@ export default {
               source: `talent.${talentUniqueId}`,
             };
 
+            const LoreSkill = {
+                      key: this.textToCamel(item.value),
+                      name: item.value,
+                      attribute: 'intellect',
+                      description: "",
+                      optional: true,
+                      isValueModify : false,
+            }
+
+            const mod =   [{     
+                      type: 'Skill', 
+                      mode: 'Add', 
+                      key: 'Lore', 
+                      // name: item.value,
+                      // value: this.textToCamel(item.value),
+                      isValueModify : false,
+                      LoreSkill : LoreSkill,
+          }]
             this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
+            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: level, modifications: mod, talentId: LoreUniqueId, source: 'featfree' } });
+    
           }
         }
       )

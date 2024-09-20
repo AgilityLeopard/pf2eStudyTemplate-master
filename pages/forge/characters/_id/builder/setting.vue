@@ -1,25 +1,19 @@
 <template lang="html">
-  <v-row >
-
+  <v-row>
     <v-dialog
       v-model="selectAvatarDialog"
       width="600px"
       scrollable
       :fullscreen="$vuetify.breakpoint.xsOnly"
     >
-
       <v-card class="pa-0">
-
-        <v-card-title style="background-color: #262e37; color: #fff;">
+        <v-card-title style="background-color: #262e37; color: #fff">
           <span>Подтвердите аватар</span>
           <v-spacer />
-          <v-icon dark @click="selectAvatarDialog = false">
-            закрыть
-          </v-icon>
+          <v-icon dark @click="selectAvatarDialog = false"> закрыть </v-icon>
         </v-card-title>
 
         <v-card-text class="pt-4">
-
           <div>
             <client-only>
               <croppa
@@ -31,7 +25,10 @@
               ></croppa>
             </client-only>
           </div>
-          <span class="caption">Перетаскивайте и масштабируйте (прокручивая) до тех пор, пока изображение не впишется в размер.</span>
+          <span class="caption"
+            >Перетаскивайте и масштабируйте (прокручивая) до тех пор, пока
+            изображение не впишется в размер.</span
+          >
 
           <div>
             <v-switch
@@ -40,8 +37,6 @@
               dense
             ></v-switch>
           </div>
-
-
         </v-card-text>
 
         <v-card-actions>
@@ -53,9 +48,7 @@
             Выбрать аватар
           </v-btn>
         </v-card-actions>
-
       </v-card>
-
     </v-dialog>
 
     <v-col :cols="12" :sm="7">
@@ -70,18 +63,6 @@
         outlined
         @input="setCharacterName"
       />
-
-      <!-- <v-text-field
-        :value="customXp"
-        class="pb-2"
-        label="Additional eXperience Points"
-        hint="Add the XP earned by playing the game. Usually granted by the GM."
-        dense
-        outlined
-        persistent-hint
-        type="number"
-        @input="setCustomXp"
-      /> -->
 
       <v-slider
         :value="characterCustomLevel"
@@ -99,44 +80,19 @@
         type="number"
         @input="setLevel"
       />
-
-      <!-- <v-slider
-        
-        :min="1"
-        :max="5"
-        :thumb-size="24"
-        :value="characterCustomRank"
-        class="pt-6"
-        label="Rank"
-        step="1"
-        ticks
-        thumb-label="always"
-        @input="setCustomRank"
-      /> -->
-
-
-
     </v-col>
 
     <v-col :cols="12" :sm="5">
       <div class="mb-2">
-
         <!-- custom avatar -->
-        <v-badge
-          bordered
-          overlap
-          color="error"
-          v-show="characterAvatarUrl"
-        >
+        <v-badge bordered overlap color="error" v-show="characterAvatarUrl">
           <template v-slot:badge>
-            <v-icon color="white" @click.stop="setCharacterAvatar(undefined)">close</v-icon>
+            <v-icon color="white" @click.stop="setCharacterAvatar(undefined)"
+              >close</v-icon
+            >
           </template>
-          <v-avatar
-            size="86"
-            tile
-            @click="selectAvatarDialog = true"
-          >
-            <v-img :src="characterAvatarUrl" ></v-img>
+          <v-avatar size="86" tile @click="selectAvatarDialog = true">
+            <v-img :src="characterAvatarUrl"></v-img>
           </v-avatar>
         </v-badge>
 
@@ -147,10 +103,12 @@
           @click="selectAvatarDialog = true"
           v-show="!characterAvatarUrl"
         >
-          <v-img src="/img/avatar_placeholder_grey.png" ></v-img>
+          <v-img src="/img/avatar_placeholder_grey.png"></v-img>
         </v-avatar>
 
-        <em class="d-none">{{ characterAvatarUrl ? characterAvatarUrl.length : 0 }}</em>
+        <em class="d-none">{{
+          characterAvatarUrl ? characterAvatarUrl.length : 0
+        }}</em>
         <div><a @click="selectAvatarDialog = true">изменить аватар</a></div>
       </div>
     </v-col>
@@ -239,42 +197,46 @@
 
     <v-col :cols="12">
       <div>
-
         <h3 class="subtitle-1"><strong>Источники</strong></h3>
 
         <p class="body-2">Включить контент из других источников</p>
 
         <div
-            v-for="homebrew in settingOfficialOptions.filter(i => i.show === true)"
-            :key="homebrew.key"
+          v-for="homebrew in settingOfficialOptions.filter(
+            (i) => i.show === true
+          )"
+          :key="homebrew.key"
         >
           <v-switch
-              v-if="homebrew.optional"
-              v-model="enabledHomebrews"
-              :value="homebrew.key"
-              :hint="homebrew.hint"
-              persistent-hint
-              color="primary"
-              dense
-              :disabled="homebrew.disabled"
-              @change="updateHomebrew(homebrew)"
+            v-if="homebrew.optional"
+            v-model="enabledHomebrews"
+            :value="homebrew.key"
+            :hint="homebrew.hint"
+            persistent-hint
+            color="primary"
+            dense
+            :disabled="homebrew.disabled"
+            @change="updateHomebrew(homebrew)"
           >
-            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
+            <template v-slot:label
+              ><span class="body-2">{{ homebrew.name }}</span></template
+            >
           </v-switch>
           <v-switch
-              v-else
-              value
-              input-value="true"
-              :hint="homebrew.hint"
-              persistent-hint
-              color="primary"
-              dense
-              disabled
-              @change="updateHomebrew(homebrew)"
+            v-else
+            value
+            input-value="true"
+            :hint="homebrew.hint"
+            persistent-hint
+            color="primary"
+            dense
+            disabled
+            @change="updateHomebrew(homebrew)"
           >
-            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
+            <template v-slot:label
+              ><span class="body-2">{{ homebrew.name }}</span></template
+            >
           </v-switch>
-
         </div>
       </div>
     </v-col>
@@ -448,46 +410,6 @@ export default {
         //   nuxt: 'https://www.drivethrurpg.com/en/product/343896/warhammer-40-000-wrath-glory-redacted-records?affiliate_id=466959',
         //   source: '',
         // },
-        // {
-        //   show: true,
-        //   disabled: false,
-        //   optional: true,
-        //   key: 'red2',
-        //   name: 'Redacted Records II',
-        //   hint: 'More Talents',
-        //   nuxt: 'https://www.drivethrurpg.com/en/product/388102/warhammer-40-000-wrath-glory-redacted-records-2?affiliate_id=466959',
-        //   source: '',
-        // },
-        // {
-        //   show: true,
-        //   disabled: true, // do not allow for now, but tease
-        //   optional: true,
-        //   key: 'aioe',
-        //   name: 'Aeldari - Inheritance of Ember',
-        //   hint: 'Aledari & Drukhari Content',
-        //   nuxt: 'https://www.drivethrurpg.com/en/product/305327/warhammer-40-000-wrath-and-glory-aeldari-inheritance-of-embers?affiliate_id=466959',
-        //   source: '',
-        // },
-        // {
-        //   show: false,
-        //   disabled: true,
-        //   optional: true,
-        //   key: 'afas',
-        //   name: 'Affliction Ascendant',
-        //   hint: '1st Company Veteran',
-        //   nuxt: 'https://www.drivethrurpg.com/en/product/343904/Wrath--Glory--Affliction-Ascendant?affiliate_id=466959',
-        //   source: '',
-        // },
-        // {
-        //   show: true,
-        //   disabled: false,
-        //   optional: true,
-        //   key: 'tnh',
-        //   name: 'The Null Hypothesis',
-        //   hint: 'Add Sisters of Silence and gear.',
-        //   nuxt: 'https://www.drivethrurpg.com/product/343894/Wrath--Glory--The-Null-Hypothesis?affiliate_id=466959',
-        //   source: '',
-        // },
       ],
       settingHomebrewOptions: [
         {
@@ -508,100 +430,9 @@ export default {
           nuxt: '/vault/an-abundance-of-apocrypha',
           source: '',
         },
-        {
-          active: true,
-          key: 'aotgt',
-          name: '\'Agents of the Golden Throne\' content',
-          hint: 'Add a Tier 4 Ascension',
-          enabled: false,
-          nuxt: '/vault/agents-of-the-golden-throne',
-          source: 'https://docs.google.com/document/d/1VkOd-WGTXb_Lygm3BQYHX9eC2WzOczsD1kkG3fy4SIg/edit',
-        },
-        {
-          active: true,
-          key: 'pax',
-          name: '\'Pax Imperialis\' content',
-          hint: 'Add Beastman, Navigators and Untouchables and their respective archetypes.',
-          enabled: false,
-          nuxt: '/vault/pax-imperialis',
-          source: 'https://docs.google.com/document/d/1VkOd-WGTXb_Lygm3BQYHX9eC2WzOczsD1kkG3fy4SIg/edit',
-        },
-        {
-          active: true,
-          key: 'tog',
-          name: '\'Tome of Glory\' content',
-          hint: 'Add Chaos Archetypes.',
-          enabled: true,
-          nuxt: '/vault/tome-of-glory',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'tea',
-          name: '\'The Emperor´s Angels\' content',
-          hint: 'Add Space Marine archetypes and Librarius Powers.',
-          enabled: false,
-          nuxt: '/vault/the-emperors-angels',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'lotn',
-          name: '\'Legacy of the Necrontyr\' content',
-          hint: 'Add Necron species and archetypes.',
-          enabled: false,
-          nuxt: '/vault/legacy-of-the-necrontyr',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'ltgb',
-          name: '\'Let the Galaxy Burn\' content',
-          hint: 'Add Heretic Astartes Chapters.',
-          enabled: false,
-          nuxt: '/vault/let-the-galaxy-burn',
-          source: '',
-        },
-        {
-          active: true,
-          key: 'dod',
-          name: '\'Doctors of Doom Sandbox\' content',
-          hint: 'Add Chapter Houses and Roguish Archetypes.',
-          enabled: true,
-          nuxt: undefined,
-          source: '',
-        },
-        {
-          active: true,
-          key: 'gohe',
-          name: '\'Godless Heathens\' content',
-          hint: 'Add Kroot and Jokaero Archetypes.',
-          enabled: true,
-          nuxt: undefined,
-          source: '',
-        },
-        {
-          active: true,
-          key: 'soti',
-          name: '\'Shadow of the Imperium Sandbox\' content',
-          hint: 'Highly experimental!',
-          enabled: true,
-          nuxt: undefined,
-          source: '',
-        },
       ],
       enabledHomebrews: [],
       settingHouseruleSelectors: [
-        /*{
-          key: 'rank-advancement-type',
-          name: 'Rank Advancement Type',
-          hint: 'Choose if Rank increases by gained XP or by Milestone.',
-          selected: 'xp',
-          items: [
-            { value: 'xp', text: 'XP' },
-            { value: 'milestone', text: 'Milestone' },
-          ],
-        },*/
         {
           key: 'skill-attribute-advancement-costs',
           name: 'Skill & Attribute Advancement Costs Method',
@@ -711,14 +542,14 @@ export default {
 </script>
 
 <style lang="scss">
-  .croppa-container canvas {
-    border: 0.5px dashed grey;
-  }
+.croppa-container canvas {
+  border: 0.5px dashed grey;
+}
 
-  .text--keyword {
-    color: rgb(244 64 52);
-    font-weight: 600;
-    font-family: serif;
-    text-transform: uppercase;
-  }
+.text--keyword {
+  color: rgb(244 64 52);
+  font-weight: 600;
+  font-family: serif;
+  text-transform: uppercase;
+}
 </style>

@@ -630,7 +630,7 @@ export const mutations = {
             }
             case("Skill"):
             {
-              if(item.mode = "Upgrade")
+              if(item.mode === "Upgrade")
               {
 
                 const Initial = character.skillChoiceInitial.find(train => train === item.key);
@@ -647,41 +647,35 @@ export const mutations = {
                   character.SkillPoints = character.SkillPoints + 1;
          
               }
-              break;
-            }
-            case("Feat"):
-            {
-              if(item.key === "Additional Lore")
-              {
-                
-                
-                
-                const talentUniqueId1 = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-                const payload = {
-                  id: talentUniqueId,
-                  name: 'Дополнительные знания',
-                  key: talent.key,
-                  cost: talent.cost,
-                  place: place+level,
-                  modifications: talent.modifications,
-                  placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
-                  selected: undefined,
-                  choice: talent.optionsKey,
-                  source: `talent.${talentUniqueId}`,
-                };
+              if(item.mode === "Add")
+                {
+                  if(item.key === 'Lore')
+                  {
 
+                    let newSkill = {};
+
+                  
+                    newSkill[item.LoreSkill.key] = 'T'
+
+                    if(character.level >= 3)
+                      newSkill[item.LoreSkill.key] = 'E';
+
+                    if(character.level >= 7)
+                      newSkill[item.LoreSkill.key] = 'M';
+
+                    if(character.level >= 15)
+                      newSkill[item.LoreSkill.key] = 'L';
+
+                    character.skills = {
+                      ...character.skills,
+                      ...newSkill,
+                    };
                 
-                if(talent.place === "background")
-                  character.talents = character.talents.filter(item => item.place != "background")
-                const talentUniqueId = Math.random()
-                  .toString(36)
-                  .replace(/[^a-z]+/g, "")
-                  .substr(0, 8);
-                console.info(`Adding Talent [${talentUniqueId}] ${talent.name}.`);
-                talent.id = talent.id || talentUniqueId;
-                character.talents.push(talent);
-         
-              }
+                    character.customSkills.push(item.LoreSkill);
+    
+                  }
+           
+                }
               break;
             }
 
@@ -743,7 +737,7 @@ export const mutations = {
               }
               case("Skill"):
               {
-                if(item.mode = "Upgrade")
+                if(item.mode === "Upgrade")
                 {
 
                   const Initial = character.skillChoiceInitial.find(train => train === item.key);
@@ -763,6 +757,20 @@ export const mutations = {
 
                     character.skillChoiceInitial = character.skillChoiceInitial.filter(train => train !== item.key);
                 }
+                if(item.mode === "Add")
+                  {
+                    if(item.key === 'Lore')
+                    {
+  
+                      delete character.skills[item.LoreSkill.key];
+                      character.customSkills = character.customSkills.filter(
+                        (s) => s.key !== item.LoreSkill.key
+                      );
+      
+
+                    }
+             
+                  }
                 break;
               }
             }
@@ -1454,8 +1462,6 @@ export const mutations = {
     };
 
     skill.custom = true;
-    console.info(`Adding ${skill.name} Skill:`);
-    console.info(skill);
     character.customSkills.push(skill);
   },
   removeBackgroundCustomSkill(state, payload) {
@@ -1598,8 +1604,8 @@ export const mutations = {
       character.talents = character.talents.filter(item => item.place != "background")
     
     if(talent.place === "free")
-      talent.place === 'free' + character.talents.filter(item => item.place.includes('free')).length;
-    
+      talent.place = 'free' + (character.talents.filter(item => item.place.includes('free')).length + 1);
+
     const talentUniqueId = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, "")
@@ -1625,6 +1631,10 @@ export const mutations = {
 
       character.talents = character.talents.filter(
         (t) => t.id !== payload.talentId
+      );
+
+      character.talents = character.talents.filter(
+        (t) => t.link !== payload.talentId
       );
     }
   },
