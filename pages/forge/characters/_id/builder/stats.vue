@@ -3,11 +3,11 @@
     <v-col :cols="12">
       <h1 class="headline">
         Выберите характеристики и навыки
-        <span>
+        <!-- <span>
           <v-btn color="primary" @click="resetStats" outlined small
             >Сброс статов</v-btn
           >
-        </span>
+        </span> -->
       </h1>
     </v-col>
 
@@ -272,7 +272,7 @@
                       skill.key == characterClassSkill ||
                       characterSkills[skill.key] == 'U' ||
                       skill.optional === true ||
-                      characterSkillPoints == MaxSkillPoints() ||
+                      characterSkillPoints === MaxSkillPoints() ||
                       skill.custom ||
                       skillChoiceInitial.find((item) => item === skill.key) !==
                         skill.key ||
@@ -1633,7 +1633,7 @@ export default {
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     MaxSkillPoints(){
-      const Max = (this.characterAttributes["intellect"] - 10) / 2 + this.characterSkillPointClass;
+      const Max = this.characterSkillPointClass + (this.characterAttributes["intellect"] - 10) / 2;
       if(Max < 0)
         return 0;
       return Max;

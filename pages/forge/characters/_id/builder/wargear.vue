@@ -1,6 +1,5 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-row justify="center">
-
     <!-- manage current inventory -->
     <v-col :cols="12">
       <v-card
@@ -8,167 +7,160 @@
         dark
         dense
         outlined
-        :color=" manageWargear ? 'info' : '' "
+        :color="manageWargear ? 'info' : ''"
         @click="manageWargear = !manageWargear"
       >
         <v-card-text class="pa-1">
-          <v-icon>{{ manageWargear ? 'expand_less' : 'expand_more' }}</v-icon>
-          Управление Оружием ({{characterWeapon.length}})
+          <v-icon>{{ manageWargear ? "expand_less" : "expand_more" }}</v-icon>
+          Управление Оружием ({{ characterWeapon.length }})
         </v-card-text>
       </v-card>
 
-      <v-simple-table  v-if="manageWargear && characterWeapon" dense>
-          <template v-slot:default>
-            <thead>
-                <tr>
-                  <th v-for="header in headers" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead>
-            <tbody>
-              <tr  v-for="gear in characterWeapon"
-              :key="gear.id">
-                <td >{{ gear.nameGear }}</td>
-                <td  class="text-center pa-1 small"> + {{ attackModifier(gear) }} / {{ attackModifier(gear) - 5 }} / {{ attackModifier(gear) - 10 }}</td>
-                <td  class="text-center pa-1 small">{{ damageModifier(gear) }}</td>
-                <td >                
-                  <v-btn outlined x-small color="info" @click="openWeaponSettings(gear)">
-                    <v-icon left>
-                      edit
-                    </v-icon>Изменить
-                  </v-btn>
-                </td>
-                <td >                
-                  <v-btn outlined x-small color="error" @click="remove(gear)">
-                    <v-icon left>
-                      delete
-                    </v-icon>Удалить
-                  </v-btn>
-                </td>
+      <v-simple-table v-if="manageWargear && characterWeapon" dense>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th v-for="header in headers" :class="header.class">
+                {{ header.text }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="gear in characterWeapon" :key="gear.id">
+              <td>{{ gear.nameGear }}</td>
+              <td class="text-center pa-1 small">
+                + {{ attackModifier(gear) }} / {{ attackModifier(gear) - 5 }} /
+                {{ attackModifier(gear) - 10 }}
+              </td>
+              <td class="text-center pa-1 small">{{ damageModifier(gear) }}</td>
+              <td>
+                <v-btn
+                  outlined
+                  x-small
+                  color="info"
+                  @click="openWeaponSettings(gear)"
+                >
+                  <v-icon left> edit </v-icon>Изменить
+                </v-btn>
+              </td>
+              <td>
+                <v-btn outlined x-small color="error" @click="remove(gear)">
+                  <v-icon left> delete </v-icon>Удалить
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
 
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-
-        <v-dialog
-              v-model="weaponEditorDialog"
-              :value="Weapon" 
-              width="600px"
-              scrollable
-              :fullscreen="$vuetify.breakpoint.xsOnly"
-            >
-
-              <v-card>
-                <v-alert
-                      :value="alert"
-                      type="error"
-                      text
-                      dense
-                      border="left"
-              
-                      >
-              Количество рун больше мощи оружия
-              </v-alert>
-                <v-card-title style="background-color: #262e37; color: #fff;">
-                  Редактирование оружия
-                  <v-spacer />
-                  <v-icon dark @click="closeWeaponSettings">close</v-icon>
-                </v-card-title>
-
-                <v-card-text v-if="Weapon" class="pt-4">
-                  <v-row>
-          
-                    <!-- <v-sheet class="ma-2 pa-2"> -->
-        
-                      <v-col         
-                          cols="6"
-                          sm="6" >
-                    <v-select  
-                      label="Разящая руна"
-                      v-model="Striking"
-                      :items="weaponRuneStriking"
-                      item-text="name"
-                      item-value="key"
-                      
-                    ></v-select>
-                      </v-col>
-
-                      <v-col         
-                          cols="6"
-                          sm="6" >
-                    <v-select  
-                      label="Руна мощи"
-                      v-model="Potency"
-                      :items="weaponRunePotency"
-                      item-text="name"
-                      item-value="key"
-                     
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                  <v-row>
-                  <v-col         
-                          cols="6"
-                          sm="12" >
-                    <v-select  
-                      label="Руны свойств"
-                      v-model="Property"
-                      :items="WeaponRuneProperty"
-                      item-text="name"
-                      item-value="key"
-                      multiple
-                      
-                      return-object
-                    >
-                    <template #selection="{ item }">
-                        <v-chip color="blue" 
-                        :close="true"
-                        @click:close="Property.pop(item)"
-                        >
-                        {{item.name}}   
-                      </v-chip>
-                      </template>
-                  </v-select>
-                  </v-col>
-                  <!-- </v-sheet> -->
-                 
-                  </v-row>
-                </v-card-text>
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-spacer />
-                  <v-btn small right color="success" 
-                  
-                  @click="saveWeapon">Save</v-btn>
-
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-
-        <v-col :cols="12" v-if="manageWargear && characterWeapon">
-      <v-card 
-        class="mb-4"
-        dark
-        outlined
-        :color=" wargearSearchActive ? 'info' : '' "
-        @click="wargearSearchActive = !wargearSearchActive"
+      <v-dialog
+        v-model="weaponEditorDialog"
+        :value="Weapon"
+        width="600px"
+        scrollable
+        :fullscreen="$vuetify.breakpoint.xsOnly"
       >
-        <v-card-text class="pa-1">
-          <v-icon>{{ wargearSearchActive ? 'expand_less' : 'expand_more' }}</v-icon>
-          Добавить оружие
-        </v-card-text>
-      </v-card>
+        <v-card>
+          <v-alert :value="alert" type="error" text dense border="left">
+            Количество рун больше мощи оружия
+          </v-alert>
+          <v-card-title style="background-color: #262e37; color: #fff">
+            Редактирование оружия
+            <v-spacer />
+            <v-icon dark @click="closeWeaponSettings">close</v-icon>
+          </v-card-title>
 
-      <wargear-search
-        v-if="wargearSearchActive && wargearList && manageWargear && characterWeapon"
-        :repository="wargearList.filter(item => weaponCategoryRepository.map(t=> t.category).includes(item.category))"
-        @select="add"
-      />
-    </v-col>
-    
+          <v-card-text v-if="Weapon" class="pt-4">
+            <v-row>
+              <!-- <v-sheet class="ma-2 pa-2"> -->
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Разящая руна"
+                  v-model="Striking"
+                  :items="weaponRuneStriking"
+                  item-text="name"
+                  item-value="key"
+                ></v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Руна мощи"
+                  v-model="Potency"
+                  :items="weaponRunePotency"
+                  item-text="name"
+                  item-value="key"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6" sm="12">
+                <v-select
+                  label="Руны свойств"
+                  v-model="Property"
+                  :items="WeaponRuneProperty"
+                  item-text="name"
+                  item-value="key"
+                  multiple
+                  return-object
+                >
+                  <template #selection="{ item }">
+                    <v-chip
+                      color="blue"
+                      :close="true"
+                      @click:close="Property.pop(item)"
+                    >
+                      {{ item.name }}
+                    </v-chip>
+                  </template>
+                </v-select>
+              </v-col>
+              <!-- </v-sheet> -->
+            </v-row>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer />
+            <v-btn small right color="success" @click="saveWeapon">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-col :cols="12" v-if="manageWargear && characterWeapon">
+        <v-card
+          class="mb-4"
+          dark
+          outlined
+          :color="wargearSearchActive ? 'info' : ''"
+          @click="wargearSearchActive = !wargearSearchActive"
+        >
+          <v-card-text class="pa-1">
+            <v-icon>{{
+              wargearSearchActive ? "expand_less" : "expand_more"
+            }}</v-icon>
+            Добавить оружие
+          </v-card-text>
+        </v-card>
+
+        <wargear-search
+          v-if="
+            wargearSearchActive &&
+            wargearList &&
+            manageWargear &&
+            characterWeapon
+          "
+          :repository="
+            wargearList.filter((item) =>
+              weaponCategoryRepository
+                .map((t) => t.category)
+                .includes(item.category)
+            )
+          "
+          @select="add"
+        />
+      </v-col>
     </v-col>
   </v-row>
 </template>
@@ -226,7 +218,7 @@ export default {
         potency: 'none',
         striking: 'none',
         property: [],
-      }  ,  
+      }  ,
       headers: [
         {
           text: 'Название', value: 'name', class: 'text-left', align: 'left',
@@ -349,7 +341,7 @@ export default {
     },
     characterWargear() {
       const characterWargear = [];
-      
+
       if (this.wargearList){
         const Category = this.weaponCategoryRepository.map(item => item.category);
         this.characterWargearRaw.filter(item => Category.includes(item.category)).forEach((chargear) => {
@@ -385,7 +377,7 @@ export default {
     },
     characterWeapon() {
       const characterWargear = [];
-      
+
       if (this.wargearList){
         const Category = this.weaponCategoryRepository.map(item => item.category);
         this.characterWargearRaw.filter(item => Category.includes(item.category)).forEach((chargear) => {
@@ -402,7 +394,7 @@ export default {
               ...chargear,
               // subtitle: this.wargearSubtitle(gear),
               // avatar: this.getAvatar(gear.type),
-              
+
             });
           } else {
             characterWargear.push({
@@ -453,11 +445,11 @@ export default {
       const { data } = await this.$axios.get('/api/wargear/', config);
       const rune = this.runeWeapon;
       data.forEach(item => {
-        if(!item.runeWeapon) 
+        if(!item.runeWeapon)
           {
             item.runeWeapon = rune;
           }
-       
+
       });
       this.wargearList = data.filter((i) => i.stub === undefined || i.stub === false);
     },
@@ -487,18 +479,21 @@ export default {
     },
 
     attackModifier(gear){
-    
+
       const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
-     
+
+      // const enhancements = this.enhancements.find()
        const modProfiency = this.archetype ? this.skillAttack[gear.category] : "U";
-       const modLevel =  modProfiency !== "U" ? this.characterLevel() : 0;
-         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel;
+      const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
+      const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+
+         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
     },
     damageModifier(gear){
-    
+
     const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
-    const mod = (modAbility - 10) / 2 + this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus;
-    
+    const mod = (modAbility - 10) / 2;
+
        return gear.damage.toString() + " + " + mod.toString();
   },
     addWargearToCharacter(wargearOptions, source) {
@@ -519,6 +514,9 @@ export default {
           finalWargear.push({name: i.name, variant: i.variant});
         }
       });
+
+
+
       finalWargear.forEach((w) => {
         this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: w.name, variant: w.variant, source, group: w.group, category: w.category });
       });
@@ -529,10 +527,26 @@ export default {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     add(gear) {
+      const category = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
+      const trait = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
+
+      gear = {
+  ...gear,
+        categoryOld: gear.category
+
+      };
+      if (category)
+        gear.category = category ? category.value : gear.category;
+      if (trait)
+        gear.category = gear.category === "advanced" ? "martial" : "simple";
+
       this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
     },
     remove(gear) {
       this.$store.commit('characters/removeCharacterWargear', { id: this.characterId, gearId: gear.id });
+    },
+    enhancements() {
+      return this.$store.getters['characters/characterEnhancementsById'](this.characterId);
     },
     openWeaponSettings(gear){
       this.weaponEditorDialog = true;
@@ -594,5 +608,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

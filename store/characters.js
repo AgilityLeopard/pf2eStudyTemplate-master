@@ -259,6 +259,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].skillFromModification : [], 
   characterSkillPointsClassId: (state) => (id) =>
     state.characters[id] ? state.characters[id].SkillPointsClass : 0,
+  characterSpeedById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].speed : {},
   characterBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Boost : 0,
   characterBoost5ById: (state) => (id) =>
@@ -327,6 +329,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].saving : {},
   characterSkillClassById: (state) => (id) =>
     state.characters[id] ? state.characters[id].skillClass : "U",
+    characterBonusById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].Bonus : [],
   characterPerseptionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Perception : "U",
 
@@ -593,7 +597,7 @@ export const mutations = {
   },
   setModification(state, payload) {
     // console.info(`Set Rank manually to ${payload.rank}.`);
-    const modification = state.characters[payload.id].enhancements.sort((a, b) => b.level - a.level).reverse().filter(s=> s.level <= payload.level);
+    const modification = state.characters[payload.id].enhancements.sort((a, b) => b.level - a.level).reverse().filter(s=> s.level <= state.characters[payload.id].level);
     const character = state.characters[payload.id];
 
     if(modification)
@@ -604,28 +608,46 @@ export const mutations = {
           switch (item.type) {
             case("Perception"):
             {
-              character.Perception = item.upgrade;
+              if (item.mode === "Upgrade") 
+                character.Perception = item.upgrade;
               break;
             }
             case("Saving"):
             {
-              character.saving[item.key] = item.upgrade;
+              if (item.mode === "Upgrade") 
+                  character.saving[item.key] = item.upgrade;
+              if (item.mode !== "Upgrade")  
+                character.Bonus.push(item);
+              
+            
               break;
         
-            }
+              }
+              case("Speed"):
+              {
+                if (item.mode === "Bonus") {
+                   character.Bonus.push(item);
+                }
+                break;
+                                  
+                  
+              }
             case("Defence"):
-            {
-                character.skillDefence[item.key] = item.upgrade;
+              {
+                if (item.mode === "Upgrade") 
+                  character.skillDefence[item.key] = item.upgrade;
                 break;
             }
             case("Attack"):
-            {
-                character.skillAttack[item.key] = item.upgrade;
+              {
+                if (item.mode === "Upgrade") 
+                  character.skillAttack[item.key] = item.upgrade;
                 break;
             }
             case("DC Class"):
-            {
-                character.skillClass = item.upgrade;
+              {
+                if (item.mode === "Upgrade") 
+                  character.skillClass = item.upgrade;
                 break;
             }
             case("Skill"):
@@ -677,6 +699,27 @@ export const mutations = {
            
                 }
               break;
+              
+              }
+               case ("Weapon"): {
+              // gear.traits.includes(item.key)
+              const war = character.wargear.filter(w => w.name === item.key)
+              //по названию
+              if (war)
+                war.forEach(w => {
+                  w.category = item.value === "martial" ? "simple" : w.category;
+                  w.category = item.value === "advanced" ? "martial" : w.category;
+
+                })
+              //по трейтам
+              const traits = character.wargear.filter(w => w.traits.includes(item.key))
+              if (traits)
+                traits.forEach(w => {
+                  w.category = w.category === "martial" ? "simple" : w.category;
+                  w.category = w.category === "advanced" ? "martial" : w.category;
+                  
+                })
+                 break;
             }
 
           }
@@ -687,7 +730,7 @@ export const mutations = {
 
   },
   clearModification(state, payload) {
-    const modification = state.characters[payload.id].enhancements.sort((a, b) => a.level - b.level).reverse();
+    const modification = state.characters[payload.id].enhancements.sort((a, b) => a.level - b.level).reverse().filter(s=> s.level <= state.characters[payload.id].level);
     const character = state.characters[payload.id];
 
 
@@ -700,39 +743,64 @@ export const mutations = {
           switch (item.type) {
               case("Perception"):
               {
-                var keys = Object.keys(character.SkillsTrained);
-                var loc = keys.indexOf(item.upgrade);
-                character.Perception = keys[loc-1];
+                if (item.mode === "Upgrade") {
+                  // var keys = Object.keys(character.SkillsTrained);
+                  // var loc = keys.indexOf(item.upgrade);
+                  character.Perception = "T";
+                  
+                }
                 break;
               }
               case("Saving"):
               {
-                var keys = Object.keys(character.SkillsTrained);
-                var loc = keys.indexOf(item.upgrade);
-                character.saving[item.key] = keys[loc-1];
+                if (item.mode === "Upgrade")
+                {
+                  var keys = Object.keys(character.SkillsTrained);
+                  var loc = keys.indexOf(item.upgrade);
+                  character.saving[item.key] = "T";
+                  
+                }
+                if (item.mode !== "Upgrade") 
+                  character.Bonus = character.Bonus.filter(i => i.talentId != item.talentId)
+                  
                 break;
-          
+            }
+            case("Speed"):
+              {
+                if (item.mode === "Bonus") {
+                  character.Bonus = character.Bonus.filter(i => i.talentId != item.talentId)
+                }
+                break;
+                                  
+                  
               }
               case("Defence"):
               {
-                var keys = Object.keys(character.SkillsTrained);
-                var loc = keys.indexOf(item.upgrade);
-                character.skillDefence[item.key] = keys[loc-1];
+                if (item.mode === "Upgrade") {
+                  var keys = Object.keys(character.SkillsTrained);
+                  var loc = keys.indexOf(item.upgrade);
+                  character.skillDefence[item.key] = "T";
+                }
                 break;
+                                  
                   
               }
               case("Attack"):
               {
-                var keys = Object.keys(character.SkillsTrained);
-                var loc = keys.indexOf(item.upgrade);
-                character.skillAttack[item.key] = keys[loc-1];
+                if (item.mode === "Upgrade") {
+                  var keys = Object.keys(character.SkillsTrained);
+                  var loc = keys.indexOf(item.upgrade);
+                  character.skillAttack[item.key] = "T";
+                }
                 break;
               }
               case("DC Class"):
               {
-                var keys = Object.keys(character.SkillsTrained);
-                var loc = keys.indexOf(item.upgrade);
-                character.skillClass = keys[loc-1];
+                if (item.mode === "Upgrade") {
+                  var keys = Object.keys(character.SkillsTrained);
+                  var loc = keys.indexOf(item.upgrade);
+                  character.skillClass = "T";
+                }
                 break;
               }
               case("Skill"):
@@ -773,6 +841,28 @@ export const mutations = {
                   }
                 break;
               }
+            case ("Weapon"): {
+              // gear.traits.includes(item.key)
+              const war = character.wargear.filter(w => w.name === item.key)
+              //по названию
+              if (war)
+                war.forEach(w => {
+                  w.category = w.categoryOld;
+                  // w.category = item.value === "simple" ? "martial" : w.category;
+
+                })
+              //по трейтам
+              const traits = character.wargear.filter(w => w.traits.includes(item.key))
+              if (traits)
+                traits.forEach(w => {
+                  w.category = w.categoryOld;
+                  // w.category = w.category === "martial" ? "advanced" : w.category;
+                  // w.category = w.category === "simple" ? "martial" : w.category;
+                  
+                })
+                 break;
+            }
+
             }
           
           }
@@ -1071,8 +1161,7 @@ export const mutations = {
                 level20: "",
               };
               character.skillChoiceInitial = [];
-              character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
-              if(character.SkillPoints < 0) character.SkillPoints = 0;
+  
               break;
               
             }
@@ -1175,20 +1264,24 @@ export const mutations = {
           });
 
           if(payload.optional == "all" || payload.optional == "class")
-            {
+          {
+              character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
+              if(character.SkillPoints < 0) character.SkillPoints = 0;
               character.customSkills = character.customSkills.filter(item => item.optional === true);
             }
 
           if(payload.optional == "all" || payload.optional == "ancestry" )
           {
             character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
+         
+            
             if(character.SkillPoints < 0) character.SkillPoints = 0;
           }
           
     Object.keys(character.skills).forEach((key, index) => {
       if( character.customSkills.find(item => item.key === key) === undefined)
       {
-      if(payload.optional == "class" )
+      if(payload.optional == "class" || payload.optional == "ancestry")
         {
 
           character.skills[key] = "U";
@@ -1208,11 +1301,12 @@ export const mutations = {
         if(payload.optional == "all")
           {
             if(character.customSkills.find(item => item.key === key) !== undefined)
-              character.skills[key] = "T";
+            character.skills[key] = "T";
+          
         }
     });
 
-    if(character.BackSkill)
+    if(character.BackSkill != "")
       if(payload.optional == "all" || payload.optional == "class")
         if(character.skills[character.BackSkill] === "T")
           character.SkillPoints =  character.SkillPoints + 1;
@@ -1223,7 +1317,8 @@ export const mutations = {
     ///Если дергаем ползунок уровня
       if(payload.optional == "level")
       {
-        character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
+        
+        // character.SkillPoints = character.SkillPointsClass + (character.attributes["intellect"] - 10) / 2;
         if(character.SkillPoints < 0) character.SkillPoints = 0;
       
         Object.keys(character.skills).forEach((key, index) => {
@@ -1233,6 +1328,7 @@ export const mutations = {
 
         character.TrainedSkillClass.forEach( train => {
           character.skills[train] = 'T'
+          
         })
 
         if(character.BackSkill != "")
@@ -1250,7 +1346,7 @@ export const mutations = {
           
 
           character.skillChoiceInitial.forEach( train => {
-            character.SkillPoint =  character.SkillPoint - 1;
+     
             character.skills[train] = 'T'
 
 
@@ -1313,6 +1409,13 @@ export const mutations = {
     const theBoost = payload.payload.value;
     state.characters[payload.id].Boost =
       state.characters[payload.id].Boost + payload.payload.value;
+  },
+  setCharacterSpeed(state, payload) {
+    const char = state.characters[payload.id];
+
+    const type = payload.type;
+    char.speed[type] =
+      payload.speed;
   },
   setCharacterBoost5(state, payload) {
     const char = state.characters[payload.id];
@@ -1515,26 +1618,37 @@ export const mutations = {
     const source = payload.content.source || undefined;
     const level = payload.content.level ;
     //payload.item - черта, особенность, предмет
-    console.info(
-      `Enhance/Modify: Adding ${modifications.length} from '${source}'.`
-    );
-
-    // we remove all enhancements that share the cleanup value.
-    if (source !== undefined) {
-      character.enhancements = character.enhancements.filter(
-        (e) => e.source !== source
-      );
-    }
-
-    modifications.forEach((item) => {
-      item.source = source;
-      const war = {
-        ...item,
-        level: level || item.level,
-        talentId: payload.content.talentId
+    if(modifications)
+      if (payload.content.optionsSelect)
+      {
+        if(character.enhancements.find(item => item.talentId === payload.content.talentId))
+          character.enhancements.find(item => item.talentId === payload.content.talentId).key = modifications.key;
+        else 
+           modifications.forEach((item) => {
+            item.source = source;
+            const war = {
+              ...item,
+              level: item.level ? item.level : level,
+              talentId: payload.content.talentId
+            }
+            character.enhancements.push(war);
+          });
       }
-      character.enhancements.push(war);
-    });
+      else
+      {
+        
+        // we remove all enhancements that share the cleanup value.
+          modifications.forEach((item) => {
+            item.source = source;
+            const war = {
+              ...item,
+              level: level || item.level,
+              talentId: payload.content.talentId
+            }
+            character.enhancements.push(war);
+          });
+        }
+      
   },
   addCharacterModifications(state, payload) {
     const character = state.characters[payload.id];
@@ -2327,6 +2441,7 @@ const getDefaultState = () => ({
   },
   SkillPointsClass: 0,
   skillClass: "",
+  Bonus: [],
   TrainedSkillClass: [],
   skills: {
     acrobatics: "U",

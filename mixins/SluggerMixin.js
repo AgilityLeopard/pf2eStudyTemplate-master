@@ -26,7 +26,9 @@ export default {
     kebabToCamel(kebab) {
       return kebab.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase());
     },
-
+    stringToKebab (text) {
+      return text.toLowerCase().replace(/\W/gm, '-');
+    },
     camelToKebab(camel) {
       return camel.replace(/([a-z0-9][A-Z])/g, (g) => `${g[0]}-${g[1].toLowerCase()}`);
     },

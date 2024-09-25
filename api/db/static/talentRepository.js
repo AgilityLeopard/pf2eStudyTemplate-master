@@ -542,7 +542,6 @@ const playerCoreAncestry = [
     //     value: 'T',
     //   }
     // ],
-
     optionsKey: 'skill',
     options: [
       {
@@ -639,46 +638,52 @@ const playerCoreAncestry = [
       + '<p>Начиная с 5-го уровня, когда вы наносите критический удар одним из перечисленных видов оружия, вы получаете эффект его критической специализации.</p>',
     modifications: [
       { 
-        targetGroup: 'Ancestry weapon', 
-        targetValue: 'Weapon', 
-        isChoiceAll: false,
-        value: 'Composite Shortbow',
-         
-        type: 'Skill', 
+        type: 'Weapon', 
         mode: 'Upgrade', 
-        key: 'nature', 
+        key: 'Composite Longbow', 
+        isChoiceAll: false,
         // option: ['all'],
-        // modifier: "T", 
+        value: "simple", 
       },
       { 
-        targetGroup: 'Ancestry weapon', 
-        targetValue: 'Weapon', 
+        type: 'Weapon', 
+        mode: 'Upgrade', 
+        key: 'Longbow', 
         isChoiceAll: false,
-        value: 'Composite Longbow',
+        // option: ['all'],
+        value: "simple", 
       },
       { 
-        targetGroup: 'Ancestry weapon', 
-        targetValue: 'Weapon', 
+        type: 'Weapon', 
+        mode: 'Upgrade', 
+        key: 'Rapier', 
         isChoiceAll: false,
-        value: 'Longbow', 
+        // option: ['all'],
+        value: "simple", 
       },
       { 
-        targetGroup: 'Ancestry weapon', 
-        targetValue: 'Weapon', 
+        type: 'Weapon', 
+        mode: 'Upgrade', 
+        key: 'Shortbow', 
         isChoiceAll: false,
-        value: 'Rapier', 
+        // option: ['all'],
+        value: "simple", 
       },
       { 
-        targetGroup: 'Ancestry weapon', 
-        targetValue: 'Weapon', 
+        type: 'Weapon', 
+        mode: 'Upgrade', 
+        key: 'Composite Shortbow', 
         isChoiceAll: false,
-        value: 'Shortbow', 
+        // option: ['all'],
+        value: "simple", 
       },
       { 
-        targetGroup: 'Ancestry weapon', 
-        targetValue: 'trait', 
+        type: 'Weapon', 
+        mode: 'Upgrade', 
+        key: 'эльф', 
         isChoiceAll: false,
-        value: 'эльф', 
+        // option: ['all'],
+        // value: "эльф", 
       },
       
     ],
@@ -709,26 +714,21 @@ const playerCoreAncestry = [
       '<p> Наблюдение за тем, как ваши друзья стареют и умирают, делает вас более угрюмым, что защищает от вредных эмоций. Вы получаете бонус обстоятельства +1 к спасброскам против эмоциональных эффектов. Если при броске, вы получаете успех спасброска против эмоционального эффекта, то вместо этого вы получаете крит.успех.</p>',
     modifications: [
       { 
-        targetGroup: 'Saving', 
-        targetValue: 'Bonus', 
-        isChoiceAll: true,
+        type: 'Saving', 
+        mode: 'Bonus', 
+        key: 'all', 
         valueBonus: 1,
         typeBonus: 'circumstance',
-        trait: 'эмоция',
-        // option: ['all'],
-        // modifier: "T", 
+        trait: 'эмоция'
       },
       { 
-        targetGroup: 'Saving', 
-        targetValue: 'Grade', 
-        isChoiceAll: true,
+        type: 'Saving', 
+        mode: 'Grade', 
+        key: 'all', 
         value: "success",
         trait: 'эмоция',
-        // valueBonus: 1,,
-        // typeBonus: 'circumstance'
-        // option: ['all'],
-        // modifier: "T", 
       },
+      
     ],
   },
   {
@@ -756,14 +756,12 @@ const playerCoreAncestry = [
     description:
       '<p> Ваши движения хорошо отточены. Ваша Скорость увеличивается на 5 футов.</p>',
     modifications: [
-      { 
-        targetGroup: 'Speed', 
-        targetValue: 'Land', 
-        isChoiceAll: false,
+          { 
+        type: 'Speed', 
+        mode: 'Bonus', 
+        key: 'land', 
         valueBonus: 5,
         typeBonus: 'untyped'
-        // option: ['all'],
-        // modifier: "T", 
       },
     ],
   },
@@ -831,16 +829,12 @@ const playerCoreAncestry = [
 +
 '<p> Против эффектов, которые погрузят вас в сон, вы считате свои спасброски на одну ступень успешнее, но вам все еще требуется естественный сон. Это защищает только от эффектов сна, а не от других форм Потери сознания.</p>',
     modifications: [
-      { 
-        targetGroup: 'Saving', 
-        targetValue: 'Grade', 
-        isChoiceAll: true,
-        trait: 'sleep'
-        // value: "success",
-        // valueBonus: 1,,
-        // typeBonus: 'circumstance'
-        // option: ['all'],
-        // modifier: "T", 
+          { 
+        type: 'Saving', 
+        mode: 'Grade', 
+        key: 'all', 
+        value: "all",
+        trait: 'cон',
       },
     ],
   },
@@ -872,15 +866,18 @@ const playerCoreAncestry = [
       '<p>Мастер может решить, что ситуация не дает вам преимущества, если промедление, наоборот, негативно отразится на результате, как например при напряженных переговорах с нетерпеливым существом.</p>',
     modifications: [
       { 
-        targetGroup: 'Option', 
-        targetValue: 'Skill', 
-        isChoiceAll: true,
-        value: 'Perception',
-        // value: "success",
+        type: 'Skill', 
+        mode: 'Bonus', 
+        key: 'all', 
         valueBonus: 2,
         typeBonus: 'circumstance',
-        // option: ['all'],
-        // modifier: "T", 
+      },
+          { 
+        type: 'Perception', 
+        mode: 'Bonus', 
+        key: 'Perception', 
+        valueBonus: 2,
+        typeBonus: 'circumstance',
       },
     ],
   },
@@ -967,6 +964,22 @@ const playerCoreAncestry = [
     description:
       '<p>Вы скрестили клинки с самыми разными противниками, владеющими самым разнообразным оружием, и вы изучили основы борьбы почти с любым из них. Когда вы владеете оружием, для которого у вас нет уровня мастерства, считайте свой уровень бонусом мастерства. На 11-м уровне вы становитесь обучены обращению со всем оружием.</p>',
     modifications: [
+      { 
+        type: 'Weapon', 
+        mode: 'Bonus', 
+        key: 'all', 
+        valueBonus: 'level',
+        level: 5,
+        typeBonus: 'profiency',
+      },
+      { 
+        type: 'Attack', 
+        mode: 'Bonus', 
+        key: 'all', 
+        valueBonus: 'level',
+        level: 5,
+        typeBonus: 'profiency',
+      },
       { 
         targetGroup: 'Weapon', 
         targetValue: 'Bonus', 

@@ -59,11 +59,9 @@
               </v-list-item-title>
               <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
             </v-list-item-content>
-
           </v-list-item>
         </v-list>
       </v-card>
-
     </v-col>
   </v-row>
 </template>
@@ -88,10 +86,7 @@ export default {
   },
   computed: {
     sources() {
-      return [
-        "playerCore",
-        ...this.settingHomebrews,
-      ];
+      return ["playerCore", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
@@ -138,41 +133,35 @@ export default {
         },
       };
       const { data } = await this.$axios.get("/api/species/", config);
-      
 
-     
-      if(this.abilityList !== undefined) 
-        {
-          data.forEach(species => {
-                      const lowercaseKeywords = species.ancestryAbility.map(s => s.toUpperCase());
-                      
-                      const List = this.abilityList;
-                      const ability = List.filter(talent => lowercaseKeywords.includes(talent.key.toString().toUpperCase()));
-                      if(ability.length > 0) 
-                      {
-                        const listAbilities = [];
-                        ability.forEach( talent => 
-                        {
-                          const ability1 = {
-                              name: talent.name,
-                              key : talent.key,
-                              description  : talent.description,
-                              modification: talent.modification,
-                         };
-                      
-                         listAbilities.push(talent);
+      if (this.abilityList !== undefined) {
+        data.forEach((species) => {
+          const lowercaseKeywords = species.ancestryAbility.map((s) =>
+            s.toUpperCase()
+          );
 
-                        }
-                        )
-                        species.speciesFeatures =  listAbilities;
-                      }
-                 
-                  })
-         
-          
-        }
+          const List = this.abilityList;
+          const ability = List.filter((talent) =>
+            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+          );
+          if (ability.length > 0) {
+            const listAbilities = [];
+            ability.forEach((talent) => {
+              const ability1 = {
+                name: talent.name,
+                key: talent.key,
+                description: talent.description,
+                modification: talent.modification,
+              };
 
-        this.speciesList = data;
+              listAbilities.push(talent);
+            });
+            species.speciesFeatures = listAbilities;
+          }
+        });
+      }
+
+      this.speciesList = data;
     },
     async getAbilityList(sources) {
       const config = {
@@ -180,9 +169,11 @@ export default {
           source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get("/api/abilityAncestry/", config.source);
+      const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
       this.abilityList = data;
-
     },
     getAvatar(key) {
       return `/img/avatars/species/${key}.png`;
@@ -197,8 +188,6 @@ export default {
       } else {
         const speciesDetails = await this.$axios.get(`/api/species/${slug}`);
         this.selectedSpecies = speciesDetails.data;
-
-          
       }
       this.selectedSpecies = item;
       this.speciesDialog = true;
@@ -219,6 +208,12 @@ export default {
         id: this.characterId,
         source: "species",
       });
+      this.$store.commit("characters/setCharacterSpeed", {
+        id: this.characterId,
+        type: "land",
+        speed: species.speed,
+      });
+
       this.$store.commit("characters/setCharacterSpecies", {
         id: this.characterId,
         species: { key: species.key, label: species.nameAncestry },
@@ -229,24 +224,22 @@ export default {
       });
 
       species.attributeBoost.forEach((t) => {
-        
-          this.$store.commit("characters/setCharacterAncestryBoostForAll", {
-            id: this.characterId,
-            payload: { key: t.key, value: t.value },
-          });
+        this.$store.commit("characters/setCharacterAncestryBoostForAll", {
+          id: this.characterId,
+          payload: { key: t.key, value: t.value },
+        });
       });
 
       species.attributeFlaw.forEach((t) => {
-        
-          this.$store.commit("characters/setCharacterAncestryFlawForAll", {
-            id: this.characterId,
-            payload: { key: t.key, value: t.value },
-          });
+        this.$store.commit("characters/setCharacterAncestryFlawForAll", {
+          id: this.characterId,
+          payload: { key: t.key, value: t.value },
+        });
       });
 
       this.$store.commit("characters/resetCharacterStats", {
         id: this.characterId,
-         optional: 'ancestry'
+        optional: "ancestry",
       });
 
       this.$store.commit("characters/setCharacterHitPoints", {
@@ -254,26 +247,24 @@ export default {
         payload: { value: species.ancestryHitPoint, type: "ancestry" },
       });
 
-
       this.$store.commit("characters/clearCharacterKeywordsBySource", {
         id: this.characterId,
         source: "species",
       });
       // modifications
       //   .filter((m) => m.targetGroup === "keywords")
-      species.trait
-        .forEach((k) => {
-          const payload = {
-            name: k,
-            source: "species",
-            type: "keyword",
-            replacement: undefined,
-          };
-          this.$store.commit("characters/addCharacterKeyword", {
-            id: this.characterId,
-            keyword: payload,
-          });
+      species.trait.forEach((k) => {
+        const payload = {
+          name: k,
+          source: "species",
+          type: "keyword",
+          replacement: undefined,
+        };
+        this.$store.commit("characters/addCharacterKeyword", {
+          id: this.characterId,
+          keyword: payload,
         });
+      });
 
       this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
         id: this.characterId,

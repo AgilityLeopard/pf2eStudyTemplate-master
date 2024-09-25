@@ -1,9 +1,6 @@
 <template lang="html">
   <v-card>
-    <v-card-title
-
-      style="background-color: #262e37; color: #fff"
-    >
+    <v-card-title style="background-color: #262e37; color: #fff">
       <span>Подтвердите выбор Таланта</span>
       <v-spacer />
       <v-icon dark @click="$emit('cancel')"> close </v-icon>
@@ -12,115 +9,101 @@
     <v-divider />
 
     <v-card-title>
-            <v-text-field
-              v-model="searchQuery"
-              filled
-              dense
-              prepend-inner-icon="search"
-              clearable
-              label="Поиск"
-            />
+      <v-text-field
+        v-model="searchQuery"
+        filled
+        dense
+        prepend-inner-icon="search"
+        clearable
+        label="Поиск"
+      />
+    </v-card-title>
+    <v-divider />
 
-          </v-card-title>
-          <v-divider />
-
-          <v-card-title>
-
-            
-            <v-select  
+    <v-card-title>
+      <v-select
         label="Трейты"
         v-model="selectedTagsFilters"
         multiple
         :items="tagFilters"
         item-text="name"
         item-value="name"
-        
-      > </v-select>
+      >
+      </v-select>
+    </v-card-title>
 
+    <v-divider />
+    <v-card-text class="pa-6">
+      <v-data-table
+        :headers="headers"
+        :items="filteredTalents"
+        :search="searchQuery"
+        :page.sync="pagination.page"
+        show-expand
+        item-key="name"
+        hide-default-footer
+        :loading="!talents"
+        loading-text="Loading Talents... Please Wait"
+        @page-count="pagination.pageCount = $event"
+      >
+        <template v-slot:no-data />
 
-              </v-card-title>
+        <template v-slot:item.name="{ item }">
+          <span>{{ item.name }}</span>
+        </template>
 
-              <v-divider />
-              <v-card-text class="pa-6">
+        <template v-slot:item.level="{ item }">
+          <v-chip>
+            {{ item.level }}
+          </v-chip>
+        </template>
 
-          
+        <template v-slot:item.prerequisitesHtml="{ item }">
+          <span v-if="item.requirementsText" v-html="item.requirementsText" />
+        </template>
 
+        <template v-slot:item.effect="{ item }">
+          <span>{{ item.effect }}</span>
+        </template>
 
-     
-          
-          <v-data-table
-            :headers="headers"
-            
-            :items="filteredTalents"
-            :search="searchQuery"
-            :page.sync="pagination.page"
-            show-expand
-            item-key="name"
-            hide-default-footer
-            :loading="!talents"
-            loading-text="Loading Talents... Please Wait"
-            @page-count="pagination.pageCount = $event"
+        <template v-slot:item.buy="{ item }">
+          <v-btn
+            :disabled="
+              item.level > level || characterTalentLabels.includes(item.name)
+            "
+            :color="item.level <= level ? 'success' : 'red'"
+            x-small
+            @click="addTalent(item, type, level)"
           >
-            <template v-slot:no-data />
+            add
+          </v-btn>
+        </template>
 
-            <template v-slot:item.name="{ item }">
-              <span>{{ item.name }}</span>
-            </template>
+        <template v-slot:expanded-item="{ headers, item }">
+          <td :colspan="headers.length">
+            <div class="pt-4 pb-2" v-html="item.description"></div>
+          </td>
+        </template>
 
-            <template v-slot:item.level="{ item }">
-              <v-chip>
-                {{ item.level }}
-              </v-chip>
+        <template v-slot:no-results>
+          <span class="text-center"
+            >Ваш поиск по "{{ searchQuery }}" found no results.</span
+          >
+        </template>
+      </v-data-table>
 
-            </template>
+      <div class="text-center pt-2">
+        <v-pagination
+          v-model="pagination.page"
+          :length="pagination.pageCount"
+        />
+      </div>
+    </v-card-text>
 
-            <template v-slot:item.prerequisitesHtml="{ item }">
-              <span v-if="item.requirementsText" v-html="item.requirementsText" />
-            </template>
-
-            <template v-slot:item.effect="{ item }">
-              <span>{{ item.effect }}</span>
-            </template>
-
-            <template v-slot:item.buy="{ item }">
-              <v-btn 
-              
-              :disabled="item.level > level || characterTalentLabels.includes(item.name)"
-                :color="item.level <= level ? 'success' : 'red'"
-             
-                x-small
-                @click="addTalent(item, type, level)"
-              >
-                add
-              </v-btn>
-            </template>
-
-            <template v-slot:expanded-item="{ headers, item }">
-              <td :colspan="headers.length">
-                <div class="pt-4 pb-2" v-html="item.description">
-                </div>
-              </td>
-            </template>
-
-            <template v-slot:no-results>
-              <span class="text-center">Ваш поиск по "{{ searchQuery }}" found no results.</span>
-            </template>
-          </v-data-table>
-
-
-          <div class="text-center pt-2">
-            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
-          </div>
-       
-        </v-card-text>
- 
-          <v-divider />
-    <v-card-actions >
-        <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
-      </v-card-actions>
-
-     
-
+    <v-divider />
+    <v-card-actions>
+      <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -213,7 +196,7 @@ export default {
           sortable: false,
         },
       ],
-   
+
       wargearList: undefined,
       loading: false,
       talentGroupFilterHelp: false,
@@ -293,24 +276,24 @@ export default {
         source: `talent.${talentUniqueId}`,
       };
 
-      const linkedFeat = talent.modifications.filter(item => item.type === 'Feat');
+      const linkedFeat = talent.modifications ? talent.modifications.filter(item => item.type === 'Feat') : undefined;
 
       if(linkedFeat)
         linkedFeat.forEach(item =>
         {
           if(item.key === 'Additional Lore')
           {
-          
+
             const LoreUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
             const Lore = list.find(item => item.name === 'Дополнительные знание');
-            
+
             const loreTalent = {
               id: LoreUniqueId,
               name: Lore.name,
               key: Lore.key,
               cost: Lore.cost,
               place: 'free',
-            
+
               link: talentUniqueId,
               selected: undefined,
               choice: Lore.optionsKey,
@@ -326,10 +309,10 @@ export default {
                       isValueModify : false,
             }
 
-            const mod =   [{     
-                      type: 'Skill', 
-                      mode: 'Add', 
-                      key: 'Lore', 
+            const mod =   [{
+                      type: 'Skill',
+                      mode: 'Add',
+                      key: 'Lore',
                       // name: item.value,
                       // value: this.textToCamel(item.value),
                       isValueModify : false,
@@ -337,7 +320,7 @@ export default {
           }]
             this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
             this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: level, modifications: mod, talentId: LoreUniqueId, source: 'featfree' } });
-    
+
           }
         }
       )
@@ -379,7 +362,7 @@ export default {
 
       return searchResult;
     },
-    
+
     tagFilters() {
       if (this.talents === undefined) {
         return [];
@@ -410,7 +393,7 @@ export default {
         return [];
       }
 
-      
+
       let filteredTalents = this.talents;
 
       if (this.selectedTagsFilters.length > 0) {
@@ -420,11 +403,11 @@ export default {
       filteredTalents = filteredTalents.map((talent) => {
         let fulfilled = true;
         let TagsFilter = true;
-        
+
         talent.prerequisitesFulfilled = fulfilled;
         return talent;
       });
-      
+
       //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
@@ -432,7 +415,7 @@ export default {
        // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
       // }
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.tags.toString().toUpperCase().includes(lw)));
-      
+
       return filteredTalents//filteredTalents.filter(talent => talent.level <= this.level);
     },
   }

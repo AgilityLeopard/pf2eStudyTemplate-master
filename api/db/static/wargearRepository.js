@@ -160,6 +160,39 @@ const playerCore =  [
     group: "sword",
     description: "Эти клинки бывают разных форм и стилей, но они обычно 2 фута длиной."
   },
+    {
+    ...gear(source.playerCore.key,211,'Composite Longbow','2C','Blade,[Any]'),
+    // ...meleez(undefined,2,2,0,0),
+    ...price(0,9,0,0),
+    nameGear: "Композитный длинный лук",
+    traits: ["залповое 30фт", "смертельное d10", "тяговое"],
+    type: "ranged",
+    category: "martial",
+    price: "20G",
+    damage: "1d8",
+    typeDamage: "piercing",
+    rarity: "common",
+    hands: 2,
+    group: "bow",
+    description: "Это дистанционное оружие сделано из рога, дерева и сухожилий, соединенных вместе, чтобы увеличить мощность натяжения и силу его снаряда. Как и у всех длинных луков, его большой размер увеличивает дальность и мощность. Чтобы стрелять, вы должны использовать две руки и он не может быть использован верхом на скакуне."
+  },
+  
+      {
+    ...gear(source.playerCore.key,211,'Elven Curve Blade','2C','Blade,[Any]'),
+    // ...meleez(undefined,2,2,0,0),
+    ...price(0,9,0,0),
+    nameGear: "Эльфийская сабля",
+    traits: ["силовое", "точное", "эльф"],
+    type: "melee",
+    category: "martial",
+    price: "20G",
+    damage: "1d8",
+    typeDamage: "slashing",
+    rarity: "uncommon",
+    hands: 2,
+    group: "sword",
+    description: "По сути, это удлиненная версия скимитара, традиционное эльфийское оружие имеет более тонкий клинок, чем его двоюродный брат."
+  },
   {
     ...gear(source.playerCore.key,211,'plate mail','2C','Blade,[Any]'),
     ...meleez(undefined,2,2,0,0),

@@ -1,6 +1,6 @@
 {
-  "name": "doctors-of-doom",
-  "version": "7.0.0",
+  "name": "shadow-of-tales",
+  "version": "1.0.0",
   "engines": {
     "node": "18.x"
   },
