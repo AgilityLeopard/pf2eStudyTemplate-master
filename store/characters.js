@@ -641,6 +641,11 @@ export const mutations = {
             case("Attack"):
               {
                 if (item.mode === "Upgrade") 
+                   if (item.key === 'all')
+                    Object.keys(character.skillAttack).forEach((key, index) => {
+                      character.skillAttack[key] = item.upgrade;
+                    });
+                else
                   character.skillAttack[item.key] = item.upgrade;
                 break;
             }
@@ -746,7 +751,7 @@ export const mutations = {
                 if (item.mode === "Upgrade") {
                   // var keys = Object.keys(character.SkillsTrained);
                   // var loc = keys.indexOf(item.upgrade);
-                  character.Perception = "T";
+                  character.Perception = "U";
                   
                 }
                 break;
@@ -757,7 +762,7 @@ export const mutations = {
                 {
                   var keys = Object.keys(character.SkillsTrained);
                   var loc = keys.indexOf(item.upgrade);
-                  character.saving[item.key] = "T";
+                  character.saving[item.key] = "U";
                   
                 }
                 if (item.mode !== "Upgrade") 
@@ -779,7 +784,7 @@ export const mutations = {
                 if (item.mode === "Upgrade") {
                   var keys = Object.keys(character.SkillsTrained);
                   var loc = keys.indexOf(item.upgrade);
-                  character.skillDefence[item.key] = "T";
+                  character.skillDefence[item.key] = "U";
                 }
                 break;
                                   
@@ -788,9 +793,12 @@ export const mutations = {
               case("Attack"):
               {
                 if (item.mode === "Upgrade") {
-                  var keys = Object.keys(character.SkillsTrained);
-                  var loc = keys.indexOf(item.upgrade);
-                  character.skillAttack[item.key] = "T";
+                  if (item.key === 'all')
+                    Object.keys(character.skillAttack).forEach((key, index) => {
+                        character.skillAttack[key] = "U"
+                      });
+                  else
+                    character.skillAttack[item.key] = "U";
                 }
                 break;
               }
@@ -799,7 +807,7 @@ export const mutations = {
                 if (item.mode === "Upgrade") {
                   var keys = Object.keys(character.SkillsTrained);
                   var loc = keys.indexOf(item.upgrade);
-                  character.skillClass = "T";
+                  character.skillClass = "U";
                 }
                 break;
               }
