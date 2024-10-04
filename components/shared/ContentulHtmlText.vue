@@ -1,4 +1,4 @@
-<script lang=js>
+<script lang="js">
 export default {
   name: 'ContentfulHtmlText',
   props: {
@@ -13,7 +13,7 @@ export default {
     parseForInternalLinks(html){
       let result = html;
       result = result.replace(/<(a)\shref="\/([^"]*)">([^<]*)(<\/\1>)/gm, `<nuxt-link to="/$2">$3</nuxt-link>`);
-      result = result.replace(/<(a)\shref=https:\/\/doctors-of-doom.com\/([^"]*)">([^<]*)(<\/\1>)/gm, `<nuxt-link to="/$2">$3</nuxt-link>`);
+      result = result.replace(/<(a)\shref=https:\/\/shadow-of-tales.ru\/([^"]*)">([^<]*)(<\/\1>)/gm, `<nuxt-link to="/$2">$3</nuxt-link>`);
       return result;
     },
     parseForShortcodes(html) {
@@ -30,10 +30,9 @@ export default {
 </script>
 
 <style lang="scss">
-
 .markdown-html-text {
-
-  & ul,ol {
+  & ul,
+  ol {
     margin-bottom: 16px !important;
   }
 
@@ -43,7 +42,6 @@ export default {
   }
 
   & blockquote {
-
     background-color: lightyellow;
     padding: 8px 16px;
     font-size: 18px;
@@ -59,9 +57,6 @@ export default {
       font-weight: 300;
       margin: 0;
     }
-
   }
-
 }
-
 </style>

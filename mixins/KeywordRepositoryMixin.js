@@ -499,9 +499,8 @@ export default {
       { type: 'Chapter of the Adeptus Astartes', placeholder: '[Chapter]', name: 'White Scars', description: 'The White Scars embrace strategies built around rapid and savage attacks, striking at an opponent and withdrawing before the foe has any opportunity to make a counterstrike. They prefer to attack from vehicles, deploying from transports or riding bikes or Land Speeders into battle. Their traditions prize ferocity, tempered by an inherent sense of honour and justice.' },
       { type: 'Chapter of the Adeptus Astartes', placeholder: '[Chapter]', name: 'Other Chapter', description: 'An unkown chapter in the vast space.' },
 
-      // Doctors of Doom
-      { source: 'dod', type: 'Chapter House of the Adeptus Astartes', placeholder: '[Chapter]', name: 'Doctors of Doom (House Isenwell)', description: 'Thrive for excellence.' },
-      { source: 'dod', type: 'Chapter House of the Adeptus Astartes', placeholder: '[Chapter]', name: 'Doctors of Doom (House Hironiat)', description: 'Break the Tide.' },
+      { source: 'dod', type: 'Chapter House of the Adeptus Astartes', placeholder: '[Chapter]', name: '', description: 'Thrive for excellence.' },
+      { source: 'dod', type: 'Chapter House of the Adeptus Astartes', placeholder: '[Chapter]', name: '', description: 'Break the Tide.' },
 
       // [Legion] -> Let the Galaxy Burn
       { source: 'ltgb', type: 'Legion of the Heretic Astartes', placeholder: '[Legion]', name: 'Black Legion', description: '' },

@@ -56,13 +56,19 @@
               <v-row no-gutters>
                 <v-col :cols="12">
                   {{ item.source.book }}
-                  <NuxtLink v-if="item.source.path" :to="item.source.path" target="_blank">
-                    <v-icon small>
-                      launch
-                    </v-icon>
+                  <NuxtLink
+                    v-if="item.source.path"
+                    :to="item.source.path"
+                    target="_blank"
+                  >
+                    <v-icon small> launch </v-icon>
                   </NuxtLink>
                 </v-col>
-                <v-col v-if="item.source.page" :cols="12" class="caption grey--text">
+                <v-col
+                  v-if="item.source.page"
+                  :cols="12"
+                  class="caption grey--text"
+                >
                   pg. {{ item.source.page }}
                 </v-col>
               </v-row>
@@ -70,7 +76,13 @@
 
             <!-- Detail Page link -->
             <template v-slot:item.actions="{ item }">
-              <v-btn v-if="item.stub === undefined || !item.stub" small icon nuxt :to="`/library/species/${textToKebab(item.key)}`">
+              <v-btn
+                v-if="item.stub === undefined || !item.stub"
+                small
+                icon
+                nuxt
+                :to="`/library/species/${textToKebab(item.key)}`"
+              >
                 <v-icon>chevron_right</v-icon>
               </v-btn>
             </template>
@@ -79,10 +91,7 @@
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">
                 <div class="pa-4">
-                  <dod-species-details
-                    :item="item"
-                    class="pa-2 pb-4"
-                  />
+                  <dod-species-details :item="item" class="pa-2 pb-4" />
 
                   <v-btn
                     v-if="item.stub === undefined || !item.stub"
@@ -110,62 +119,65 @@
 </template>
 
 <script>
-import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
-import DodSpeciesDetails from '~/components/DodSpeciesDetails';
-import SluggerMixin from '~/mixins/SluggerMixin';
-import BreadcrumbSchemaMixin from '~/mixins/BreadcrumbSchemaMixin';
+import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
+import DodSpeciesDetails from "~/components/DodSpeciesDetails";
+import SluggerMixin from "~/mixins/SluggerMixin";
+import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
 
 export default {
   components: {
     DodDefaultBreadcrumbs,
     DodSpeciesDetails,
   },
-  mixins: [
-    BreadcrumbSchemaMixin,
-    SluggerMixin,
-  ],
+  mixins: [BreadcrumbSchemaMixin, SluggerMixin],
   head() {
-    const title = 'Species - Wrath & Glory Reference | Library';
-    const description = 'There are some homebrew species and human variants in addition to some Xenos options. '
-      + 'Check out the respective linked Homebrews for detailed informations.';
-    const image = 'https://www.doctors-of-doom.com/img/artwork_library.jpg';
+    const title = "Species - Wrath & Glory Reference | Library";
+    const description =
+      "There are some homebrew species and human variants in addition to some Xenos options. " +
+      "Check out the respective linked Homebrews for detailed informations.";
+    const image = "https://www.shadow-of-tales.ru/img/artwork_library.jpg";
 
     return {
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', name: 'og:title', content: title },
-        { hid: 'og:description', name: 'og:description', content: description },
-        { hid: 'og:image', name: 'og:image', content: image },
+        { hid: "description", name: "description", content: description },
+        { hid: "og:title", name: "og:title", content: title },
+        { hid: "og:description", name: "og:description", content: description },
+        { hid: "og:image", name: "og:image", content: image },
       ],
-      __dangerouslyDisableSanitizers: ['script'],
+      __dangerouslyDisableSanitizers: ["script"],
       script: [
-        { innerHTML: JSON.stringify(this.breadcrumbJsonLdSchema(this.breadcrumbItems)), type: 'application/ld+json' },
+        {
+          innerHTML: JSON.stringify(
+            this.breadcrumbJsonLdSchema(this.breadcrumbItems)
+          ),
+          type: "application/ld+json",
+        },
       ],
     };
   },
   async asyncData({ $axios, query, params, error }) {
-    const response = await $axios.get('/api/species/');
+    const response = await $axios.get("/api/species/");
     const { data } = response;
 
     if (data === undefined || data.length <= 0) {
-      error({ statusCode: 404, message: 'No Ascension Packages found!' });
+      error({ statusCode: 404, message: "No Ascension Packages found!" });
     }
 
     const groupFilterSelections = [];
-    if (query['filter-group']) {
+    if (query["filter-group"]) {
       // factionFilterSelections.push(query['filter-faction']);
     }
 
     const filtersSourceModel = [];
-    if (query['filter-source']) {
-      filtersSourceModel.push(query['filter-source']);
+    if (query["filter-source"]) {
+      filtersSourceModel.push(query["filter-source"]);
     }
 
     return {
       items: data,
       filters: {
-        source: { model: filtersSourceModel, label: 'Filter by Homebrew' },
+        source: { model: filtersSourceModel, label: "Filter by Homebrew" },
       },
     };
   },
@@ -173,41 +185,72 @@ export default {
     return {
       breadcrumbItems: [
         {
-          text: '', disabled: false, nuxt: true, exact: true, to: '/',
+          text: "",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/",
         },
         {
-          text: 'Library', disabled: false, nuxt: true, exact: true, to: '/library',
+          text: "Library",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/library",
         },
         {
-          text: 'Species', disabled: false, nuxt: true, exact: true, to: '/library/species',
+          text: "Species",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/library/species",
         },
       ],
-      searchQuery: '',
+      searchQuery: "",
       selectedTypeFilters: [],
       pagination: {
         page: 1,
         pageCount: 0,
-        sortBy: 'title',
+        sortBy: "title",
         rowsPerPage: 25,
       },
       headers: [
         {
-          text: 'Name', align: 'start', value: 'name', class: '',
+          text: "Name",
+          align: "start",
+          value: "name",
+          class: "",
         },
         {
-          text: 'Group', align: 'start', value: 'group', class: '',
+          text: "Group",
+          align: "start",
+          value: "group",
+          class: "",
         },
         {
-          text: 'Hint', align: 'start', value: 'hint', class: '',
+          text: "Hint",
+          align: "start",
+          value: "hint",
+          class: "",
         },
         {
-          text: 'Cost', align: 'center', value: 'cost', class: '',
+          text: "Cost",
+          align: "center",
+          value: "cost",
+          class: "",
         },
         {
-          text: 'Source', align: 'start', value: 'source.book', class: '',
+          text: "Source",
+          align: "start",
+          value: "source.book",
+          class: "",
         },
         {
-          text: '', align: 'end', value: 'actions', class: '', sortable: false,
+          text: "",
+          align: "end",
+          value: "actions",
+          class: "",
+          sortable: false,
         },
       ],
       expand: false,
@@ -218,7 +261,10 @@ export default {
       return this.items;
     },
     filterSourceOptions() {
-      const options = this.activeRepository.map((i) => ({ value: i.source.key, text: i.source.book }));
+      const options = this.activeRepository.map((i) => ({
+        value: i.source.key,
+        text: i.source.book,
+      }));
       return [...new Set(options)].sort((a, b) => a.text.localeCompare(b.text));
     },
     searchResult() {
@@ -231,19 +277,21 @@ export default {
 
       filter = this.filters.source;
       if (filter.model.length > 0) {
-        filteredResults = filteredResults.filter((i) => filter.model.includes(i.source.key));
+        filteredResults = filteredResults.filter((i) =>
+          filter.model.includes(i.source.key)
+        );
       }
 
       return filteredResults;
     },
     filterSettingTierOptions() {
       return [
-        { text: 'Show all tiers', value: 6 },
-        { text: '1 - One among billions', value: 1 },
-        { text: '2 - Stalwart Defenders', value: 2 },
-        { text: '3 - Elite Guardians', value: 3 },
-        { text: '4 - Heroic Operatives', value: 4 },
-        { text: '5 - Agents of Fate', value: 5 },
+        { text: "Show all tiers", value: 6 },
+        { text: "1 - One among billions", value: 1 },
+        { text: "2 - Stalwart Defenders", value: 2 },
+        { text: "3 - Elite Guardians", value: 3 },
+        { text: "4 - Heroic Operatives", value: 4 },
+        { text: "5 - Agents of Fate", value: 5 },
       ];
     },
     filterSpeciesOptions() {
@@ -260,10 +308,8 @@ export default {
       return distinct.filter((d) => d !== null).sort();
     },
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

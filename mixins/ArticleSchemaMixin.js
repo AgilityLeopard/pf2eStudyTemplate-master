@@ -18,12 +18,12 @@ export default {
           "name": "ShadowTales",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://www.doctors-of-doom.com/android-chrome-192x192.png"
+            "url": "shadow-of-tales.ru/android-chrome-192x192.png"
           }
         },
         "mainEntityOfPage": {
           "@type": "WebPage",
-          "@id": "https://www.doctors-of-doom.com/posts"
+          "@id": "shadow-of-tales.ru/posts"
         },
       };
     },

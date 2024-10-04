@@ -186,7 +186,7 @@ const playerCore =  [
       },
         ],
     modification:
-    [      
+      [     
       {
         key: "will",
         upgrade: "E",

@@ -1,9 +1,5 @@
 <template lang="html">
-  <v-row
-    justify="center"
-    no-gutters
-    dense
-  >
+  <v-row justify="center" no-gutters dense>
     <v-col
       v-for="section in sections"
       :key="section.key"
@@ -23,7 +19,11 @@
         hover
       >
         <div class="card__image-container">
-          <div class="card__image" :style="{ backgroundImage: 'url('+section.imageSrc+')' }" loading />
+          <div
+            class="card__image"
+            :style="{ backgroundImage: 'url(' + section.imageSrc + ')' }"
+            loading
+          />
         </div>
 
         <div class="card__content-container pa-4">
@@ -52,7 +52,7 @@ export default {
   head() {
     const title = 'Shadow Tales';
     const description = '';
-    const image = 'https://www.doctors-of-doom.com/img/background_abstract_green.jpg';
+    const image = 'https://www.shadow-of-tales.ru/img/background_abstract_green.jpg';
 
     return {
       title,
@@ -176,88 +176,86 @@ export default {
 </script>
 
 <style scoped lang="scss">
+// xs < 600
+.card {
+  //max-width: 640px;
+  height: 140px;
+  display: flex;
 
-  // xs < 600
-  .card {
+  &__image-container {
+    width: 30%;
+    min-width: 30%;
+    object-fit: contain;
+    align-self: flex-start;
+  }
 
-    //max-width: 640px;
+  &__image {
+    background-position: center center;
+    background-size: cover;
     height: 140px;
-    display: flex;
+  }
+
+  &__content-container {
+    flex: 1 1 auto;
+  }
+
+  &__content-subtitle {
+  }
+
+  &__content-footer {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+// sm small
+@media only screen and (min-width: 600px) {
+  .card {
+    height: 180px;
 
     &__image-container {
-      width: 30%;
-      min-width: 30%;
-      object-fit: contain;
-      align-self: flex-start;
+      width: 25%;
+      min-width: 25%;
     }
 
     &__image {
-      background-position: center center;
-      background-size: cover;
-      height: 140px;
-    }
-
-    &__content-container {
-      flex: 1 1 auto;
-    }
-
-    &__content-subtitle {
-
-    }
-
-    &__content-footer {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-    }
-  }
-
-  // sm small
-  @media only screen and (min-width: 600px) {
-    .card {
       height: 180px;
-
-      &__image-container {
-        width: 25%;
-        min-width: 25%;
-      }
-
-      &__image {
-        height: 180px;
-      }
     }
   }
+}
 
-  // md medium
-  @media only screen and (min-width: 960px) {
-    .card {
+// md medium
+@media only screen and (min-width: 960px) {
+  .card {
+    height: 240px;
+
+    &__image-container {
+      width: 25%;
+      min-width: 25%;
+    }
+
+    &__image {
       height: 240px;
-
-      &__image-container {
-        width: 25%;
-        min-width: 25%;
-      }
-
-      &__image {
-        height: 240px;
-      }
     }
   }
+}
 
-
-  .flexcard {
-    display: flex;
-    flex-direction: column;
-  }
-  .hover-card {
-    cursor: pointer;
-  }
-  .hover-card:hover {
-    -webkit-box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2), 0px 12px 17px 2px rgba(0,0,0,0.14), 0px 5px 22px 4px rgba(0,0,0,0.12) !important;
-    box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2), 0px 12px 17px 2px rgba(0,0,0,0.14), 0px 5px 22px 4px rgba(0,0,0,0.12) !important;
-  }
-  .greyscale {
-    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-    filter: grayscale(100%);
-  }
+.flexcard {
+  display: flex;
+  flex-direction: column;
+}
+.hover-card {
+  cursor: pointer;
+}
+.hover-card:hover {
+  -webkit-box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
+    0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
+    0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
+}
+.greyscale {
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+}
 </style>

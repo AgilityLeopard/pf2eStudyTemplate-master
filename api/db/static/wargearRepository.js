@@ -1242,7 +1242,6 @@ module.exports = [
   // ...aioe,
   // ...red2_eclisiarchy,
   // ...red2_mechanicus,
-  // ...doctorsOfDoom,
   // ...fspg,
   // ...cos,
   // ...tnh,

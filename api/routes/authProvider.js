@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 
 const authProvider = require('jsonwebtoken');
 
-const JWT_ISSUER = 'doctors-of-doom.com';
+const JWT_ISSUER = 'shadow-of-tales.ru';
 
 module.exports = {
   sign: (userId, jwtPayload) => {

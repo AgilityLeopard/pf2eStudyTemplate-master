@@ -26,7 +26,7 @@
                       :input-value="active"
                       @click="toggle"
                     >
-                      <img :src="getAvatar(faction)">
+                      <img :src="getAvatar(faction)" />
                     </v-avatar>
                   </v-slide-item>
                 </v-slide-group>
@@ -75,7 +75,6 @@
                   dense
                   clearable
                   multiple
-
                   deletable-chips
                   single-line
                 />
@@ -113,11 +112,13 @@
                 </v-chip>
                 <v-chip
                   v-else-if="filterTier > 0"
-                  :color="getClassificationColor(item.classification[filterTier-1])"
+                  :color="
+                    getClassificationColor(item.classification[filterTier - 1])
+                  "
                   x-small
                   label
                 >
-                  {{ item.classification[filterTier-1] }}
+                  {{ item.classification[filterTier - 1] }}
                 </v-chip>
 
                 <v-chip-group v-else multiple>
@@ -128,7 +129,7 @@
                     x-small
                     label
                   >
-                    {{ classification.substr(0,1) }}
+                    {{ classification.substr(0, 1) }}
                   </v-chip>
                 </v-chip-group>
               </div>
@@ -139,8 +140,16 @@
                 <v-col :cols="12">
                   {{ item.name }}
                 </v-col>
-                <v-col v-if="item.keywords" :cols="12" class="caption grey--text">
-                  {{ item.keywords.filter(k=>k.indexOf('<')!==0).join(' • ') }}
+                <v-col
+                  v-if="item.keywords"
+                  :cols="12"
+                  class="caption grey--text"
+                >
+                  {{
+                    item.keywords
+                      .filter((k) => k.indexOf("<") !== 0)
+                      .join(" • ")
+                  }}
                 </v-col>
               </v-row>
             </template>
@@ -149,13 +158,19 @@
               <v-row no-gutters>
                 <v-col :cols="12">
                   {{ item.source.book }}
-                  <NuxtLink v-if="item.source.path" :to="item.source.path" target="_blank">
-                    <v-icon small>
-                      launch
-                    </v-icon>
+                  <NuxtLink
+                    v-if="item.source.path"
+                    :to="item.source.path"
+                    target="_blank"
+                  >
+                    <v-icon small> launch </v-icon>
                   </NuxtLink>
                 </v-col>
-                <v-col v-if="item.source.page" :cols="12" class="caption grey--text">
+                <v-col
+                  v-if="item.source.page"
+                  :cols="12"
+                  class="caption grey--text"
+                >
                   pg. {{ item.source.page }}
                 </v-col>
               </v-row>
@@ -163,7 +178,13 @@
 
             <!-- Detail Page link -->
             <template v-slot:item.actions="{ item }">
-              <v-btn v-if="item.key && (item.stub === undefined || !item.stub)" small icon nuxt :to="`/bestiary/${camelToKebab(item.key)}`">
+              <v-btn
+                v-if="item.key && (item.stub === undefined || !item.stub)"
+                small
+                icon
+                nuxt
+                :to="`/bestiary/${camelToKebab(item.key)}`"
+              >
                 <v-icon>chevron_right</v-icon>
               </v-btn>
             </template>
@@ -186,7 +207,10 @@
           </v-data-table>
 
           <div class="text-center pt-2">
-            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
+            <v-pagination
+              v-model="pagination.page"
+              :length="pagination.pageCount"
+            />
           </div>
         </v-card>
       </v-col>
@@ -195,20 +219,17 @@
         <v-card>
           <v-card-text>
             <h1 class="headline">
-              Search the bestiary for homebrew threats to enrich your Wrath and Glory Campaign
+              Search the bestiary for homebrew threats to enrich your Wrath and
+              Glory Campaign
             </h1>
             <p>
-              Using the same threats within your Wrath and Glory campaign over and over?
-              Never leave your players bored again! search throu this growing collection of adversaries
-              derived from the various content provided by the fans. Check out the respective brews
-              within the <nuxt-link to="/vault">
-                Vault
-              </nuxt-link>.
+              Using the same threats within your Wrath and Glory campaign over
+              and over? Never leave your players bored again! search throu this
+              growing collection of adversaries derived from the various content
+              provided by the fans. Check out the respective brews within the
+              <nuxt-link to="/vault"> Vault </nuxt-link>.
             </p>
-            <p>
-              If you have any feedback, or want to add your brews to the collection, you can mail me at
-              <a href="mailto:docsofdoom+bestiary@gmail.com?subject=Bestiary Feedback">docsofdoom+bestiary(at)gmail.com</a>.
-            </p>
+            <p></p>
           </v-card-text>
         </v-card>
       </v-col>
@@ -217,86 +238,114 @@
 </template>
 
 <script>
-import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
-import DodThreatDetails from '~/components/DodThreatDetails';
-import SluggerMixin from '~/mixins/SluggerMixin';
+import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
+import DodThreatDetails from "~/components/DodThreatDetails";
+import SluggerMixin from "~/mixins/SluggerMixin";
 
 export default {
   components: {
     DodDefaultBreadcrumbs,
     DodThreatDetails,
   },
-  mixins: [
-    SluggerMixin,
-  ],
+  mixins: [SluggerMixin],
   head() {
     const breadcrumbListSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
       itemListElement: this.breadcrumbItems.map((item, index) => ({
-        '@type': 'ListItem',
+        "@type": "ListItem",
         position: index + 1,
-        name: (index === 0 ? 'Shadow Tales' : item.text),
-        item: `https://www.doctors-of-doom.com${item.to}`,
+        name: index === 0 ? "Shadow Tales" : item.text,
+        item: `https://www.shadow-of-tales.ru${item.to}`,
       })),
     };
 
-    const title = 'Threats for Wrath & Glory | Bestiary';
-    const description = 'This Bestiary contains fan-made homebews threats to be used by the Game Master to challenge your Wrath & Glory Players. '
-      + 'Filter by Campaign Tier and Faction to find various Troops of Mobs, Elite Champions and Adversaries.';
-    const image = 'https://www.doctors-of-doom.com/img/artwork_bestiary_death.png';
-    const imageTwitter = 'https://www.doctors-of-doom.com/img/artwork_bestiary_twitter.png';
+    const title = "Threats for Wrath & Glory | Bestiary";
+    const description =
+      "This Bestiary contains fan-made homebews threats to be used by the Game Master to challenge your Wrath & Glory Players. " +
+      "Filter by Campaign Tier and Faction to find various Troops of Mobs, Elite Champions and Adversaries.";
+    const image =
+      "https://www.shadow-of-tales.ru/img/artwork_bestiary_death.png";
+    const imageTwitter =
+      "https://www.shadow-of-tales.ru/img/artwork_bestiary_twitter.png";
 
     return {
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', name: 'og:title', content: title },
-        { hid: 'og:description', name: 'og:description', content: description },
+        { hid: "description", name: "description", content: description },
+        { hid: "og:title", name: "og:title", content: title },
+        { hid: "og:description", name: "og:description", content: description },
 
         // Open Graph
-        { hid: 'og:image', name: 'og:image', content: image },
+        { hid: "og:image", name: "og:image", content: image },
 
         // Twitter
-        { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
-        { hid: 'twitter:title', name: 'twitter:title', content: title },
-        { hid: 'twitter:description', name: 'twitter:description', content: description },
-        { hid: 'twitter:image', name: 'twitter:image', content: imageTwitter },
+        {
+          hid: "twitter:card",
+          name: "twitter:card",
+          content: "summary_large_image",
+        },
+        { hid: "twitter:title", name: "twitter:title", content: title },
+        {
+          hid: "twitter:description",
+          name: "twitter:description",
+          content: description,
+        },
+        { hid: "twitter:image", name: "twitter:image", content: imageTwitter },
       ],
-      __dangerouslyDisableSanitizers: ['script'],
+      __dangerouslyDisableSanitizers: ["script"],
       script: [
-        { innerHTML: JSON.stringify(breadcrumbListSchema), type: 'application/ld+json' },
+        {
+          innerHTML: JSON.stringify(breadcrumbListSchema),
+          type: "application/ld+json",
+        },
       ],
     };
   },
   data() {
     return {
-      searchQuery: '',
+      searchQuery: "",
       settingFilter: [],
       contentFilter: [],
       factionFilterSelections: [],
       pagination: {
         page: 1,
         pageCount: 0,
-        sortBy: 'name',
+        sortBy: "name",
         rowsPerPage: 25,
       },
       headers: [
         {
-          text: 'Classification', align: 'center', value: 'classification', class: '',
+          text: "Classification",
+          align: "center",
+          value: "classification",
+          class: "",
         },
         // { text: '',               align: 'center',  value: 'avatar',          class: '' },
         {
-          text: 'Name', align: 'start', value: 'name', class: '',
+          text: "Name",
+          align: "start",
+          value: "name",
+          class: "",
         },
         {
-          text: 'Faction', align: 'start', value: 'faction', class: '',
+          text: "Faction",
+          align: "start",
+          value: "faction",
+          class: "",
         },
         {
-          text: 'Source', align: 'start', value: 'source.book', class: '',
+          text: "Source",
+          align: "start",
+          value: "source.book",
+          class: "",
         },
         {
-          text: '', align: 'end', value: 'actions', class: '', sortable: false,
+          text: "",
+          align: "end",
+          value: "actions",
+          class: "",
+          sortable: false,
         },
       ],
       expanded: [],
@@ -306,10 +355,16 @@ export default {
     breadcrumbItems() {
       return [
         {
-          text: '', nuxt: true, exact: true, to: '/',
+          text: "",
+          nuxt: true,
+          exact: true,
+          to: "/",
         },
         {
-          text: 'Bestiary', nuxt: true, exact: true, to: '/bestiary',
+          text: "Bestiary",
+          nuxt: true,
+          exact: true,
+          to: "/bestiary",
         },
       ];
     },
@@ -318,11 +373,17 @@ export default {
       // return this.homebrewRepository.map(h => h.setting).filter(i => i !== '');
     },
     filterFactionOptions() {
-      const options = this.items.map((i) => ({ value: i.faction, text: i.faction }));
+      const options = this.items.map((i) => ({
+        value: i.faction,
+        text: i.faction,
+      }));
       return [...new Set(options)].sort((a, b) => a.text.localeCompare(b.text));
     },
     filterSourceOptions() {
-      const options = this.items.map((i) => ({ value: i.source.key, text: i.source.book }));
+      const options = this.items.map((i) => ({
+        value: i.source.key,
+        text: i.source.book,
+      }));
       return [...new Set(options)].sort((a, b) => a.text.localeCompare(b.text));
     },
     contentOptions() {
@@ -333,46 +394,52 @@ export default {
       let filteredResults = this.items;
 
       if (this.filtersSourceModel.length > 0) {
-        filteredResults = filteredResults.filter((i) => this.filtersSourceModel.includes(i.source.key));
+        filteredResults = filteredResults.filter((i) =>
+          this.filtersSourceModel.includes(i.source.key)
+        );
       }
 
       if (this.factionFilterSelections.length > 0) {
-        filteredResults = filteredResults.filter((i) => this.factionFilterSelections.includes(i.faction));
+        filteredResults = filteredResults.filter((i) =>
+          this.factionFilterSelections.includes(i.faction)
+        );
       }
 
       return filteredResults;
     },
     pages() {
-      if (this.pagination.rowsPerPage == null
-        || this.pagination.totalItems == null
-      ) return 0;
+      if (
+        this.pagination.rowsPerPage == null ||
+        this.pagination.totalItems == null
+      )
+        return 0;
 
-      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
+      return Math.ceil(
+        this.pagination.totalItems / this.pagination.rowsPerPage
+      );
     },
   },
-  async asyncData({
-    $axios, query, params, error,
-  }) {
-    const response = await $axios.get('/api/threats/');
+  async asyncData({ $axios, query, params, error }) {
+    const response = await $axios.get("/api/threats/");
     const items = response.data;
 
     if (items === undefined || items.length <= 0) {
-      error({ statusCode: 404, message: 'Threat not found' });
+      error({ statusCode: 404, message: "Threat not found" });
     }
 
     const factionFilterSelections = [];
-    if (query['filter-faction']) {
-      factionFilterSelections.push(query['filter-faction']);
+    if (query["filter-faction"]) {
+      factionFilterSelections.push(query["filter-faction"]);
     }
 
     let filterTier = 0;
-    if (query['filter-tier']) {
-      filterTier = query['filter-tier'];
+    if (query["filter-tier"]) {
+      filterTier = query["filter-tier"];
     }
 
     const filtersSourceModel = [];
-    if (query['filter-source']) {
-      filtersSourceModel.push(query['filter-source']);
+    if (query["filter-source"]) {
+      filtersSourceModel.push(query["filter-source"]);
     }
 
     return {
@@ -385,9 +452,11 @@ export default {
   methods: {
     getAvatar(factionLabel) {
       if (factionLabel !== undefined) {
-        return `/img/bestiary/faction_${this.textToKebab(factionLabel)}_avatar.png`;
+        return `/img/bestiary/faction_${this.textToKebab(
+          factionLabel
+        )}_avatar.png`;
       }
-      return '/img/avatars/species/core-human.png';
+      return "/img/avatars/species/core-human.png";
     },
     changeSort(column) {
       if (this.pagination.sortBy === column) {
@@ -399,21 +468,31 @@ export default {
     },
     toggleFilterFactionSelection(name) {
       if (this.factionFilterSelections.includes(name)) {
-        this.factionFilterSelections = this.factionFilterSelections.filter((d) => d != name);
+        this.factionFilterSelections = this.factionFilterSelections.filter(
+          (d) => d != name
+        );
       } else {
         this.factionFilterSelections.push(name);
       }
     },
     trackExpand(event) {
       if (event.value === true) {
-        this.$ga.event('Bestiary Row', 'expand', this.camelToKebab(event.item.key), 1);
+        this.$ga.event(
+          "Bestiary Row",
+          "expand",
+          this.camelToKebab(event.item.key),
+          1
+        );
       }
     },
     getClassificationColor(classification) {
       switch (classification) {
-        case 'Troops': return 'green';
-        case 'Elite': return 'yellow';
-        case 'Adversary': return 'orange';
+        case "Troops":
+          return "green";
+        case "Elite":
+          return "yellow";
+        case "Adversary":
+          return "orange";
       }
     },
   },
@@ -421,16 +500,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  tr:hover {
-    cursor: pointer;
-  }
+tr:hover {
+  cursor: pointer;
+}
 
-  .faction-filter {
-    opacity: 0.5;
-  }
+.faction-filter {
+  opacity: 0.5;
+}
 
-  .faction-filter.v-slide-item--active {
-    opacity: unset;
-  }
-
+.faction-filter.v-slide-item--active {
+  opacity: unset;
+}
 </style>

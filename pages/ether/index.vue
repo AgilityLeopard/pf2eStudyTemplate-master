@@ -172,9 +172,6 @@
             <h1 class="headline">
               Search the Ether for Lets Play Videos
             </h1>
-            <p>
-              Help me fill the gabs <a href="mailto:docsofdoom+ether@gmail.com?subject=Ether Request">docsofdoom+ether(at)gmail.com</a>.
-            </p>
           </v-card-text>
         </v-card>
       </v-col>
@@ -202,7 +199,7 @@ export default {
         author: item.author,
         version: item.version,
         url: item.documentUrl,
-        thumbnailUrl: item.image ? `https://www.doctors-of-doom.com${item.image.fields.file.url}` : null,
+        thumbnailUrl: item.image ? `https://www.shadow-of-tales.ru${item.image.fields.file.url}` : null,
         description: item.abstract,
         keywords: item.keywordTags ? [...item.keywordTags, 'Wrath & Glory'].join(',') : 'Wrath & Glory',
       }
@@ -215,14 +212,13 @@ export default {
         '@type': 'ListItem',
         position: index + 1,
         name: (index === 0 ? 'Shadow Tales' : item.text),
-        item: `https://www.doctors-of-doom.com${item.to}`,
+        item: `https://www.shadow-of-tales.ru${item.to}`,
       })),
     };
 
     const title = 'Watch People Play Wrath & Glory | Ether';
-    const description = 'The Doctors of Doom Ether lists and links to a collection of (Youtube) ' +
-      'Lets Plays for Wrath & Glory, the latest Warhammer 40k Roleplaying game.';
-    const image = 'https://www.doctors-of-doom.com/img/artwork_ether.jpg';
+    const description = '';
+    const image = 'https://www.shadow-of-tales.ru/img/artwork_ether.jpg';
 
     return {
       title,
@@ -317,7 +313,7 @@ export default {
         navigator.share({
           title: 'Vault',
           text: `Check out ${item.title}`,
-          url: `https://www.doctors-of-doom/ether/${item.slug}`,
+          url: `https://www.shadow-of-tales/ether/${item.slug}`,
         })
           .then(() => console.log('Successful share'))
           .catch((error) => console.log('Error sharing', error));

@@ -4,8 +4,8 @@
   "engines": {
     "node": "18.x"
   },
-  "description": "The Doctors of Doom exist to serve the Wrath and Glory Community",
-  "author": "Brother Lucius",
+  "description": "Билдер и инфа для патфайндер на русском",
+  "author": "Shadow",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development nuxt",

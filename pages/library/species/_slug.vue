@@ -13,40 +13,43 @@
 </template>
 
 <script>
-import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
-import DodSpeciesDetails from '~/components/DodSpeciesDetails';
-import BreadcrumbSchemaMixin from '~/mixins/BreadcrumbSchemaMixin';
+import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
+import DodSpeciesDetails from "~/components/DodSpeciesDetails";
+import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
 
 export default {
-  name: 'Species',
+  name: "Species",
   components: {
     DodDefaultBreadcrumbs,
     DodSpeciesDetails,
   },
-  mixins: [
-    BreadcrumbSchemaMixin,
-  ],
+  mixins: [BreadcrumbSchemaMixin],
   head() {
     const title = `${this.item.name} - Species`;
-    const description = this.item.source.key.includes('core')
+    const description = this.item.source.key.includes("core")
       ? `The ${this.item.name} from ${this.item.group} is an official Species described in the ${this.item.source.book}.`
       : `The ${this.item.name} from ${this.item.group} is a homebrew Species provided by ${this.item.source.book}.`;
     const image = this.item.thumbnail
-      ? `https://www.doctors-of-doom.com${this.item.thumbnail}`
-      : `https://www.doctors-of-doom.com/img/bestiary/faction_${this.item.group.toLowerCase()}_avatar.png`;
+      ? `https://www.shadow-of-tales.ru${this.item.thumbnail}`
+      : `https://www.shadow-of-tales.ru/img/bestiary/faction_${this.item.group.toLowerCase()}_avatar.png`;
 
     return {
-      titleTemplate: '%s | Wrath & Glory Library',
+      titleTemplate: "%s | Wrath & Glory Library",
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', name: 'og:title', content: title },
-        { hid: 'og:description', name: 'og:description', content: description },
-        { hid: 'og:image', name: 'og:image', content: image },
+        { hid: "description", name: "description", content: description },
+        { hid: "og:title", name: "og:title", content: title },
+        { hid: "og:description", name: "og:description", content: description },
+        { hid: "og:image", name: "og:image", content: image },
       ],
-      __dangerouslyDisableSanitizers: ['script'],
+      __dangerouslyDisableSanitizers: ["script"],
       script: [
-        { innerHTML: JSON.stringify(this.breadcrumbJsonLdSchema(this.breadcrumbItems)), type: 'application/ld+json' },
+        {
+          innerHTML: JSON.stringify(
+            this.breadcrumbJsonLdSchema(this.breadcrumbItems)
+          ),
+          type: "application/ld+json",
+        },
       ],
     };
   },
@@ -57,7 +60,7 @@ export default {
     const item = response.data;
 
     if (item === undefined || item.length <= 0) {
-      error({ statusCode: 404, message: 'Species not found' });
+      error({ statusCode: 404, message: "Species not found" });
     }
 
     return {
@@ -65,16 +68,28 @@ export default {
       slug,
       breadcrumbItems: [
         {
-          text: '', nuxt: true, exact: true, to: '/',
+          text: "",
+          nuxt: true,
+          exact: true,
+          to: "/",
         },
         {
-          text: 'Library', nuxt: true, exact: true, to: '/library',
+          text: "Library",
+          nuxt: true,
+          exact: true,
+          to: "/library",
         },
         {
-          text: 'Species', nuxt: true, exact: true, to: '/library/species',
+          text: "Species",
+          nuxt: true,
+          exact: true,
+          to: "/library/species",
         },
         {
-          text: item.name, disabled: true, nuxt: true, to: `/library/species/${slug}`,
+          text: item.name,
+          disabled: true,
+          nuxt: true,
+          to: `/library/species/${slug}`,
         },
       ],
     };
@@ -82,6 +97,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

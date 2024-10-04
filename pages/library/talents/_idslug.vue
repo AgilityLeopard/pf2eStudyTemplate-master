@@ -12,7 +12,7 @@
           </h3>
           <h4 class="subtitle-2 grey--text" />
 
-          <hr class="mb-0">
+          <hr class="mb-0" />
 
           <p class="mt-2">
             {{ item.description }}
@@ -45,37 +45,40 @@
 </template>
 
 <script>
-import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
-import BreadcrumbSchemaMixin from '~/mixins/BreadcrumbSchemaMixin';
+import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
+import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
 
 export default {
-  name: 'Wargear',
+  name: "Wargear",
   components: {
     DodDefaultBreadcrumbs,
   },
-  mixins: [
-    BreadcrumbSchemaMixin,
-  ],
+  mixins: [BreadcrumbSchemaMixin],
   head() {
     const title = `${this.item.name} - Talent`;
-    const description = ''; /* this.item.source.key.indexOf('core') >= 0
+    const description = ""; /* this.item.source.key.indexOf('core') >= 0
       ? `The ${this.item.name} from ${this.item.group} is an official Species described in the ${this.item.source.book}.`
       : `The ${this.item.name} from ${this.item.group} is a homebrew Species provided by ${this.item.source.book}.`; */
     const image = this.item.thumbnail
-      ? `https://www.doctors-of-doom.com${this.item.thumbnail}`
+      ? `https://www.shadow-of-tales.ru${this.item.thumbnail}`
       : undefined;
 
     return {
-      titleTemplate: '%s | Wrath & Glory Library',
+      titleTemplate: "%s | Wrath & Glory Library",
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', name: 'og:title', content: title },
-        { hid: 'og:description', name: 'og:description', content: description },
+        { hid: "description", name: "description", content: description },
+        { hid: "og:title", name: "og:title", content: title },
+        { hid: "og:description", name: "og:description", content: description },
       ],
-      __dangerouslyDisableSanitizers: ['script'],
+      __dangerouslyDisableSanitizers: ["script"],
       script: [
-        { innerHTML: JSON.stringify(this.breadcrumbJsonLdSchema(this.breadcrumbItems)), type: 'application/ld+json' },
+        {
+          innerHTML: JSON.stringify(
+            this.breadcrumbJsonLdSchema(this.breadcrumbItems)
+          ),
+          type: "application/ld+json",
+        },
       ],
     };
   },
@@ -86,7 +89,7 @@ export default {
 
     let regExpExecArray = regex.exec(idslug);
     if (regExpExecArray === null) {
-      error({ statusCode: 404, message: 'Wargear not found' });
+      error({ statusCode: 404, message: "Wargear not found" });
       return;
     }
     const { id, slug } = regExpExecArray.groups;
@@ -95,7 +98,7 @@ export default {
     const item = response.data;
 
     if (item === undefined || item.length <= 0) {
-      error({ statusCode: 404, message: 'Wargear not found' });
+      error({ statusCode: 404, message: "Wargear not found" });
       return;
     }
 
@@ -104,16 +107,28 @@ export default {
       slug,
       breadcrumbItems: [
         {
-          text: '', nuxt: true, exact: true, to: '/',
+          text: "",
+          nuxt: true,
+          exact: true,
+          to: "/",
         },
         {
-          text: 'Library', nuxt: true, exact: true, to: '/library',
+          text: "Library",
+          nuxt: true,
+          exact: true,
+          to: "/library",
         },
         {
-          text: 'Talents', nuxt: true, exact: true, to: '/library/talents',
+          text: "Talents",
+          nuxt: true,
+          exact: true,
+          to: "/library/talents",
         },
         {
-          text: item.name, disabled: true, nuxt: true, to: `/library/talents/${id}-${slug}`,
+          text: item.name,
+          disabled: true,
+          nuxt: true,
+          to: `/library/talents/${id}-${slug}`,
         },
       ],
     };
@@ -123,25 +138,27 @@ export default {
       const texts = [];
 
       if (item.prerequisites.length <= 0) {
-        return ['None'];
+        return ["None"];
       }
 
       item.prerequisites.forEach((p) => {
-        let text = '';
+        let text = "";
 
         switch (p.type) {
-          case 'keyword':
-          case 'talent':
-            if (p.condition === 'mustNot') {
-              text = `<strong>must not</strong> possess the ${p.key.join(' or ')} ${p.type}`;
+          case "keyword":
+          case "talent":
+            if (p.condition === "mustNot") {
+              text = `<strong>must not</strong> possess the ${p.key.join(
+                " or "
+              )} ${p.type}`;
             } else {
-              text = `${p.key.join(' or ')}`;
+              text = `${p.key.join(" or ")}`;
             }
             break;
 
-          case 'attribute':
-          case 'skill':
-          case 'character':
+          case "attribute":
+          case "skill":
+          case "character":
             text = `${p.key} ${p.value}`;
             break;
 
@@ -158,12 +175,10 @@ export default {
       if (item.subtype) {
         types.push(item.subtype);
       }
-      return types.join(' • ');
+      return types.join(" • ");
     },
   },
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

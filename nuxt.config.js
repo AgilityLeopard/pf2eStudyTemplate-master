@@ -30,40 +30,40 @@ module.exports = {
         hid: "keywords",
         name: "keywords",
         content:
-          "Wrath and Glory,Wrath & Glory,W&G,Homebrew,40k,Warhammer,Roleplaying Game",
+          "Pathfinder, патфайндер, pathbuilder, патфайндер на русском",
       },
       { hid: "theme-color", name: "theme-color", content: "#4caf50" },
-      {
-        hid: "google-site-verification",
-        name: "google-site-verification",
-        content: "5Eig5Vs_1-k3HAZdkGwTDu4Tu94AM9H-xny9n80IgJ0",
-      },
+      // {
+      //   hid: "google-site-verification",
+      //   name: "google-site-verification",
+      //   content: "5Eig5Vs_1-k3HAZdkGwTDu4Tu94AM9H-xny9n80IgJ0",
+      // },
 
       /**
        *  Open Graph, used in facebook
        */
-      { hid: "og:site_name", name: "og:site_name", content: "Shadow Tales" },
-      {
-        hid: "og:image",
-        name: "og:image",
-        content: "https://www.doctors-of-doom.com/website_logo.png",
-      },
+      // { hid: "og:site_name", name: "og:site_name", content: "Shadow Tales" },
+      // {
+      //   hid: "og:image",
+      //   name: "og:image",
+      //   content: "https://shadow-of-tales.ru/website_logo.png",
+      // },
 
-      /**
-       * Twitter Card, used in Twitter, Discord
-       * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
-       * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary
-       */
-      {
-        hid: "twitter:site",
-        name: "twitter:site",
-        content: "@doctors_of_doom",
-      },
-      {
-        hid: "twitter:creator",
-        name: "twitter:creator",
-        content: "@doctors_of_doom",
-      },
+      // /**
+      //  * Twitter Card, used in Twitter, Discord
+      //  * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
+      //  * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary
+      //  */
+      // {
+      //   hid: "twitter:site",
+      //   name: "twitter:site",
+      //   content: "@",
+      // },
+      // {
+      //   hid: "twitter:creator",
+      //   name: "twitter:creator",
+      //   content: "@",
+      // },
     ],
     link: [
       {
@@ -193,7 +193,7 @@ module.exports = {
    * Sitemap module configuration
    */
   sitemap: {
-    hostname: "https://www.doctors-of-doom.com",
+    hostname: "https://shadow-of-tales.ru",
     gzip: true,
     exclude: [
       // dynamic and user specific parts should not be sitemaped
@@ -203,7 +203,7 @@ module.exports = {
     routes: async () => {
       const base =
         process.env.NODE_ENV === "production"
-          ? "https://www.doctors-of-doom.com"
+          ? "https://shadow-of-tales.ru"
           : "http://localhost:3000";
 
       const homebrewResponse = await axios.get(`${base}/api/homebrews/`);

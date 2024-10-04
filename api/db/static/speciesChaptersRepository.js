@@ -436,36 +436,6 @@ const ltgb = [
   },
 ];
 
-const dod = [
-  {
-    ...chapterz('dod','-','Doctors of Doom (House Isenwell)','-','Imperium','Unknown'),
-    beliefsAndTraditions: [
-      {
-        name: 'Thunder’s Call',
-        effect: 'Blade in hand, Isenwellers loudly issue challenges to those enemies they deem worthy to face them. A Isenweller may spend a Glory as a free action to issue a Thunder’s Call, picking out a specific threat. So long as he spends his next action(s) attempting to engage that enemy in melee, the target of the Call suffers a +½ Rank DN penalty to all attacks against targets that are not the Warden, and the Warden gains +½ Rank bonus dice to all melee attacks against the target until the target is dead or combat has ended. Only one enemy may be the target of a specific Isenweller’s Thunder’s Call at a time.',
-      },
-      {
-        name: 'My Oath is My Bond',
-        origin: 'Tradition',
-        effect: 'A Isenweller who breaks his word is without honor, and to purposefully use a false oath to deceive an enemy is the lowest cowardice. If the Isenweller says that he will perform an action, and then does not at least earnestly attempt to perform that action, then the GM gains 2 ruin. ',
-      },
-    ],
-  },
-  {
-    ...chapterz('dod','-','Doctors of Doom (House Hironiat)','-','Imperium','Unknown'),
-    beliefsAndTraditions: [
-      {
-        name: 'Siege Masters',
-        effect: 'You may reroll Double Rank dice whenever you attack a building, fortification, or enemy in cover. You may also add +Rank dice whenever you make a Test related to architectural engineering',
-      },
-      {
-        name: 'Geen-seed Flawed',
-        origin: 'Geen-Seed',
-        effect: 'You are missing implant 12: Sus-an Membrane, and implant 17: Bletcher’s Gland. See below for more information on Space Marine implants.',
-      },
-    ],
-  },
-];
 
 module.exports = [
   ...playerCore,

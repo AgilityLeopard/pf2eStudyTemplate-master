@@ -20,21 +20,17 @@
 
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
-    <v-row
-      justify="center"
-      no-gutters
-      dense
-      class="mt-4"
-    >
-      <v-col
-        :cols="12"
-        :md="12"
-      >
-        <ColorfulPage :headline="page.title" flavour="blog">
-        </ColorfulPage>
+    <v-row justify="center" no-gutters dense class="mt-4">
+      <v-col :cols="12" :md="12">
+        <ColorfulPage :headline="page.title" flavour="blog"> </ColorfulPage>
 
         <v-row v-if="$fetchState.pending" justify="center">
-          <v-progress-circular indeterminate color="success" size="128" width="12" />
+          <v-progress-circular
+            indeterminate
+            color="success"
+            size="128"
+            width="12"
+          />
         </v-row>
 
         <v-row v-else>
@@ -60,10 +56,8 @@
                 class="align-end justify-end"
               >
                 <div class="image-caption pa-2 pt-1 pb-1 caption">
-                   <span
-                     class="image-caption__time-since white--text"
-                   >
-                     {{ item.fields.publishedAt | timeSince }} by
+                  <span class="image-caption__time-since white--text">
+                    {{ item.fields.publishedAt | timeSince }} by
                   </span>
                   <span class="image-caption__by-author items--text ml-1">
                     {{ item.fields.author }}
@@ -74,7 +68,6 @@
               <v-card-text>{{ item.fields.description }}</v-card-text>
             </v-card>
           </v-col>
-
         </v-row>
       </v-col>
     </v-row>
@@ -82,22 +75,20 @@
 </template>
 
 <script>
-import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
-import BreadcrumbSchemaMixin from '~/mixins/BreadcrumbSchemaMixin';
-import ColorfulPage from '~/components/shared/ColorfulPage';
+import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
+import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
+import ColorfulPage from "~/components/shared/ColorfulPage";
 const fixedTime = new Date();
 
 export default {
-  name: 'items',
+  name: "items",
   components: {
     ColorfulPage,
     DodDefaultBreadcrumbs,
   },
-  mixins: [
-    BreadcrumbSchemaMixin,
-  ],
+  mixins: [BreadcrumbSchemaMixin],
   async fetch() {
-    const { data } = await this.$axios.get('/api/actual-plays');
+    const { data } = await this.$axios.get("/api/actual-plays");
 
     this.items = data;
   },
@@ -116,39 +107,49 @@ export default {
       fixedTime: new Date(),
       items: [],
       page: {
-        title: 'Hub of Actual Plays',
-        description: 'Session Reports and other related articles from the Wrath & Glory Universe.',
+        title: "Hub of Actual Plays",
+        description:
+          "Session Reports and other related articles from the Wrath & Glory Universe.",
       },
       showTooltip: false,
       tooltip: {
         position: { x: 0, y: 0 },
         loading: false,
       },
-      hintBoxItem: { title: '', description: '', type: '' },
+      hintBoxItem: { title: "", description: "", type: "" },
     };
   },
   head() {
     const { title, description } = this.page;
-    // const image = `https://www.doctors-of-doom.com${this.item.image}`;
+    // const image = `https://www.shadow-of-tales.ru${this.item.image}`;
 
     return {
       title,
-      titleTemplate: '%s | Actual Plays',
+      titleTemplate: "%s | Actual Plays",
       meta: [
-        { hid: 'description', name: 'description', content: description },
+        { hid: "description", name: "description", content: description },
 
-        { hid: 'og:title', name: 'og:title', content: title },
-        { hid: 'og:description', name: 'og:description', content: description },
+        { hid: "og:title", name: "og:title", content: title },
+        { hid: "og:description", name: "og:description", content: description },
         // { hid: 'og:image', name: 'og:image', content: image },
 
         // { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
-        { hid: 'twitter:title', name: 'twitter:title', content: title },
-        { hid: 'twitter:description', name: 'twitter:description', content: description },
+        { hid: "twitter:title", name: "twitter:title", content: title },
+        {
+          hid: "twitter:description",
+          name: "twitter:description",
+          content: description,
+        },
         // { hid: 'twitter:image', name: 'twitter:image', content: image },
       ],
-      __dangerouslyDisableSanitizers: ['script'],
+      __dangerouslyDisableSanitizers: ["script"],
       script: [
-        { innerHTML: JSON.stringify(this.breadcrumbJsonLdSchema(this.breadcrumbItems)), type: 'application/ld+json' },
+        {
+          innerHTML: JSON.stringify(
+            this.breadcrumbJsonLdSchema(this.breadcrumbItems)
+          ),
+          type: "application/ld+json",
+        },
       ],
     };
   },
@@ -156,10 +157,18 @@ export default {
     breadcrumbItems() {
       return [
         {
-          text: '', disabled: false, nuxt: true, exact: true, to: '/',
+          text: "",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/",
         },
         {
-          text: 'Ether', disabled: false, nuxt: true, exact: true, to: '/ether',
+          text: "Ether",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/ether",
         },
       ];
     },
@@ -181,7 +190,7 @@ export default {
       interval = Math.floor(seconds / 86400);
 
       if (interval > 7) {
-        let options = { year: 'numeric', month: 'short', day: 'numeric' };
+        let options = { year: "numeric", month: "short", day: "numeric" };
         return date.toLocaleDateString("en-US", options);
       }
 
@@ -203,27 +212,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-header {
+  border-bottom: 2px solid hsl(194, 90%, 65%);
+}
 
-  .page-header {
-    border-bottom: 2px solid hsl(194, 90%, 65%);
+.items--text {
+  color: hsl(194, 90%, 65%);
+}
+
+.image-caption {
+  background-color: hsla(300, 6%, 3%, 0.8);
+  justify-content: flex-end;
+  display: flex;
+
+  &__time-since {
   }
 
-  .items--text {
-    color: hsl(194, 90%, 65%);
+  &__by-author {
   }
-
-  .image-caption {
-    background-color: hsla(300, 6%, 3%, 0.8);
-    justify-content: flex-end;
-    display: flex;
-
-    &__time-since {
-
-    }
-
-    &__by-author {
-
-    }
-  }
-
+}
 </style>

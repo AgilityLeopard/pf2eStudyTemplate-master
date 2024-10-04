@@ -3305,16 +3305,6 @@
 //   {
 //     source: {
 //       ...source.aaoa2,
-//       page: '190',
-//     },
-//     key: 'aaoaDoomsdayArk',
-//     name: 'Doomsday Ark',
-//     faction: 'Necrons',
-//     classification: classificationHelper('vvvvv'),
-//   },
-//   {
-//     source: {
-//       ...source.aaoa2,
 //       page: '191',
 //     },
 //     key: 'aaoaAnnihilationBarge',

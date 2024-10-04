@@ -12,43 +12,29 @@
     >
       <v-list>
         <v-list-item>
-
-          <v-btn icon href="https://discordapp.com/channels/256930339878993920/600107858486493193">
+          <v-btn icon href="">
             <v-icon>mdi-discord</v-icon>
           </v-btn>
-          <v-btn icon href="https://twitter.com/doctors_of_doom">
-            <v-icon color="#1DA1F2">mdi-twitter</v-icon>
-          </v-btn>
         </v-list-item>
-        <div
-          v-for="item in navigation"
-          :key="item.to"
-        >
-          <v-list-group
-            v-if="item.children"
-          >
+        <div v-for="item in navigation" :key="item.to">
+          <v-list-group v-if="item.children">
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
                 <v-list-item-subtitle>{{ item.subtitle }}</v-list-item-subtitle>
               </v-list-item-content>
             </template>
-              <v-list-item
-                class="ml-4"
-                v-for="child in item.children"
-                :key="child.to"
-                :to="child.to"
-                nuxt
-              >
-                <v-list-item-title>{{ child.title }}</v-list-item-title>
-              </v-list-item>
-
+            <v-list-item
+              class="ml-4"
+              v-for="child in item.children"
+              :key="child.to"
+              :to="child.to"
+              nuxt
+            >
+              <v-list-item-title>{{ child.title }}</v-list-item-title>
+            </v-list-item>
           </v-list-group>
-          <v-list-item
-            v-else
-            :to="item.to"
-            nuxt
-          >
+          <v-list-item v-else :to="item.to" nuxt>
             <v-list-item-content>
               <v-list-item-title>
                 {{ item.title }}
@@ -67,11 +53,14 @@
       app
       dark
       dense
-      style="background-color: #212121;"
+      style="background-color: #212121"
       :fixed="toolbar.fixed"
       :clipped-left="toolbar.clippedLeft"
     >
-      <v-container class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
+      <v-container
+        class="pa-0 fill-height"
+        :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }"
+      >
         <v-toolbar-title>
           <nuxt-link to="/" class="title brand-logo brand-logo__text">
             Shadow Tales
@@ -81,11 +70,8 @@
         <v-spacer />
 
         <v-toolbar-items>
-          <v-btn class="d-none d-md-inline-flex" icon href="https://discordapp.com/channels/256930339878993920/600107858486493193">
+          <v-btn class="d-none d-md-inline-flex" icon href="">
             <v-icon>mdi-discord</v-icon>
-          </v-btn>
-          <v-btn class="d-none d-md-inline-flex" icon href="https://twitter.com/doctors_of_doom">
-            <v-icon color="#1DA1F2">mdi-twitter</v-icon>
           </v-btn>
           <v-btn icon @click="toggleDarkTheme">
             <v-icon>mdi-brightness-6</v-icon>
@@ -97,21 +83,23 @@
     </v-app-bar>
 
     <v-main>
-
       <v-toolbar dense class="d-none d-md-block">
-        <v-container  class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
-        <v-toolbar-items>
-          <v-btn
-            v-for="item in navigation"
-            :key="item.to"
-            smallt
-            text
-            nuxt
-            :to="item.to"
-          >
-            {{ item.title }}
-          </v-btn>
-        </v-toolbar-items>
+        <v-container
+          class="pa-0 fill-height"
+          :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }"
+        >
+          <v-toolbar-items>
+            <v-btn
+              v-for="item in navigation"
+              :key="item.to"
+              smallt
+              text
+              nuxt
+              :to="item.to"
+            >
+              {{ item.title }}
+            </v-btn>
+          </v-toolbar-items>
         </v-container>
       </v-toolbar>
 
@@ -125,8 +113,8 @@
 </template>
 
 <script>
-import DefaultFooter from '~/components/DefaultFooter.vue';
-import ToolbarAccountActions from '~/components/user/ToolbarAccountActions.vue';
+import DefaultFooter from "~/components/DefaultFooter.vue";
+import ToolbarAccountActions from "~/components/user/ToolbarAccountActions.vue";
 
 export default {
   components: {
@@ -136,7 +124,10 @@ export default {
   head() {
     return {
       link: [
-        { rel: 'canonical', href: `https://www.doctors-of-doom.com${this.$route.path}` },
+        {
+          rel: "canonical",
+          href: `https://www.shadow-of-tales.ru${this.$route.path}`,
+        },
       ],
     };
   },
@@ -145,22 +136,66 @@ export default {
       darkTheme: false,
       navigation: [
         // { to: '/vault', title: 'Vault', subtitle: 'Browse Homebrews', icon: '' },
-        { to: '/forge/my-characters', title: 'Билдодельня', subtitle: 'Создание персонажей', icon: '' },
+        {
+          to: "/forge/my-characters",
+          title: "Билдодельня",
+          subtitle: "Создание персонажей",
+          icon: "",
+        },
         // { to: '/bestiary', title: 'Bestiary', subtitle: 'Find Threats', icon: '' },
         // { to: '/network', title: 'Network', subtitle: 'Find Assets', icon: '' },
         // { to: '/posts', title: 'Articles', subtitle: 'Hobby Articles', icon: '' },
         // { to: '/ether', title: 'Ether', subtitle: 'Browse Let´s Plays', icon: '' },
-        { to: '/library', title: 'Библиотека', subtitle: 'Просмотр предметов', icon: '',
+        {
+          to: "/library",
+          title: "Библиотека",
+          subtitle: "Просмотр предметов",
+          icon: "",
           children: [
-            { to: '/library/species', title: 'Species', subtitle: 'Browse ', icon: '', },
-            { to: '/library/archetypes', title: 'Archetypes', subtitle: 'Browse ', icon: '', },
-            { to: '/library/ascension-packages', title: 'Species', subtitle: 'Browse ', icon: '', },
-            { to: '/library/talents', title: 'Talents', subtitle: 'Browse ', icon: '', },
-            { to: '/library/wargear', title: 'Wargear', subtitle: 'Browse ', icon: '', },
-            { to: '/library/psychic-powers', title: 'Psychic Powers', subtitle: 'Browse ', icon: '', },
+            {
+              to: "/library/species",
+              title: "Species",
+              subtitle: "Browse ",
+              icon: "",
+            },
+            {
+              to: "/library/archetypes",
+              title: "Archetypes",
+              subtitle: "Browse ",
+              icon: "",
+            },
+            {
+              to: "/library/ascension-packages",
+              title: "Species",
+              subtitle: "Browse ",
+              icon: "",
+            },
+            {
+              to: "/library/talents",
+              title: "Talents",
+              subtitle: "Browse ",
+              icon: "",
+            },
+            {
+              to: "/library/wargear",
+              title: "Wargear",
+              subtitle: "Browse ",
+              icon: "",
+            },
+            {
+              to: "/library/psychic-powers",
+              title: "Psychic Powers",
+              subtitle: "Browse ",
+              icon: "",
+            },
           ],
         },
-        { to: '/codex', title: 'Правила', subtitle: 'Просмотр правил', icon: '' },
+        {
+          to: "/codex",
+          title: "Правила",
+          subtitle: "Просмотр правил",
+          icon: "",
+        },
       ],
       drawer: {
         // sets the open status of the drawer
@@ -190,24 +225,24 @@ export default {
   },
   computed: {
     theme() {
-      return this.$store.getters['theme'];
+      return this.$store.getters["theme"];
     },
   },
   watch: {
     theme: {
       handler(newTheme, oldTheme) {
         console.info(`handle ${newTheme}`);
-        this.$vuetify.theme.dark = newTheme !== 'light';
+        this.$vuetify.theme.dark = newTheme !== "light";
       },
       immediate: true, // make this watch function is called when component created
-    }
+    },
   },
   methods: {
     toggleDarkTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      let theme = this.$vuetify.theme.dark ? 'dark' : 'light';
-      this.$store.commit('setTheme', theme);
-      this.$ga.event('Settings', 'Change Theme', theme, 1);
+      let theme = this.$vuetify.theme.dark ? "dark" : "light";
+      this.$store.commit("setTheme", theme);
+      this.$ga.event("Settings", "Change Theme", theme, 1);
     },
     toggleDrawer() {
       if (this.drawer.permanent) {
@@ -225,14 +260,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-  .brand-logo {
-
-    &__text {
-      color: hsl(0, 0%, 100%);
-      text-decoration: none;
-    }
-
+.brand-logo {
+  &__text {
+    color: hsl(0, 0%, 100%);
+    text-decoration: none;
   }
-
+}
 </style>
