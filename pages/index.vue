@@ -48,6 +48,7 @@
 
 <script lang="js">
 export default {
+
   components: {},
   head() {
     const title = 'Shadow Tales';

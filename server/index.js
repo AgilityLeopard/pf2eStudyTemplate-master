@@ -4,6 +4,7 @@ const { Nuxt, Builder } = require('nuxt');
 
 const app = express();
 
+
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js');
 
@@ -28,6 +29,7 @@ async function start() {
 
   // Listen the server
   app.listen(port, host);
+  // app.listen(3000, '0.0.0.0');
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true,

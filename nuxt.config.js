@@ -3,7 +3,8 @@
 const colors = require("vuetify/es5/util/colors").default;
 const path = require("path");
 const axios = require("axios");
-
+const config = require('./.contentful.json');
+console.log(config);
 module.exports = {
   configureWebpack: {
     devtool: "source-map",
@@ -134,6 +135,10 @@ module.exports = {
   /*
    ** Nuxt.js dev-modules
    */
+
+  env: {
+    ...config
+  },
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     //'@nuxtjs/eslint-module',

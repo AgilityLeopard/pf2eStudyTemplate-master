@@ -1,6 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+const config = require('./.contentful.json');
 
 const { NUXT_ENV_CTF_SPACE_ID, NUXT_ENV_CTF_CD_ACCESS_TOKEN } = process.env;
 
@@ -10,9 +11,11 @@ const router = new Router();
 module.exports = router;
 
 const contentful = require('contentful');
+
+
 const client = contentful.createClient({
-  space: NUXT_ENV_CTF_SPACE_ID,
-  accessToken: NUXT_ENV_CTF_CD_ACCESS_TOKEN,
+  space: config.NUXT_ENV_CTF_SPACE_ID,
+  accessToken: config.NUXT_ENV_CTF_CD_ACCESS_TOKEN,
 });
 
 router.get('/', (request, response) => {

@@ -287,6 +287,7 @@ const playerCore =  [
         mode: "Upgrade",
         upgrade: "M",
         type: "Attack",
+
         level: 13,
       },
       {

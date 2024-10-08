@@ -587,7 +587,6 @@ const playerCoreAncestry = [
         type: 'Skill', 
         mode: 'Upgrade', 
         key: 'arcana',
-        isChoiceAll: false,
         // option: ['all'],
         value: "T", 
       },
@@ -596,7 +595,6 @@ const playerCoreAncestry = [
         type: 'Skill', 
         mode: 'Upgrade', 
         key: 'nature', 
-        isChoiceAll: false,
         // option: ['all'],
         value: "T", 
       },
@@ -872,7 +870,7 @@ const playerCoreAncestry = [
         valueBonus: 2,
         typeBonus: 'circumstance',
       },
-          { 
+      { 
         type: 'Perception', 
         mode: 'Bonus', 
         key: 'Perception', 

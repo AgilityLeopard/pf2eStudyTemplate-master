@@ -5,7 +5,7 @@
         <v-col :cols="12" sm="10" md="8" lg="8">
           <h1>About this page</h1>
 
-          <p>
+          <!-- <p>
             This page is an <strong>inofficial</strong> fan page for the
             Warhammer 40k Role Playing Game Wrath & Glory. The game is currently
             published by
@@ -23,31 +23,17 @@
             <a href="http://apps.ajott.io/dh2chargen/"
               >Dark Heresy 2 Character Generator</a
             >. You should definitely check it out!
-          </p>
+          </p> -->
 
-          <p>
+          <!-- <p>
             Also, I quite often use the Official D&D Character Generator over at
             <a href="https://www.dndbeyond.com/">D&D Beyond</a>
             and draw inspiration how to organise the layout.
-          </p>
+          </p> -->
 
           <p>
-            The Forge uses icons from
-            <a href="https://game-icons.net/">game-icons.net</a>, check them
-            out!
-          </p>
-
-          <h2>Disclaimer</h2>
-          <p>
-            I'm not associated to Cubical 7 or Games Workshop. I'm an
-            enthusiastic fan that wants to support the Warhammer 40k Roleplaying
-            community.
-          </p>
-
-          <p>
-            This page is not endorsed, sponsored, or affiliated with Games
-            Workshop Ltd., Ulisses Spiele, Cubical 7, or the WARHAMMER 40,000
-            franchise.
+            Иконки с сайта
+            <a href="https://game-icons.net/">game-icons.net</a>
           </p>
 
           <p />
