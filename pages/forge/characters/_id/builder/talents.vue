@@ -149,7 +149,7 @@
                 :talents="selectedTalentsClass"
                 :level="levelAncestry"
                 :list="talentList"
-                type="ancestry"
+                type="class"
                 choose-mode
                 @cancel="talentsDialogClass = false"
               />
@@ -341,7 +341,7 @@
                 :talents="selectedTalentsSkill"
                 :list="talentList"
                 :level="levelAncestry"
-                type="ancestry"
+                type="skill"
                 choose-mode
                 @cancel="talentsDialogSkill = false"
               />
