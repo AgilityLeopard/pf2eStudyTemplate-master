@@ -176,7 +176,7 @@ const coreRep = [
     rarity: "common",
     size: "medium",
     ancestryAbility: [
-      "low-light"
+      "low-light vision"
     ],
     exampleName:
       "Аэрэль, Амрунэлара, Каладрэль, Дардлара, Фанра, Хэлдалэль, Ятхэль, Ланлисс, Опарэль, Сэлдлон, Сумрэль, Талатэль, Тессара, Вариэль, Яландлара, Зордлон",

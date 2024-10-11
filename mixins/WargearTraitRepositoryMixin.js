@@ -455,6 +455,24 @@ export default {
           name: "Продвинутое оружие"
         }
       ],
+      armourCategoryRepository: [
+        {
+          category: "heavy",
+          name: "Тяжелый доспех"
+        },
+        {
+          category: "medium",
+          name: "Средний доспех"
+        },
+        {
+          category: "light",
+          name: "Легкий доспех"
+        },
+        {
+          category: "unarmored",
+          name: "Защита без доспехов"
+        }
+      ],
       weaponRuneStriking: [
         {
           key: "none",
@@ -519,6 +537,20 @@ export default {
           key: "shifting",
           name: "Изменяющаяся",
           addItemBonus: 0
+        },
+      ],
+      DamageType: [
+        {
+          key: "piercing",
+          name: "колющий"
+        },
+        {
+          key: "slashing",
+          name: "режущий"
+        },
+        {
+          key: "bludgeoning",
+          name: "дробящий"
         },
       ]
     };

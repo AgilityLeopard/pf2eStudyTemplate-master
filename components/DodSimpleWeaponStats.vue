@@ -6,7 +6,6 @@
           <tr>
             <th
               v-for="header in headers"
-         
               :key="header.value"
               :class="header.class"
             >
@@ -21,33 +20,26 @@
               {{ stats.nameGear }}
             </td>
             <td class="text-center">
-              <span >{{ groupName(stats.group) }}</span>
-              <!-- <span v-if="['*','-'].includes(stats.range)">*</span>
-              <span v-else-if="stats.range === 0">melee</span>
-              <span v-else-if="stats.range === 1">melee</span>
-              <span v-else-if="stats.range === 2">2</span>
-              <span v-else>{{ stats.range/2 }} | {{ stats.range }} | {{ stats.range*1.5 }}</span> -->
+              <span>{{ groupName(stats.group) }}</span>
             </td>
             <td class="text-center">
               <div v-if="stats.damage.static === '*'">
                 <span>*</span>
               </div>
               <div v-else-if="stats.damage">
-                <span>{{ stats.damage }}  {{ stats.typeDamage }}</span>
-                <!-- <span v-if="isMelee">STR+{{ stats.damage }}</span>
-                <span v-else>{{ stats.damage.static }}</span>
-                <span> + </span>
-                <span>{{ stats.damage.ed }} ED</span> -->
+                <span>{{ stats.damage }} {{ stats.typeDamage }}</span>
               </div>
             </td>
             <td class="text-center">
               <span>{{ category(stats.category) }}</span>
             </td>
-            <td  class="text-center">
+            <td class="text-center">
               <span>{{ stats.hands }}</span>
             </td>
             <td class="text-left">
-              <span v-if="stats.traits && stats.traits.length >0">{{ stats.traits.join(', ') }}</span>
+              <span v-if="stats.traits && stats.traits.length > 0">{{
+                stats.traits.join(", ")
+              }}</span>
             </td>
           </tr>
         </tbody>
@@ -69,10 +61,10 @@
 </template>
 
 <script>
-import WargearTraitRepositoryMixin from '~/mixins/WargearTraitRepositoryMixin';
+import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 
 export default {
-  name: 'DodSimpleWeaponStats',
+  name: "DodSimpleWeaponStats",
   mixins: [WargearTraitRepositoryMixin],
   props: {
     name: {
@@ -93,50 +85,65 @@ export default {
     return {
       headers: [
         {
-          text: 'Название', value: 'name', class: 'text-left', align: 'left',
+          text: "Название",
+          value: "name",
+          class: "text-left",
+          align: "left",
         },
         {
-          text: 'Группа', value: 'range', class: 'text-center', align: 'center',
+          text: "Группа",
+          value: "range",
+          class: "text-center",
+          align: "center",
         },
         {
-          text: 'Урон', value: 'damage', class: 'text-center', align: 'center',
+          text: "Урон",
+          value: "damage",
+          class: "text-center",
+          align: "center",
         },
         {
-          text: 'Категория', value: 'ap', class: 'text-center', align: 'center',
+          text: "Категория",
+          value: "ap",
+          class: "text-center",
+          align: "center",
         },
         {
-          text: 'Руки', value: 'salvo', class: 'text-center', align: 'center',
+          text: "Руки",
+          value: "salvo",
+          class: "text-center",
+          align: "center",
         },
         {
-          text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
+          text: "Трейты",
+          value: "traits",
+          class: "text-left",
+          align: "left",
         },
       ],
     };
   },
   computed: {
     isMelee() {
-      return this.stats.type === 'melee-weapon';
+      return this.stats.type === "melee-weapon";
     },
-
-
   },
   methods: {
     traitByName(name) {
-      const prefix = name.split('(')[0];
-      return this.wargearTraitRepository.find((item) => item.name.includes(prefix));
+      const prefix = name.split("(")[0];
+      return this.wargearTraitRepository.find((item) =>
+        item.name.includes(prefix)
+      );
     },
-    groupName(name){
-      return this.weaponGroup.find(item => item.group === name).name;
+    groupName(name) {
+      return this.weaponGroup.find((item) => item.group === name).name;
     },
-    category(category)
-    {
-      return this.weaponCategoryRepository.find(t => t.category === category).name;
-    }
+    category(category) {
+      return this.weaponCategoryRepository.find((t) => t.category === category)
+        .name;
+    },
   },
-
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

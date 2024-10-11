@@ -34,10 +34,10 @@
       <!-- </div> -->
 
       <p></p>
-
-      <p class="text-lg-justify">
+      <div v-html="species.previewText"></div>
+      <!-- <p class="text-lg-justify">
           <div v-html="species.previewText"></div> 
-      </p>
+      </p> -->
 
       <span class="mt-2 grey--text">Повышение характеристик</span>
       <v-divider />
@@ -58,12 +58,26 @@
 
       <span class="mt-2 grey--text">Понижение характеристик</span>
       <v-divider />
- 
 
       <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
         <div v-if="flaw.value < 0">
           <strong>{{ flaw.name }}</strong>
         </div>
+      </div>
+
+      <p></p>
+      <span class="mt-2 grey--text">Языки</span>
+      <v-divider />
+
+      <div v-for="lang in species.language" class="text-lg-justify">
+        <div>
+          <strong>{{ lang }}</strong>
+        </div>
+      </div>
+
+      <div>
+        {{ species.freeLanguage }} на выбор + количество языков, равное вашему
+        модификатору Интеллекта (если положительный)
       </div>
 
       <p></p>
@@ -73,20 +87,24 @@
       <div v-if="species.speciesFeatures">
         <div v-for="feature in species.speciesFeatures" class="text-lg-justify">
           <div v-if="feature.description">
-            <strong>{{ feature.name }}</strong>
-            <div v-html="feature.description"></div>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <div v-on="on" class="tooltip">
+                  {{ feature.name }}
+                </div>
+              </template>
+              <span>{{ feature.description }}</span>
+            </v-tooltip>
           </div>
-          <p v-else>
-            <strong>{{ feature.name }}: </strong>{{ feature.snippet }}
-          </p>
-          <p></p>
         </div>
       </div>
     </v-card-text>
 
     <v-divider v-if="chooseMode" />
     <v-card-actions v-if="chooseMode">
-      <v-btn outlined color="red" left @click="$emit('cancel')"> Отменить </v-btn>
+      <v-btn outlined color="red" left @click="$emit('cancel')">
+        Отменить
+      </v-btn>
       <v-spacer />
       <v-btn color="success" right @click="$emit('select', species)">
         Выберите наследие
@@ -161,11 +179,26 @@ export default {
   font-weight: bolder;
   margin: 0;
   padding: 0 0.25em;
+  cursor: pointer;
 }
 
 .simple {
   display: inherit;
   margin-bottom: 0;
   padding-inline-start: 0.2em;
+}
+
+.tooltip {
+  color: #359fdf;
+  text-decoration: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  cursor: pointer;
 }
 </style>

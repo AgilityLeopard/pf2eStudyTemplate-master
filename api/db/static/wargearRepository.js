@@ -152,7 +152,8 @@ const playerCore =  [
     traits: ["быстрое", "точное", "универсальное рубящий"],
     type: "melee",
     category: "martial",
-    price: "9S",
+    weigthL: 1,
+    // price: "9S",
     damage: "1d6",
     typeDamage: "piercing",
     rarity: "common",
@@ -163,12 +164,13 @@ const playerCore =  [
     {
     ...gear(source.playerCore.key,211,'Composite Longbow','2C','Blade,[Any]'),
     // ...meleez(undefined,2,2,0,0),
-    ...price(0,9,0,0),
+    ...price(0,20,0,0),
     nameGear: "Композитный длинный лук",
     traits: ["залповое 30фт", "смертельное d10", "тяговое"],
     type: "ranged",
     category: "martial",
-    price: "20G",
+      // price: "20G",
+    weight: 2,
     damage: "1d8",
     typeDamage: "piercing",
     rarity: "common",
@@ -180,12 +182,13 @@ const playerCore =  [
       {
     ...gear(source.playerCore.key,211,'Elven Curve Blade','2C','Blade,[Any]'),
     // ...meleez(undefined,2,2,0,0),
-    ...price(0,9,0,0),
+    ...price(0,4,0,0),
     nameGear: "Эльфийская сабля",
     traits: ["силовое", "точное", "эльф"],
     type: "melee",
     category: "martial",
-    price: "20G",
+        // price: "20G",
+     weight: 2,
     damage: "1d8",
     typeDamage: "slashing",
     rarity: "uncommon",
@@ -193,23 +196,32 @@ const playerCore =  [
     group: "sword",
     description: "По сути, это удлиненная версия скимитара, традиционное эльфийское оружие имеет более тонкий клинок, чем его двоюродный брат."
   },
+
+  ///Доспехи
   {
-    ...gear(source.playerCore.key,211,'plate mail','2C','Blade,[Any]'),
-    ...meleez(undefined,2,2,0,0),
-    ...price(0,9,0,0),
-    nameGear: "Не меч",
-    traits: ["тяжелое", "ручное", "точное"],
-    type: "melee",
-    category: "heavy",
-    price: "9S",
-    damage: "1d6",
-    typeDamage: "piercing",
+    ...gear(source.playerCore.key,211,'Chain Mail','2C',''),
+    ...armour(undefined,0,0),
+    ...price(0,6,0,0),
+    nameGear: "Кольчуга",
+    traits: ["гибкий", "шумный"],
+    category: "medium",
+    // category: "heavy",
+    // price: "6G",
+    // damage: "1d6",
+    // typeDamage: "piercing",
     rarity: "common",
-    hands: 1,
-    group: "sword",
-    description: "Эти клинки бывают разных форм и стилей, но они обычно 2 фута длиной."
+    bonusAC: 4,
+    modDex: 1,
+    penalty: 2,
+    penaltySpeed: 5,
+    weight: 2,
+    strength: 16,
+    // hands: 1,
+    group: "leather",
+    description: "Кольчужный комплект содержит несколько частей доспеха, состоящих из небольших металлических колец, соединенных вместе и образующих защитную сетку. Обычно он включает в себя кольчужную рубашку, поножи, рукава и койф, которые в совокупности защищают большую часть тела."
   }
 ]
+
 
 // const playerCore =  [
 //   {

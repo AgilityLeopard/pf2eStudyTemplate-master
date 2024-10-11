@@ -12,11 +12,11 @@
       >
         <v-card-text class="pa-1">
           <v-icon>{{ manageWargear ? "expand_less" : "expand_more" }}</v-icon>
-          Управление Оружием ({{ characterWeapon.length }})
+          Управление Оружием({{ characterWeapon.length }})
         </v-card-text>
       </v-card>
 
-      <v-simple-table v-if="manageWargear && characterWeapon" dense>
+      <v-simple-table v-if="manageArmour && characterArmour" dense>
         <template v-slot:default>
           <thead>
             <tr>
@@ -41,6 +41,96 @@
                   @click="openWeaponSettings(gear)"
                 >
                   <v-icon left> edit </v-icon>Изменить
+                </v-btn>
+              </td>
+              <td>
+                <v-btn outlined x-small color="error" @click="remove(gear)">
+                  <v-icon left> delete </v-icon>Удалить
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+
+      <v-col :cols="12" v-if="manageWargear && characterWeapon">
+        <v-card
+          class="mb-4"
+          dark
+          outlined
+          :color="wargearSearchActive ? 'info' : ''"
+          @click="wargearSearchActive = !wargearSearchActive"
+        >
+          <v-card-text class="pa-1">
+            <v-icon>{{
+              wargearSearchActive ? "expand_less" : "expand_more"
+            }}</v-icon>
+            Добавить оружие
+          </v-card-text>
+        </v-card>
+
+        <wargear-search
+          v-if="
+            wargearSearchActive &&
+            wargearList &&
+            manageWargear &&
+            characterWeapon
+          "
+          :repository="
+            wargearList.filter((item) =>
+              weaponCategoryRepository
+                .map((t) => t.category)
+                .includes(item.category)
+            )
+          "
+          @select="add"
+        />
+      </v-col>
+
+      <v-card
+        class="mb-4"
+        dark
+        dense
+        outlined
+        :color="manageArmour ? 'info' : ''"
+        @click="manageArmour = !manageArmour"
+      >
+        <v-card-text class="pa-1">
+          <v-icon>{{ manageArmour ? "expand_less" : "expand_more" }}</v-icon>
+          Управление Доспехами({{ characterArmour.length }})
+        </v-card-text>
+      </v-card>
+
+      <v-simple-table v-if="manageArmour && characterArmour" dense>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th v-for="header in headers" :class="header.class">
+                {{ header.text }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="gear in characterArmour" :key="gear.id">
+              <td>{{ gear.nameGear }}</td>
+              <!-- <td class="text-center pa-1 small">
+                + {{ attackModifier(gear) }} / {{ attackModifier(gear) - 5 }} /
+                {{ attackModifier(gear) - 10 }}
+              </td> -->
+              <!-- <td class="text-center pa-1 small">{{ damageModifier(gear) }}</td> -->
+              <!-- <td>
+                <v-btn
+                  outlined
+                  x-small
+                  color="info"
+                  @click="openWeaponSettings(gear)"
+                >
+                  <v-icon left> edit </v-icon>Изменить
+                </v-btn>
+              </td> -->
+              <td>
+                <v-btn outlined x-small color="info" @click="wear(gear)">
+                  <v-icon left> lock </v-icon>Надеть
                 </v-btn>
               </td>
               <td>
@@ -128,32 +218,27 @@
         </v-card>
       </v-dialog>
 
-      <v-col :cols="12" v-if="manageWargear && characterWeapon">
+      <v-col :cols="12" v-if="manageArmour && characterArmour">
         <v-card
           class="mb-4"
           dark
           outlined
-          :color="wargearSearchActive ? 'info' : ''"
-          @click="wargearSearchActive = !wargearSearchActive"
+          :color="armourSearchActive ? 'info' : ''"
+          @click="armourSearchActive = !armourSearchActive"
         >
           <v-card-text class="pa-1">
             <v-icon>{{
-              wargearSearchActive ? "expand_less" : "expand_more"
+              armourSearchActive ? "expand_less" : "expand_more"
             }}</v-icon>
-            Добавить оружие
+            Добавить доспех
           </v-card-text>
         </v-card>
 
         <wargear-search
-          v-if="
-            wargearSearchActive &&
-            wargearList &&
-            manageWargear &&
-            characterWeapon
-          "
+          v-if="armourSearchActive"
           :repository="
             wargearList.filter((item) =>
-              weaponCategoryRepository
+              armourCategoryRepository
                 .map((t) => t.category)
                 .includes(item.category)
             )
@@ -202,13 +287,16 @@ export default {
   data() {
     return {
       manageWargear: true,
+      manageArmour: true,
       weaponEditorDialog: false,
       startingWargearExpand: true,
       wargearSearchActive: false,
+      armourSearchActive: false,
       loading: false,
       alert: false,
       archetype: undefined,
       wargearList: undefined,
+      armourList: undefined,
       advancedShoppingChart: [],
       Striking:  "none",
       Potency:  "none",
@@ -409,6 +497,41 @@ export default {
         });
       }
       return characterWargear;
+    },
+    characterArmour() {
+      const characterWargear = [];
+
+      if (this.wargearList){
+        const Category = this.armourCategoryRepository.map(item => item.category);
+        this.characterWargearRaw.filter(item => Category.includes(item.category)).forEach((chargear) => {
+          // this.characterWargearRaw.forEach((chargear) => {
+          let gear = {};
+          gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);
+          if (gear) {
+            gear.id = chargear.id;
+            gear.source = chargear.source;
+            characterWargear.push({
+              id: chargear.id,
+              // name: gear.nameGear,
+              // source: chargear.source,
+              ...chargear,
+              // subtitle: this.wargearSubtitle(gear),
+              // avatar: this.getAvatar(gear.type),
+
+            });
+          } else {
+            characterWargear.push({
+              id: chargear.id,
+              name: chargear.name,
+              type: 'Misc',
+              subtitle: 'Misc',
+              avatar: this.getAvatar('Misc'),
+              source: chargear.source,
+            });
+          }
+        });
+      }
+      return characterWargear;
     }
   },
   watch: {
@@ -527,11 +650,13 @@ export default {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     add(gear) {
+      if (gear.type === 'melee' || gear.type === 'range')
+      {
       const category = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
       const trait = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
 
       gear = {
-  ...gear,
+        ...gear,
         categoryOld: gear.category
 
       };
@@ -540,10 +665,18 @@ export default {
       if (trait)
         gear.category = gear.category === "advanced" ? "martial" : "simple";
 
+      }
+      // else
+      // {
+
+      // }
       this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
     },
     remove(gear) {
       this.$store.commit('characters/removeCharacterWargear', { id: this.characterId, gearId: gear.id });
+    },
+    wear(gear) {
+      this.$store.commit('characters/wearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
     },
     enhancements() {
       return this.$store.getters['characters/characterEnhancementsById'](this.characterId);

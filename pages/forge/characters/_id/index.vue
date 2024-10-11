@@ -319,7 +319,7 @@
         <v-card>
           <v-tabs centered grow color="red">
             <v-tab class="caption" key="actions" :href="`#tab-actions`"
-              ><h2 class="subtitle-2">Weapons</h2></v-tab
+              ><h2 class="subtitle-2">Оружие</h2></v-tab
             >
             <v-tab class="caption" key="wargear" :href="`#tab-wargear`"
               ><h2 class="subtitle-2">Wargear</h2></v-tab
@@ -354,91 +354,46 @@
                   hide-default-footer
                 >
                   <template v-slot:item="{ item }">
-                    <tr
-                      v-if="item.meta"
-                      v-for="(meta, metaIndex) in item.meta.filter(
-                        (m) => m.type.indexOf('-weapon') > 0
-                      )"
-                      :key="`${item.name}-${metaIndex}`"
-                    >
+                    <tr v-if="item">
                       <td class="text-left pa-1 small">
-                        {{ item.name }}
-                        <template v-if="item.meta.length > 1">
-                          <span v-if="meta.type === 'melee-weapon'"
-                            >Ближний бой</span
-                          >
-                          <span v-else-if="meta.type === 'ranged-weapon'"
-                            >Дальний бой</span
-                          >
-                        </template>
+                        {{ item.nameGear }}
                       </td>
 
                       <td class="text-center pa-1 small">
-                        <span v-if="meta.range > 4">
-                          {{ meta.range / 2 }} | {{ meta.range }} |
-                          {{ meta.range * 1.5 }}
-                        </span>
-                        <span v-else-if="meta.range > 1"
-                          >{{ meta.range }} m</span
-                        >
-                        <span v-if="meta.range === 1">melee</span>
-                        <span
-                          v-if="
-                            isNaN(meta.range) && meta.range.startsWith('STRx')
-                          "
-                          >{{ meta.range }}</span
-                        >
+                        <span>{{ groupName(item.group) }}</span>
                       </td>
 
                       <td class="text-center pa-1 small">
-                        <div v-if="meta.damage">
-                          <div v-if="meta.damage.static === '*'">*</div>
-                          <div v-else>
-                            <span v-if="meta.type === 'melee-weapon'"
-                              >{{
-                                meta.damage.static +
-                                attributes.find((a) => a.key === "strength")
-                                  .adjustedRating
-                              }}*</span
-                            >
-                            <span v-else>{{ meta.damage }}</span>
-                            <span> + </span>
-                            <span>{{ item.damage }} ED</span>
-                          </div>
+                        + {{ attackModifier(item) }} /
+                        {{ attackModifier(item) - 5 }} /
+                        {{ attackModifier(item) - 10 }}
+                      </td>
+
+                      <td class="text-center pa-1 small">
+                        <div v-if="item.damage">
+                          <span
+                            >{{ item.damage }}
+                            {{ typeDamage(item.typeDamage) }}</span
+                          >
                         </div>
                       </td>
 
                       <td class="text-center pa-1 small">
-                        <span>{{ meta.ap }}</span>
+                        <span>{{ category(item.category) }}</span>
                       </td>
 
                       <td class="text-center pa-1 small">
-                        <span>{{ isNaN(meta.salvo) ? "-" : meta.salvo }}</span>
+                        <span>{{ item.hands }}</span>
                       </td>
 
-                      <!-- <td class="text-left pa-1 small">
-                        <span v-if="meta.traits && meta.traits.length >0">{{ meta.traits.join(', ') }}</span>
-                        <span v-else>-</span>
-                      </td> -->
+                      <td class="text-left pa-1 small">
+                        <span v-if="item.traits && item.traits.length > 0">{{
+                          item.traits.join(", ")
+                        }}</span>
+                      </td>
                     </tr>
                   </template>
                 </v-data-table>
-
-                <!-- <div class="mb-1 mt-2">
-                  <span class="body-2 red--text">Reloads:</span>
-                  <span class="body-2">{{ characterReloads.points - characterReloads.spend }} remaining.</span>
-                  <div class="pl-2" style="flex-wrap: wrap; display: flex;" v-if="characterReloads.points > 0">
-                    <v-btn
-                      text icon
-                      v-for="pointIndex in characterReloads.points"
-                      :key="pointIndex"
-                      @click="toggleResourceReloads(pointIndex)"
-                    >
-                      <v-icon color="error" v-if="pointIndex <= characterReloads.spend">signal_cellular_no_sim</v-icon>
-                      <v-icon color="primary" v-else>sd_storage</v-icon>
-                    </v-btn>
-                  </div>
-                </div> -->
 
                 <div class="mt-4">
                   <div
@@ -1249,10 +1204,11 @@ export default {
       ],
       weaponHeaders: [
         { text: 'Название', sortable: false, align: 'left', class: 'small pa-1' },
-        { text: 'Дальность', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Группа оружия', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Попадание', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Урон', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Категория', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Группа', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Руки', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
       ],
       psychicPowersHeaders: [
@@ -1314,6 +1270,9 @@ export default {
         // 'tnh',
         ...this.settingHomebrews
       ];
+    },
+    skillAttack() {
+      return this.$store.getters['characters/characterskillAttackById'](this.characterId);
     },
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
@@ -1816,29 +1775,6 @@ export default {
         }
       }
 
-      // from ascensions
-      const ascensionRepository = this.ascensionPackagesRepository;
-      // if (ascensionRepository && ascensionRepository.length > 0) {
-      //   ascensionRepository.forEach((ascension) => {
-      //     const ascendedTiers = ascension.targetTier - ascension.sourceTier;
-      //     ascension.ascensionFeatures.forEach((feature) => {
-      //       if (feature.modifications) {
-      //         feature.modifications.forEach((mod) => {
-      //           const newMod = {
-      //             ...mod,
-      //             ascendedTiers,
-      //             provider: feature.name,
-      //             category: ascension.name,
-      //             source: ascension.source,
-      //           };
-      //           finalEnhancements.push(newMod);
-      //         });
-      //       }
-      //     });
-      //   });
-      // }
-
-      // existing enhancements (Excluding those from the RAW package)
       if (this.characterEnhancements) {
         this.characterEnhancements
         .filter((mod) => mod.source
@@ -2289,9 +2225,9 @@ export default {
       return wargear;
     },
     weapons() {
-      return this.wargear.filter((wargear) => {
+      return this.charGear.filter((wargear) => {
         let hasWeaponsProfile = false;
-        if (['Ranged Weapon', 'Melee Weapon'].includes(wargear.type)) {
+        if (['ranged', 'melee'].includes(wargear.type)) {
           hasWeaponsProfile = true;
         } else {
           if (wargear.meta) {
@@ -2576,6 +2512,17 @@ export default {
             break;
         }
     },
+    attackModifier(gear){
+
+      const modAbility = gear.type === 'melee' ? this.characterAttributesEnhanced["strength"] : this.characterAttributesEnhanced["dexterity"];
+
+      const modProfiency = this.characterArchetype ? this.skillAttack[gear.category] : "U";
+      const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
+      const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+
+         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+    },
+
     getTalentOption(talent, choiceKey) {
       return talent.options.find((t) => t.key === choiceKey);
     },
@@ -2584,6 +2531,7 @@ export default {
         return text;
       }
       const rank = this.characterRank;
+
       let computed = text;
 
       // computed = computed.replace(/(1d3\+Rank Shock)/g, `<strong>1d3+${rank} Shock</strong>`);
@@ -2631,6 +2579,17 @@ export default {
     },
     openSkillsSettings(){
       this.skillsEditorDialog = true;
+    },
+    category(category)
+    {
+      return this.weaponCategoryRepository.find(t => t.category === category).name;
+    },
+    typeDamage(type)
+    {
+      return this.DamageType.find(t => t.key === type).name;
+    },
+    groupName(name){
+      return this.weaponGroup.find(item => item.group === name).name;
     },
     closeSkillsSettings() {
       this.customSkill = {

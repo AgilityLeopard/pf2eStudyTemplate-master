@@ -17,13 +17,21 @@
         <tbody>
           <tr>
             <td class="text-left">
-              {{ name }}
+              {{ stats.nameGear }}
             </td>
             <td class="text-center">
-              {{ stats.armourRating }}
+              {{ stats.group }}
+            </td>
+            <td class="text-center">
+              {{ stats.weight }} + {{ stats.weightL }}
+            </td>
+            <td class="text-center">
+              {{ stats.category }}
             </td>
             <td class="text-left">
-              <span v-if="stats.traits && stats.traits.length >0">{{ stats.traits.join(', ') }}</span>
+              <span v-if="stats.traits && stats.traits.length > 0">{{
+                stats.traits.join(", ")
+              }}</span>
             </td>
           </tr>
         </tbody>
@@ -31,11 +39,7 @@
     </v-simple-table>
 
     <div v-if="showTraits" class="mt-4">
-      <p
-        v-for="trait in stats.traits"
-        v-if="traitByName(trait)"
-        :key="trait"
-      >
+      <p v-for="trait in stats.traits" v-if="traitByName(trait)" :key="trait">
         <strong>{{ traitByName(trait).name }}: </strong>
         {{ traitByName(trait).effect }}
       </p>
@@ -44,10 +48,10 @@
 </template>
 
 <script>
-import WargearTraitRepositoryMixin from '~/mixins/WargearTraitRepositoryMixin';
+import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 
 export default {
-  name: 'DodSimpleArmourStats',
+  name: "DodSimpleArmourStats",
   mixins: [WargearTraitRepositoryMixin],
   props: {
     name: {
@@ -68,26 +72,53 @@ export default {
     return {
       headers: [
         {
-          text: 'Название', value: 'name', class: 'text-left', align: 'left',
+          text: "Название",
+          value: "name",
+          class: "text-left",
+          align: "left",
         },
         {
-          text: 'Armour Rating', value: 'range', class: 'text-center', align: 'center',
+          text: "Группа",
+          value: "range",
+          class: "text-center",
+          align: "center",
         },
         {
-          text: 'Traits', value: 'traits', class: 'text-left', align: 'left',
+          text: "Вес",
+          value: "damage",
+          class: "text-center",
+          align: "center",
+        },
+        {
+          text: "Категория",
+          value: "ap",
+          class: "text-center",
+          align: "center",
+        },
+        {
+          text: "Руки",
+          value: "salvo",
+          class: "text-center",
+          align: "center",
+        },
+        {
+          text: "Трейты",
+          value: "traits",
+          class: "text-left",
+          align: "left",
         },
       ],
     };
   },
   methods: {
     traitByName(name) {
-      const prefix = name.split('(')[0];
-      return this.wargearTraitRepository.find((item) => item.name.includes(prefix));
+      const prefix = name.split("(")[0];
+      return this.wargearTraitRepository.find((item) =>
+        item.name.includes(prefix)
+      );
     },
   },
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

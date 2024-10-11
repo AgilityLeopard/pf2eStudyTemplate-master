@@ -4,7 +4,7 @@ const colors = require("vuetify/es5/util/colors").default;
 const path = require("path");
 const axios = require("axios");
 const config = require('./.contentful.json');
-console.log(config);
+
 module.exports = {
   configureWebpack: {
     devtool: "source-map",

@@ -24,6 +24,18 @@
 
         <v-list-item>
           <v-list-item-content>
+            <v-list-item-title> Класс доспехов </v-list-item-title>
+          </v-list-item-content>
+
+          <v-list-item-action class="hidden-xs-only">
+            <v-chip pill color="green" text-color="white">
+              {{ characterArmor() }}
+            </v-chip>
+          </v-list-item-action>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-content>
             <v-list-item-title> Скорость: </v-list-item-title>
           </v-list-item-content>
 
@@ -1147,7 +1159,26 @@ export default {
       this.drawer.clipped = false;
       this.toolbar.clippedLeft = false;
     },
+    characterArmor() {
+      const wear = this.$store.getters["characters/characterWearById"](
+        this.$route.params.id
+      );
+      if (wear) {
+        const modDex = Math.floor(
+          (this.characterAttributes["dexterity"] - 10) / 2
+        );
+        const dex = modDex > wear.modDex ? wear.modDex : modDex;
+        const Def = this.profiencyRepository[this.skillDefence[wear.category]];
+        const bonusAC = wear.bonusAC;
+        const arm = Def === 0 ? 0 : this.characterLevel();
+        return 10 + dex + Def + arm + bonusAC;
+      }
 
+      const modDex = Math.floor(
+        (this.characterAttributes["dexterity"] - 10) / 2
+      );
+      return 10 + modDex;
+    },
     characterHitPointsMax() {
       const species = this.characterHitPoints["species"]
         ? this.characterHitPoints["species"]

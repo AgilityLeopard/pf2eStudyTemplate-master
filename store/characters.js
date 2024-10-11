@@ -333,6 +333,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].Bonus : [],
   characterPerseptionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Perception : "U",
+  characterWearById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].wearArmor : {},
 
   characterTraitsById: (state, getters) => (id) => {
     const character = state.characters[id];
@@ -1899,6 +1901,15 @@ export const mutations = {
       character.wargear = character.wargear.filter((t) => t.id !== gearId);
     }
   },
+  wearCharacterWargear(state, payload) {
+    const character = state.characters[payload.id];
+    const { gearId } = payload;
+    const hasWargear =
+      character.wargear.find((t) => t.id === gearId) !== undefined;
+    if (hasWargear) {
+      character.wearArmor = payload.gear;
+    }
+  },
   removeCharacterWargearBySource(state, payload) {
     const character = state.characters[payload.id];
     const { source } = payload;
@@ -2523,7 +2534,9 @@ const getDefaultState = () => ({
     burrow: 0,
     swim: 0,
   },
+  AC: 0,
   wargear: [],
+  wearArmor: {},
   background: {
     origin: undefined,
     accomplishment: undefined,
