@@ -1910,6 +1910,15 @@ export const mutations = {
       character.wearArmor = payload.gear;
     }
   },
+  unwearCharacterWargear(state, payload) {
+    const character = state.characters[payload.id];
+    const { gearId } = payload;
+    const hasWargear =
+      character.wargear.find((t) => t.id === gearId) !== undefined;
+    if (hasWargear) {
+      character.wearArmor = undefined;
+    }
+  },
   removeCharacterWargearBySource(state, payload) {
     const character = state.characters[payload.id];
     const { source } = payload;

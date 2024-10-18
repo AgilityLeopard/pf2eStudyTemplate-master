@@ -68,12 +68,9 @@
 
         <template v-slot:item.buy="{ item }">
           <v-btn
-            :disabled="
-              item.level > level || characterTalentLabels.includes(item.name)
-            "
             :color="item.level <= level ? 'success' : 'red'"
             x-small
-            @click="addTalent(item, type, level)"
+            @click="addTalent(item, type, item.level)"
           >
             add
           </v-btn>
@@ -259,16 +256,17 @@ export default {
     },
   },
   methods: {
-    addTalent(talent, place, level) {
+    addTalent(talent, place, level1) {
       const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
       const list = this.list;
+      const level = talent.placeLevel;
       const payload = {
         id: talentUniqueId,
         name: talent.name,
         key: talent.key,
         cost: talent.cost,
-        place: place+level,
+        place: talent.place,
         modifications: talent.modifications,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
@@ -319,7 +317,7 @@ export default {
                       LoreSkill : LoreSkill,
           }]
             this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
-            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: level, modifications: mod, talentId: LoreUniqueId, source: 'featfree' } });
+            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: LoreUniqueId, source: 'featfree' } });
 
           }
         }

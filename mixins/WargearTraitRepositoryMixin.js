@@ -517,6 +517,50 @@ export default {
           addItemBonus: 3
         }
       ],
+      armourRuneResilent: [
+        {
+          key: "none",
+          name: "Нет",
+          addDice: 0
+        },
+        {
+          key: "resilent",
+          name: "Стойкости",
+          addDice: 1
+        },
+        {
+          key: "greater resilent",
+          name: "Отличная стойкости",
+          addDice: 2
+        },
+        {
+          key: "Major resilent",
+          name: "Cтаршая стойкости",
+          addDice: 3
+        }
+      ],
+      armourRunePotency: [
+        {
+          key: "none",
+          name: "Нет",
+          addItemBonus: 0
+        },
+        {
+          key: "potency-1",
+          name: "Мощи оружия +1",
+          addItemBonus: 1
+        },
+        {
+          key: "potency-2",
+          name: "Мощи оружия +2",
+          addItemBonus: 2
+        },
+        {
+          key: "potency-3",
+          name: "Мощи оружия +3",
+          addItemBonus: 3
+        }
+      ],
       WeaponRuneProperty: [
         {
           key: "returning",

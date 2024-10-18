@@ -38,7 +38,7 @@
             </v-dialog>
 
             <v-btn
-              @click="updatePreview()"
+              @click="updatePreview(levelAncestry, 'ancestry')"
               v-if="!characterAncestryTalent(levelAncestry)"
             >
               Выберите черту {{ levelAncestry }}
@@ -53,13 +53,7 @@
                   <template v-slot:default="{ open }">
                     <v-row no-gutters>
                       <v-col :cols="8" :sm="10" class="subtitle-1">
-                        <span
-                          v-html="
-                            placeText[
-                              characterAncestryTalent(levelAncestry).place
-                            ]
-                          "
-                        />
+                        <span />
                       </v-col>
                       <v-col :cols="8" :sm="10" class="subtitle-2">
                         <span
@@ -109,7 +103,7 @@
                       dense
                       @input="
                         talentUpdateSelected(
-                          $event,
+                          item,
                           characterAncestryTalent(levelAncestry),
                           levelAncestry
                         )
@@ -156,7 +150,7 @@
             </v-dialog>
 
             <v-btn
-              @click="updatePreviewClass()"
+              @click="updatePreview(levelAncestry, 'class')"
               v-if="!characterClassTalent(levelAncestry)"
             >
               Выберите черту {{ levelAncestry }}
@@ -171,11 +165,7 @@
                   <template v-slot:default="{ open }">
                     <v-row no-gutters>
                       <v-col :cols="8" :sm="10" class="subtitle-1">
-                        <span
-                          v-html="
-                            placeText[characterClassTalent(levelAncestry).place]
-                          "
-                        />
+                        <span />
                       </v-col>
                       <v-col :cols="8" :sm="10" class="subtitle-2">
                         <span
@@ -233,7 +223,7 @@
                       dense
                       @input="
                         talentUpdateSelected(
-                          $event,
+                          item,
                           characterClassTalent(levelAncestry),
                           levelAncestry
                         )
@@ -259,9 +249,7 @@
                   <template v-slot:default="{ open }">
                     <v-row no-gutters>
                       <v-col :cols="8" :sm="10" class="subtitle-1">
-                        <span
-                          v-html="placeText[characterBackgroundTalent(1).place]"
-                        />
+                        <span />
                       </v-col>
                       <v-col :cols="8" :sm="10" class="subtitle-2">
                         <span v-html="characterBackgroundTalent(1).label" />
@@ -306,7 +294,7 @@
                       dense
                       @input="
                         talentSkillUpdateSelected(
-                          $event,
+                          item,
                           characterBackgroundTalent(1)
                         )
                       "
@@ -348,7 +336,7 @@
             </v-dialog>
 
             <v-btn
-              @click="updatePreviewSkill()"
+              @click="updatePreview(levelAncestry, 'skill')"
               v-if="!characterSkillTalent(levelAncestry)"
             >
               Выберите черту {{ levelAncestry }}
@@ -363,11 +351,7 @@
                   <template v-slot:default="{ open }">
                     <v-row no-gutters>
                       <v-col :cols="8" :sm="10" class="subtitle-1">
-                        <span
-                          v-html="
-                            placeText[characterSkillTalent(levelAncestry).place]
-                          "
-                        />
+                        <span />
                       </v-col>
                       <v-col :cols="8" :sm="10" class="subtitle-2">
                         <span
@@ -425,7 +409,7 @@
                       dense
                       @input="
                         talentUpdateSelected(
-                          $event,
+                          item,
                           characterSkillTalent(levelAncestry),
                           levelAncestry
                         )
@@ -472,7 +456,7 @@
             </v-dialog>
 
             <v-btn
-              @click="updatePreviewGeneral()"
+              @click="updatePreview(levelAncestry, 'general')"
               v-if="!characterGeneralTalent(levelAncestry)"
             >
               Выберите черту {{ levelAncestry }}
@@ -487,13 +471,7 @@
                   <template v-slot:default="{ open }">
                     <v-row no-gutters>
                       <v-col :cols="8" :sm="10" class="subtitle-1">
-                        <span
-                          v-html="
-                            placeText[
-                              characterGeneralTalent(levelAncestry).place
-                            ]
-                          "
-                        />
+                        <span />
                       </v-col>
                       <v-col :cols="8" :sm="10" class="subtitle-2">
                         <span
@@ -551,7 +529,7 @@
                       dense
                       @input="
                         talentUpdateSelected(
-                          $event,
+                          item,
                           characterGeneralTalent(levelAncestry),
                           levelAncestry
                         )
@@ -593,11 +571,7 @@
                   <template v-slot:default="{ open }">
                     <v-row no-gutters>
                       <v-col :cols="8" :sm="10" class="subtitle-1">
-                        <span
-                          v-html="
-                            placeText[characteFreeTalent(levelAncestry).place]
-                          "
-                        />
+                        <span />
                       </v-col>
                       <v-col :cols="8" :sm="10" class="subtitle-2">
                         <span
@@ -646,7 +620,7 @@
                       dense
                       @input="
                         talentUpdateSelected(
-                          $event,
+                          item,
                           characteFreeTalent(levelAncestry),
                           levelAncestry
                         )
@@ -928,21 +902,43 @@ export default {
     },
   },
   methods: {
-     updatePreview() {
+     updatePreview(levelAncestry, type) {
 
-      const config = {
-        params: { source: this.sources.join(','), },
-      };
 
-      // const TalentsDetails = await this.$axios.get('/api/talents/', config);
-
-      this.selectedTalentsAncestry = this.talentList.filter(s => s.type == 'ancestry').map(talent => {
+      const list = this.talentList.filter(s => s.type === type).map(talent => {
 
                        return {
                          ...talent
+
                        }
-                      });
-      this.talentsDialog = true;
+      });
+      list.forEach(t => {
+        const tal = t;
+        tal.place = type + levelAncestry;
+        tal.placeLevel = levelAncestry;
+
+      })
+
+      switch (type) {
+        case "ancestry":
+          this.talentsDialog = true;
+          this.selectedTalentsAncestry = list;
+          break;
+         case "class":
+          this.talentsDialogClass = true;
+          this.selectedTalentsClass  = list;
+             break;
+         case "skill":
+          this.talentsDialogSkill = true;
+          this.selectedTalentsSkill  = list;
+             break;
+          case "general":
+          this.talentsDialogGeneral = true;
+            this.selectedTalentsGeneral  = list;
+             break;
+
+        }
+
     },
      updatePreviewSkill() {
 
@@ -958,7 +954,8 @@ export default {
                        return {
                          ...talent
                        }
-                      });
+      });
+
       this.talentsDialogSkill = true;
     },
      updatePreviewClass() {

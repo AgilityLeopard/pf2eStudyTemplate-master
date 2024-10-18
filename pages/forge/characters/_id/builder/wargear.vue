@@ -129,8 +129,40 @@
                 </v-btn>
               </td> -->
               <td>
-                <v-btn outlined x-small color="info" @click="wear(gear)">
-                  <v-icon left> lock </v-icon>Надеть
+                <v-btn
+                  outlined
+                  x-small
+                  :color="
+                    characterWearWargear && characterWearWargear.id === gear.id
+                      ? 'info'
+                      : 'warning'
+                  "
+                  @click="
+                    characterWearWargear && characterWearWargear.id === gear.id
+                      ? unwear(gear)
+                      : wear(gear)
+                  "
+                >
+                  <v-icon left> lock </v-icon>
+
+                  <span
+                    v-if="
+                      characterWearWargear &&
+                      characterWearWargear.id === gear.id
+                    "
+                    >Снять
+                  </span>
+                  <span v-else>Надеть </span>
+                </v-btn>
+              </td>
+              <td>
+                <v-btn
+                  outlined
+                  x-small
+                  color="info"
+                  @click="openArmourSettings(gear)"
+                >
+                  <v-icon left> edit </v-icon>Изменить
                 </v-btn>
               </td>
               <td>
@@ -218,6 +250,81 @@
         </v-card>
       </v-dialog>
 
+      <v-dialog
+        v-model="armorEditorDialog"
+        :value="Armor"
+        width="600px"
+        scrollable
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+      >
+        <v-card>
+          <v-alert :value="alert1" type="error" text dense border="left">
+            Количество рун больше мощи доспеха
+          </v-alert>
+          <v-card-title style="background-color: #262e37; color: #fff">
+            Редактирование доспеха
+            <v-spacer />
+            <v-icon dark @click="closeArmorSettings">close</v-icon>
+          </v-card-title>
+
+          <v-card-text v-if="Weapon" class="pt-4">
+            <v-row>
+              <!-- <v-sheet class="ma-2 pa-2"> -->
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Стойкости руна"
+                  v-model="Resilent"
+                  :items="armourRuneResilent"
+                  item-text="name"
+                  item-value="key"
+                ></v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Руна мощи"
+                  v-model="Potency"
+                  :items="armourRunePotency"
+                  item-text="name"
+                  item-value="key"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6" sm="12">
+                <v-select
+                  label="Руны свойств"
+                  v-model="Property"
+                  :items="armourRuneProperty"
+                  item-text="name"
+                  item-value="key"
+                  multiple
+                  return-object
+                >
+                  <template #selection="{ item }">
+                    <v-chip
+                      color="blue"
+                      :close="true"
+                      @click:close="Property.pop(item)"
+                    >
+                      {{ item.name }}
+                    </v-chip>
+                  </template>
+                </v-select>
+              </v-col>
+              <!-- </v-sheet> -->
+            </v-row>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer />
+            <v-btn small right color="success" @click="saveArmor">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <v-col :cols="12" v-if="manageArmour && characterArmour">
         <v-card
           class="mb-4"
@@ -289,6 +396,7 @@ export default {
       manageWargear: true,
       manageArmour: true,
       weaponEditorDialog: false,
+      armorEditorDialog: false,
       startingWargearExpand: true,
       wargearSearchActive: false,
       armourSearchActive: false,
@@ -298,15 +406,23 @@ export default {
       wargearList: undefined,
       armourList: undefined,
       advancedShoppingChart: [],
-      Striking:  "none",
+      Striking: "none",
+      Resilent: "none",
       Potency:  "none",
       Property: [],
+
       Weapon: undefined,
+      Armor: undefined,
       runeWeapon:{
         potency: 'none',
         striking: 'none',
         property: [],
-      }  ,
+      },
+      runeArmor:{
+        potency: 'none',
+        resilent: 'none',
+        property: [],
+      } ,
       headers: [
         {
           text: 'Название', value: 'name', class: 'text-left', align: 'left',
@@ -427,6 +543,10 @@ export default {
     characterAttributes() {
       return this.$store.getters['characters/characterAttributesById'](this.characterId);
     },
+    characterWearWargear() {
+      return this.$store.getters['characters/characterWearById'](this.characterId);
+    },
+
     characterWargear() {
       const characterWargear = [];
 
@@ -567,12 +687,18 @@ export default {
       };
       const { data } = await this.$axios.get('/api/wargear/', config);
       const rune = this.runeWeapon;
+      const wr = this.weaponCategoryRepository;
+      const ar = this.armourCategoryRepository;
       data.forEach(item => {
-        if(!item.runeWeapon)
+        if(!item.runeWeapon && wr.find(t => t.category === item.category))
           {
             item.runeWeapon = rune;
           }
 
+          if(!item.armorWeapon && ar.find(t => t.category === item.category))
+          {
+            item.armorWeapon = rune;
+          }
       });
       this.wargearList = data.filter((i) => i.stub === undefined || i.stub === false);
     },
@@ -673,10 +799,14 @@ export default {
       this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
     },
     remove(gear) {
+      this.$store.commit('characters/unwearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
       this.$store.commit('characters/removeCharacterWargear', { id: this.characterId, gearId: gear.id });
     },
     wear(gear) {
       this.$store.commit('characters/wearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
+    },
+    unwear(gear) {
+      this.$store.commit('characters/unwearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
     },
     enhancements() {
       return this.$store.getters['characters/characterEnhancementsById'](this.characterId);
@@ -690,8 +820,21 @@ export default {
       this.Property = this.WeaponRuneProperty.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
       this.Weapon = gear;
     },
+    openArmourSettings(gear){
+      this.armourEditorDialog = true;
+      const armor = this.characterWargearRaw.find(t => t.id === gear.id);
+      this.Resilent = this.armourRuneResilent.find(item => armor.runeArmor.resilent === item.key).key;
+      this.Potency = this.armourRunePotency.find(item => armor.runeArmor.potency === item.key).key;
+      const PropertyMap = armor.runeArmor.property.map(item => item.key)
+      this.Property = this.ArmorRuneProperty.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
+      this.Armor = gear;
+    },
     closeWeaponSettings() {
       this.weaponEditorDialog = false;
+      // this.alert = false;
+    },
+    closeArmourSettings() {
+      this.armorEditorDialog = false;
       // this.alert = false;
     },
     PotencyCap(potency){
@@ -716,6 +859,23 @@ export default {
         // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
         this.weaponEditorDialog = false;
       }
+    },
+    saveArmor() {
+      this.alert = false;
+      const armor =  this.Resilent;
+      const runeStriking = this.armourRuneResilent.find(item => weapon === item.key).addDice;
+      const PropertyMap = this.Property.map(item => item.key);
+      const Property =  this.armourRuneProperty.filter(item => PropertyMap.includes(item.key));
+
+      // if ( this.PotencyCap(this.Potency) < this.Property.length) {
+      //   this.alert = true;
+      //   // console.warn(`Skill ${skill.name} already exists.`);
+      // }
+      // else{
+      //   this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon });
+      //   // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
+      //   this.weaponEditorDialog = false;
+      // }
     },
     /**
      * {
