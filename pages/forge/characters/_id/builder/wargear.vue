@@ -16,7 +16,7 @@
         </v-card-text>
       </v-card>
 
-      <v-simple-table v-if="manageArmour && characterArmour" dense>
+      <v-simple-table v-if="manageWargear && characterWeapon" dense>
         <template v-slot:default>
           <thead>
             <tr>
@@ -87,6 +87,7 @@
         />
       </v-col>
 
+      <!-- Доспехи -->
       <v-card
         class="mb-4"
         dark
@@ -264,10 +265,10 @@
           <v-card-title style="background-color: #262e37; color: #fff">
             Редактирование доспеха
             <v-spacer />
-            <v-icon dark @click="closeArmorSettings">close</v-icon>
+            <v-icon dark @click="closeArmourSettings">close</v-icon>
           </v-card-title>
 
-          <v-card-text v-if="Weapon" class="pt-4">
+          <v-card-text v-if="Armor" class="pt-4">
             <v-row>
               <!-- <v-sheet class="ma-2 pa-2"> -->
 
@@ -296,7 +297,7 @@
                 <v-select
                   label="Руны свойств"
                   v-model="Property"
-                  :items="armourRuneProperty"
+                  :items="ArmorRuneProperty"
                   item-text="name"
                   item-value="key"
                   multiple
@@ -402,6 +403,7 @@ export default {
       armourSearchActive: false,
       loading: false,
       alert: false,
+      alert1: false,
       archetype: undefined,
       wargearList: undefined,
       armourList: undefined,
@@ -687,6 +689,8 @@ export default {
       };
       const { data } = await this.$axios.get('/api/wargear/', config);
       const rune = this.runeWeapon;
+      const rune1 = this.runeArmor;
+
       const wr = this.weaponCategoryRepository;
       const ar = this.armourCategoryRepository;
       data.forEach(item => {
@@ -695,9 +699,9 @@ export default {
             item.runeWeapon = rune;
           }
 
-          if(!item.armorWeapon && ar.find(t => t.category === item.category))
+          if(!item.runeArmor && ar.find(t => t.category === item.category))
           {
-            item.armorWeapon = rune;
+            item.runeArmor = rune1;
           }
       });
       this.wargearList = data.filter((i) => i.stub === undefined || i.stub === false);
@@ -821,7 +825,7 @@ export default {
       this.Weapon = gear;
     },
     openArmourSettings(gear){
-      this.armourEditorDialog = true;
+      this.armorEditorDialog = true;
       const armor = this.characterWargearRaw.find(t => t.id === gear.id);
       this.Resilent = this.armourRuneResilent.find(item => armor.runeArmor.resilent === item.key).key;
       this.Potency = this.armourRunePotency.find(item => armor.runeArmor.potency === item.key).key;
@@ -865,7 +869,7 @@ export default {
       const armor =  this.Resilent;
       const runeStriking = this.armourRuneResilent.find(item => weapon === item.key).addDice;
       const PropertyMap = this.Property.map(item => item.key);
-      const Property =  this.armourRuneProperty.filter(item => PropertyMap.includes(item.key));
+      const Property =  this.ArmorRuneProperty.filter(item => PropertyMap.includes(item.key));
 
       // if ( this.PotencyCap(this.Potency) < this.Property.length) {
       //   this.alert = true;

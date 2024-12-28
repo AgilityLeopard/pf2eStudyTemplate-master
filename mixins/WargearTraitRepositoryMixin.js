@@ -583,6 +583,28 @@ export default {
           addItemBonus: 0
         },
       ],
+      ArmorRuneProperty: [
+        {
+          key: "returning",
+          name: "Возвращающаяся",
+          addItemBonus: 0
+        },
+        {
+          key: "ghost touch",
+          name: "Призрачного касания",
+          addItemBonus: 0
+        },
+        {
+          key: "disrupting",
+          name: "Разрушающаяся",
+          addItemBonus: 0
+        },
+        {
+          key: "shifting",
+          name: "Изменяющаяся",
+          addItemBonus: 0
+        },
+      ],
       DamageType: [
         {
           key: "piercing",
