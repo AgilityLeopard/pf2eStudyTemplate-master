@@ -1,38 +1,36 @@
 const Router = require('express-promise-router');
 
-const { sourceSql } = require('./_sqlSnippets');
-
-const { powers} = require('../db/static/psychicPowersRepository');
+const repository = require('../db/static/traitRepository');
 
 const router = new Router();
 
 module.exports = router;
 
-const TABLE_FIELDS = ['id', 'name', 'cost', 'keywords', 'effect', 'discipline'];
+router.get('/', async (request, response) => {
 
-router.get('/', (request, response) => {
-  let items = [];
-  items = powers;
+  let items = repository;
 
   const filter = {};
+
   const filterSourceString = request.query.source;
   if (filterSourceString) {
     filter.source = filterSourceString.split(',');
+
     if (filter.source) {
       items = items.filter((item) => filter.source.includes(item.source.key));
+
     }
-  };
+  }
 
   response.set('Cache-Control', 'public, max-age=3600'); // one hour
   response.status(200).json(items);
 });
 
-
-
 router.get('/:slug', async (request, response) => {
+
   const { slug } = request.params;
 
-  const item = powers.find(power => power.key === slug);
+  const item = repository.find(talent => talent.key === slug);
 
   response.set('Cache-Control', 'public, max-age=3600'); // one hour
   response.status(200).json(item);

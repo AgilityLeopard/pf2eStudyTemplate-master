@@ -80,6 +80,7 @@ export default {
     return {
       speciesList: undefined,
       abilityList: undefined,
+      traitList: undefined,
       selectedSpecies: undefined, // for he preview dialog box
       speciesDialog: false,
     };
@@ -114,7 +115,9 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.getAbilityList(newVal);
+          this.getTraitList(newVal);
           this.getSpeciesList(newVal);
+          
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -144,6 +147,7 @@ export default {
           const ability = List.filter((talent) =>
             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
           );
+
           if (ability.length > 0) {
             const listAbilities = [];
             ability.forEach((talent) => {
@@ -153,13 +157,52 @@ export default {
                 description: talent.description,
                 modification: talent.modification,
               };
+              
 
               listAbilities.push(talent);
             });
             species.speciesFeatures = listAbilities;
           }
+ 
         });
+
       }
+
+      if (this.traitList !== undefined) {
+        data.forEach((species) => {
+          const lowercaseKeywords = species.trait.map((s) =>
+            s.toUpperCase()
+          );
+
+          const List1 = this.traitList;
+          const trait = List1.filter((talent) =>
+            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+          );
+
+          if (trait.length > 0) {
+            const listAbilities = [];
+            species.trait.forEach((talent) => {
+
+                const t = trait.find(k => k.key === talent)
+
+                if (t)
+                {
+                const ability1 = {
+                  name: t.key,
+                  description: t.desc,
+                };
+              
+                listAbilities.push(ability1);
+              }
+          
+             
+            });
+            species.traitDesc = listAbilities;
+          }
+        });
+
+}
+
 
       this.speciesList = data;
     },
@@ -174,6 +217,18 @@ export default {
         config.source
       );
       this.abilityList = data;
+    },
+    async getTraitList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/traits/",
+        config.source
+      );
+      this.traitList = data;
     },
     getAvatar(key) {
       return `/img/avatars/species/${key}.png`;

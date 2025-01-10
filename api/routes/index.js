@@ -9,6 +9,7 @@ const species = require('./species');
 const archetypes = require('./archetypes');
 const ascensionPackages = require('./ascensionPackages');
 const threats = require('./threats');
+const traits = require('./traits');
 
 const posts = require('./posts');
 const actualPlays = require('./actualPlays');
@@ -28,6 +29,7 @@ module.exports = (app) => {
   app.use('/archetypes', archetypes);
   app.use('/ascension-packages', ascensionPackages);
   app.use('/threats', threats);
+  app.use('/traits', traits);
 
   // via contentfull
   app.use('/homebrews', homebrews);

@@ -2,31 +2,30 @@
   <v-row justify="center">
     <v-col>
       <h1 class="headline">
-        Manage Powers
+        Заклинания
         <span>
           <v-icon v-if="alerts && alerts.length <= 0">error_outline</v-icon>
-          <v-btn color="warning" v-else-if="showAlerts" @click="showAlerts = !showAlerts" small><v-icon small left>error</v-icon> Hide warnings</v-btn>
-          <v-btn color="warning" v-else @click="showAlerts = !showAlerts" outlined small>
-            <v-icon small left>error_outline</v-icon>show {{alerts.length}} warning{{ alerts.length > 1 ? 's' : '' }}
+          <v-btn
+            color="warning"
+            v-else-if="showAlerts"
+            @click="showAlerts = !showAlerts"
+            small
+            ><v-icon small left>error</v-icon> Hide warnings</v-btn
+          >
+          <v-btn
+            color="warning"
+            v-else
+            @click="showAlerts = !showAlerts"
+            outlined
+            small
+          >
+            <v-icon small left>error_outline</v-icon>show
+            {{ alerts.length }} warning{{ alerts.length > 1 ? "s" : "" }}
           </v-btn>
         </span>
       </h1>
     </v-col>
-
-    <v-col :cols="12" v-if="showAlerts">
-      <v-alert
-        v-for="alert in alerts"
-        :key="alert.key"
-        :value="true"
-        :type="alert.type"
-        text
-        dense
-        border="left"
-      >
-        {{ alert.text }}
-      </v-alert>
-    </v-col>
-
+    <!-- 
     <v-col :cols="12">
       <v-card>
         <v-card-text>
@@ -41,9 +40,9 @@
           </v-chip>
         </v-card-text>
       </v-card>
-    </v-col>
+    </v-col> -->
 
-    <v-col :cols="12">
+    <!-- <v-col :cols="12">
       <v-chip-group
         v-model="selectedDisciplines"
         active-class="primary--text"
@@ -60,12 +59,14 @@
           label
         >
           {{ filter.name }}
-          <em v-if="filter.source !== 'core'" class="ml-1">({{filter.source}})</em>
+          <em v-if="filter.source !== 'core'" class="ml-1"
+            >({{ filter.source }})</em
+          >
         </v-chip>
       </v-chip-group>
-    </v-col>
+    </v-col> -->
 
-    <v-col :cols="12">
+    <!-- <v-col :cols="12">
       <v-switch
         v-model="grantAllAccess"
         color="primary"
@@ -74,21 +75,141 @@
         persistent-hint
         class="pl-2"
       />
-    </v-col>
+    </v-col> -->
 
     <v-col :cols="12">
       <v-card>
-        <v-card-title>
-          <v-text-field
-            v-model="searchQuery"
-            append-icon="search"
-            label="Search"
-            single-line
-            hide-details
-          />
-        </v-card-title>
+        <v-expansion-panels multiple v-if="archetype">
+          <v-expansion-panel
+            v-for="levelAncestry in 10"
+            :key="levelAncestry"
+            v-if="
+              levelAncestry - 1 <=
+              archetype.spellProgression[characterLevel()].findIndex(
+                (t) => t == 0
+              ) -
+                1
+            "
+          >
+            <v-expansion-panel-header>
+              <p v-if="levelAncestry - 1 == 0">Чары</p>
+              <p v-if="levelAncestry - 1 != 0">
+                {{ levelAncestry - 1 }} уровень
+              </p>
+            </v-expansion-panel-header>
 
-        <v-data-table
+            <v-expansion-panel-content :key="levelAncestry">
+              <v-row
+                v-for="cell in archetype.spellProgression[characterLevel()][
+                  levelAncestry - 1
+                ]"
+              >
+                <v-btn @click="updatePreview(levelAncestry, cell)">
+                  Выберите заклинание в ячейку {{ cell }}
+                </v-btn>
+              </v-row>
+
+              <v-dialog
+                v-model="psychicDialog"
+                :fullscreen="$vuetify.breakpoint.xsOnly"
+                width="600px"
+                scrollable
+              >
+                <psychic-preview
+                  :character-id="characterId"
+                  :talents="selectedPsychic"
+                  :level="levelAncestry"
+                  :list="psychicPowersList"
+                  type="spell"
+                  choose-mode
+                  @cancel="psychicDialog = false"
+                />
+              </v-dialog>
+
+              <!-- 
+     
+
+      <v-btn
+        @click="updatePreview(levelAncestry, 'ancestry')"
+        v-if="!characterAncestryTalent(levelAncestry)"
+      >
+        Выберите черту {{ levelAncestry }}
+      </v-btn>
+
+      <v-expansion-panels
+        multiple
+        v-if="characterAncestryTalent(levelAncestry)"
+      >
+        <v-expansion-panel>
+          <v-expansion-panel-header>
+            <template v-slot:default="{ open }">
+              <v-row no-gutters>
+                <v-col :cols="8" :sm="10" class="subtitle-1">
+                  <span />
+                </v-col>
+                <v-col :cols="8" :sm="10" class="subtitle-2">
+                  <span
+                    v-html="characterAncestryTalent(levelAncestry).label"
+                  />
+                </v-col>
+                <v-col :cols="4" :sm="2">
+                  <v-btn
+                    color="error"
+                    x-small
+                    @click.stop.prevent="
+                      removeTalent(characterAncestryTalent(levelAncestry))
+                    "
+                    >Удалить</v-btn
+                  >
+                </v-col>
+                <v-col
+                  v-if="!open"
+                  :cols="8"
+                  :sm="10"
+                  class="caption grey--text"
+                >
+                  {{ characterAncestryTalent(levelAncestry).snippet }}
+                </v-col>
+              </v-row>
+            </template>
+          </v-expansion-panel-header>
+
+          <v-expansion-panel-content>
+            <div
+              class="body-2 mb-2"
+              v-html="characterAncestryTalent(levelAncestry).description"
+            ></div>
+
+            <div v-if="characterAncestryTalent(levelAncestry).options">
+              <v-select
+                v-if="
+                  characterAncestryTalent(levelAncestry).optionsKey ===
+                  'skill'
+                "
+                :value="characterAncestryTalent(levelAncestry).selected"
+                :items="skillRepository"
+                item-text="name"
+                item-value="key"
+                placeholder="Выберите навык"
+                filled
+                dense
+                @input="
+                  talentUpdateSelected(
+                    item,
+                    characterAncestryTalent(levelAncestry),
+                    levelAncestry
+                  )
+                "
+              />
+            </div>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>-->
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+
+        <!-- <v-data-table
           :headers="headers"
           :items="filteredPowers"
           :search="searchQuery"
@@ -108,26 +229,13 @@
               {{item.source.key.toUpperCase()}}
             </v-chip>
           </template>
-          <template v-slot:item.learn="{ item }">
-            <span>
-              <v-btn
-                :disabled="characterPowers.map(i=>i.name).includes(item.name)"
-                :color="affordableColor(item.cost)"
-                :dark="!characterPowers.map(i=>i.name).includes(item.name)"
-                x-small
-                @click="addPower(item)"
-              >
-                add
-              </v-btn>
-            </span>
-          </template>
 
           <template v-slot:no-results>
             <div class="text-lg-center">
               Your search for "{{ searchQuery }}" found no results.
             </div>
           </template>
-        </v-data-table>
+        </v-data-table> -->
       </v-card>
     </v-col>
   </v-row>
@@ -135,6 +243,7 @@
 
 <script lang="js">
 import PsychicDisciplineMixin from '~/mixins/PsychicDisciplineMixin';
+import PsychicPreview from "~/components/forge/PsychicPreview.vue";
 
 export default {
   name: 'PsychicPowers',
@@ -142,10 +251,13 @@ export default {
   mixins: [
     PsychicDisciplineMixin,
   ],
+  components: {
+    PsychicPreview,
+  },
   props: [],
   head() {
     return {
-      title: 'Select Psychic Powers',
+      title: 'Выберите заклинания',
     };
   },
   asyncData({ params }) {
@@ -158,47 +270,43 @@ export default {
       searchQuery: '',
       headers: [
         {
-          text: 'Name',
+          text: 'Имя',
           value: 'name',
           align: 'left',
           sortable: true,
         },
         {
-          text: 'Cost',
-          value: 'cost',
+          text: 'Уровень',
+          value: 'level',
           align: 'center',
           sortable: true,
         },
         {
-          text: 'Discipline',
-          value: 'discipline',
+          text: 'Традиция',
+          value: 'tradition',
           sortable: true,
         },
         {
-          text: 'Effect',
-          value: 'effect',
-          sortable: false,
-        },
-        {
-          text: 'Learn',
-          align: 'center',
-          value: 'learn',
+          text: 'Детали',
+          value: 'description',
           sortable: false,
         },
       ],
       grantAllAccess: false,
       selectedDisciplines: [],
       species: undefined,
+      selectedPsychic: undefined,
       archetype: undefined,
       psychicPowersList: undefined,
       loading: false,
       showAlerts: false,
+      psychicDialog: false,
     };
   },
   computed: {
     sources() {
       return [
-        'core',
+        'playerCore',
         'fspg',
         'red1',
         'cos',
@@ -338,6 +446,30 @@ export default {
     },
   },
   methods: {
+     updatePreview(levelAncestry, cell) {
+
+
+      const list = this.psychicPowersList;
+      /*.filter(s => s.type === type).map(talent => {
+
+                       return {
+                         ...talent
+
+                       }
+      });*/
+      list.forEach(t => {
+        const tal = t;
+        tal.rank = levelAncestry - 1;
+        tal.cell = cell;
+
+      })
+      this.selectedPsychic = list;
+      this.psychicDialog = true;
+
+    },
+    characterLevel(){
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
     affordableColor(cost) {
       return (cost <= this.remainingBuildPoints) ? 'green' : 'grey';
     },
@@ -361,6 +493,10 @@ export default {
       const { data } = await this.$axios.get('/api/psychic-powers/', config);
       this.loading = false;
       this.psychicPowersList = data;
+      data.forEach(spell =>{
+        spell.description = spell.description.replace("{{powers}}", spell.powerValue)
+      });
+      this.psychicPowersList = data;
     },
     addPower(power) {
       this.$store.commit('characters/addCharacterPsychicPower', { id: this.characterId, key: power.key, name: power.name, cost: power.cost });
@@ -379,5 +515,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

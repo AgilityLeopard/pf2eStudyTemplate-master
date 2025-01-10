@@ -27,9 +27,21 @@
 
     <v-card-text class="pa-6">
       <ul class="simple">
-        <li v-if="species.trait" v-for="trait in species.trait" class="traits">
-          <p class="trait">{{ trait }}</p>
+        <li v-if="species.traitDesc" v-for="trait in species.traitDesc" class="traits">
+          <p class="trait">
+          <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <div v-on="on" class="t">
+                  {{ trait.name }} 
+                </div>
+              </template>
+              <span>{{ trait.description }}</span>
+            </v-tooltip>
+          </p>
+          
+          <!-- <p class="trait">{{ trait }}</p> -->
         </li>
+     
       </ul>
       <!-- </div> -->
 
@@ -56,8 +68,8 @@
 
       <p></p>
 
-      <span class="mt-2 grey--text">Понижение характеристик</span>
-      <v-divider />
+      <span  v-if="species.attributeFlaw.find(t => t.value < 0)" class="mt-2 grey--text">Понижение характеристик</span>
+      <v-divider  v-if="species.attributeFlaw.find(t => t.value < 0)" />
 
       <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
         <div v-if="flaw.value < 0">
@@ -81,8 +93,8 @@
       </div>
 
       <p></p>
-      <span class="mt-2 grey--text">Особенности Родословной</span>
-      <v-divider />
+      <span v-if="species.speciesFeatures.length != 0" class="mt-2 grey--text">Особенности Родословной</span>
+      <v-divider v-if="species.speciesFeatures.length != 0" />
 
       <div v-if="species.speciesFeatures">
         <div v-for="feature in species.speciesFeatures" class="text-lg-justify">
@@ -148,6 +160,7 @@ export default {
     };
   },
   computed: {
+
     avatar() {
       if (this.species === undefined) return '';
       return `/img/avatars/species/${this.species.key}.png`;
@@ -186,6 +199,20 @@ export default {
   display: inherit;
   margin-bottom: 0;
   padding-inline-start: 0.2em;
+}
+
+.t {
+  color: #ffffff;
+  text-decoration: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 .tooltip {
