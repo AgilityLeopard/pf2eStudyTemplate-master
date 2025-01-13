@@ -425,9 +425,45 @@ export default {
 
       filteredTalents.forEach(spell =>
       {
-        const heightened =  Math.floor((rank - 1) / spell.power);
-        const powerLevel1 = parseInt(spell.powerStart1) +parseInt(spell.powerValue1) * heightened;
-        spell.description = spell.description.replace("{{powerValue1}}", powerLevel1)
+        if (spell.powerValue1)
+        {
+          if (spell.powerValue1.indexOf("d", 0) == -1)
+          {
+            const heightened = Math.floor((rank - 1) / spell.power);
+            const powerLevel1 = parseInt(spell.powerStart1) +parseInt(spell.powerValue1) * heightened;
+            spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "</span>")
+          }
+          else
+          {
+            const heightened = Math.floor((rank - 1) / spell.power);
+            const index = spell.powerValue1.indexOf("d", 0);
+            const dice = spell.powerValue1.slice(index-1, index);
+            const diceSize = spell.powerValue1.slice(index+1);
+            const powerLevel1 = parseInt(spell.powerStart1) + parseInt(dice) * heightened;
+            spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "d" + diceSize + "</span>")
+          }
+
+        }
+
+        if (spell.powerValue2)
+        {
+          if (spell.powerValue2.indexOf("d", 0) == -1)
+          {
+            const heightened = Math.floor((rank - 1) / spell.power);
+            const powerLevel2 = parseInt(spell.powerStart2) +parseInt(spell.powerValue2) * heightened;
+            spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "</span>")
+          }
+          else
+          {
+            const heightened = Math.floor((rank - 1) / spell.power);
+            const index = spell.powerValue2.indexOf("d", 0);
+            const dice = spell.powerValue2.slice(index-1, index);
+            const diceSize = spell.powerValue2.slice(index+1);
+            const powerLevel2 = parseInt(spell.powerStart2) + parseInt(dice) * heightened;
+            spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>")
+          }
+
+        }
       }
 
 
