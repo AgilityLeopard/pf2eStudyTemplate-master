@@ -1,81 +1,8 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-row justify="center">
     <v-col>
-      <h1 class="headline">
-        Заклинания
-        <span>
-          <v-icon v-if="alerts && alerts.length <= 0">error_outline</v-icon>
-          <v-btn
-            color="warning"
-            v-else-if="showAlerts"
-            @click="showAlerts = !showAlerts"
-            small
-            ><v-icon small left>error</v-icon> Hide warnings</v-btn
-          >
-          <v-btn
-            color="warning"
-            v-else
-            @click="showAlerts = !showAlerts"
-            outlined
-            small
-          >
-            <v-icon small left>error_outline</v-icon>show
-            {{ alerts.length }} warning{{ alerts.length > 1 ? "s" : "" }}
-          </v-btn>
-        </span>
-      </h1>
+      <h1 class="headline">Заклинания</h1>
     </v-col>
-    <!-- 
-    <v-col :cols="12">
-      <v-card>
-        <v-card-text>
-          <v-chip
-            v-for="item in characterPowers"
-            :key="item.name"
-            :close="item.cost !== 0"
-            class="mr-2"
-            @click:close="removePower(item.name)"
-          >
-            {{ item.name }}
-          </v-chip>
-        </v-card-text>
-      </v-card>
-    </v-col> -->
-
-    <!-- <v-col :cols="12">
-      <v-chip-group
-        v-model="selectedDisciplines"
-        active-class="primary--text"
-        column
-        multiple
-      >
-        <v-chip
-          v-for="filter in disciplines"
-          :key="filter.key"
-          :value="filter.name"
-          :disabled="!allowedDisciplines.includes(filter.name)"
-          filter
-          small
-          label
-        >
-          {{ filter.name }}
-          <em v-if="filter.source !== 'core'" class="ml-1"
-            >({{ filter.source }})</em
-          >
-        </v-chip>
-      </v-chip-group>
-    </v-col> -->
-
-    <!-- <v-col :cols="12">
-      <v-switch
-        v-model="grantAllAccess"
-        color="primary"
-        label="Allow all access"
-        hint="This is a workaround to access all powers"
-        persistent-hint
-        class="pl-2"
-      />
-    </v-col> -->
 
     <v-col :cols="12">
       <v-card>
@@ -118,7 +45,13 @@
                 <psychic-preview
                   :character-id="characterId"
                   :talents="selectedPsychic"
-                  :level="levelAncestry"
+                  :archetype="archetype"
+                  :rank="
+                    archetype.spellProgression[characterLevel()].findIndex(
+                      (t) => t == 0
+                    ) - 1
+                  "
+                  :level="levelAncestry - 1"
                   :list="psychicPowersList"
                   type="spell"
                   choose-mode
@@ -463,7 +396,11 @@ export default {
         tal.cell = cell;
 
       })
-      this.selectedPsychic = list;
+      if (levelAncestry - 1 == 0)
+        this.selectedPsychic = list.filter(spell => spell.cantrip === true);
+      else
+        this.selectedPsychic = list.filter(spell => spell.cantrip === false);
+
       this.psychicDialog = true;
 
     },

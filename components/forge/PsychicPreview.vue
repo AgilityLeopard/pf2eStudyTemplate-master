@@ -21,7 +21,7 @@
     <v-divider />
 
     <v-card-title>
-      <!-- <v-select
+      <v-select
         label="Трейты"
         v-model="selectedTagsFilters"
         multiple
@@ -29,7 +29,7 @@
         item-text="name"
         item-value="name"
       >
-      </v-select> -->
+      </v-select>
     </v-card-title>
 
     <v-divider />
@@ -122,13 +122,17 @@ export default {
       required: true,
     },
     talents: {},
+    archetype: {},
     list: {},
         // Number
     level: {
       type: Number,
       required: false,
     },
-
+    rank: {
+      type: Number,
+      required: false,
+    },
     type: undefined,
     psychicPowers: {
       type: Array,
@@ -363,26 +367,28 @@ export default {
     },
 
     tagFilters() {
-    //   if (this.talents === undefined) {
-    //     return [];
-    //   }
-    //   let filteredTalents = this.talents;
-    //   //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
-    //   const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
-    //   // only show those whose prerequisites are met
+       if (this.talents === undefined) {
+        return [];
+      }
+      let filteredTalents = this.talents;
+      //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
 
-    //   filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.tags.toString().toUpperCase().includes(lw)));
-    //   //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
-    //   let reduced = [];
-    //   filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
-    //     if (item.tags) {
-    //       reduced.push(...item.tags);
-    //     }
-    //   });
-    //   reduced = reduced.filter(item => item.trim().length > 0);
-    //   const distinct = [...new Set(reduced)];
-    //   return distinct.sort().map((tag) => ({ name: tag }));
-      return ['тест'];
+      //Берем обычаи из листа
+      const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+      // Берем тот список, что соответствует заклинательскому
+      filteredTalents = filteredTalents.filter((talent) => talent.tradition.toString().toUpperCase().includes(lowercaseKeywords))
+
+      //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
+      let reduced = [];
+      filteredTalents.filter(talent => (talent.level <= this.level && talent.cantrip === false) || talent.cantrip === true).forEach((item) => {
+        if (item.trait) {
+          reduced.push(...item.trait);
+        }
+      });
+      reduced = reduced.filter(item => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((trait) => ({ name: trait }));
+
     },
       finalKeywords() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
@@ -391,7 +397,7 @@ export default {
     },
 
     filteredTalents() {
-      if (this.talents === undefined || this.tagFilters.length == 0) {
+      if (this.talents === undefined) {
         return [];
       }
 
@@ -399,7 +405,7 @@ export default {
       let filteredTalents = this.talents;
 
       if (this.selectedTagsFilters.length > 0) {
-        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
+        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.trait.includes(m)));
       }
 
       filteredTalents = filteredTalents.map((talent) => {
@@ -411,7 +417,21 @@ export default {
       });
 
       //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
-      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+      // Берем тот список, что соответствует заклинательскому
+      filteredTalents = filteredTalents.filter((talent) => talent.tradition.toString().toUpperCase().includes(lowercaseKeywords))
+
+      const rank = this.rank;
+
+      filteredTalents.forEach(spell =>
+      {
+        const heightened =  Math.floor((rank - 1) / spell.power);
+        const powerLevel1 = parseInt(spell.powerStart1) +parseInt(spell.powerValue1) * heightened;
+        spell.description = spell.description.replace("{{powerValue1}}", powerLevel1)
+      }
+
+
+      )
       // only show those whose prerequisites are met
       // if () {
        // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
@@ -420,7 +440,7 @@ export default {
 
       ///filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.tags.toString().toUpperCase().includes(lw)));
 
-      return this.talents//filteredTalents.filter(talent => talent.level <= this.level);
+      return filteredTalents.filter(talent => (talent.level <= this.level && talent.cantrip === false) || talent.cantrip === true);
     },
   }
 };
