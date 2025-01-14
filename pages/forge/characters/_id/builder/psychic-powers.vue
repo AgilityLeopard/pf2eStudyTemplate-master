@@ -4,9 +4,21 @@
       <h1 class="headline">Заклинания</h1>
     </v-col>
 
+    <!-- Характеристики заклинателя -->
+    <v-col :cols="12" v-if="archetype && archetype.spellTradition">
+      <span> Обычай: {{ archetype.spellTradition }} </span>
+
+      <span> Сложность заклинаний: {{ ModAttributeClassSpell() }} </span>
+
+      <span> Атака заклинанием: {{ ModAttributeAttackSpell() }} </span>
+    </v-col>
+
     <v-col :cols="12">
       <v-card>
-        <v-expansion-panels multiple v-if="archetype">
+        <v-expansion-panels
+          multiple
+          v-if="archetype && archetype.spellTradition"
+        >
           <v-expansion-panel
             v-for="levelAncestry in 10"
             :key="levelAncestry"
@@ -177,12 +189,13 @@
 <script lang="js">
 import PsychicDisciplineMixin from '~/mixins/PsychicDisciplineMixin';
 import PsychicPreview from "~/components/forge/PsychicPreview.vue";
+import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
   name: 'PsychicPowers',
   layout: 'forge',
   mixins: [
-    PsychicDisciplineMixin,
+    PsychicDisciplineMixin, StatRepositoryMixin
   ],
   components: {
     PsychicPreview,
@@ -240,15 +253,8 @@ export default {
     sources() {
       return [
         'playerCore',
-        'fspg',
-        'red1',
-        'cos',
-        // 'tnh',
         ...this.settingHomebrews
       ];
-    },
-    disciplines() {
-      return this.disciplinesRepository.filter((d)=>this.sources.includes(d.source));
     },
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
@@ -262,13 +268,6 @@ export default {
     characterEnhancements() {
       return this.$store.getters['characters/characterEnhancementsById'](this.characterId);
     },
-    characterAccessibleDisciplines() {
-      let disciplines = [];
-      if (this.characterEnhancements) {
-        return this.characterEnhancements.filter((e)=> e.targetGroup === 'psychicDisciplines');
-      }
-      return disciplines;
-    },
     alerts() {
       const alerts = [];
 
@@ -281,56 +280,8 @@ export default {
       }
       return alerts;
     },
-    isPsychic() {
-      const skills = this.$store.getters['characters/characterSkillsById'](this.characterId);
-      const keywords = this.$store.getters['characters/characterKeywordsRawById'](this.characterId);
-      const hasSkill = skills.psychicMastery > 0;
-      const hasKeyword = keywords.some( (k) => k.name === 'Psyker');
-      return (hasSkill || hasKeyword);
-    },
-    isNavigator() { // from the PAX Homebrew
-      const key = this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
-      return key === 'pax-navigator';
-    },
     settingTier() {
       return this.$store.getters['characters/characterSettingTierById'](this.characterId);
-    },
-    maximumMinorPowers() { return this.settingTier; },
-    maximumDisciplinePowers() { return Math.max(1, this.settingTier - 1); },
-    maximumPsychicPowers() { return this.settingTier + 3; },
-    characterPowers() {
-      return this.$store.getters['characters/characterPsychicPowersById'](this.characterId);
-    },
-    allowedDisciplines() {
-      let access = [];
-
-      if (this.grantAllAccess) {
-        return this.disciplines.map((d)=>d.name);
-      }
-
-      if(this.species && this.species.speciesFeatures) {
-        this.species.speciesFeatures
-          .filter((f)=> f.psychicDisciplines)
-          .map((f)=> f.psychicDisciplines)
-          .forEach((disciplines) => access = [ ...access, ...disciplines]);
-      }
-
-      if(this.archetype && this.archetype.archetypeFeatures) {
-        this.archetype.archetypeFeatures
-        .filter((f)=> f.psychicDisciplines)
-        .map((f)=> f.psychicDisciplines)
-        .forEach((disciplines) => access = [ ...access, ...disciplines]);
-      }
-
-      // TODO if there is no discipline access and the psyker keyword -> allow Minor
-      access.push('Minor');
-
-      this.characterAccessibleDisciplines.map((d) => d.targetValue).forEach((discipline) => {
-        access = [ ...access, discipline ];
-      });
-
-      access = [...new Set(access)].sort();
-      return access;
     },
     filteredPowers() {
       if (this.psychicPowersList === undefined) {
@@ -348,8 +299,11 @@ export default {
 
       return filteredPowers;
     },
-    remainingBuildPoints() {
-      return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
+
+    characterAttributes() {
+      return this.$store.getters["characters/characterAttributesById"](
+        this.characterId
+      );
     },
   },
   watch: {
@@ -410,6 +364,25 @@ export default {
     affordableColor(cost) {
       return (cost <= this.remainingBuildPoints) ? 'green' : 'grey';
     },
+    // Сложность класса заклинателя и его атаки
+    ModAttributeClassSpell() {
+      const char1 = this.profiencyRepository[this.archetype.spellsClass["class"]];
+      const char2 = (this.characterAttributes[this.archetype.attributeBoost.find(t => t.value > 0).key] - 10) / 2;
+      const char3 = this.characterLevel();
+      if (this.archetype)
+        return 10 + parseInt(char1) + parseInt(char2) + parseInt(char3);
+      else 0;
+    },
+    ModAttributeAttackSpell() {
+      const char1 = this.profiencyRepository[this.archetype.spellsClass["attack"]];
+      const char2 = (this.characterAttributes[this.archetype.attributeBoost.find(t => t.value > 0).key] - 10) / 2;
+      const char3 = this.characterLevel();
+      if (this.archetype)
+        return parseInt(char1) + parseInt(char2) + parseInt(char3);
+      else 0;
+    },
+    //
+
     async getSpecies(key) {
       this.loading = true;
       const { data } = await this.$axios.get(`/api/species/${key}`);

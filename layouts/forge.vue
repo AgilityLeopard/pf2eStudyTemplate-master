@@ -310,6 +310,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
+      <!-- Диалог по нажатию на навы -->
       <v-dialog
         v-model="skillsDialog"
         width="600px"
@@ -325,7 +326,7 @@
 
           <v-card-text class="pt-4">
             <v-container class="bg-primary mb-6">
-              <v-row align="start" style="height: 150px">
+              <v-row align-items="start" style="height: 150px">
                 <v-col>
                   <v-sheet class="text-center small pa-1"> Навык </v-sheet>
                   <v-sheet class="text-center pa-2 ma-2">
@@ -360,6 +361,11 @@
                   </v-sheet>
                   <v-sheet v-else class="text-center pa-2 ma-2"> 0 </v-sheet>
                 </v-col>
+              </v-row>
+            <v-divider></v-divider>
+              <v-row>
+                  <div class="pt-4 pb-2" v-html="skill.description"></div>
+
               </v-row>
             </v-container>
           </v-card-text>
@@ -431,40 +437,6 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-
-      <!--           
-      
-        <v-list-item
-          nuxt
-          :to="`/forge/characters/${$route.params.id}/builder/setting`"
-        >
-          <v-list-item-content>
-          
-            <v-list-item-subtitle>Главная</v-list-item-subtitle>
-          </v-list-item-content>
-
-
-        </v-list-item>
-
-        <div
-      
-        >
-
-
-
-           <v-list-item
-            v-else
-            nuxt
-            :to="entry.path"
-          >
-            <v-list-item-content>
-              <v-list-item-title>{{ entry.text }}</v-list-item-title>
-              <v-list-item-subtitle>{{ entry.hint }}</v-list-item-subtitle>
-            </v-list-item-content>
-
-          </v-list-item> 
-        </div>
-      </v-list> -->
     </v-navigation-drawer>
 
     <v-app-bar
@@ -1169,7 +1141,7 @@ export default {
         );
         const dex = modDex > wear.modDex ? wear.modDex : modDex;
         const Def = this.profiencyRepository[this.skillDefence[wear.category]];
-        const bonusAC = wear.bonusAC;
+        const bonusAC = wear.bonusAC ? wear.bonusAC : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();
         return 10 + dex + Def + arm + bonusAC;
       }

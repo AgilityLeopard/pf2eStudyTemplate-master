@@ -84,7 +84,7 @@
 
         <template v-slot:no-results>
           <span class="text-center"
-            >Ваш поиск по "{{ searchQuery }}" found no results.</span
+            >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
           >
         </template>
       </v-data-table>
@@ -164,10 +164,6 @@ export default {
         sortBy: 'name',
         rowsPerPage: 25,
       },
-      placeText: {
-        ancestry1: "Черта родословной 1 Уровня",
-        ancestry2: "Черта родословной 2 Уровня",
-      },
       headers: [
         {
           text: 'Название',
@@ -202,48 +198,6 @@ export default {
       wargearList: undefined,
       loading: false,
       talentGroupFilterHelp: false,
-      selectedTalentGroups: ['Talents'],
-      // Exarch Powers, Priest Prayers & Litanies, Chaos Rituals, ...
-      talentGroupList: [
-        {
-          source: {
-            book: 'Core Rules',
-            key: 'playerCore',
-            page: 169,
-          },
-          key: 'core-talents',
-          name: 'Talents',
-          description:
-            '<p>Talents represent a knack that a character possesses. Many grant characters a ' +
-            'special ability, which others cannot undertake. Other talents provide situational ' +
-            'benefits to a character. Each talent has an associated build point cost, and may have ' +
-            'prerequisite attributes, keywords, skills, or Talents. Players are not required to ' +
-            'select any talents for their characters. The maximum number of talents that may be ' +
-            'purchased is limited by Tier.</p>',
-        },
-        /*
-        {
-          source: {
-            book: 'An Abundance of Apocrypha',
-            key: 'aaoa',
-            page: 147,
-          },
-          key: 'aaoa-exarch-powers',
-          name: 'Exarch Powers',
-          description:
-            '<p>The following abilities are unique powers and combat techniques exhibited by Exarchs, ' +
-            'mighty Aeldari warriors who lead the Aspect Warrior shrines into battle and maintain ' +
-            'those shrines during the all-too-rare times of peace.</p>' +
-            '<p>An Exarch may <strong>purchase up to two of these powers</strong>, at the costs ' +
-            'listed, so long as the Exarch meets the listed prerequisites. Some of the powers in ' +
-            'this section are distinct to Exarchs of particular Aspect Temples, and they may only ' +
-            'be selected by an Exarch of that temple.</p>' +
-            '<p>Many of the powers in this section affect the Exarch’s students as well, granting a ' +
-            'benefit to the Aspect Warriors under their command. An Exarch may <strong>consider all Aspect ' +
-            'Warriors of the same type as the Exarch within 10m as being part of the Exarch’s squad.</strong></p>',
-        },
-        */
-      ],
     };
   },
   computed: {

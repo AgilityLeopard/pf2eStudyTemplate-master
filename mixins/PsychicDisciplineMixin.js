@@ -26,9 +26,6 @@ export default {
         { key: 'aaoa-waaagh', name: 'WAAAGH!', source: 'aaoa' },
         // AAOA Squat
         { key: 'aaoa-ancestral-rites', name: 'Ancestral Rites', source: 'aaoa' },
-        // v1.0
-        //{ key: 'pax-navigator-powers', name: 'Navigator Powers', source: 'pax' },
-        //{ key: 'tea-librarius', name: 'Librarius', source: 'tea' },
       ],
     }
   },
