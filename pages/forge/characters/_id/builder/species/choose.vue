@@ -57,7 +57,11 @@
                   {{ item.source.key.toUpperCase() }}
                 </v-chip>
               </v-list-item-title>
-              <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
+              <v-list-item-subtitle
+                ><v-chip> {{ item.ancestryHitPoint }} HP </v-chip
+                ><v-chip> +ЛОВ, МДР, СВОБ </v-chip><v-chip> -ТЕЛ </v-chip>
+              </v-list-item-subtitle>
+              <!-- <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle> -->
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -117,7 +121,6 @@ export default {
           this.getAbilityList(newVal);
           this.getTraitList(newVal);
           this.getSpeciesList(newVal);
-          
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -157,22 +160,17 @@ export default {
                 description: talent.description,
                 modification: talent.modification,
               };
-              
 
               listAbilities.push(talent);
             });
             species.speciesFeatures = listAbilities;
           }
- 
         });
-
       }
 
       if (this.traitList !== undefined) {
         data.forEach((species) => {
-          const lowercaseKeywords = species.trait.map((s) =>
-            s.toUpperCase()
-          );
+          const lowercaseKeywords = species.trait.map((s) => s.toUpperCase());
 
           const List1 = this.traitList;
           const trait = List1.filter((talent) =>
@@ -182,27 +180,21 @@ export default {
           if (trait.length > 0) {
             const listAbilities = [];
             species.trait.forEach((talent) => {
+              const t = trait.find((k) => k.key === talent);
 
-                const t = trait.find(k => k.key === talent)
-
-                if (t)
-                {
+              if (t) {
                 const ability1 = {
                   name: t.key,
                   description: t.desc,
                 };
-              
+
                 listAbilities.push(ability1);
               }
-          
-             
             });
             species.traitDesc = listAbilities;
           }
         });
-
-}
-
+      }
 
       this.speciesList = data;
     },
@@ -224,10 +216,7 @@ export default {
           source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get(
-        "/api/traits/",
-        config.source
-      );
+      const { data } = await this.$axios.get("/api/traits/", config.source);
       this.traitList = data;
     },
     getAvatar(key) {

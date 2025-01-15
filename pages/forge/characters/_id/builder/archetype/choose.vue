@@ -60,7 +60,6 @@
                   {{ item.source.key.toUpperCase() }}
                 </v-chip>
               </v-list-item-title>
-              <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
             </v-list-item-content>
 
             <v-list-item-action class="hidden-sm-and-up">
@@ -68,25 +67,8 @@
                 <v-icon color="primary"> arrow_forward_ios </v-icon>
               </v-btn>
             </v-list-item-action>
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill color="green" text-color="white">
-                <v-avatar left class="green darken-4">
-                  {{ item.cost }}
-                </v-avatar>
-                XP
-              </v-chip>
-            </v-list-item-action>
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill color="red" text-color="white">
-                <v-avatar left class="red darken-4">
-                  {{ item.tier }}
-                </v-avatar>
-                Tier
-              </v-chip>
-            </v-list-item-action>
           </v-list-item>
         </v-list>
-        <!-- </div> -->
       </v-card>
     </v-col>
   </v-row>
@@ -116,6 +98,7 @@ export default {
       searchQuery: "",
       characterSpecies: undefined,
       characterFactions: undefined,
+
       // advanced character creation
       advancedName: "Unaligned Scoundrel",
       advancedKeywordsDialog: false,
@@ -130,13 +113,6 @@ export default {
         M: 6,
         L: 8,
       },
-      advancedTierOptions: [
-        { text: "1 - One among billions", value: 1, naming: "Unknown" },
-        { text: "2 - Stalwart Defenders", value: 2, naming: "Tested" },
-        { text: "3 - Elite Guardians", value: 3, naming: "Veteran" },
-        { text: "4 - Heroic Operatives", value: 4, naming: "Heroic" },
-        // { text: '5 - Agents of Fate', value: 5 },
-      ],
     };
   },
   computed: {

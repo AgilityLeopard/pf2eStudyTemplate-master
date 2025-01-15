@@ -21,15 +21,31 @@
     <v-divider />
 
     <v-card-title>
-      <v-select
-        label="Трейты"
-        v-model="selectedTagsFilters"
-        multiple
-        :items="tagFilters"
-        item-text="name"
-        item-value="name"
-      >
-      </v-select>
+      <v-row>
+        <v-col>
+          <v-select
+            label="Трейты"
+            v-model="selectedTagsFilters"
+            multiple
+            :items="tagFilters"
+            item-text="name"
+            item-value="name"
+          >
+          </v-select>
+        </v-col>
+
+        <v-col>
+          <v-select
+            label="Источник"
+            v-model="selectedBookFilters"
+            multiple
+            :items="bookFilters"
+            item-text="name"
+            item-value="name"
+          >
+          </v-select>
+        </v-col>
+      </v-row>
     </v-card-title>
 
     <v-divider />
@@ -43,27 +59,30 @@
         item-key="name"
         hide-default-footer
         :loading="!talents"
-        loading-text="Loading Talents... Please Wait"
+        loading-text="Загрузка заклинаний, пожалуйста подождите"
         @page-count="pagination.pageCount = $event"
       >
         <template v-slot:no-data />
 
         <template v-slot:item.name="{ item }">
           <span>{{ item.name }}</span>
+          <div>
+            <trait-view v-if="item.traitDesc" :item="item" class="mb-2" />
+          </div>
         </template>
 
         <template v-slot:item.level="{ item }">
-          <v-chip>
+          <span>
             {{ item.level }}
-          </v-chip>
+          </span>
         </template>
 
-        <template v-slot:item.prerequisitesHtml="{ item }">
-          <span v-if="item.requirementsText" v-html="item.requirementsText" />
+        <template v-slot:item.source="{ item }">
+          <span v-if="item.source.book" v-html="item.book" />
         </template>
 
-        <template v-slot:item.effect="{ item }">
-          <span>{{ item.effect }}</span>
+        <template v-slot:item.tradition="{ item }">
+          <span>{{ item.tradition.join(", ") }}</span>
         </template>
 
         <template v-slot:item.buy="{ item }">
@@ -108,6 +127,7 @@
 import { lowerCase } from 'lodash';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
+import traitView from '~/components/TraitView';
 
 
 export default {
@@ -115,7 +135,11 @@ export default {
   mixins: [
     SluggerMixin,
     StatRepositoryMixin,
+
   ],
+  components: {
+    traitView,
+  },
   props: {
     characterId: {
       type: String,
@@ -130,6 +154,10 @@ export default {
       required: false,
     },
     rank: {
+      type: Number,
+      required: false,
+    },
+        cell: {
       type: Number,
       required: false,
     },
@@ -151,6 +179,7 @@ export default {
       talentsDialog: false,
       searchQuery: '',
       selectedTagsFilters: [],
+      selectedBookFilters: [],
       filters: {
         tags: {
           model: [],
@@ -178,15 +207,15 @@ export default {
           sortable: true,
         },
         {
-          text: 'Требование',
-          value: 'prerequisitesHtml',
+          text: 'Источник',
+          value: 'source.book',
           sortable: false,
         },
-        /*{
-          text: 'Effect',
-          value: 'effect',
+        {
+          text: 'Обычай',
+          value: 'tradition',
           sortable: false,
-        },*/
+        },
         {
           text: 'Добавить',
           value: 'buy',
@@ -218,74 +247,20 @@ export default {
     addTalent(talent, place, level1) {
       const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-      const list = this.list;
-      const level = talent.placeLevel;
+
       const payload = {
         id: talentUniqueId,
         name: talent.name,
         key: talent.key,
-        cost: talent.cost,
         place: talent.place,
-        modifications: talent.modifications,
+        rank: talent.rank,
+        cell:  talent.cell,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
-        choice: talent.optionsKey,
         source: `talent.${talentUniqueId}`,
       };
 
-      const linkedFeat = talent.modifications ? talent.modifications.filter(item => item.type === 'Feat') : undefined;
-
-      if(linkedFeat)
-        linkedFeat.forEach(item =>
-        {
-          if(item.key === 'Additional Lore')
-          {
-
-            const LoreUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-            const Lore = list.find(item => item.name === 'Дополнительные знание');
-
-            const loreTalent = {
-              id: LoreUniqueId,
-              name: Lore.name,
-              key: Lore.key,
-              cost: Lore.cost,
-              place: 'free',
-
-              link: talentUniqueId,
-              selected: undefined,
-              choice: Lore.optionsKey,
-              source: `talent.${talentUniqueId}`,
-            };
-
-            const LoreSkill = {
-                      key: this.textToCamel(item.value),
-                      name: item.value,
-                      attribute: 'intellect',
-                      description: "",
-                      optional: true,
-                      isValueModify : false,
-            }
-
-            const mod =   [{
-                      type: 'Skill',
-                      mode: 'Add',
-                      key: 'Lore',
-                      // name: item.value,
-                      // value: this.textToCamel(item.value),
-                      isValueModify : false,
-                      LoreSkill : LoreSkill,
-          }]
-            this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
-            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: LoreUniqueId, source: 'featfree' } });
-
-          }
-        }
-      )
-
-      this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: level, modifications: payload.modifications, talentId:talentUniqueId, source: 'feat'+place } });
-      this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
-      this.$store.commit('characters/clearModification', { id: this.characterId, level });
-      this.$store.commit('characters/setModification', { id: this.characterId, level });
+      this.$store.commit('characters/addCharacterSpell', { id: this.characterId, talent: payload });
       this.$emit('cancel');
     },
     characterLevel(){
@@ -308,8 +283,11 @@ export default {
 
       if (this.selectedTagsFilters.length > 0) {
         searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
-      }
+        }
 
+      if (this.selectedBookFilters.length > 0) {
+        searchResult = searchResult.filter((item) => this.selectedBookFilters.some((m) => item.source.book.includes(m)));
+      }
       let filter;
 
       filter = this.filters.source;
@@ -318,15 +296,36 @@ export default {
       }
 
       return searchResult;
-    },
+      },
 
+     /*Фильтры по разным категориям */
+    bookFilters() {
+       if (this.talents === undefined) {
+        return [];
+      }
+      let filteredTalents = this.talents;
+      //Берем обычаи из листа
+      const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+      // Берем тот список, что соответствует заклинательскому
+      filteredTalents = filteredTalents.filter((talent) => talent.tradition.toString().toUpperCase().includes(lowercaseKeywords))
+
+      let reduced = [];
+      filteredTalents.filter(talent => (talent.level <= this.level && talent.cantrip === false) || talent.cantrip === true).forEach((item) => {
+        if (item.source.book) {
+          reduced.push(item.source.book);
+        }
+      });
+
+      reduced = reduced.filter(item => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((trait) => ({ name: trait }));
+
+    },
     tagFilters() {
        if (this.talents === undefined) {
         return [];
       }
       let filteredTalents = this.talents;
-      //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
-
       //Берем обычаи из листа
       const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
       // Берем тот список, что соответствует заклинательскому
@@ -339,15 +338,14 @@ export default {
           reduced.push(...item.trait);
         }
       });
+
       reduced = reduced.filter(item => item.trim().length > 0);
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((trait) => ({ name: trait }));
 
     },
-      finalKeywords() {
+    finalKeywords() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
-
-
     },
 
     filteredTalents() {
@@ -362,6 +360,9 @@ export default {
         filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.trait.includes(m)));
       }
 
+      if (this.selectedBookFilters.length > 0) {
+        filteredTalents = filteredTalents.filter((item) => this.selectedBookFilters.includes(item.source.book));
+      }
       filteredTalents = filteredTalents.map((talent) => {
         let fulfilled = true;
         let TagsFilter = true;
@@ -422,13 +423,6 @@ export default {
 
 
       )
-      // only show those whose prerequisites are met
-      // if () {
-       // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
-      // }
-
-
-      ///filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.tags.toString().toUpperCase().includes(lw)));
 
       return filteredTalents.filter(talent => (talent.level <= this.level && talent.cantrip === false) || talent.cantrip === true);
     },

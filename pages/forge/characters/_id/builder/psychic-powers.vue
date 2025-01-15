@@ -10,7 +10,7 @@
 
       <span> Сложность заклинаний: {{ ModAttributeClassSpell() }} </span>
 
-      <span> Атака заклинанием: {{ ModAttributeAttackSpell() }} </span>
+      <span> Атака заклинанием: +{{ ModAttributeAttackSpell() }} </span>
     </v-col>
 
     <v-col :cols="12">
@@ -43,15 +43,73 @@
                   levelAncestry - 1
                 ]"
               >
-                <v-btn @click="updatePreview(levelAncestry, cell)">
+                <v-btn
+                  @click="updatePreview(levelAncestry - 1, cell)"
+                  v-if="!characterSpell(levelAncestry - 1, cell)"
+                >
                   Выберите заклинание в ячейку {{ cell }}
                 </v-btn>
+
+                <v-expansion-panels
+                  multiple
+                  v-if="characterSpell(levelAncestry - 1, cell)"
+                >
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>
+                      <template v-slot:default="{ open }">
+                        <v-row no-gutters>
+                          <v-col :cols="8" :sm="10" class="subtitle-1">
+                            <span />
+                          </v-col>
+                          <v-col :cols="8" :sm="10" class="subtitle-2">
+                            <span
+                              v-html="
+                                characterSpell(levelAncestry - 1, cell).label
+                              "
+                            />
+                          </v-col>
+                          <v-col :cols="4" :sm="2">
+                            <v-btn
+                              color="error"
+                              x-small
+                              @click.stop.prevent="
+                                removeTalent(
+                                  characterSpell(levelAncestry - 1, cell)
+                                )
+                              "
+                              >Удалить</v-btn
+                            >
+                          </v-col>
+                          <v-col
+                            v-if="!open"
+                            :cols="8"
+                            :sm="10"
+                            class="caption grey--text"
+                          >
+                            {{
+                              characterSpell(levelAncestry - 1, cell).snippet
+                            }}
+                          </v-col>
+                        </v-row>
+                      </template>
+                    </v-expansion-panel-header>
+
+                    <v-expansion-panel-content>
+                      <div
+                        class="body-2 mb-2"
+                        v-html="
+                          characterSpell(levelAncestry - 1, cell).description
+                        "
+                      ></div>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
               </v-row>
 
               <v-dialog
                 v-model="psychicDialog"
                 :fullscreen="$vuetify.breakpoint.xsOnly"
-                width="600px"
+                width="1000px"
                 scrollable
               >
                 <psychic-preview
@@ -70,20 +128,22 @@
                   @cancel="psychicDialog = false"
                 />
               </v-dialog>
-
-              <!-- 
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <!-- 
      
 
       <v-btn
         @click="updatePreview(levelAncestry, 'ancestry')"
-        v-if="!characterAncestryTalent(levelAncestry)"
+        v-if="!characterSpell(levelAncestry - 1, cell)"
       >
         Выберите черту {{ levelAncestry }}
       </v-btn>
 
       <v-expansion-panels
         multiple
-        v-if="characterAncestryTalent(levelAncestry)"
+        v-if="characterSpell(levelAncestry - 1, cell)"
       >
         <v-expansion-panel>
           <v-expansion-panel-header>
@@ -94,7 +154,7 @@
                 </v-col>
                 <v-col :cols="8" :sm="10" class="subtitle-2">
                   <span
-                    v-html="characterAncestryTalent(levelAncestry).label"
+                    v-html="characterSpell(levelAncestry - 1, cell).label"
                   />
                 </v-col>
                 <v-col :cols="4" :sm="2">
@@ -102,7 +162,7 @@
                     color="error"
                     x-small
                     @click.stop.prevent="
-                      removeTalent(characterAncestryTalent(levelAncestry))
+                      removeTalent(characterSpell(levelAncestry - 1, cell))
                     "
                     >Удалить</v-btn
                   >
@@ -113,7 +173,7 @@
                   :sm="10"
                   class="caption grey--text"
                 >
-                  {{ characterAncestryTalent(levelAncestry).snippet }}
+                  {{ characterSpell(levelAncestry - 1, cell).snippet }}
                 </v-col>
               </v-row>
             </template>
@@ -122,16 +182,16 @@
           <v-expansion-panel-content>
             <div
               class="body-2 mb-2"
-              v-html="characterAncestryTalent(levelAncestry).description"
+              v-html="characterSpell(levelAncestry - 1, cell).description"
             ></div>
 
-            <div v-if="characterAncestryTalent(levelAncestry).options">
+            <div v-if="characterSpell(levelAncestry - 1, cell).options">
               <v-select
                 v-if="
-                  characterAncestryTalent(levelAncestry).optionsKey ===
+                  characterSpell(levelAncestry - 1, cell).optionsKey ===
                   'skill'
                 "
-                :value="characterAncestryTalent(levelAncestry).selected"
+                :value="characterSpell(levelAncestry - 1, cell).selected"
                 :items="skillRepository"
                 item-text="name"
                 item-value="key"
@@ -141,7 +201,7 @@
                 @input="
                   talentUpdateSelected(
                     item,
-                    characterAncestryTalent(levelAncestry),
+                    characterSpell(levelAncestry - 1, cell),
                     levelAncestry
                   )
                 "
@@ -150,9 +210,6 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>-->
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
 
         <!-- <v-data-table
           :headers="headers"
@@ -238,6 +295,7 @@ export default {
           sortable: false,
         },
       ],
+      cellSpell: undefined,
       grantAllAccess: false,
       selectedDisciplines: [],
       species: undefined,
@@ -253,6 +311,7 @@ export default {
     sources() {
       return [
         'playerCore',
+        'playerCore2',
         ...this.settingHomebrews
       ];
     },
@@ -311,6 +370,7 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.getPsychicPowers(newVal);
+          this.getTraitList(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -333,6 +393,52 @@ export default {
     },
   },
   methods: {
+    characterSpell(rank, cell)
+    {
+    // { id, name, cost, selection}
+    if (this.psychicPowersList === undefined) {
+        return false;
+      }
+
+      const characterTalents = this.$store.getters['characters/characterSpellsById'](this.characterId);
+
+      const talents = characterTalents.filter((t) => t).map((talent) => {
+
+      const rawTalent = this.psychicPowersList.find((r) => r.key === talent.key);
+
+        if (rawTalent === undefined) {
+          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
+          return {
+            id: talent.id,
+            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
+            name: talent.name,
+            key: talent.key,
+            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
+            cost: 0,
+          }
+        }
+
+        const aggregatedTalent = Object.assign({}, rawTalent);
+        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
+        aggregatedTalent.id = talent.id;
+        // aggregatedTalent.cost = talent.cost;
+        aggregatedTalent.label = aggregatedTalent.name;
+        aggregatedTalent.rank = talent.rank;
+        aggregatedTalent.cell = talent.cell;
+        // aggregatedTalent.place = talent.place;
+        // for each special talent, check respectively
+        if (talent.selected) {
+          aggregatedTalent.selected = talent.selected;
+
+        }
+
+        return aggregatedTalent;
+      }).sort((a, b) => a.id.localeCompare(b.id));
+
+
+      return talents.find(s => s.rank === rank && s.cell === cell);
+    },
      updatePreview(levelAncestry, cell) {
 
 
@@ -346,11 +452,11 @@ export default {
       });*/
       list.forEach(t => {
         const tal = t;
-        tal.rank = levelAncestry - 1;
+        tal.rank = levelAncestry ;
         tal.cell = cell;
 
       })
-      if (levelAncestry - 1 == 0)
+      if (levelAncestry == 0)
         this.selectedPsychic = list.filter(spell => spell.cantrip === true);
       else
         this.selectedPsychic = list.filter(spell => spell.cantrip === false);
@@ -382,10 +488,55 @@ export default {
       else 0;
     },
     //
-
+    async getTraitList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/traits/",
+        config.source
+      );
+      this.traitList = data;
+    },
     async getSpecies(key) {
       this.loading = true;
       const { data } = await this.$axios.get(`/api/species/${key}`);
+            if (this.traitList !== undefined) {
+        data.forEach((species) => {
+          const lowercaseKeywords = species.trait.map((s) =>
+            s.toUpperCase()
+          );
+
+          const List1 = this.traitList;
+          const trait = List1.filter((talent) =>
+            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+          );
+
+          if (trait.length > 0) {
+            const listAbilities = [];
+            species.trait.forEach((talent) => {
+
+                const t = trait.find(k => k.key === talent)
+
+                if (t)
+                {
+                const ability1 = {
+                  name: t.key,
+                  description: t.desc,
+                };
+
+                listAbilities.push(ability1);
+              }
+
+
+            });
+            species.traitDesc = listAbilities;
+          }
+        });
+
+}
       this.loading = false;
       this.species = data;
     },
@@ -402,18 +553,55 @@ export default {
       this.loading = true;
       const { data } = await this.$axios.get('/api/psychic-powers/', config);
       this.loading = false;
+       if (this.traitList !== undefined) {
+        data.forEach((species) => {
+          const lowercaseKeywords = species.trait.map((s) =>
+            s.toUpperCase()
+          );
+
+          const List1 = this.traitList;
+          const trait = List1.filter((talent) =>
+            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+          );
+
+          if (trait.length > 0) {
+            const listAbilities = [];
+            species.trait.forEach((talent) => {
+
+                const t = trait.find(k => k.key === talent)
+
+                if (t)
+                {
+                const ability1 = {
+                  name: t.key,
+                  description: t.desc,
+                };
+
+                listAbilities.push(ability1);
+              }
+
+
+            });
+            species.traitDesc = listAbilities;
+          }
+        });
+
+}
       this.psychicPowersList = data;
-      data.forEach(spell =>{
-        spell.description = spell.description.replace("{{powers}}", spell.powerValue)
-      });
-      this.psychicPowersList = data;
+      // data.forEach(spell =>{
+      //   spell.description = spell.description.replace("{{powers}}", spell.powerValue)
+      // });
+      // this.psychicPowersList = data;
     },
-    addPower(power) {
-      this.$store.commit('characters/addCharacterPsychicPower', { id: this.characterId, key: power.key, name: power.name, cost: power.cost });
+    removeTalent(talent) {
+      const id = this.characterId;
+      const source = `talent.${talent.id}`;
+      // this.$store.commit('characters/clearModification', { id: this.characterId, level });
+      // this.$store.commit('characters/removeModification', { id: this.characterId,   talentId: talent.id });
+      this.$store.commit('characters/removeCharacterSpell', { id, talentId: talent.id });
+      // this.$store.commit('characters/setModification', { id: this.characterId, level });
     },
-    removePower(powerName) {
-      this.$store.commit('characters/removeCharacterPsychicPower', { id: this.characterId, name: powerName });
-    },
+
     toggleDisciplineFilter(name) {
       if (this.selectedDisciplines.includes(name)) {
         this.selectedDisciplines = this.selectedDisciplines.filter((d) => d !== name);

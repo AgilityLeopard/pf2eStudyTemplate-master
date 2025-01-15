@@ -113,88 +113,6 @@
       </div>
     </v-col>
 
-    <!-- <v-col :cols="12" :sm="7">
-      <h3 class="subtitle-1"><strong>Framework</strong></h3>
-      <p class="body-2">Define your campaign framework.</p>
-
-      <v-select
-        label="Select a fitting tier"
-        :value="settingTier"
-        :items="tierSelect.options"
-        dense
-        outlined
-        @change="setSettingTier"
-      />
-
-      <v-text-field
-        :value="settingTitle"
-        class="pb-2"
-        label="Describe your Setting or Campaign"
-        hint="Only a few words"
-        dense
-        outlined
-        persistent-hint
-        @input="setSettingTitle"
-      />
-
-      <v-select
-        v-if="false"
-        label="Allowed Species"
-        :value="speciesRepository.map( s => s.name )"
-        :items="speciesRepository"
-        item-text="name"
-        item-value="name"
-        dense
-        outlined
-        multiple
-        chips
-        deletable-chips
-        readonly
-        hint="Select at least one species"
-      />
-
-      <v-select
-        v-if="false"
-        label="Excluded Archetypes"
-        :items="archetypeRepository"
-        item-text="name"
-        item-value="name"
-        chips
-        dense
-        box
-        multiple
-        deletable-chips
-        disabled
-        hint="Select Archetypes that are not allowed to pick."
-        persistent-hint
-      />
-
-    </v-col> -->
-
-    <!-- <v-col :cols="12" :sm="7">
-      <div>
-        <h3 class="subtitle-1"><strong>House Rules</strong></h3>
-        <p class="body-2">Allow specific house rules for this character.</p>
-        <div>
-          <div
-            v-for="houserule in settingHouseruleSelectors"
-            :key="houserule.key"
-          >
-            <v-select
-              v-model="houserule.selected"
-              :items="houserule.items"
-              :label="houserule.name"
-              dense
-              outlined
-              persistent-hint
-              :hint="houserule.hint"
-              @change="updateHouserules($event, houserule.key)"
-            ></v-select>
-          </div>
-        </div>
-      </div>
-    </v-col> -->
-
     <v-col :cols="12">
       <div>
         <h3 class="subtitle-1"><strong>Источники</strong></h3>
@@ -241,93 +159,7 @@
       </div>
     </v-col>
 
-    <!-- <v-col :cols="12">
-      <div>
-
-        <h3 class="subtitle-1"><strong>Homebrews</strong></h3>
-
-        <p class="body-2">Allow specific homebrew content to be used for this character.</p>
-
-        <div v-if="settingHomebrews.includes('aaoa') && settingHomebrews.includes('tea')">
-          <v-alert
-            text border-left dense color="warning" class="caption"
-          >
-            You selected two homebrews, the <em>Abundance of Apocrypha</em> and <em>The Emperors Angels</em>.
-            Both introduce similar Astartes Archetypes, Wargear and Powers.
-            This lead to duplicated entries and thus, <strong>it is NOT recommended to use both</strong> at the same time.
-          </v-alert>
-        </div>
-
-        <div
-          v-for="homebrew in settingHomebrewOptions.filter((h)=>h.enabled)"
-          :key="homebrew.key"
-        >
-          <v-switch
-            v-model="enabledHomebrews"
-            :value="homebrew.key"
-            :hint="homebrew.hint"
-            persistent-hint
-            color="primary"
-            dense
-            :disabled="!homebrew.enabled"
-            @change="updateHomebrew(homebrew)"
-          >
-            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
-          </v-switch>
-        </div>
-
-        <div class="mt-4">
-          <v-alert text border-left dense color="info" class="caption">
-            The <a href="https://www.cubicle7games.com/wrath-glory-pdf-pre-order-live/>">revised edition by Cubicle 7 just came out</a> and thus, most of the homebrews are currently outdated. I have disabled them for now until they are updated to match the recent changes.
-          </v-alert>
-        </div>
-
-        <div
-          v-for="homebrew in settingHomebrewOptions.filter((h)=>!h.enabled)"
-          :key="homebrew.key"
-        >
-          <v-switch
-            v-model="enabledHomebrews"
-            :value="homebrew.key"
-            :hint="homebrew.hint"
-            persistent-hint
-            color="primary"
-            dense
-            :disabled="!homebrew.enabled"
-            @change="updateHomebrew(homebrew)"
-          >
-            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
-          </v-switch>
-        </div>
-      </div>
-    </v-col> -->
-
     <v-col :cols="12" />
-
-    <!-- <v-col
-      v-for="item in settingTemplateOptions"
-      v-if="false"
-      :key="item.name"
-      :cols="12"
-      :sm="6"
-      :md="4"
-      :lg="2"
-    >
-      <v-card>
-        <v-img v-if="true" :src="item.cover" height="150" />
-        <v-card-title primary-title>
-          <h3 class="title">
-            {{ item.name }}
-          </h3>
-        </v-card-title>
-        <v-card-text>
-          <v-subheader>Recommended Tier: {{ item.recommendedTiers }}</v-subheader>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn>Select</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col> -->
   </v-row>
 </template>
 
@@ -359,26 +191,7 @@ export default {
       myCroppaConfig: {
         preventWhiteSpace: true,
       },
-      tierSelect: {
-        // One among billions','stalwart Defenders','Elite Guardians','Heroic Operatives','Agents of Fate
-        selected: 1,
-        options: [
-          { text: '1 - One among billions', value: 1 },
-          { text: '2 - Stalwart Defenders', value: 2 },
-          { text: '3 - Elite Guardians', value: 3 },
-          { text: '4 - Heroic Operatives', value: 4 },
-          { text: '5 - Agents of Fate', value: 5 },
-        ],
-      },
       settingPlayMode: false,
-      settingTemplateOptions: [
-        { name: 'Custom', recommendedTiers: '1-5', cover: 'https://cdna.artstation.com/p/assets/images/images/011/151/588/large/diego-gisbert-llorens-b-g-cover-1-wip4a.jpg?1528118826' },
-        { name: 'Only War', recommendedTiers: '1', cover: 'https://40k.gallery/img/40K-artwork/40K-20170826114311.jpg' },
-        { name: 'Dark Heresy', recommendedTiers: '1-3', cover: 'https://www.fantasyflightgames.com/media/ffg_content/Dark-Heresy-2nd/core-book-previews/preview-3/Dark_HeresyII_wip7-Web.jpg' },
-        { name: 'Rogue Trader', recommendedTiers: '2-3', cover: 'https://i.pinimg.com/originals/4d/d9/ab/4dd9ab05a6c5dc62a09d61365303c34b.jpg' },
-        { name: 'Deathwatch', recommendedTiers: '3-4', cover: 'https://i.pinimg.com/originals/be/09/17/be0917ae8414dbfde3f973d8ba2956bb.jpg' },
-        { name: 'Black Crusade', recommendedTiers: '3-4', cover: 'https://warhammerart.com/wp-content/uploads/2018/11/13TH-BLACK-CRUSADE-04.jpg' },
-      ],
       settingOfficialOptions: [
         {
           show: true,
@@ -386,30 +199,18 @@ export default {
           optional: false, // always active
           key: 'playerCore',
           name: 'Основная книга игрока (Ремастер)',
-          hint: 'Основные правил',
+          hint: 'Основные правила',
           nuxt: '',
-          source: 'https://www.drivethrurpg.com/en/product/249388/warhammer-40-000-wrath-glory-core-rulebook?affiliate_id=466959',
         },
-        // {
-        //   show: true,
-        //   disabled: true,
-        //   optional: false, // always active
-        //   key: 'fspg',
-        //   name: 'Forsaken System Player Guide',
-        //   hint: 'Imperial Archeytypes',
-        //   nuxt: 'https://www.drivethrurpg.com/en/product/303930/warhammer-40-000-wrath-glory-forsaken-system-player-s-guide?affiliate_id=466959',
-        //   source: '',
-        // },
-        // {
-        //   show: true,
-        //   disabled: true,
-        //   optional: false, // always active
-        //   key: 'red1',
-        //   name: 'Redacted Records I',
-        //   hint: 'Some Talents',
-        //   nuxt: 'https://www.drivethrurpg.com/en/product/343896/warhammer-40-000-wrath-glory-redacted-records?affiliate_id=466959',
-        //   source: '',
-        // },
+        {
+          show: true,
+          disabled: true,
+          optional: false, // always active
+          key: 'playerCore2',
+          name: 'Основная книга игрока 2 (Ремастер)',
+          hint: 'Основные правила',
+        },
+
       ],
       settingHomebrewOptions: [
         {

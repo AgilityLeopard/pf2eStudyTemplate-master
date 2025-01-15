@@ -1,5 +1,5 @@
-import {source} from './_sourcesRepository';
-import {stringToKebab} from './_stringUtils';
+import { source } from './_sourcesRepository';
+import { stringToKebab } from './_stringUtils';
 
 const cost = function (cost, archetype = 0, stats = 0, species = 0, other = 0) {
   return {
@@ -20,14 +20,14 @@ const archetype = function (sourceKey, sourcePage, name, tier, species, stub = f
   let speciesName = 'Human';
   let split = [];
   split = species.split('/');
-  if ( split.length === 2) {
+  if (split.length === 2) {
     speciesSourceKey = split[0];
     speciesName = split[1];
   } else {
     split = species.split('-');
-    if ( split.length >= 2 ){
+    if (split.length >= 2) {
       speciesSourceKey = split[0];
-      speciesName = split.splice(1).map((i)=>i.charAt(0).toUpperCase() + i.slice(1)).join(' ');
+      speciesName = split.splice(1).map((i) => i.charAt(0).toUpperCase() + i.slice(1)).join(' ');
     } else {
       speciesName = species;
     }
@@ -48,7 +48,7 @@ const archetype = function (sourceKey, sourcePage, name, tier, species, stub = f
     name,
     cost,
     tier,
-    species: [ speciesObject ],
+    species: [speciesObject],
     stub,
     wargear: [],
     prerequisites: [],
@@ -57,7 +57,7 @@ const archetype = function (sourceKey, sourcePage, name, tier, species, stub = f
   };
 }
 
-const wargearOptionFromString = function(partString) {
+const wargearOptionFromString = function (partString) {
   let part = partString.trim();
   const gear = {};
 
@@ -94,10 +94,10 @@ const statBoost = function (str, dex, con, int, wis, cha) {
   };
 };
 
-const playerCore =  [
+const playerCore = [
   {
-    ...archetype(source.playerCore.key,92,'Fighter',1,'Human'),
-    ...cost(12,0,12, 0, 0),
+    ...archetype(source.playerCore.key, 92, 'Fighter', 1, 'Human'),
+    ...cost(12, 0, 12, 0, 0),
     ...statBoost(0, 0, 0, 0, 0, 0),
     hint: 'Сражаясь ради чести, жадности, верности или просто ради азарта битвы, вы бесспорно являетесь мастером владения оружием и боевыми техниками. Вы сочетаете свои действия в комбинациях открывающих движений, завершающих ударов, и контратак, когда ваши враги по неосторожности ослабят защиту. Являетесь ли вы рыцарем, наемником, снайпером или мастером клинка, вы искусно отточили свои боевые навыки и обрушиваете сокрушительные критические атаки на своих врагов.',
     name: 'Воин',
@@ -166,228 +166,228 @@ const playerCore =  [
       {
         name: 'Возможность для атаки',
         snippet: 'Всегда внимательный к уязвимостям, вы можете быстро атаковать неприятеля, который оставляет брешь в своей защите. Вы получаете реакцию "Возможность для атаки".',
-        item: {key: 'Attack of the Opportunity', type: 'action'},
+        item: { key: 'Attack of the Opportunity', type: 'action' },
         key: 'fighterAbility',
         level: 1
       },
       {
         name: 'Блок щитом',
         snippet: 'Вы получаете общую черту Блок щитом / 1, это реакция для уменьшения урона с помощью щита.',
-        item: {key: 'Shield Block', type: 'general'},
+        item: { key: 'Shield Block', type: 'general' },
         key: 'fighterAbility',
-        level: 1 
+        level: 1
       },
       {
         name: 'Оценка противника',
         snippet: 'Независимо от того, осматриваете ли вы вражескую армию или просто стоите на страже, вы преуспеваете в наблюдении за своими врагами. Ваш уровень мастерства Восприятия увеличивается до мастера. Дополнительно, вы получаете бонус обстоятельства +2 к проверкам Восприятия для инициативы, что позволяет вам быстрее реагировать в бою.',
         // item: {key: 'Shield Block', type: 'general'},
         key: 'fighterAbility',
-        level: 7 
+        level: 7
       },
-        ],
+    ],
     modification:
-      [     
-      {
-        key: "will",
-        upgrade: "E",
-        mode: "Upgrade",
-        type: "Saving",
-        level: 3,
-      },
+      [
+        {
+          key: "will",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "Saving",
+          level: 3,
+        },
 
-      {
-        key: "weapon-specialization",
-        // upgrade: "M",
-        type: "weapon-specialization",
-        level: 7, 
-        bonusDamage: {
-          E: 2,
-          M: 3,
-          L: 4,
-        }
-        // valueBonus: 2,
-        // typeBonus: "damage"
-      },
-      {
-        key: "Perception",
-        upgrade: "M",
-        type: "Perception",
-        mode: "Upgrade",
-        level: 7,
-        valueBonus: 2,
-        typeBonus: "circumstance"
-      },
-      {
-        key: "fortitude",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "Saving",
-        level: 9,
-      },
-      {
-        key: "light",
-        upgrade: "E",
-        mode: "Upgrade",
-        type: "Defence",
-        level: 11,
-      },
-      {
-        key: "class",
-        upgrade: "E",
-        mode: "Upgrade",
-        type: "DC Class",
-        level: 11,
-      },
-      {
-        key: "medium",
-        upgrade: "E",
-        mode: "Upgrade",
-        type: "Defence",
-        criticalSpecialization: true,
-        level: 11,
-      },
-      {
-        key: "heavy",
-        mode: "Upgrade",
-        upgrade: "E",
-        type: "Defence",
-        criticalSpecialization: true,
-        level: 11,
-      },
-      {
-        key: "unarmored",
-        upgrade: "E",
-        mode: "Upgrade",
-        type: "Defence",
-        level: 11,
-      },
-      {
-        key: "simple",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "Attack",
-        level: 13,
-      },
-      {
-        key: "martial",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "Attack",
-        level: 13,
-      },
-      {
-        key: "advanced",
-        upgrade: "E",
-        mode: "Upgrade",
-        type: "Attack",
-        level: 13,
-      },
-      {
-        key: "unarmed",
-        mode: "Upgrade",
-        upgrade: "M",
-        type: "Attack",
+        {
+          key: "weapon-specialization",
+          // upgrade: "M",
+          type: "weapon-specialization",
+          level: 7,
+          bonusDamage: {
+            E: 2,
+            M: 3,
+            L: 4,
+          }
+          // valueBonus: 2,
+          // typeBonus: "damage"
+        },
+        {
+          key: "Perception",
+          upgrade: "M",
+          type: "Perception",
+          mode: "Upgrade",
+          level: 7,
+          valueBonus: 2,
+          typeBonus: "circumstance"
+        },
+        {
+          key: "fortitude",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "Saving",
+          level: 9,
+        },
+        {
+          key: "light",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "Defence",
+          level: 11,
+        },
+        {
+          key: "class",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "DC Class",
+          level: 11,
+        },
+        {
+          key: "medium",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "Defence",
+          criticalSpecialization: true,
+          level: 11,
+        },
+        {
+          key: "heavy",
+          mode: "Upgrade",
+          upgrade: "E",
+          type: "Defence",
+          criticalSpecialization: true,
+          level: 11,
+        },
+        {
+          key: "unarmored",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "Defence",
+          level: 11,
+        },
+        {
+          key: "simple",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "Attack",
+          level: 13,
+        },
+        {
+          key: "martial",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "Attack",
+          level: 13,
+        },
+        {
+          key: "advanced",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "Attack",
+          level: 13,
+        },
+        {
+          key: "unarmed",
+          mode: "Upgrade",
+          upgrade: "M",
+          type: "Attack",
 
-        level: 13,
-      },
-      {
-        key: "reflex",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "Saving",
-        level: 15,
-      },
-      {
-        key: "greater-weapon-specialization",
-        // upgrade: "M",
-        type: "greater-weapon-specialization",
-        level: 15, 
-        bonusDamage: {
-          E: 4,
-          M: 6,
-          L: 8,
-        }
-        // valueBonus: 2,
-        // typeBonus: "damage"
-      },
-      {
-        key: "light",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "Defence",
-        level: 17,
-      },
-      {
-        key: "medium",
-        upgrade: "M",
-        type: "Defence",
-        mode: "Upgrade",
-        criticalSpecialization: true,
-        level: 17,
-      },
-      {
-        key: "heavy",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "Defence",
-        criticalSpecialization: true,
-        level: 17,
-      },
-      {
-        key: "unarmored",
-        mode: "Upgrade",
-        upgrade: "M",
-        type: "Defence",
-        level: 17,
-      },
-      {
-        key: "simple",
-        mode: "Upgrade",
-        upgrade: "L",
-        type: "Attack",
-        level: 19,
-      },
-      {
-        key: "martial",
-        upgrade: "L",
-        type: "Attack",
-        mode: "Upgrade",
-        level: 19,
-      },
-      {
-        key: "advanced",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "Attack",
-        level: 19,
-      },
-      {
-        key: "unarmed",
-        upgrade: "L",
-        mode: "Upgrade",
-        type: "Attack",
-        level: 19,
-      },
-      {
-        key: "class",
-        upgrade: "M",
-        mode: "Upgrade",
-        type: "DC Class",
-        level: 19,
-      },
-    ]
+          level: 13,
+        },
+        {
+          key: "reflex",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "Saving",
+          level: 15,
+        },
+        {
+          key: "greater-weapon-specialization",
+          // upgrade: "M",
+          type: "greater-weapon-specialization",
+          level: 15,
+          bonusDamage: {
+            E: 4,
+            M: 6,
+            L: 8,
+          }
+          // valueBonus: 2,
+          // typeBonus: "damage"
+        },
+        {
+          key: "light",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "Defence",
+          level: 17,
+        },
+        {
+          key: "medium",
+          upgrade: "M",
+          type: "Defence",
+          mode: "Upgrade",
+          criticalSpecialization: true,
+          level: 17,
+        },
+        {
+          key: "heavy",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "Defence",
+          criticalSpecialization: true,
+          level: 17,
+        },
+        {
+          key: "unarmored",
+          mode: "Upgrade",
+          upgrade: "M",
+          type: "Defence",
+          level: 17,
+        },
+        {
+          key: "simple",
+          mode: "Upgrade",
+          upgrade: "L",
+          type: "Attack",
+          level: 19,
+        },
+        {
+          key: "martial",
+          upgrade: "L",
+          type: "Attack",
+          mode: "Upgrade",
+          level: 19,
+        },
+        {
+          key: "advanced",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "Attack",
+          level: 19,
+        },
+        {
+          key: "unarmed",
+          upgrade: "L",
+          mode: "Upgrade",
+          type: "Attack",
+          level: 19,
+        },
+        {
+          key: "class",
+          upgrade: "M",
+          mode: "Upgrade",
+          type: "DC Class",
+          level: 19,
+        },
+      ]
   },
 
-    {
-    ...archetype(source.playerCore.key,92,'Bard',1,'Human'),
-    ...cost(12,0,12, 0, 0),
+  {
+    ...archetype(source.playerCore.key, 92, 'Bard', 1, 'Human'),
+    ...cost(12, 0, 12, 0, 0),
     ...statBoost(0, 0, 0, 0, 0, 1),
     hint: 'Ваш проводник божественной силы сторонится традиционных каналов молитвы и служения - вместо этого вы собираете сакральные истины, которые выходят за рамки любого отдельного божества. Вы понимаете великие тайны вселенной, воплощенные во всеобъемлющих концепциях, которые превосходят добро и зло или хаос и порядок, независимо от того, воспринимаете ли вы общую связь между несколькими божествами или полностью обходите стороной их силу. Вы исследуете одну из этих тайн и используете ее силу, чтобы творить чудесные заклинания, но эта сила стоит ужасную цену: чем больше вы ее используете, тем сильнее становится проклятие. Ваши умения - обоюдоострый меч, который вы можете поддерживать как божественный инструмент или как проклятие богов.',
     name: 'Бард',
     keywords: 'бард',
     hitpoints: 8,
     // keyAbility: ["dexterity", "strength"],
-     keyAbility: [],
+    keyAbility: [],
     trait: ["бард"],
     rarity: "common",
     skillTrainedChoice: [],
@@ -483,122 +483,122 @@ const playerCore =  [
       {
         name: 'Возможность для атаки',
         snippet: 'Всегда внимательный к уязвимостям, вы можете быстро атаковать неприятеля, который оставляет брешь в своей защите. Вы получаете реакцию "Возможность для атаки".',
-        item: {key: 'Attack of the Opportunity', type: 'action'},
+        item: { key: 'Attack of the Opportunity', type: 'action' },
         key: 'fighterAbility',
         level: 1
       },
       {
         name: 'Блок щитом',
         snippet: 'Вы получаете общую черту Блок щитом / 1, это реакция для уменьшения урона с помощью щита.',
-        item: {key: 'Shield Block', type: 'general'},
+        item: { key: 'Shield Block', type: 'general' },
         key: 'fighterAbility',
-        level: 1 
+        level: 1
       },
       {
         name: 'Оценка противника',
         snippet: 'Независимо от того, осматриваете ли вы вражескую армию или просто стоите на страже, вы преуспеваете в наблюдении за своими врагами. Ваш уровень мастерства Восприятия увеличивается до мастера. Дополнительно, вы получаете бонус обстоятельства +2 к проверкам Восприятия для инициативы, что позволяет вам быстрее реагировать в бою.',
         // item: {key: 'Shield Block', type: 'general'},
         key: 'fighterAbility',
-        level: 7 
+        level: 7
       },
-        ],
+    ],
     modification:
-    [      
-      {
-        key: "will",
-        upgrade: "M",
-        type: "Saving",
+      [
+        {
+          key: "will",
+          upgrade: "M",
+          type: "Saving",
           mode: "Upgrade",
-        level: 7,
-        },
-      {
-        key: "fortitude",
-        upgrade: "E",
-        type: "Saving",
-          mode: "Upgrade",
-        level: 9,
-      },
-      {
-        key: "Perception",
-        upgrade: "E",
-        type: "Perception",
-          mode: "Upgrade",
-        level: 11,
-        // valueBonus: 2,
-        // typeBonus: "circumstance"
+          level: 7,
         },
         {
-        key: "unarmed",
-        upgrade: "E",
+          key: "fortitude",
+          upgrade: "E",
+          type: "Saving",
+          mode: "Upgrade",
+          level: 9,
+        },
+        {
+          key: "Perception",
+          upgrade: "E",
+          type: "Perception",
+          mode: "Upgrade",
+          level: 11,
+          // valueBonus: 2,
+          // typeBonus: "circumstance"
+        },
+        {
+          key: "unarmed",
+          upgrade: "E",
           type: "Attack",
           mode: "Upgrade",
-        level: 11,
-      },
-      {
-        key: "simple",
-        upgrade: "E",
-        type: "Attack",
-          mode: "Upgrade",
-        level: 11,
-      },
-      {
-        key: "light",
-        upgrade: "E",
-        type: "Defence",
-          mode: "Upgrade",
-        level: 13,
-      },
-      {
-        key: "unarmored",
-        upgrade: "E",
-          mode: "Upgrade",
-        type: "Defence",
-        level: 13,
+          level: 11,
         },
         {
-        key: "reflex",
-        upgrade: "E",
-              type: "Saving",
+          key: "simple",
+          upgrade: "E",
+          type: "Attack",
           mode: "Upgrade",
-        level: 13,
+          level: 11,
         },
-      
-      {
-        key: "weapon-specialization",
-        // upgrade: "M",
-        type: "weapon-specialization",
-        level: 13, 
-        bonusDamage: {
-          E: 2,
-          M: 3,
-          L: 4,
-        }
-        // valueBonus: 2,
-        // typeBonus: "damage"
-      },
-            {
-        key: "will",
-        upgrade: "L",
-        type: "Saving",
-        mode: "Upgrade",
-        level: 17,
+        {
+          key: "light",
+          upgrade: "E",
+          type: "Defence",
+          mode: "Upgrade",
+          level: 13,
         },
-      
-    ]
+        {
+          key: "unarmored",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "Defence",
+          level: 13,
+        },
+        {
+          key: "reflex",
+          upgrade: "E",
+          type: "Saving",
+          mode: "Upgrade",
+          level: 13,
+        },
+
+        {
+          key: "weapon-specialization",
+          // upgrade: "M",
+          type: "weapon-specialization",
+          level: 13,
+          bonusDamage: {
+            E: 2,
+            M: 3,
+            L: 4,
+          }
+          // valueBonus: 2,
+          // typeBonus: "damage"
+        },
+        {
+          key: "will",
+          upgrade: "L",
+          type: "Saving",
+          mode: "Upgrade",
+          level: 17,
+        },
+
+      ]
   },
 ];
-  
-const playerCore2 =  [
-    {
-    ...archetype(source.playerCore.key,92,'Oracle',1,'Human'),
-    ...cost(12,0,12, 0, 0),
+
+const playerCore2 = [
+  {
+    ...archetype(source.playerCore.key, 92, 'Oracle', 1, 'Human'),
+    ...cost(12, 0, 12, 0, 0),
     ...statBoost(0, 0, 0, 0, 0, 1),
     hint: 'Ваш проводник божественной силы сторонится традиционных каналов молитвы и служения - вместо этого вы собираете сакральные истины, которые выходят за рамки любого отдельного божества. Вы понимаете великие тайны вселенной, воплощенные во всеобъемлющих концепциях, которые превосходят добро и зло или хаос и порядок, независимо от того, воспринимаете ли вы общую связь между несколькими божествами или полностью обходите стороной их силу. Вы исследуете одну из этих тайн и используете ее силу, чтобы творить чудесные заклинания, но эта сила стоит ужасную цену: чем больше вы ее используете, тем сильнее становится проклятие. Ваши умения - обоюдоострый меч, который вы можете поддерживать как божественный инструмент или как проклятие богов.',
     name: 'Оракул',
     keywords: 'оракул',
     hitpoints: 8,
     // keyAbility: ["dexterity", "strength"],
-     keyAbility: [],
+    keyAbility: [],
     trait: ["оракул"],
     rarity: "сommon",
     skillTrainedChoice: [],
@@ -671,113 +671,114 @@ const playerCore2 =  [
       {
         name: 'Возможность для атаки',
         snippet: 'Всегда внимательный к уязвимостям, вы можете быстро атаковать неприятеля, который оставляет брешь в своей защите. Вы получаете реакцию "Возможность для атаки".',
-        item: {key: 'Attack of the Opportunity', type: 'action'},
+        item: { key: 'Attack of the Opportunity', type: 'action' },
         key: 'fighterAbility',
         level: 1
       },
       {
         name: 'Блок щитом',
         snippet: 'Вы получаете общую черту Блок щитом / 1, это реакция для уменьшения урона с помощью щита.',
-        item: {key: 'Shield Block', type: 'general'},
+        item: {
+          key: 'Shield Block',
+          type: 'general'
+        },
         key: 'fighterAbility',
-        level: 1 
+        level: 1
       },
       {
         name: 'Оценка противника',
         snippet: 'Независимо от того, осматриваете ли вы вражескую армию или просто стоите на страже, вы преуспеваете в наблюдении за своими врагами. Ваш уровень мастерства Восприятия увеличивается до мастера. Дополнительно, вы получаете бонус обстоятельства +2 к проверкам Восприятия для инициативы, что позволяет вам быстрее реагировать в бою.',
         // item: {key: 'Shield Block', type: 'general'},
         key: 'fighterAbility',
-        level: 7 
+        level: 7
       },
-        ],
+    ],
     modification:
-    [      
-      {
-        key: "will",
-        upgrade: "M",
-        type: "Saving",
+      [
+        {
+          key: "will",
+          upgrade: "M",
+          type: "Saving",
           mode: "Upgrade",
-        level: 7,
-        },
-      {
-        key: "fortitude",
-        upgrade: "E",
-        type: "Saving",
-          mode: "Upgrade",
-        level: 9,
-      },
-      {
-        key: "Perception",
-        upgrade: "E",
-        type: "Perception",
-          mode: "Upgrade",
-        level: 11,
-        // valueBonus: 2,
-        // typeBonus: "circumstance"
+          level: 7,
         },
         {
-        key: "unarmed",
-        upgrade: "E",
+          key: "fortitude",
+          upgrade: "E",
+          type: "Saving",
+          mode: "Upgrade",
+          level: 9,
+        },
+        {
+          key: "Perception",
+          upgrade: "E",
+          type: "Perception",
+          mode: "Upgrade",
+          level: 11,
+        },
+        {
+          key: "unarmed",
+          upgrade: "E",
           type: "Attack",
           mode: "Upgrade",
-        level: 11,
-      },
-      {
-        key: "simple",
-        upgrade: "E",
-        type: "Attack",
-          mode: "Upgrade",
-        level: 11,
-      },
-      {
-        key: "light",
-        upgrade: "E",
-        type: "Defence",
-          mode: "Upgrade",
-        level: 13,
-      },
-      {
-        key: "unarmored",
-        upgrade: "E",
-          mode: "Upgrade",
-        type: "Defence",
-        level: 13,
+          level: 11,
         },
         {
-        key: "reflex",
-        upgrade: "E",
-              type: "Saving",
+          key: "simple",
+          upgrade: "E",
+          type: "Attack",
           mode: "Upgrade",
-        level: 13,
+          level: 11,
         },
-      
-      {
-        key: "weapon-specialization",
-        // upgrade: "M",
-        type: "weapon-specialization",
-        level: 13, 
-        bonusDamage: {
-          E: 2,
-          M: 3,
-          L: 4,
-        }
-        // valueBonus: 2,
-        // typeBonus: "damage"
-      },
-            {
-        key: "will",
-        upgrade: "L",
-        type: "Saving",
-        mode: "Upgrade",
-        level: 17,
+        {
+          key: "light",
+          upgrade: "E",
+          type: "Defence",
+          mode: "Upgrade",
+          level: 13,
         },
-      
-    ]
-},
-]; 
+        {
+          key: "unarmored",
+          upgrade: "E",
+          mode: "Upgrade",
+          type: "Defence",
+          level: 13,
+        },
+        {
+          key: "reflex",
+          upgrade: "E",
+          type: "Saving",
+          mode: "Upgrade",
+          level: 13,
+        },
+
+        {
+          key: "weapon-specialization",
+          // upgrade: "M",
+          type: "weapon-specialization",
+          level: 13,
+          bonusDamage: {
+            E: 2,
+            M: 3,
+            L: 4,
+          }
+          // valueBonus: 2,
+          // typeBonus: "damage"
+        },
+        {
+          key: "will",
+          upgrade: "L",
+          type: "Saving",
+          mode: "Upgrade",
+          level: 17,
+        },
+
+      ]
+  },
+];
 const archetypeRepository = [
   ...playerCore,
-
+  ...playerCore2
 ];
 
 module.exports = archetypeRepository;
