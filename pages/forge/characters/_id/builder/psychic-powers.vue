@@ -1,16 +1,38 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-row justify="center">
     <v-col>
-      <h1 class="headline">Заклинания</h1>
+      <h1 class="headline" v-if="archetype && archetype.spellTradition">
+        Заклинания
+      </h1>
     </v-col>
 
+    <v-col v-if="archetype && !archetype.spellTradition" :cols="12">
+      <v-alert
+        type="warning"
+        class="caption ml-4 mr-4"
+        dense
+        outlined
+        border="left"
+      >
+        У класса нет способности к заклинаниям
+      </v-alert>
+    </v-col>
     <!-- Характеристики заклинателя -->
     <v-col :cols="12" v-if="archetype && archetype.spellTradition">
-      <span> Обычай: {{ archetype.spellTradition }} </span>
+      <span
+        ><br />
+        <b>Обычай:</b> {{ archetype.spellTradition }}
+      </span>
 
-      <span> Сложность заклинаний: {{ ModAttributeClassSpell() }} </span>
+      <span>
+        <br />
+        <b>Сложность заклинаний:</b> {{ ModAttributeClassSpell() }}
+      </span>
 
-      <span> Атака заклинанием: +{{ ModAttributeAttackSpell() }} </span>
+      <span>
+        <br />
+        <b>Атака заклинанием:</b> +{{ ModAttributeAttackSpell() }}
+      </span>
     </v-col>
 
     <v-col :cols="12">
@@ -24,10 +46,10 @@
             :key="levelAncestry"
             v-if="
               levelAncestry - 1 <=
-              archetype.spellProgression[characterLevel()].findIndex(
-                (t) => t == 0
-              ) -
-                1
+                archetype.spellProgression[characterLevel()].findIndex(
+                  (t) => t == 0
+                ) -
+                  1 || characterLevel() == 20
             "
           >
             <v-expansion-panel-header>
