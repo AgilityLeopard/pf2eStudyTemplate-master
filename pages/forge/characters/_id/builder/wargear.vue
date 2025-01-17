@@ -1,6 +1,14 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-row justify="center">
     <!-- manage current inventory -->
+
+    <v-col :cols="12">
+      <v-btn x-small> Платина </v-btn>
+      <v-btn x-small> Золото </v-btn>
+      <v-btn x-small> Серебро </v-btn>
+      <v-btn x-small> Медь </v-btn>
+    </v-col>
+
     <v-col :cols="12">
       <v-card
         class="mb-4"

@@ -443,6 +443,7 @@ export default {
         const aggregatedTalent = Object.assign({}, rawTalent);
         console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
 
+        aggregatedTalent.description = talent.description;
         aggregatedTalent.id = talent.id;
         // aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;

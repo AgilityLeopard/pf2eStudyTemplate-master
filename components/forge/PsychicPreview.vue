@@ -86,11 +86,7 @@
         </template>
 
         <template v-slot:item.buy="{ item }">
-          <v-btn
-            :color="item.level <= level ? 'success' : 'red'"
-            x-small
-            @click="addTalent(item, type, item.level)"
-          >
+          <v-btn x-small @click="addTalent(item, type, item.level)">
             add
           </v-btn>
         </template>
@@ -253,6 +249,7 @@ export default {
         name: talent.name,
         key: talent.key,
         place: talent.place,
+        description: talent.description,
         rank: talent.rank,
         cell:  talent.cell,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
