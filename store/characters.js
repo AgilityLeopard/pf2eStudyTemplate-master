@@ -259,6 +259,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].skillFromModification : [],
   characterSkillPointsClassId: (state) => (id) =>
     state.characters[id] ? state.characters[id].SkillPointsClass : 0,
+  characterMoneyById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].money : {},
   characterSpeedById: (state) => (id) =>
     state.characters[id] ? state.characters[id].speed : {},
   characterBoostById: (state) => (id) =>
@@ -1367,7 +1369,10 @@ export const mutations = {
     state.characters[payload.id].SkillPointsClass =
       payload.payload.value;
   },
-
+  setCharacterMoney(state, payload) {
+    state.characters[payload.id].money[payload.nominal] =
+      parseInt(payload.value);
+  },
   setCharacterSkill(state, payload) {
     state.characters[payload.id].skills[payload.payload.key] =
       payload.payload.value;
@@ -2354,7 +2359,12 @@ const getDefaultState = () => ({
     wisdom: 0,
     charisma: 0,
   },
-
+  money: {
+    pp: 0,
+    gp: 15,
+    sp: 0,
+    cp: 0,
+  },
   Boost: 0,
   AncestryFreeBoost: "",
   AncestryFreeBoost2: "",

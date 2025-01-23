@@ -3,11 +3,23 @@
     <!-- manage current inventory -->
 
     <v-col :cols="12">
-      <v-btn x-small> Платина </v-btn>
-      <v-btn x-small> Золото </v-btn>
-      <v-btn x-small> Серебро </v-btn>
-      <v-btn x-small> Медь </v-btn>
+      <v-btn x-small @click="openMoneySettings(getMoney['pp'], 'pp')">
+        Платина: {{ getMoney["pp"] }}
+      </v-btn>
+      <v-btn x-small @click="openMoneySettings(getMoney['gp'], 'gp')">
+        Золото: {{ getMoney["gp"] }}
+      </v-btn>
+      <v-btn x-small @click="openMoneySettings(getMoney['sp'], 'sp')">
+        Серебро: {{ getMoney["sp"] }}
+      </v-btn>
+      <v-btn x-small @click="openMoneySettings(getMoney['cp'], 'cp')">
+        Медь: {{ getMoney["cp"] }}
+      </v-btn>
     </v-col>
+
+    <v-alert :value="alertMoney" type="error" text dense border="left">
+      У вас недостаточно денег на покупку
+    </v-alert>
 
     <v-col :cols="12">
       <v-card
@@ -334,6 +346,66 @@
         </v-card>
       </v-dialog>
 
+      <v-dialog
+        v-model="moneyEditorDialog"
+        width="600px"
+        scrollable
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+      >
+        <v-card>
+          <v-card-title style="background-color: #262e37; color: #fff">
+            {{ groupMoney[labelMoney] }}
+            <v-spacer />
+            <v-icon dark @click="closeMoneySettings">close</v-icon>
+          </v-card-title>
+
+          <v-card-text class="pt-4">
+            <v-row>
+              <v-col cols="6" sm="6">
+                <v-text-field
+                  label="Установить количество монет"
+                  dense
+                  required
+                  v-model="gp"
+                  :type="number"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6" sm="6">
+                <v-btn small center color="info" @click="changeMoney()"
+                  >Установить</v-btn
+                >
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="6" sm="6">
+                <v-text-field
+                  label="Прибавить количество монет"
+                  dense
+                  required
+                  v-model="gpAd"
+                  :type="number"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6" sm="6">
+                <v-btn small right color="info" @click="adjustMoney()"
+                  >Скорректировать</v-btn
+                >
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer />
+            <!-- <v-btn small right color="сфт" @click="changeMoney()"
+              >Save</v-btn
+            > -->
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-col :cols="12" v-if="manageArmour && characterArmour">
         <v-card
           class="mb-4"
@@ -405,23 +477,34 @@ export default {
       manageWargear: true,
       manageArmour: true,
       weaponEditorDialog: false,
+      moneyEditorDialog:false,
       armorEditorDialog: false,
       startingWargearExpand: true,
       wargearSearchActive: false,
       armourSearchActive: false,
       loading: false,
       alert: false,
+      alertMoney: false,
       alert1: false,
       archetype: undefined,
       wargearList: undefined,
       armourList: undefined,
       advancedShoppingChart: [],
+      groupMoney: {
+        pp: "Платина",
+        gp: "Золото",
+        sp: "Серебро",
+        cp: "Медь",
+      },
       Striking: "none",
       Resilent: "none",
       Potency:  "none",
       Property: [],
-
+      gp: undefined,
+      gpAd: undefined,
+      labelMoney: undefined,
       Weapon: undefined,
+      money: undefined,
       Armor: undefined,
       runeWeapon:{
         potency: 'none',
@@ -513,9 +596,6 @@ export default {
     sources() {
       return [
         'playerCore',
-        'fspg',
-        'red1',
-        'cos',
         // 'tnh',
         ...this.settingHomebrews
       ];
@@ -552,6 +632,9 @@ export default {
     },
     characterAttributes() {
       return this.$store.getters['characters/characterAttributesById'](this.characterId);
+    },
+    getMoney() {
+      return this.$store.getters['characters/characterMoneyById'](this.characterId);
     },
     characterWearWargear() {
       return this.$store.getters['characters/characterWearById'](this.characterId);
@@ -787,9 +870,78 @@ export default {
     characterLevel(){
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
-    add(gear) {
-      if (gear.type === 'melee' || gear.type === 'range')
+    add(gear, buy) {
+      let cp = 0, sp= 0, gp= 0, pp = this.getMoney["pp"];
+      this.alertMoney = false;
+      if (buy === true)
       {
+        // const Charmoney = this.getMoney['cp'] + this.getMoney['sp'] * 10 + this.getMoney['gp'] * 100 + this.getMoney['pp'] * 1000;
+        // const price = gear.cp + gear.sp * 10 + gear.gp * 100 + gear.pp * 1000;
+
+        if(gear.cp !== 0)
+        {
+          const Charmoney = this.getMoney["cp"];
+          const price = gear.cp;
+          cp = Charmoney - price;
+        }
+        if(gear.sp !== 0)
+        {
+          const Charmoney = this.getMoney["sp"];
+          const price = gear.sp;
+          sp = Charmoney - price;
+        }
+
+        if(gear.gp !== 0)
+        {
+          const Charmoney = this.getMoney["gp"];
+          const price = gear.gp;
+          gp = Charmoney - price;
+        }
+
+        if(gear.pp !== 0)
+        {
+          const Charmoney = this.getMoney["pp"];
+          const price = gear.pp;
+          pp = Charmoney - price;
+        }
+
+        //как только все вычлось, смотрим и избавляемся от минусовых значений
+        if (cp < 0)
+        {
+          const diff = Math.abs(cp / 10) ;
+          cp = cp + Math.ceil(diff) * 10;
+          sp = sp  - Math.ceil(diff)
+        }
+
+        if (sp < 0)
+        {
+          const diff = Math.abs(sp / 10);
+          sp = sp + Math.ceil(diff) * 10;
+          gp = gp  - Math.ceil(diff)
+        }
+
+        if (gp < 0)
+        {
+          const diff = Math.abs(gp / 10);
+          gp = gp + Math.ceil(diff) * 10;
+          pp = pp  - Math.ceil(diff)
+        }
+
+        if (pp < 0) this.alertMoney= true;
+
+      }
+
+      if ((buy === true && pp >=0) || buy !== true)
+      {
+        if (buy === true)
+        {
+          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: pp, nominal: "pp" });
+          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: gp, nominal: "gp" });
+          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: sp, nominal: "sp" });
+          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: cp, nominal: "cp" });
+      }
+
+
       const category = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
       const trait = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
 
@@ -803,12 +955,10 @@ export default {
       if (trait)
         gear.category = gear.category === "advanced" ? "martial" : "simple";
 
+         this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
       }
-      // else
-      // {
 
-      // }
-      this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
+
     },
     remove(gear) {
       this.$store.commit('characters/unwearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
@@ -816,6 +966,15 @@ export default {
     },
     wear(gear) {
       this.$store.commit('characters/wearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
+    },
+    changeMoney() {
+       this.moneyEditorDialog = false;
+       this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: this.gp === '' ? this.money :  this.gp, nominal: this.labelMoney });
+    },
+    adjustMoney() {
+       this.moneyEditorDialog = false;
+      const adj = this.gpAd === '' ? this.gp : parseInt(this.gp) + parseInt(this.gpAd);
+       this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: adj, nominal: this.labelMoney });
     },
     unwear(gear) {
       this.$store.commit('characters/unwearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
@@ -832,6 +991,12 @@ export default {
       this.Property = this.WeaponRuneProperty.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
       this.Weapon = gear;
     },
+    openMoneySettings(value, nominal){
+      this.moneyEditorDialog = true;
+      this.labelMoney = nominal;
+      this.money = value;
+      this.gp = value;
+    },
     openArmourSettings(gear){
       this.armorEditorDialog = true;
       const armor = this.characterWargearRaw.find(t => t.id === gear.id);
@@ -847,6 +1012,10 @@ export default {
     },
     closeArmourSettings() {
       this.armorEditorDialog = false;
+      // this.alert = false;
+    },
+    closeMoneySettings() {
+      this.moneyEditorDialog = false;
       // this.alert = false;
     },
     PotencyCap(potency){
@@ -871,7 +1040,7 @@ export default {
         // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
         this.weaponEditorDialog = false;
       }
-    },
+  },
     saveArmor() {
       this.alert = false;
       const armor =  this.Resilent;

@@ -1,6 +1,6 @@
-import {source} from './_sourcesRepository';
-import {stringToKebab} from './_stringUtils';
-import {ATTRIBUTES, SKILLS, TRAITS} from './_statUtils';
+import { source } from './_sourcesRepository';
+import { stringToKebab } from './_stringUtils';
+import { ATTRIBUTES, SKILLS, TRAITS } from './_statUtils';
 
 const rarity = {
   'C': 'Common',
@@ -30,7 +30,7 @@ const gear = function (sourceKey, sourcePage, name, value, keywords, stub = fals
     subtype: '',
     value: valuePart,
     // rarity: rarity[rarityPart],
-    keywords: keywords.split(',').map((k)=>k.trim()),
+    keywords: keywords.split(',').map((k) => k.trim()),
     stub: stub,
     meta: [],
   };
@@ -46,26 +46,6 @@ const price = function (pp, gp, sp, cp) {
   };
 };
 
-const simpleStub = function (id, sourceKey, sourcePage, name, value, keywords, hint, stub = true) {
-  const valueParts = value.split('');
-  return {
-    source: {
-      ...source[sourceKey],
-      page: sourcePage,
-    },
-    id: id,
-    key: `${stringToKebab(`${sourceKey} ${name}`)}`,
-    name,
-    hint,
-    type: 'Misc',
-    subtype: '',
-    value: valueParts[0],
-    rarity: rarity[valueParts[1]],
-    keywords: keywords.split(',').map((k)=>k.trim()),
-    stub: stub,
-    meta: [],
-  };
-};
 
 const armour = function (subtype, armourRating, traits) {
   return {
@@ -75,33 +55,13 @@ const armour = function (subtype, armourRating, traits) {
       {
         type: 'armour',
         armourRating: armourRating,
-        traits: traits ? traits.split(',').map((k)=>k.trim()) : [],
+        traits: traits ? traits.split(',').map((k) => k.trim()) : [],
       }
     ],
   };
 };
 
 
-
-const metaMelee = function(staticPart, ed, ap, range, traits) {
-  return {
-    type: 'melee-weapon',
-    range,
-    damage: { static: staticPart, ed },
-    ap,
-    traits,
-  };
-}
-
-const meleez = function (subtype, damage, ed, ap, range, traits = undefined) {
-  return {
-    type: 'Melee Weapon',
-    subtype: subtype ? subtype : undefined,
-    meta: [
-      metaMelee(damage, ed, ap, range < 1 ? 1 : range, traits ? traits.split(',').map((k)=>k.trim()) : []),
-    ],
-  };
-};
 
 
 /**
@@ -113,41 +73,13 @@ const meleez = function (subtype, damage, ed, ap, range, traits = undefined) {
  * @param subtype
  * @returns {{subtype: string, meta: [{traits: (*|[]), armourRating: *}], type: string}}
  */
-const meleePax = function (paxString, subtype = '') {
-  const parts = paxString.split('; ');
 
-  const damageString = parts[0].split(' ')[1]; // Damage: 4+1ED
-  const ap = parts[1].split(' ')[1];
-  const rangeString = parts[2].split(' ')[1];
-  const traits = parts[3];
 
-  const damageParts = damageString.split('+');
-  const damageStatic = damageParts[0];
-  const damageEd = damageParts[1].split('ED')[0];
-
-  return {
-    type: 'Melee Weapon',
-    subtype: subtype,
-    meta: [
-      {
-        type: 'melee-weapon',
-        range: rangeString === 'M' ? 1 : rangeString.split('m')[0],
-        damage: {
-          static: damageStatic,
-          ed: damageEd,
-        },
-        ap: ap,
-        traits: traits ? traits.split(',').map((k)=>k.trim()) : [],
-      }
-    ],
-  };
-};
-
-const playerCore =  [
+const playerCore = [
   {
-    ...gear(source.playerCore.key,211,'Short Sword','2C','Blade,[Any]'),
+    ...gear(source.playerCore.key, 211, 'Short Sword', '2C', 'Blade,[Any]'),
     // ...meleez(undefined,2,2,0,0),
-    ...price(0,9,0,0),
+    ...price(0, 9, 0, 0),
     nameGear: "Короткий меч",
     traits: ["быстрое", "точное", "универсальное рубящий"],
     type: "melee",
@@ -161,15 +93,15 @@ const playerCore =  [
     group: "sword",
     description: "Эти клинки бывают разных форм и стилей, но они обычно 2 фута длиной."
   },
-    {
-    ...gear(source.playerCore.key,211,'Composite Longbow','2C','Blade,[Any]'),
+  {
+    ...gear(source.playerCore.key, 211, 'Composite Longbow', '2C', 'Blade,[Any]'),
     // ...meleez(undefined,2,2,0,0),
-    ...price(0,20,0,0),
+    ...price(0, 20, 0, 0),
     nameGear: "Композитный длинный лук",
     traits: ["залповое 30фт", "смертельное d10", "тяговое"],
     type: "ranged",
     category: "martial",
-      // price: "20G",
+    // price: "20G",
     weight: 2,
     damage: "1d8",
     typeDamage: "piercing",
@@ -178,17 +110,17 @@ const playerCore =  [
     group: "bow",
     description: "Это дистанционное оружие сделано из рога, дерева и сухожилий, соединенных вместе, чтобы увеличить мощность натяжения и силу его снаряда. Как и у всех длинных луков, его большой размер увеличивает дальность и мощность. Чтобы стрелять, вы должны использовать две руки и он не может быть использован верхом на скакуне."
   },
-  
-      {
-    ...gear(source.playerCore.key,211,'Elven Curve Blade','2C','Blade,[Any]'),
+
+  {
+    ...gear(source.playerCore.key, 211, 'Elven Curve Blade', '2C', 'Blade,[Any]'),
     // ...meleez(undefined,2,2,0,0),
-    ...price(0,4,0,0),
+    ...price(0, 4, 0, 0),
     nameGear: "Эльфийская сабля",
     traits: ["силовое", "точное", "эльф"],
     type: "melee",
     category: "martial",
-        // price: "20G",
-     weight: 2,
+    // price: "20G",
+    weight: 2,
     damage: "1d8",
     typeDamage: "slashing",
     rarity: "uncommon",
@@ -199,9 +131,9 @@ const playerCore =  [
 
   ///Доспехи
   {
-    ...gear(source.playerCore.key,211,'Chain Mail','2C',''),
-    ...armour(undefined,0,0),
-    ...price(0,6,0,0),
+    ...gear(source.playerCore.key, 211, 'Chain Mail', '2C', ''),
+    ...armour(undefined, 0, 0),
+    ...price(0, 6, 0, 0),
     nameGear: "Кольчуга",
     traits: ["гибкий", "шумный"],
     category: "medium",
@@ -1251,24 +1183,5 @@ const playerCore =  [
 
 module.exports = [
   ...playerCore,
-  // ...aioe,
-  // ...red2_eclisiarchy,
-  // ...red2_mechanicus,
-  // ...fspg,
-  // ...cos,
-  // ...tnh,
-  // ...afas,
-  // ...aaoa,
-  // ...aaoav2,
-  // ...pax,
-  // ...lotn,
-  // ...tea,
-  // ...glhe,
-];
 
-/*
-Fusion Gun
-Melta Bomb
-Aeldari Jetbike
-Lasblaster
- */
+];

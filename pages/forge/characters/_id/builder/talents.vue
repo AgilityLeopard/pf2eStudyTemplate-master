@@ -20,23 +20,6 @@
             >{{ levelAncestry }} уровень</v-expansion-panel-header
           >
           <v-expansion-panel-content :key="levelAncestry">
-            <v-dialog
-              v-model="talentsDialog"
-              :fullscreen="$vuetify.breakpoint.xsOnly"
-              width="600px"
-              scrollable
-            >
-              <talents-preview
-                :character-id="characterId"
-                :talents="selectedTalentsAncestry"
-                :level="levelAncestry"
-                :list="talentList"
-                type="ancestry"
-                choose-mode
-                @cancel="talentsDialog = false"
-              />
-            </v-dialog>
-
             <v-btn
               @click="updatePreview(levelAncestry, 'ancestry')"
               v-if="!characterAncestryTalent(levelAncestry)"
@@ -132,23 +115,6 @@
             >{{ levelAncestry }} уровень</v-expansion-panel-header
           >
           <v-expansion-panel-content :key="levelAncestry">
-            <v-dialog
-              v-model="talentsDialogClass"
-              :fullscreen="$vuetify.breakpoint.xsOnly"
-              width="600px"
-              scrollable
-            >
-              <talents-preview
-                :character-id="characterId"
-                :talents="selectedTalentsClass"
-                :level="levelAncestry"
-                :list="talentList"
-                type="class"
-                choose-mode
-                @cancel="talentsDialogClass = false"
-              />
-            </v-dialog>
-
             <v-btn
               @click="updatePreview(levelAncestry, 'class')"
               v-if="!characterClassTalent(levelAncestry)"
@@ -318,23 +284,6 @@
           >
 
           <v-expansion-panel-content :key="levelAncestry">
-            <v-dialog
-              v-model="talentsDialogSkill"
-              :fullscreen="$vuetify.breakpoint.xsOnly"
-              width="600px"
-              scrollable
-            >
-              <talents-preview
-                :character-id="characterId"
-                :talents="selectedTalentsSkill"
-                :list="talentList"
-                :level="levelAncestry"
-                type="skill"
-                choose-mode
-                @cancel="talentsDialogSkill = false"
-              />
-            </v-dialog>
-
             <v-btn
               @click="updatePreview(levelAncestry, 'skill')"
               v-if="!characterSkillTalent(levelAncestry)"
@@ -633,6 +582,57 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+
+      <v-dialog
+        v-model="talentsDialogClass"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+        width="600px"
+        scrollable
+      >
+        <talents-preview
+          :character-id="characterId"
+          :talents="selectedTalentsClass"
+          :level="levelAncestry"
+          :list="talentList"
+          type="class"
+          choose-mode
+          @cancel="talentsDialogClass = false"
+        />
+      </v-dialog>
+
+      <v-dialog
+        v-model="talentsDialog"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+        width="600px"
+        scrollable
+      >
+        <talents-preview
+          :character-id="characterId"
+          :talents="selectedTalentsAncestry"
+          :level="levelAncestry"
+          :list="talentList"
+          type="ancestry"
+          choose-mode
+          @cancel="talentsDialog = false"
+        />
+      </v-dialog>
+
+      <v-dialog
+        v-model="talentsDialogSkill"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+        width="600px"
+        scrollable
+      >
+        <talents-preview
+          :character-id="characterId"
+          :talents="selectedTalentsSkill"
+          :list="talentList"
+          :level="levelAncestry"
+          type="skill"
+          choose-mode
+          @cancel="talentsDialogSkill = false"
+        />
+      </v-dialog>
     </v-row>
   </div>
 </template>
