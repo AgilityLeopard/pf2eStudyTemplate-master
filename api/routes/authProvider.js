@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 
 const authProvider = require('jsonwebtoken');
 
-const JWT_ISSUER = 'shadow-of-tales.ru';
+const JWT_ISSUER = 'pf2e-builder-ru.netlify.app';
 
 module.exports = {
   sign: (userId, jwtPayload) => {

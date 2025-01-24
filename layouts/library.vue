@@ -68,7 +68,7 @@ export default {
       link: [
         {
           rel: "canonical",
-          href: `https://shadow-of-tales.ru${this.$route.path}`,
+          href: `https://pf2e-builder-ru.netlify.app${this.$route.path}`,
         },
       ],
     };

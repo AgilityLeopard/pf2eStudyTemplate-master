@@ -13,7 +13,7 @@ export default {
     parseForInternalLinks(html){
       let result = html;
       result = result.replace(/<(a)\shref="\/([^"]*)">([^<]*)(<\/\1>)/gm, `<nuxt-link to="/$2">$3</nuxt-link>`);
-      result = result.replace(/<(a)\shref=https:\/\/shadow-of-tales.ru\/([^"]*)">([^<]*)(<\/\1>)/gm, `<nuxt-link to="/$2">$3</nuxt-link>`);
+      result = result.replace(/<(a)\shref=https:\/\/pf2e-builder-ru.netlify.app\/([^"]*)">([^<]*)(<\/\1>)/gm, `<nuxt-link to="/$2">$3</nuxt-link>`);
       return result;
     },
     parseForShortcodes(html) {
