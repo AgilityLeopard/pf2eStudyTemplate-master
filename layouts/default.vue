@@ -146,56 +146,56 @@ export default {
         // { to: '/network', title: 'Network', subtitle: 'Find Assets', icon: '' },
         // { to: '/posts', title: 'Articles', subtitle: 'Hobby Articles', icon: '' },
         // { to: '/ether', title: 'Ether', subtitle: 'Browse Let´s Plays', icon: '' },
-        {
-          to: "/library",
-          title: "Библиотека",
-          subtitle: "Просмотр предметов",
-          icon: "",
-          children: [
-            {
-              to: "/library/species",
-              title: "Species",
-              subtitle: "Browse ",
-              icon: "",
-            },
-            {
-              to: "/library/archetypes",
-              title: "Archetypes",
-              subtitle: "Browse ",
-              icon: "",
-            },
-            {
-              to: "/library/ascension-packages",
-              title: "Species",
-              subtitle: "Browse ",
-              icon: "",
-            },
-            {
-              to: "/library/talents",
-              title: "Talents",
-              subtitle: "Browse ",
-              icon: "",
-            },
-            {
-              to: "/library/wargear",
-              title: "Wargear",
-              subtitle: "Browse ",
-              icon: "",
-            },
-            {
-              to: "/library/psychic-powers",
-              title: "Psychic Powers",
-              subtitle: "Browse ",
-              icon: "",
-            },
-          ],
-        },
-        {
-          to: "/codex",
-          title: "Правила",
-          subtitle: "Просмотр правил",
-          icon: "",
-        },
+        // {
+        //   to: "/library",
+        //   title: "Библиотека",
+        //   subtitle: "Просмотр предметов",
+        //   icon: "",
+        //   children: [
+        //     {
+        //       to: "/library/species",
+        //       title: "Species",
+        //       subtitle: "Browse ",
+        //       icon: "",
+        //     },
+        //     {
+        //       to: "/library/archetypes",
+        //       title: "Archetypes",
+        //       subtitle: "Browse ",
+        //       icon: "",
+        //     },
+        //     {
+        //       to: "/library/ascension-packages",
+        //       title: "Species",
+        //       subtitle: "Browse ",
+        //       icon: "",
+        //     },
+        //     {
+        //       to: "/library/talents",
+        //       title: "Talents",
+        //       subtitle: "Browse ",
+        //       icon: "",
+        //     },
+        //     {
+        //       to: "/library/wargear",
+        //       title: "Wargear",
+        //       subtitle: "Browse ",
+        //       icon: "",
+        //     },
+        //     {
+        //       to: "/library/psychic-powers",
+        //       title: "Psychic Powers",
+        //       subtitle: "Browse ",
+        //       icon: "",
+        //     },
+        //   ],
+        // },
+        // {
+        //   to: "/codex",
+        //   title: "Правила",
+        //   subtitle: "Просмотр правил",
+        //   icon: "",
+        // },
       ],
       drawer: {
         // sets the open status of the drawer
