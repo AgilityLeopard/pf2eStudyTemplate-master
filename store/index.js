@@ -38,7 +38,8 @@ export const mutations = {
   }
 };
 
-const baseApiUrl = 'https://shadowfoftales.ru';
+const baseApiUrl = 'http://shadow-of-tales.ru
+';
 
 export const actions = {
   nuxtServerInit({ commit }, { req }) {

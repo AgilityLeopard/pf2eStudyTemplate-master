@@ -135,7 +135,8 @@ export default {
     const description =
       "There are some homebrew species and human variants in addition to some Xenos options. " +
       "Check out the respective linked Homebrews for detailed informations.";
-    const image = "https://shadowfoftales.ru/img/artwork_library.jpg";
+    const image = "http://shadow-of-tales.ru
+/img/artwork_library.jpg";
 
     return {
       title,

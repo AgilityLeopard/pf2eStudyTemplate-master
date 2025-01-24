@@ -94,7 +94,8 @@ export default {
     const { title, description } = this.item.fields;
     const image = this.item.fields.imageTwitter
       ? `https:${this.item.fields.imageTwitter.fields.file.url}`
-      : `https://shadowfoftales.ru/img/artwork_actual-plays.jpg`;
+      : `http://shadow-of-tales.ru
+/img/artwork_actual-plays.jpg`;
 
     return {
       title,

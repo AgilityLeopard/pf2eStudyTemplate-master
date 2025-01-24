@@ -120,7 +120,8 @@ export default {
   },
   head() {
     const { title, description } = this.page;
-    // const image = `https://shadowfoftales.ru${this.post.image}`;
+    // const image = `http://shadow-of-tales.ru
+${this.post.image}`;
 
     return {
       title,

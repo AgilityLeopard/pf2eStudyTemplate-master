@@ -38,10 +38,10 @@ export default {
       ? `${this.item.description}`
       : `The ${this.item.name} from the ${this.item.faction} faction is a threat provided by ${this.item.source.book}.`;
     const image = this.item.thumbnail
-      ? `https://shadowfoftales.ru${this.item.thumbnail}`
-      : `https://shadowfoftales.ru/img/bestiary/faction_${this.textToKebab(
-          this.item.faction
-        )}_avatar.png`;
+      ? `http://shadow-of-tales.ru
+${this.item.thumbnail}`
+      : `http://shadow-of-tales.ru
+/img/bestiary/faction_${this.textToKebab(this.item.faction)}_avatar.png`;
 
     return {
       titleTemplate: "%s | Wrath & Glory Bestiary",

@@ -8,7 +8,8 @@ export default {
           '@type': 'ListItem',
           position: index + 1,
           name: (index === 0 ? 'Shadow Tales' : item.text),
-          item: `https://shadowfoftales.ru${item.to}`,
+          item: `http://shadow-of-tales.ru
+${item.to}`,
         })),
       };
       return breadcrumbListSchema;

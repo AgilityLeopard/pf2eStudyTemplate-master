@@ -60,7 +60,8 @@ export default {
       ? `The ${this.item.name} from ${this.item.group} is an official Species described in the ${this.item.source.book}.`
       : `The ${this.item.name} from ${this.item.group} is a homebrew Species provided by ${this.item.source.book}.`; */
     const image = this.item.thumbnail
-      ? `https://shadowfoftales.ru${this.item.thumbnail}`
+      ? `http://shadow-of-tales.ru
+${this.item.thumbnail}`
       : undefined;
 
     return {

@@ -256,7 +256,8 @@ export default {
         "@type": "ListItem",
         position: index + 1,
         name: index === 0 ? "Shadow Tales" : item.text,
-        item: `https://shadowfoftales.ru${item.to}`,
+        item: `http://shadow-of-tales.ru
+${item.to}`,
       })),
     };
 
@@ -264,9 +265,11 @@ export default {
     const description =
       "This Bestiary contains fan-made homebews threats to be used by the Game Master to challenge your Wrath & Glory Players. " +
       "Filter by Campaign Tier and Faction to find various Troops of Mobs, Elite Champions and Adversaries.";
-    const image = "https://shadowfoftales.ru/img/artwork_bestiary_death.png";
+    const image = "http://shadow-of-tales.ru
+/img/artwork_bestiary_death.png";
     const imageTwitter =
-      "https://shadowfoftales.ru/img/artwork_bestiary_twitter.png";
+      "http://shadow-of-tales.ru
+/img/artwork_bestiary_twitter.png";
 
     return {
       title,

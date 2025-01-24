@@ -68,7 +68,8 @@ export default {
       link: [
         {
           rel: "canonical",
-          href: `https://shadowfoftales.ru${this.$route.path}`,
+          href: `http://shadow-of-tales.ru
+${this.$route.path}`,
         },
       ],
     };

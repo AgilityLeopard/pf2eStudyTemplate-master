@@ -391,15 +391,18 @@ export default {
     const title = 'Создание персонажа для Pathfinder 2e | Билдодельня';
     const description =
       '';
-    const image = 'https://shadowfoftales.ru/img/artwork_abstract.jpg';
-    const imageTwitter = 'https://shadowfoftales.ru/img/artwork_forge_twitter.jpg';
+    const image = 'http://shadow-of-tales.ru
+/img/artwork_abstract.jpg';
+    const imageTwitter = 'http://shadow-of-tales.ru
+/img/artwork_forge_twitter.jpg';
 
     const howToSchema = {
       '@context': 'http://schema.org',
       '@type': 'HowTo',
       name: '',
       description: '',
-      image: 'https://shadowfoftales.ru/img/artwork_abstract.jpg',
+      image: 'http://shadow-of-tales.ru
+/img/artwork_abstract.jpg',
       tool: [
         {
           '@type': 'HowToTool',
