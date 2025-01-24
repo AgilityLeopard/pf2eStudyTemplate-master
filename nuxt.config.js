@@ -204,6 +204,7 @@ module.exports = {
       // dynamic and user specific parts should not be sitemaped
       "/about",
       "/forge/characters/**",
+      "/api/**"
     ],
     routes: async () => {
       const base =
@@ -242,7 +243,8 @@ module.exports = {
         };
       });
 
-      return [...homebrewRoutes, ...threatRoutes, ...postRoutes];
+      // return [...homebrewRoutes, ...threatRoutes, ...postRoutes];
+      return [];
     },
     defaults: {
       changefreq: "weekly",
