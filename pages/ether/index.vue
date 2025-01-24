@@ -199,7 +199,7 @@ export default {
         author: item.author,
         version: item.version,
         url: item.documentUrl,
-        thumbnailUrl: item.image ? `https://pf2e-builder-ru.netlify.app${item.image.fields.file.url}` : null,
+        thumbnailUrl: item.image ? `https://shadowfoftales.ru${item.image.fields.file.url}` : null,
         description: item.abstract,
         keywords: item.keywordTags ? [...item.keywordTags, 'Wrath & Glory'].join(',') : 'Wrath & Glory',
       }
@@ -212,13 +212,13 @@ export default {
         '@type': 'ListItem',
         position: index + 1,
         name: (index === 0 ? 'Shadow Tales' : item.text),
-        item: `https://pf2e-builder-ru.netlify.app${item.to}`,
+        item: `https://shadowfoftales.ru${item.to}`,
       })),
     };
 
     const title = 'Watch People Play Wrath & Glory | Ether';
     const description = '';
-    const image = 'https://pf2e-builder-ru.netlify.app/img/artwork_ether.jpg';
+    const image = 'https://shadowfoftales.ru/img/artwork_ether.jpg';
 
     return {
       title,

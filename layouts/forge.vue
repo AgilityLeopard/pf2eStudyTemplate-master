@@ -1060,7 +1060,7 @@ export default {
         { hid: "robots", name: "robots", content: "noindex,nofollow" },
       ],
       link: [
-        // { rel: 'canonical', href: `https://pf2e-builder-ru.netlify.app${this.$route.path}` },
+        // { rel: 'canonical', href: `https://shadowfoftales.ru${this.$route.path}` },
       ],
     };
   },

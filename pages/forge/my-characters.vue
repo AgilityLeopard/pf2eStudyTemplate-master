@@ -391,15 +391,15 @@ export default {
     const title = 'Создание персонажа для Pathfinder 2e | Билдодельня';
     const description =
       '';
-    const image = 'https://pf2e-builder-ru.netlify.app/img/artwork_abstract.jpg';
-    const imageTwitter = 'https://pf2e-builder-ru.netlify.app/img/artwork_forge_twitter.jpg';
+    const image = 'https://shadowfoftales.ru/img/artwork_abstract.jpg';
+    const imageTwitter = 'https://shadowfoftales.ru/img/artwork_forge_twitter.jpg';
 
     const howToSchema = {
       '@context': 'http://schema.org',
       '@type': 'HowTo',
       name: '',
       description: '',
-      image: 'https://pf2e-builder-ru.netlify.app/img/artwork_abstract.jpg',
+      image: 'https://shadowfoftales.ru/img/artwork_abstract.jpg',
       tool: [
         {
           '@type': 'HowToTool',

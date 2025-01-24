@@ -120,7 +120,7 @@ export default {
   },
   head() {
     const { title, description } = this.page;
-    // const image = `https://pf2e-builder-ru.netlify.app${this.post.image}`;
+    // const image = `https://shadowfoftales.ru${this.post.image}`;
 
     return {
       title,

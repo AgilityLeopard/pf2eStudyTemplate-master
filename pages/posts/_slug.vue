@@ -89,7 +89,7 @@ export default {
     const { title, description } = this.post.fields;
     const image = this.post.fields.imageTwitter
       ? `https:${this.post.fields.imageTwitter.fields.file.url}`
-      : `https://pf2e-builder-ru.netlify.app/img/artwork_posts.jpg`;
+      : `https://shadowfoftales.ru/img/artwork_posts.jpg`;
 
     return {
       title,

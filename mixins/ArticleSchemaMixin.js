@@ -18,12 +18,12 @@ export default {
           "name": "ShadowTales",
           "logo": {
             "@type": "ImageObject",
-            "url": "pf2e-builder-ru.netlify.app/android-chrome-192x192.png"
+            "url": "shadowfoftales.ru/android-chrome-192x192.png"
           }
         },
         "mainEntityOfPage": {
           "@type": "WebPage",
-          "@id": "pf2e-builder-ru.netlify.app/posts"
+          "@id": "shadowfoftales.ru/posts"
         },
       };
     },

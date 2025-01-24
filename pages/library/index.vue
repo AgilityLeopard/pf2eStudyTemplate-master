@@ -61,7 +61,7 @@ export default {
         "@type": "ListItem",
         position: index + 1,
         name: index === 0 ? "Shadow Tales" : item.text,
-        item: `https://pf2e-builder-ru.netlify.app${item.to}`,
+        item: `https://shadowfoftales.ru${item.to}`,
       })),
     };
 

@@ -53,7 +53,7 @@ export default {
   head() {
     const title = 'Shadow Tales';
     const description = '';
-    const image = 'https://pf2e-builder-ru.netlify.app/img/background_abstract_green.jpg';
+    const image = 'https://shadowfoftales.ru/img/background_abstract_green.jpg';
 
     return {
       title,

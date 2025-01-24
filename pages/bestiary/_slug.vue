@@ -38,8 +38,8 @@ export default {
       ? `${this.item.description}`
       : `The ${this.item.name} from the ${this.item.faction} faction is a threat provided by ${this.item.source.book}.`;
     const image = this.item.thumbnail
-      ? `https://pf2e-builder-ru.netlify.app${this.item.thumbnail}`
-      : `https://pf2e-builder-ru.netlify.app/img/bestiary/faction_${this.textToKebab(
+      ? `https://shadowfoftales.ru${this.item.thumbnail}`
+      : `https://shadowfoftales.ru/img/bestiary/faction_${this.textToKebab(
           this.item.faction
         )}_avatar.png`;
 
