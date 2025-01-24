@@ -61,7 +61,7 @@ typings/
 # dotenv environment variables file
 .env
 .env.local
-/api/routes/.contentful.json
+# /api/routes/.contentful.json
 # .contentful.json
 
 # parcel-bundler cache (https://parceljs.org/)
