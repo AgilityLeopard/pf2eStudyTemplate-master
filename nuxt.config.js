@@ -200,7 +200,7 @@ module.exports = {
    * Sitemap module configuration
    */
   sitemap: {
-    // hostname: "https://pf2e-builder-ru.netlify.app",
+    hostname: "https://pf2e-builder-ru.netlify.app",
     gzip: true,
     exclude: [
       // dynamic and user specific parts should not be sitemaped
