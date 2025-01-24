@@ -362,10 +362,9 @@
                   <v-sheet v-else class="text-center pa-2 ma-2"> 0 </v-sheet>
                 </v-col>
               </v-row>
-            <v-divider></v-divider>
+              <v-divider></v-divider>
               <v-row>
-                  <div class="pt-4 pb-2" v-html="skill.description"></div>
-
+                <div class="pt-4 pb-2" v-html="skill.description"></div>
               </v-row>
             </v-container>
           </v-card-text>
@@ -1061,7 +1060,7 @@ export default {
         { hid: "robots", name: "robots", content: "noindex,nofollow" },
       ],
       link: [
-        // { rel: 'canonical', href: `https://www.shadow-of-tales.ru${this.$route.path}` },
+        // { rel: 'canonical', href: `https://pf2e-builder-ru.netlify.app${this.$route.path}` },
       ],
     };
   },

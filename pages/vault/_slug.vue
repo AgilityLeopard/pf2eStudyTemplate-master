@@ -155,7 +155,7 @@ export default {
         "@type": "ListItem",
         position: index + 1,
         name: index === 0 ? "Shadow Tales" : item.text,
-        item: `https://www.shadow-of-tales.ru${item.to}`,
+        item: `https://pf2e-builder-ru.netlify.app${item.to}`,
       })),
     };
 
@@ -163,7 +163,7 @@ export default {
     const description = `${item.subtitle}. ${item.abstract}`;
     const image = item.image
       ? `${item.image.fields.file.url}`
-      : "https://www.shadow-of-tales.ru/img/artwork_vault_bright.jpg";
+      : "https://pf2e-builder-ru.netlify.app/img/artwork_vault_bright.jpg";
     const keywords = item.keywordTags
       ? [...item.keywordTags, "Homebrew", "Supplement", "Wrath & Glory"]
       : ["Homebrew", "Supplement", "Wrath & Glory"];

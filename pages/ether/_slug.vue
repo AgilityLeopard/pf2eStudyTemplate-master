@@ -94,7 +94,7 @@ export default {
     const { title, description } = this.item.fields;
     const image = this.item.fields.imageTwitter
       ? `https:${this.item.fields.imageTwitter.fields.file.url}`
-      : `https://www.shadow-of-tales.ru/img/artwork_actual-plays.jpg`;
+      : `https://pf2e-builder-ru.netlify.app/img/artwork_actual-plays.jpg`;
 
     return {
       title,

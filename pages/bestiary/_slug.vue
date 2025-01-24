@@ -15,16 +15,15 @@
         </ColorfulEntry>
       </v-col>
     </v-row>
-
   </div>
 </template>
 
 <script>
-import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
-import DodThreatDetails from '~/components/DodThreatDetails';
-import SluggerMixin from '~/mixins/SluggerMixin';
-import BreadcrumbSchemaMixin from '~/mixins/BreadcrumbSchemaMixin';
-import ColorfulEntry from '~/components/shared/ColorfulEntry';
+import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
+import DodThreatDetails from "~/components/DodThreatDetails";
+import SluggerMixin from "~/mixins/SluggerMixin";
+import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
+import ColorfulEntry from "~/components/shared/ColorfulEntry";
 
 export default {
   components: {
@@ -32,52 +31,55 @@ export default {
     DodDefaultBreadcrumbs,
     DodThreatDetails,
   },
-  mixins: [
-    BreadcrumbSchemaMixin,
-    SluggerMixin,
-  ],
+  mixins: [BreadcrumbSchemaMixin, SluggerMixin],
   head() {
     const title = `${this.item.name} - ${this.item.faction} Threat`;
     const description = this.item.description
       ? `${this.item.description}`
       : `The ${this.item.name} from the ${this.item.faction} faction is a threat provided by ${this.item.source.book}.`;
     const image = this.item.thumbnail
-      ? `https://www.shadow-of-tales.ru${this.item.thumbnail}`
-      : `https://www.shadow-of-tales.ru/img/bestiary/faction_${this.textToKebab(this.item.faction)}_avatar.png`;
+      ? `https://pf2e-builder-ru.netlify.app${this.item.thumbnail}`
+      : `https://pf2e-builder-ru.netlify.app/img/bestiary/faction_${this.textToKebab(
+          this.item.faction
+        )}_avatar.png`;
 
     return {
-      titleTemplate: '%s | Wrath & Glory Bestiary',
+      titleTemplate: "%s | Wrath & Glory Bestiary",
       title,
       meta: [
-        { hid: 'description', name: 'description', content: description },
+        { hid: "description", name: "description", content: description },
 
         // Open Graph
-        { hid: 'og:title', name: 'og:title', content: title },
-        { hid: 'og:description', name: 'og:description', content: description },
-        { hid: 'og:image', name: 'og:image', content: image },
+        { hid: "og:title", name: "og:title", content: title },
+        { hid: "og:description", name: "og:description", content: description },
+        { hid: "og:image", name: "og:image", content: image },
 
         // Twitter
-        { hid: 'twitter:image', name: 'twitter:image', content: image },
+        { hid: "twitter:image", name: "twitter:image", content: image },
 
         {
-          hid: 'keywords',
-          name: 'keywords',
+          hid: "keywords",
+          name: "keywords",
           content: [
             // ...this.item.keywords.filter( k => k.indexOf('<') !== 0),
-            'Threat',
-            'Bestiary',
-            'Wrath & Glory',
-          ].join(','),
+            "Threat",
+            "Bestiary",
+            "Wrath & Glory",
+          ].join(","),
         },
       ],
-      __dangerouslyDisableSanitizers: ['script'],
+      __dangerouslyDisableSanitizers: ["script"],
       script: [
-        { innerHTML: JSON.stringify(this.breadcrumbJsonLdSchema(this.breadcrumbItems)), type: 'application/ld+json' },
+        {
+          innerHTML: JSON.stringify(
+            this.breadcrumbJsonLdSchema(this.breadcrumbItems)
+          ),
+          type: "application/ld+json",
+        },
       ],
     };
   },
-  computed: {
-  },
+  computed: {},
   async asyncData({ params, $axios, error }) {
     const { slug } = params;
 
@@ -85,7 +87,7 @@ export default {
     const item = response.data;
 
     if (item === undefined || item.length <= 0) {
-      error({ statusCode: 404, message: 'Threat not found' });
+      error({ statusCode: 404, message: "Threat not found" });
     }
 
     return {
@@ -93,13 +95,22 @@ export default {
       slug,
       breadcrumbItems: [
         {
-          text: '', nuxt: true, exact: true, to: '/',
+          text: "",
+          nuxt: true,
+          exact: true,
+          to: "/",
         },
         {
-          text: 'Bestiary', nuxt: true, exact: true, to: '/bestiary',
+          text: "Bestiary",
+          nuxt: true,
+          exact: true,
+          to: "/bestiary",
         },
         {
-          text: item.name, disabled: true, nuxt: true, to: `/bestiary/${slug}`,
+          text: item.name,
+          disabled: true,
+          nuxt: true,
+          to: `/bestiary/${slug}`,
         },
       ],
     };
@@ -107,6 +118,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

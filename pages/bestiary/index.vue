@@ -256,7 +256,7 @@ export default {
         "@type": "ListItem",
         position: index + 1,
         name: index === 0 ? "Shadow Tales" : item.text,
-        item: `https://www.shadow-of-tales.ru${item.to}`,
+        item: `https://pf2e-builder-ru.netlify.app${item.to}`,
       })),
     };
 
@@ -265,9 +265,9 @@ export default {
       "This Bestiary contains fan-made homebews threats to be used by the Game Master to challenge your Wrath & Glory Players. " +
       "Filter by Campaign Tier and Faction to find various Troops of Mobs, Elite Champions and Adversaries.";
     const image =
-      "https://www.shadow-of-tales.ru/img/artwork_bestiary_death.png";
+      "https://pf2e-builder-ru.netlify.app/img/artwork_bestiary_death.png";
     const imageTwitter =
-      "https://www.shadow-of-tales.ru/img/artwork_bestiary_twitter.png";
+      "https://pf2e-builder-ru.netlify.app/img/artwork_bestiary_twitter.png";
 
     return {
       title,

@@ -221,9 +221,7 @@
             <h1 class="headline">
               Search the Vault for precious, fan-made homebrews
             </h1>
-            <p>
-
-            </p>
+            <p></p>
           </v-card-text>
         </v-card>
       </v-col>
@@ -261,7 +259,7 @@ export default {
         version: item.version,
         url: item.documentUrl,
         thumbnailUrl: item.image
-          ? `https://www.shadow-of-tales.ru${item.image.fields.file.url}`
+          ? `https://pf2e-builder-ru.netlify.app${item.image.fields.file.url}`
           : null,
         description: item.abstract,
         keywords: item.keywordTags
@@ -290,7 +288,7 @@ export default {
         "@type": "ListItem",
         position: index + 1,
         name: index === 0 ? "Shadow Tales" : item.text,
-        item: `https://www.shadow-of-tales.ru${item.to}`,
+        item: `https://pf2e-builder-ru.netlify.app${item.to}`,
       })),
     };
 
@@ -299,7 +297,8 @@ export default {
       "" +
       " homebrews and houserules for Wrath & Glory, the latest Warhammer 40k Roleplaying game. " +
       "Those are written by dedicated fans.";
-    const image = "https://www.shadow-of-tales.ru/img/artwork_vault_bright.jpg";
+    const image =
+      "https://pf2e-builder-ru.netlify.app/img/artwork_vault_bright.jpg";
 
     return {
       title,
@@ -394,15 +393,15 @@ export default {
           a:
             "Multiple fan supplements exist to extend the Wrath & Glory Core Rules. " +
             "When you are coming from <strong>Dark Heresy</strong>, " +
-            'the <a href="https://www.shadow-of-tales.ru/vault/agents-of-the-golden-throne">Agents of the Golden Throne</a> supplement ' +
+            'the <a href="https://pf2e-builder-ru.netlify.app/vault/agents-of-the-golden-throne">Agents of the Golden Throne</a> supplement ' +
             "provides your with archetypes wargear and more.</p>",
         },
         {
           q: "Can I play a Deathwatch Campaign with Wrath and Glory?",
           a:
             "Yes, there are <strong>multiple homebrews</strong> to support this campaign style. " +
-            'Most notably are the <a href="https://www.shadow-of-tales.ru/vault/the-deathwatch---slayers-of-the-alien-horde">Slayers of the Alien Horde</a> ' +
-            'and <a href="https://www.shadow-of-tales.ru/vault/the-emperors-angels">The Emperor’s Angels</a>.',
+            'Most notably are the <a href="https://pf2e-builder-ru.netlify.app/vault/the-deathwatch---slayers-of-the-alien-horde">Slayers of the Alien Horde</a> ' +
+            'and <a href="https://pf2e-builder-ru.netlify.app/vault/the-emperors-angels">The Emperor’s Angels</a>.',
         },
       ],
     };

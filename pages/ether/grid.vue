@@ -121,7 +121,7 @@ export default {
   },
   head() {
     const { title, description } = this.page;
-    // const image = `https://www.shadow-of-tales.ru${this.item.image}`;
+    // const image = `https://pf2e-builder-ru.netlify.app${this.item.image}`;
 
     return {
       title,
