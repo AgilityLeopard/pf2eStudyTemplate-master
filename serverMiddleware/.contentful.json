@@ -1,0 +1,4 @@
+{
+  "NUXT_ENV_CTF_SPACE_ID": "token",
+  "NUXT_ENV_CTF_CD_ACCESS_TOKEN": "accessToken"
+}
