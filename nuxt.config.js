@@ -9,6 +9,8 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map",
   },
+  target: 'static',
+  ssr: false,
   /*
    ** Headers of the page
    */
