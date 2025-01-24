@@ -259,8 +259,7 @@ export default {
         version: item.version,
         url: item.documentUrl,
         thumbnailUrl: item.image
-          ? `http://shadow-of-tales.ru
-${item.image.fields.file.url}`
+          ? `http://shadow-of-tales.ru${item.image.fields.file.url}`
           : null,
         description: item.abstract,
         keywords: item.keywordTags
@@ -289,8 +288,7 @@ ${item.image.fields.file.url}`
         "@type": "ListItem",
         position: index + 1,
         name: index === 0 ? "Shadow Tales" : item.text,
-        item: `http://shadow-of-tales.ru
-${item.to}`,
+        item: `http://shadow-of-tales.ru${item.to}`,
       })),
     };
 
@@ -299,8 +297,7 @@ ${item.to}`,
       "" +
       " homebrews and houserules for Wrath & Glory, the latest Warhammer 40k Roleplaying game. " +
       "Those are written by dedicated fans.";
-    const image = "http://shadow-of-tales.ru
-/img/artwork_vault_bright.jpg";
+    const image = "http://shadow-of-tales.ru/img/artwork_vault_bright.jpg";
 
     return {
       title,
@@ -395,18 +392,15 @@ ${item.to}`,
           a:
             "Multiple fan supplements exist to extend the Wrath & Glory Core Rules. " +
             "When you are coming from <strong>Dark Heresy</strong>, " +
-            'the <a href="http://shadow-of-tales.ru
-/vault/agents-of-the-golden-throne">Agents of the Golden Throne</a> supplement ' +
+            'the <a href="http://shadow-of-tales.ru/vault/agents-of-the-golden-throne">Agents of the Golden Throne</a> supplement ' +
             "provides your with archetypes wargear and more.</p>",
         },
         {
           q: "Can I play a Deathwatch Campaign with Wrath and Glory?",
           a:
             "Yes, there are <strong>multiple homebrews</strong> to support this campaign style. " +
-            'Most notably are the <a href="http://shadow-of-tales.ru
-/vault/the-deathwatch---slayers-of-the-alien-horde">Slayers of the Alien Horde</a> ' +
-            'and <a href="http://shadow-of-tales.ru
-/vault/the-emperors-angels">The Emperor’s Angels</a>.',
+            'Most notably are the <a href="http://shadow-of-tales.ru/vault/the-deathwatch---slayers-of-the-alien-horde">Slayers of the Alien Horde</a> ' +
+            'and <a href="http://shadow-of-tales.ru/vault/the-emperors-angels">The Emperor’s Angels</a>.',
         },
       ],
     };

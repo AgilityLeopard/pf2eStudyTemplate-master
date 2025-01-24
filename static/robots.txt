@@ -8,5 +8,4 @@ Disallow: /about
 User-agent: *
 Allow: /
 
-Sitemap: http://shadow-of-tales.ru
-/sitemap.xml
+Sitemap: http://shadow-of-tales.ru/sitemap.xml
