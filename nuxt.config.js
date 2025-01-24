@@ -209,41 +209,41 @@ module.exports = {
       "/api/**"
     ],
     routes: async () => {
-      const base =
-        process.env.NODE_ENV === "production"
-          ? "https://pf2e-builder-ru.netlify.app"
-          : "http://127.0.0.1:3000";
+      // const base =
+      //   process.env.NODE_ENV === "production"
+      //     ? "https://pf2e-builder-ru.netlify.app"
+      //     : "http://127.0.0.1:3000";
 
-      const homebrewResponse = await axios.get(`${base}/api/homebrews/`);
-      const homebrewRoutes = homebrewResponse.data.map((item) => {
-        return {
-          url: `/vault/${item.fields.urlSlug}`,
-          changefreq: "weekly",
-          priority: 1,
-          lastmod: item.sys.updatedAt,
-        };
-      });
+      // const homebrewResponse = await axios.get(`${base}/api/homebrews/`);
+      // const homebrewRoutes = homebrewResponse.data.map((item) => {
+      //   return {
+      //     url: `/vault/${item.fields.urlSlug}`,
+      //     changefreq: "weekly",
+      //     priority: 1,
+      //     lastmod: item.sys.updatedAt,
+      //   };
+      // });
 
-      const threatResponse = await axios.get(`${base}/api/threats/`);
-      const threatRoutes = threatResponse.data
-        .filter((item) => item.source.key !== "core")
-        .map((item) => {
-          const slug = item.key.replace(
-            /([a-z][A-Z])/g,
-            (g) => `${g[0]}-${g[1].toLowerCase()}`
-          );
-          return `/bestiary/${slug}`;
-        });
+      // const threatResponse = await axios.get(`${base}/api/threats/`);
+      // const threatRoutes = threatResponse.data
+      //   .filter((item) => item.source.key !== "core")
+      //   .map((item) => {
+      //     const slug = item.key.replace(
+      //       /([a-z][A-Z])/g,
+      //       (g) => `${g[0]}-${g[1].toLowerCase()}`
+      //     );
+      //     return `/bestiary/${slug}`;
+      //   });
 
-      const postResponse = await axios.get(`${base}/api/posts/`);
-      const postRoutes = postResponse.data.map((item) => {
-        return {
-          url: `/posts/${item.fields.slug}`,
-          changefreq: "weekly",
-          priority: 1,
-          lastmod: item.sys.updatedAt,
-        };
-      });
+      // const postResponse = await axios.get(`${base}/api/posts/`);
+      // const postRoutes = postResponse.data.map((item) => {
+      //   return {
+      //     url: `/posts/${item.fields.slug}`,
+      //     changefreq: "weekly",
+      //     priority: 1,
+      //     lastmod: item.sys.updatedAt,
+      //   };
+      // });
 
       // return [...homebrewRoutes, ...threatRoutes, ...postRoutes];
       return [];
@@ -259,9 +259,9 @@ module.exports = {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  // axios: {
-  //   browserBaseURL: "/",
-  // },
+  axios: {
+    //   browserBaseURL: "/",
+  },
 
   /* auth: {
     strategies: {
