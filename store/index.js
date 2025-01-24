@@ -38,7 +38,7 @@ export const mutations = {
   }
 };
 
-const baseApiUrl = 'http://localhost:3000';
+const baseApiUrl = 'https://pf2e-builder-ru.netlify.app';
 
 export const actions = {
   nuxtServerInit({ commit }, { req }) {
@@ -70,7 +70,7 @@ export const actions = {
         .catch((error) => {
           console.error(error);
         })
-        .finally(() => {});
+        .finally(() => { });
     }
     axios.put(`${baseApiUrl}/api/characters/${characterId}`, body)
       .then((response) => {
@@ -79,7 +79,7 @@ export const actions = {
       .catch((error) => {
         console.error(error);
       })
-      .finally(() => {});
+      .finally(() => { });
   },
   /**
    * Character is loaded by a given uuid identifiying the character
