@@ -30,7 +30,7 @@ async function start() {
   app.use(nuxt.render);
 
   // Listen the server
-  app.listen(port, host);
+  app.listen(port, "https://pf2e-builder-ru.netlify.app");
   // app.listen(3000, '0.0.0.0');
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
