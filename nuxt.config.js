@@ -210,7 +210,7 @@ module.exports = {
       const base =
         process.env.NODE_ENV === "production"
           ? "https://pf2e-builder-ru.netlify.app"
-          : "http://localhost:3000";
+          : "http://127.0.0.1:3000";
 
       const homebrewResponse = await axios.get(`${base}/api/homebrews/`);
       const homebrewRoutes = homebrewResponse.data.map((item) => {
