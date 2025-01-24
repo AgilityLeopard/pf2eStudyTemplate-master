@@ -208,8 +208,7 @@ module.exports = {
     routes: async () => {
       const base =
         process.env.NODE_ENV === "production"
-          // ? "https://pf2e-builder-ru.netlify.app"
-          ? "http://localhost:3000"
+          ? "https://pf2e-builder-ru.netlify.app"
           : "http://localhost:3000";
 
       const homebrewResponse = await axios.get(`${base}/api/homebrews/`);
