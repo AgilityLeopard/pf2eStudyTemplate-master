@@ -10,7 +10,7 @@ module.exports = {
     devtool: "source-map",
   },
 
-  target: "serverless",
+  target: "static",
   ssr: false,
   /*
    ** Headers of the page

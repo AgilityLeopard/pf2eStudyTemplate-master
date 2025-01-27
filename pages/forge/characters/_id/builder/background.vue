@@ -1,16 +1,10 @@
 <template lang="html">
-
   <v-row justify="center">
-
     <!-- headline -->
     <v-col :cols="12">
-
       <h2>Управление языками</h2>
-
-
+      <h2>Тест</h2>
     </v-col>
-
-
 
     <!-- Languages -->
     <v-col :cols="12">
@@ -27,7 +21,8 @@
               :close="language.name != 'Всеобщий'"
               @click:close="removeLanguage(language.name)"
             >
-              <strong>{{language.name}}</strong>&nbsp;
+              <strong>{{ language.name }}</strong
+              >&nbsp;
               <!-- <span v-if="language.cost > 0">({{ language.cost }} XP)</span> -->
             </v-chip>
           </v-chip-group>
@@ -35,14 +30,13 @@
         <v-divider></v-divider>
         <v-card-text>
           <p>
-            Каждый персонаж владеет <strong>Общим языком</strong> и дополнительными языками в количестве {{ MaxIntellectLanguage() }}.
+            Каждый персонаж владеет <strong>Общим языком</strong> и
+            дополнительными языками в количестве {{ MaxIntellectLanguage() }}.
           </p>
           <v-text-field
             v-model="languageInput"
             persistent-hint
             hint="Введите язык"
-        
-            
             :disabled="MaxIntellectLanguage() < 1"
             append-outer-icon="add_box"
             @click:append-outer="addLanguage(languageInput)"
@@ -284,5 +278,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>
