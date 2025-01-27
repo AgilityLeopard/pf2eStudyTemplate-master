@@ -9,9 +9,7 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map",
   },
-  generate: {
-    fallback: true
-  },
+
   target: "static",
   ssr: false,
   /*
