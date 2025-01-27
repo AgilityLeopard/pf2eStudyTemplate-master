@@ -30,7 +30,12 @@ router.get("/", (req, res) => {
   });
 });
 
-app.use(`/.netlify/functions/api`, router);
+app.use(`/.netlify/functions/api`, "/");
+
+// module.exports = {
+//   path: '/api',
+//   handler: app,
+// };
 
 module.exports = app;
 module.exports.handler = serverless(app);
