@@ -2,18 +2,35 @@
 // https://blog.logrocket.com/setting-up-a-restful-api-with-node-js-and-postgresql-d96d6fc892d8/
 
 /**/
-const express = require('express');
+// const express = require('express');
 
-const app = express();
-app.use(express.json());
+// const app = express();
+// app.use(express.json());
 
-const mountRoutes = require('./routes');
+// const mountRoutes = require('./routes');
 
-mountRoutes(app);
+// mountRoutes(app);
 
-module.exports = {
-  path: '/api',
-  handler: app,
-};
+// module.exports = {
+//   path: '/api',
+//   handler: app,
+// };
 
 /**/
+
+const express = require("express");
+const serverless = require("serverless-http");
+
+const app = express();
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.json({
+    hello: "hi!"
+  });
+});
+
+app.use(`/.netlify/functions/api`, router);
+
+module.exports = app;
+module.exports.handler = serverless(app);
