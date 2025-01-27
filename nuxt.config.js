@@ -10,7 +10,7 @@ module.exports = {
     devtool: "source-map",
   },
 
-  target: "static",
+  target: "serverless",
   ssr: false,
   /*
    ** Headers of the page
@@ -304,7 +304,7 @@ module.exports = {
     //'redirect-ssl',
     //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
     "~/api/express", // handles /api/** calls
-    // '~/serverMiddleware/forcedomain'
+    '~/serverMiddleware/forcedomain'
   ],
 
   /**
