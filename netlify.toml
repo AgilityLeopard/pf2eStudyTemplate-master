@@ -1,0 +1,12 @@
+# netlify.toml
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/builder/*"
+  to = "/forge/my-characters"
+  status = 301
+
+# HTTPS redirect (handled automatically by Netlify)
