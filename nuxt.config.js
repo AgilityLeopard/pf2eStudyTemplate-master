@@ -11,7 +11,7 @@ module.exports = {
   },
 
   target: "static",
-  ssr: true,
+  ssr: false,
 
   /*
    ** Headers of the page
@@ -301,12 +301,12 @@ module.exports = {
     },
   },
 
-  serverMiddleware: [
-    //'redirect-ssl',
-    //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
-    "~/api/express", // handles /api/** calls
-    '~/serverMiddleware/forcedomain'
-  ],
+  // serverMiddleware: [
+  //   //'redirect-ssl',
+  //   //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
+  //   "~/api/express", // handles /api/** calls
+  //   '~/serverMiddleware/forcedomain'
+  // ],
 
   /**
    * Build configuration
