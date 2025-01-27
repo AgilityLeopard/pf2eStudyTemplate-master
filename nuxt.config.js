@@ -201,7 +201,7 @@ module.exports = {
    * Sitemap module configuration
    */
   sitemap: {
-    hostname: "http://shadow-of-tales.ru",
+    hostname: "https://pf2e-ru-builder.netlify.app",
     gzip: true,
     exclude: [
       // dynamic and user specific parts should not be sitemaped
@@ -212,7 +212,7 @@ module.exports = {
     routes: async () => {
       // const base =
       //   process.env.NODE_ENV === "production"
-      //     ? "http://shadow-of-tales.ru      "
+      //     ? "https://pf2e-ru-builder.netlify.app      "
       //     : "http://127.0.0.1:3000";
 
       // const homebrewResponse = await axios.get(`${base}/api/homebrews/`);

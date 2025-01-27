@@ -104,7 +104,7 @@ export default {
     const description =
       "Tired of staying the course and wizzarding around? Search the Library for Ascension Packages. " +
       "Check out the respective linked Homebrews for detailed informations.";
-    const image = "http://shadow-of-tales.ru/img/artwork_library.jpg";
+    const image = "https://pf2e-ru-builder.netlify.app/img/artwork_library.jpg";
 
     return {
       title,

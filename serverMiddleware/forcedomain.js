@@ -2,9 +2,9 @@ export default function (req, res, next) {
   const host = req.headers.host
   const url = req.url
   const env = process.env.NODE_ENV
-  const forceDomain = 'http://shadow-of-tales.ru'
+  const forceDomain = 'https://pf2e-ru-builder.netlify.app'
 
-  if (env === 'production' && host === 'shadowfoftales.ru') {
+  if (env === 'production' && host === 'pf2e-ru-builder.netlify.app') {
     res.writeHead(301, { Location: forceDomain + url })
     return res.end()
   }

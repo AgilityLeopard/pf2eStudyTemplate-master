@@ -38,7 +38,7 @@ export const mutations = {
   }
 };
 
-const baseApiUrl = 'http://shadow-of-tales.ru';
+const baseApiUrl = 'https://pf2e-ru-builder.netlify.app';
 
 export const actions = {
   nuxtServerInit({ commit }, { req }) {
