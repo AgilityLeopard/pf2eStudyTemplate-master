@@ -208,7 +208,7 @@ module.exports = {
       // dynamic and user specific parts should not be sitemaped
       "/about",
       "/forge/characters/**",
-      // "/api/**"
+      "/api/**"
     ],
     routes: async () => {
       // const base =
