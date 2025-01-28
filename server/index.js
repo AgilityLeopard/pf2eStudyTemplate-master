@@ -33,7 +33,6 @@ async function start() {
   app.listen(port, host);
   // app.listen(3000, '0.0.0.0');
   consola.ready({
-    console.log(`API server listening on port ${port}`);
     message: `Server listening on http://${host}:${port}`,
     badge: true,
   });
