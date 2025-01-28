@@ -1,25 +1,25 @@
-const Router = require('express-promise-router');
+// const Router = require('express-promise-router');
 
-const threatRepository = require('../db/static/threatRepository');
+// const threatRepository = require('../db/static/threatRepository');
 
-const router = new Router();
+// const router = new Router();
 
-module.exports = router;
+// module.exports = router;
 
-router.get('/', (request, response) => {
-  const items = threatRepository;
+// router.get('/', (request, response) => {
+//   const items = threatRepository;
 
-  response.set('Cache-Control', 'public, max-age=3600'); // one hour
-  response.status(200).json(items);
-});
+//   response.set('Cache-Control', 'public, max-age=3600'); // one hour
+//   response.status(200).json(items);
+// });
 
-router.get('/:slug', (request, response) => {
-  const { slug } = request.params;
+// router.get('/:slug', (request, response) => {
+//   const { slug } = request.params;
 
-  const key = slug.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+//   const key = slug.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 
-  const item = threatRepository.find((threat) => threat.key === key);
+//   const item = threatRepository.find((threat) => threat.key === key);
 
-  response.set('Cache-Control', 'public, max-age=3600'); // one hour
-  response.status(200).json(item);
-});
+//   response.set('Cache-Control', 'public, max-age=3600'); // one hour
+//   response.status(200).json(item);
+// });
