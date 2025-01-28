@@ -73,13 +73,14 @@
 <script>
 import SpeciesPreview from "~/components/forge/SpeciesPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
+import talentMixin from "~/mixins/talentRepository";
 
 export default {
   name: "Choose",
   components: {
     SpeciesPreview,
   },
-  mixins: [SluggerMixin],
+  mixins: [SluggerMixin, talentMixin],
   data() {
     return {
       speciesList: undefined,
@@ -138,7 +139,7 @@ export default {
           source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get("/dist/api/species/", config);
+      const { data } = await this.$axios.get("/api/species/", config);
 
       if (this.abilityList !== undefined) {
         data.forEach((species) => {
