@@ -140,7 +140,7 @@ export default {
         },
       };
       const { data } = await this.$axios.get("/api/species/", config);
-
+      console.log("");
       if (this.abilityList !== undefined) {
         data.forEach((species) => {
           const lowercaseKeywords = species.ancestryAbility.map((s) =>
