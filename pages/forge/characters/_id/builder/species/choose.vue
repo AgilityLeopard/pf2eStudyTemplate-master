@@ -138,7 +138,7 @@ export default {
           source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get("/api/species/", config);
+      const { data } = await this.$axios.get("/dist/api/species/", config);
 
       if (this.abilityList !== undefined) {
         data.forEach((species) => {

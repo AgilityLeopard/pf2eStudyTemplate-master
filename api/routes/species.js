@@ -11,8 +11,6 @@ router.get('/', (request, response) => {
   let items = [];
   items = speciesRepository;
 
-  console.log(request);
-  console.log(response);
 
   const filter = {};
   const filterSourceString = request.query.source;
