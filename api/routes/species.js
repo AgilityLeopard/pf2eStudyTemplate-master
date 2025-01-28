@@ -11,6 +11,9 @@ router.get('/', (request, response) => {
   let items = [];
   items = speciesRepository;
 
+  console.log(request);
+  console.log(response);
+
   const filter = {};
   const filterSourceString = request.query.source;
   if (filterSourceString) {
@@ -40,8 +43,8 @@ router.get('/chapters/', (request, response) => {
     }
   }
 
-  items = items.map( (chapter) => {
-    const label = chapter.source.key === 'core' ? chapter.name : `${chapter.name} [${chapter.source.book}]` ;
+  items = items.map((chapter) => {
+    const label = chapter.source.key === 'core' ? chapter.name : `${chapter.name} [${chapter.source.book}]`;
     return {
       ...chapter,
       label,
