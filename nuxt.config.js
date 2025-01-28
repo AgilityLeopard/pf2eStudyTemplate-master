@@ -11,7 +11,7 @@ module.exports = {
   },
 
   // target: "static",
-  ssr: true,
+  // ssr: true,
 
   /*
    ** Headers of the page
