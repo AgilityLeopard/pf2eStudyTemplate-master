@@ -16,26 +16,3 @@ module.exports = {
   handler: app,
 };
 
-/**/
-
-// const express = require("express");
-// const serverless = require("serverless-http");
-
-// const app = express();
-// const router = express.Router();
-
-// router.get("/", (req, res) => {
-//   res.json({
-//     hello: "hi!"
-//   });
-// });
-
-// app.use(`/.netlify/functions/api`, "/");
-
-// // module.exports = {
-// //   path: '/api',
-// //   handler: app,
-// // };
-
-// module.exports = app;
-// module.exports.handler = serverless(app);

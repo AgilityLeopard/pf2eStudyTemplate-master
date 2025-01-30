@@ -1,37 +1,37 @@
-// const Router = require('express-promise-router');
+const Router = require('express-promise-router');
 
-// const repository = require('../db/static/traitRepository');
+const repository = require('../db/static/traitRepository');
 
-// const router = new Router();
+const router = new Router();
 
-// module.exports = router;
+module.exports = router;
 
-// router.get('/', async (request, response) => {
+router.get('/', async (request, response) => {
 
-//   let items = repository;
+    let items = repository;
 
-//   const filter = {};
+    const filter = {};
 
-//   const filterSourceString = request.query.source;
-//   if (filterSourceString) {
-//     filter.source = filterSourceString.split(',');
+    const filterSourceString = request.query.source;
+    if (filterSourceString) {
+        filter.source = filterSourceString.split(',');
 
-//     if (filter.source) {
-//       items = items.filter((item) => filter.source.includes(item.source.key));
+        if (filter.source) {
+            items = items.filter((item) => filter.source.includes(item.source.key));
 
-//     }
-//   }
+        }
+    }
 
-//   response.set('Cache-Control', 'public, max-age=3600'); // one hour
-//   response.status(200).json(items);
-// });
+    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.status(200).json(items);
+});
 
-// router.get('/:slug', async (request, response) => {
+router.get('/:slug', async (request, response) => {
 
-//   const { slug } = request.params;
+    const { slug } = request.params;
 
-//   const item = repository.find(talent => talent.key === slug);
+    const item = repository.find(talent => talent.key === slug);
 
-//   response.set('Cache-Control', 'public, max-age=3600'); // one hour
-//   response.status(200).json(item);
-// });
+    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.status(200).json(item);
+});
