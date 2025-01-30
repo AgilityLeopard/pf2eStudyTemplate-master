@@ -5,6 +5,7 @@
         <h1 class="headline">Выбор черт</h1>
       </v-col>
 
+      <!-- Динамическое изменение столбцов -->
       <v-col :cols="8" :sm="10" class="subtitle-1"> Черты родословной </v-col>
 
       <v-expansion-panels multiple>
@@ -492,6 +493,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
+      <!-- Доп черты это те, что получены не выбором (например, доп знание от черт наследия) -->
       <v-col
         v-if="FreeTalentsLength() !== 0"
         :cols="8"
@@ -583,6 +585,8 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
+      <!-- Открытие диалогов выбора черт -->
+      <!-- Класс -->
       <v-dialog
         v-model="talentsDialogClass"
         :fullscreen="$vuetify.breakpoint.xsOnly"
@@ -600,6 +604,7 @@
         />
       </v-dialog>
 
+      <!-- Наследие -->
       <v-dialog
         v-model="talentsDialog"
         :fullscreen="$vuetify.breakpoint.xsOnly"
@@ -617,6 +622,7 @@
         />
       </v-dialog>
 
+      <!-- Навыки -->
       <v-dialog
         v-model="talentsDialogSkill"
         :fullscreen="$vuetify.breakpoint.xsOnly"
