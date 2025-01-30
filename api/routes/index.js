@@ -8,14 +8,14 @@ const factions = require('./factions');
 const species = require('./species');
 const archetypes = require('./archetypes');
 const ascensionPackages = require('./ascensionPackages');
-const threats = require('./threats');
+// const threats = require('./threats');
 const traits = require('./traits');
 
-const posts = require('./posts');
-const actualPlays = require('./actualPlays');
+// const posts = require('./posts');
+// const actualPlays = require('./actualPlays');
 
-const users = require('./users.js_');
-const characters = require('./characters.js_');
+// const users = require('./users.js_');
+// const characters = require('./characters.js_');
 
 module.exports = (app) => {
   app.use('/talents', talents);
@@ -28,15 +28,15 @@ module.exports = (app) => {
   app.use('/species', species);
   app.use('/archetypes', archetypes);
   app.use('/ascension-packages', ascensionPackages);
-  app.use('/threats', threats);
+  // app.use('/threats', threats);
   app.use('/traits', traits);
 
   //via contentfull
-  app.use('/homebrews', homebrews);
-  app.use('/posts', posts);
-  app.use('/actual-plays', actualPlays);
+  // app.use('/homebrews', homebrews);
+  // app.use('/posts', posts);
+  // app.use('/actual-plays', actualPlays);
 
-  Users
-  app.use('/users', users);
-  app.use('/characters', characters);
+  // // Users
+  // app.use('/users', users);
+  // app.use('/characters', characters);
 };

@@ -27,7 +27,7 @@
 
       <v-divider></v-divider>
 
-      <div class="mt-2 body-2 text-justify">
+      <div class="mt-2 body-2 text-justify ">
 
         <v-alert
           v-if="item.alerts"
@@ -48,21 +48,6 @@
         <p><strong>Обучен дополнительным навыкам, в кол-ве равном:</strong> {{ item.skillTrainedPoints}} + мод Интеллекта</p>
         
         <p><strong>Очки здоровья:</strong>  {{ item.hitpoints}} + мод Телосложения</p>
-        <!-- <p><strong>Species:</strong> {{ item.species.map((s)=>s.name).join(', ') }}</p> -->
-
-        <!-- <p><strong>XP Cost:</strong> {{ item.cost }}, incl. Archetype ({{ item.costs.archetype }} XP) and Stats ({{ item.costs.stats }} XP)</p> -->
-
-        <!-- <v-alert
-          v-if="item.costs.archetype !== characterArchetypeCost"
-          type="warning"
-          class="caption ml-4 mr-4"
-          dense outlined border="left"
-        >
-          <p>
-            It seems that the cost that you payed for this archetype ({{characterArchetypeCost}} XP) are not in line with the latest Errata ({{item.costs.archetype}} XP). This will probably <strong>free up {{ characterArchetypeCost - item.costs.archetype }} XP</strong>.
-          </p>
-          <v-btn color="success" @click="updateArchetypeCost()">Update XP Cost</v-btn>
-        </v-alert> -->
 
         <v-divider class="mb-2"></v-divider>
 
@@ -81,7 +66,6 @@
           </span>
           
         </p>
-
         
         <p v-if="item.saving">
 
@@ -110,10 +94,16 @@
           <h3 class="headline">Классовые особенности</h3>
           <div
         v-for="feature in item.archetypeFeatures"
-        class="text-lg-justify" v-bind:key="feature.name"
+        class="text-lg-justify " v-bind:key="feature.name"
       >
-        <div>
-          <strong>{{ feature.name }}</strong>
+
+      <div >
+          <h3 ><span style="display: inline-block; width: 50%;">{{ feature.name }}</span><span style="display: inline-block; text-align: right; width: 50%;">Уровень {{ feature.level }}</span></h3>
+          </div>
+        <div >
+          
+
+          <!-- <strong></strong> <div class="text-right"> </div> -->
           <div v-if="feature.description" v-html="feature.description"></div>
           <p v-else>{{ feature.snippet }}</p>
           <v-alert
@@ -125,122 +115,8 @@
         </div>
 
       </div>
-        <!-- <p v-if="item.influence && item.influence != 0">
-          <strong>Influence Modifier: </strong>
-          {{ `${item.influence > 0 ? '+' : ''}${item.influence}` }}
-        </p>
-
-        <p>
-          <strong>Keywords: </strong>
-          <span style="text-transform: uppercase; color: #F44336;" v-if="item.keywords">{{ item.keywords.split(',').map((i)=>i.trim()).join(', ') }}</span>
-          <span v-else>none</span>
-        </p>
-
-        <div
-          v-for="placeholder in itemKeywordPlaceholders"
-          :key="placeholder.key"
-          class="ml-4 mr-4"
-        >
-          <v-select
-            v-model="placeholder.selected"
-            :label="placeholder.name +' Keyword'"
-            :items="placeholder.options"
-            item-text="name"
-            item-value="name"
-            persistent-hint
-            :hint="keywordHint(placeholder.selected, placeholder)"
-            solo
-            dense
-            @change="updateKeyword(placeholder, placeholder.selected)"
-          >
-            <template v-slot:item="data">
-              <v-list-item-content>
-                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                <v-list-item-subtitle v-if="data.item.description">{{data.item.description}}</v-list-item-subtitle>
-                <v-list-item-subtitle v-if="data.item.effect">{{data.item.effect}}</v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-select>
-
-          <p
-            v-if="selectedKeywords[placeholder.name] && keywordEffect(selectedKeywords[placeholder.name])"
-            class="ma-4"
-          >
-            <strong>Effect: </strong>{{ keywordEffect(selectedKeywords[placeholder.name]) }}
-          </p> -->
 
         </div>
-
-        <!-- <div
-          v-for="feature in item.archetypeFeatures"
-          class="text-lg-justify"
-        >
-          <div>
-            <strong>{{ feature.name }}</strong>
-            <div v-if="feature.description" v-html="feature.description"></div>
-            <p v-else>{{ feature.snippet }}</p>
-            <v-alert
-              v-if="feature.alerts"
-              v-for="(alert, index) in feature.alerts"
-              :key="index"
-              :type="alert.type"
-              dense
-              text
-            >{{alert.text}}</v-alert>
-          </div>
-
-          <div
-            v-if="feature.options && feature.options.length > 0"
-            class="ml-4 mr-4"
-          >
-            <div v-for="inx in feature.selected.length">
-              <v-select
-                :items="feature.options"
-                v-model="feature.selected[inx-1]"
-                item-value="name"
-                item-text="name"
-                @change="changeSelectedOption(feature, inx-1)"
-                dense
-                solo
-              ></v-select>
-              <div
-                v-if="feature.selected[inx-1] && feature.selected[inx-1].length > 0"
-                class="ml-4 mr-4"
-              >
-                <div
-                  v-if="feature.options.find((o)=>o.name === feature.selected[inx-1]).description"
-                  v-html="feature.options.find((o)=>o.name === feature.selected[inx-1]).description"
-                ></div>
-                <p v-else>{{feature.options.find((o)=>o.name === feature.selected[inx-1]).snippet}}</p>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-
-        <!-- Wargear -->
-        <!-- <div>
-          <strong>Wargear</strong>
-          <p>{{ wargearText }}</p>
-        </div>
-        <v-alert text border-left dense type="info" class="caption ml-4 mr-4">
-          You can add your (starting) equipment in the <em>6. Wargear</em> section.
-        </v-alert>
-
-        <v-divider class="mb-4" v-if="suggestedSkills"></v-divider>
-
-        <div v-if="suggestedSkills">
-          <p><strong>Suggested Skills:</strong>
-            <span v-for="(skill, index) in suggestedSkills">
-            {{ skill.name }} {{ skill.threshold }}<v-icon x-small color="success" v-if="skill.fulfilled">check_circle</v-icon>{{ index < suggestedSkills.length-1 ? ', ' : '' }}
-            </span>
-          </p>
-          <v-btn :disabled="!suggestedSkills.find((s) => s.fulfilled === false)" x-small @click="learnSuggestedSkills">Learn suggested Skills.</v-btn>
-        </div>
-
-
-      </div> -->
 
     </v-col>
 
@@ -272,6 +148,7 @@ export default {
     return {
       loading: false,
       item: undefined,
+        abilityList: undefined,
     };
   },
   computed: {
@@ -425,9 +302,29 @@ export default {
       }
       return this.item.wargear;
     },
- 
+     sources() {
+      return [
+        "playerCore",
+
+        // 'tnh',
+         ...this.settingHomebrews,
+      ];
+    },
+        settingHomebrews() {
+      return this.$store.getters["characters/characterSettingHomebrewsById"](
+        this.characterId
+      );
+    },
   },
   watch: {
+        sources: {
+      handler(newVal) {
+        if (newVal) {
+          this.getAbilityList(newVal);
+        }
+      },
+      immediate: true, // make this watch function is called when component created
+    },
     characterArchetypeKey: {
       handler(key) {
         if (key) {
@@ -444,25 +341,26 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+
   },
   methods: {
     characterlabel(key){
         switch (key) {
           case "U":
             return "Нетренирован"
-            break;
+
          case "T":
             return "Тренирован"
-            break;
+
          case "E":
             return "Эксперт"
-            break;
+
           case "M":
             return "Мастер"
-            break;
+
           case "L":
             return "Легенда"
-            break;
+
           default:
             break;
         }
@@ -476,7 +374,18 @@ export default {
     characterLabelSkillTrainedChoice(keyAbility){
       return this.skillRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
     },
-    
+     async getAbilityList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
+      this.abilityList = data;
+    },
     async loadAdvancedArchetype(){
       this.loading = true;
       console.info(`loading advanced character pseudo archetype...`);
@@ -530,7 +439,64 @@ export default {
       const { data } = await this.$axios.get(`/api/archetypes/${key}`);
       finalData = data;
 
-      finalData = this.enrichArchetypeFeatures(finalData);
+      // finalData = this.enrichArchetypeFeatures(finalData);
+      const level = this.$store.getters["characters/characterLevelById"](
+        this.characterId
+      );
+      if (this.abilityList !== undefined) {
+
+          const lowercaseKeywords = finalData.archetypeFeatures.map((s) =>
+            s.toUpperCase()
+          );
+
+          const List = this.abilityList;
+          let ability = List.filter((talent) =>
+            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+          );
+
+              const abilityInArray = [];
+
+          ability.forEach((ab) => {
+            if (Array.isArray(ab.level)) {
+              abilityInArray.push(ab);
+            }
+          });
+
+         ability.filter((ab) => {
+            // (Array.isArray(ab.level) && ab.level.includes(level)) ||
+            !Array.isArray(ab.level);
+          });
+
+          abilityInArray.forEach((ab) => {
+            const tal = ab;
+            ab.level.forEach((talent) => {
+              const ability1 = {
+                name: tal.name,
+                key: tal.key,
+                description: tal.snippet,
+                modification: tal.modification,
+                level: talent,
+              };
+
+              if (talent <= level) ability.push(ability1);
+            });
+          });
+
+          if (ability.length > 0) {
+            const listAbilities = [];
+            ability.forEach((talent) => {
+              const ability1 = {
+                name: talent.name,
+                key: talent.key,
+                description: talent.description,
+                modification: talent.modification,
+              };
+
+              listAbilities.push(talent);
+            });
+            finalData.archetypeFeatures = listAbilities.filter(t => t.level <= level);
+          } ;
+      }
 
       this.item = finalData;
       this.loading = false;
@@ -750,5 +716,11 @@ export default {
 </script>
 
 <style scoped>
+.right{
+    float:right;
+}
 
+.left{
+    float:left;
+}
 </style>

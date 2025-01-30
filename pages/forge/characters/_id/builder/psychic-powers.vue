@@ -54,7 +54,7 @@
           >
             <v-expansion-panel-header>
               <p v-if="levelAncestry - 1 == 0">Чары</p>
-              <p v-if="levelAncestry - 1 != 0">
+              <p v-if="levelAncestry - 1 !== 0">
                 {{ levelAncestry - 1 }} уровень
               </p>
             </v-expansion-panel-header>

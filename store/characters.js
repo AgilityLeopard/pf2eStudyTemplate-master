@@ -824,6 +824,7 @@ export const mutations = {
                 const list1 = list.filter(train => train !== item.key);
                 character.skillFromModification = list1;
 
+
                 if (![Initial, Back, classSkill, trained].includes(item.key))
                   if (character.skills[item.key] === "T" || character.skills[item.key] === "U")
                     character.skills[item.key] = "U"

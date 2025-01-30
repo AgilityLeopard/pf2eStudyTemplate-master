@@ -98,7 +98,7 @@ export default {
       searchQuery: "",
       characterSpecies: undefined,
       characterFactions: undefined,
-
+      abilityList: undefined,
       // advanced character creation
       advancedName: "Unaligned Scoundrel",
       advancedKeywordsDialog: false,
@@ -231,6 +231,7 @@ export default {
     sources: {
       handler(newVal) {
         if (newVal) {
+          this.getAbilityList(newVal);
           this.getArchetypeList(newVal);
           this.loadFactions(newVal);
         }
@@ -243,13 +244,84 @@ export default {
       "setCharacterArchetype",
       "setCharacterFaction",
     ]),
+    async getAbilityList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
+      this.abilityList = data;
+    },
     async getArchetypeList(sources) {
       const config = {
         params: {
           source: sources.join(","),
         },
       };
+      const level = this.$store.getters["characters/characterLevelById"](
+        this.characterId
+      );
       const { data } = await this.$axios.get("/api/archetypes/", config);
+      if (this.abilityList !== undefined) {
+        data.forEach((species) => {
+          const lowercaseKeywords = species.archetypeFeatures.map((s) =>
+            s.toUpperCase()
+          );
+
+          const List = this.abilityList;
+          let ability = List.filter((talent) =>
+            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+          );
+
+          const abilityInArray = [];
+
+          ability.forEach((ab) => {
+            if (Array.isArray(ab.level)) {
+              abilityInArray.push(ab);
+            }
+          });
+
+          ability = ability.filter((ab) => {
+            // (Array.isArray(ab.level) && ab.level.includes(level)) ||
+            !Array.isArray(ab.level);
+          });
+
+          abilityInArray.forEach((ab) => {
+            const tal = ab;
+            ab.level.forEach((talent) => {
+              const ability1 = {
+                name: tal.name,
+                key: tal.key,
+                description: tal.snippet,
+                modification: tal.modification,
+                level: tal.level,
+              };
+
+              if (talent === level) ability.push(ability1);
+            });
+          });
+
+          if (ability.length > 0) {
+            const listAbilities = [];
+            ability.forEach((talent) => {
+              const ability1 = {
+                name: talent.name,
+                key: talent.key,
+                description: talent.description,
+                modification: talent.modification,
+                level: talent.level,
+              };
+
+              listAbilities.push(talent);
+            });
+            species.archetypeFeatures = listAbilities;
+          }
+        });
+      }
       // only those that have a HINT indicating they are not only stubs
       this.itemList = data.filter((i) => i.hint);
     },
