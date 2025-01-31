@@ -58,8 +58,8 @@
                 </v-chip>
               </v-list-item-title>
               <v-list-item-subtitle
-                ><v-chip> {{ item.ancestryHitPoint }} HP </v-chip
-                ><v-chip> +ЛОВ, МДР, СВОБ </v-chip><v-chip> -ТЕЛ </v-chip>
+                ><v-chip> {{ item.ancestryHitPoint }} HP </v-chip>
+                <!-- <v-chip> +ЛОВ, МДР, СВОБ </v-chip><v-chip> -ТЕЛ </v-chip> -->
               </v-list-item-subtitle>
               <!-- <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle> -->
             </v-list-item-content>
@@ -73,7 +73,6 @@
 <script>
 import SpeciesPreview from "~/components/forge/SpeciesPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
-// import talentMixin from "~/mixins/talentRepository";
 
 export default {
   name: "Choose",
@@ -92,7 +91,7 @@ export default {
   },
   computed: {
     sources() {
-      return ["playerCore", ...this.settingHomebrews];
+      return ["playerCore", "playerCore2", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
@@ -237,7 +236,6 @@ export default {
       this.speciesDialog = true;
     },
     selectSpeciesForChar(species) {
-      // TODO ensure attributes and skills
       if (species.prerequisites)
         this.ensurePrerequisites(species.prerequisites);
 
@@ -295,8 +293,10 @@ export default {
         id: this.characterId,
         source: "species",
       });
+
       // modifications
       //   .filter((m) => m.targetGroup === "keywords")
+
       species.trait.forEach((k) => {
         const payload = {
           name: k,
@@ -340,12 +340,6 @@ export default {
       this.$router.push({
         name: "forge-characters-id-builder-species-manage",
         params: { id: this.characterId },
-      });
-    },
-    openCustomEditor() {
-      this.$router.push({
-        name: "forge-characters-id-builder-species-edit",
-        params: { id: this.characterId, speciesKey: undefined },
       });
     },
     ensurePrerequisites(prerequisites) {

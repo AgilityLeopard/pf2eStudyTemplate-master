@@ -496,7 +496,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Specialty Crafting'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Tinker', 'В молодости вы шли в бой в качестве наемника, воина, защищающего кочевой народ, либо члена ополчения или армии', false),
+        ...simpleStub('playerCore', 150, 'Warrior', 'В молодости вы шли в бой в качестве наемника, воина, защищающего кочевой народ, либо члена ополчения или армии', false),
         nameBackground: 'Воин',
         boost1: ['constitution', 'strength'],
         boost2: true,

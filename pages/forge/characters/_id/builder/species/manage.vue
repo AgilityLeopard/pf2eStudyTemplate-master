@@ -131,44 +131,37 @@ export default {
       );
     },
     sources() {
-      return [
-        "playerCore",
-        // "fspg",
-        // "red1",
-        // "cos",
-        // 'tnh',
-        ...this.settingHomebrews,
-      ];
+      return ["playerCore", "playerCore2", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
         this.characterId
       );
     },
-    attributes() {
-      if (
-        this.species === undefined ||
-        this.species.prerequisites === undefined
-      )
-        return undefined;
-      return this.species.prerequisites
-        .filter((pre) => pre.group === "attributes")
-        .map(
-          (pre) => `${this.getAttributeByKey(pre.value).name} ${pre.threshold}`
-        )
-        .join(", ");
-    },
-    skills() {
-      if (
-        this.species === undefined ||
-        this.species.prerequisites === undefined
-      )
-        return undefined;
-      return this.species.prerequisites
-        .filter((pre) => pre.group === "skills")
-        .map((pre) => `${this.getSkillByKey(pre.value).name} ${pre.threshold}`)
-        .join(", ");
-    },
+    // attributes() {
+    //   if (
+    //     this.species === undefined ||
+    //     this.species.prerequisites === undefined
+    //   )
+    //     return undefined;
+    //   return this.species.prerequisites
+    //     .filter((pre) => pre.group === "attributes")
+    //     .map(
+    //       (pre) => `${this.getAttributeByKey(pre.value).name} ${pre.threshold}`
+    //     )
+    //     .join(", ");
+    // },
+    // skills() {
+    //   if (
+    //     this.species === undefined ||
+    //     this.species.prerequisites === undefined
+    //   )
+    //     return undefined;
+    //   return this.species.prerequisites
+    //     .filter((pre) => pre.group === "skills")
+    //     .map((pre) => `${this.getSkillByKey(pre.value).name} ${pre.threshold}`)
+    //     .join(", ");
+    // },
     avatar() {
       if (this.species === undefined) return "";
       return `/img/avatars/species/${this.species.key}.png`;
@@ -219,6 +212,7 @@ export default {
       this.abilityList = data;
       this.loading = false;
     },
+
     getSpecies: async function (key) {
       this.loading = true;
       let finalData = {};

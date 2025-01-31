@@ -210,6 +210,15 @@ export default {
           name: 'Основная книга игрока 2 (Ремастер)',
           hint: 'Основные правила',
         },
+        // {
+        //   show: true,
+        //   disabled: false,
+        //   optional: true,
+        //   key: 'secretOfMagic',
+        //   name: 'Секреты магии',
+        //   hint: 'Дополнение, включающее класс Магус и Призывателя',
+        // },
+
 
       ],
       settingHomebrewOptions: [

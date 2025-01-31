@@ -99,20 +99,6 @@ export default {
       characterSpecies: undefined,
       characterFactions: undefined,
       abilityList: undefined,
-      // advanced character creation
-      advancedName: "Unaligned Scoundrel",
-      advancedKeywordsDialog: false,
-      advancedFaction: undefined,
-      advancedKeywords: [],
-      advancedArchetype: undefined,
-      advancedTier: 1,
-      SkillsTrained: {
-        U: 0,
-        T: 2,
-        E: 4,
-        M: 6,
-        L: 8,
-      },
     };
   },
   computed: {
@@ -233,7 +219,7 @@ export default {
         if (newVal) {
           this.getAbilityList(newVal);
           this.getArchetypeList(newVal);
-          this.loadFactions(newVal);
+          // this.loadFactions(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -265,18 +251,23 @@ export default {
       const level = this.$store.getters["characters/characterLevelById"](
         this.characterId
       );
+
+      //список архетипов
       const { data } = await this.$axios.get("/api/archetypes/", config);
+
       if (this.abilityList !== undefined) {
         data.forEach((species) => {
           const lowercaseKeywords = species.archetypeFeatures.map((s) =>
             s.toUpperCase()
           );
 
+          //Список особенностей
           const List = this.abilityList;
           let ability = List.filter((talent) =>
             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
           );
 
+          //Сюда кладем то, что дается больше одного раза
           const abilityInArray = [];
 
           ability.forEach((ab) => {
@@ -285,11 +276,12 @@ export default {
             }
           });
 
+          //Выкидываем из списка особенности, уровень которых перечислен в массиве
           ability = ability.filter((ab) => {
-            // (Array.isArray(ab.level) && ab.level.includes(level)) ||
             !Array.isArray(ab.level);
           });
 
+          //Смотрим все особенности, и делаем их по тем уровням, что в массиве
           abilityInArray.forEach((ab) => {
             const tal = ab;
             ab.level.forEach((talent) => {
@@ -298,31 +290,25 @@ export default {
                 key: tal.key,
                 description: tal.snippet,
                 modification: tal.modification,
-                level: tal.level,
+                level: talent,
               };
 
-              if (talent === level) ability.push(ability1);
+              //Кладем в общий "пул"
+              if (talent <= level) ability.push(ability1);
             });
           });
 
           if (ability.length > 0) {
-            const listAbilities = [];
-            ability.forEach((talent) => {
-              const ability1 = {
-                name: talent.name,
-                key: talent.key,
-                description: talent.description,
-                modification: talent.modification,
-                level: talent.level,
-              };
-
-              listAbilities.push(talent);
-            });
-            species.archetypeFeatures = listAbilities;
+            //Если нашли все особенности, то кладем их в каждый класс
+            species.archetypeFeatures = ability;
           }
+          species.archetypeFeatures = ability
+            .filter((t) => t.level <= level)
+            .sort((a, b) => a.level - b.level);
         });
       }
       // only those that have a HINT indicating they are not only stubs
+
       this.itemList = data.filter((i) => i.hint);
     },
     async loadSpecies(key) {
@@ -331,138 +317,76 @@ export default {
         this.characterSpecies = data;
       }
     },
-    async loadFactions(sources) {
-      const config = {
-        params: {
-          source: sources.join(","),
-        },
-      };
-      const { data } = await this.$axios.get(`/api/factions/`, config);
-      this.characterFactions = data;
-    },
+    // async loadFactions(sources) {
+    //   const config = {
+    //     params: {
+    //       source: sources.join(","),
+    //     },
+    //   };
+    //   const { data } = await this.$axios.get(`/api/factions/`, config);
+    //   this.characterFactions = data;
+    // },
     getAvatar(key) {
-      if (key === undefined || key === "advanced")
-        return "/img/avatar_placeholder.png";
+      if (key === undefined) return "/img/avatar_placeholder.png";
       return `/img/avatars/archetype/${key}.png`;
     },
-    archetypesByFaction(groupName) {
-      let archetypes = this.itemList;
+    //   let archetypes = this.itemList;
 
-      if (archetypes === undefined) return [];
-      /* filter by archetype group */
-      archetypes = archetypes.filter((a) => a.faction === groupName);
+    //   if (archetypes === undefined) return [];
+    //   /* filter by archetype group */
+    //   archetypes = archetypes.filter((a) => a.faction === groupName);
 
-      if (this.characterSpecies) {
-        archetypes = archetypes.filter((a) => {
-          if (a.species.some((s) => s.key.includes(this.characterSpecies.key)))
-            return true;
-          if (
-            a.species.some((s) => s.key.includes(this.characterSpecies.variant))
-          )
-            return true;
-          return false;
-        });
+    //   if (this.characterSpecies) {
+    //     archetypes = archetypes.filter((a) => {
+    //       if (a.species.some((s) => s.key.includes(this.characterSpecies.key)))
+    //         return true;
+    //       if (
+    //         a.species.some((s) => s.key.includes(this.characterSpecies.variant))
+    //       )
+    //         return true;
+    //       return false;
+    //     });
 
-        if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-          archetypes = archetypes.filter(
-            (a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier
-          );
-        }
-      }
+    //     if (this.characterSpecies.archetypeRestrictionsMaxTier) {
+    //       archetypes = archetypes.filter(
+    //         (a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier
+    //       );
+    //     }
+    //   }
 
-      if (this.characterSettingTier !== undefined) {
-        archetypes = archetypes.filter(
-          (a) => a.tier <= this.characterSettingTier
-        );
-      }
+    //   if (this.characterSettingTier !== undefined) {
+    //     archetypes = archetypes.filter(
+    //       (a) => a.tier <= this.characterSettingTier
+    //     );
+    //   }
 
-      /* filter by search query */
-      if (this.searchQuery) {
-        const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
-        archetypes = archetypes.filter((a) => {
-          const lowerCaseArchetype = a.name.toLowerCase();
-          return lowerCaseArchetype.startsWith(lowerCaseSearchQuery);
-        });
-      }
+    //   /* filter by search query */
+    //   if (this.searchQuery) {
+    //     const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
+    //     archetypes = archetypes.filter((a) => {
+    //       const lowerCaseArchetype = a.name.toLowerCase();
+    //       return lowerCaseArchetype.startsWith(lowerCaseSearchQuery);
+    //     });
+    //   }
 
-      return archetypes.sort((a, b) => {
-        if (a.tier > b.tier) {
-          return 1;
-        }
-        if (b.tier > a.tier) {
-          return -1;
-        }
-        return 0;
-      });
-    },
+    //   return archetypes.sort((a, b) => {
+    //     if (a.tier > b.tier) {
+    //       return 1;
+    //     }
+    //     if (b.tier > a.tier) {
+    //       return -1;
+    //     }
+    //     return 0;
+    //   });
+    // },
     updatePreview(item) {
       this.previewItem = item;
       this.previewDialog = true;
     },
-    createAdvancedArchetype(name, factionName, keywords, tier, archetype) {
-      const id = this.characterId;
-
-      const settingTier = this.$store.getters[
-        "characters/characterSettingTierById"
-      ](this.characterId);
-      let cost = -1 * settingTier * 10;
-      cost += archetype ? archetype.tier * 10 : 0;
-
-      const mimic = archetype ? archetype.key : undefined;
-
-      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
-        id,
-        source: "archetype",
-      });
-      this.$store.commit("characters/clearCharacterKeywordsBySource", {
-        id,
-        source: "archetype",
-        cascade: true,
-      });
-
-      let faction = { key: "core-unaligned", name: factionName };
-      const factionData = this.characterFactions.find(
-        (f) => f.name === factionName
-      );
-      if (factionData) {
-        faction = factionData;
-      }
-
-      this.setCharacterArchetype({
-        id,
-        archetype: {
-          key: "advanced",
-          value: name,
-          cost,
-          tier,
-          keywords,
-          mimic,
-        },
-      });
-      this.setCharacterFaction({
-        id,
-        faction: { key: faction.key, label: faction.name },
-      });
-
-      keywords.forEach((k) => {
-        const keyword = {
-          name: k,
-          source: "archetype",
-          type: k.includes("[") ? "placeholder" : "keyword",
-          replacement: undefined,
-        };
-        this.$store.commit("characters/addCharacterKeyword", { id, keyword });
-      });
-
-      this.advancedKeywordsDialog = false;
-      this.$router.push({
-        name: "forge-characters-id-builder-archetype-manage",
-        params: { id },
-      });
-    },
     selectArchetypeForChar(item) {
       const id = this.characterId;
 
+      //Устанавиливаем класс персонажа
       this.setCharacterArchetype({
         id,
         archetype: {
@@ -472,30 +396,42 @@ export default {
           tier: item.tier,
         },
       });
-      this.setCharacterFaction({
-        id,
-        faction: { key: item.factionKey, label: item.faction },
-      });
 
-      // TODO ensure species
-
-      // TODO ensure attributes and skills
       this.ensurePrerequisites(item);
 
       this.$store.commit("characters/clearCharacterEnhancementsBySource", {
         id: this.characterId,
         source: "archetype",
       });
+
+      //Смотрим правила всех модификаций
       const mods = [];
-      if (item.influence) {
-        mods.push({
-          targetGroup: "traits",
-          targetValue: "influence",
-          modifier: item.influence,
-          hint: item.name,
-          source: "archetype",
-        });
-      }
+      const Saving = [];
+      const Attack = [];
+      const Defence = [];
+      const Class = [
+        {
+          key: "class",
+          upgrade: item.skillClass,
+          type: "DC Class",
+          mode: "Upgrade",
+          level: 1,
+        },
+      ];
+      const Perception = [
+        {
+          key: "Perception",
+          upgrade: item.Perception,
+          mode: "Upgrade",
+          type: "Perception",
+          level: 1,
+        },
+      ];
+      const level = this.$store.getters["characters/characterLevelById"](
+        this.characterId
+      );
+
+      //Правила улучшения, наподобие повышения Спасбросков или навыков от класса
       if (item.modification) {
         mods.push(...item.modification);
       }
@@ -507,28 +443,25 @@ export default {
           });
         });
 
+      //Добавление хитов, спасов и т.д. в Персонажа
       this.$store.commit("characters/setCharacterHitPoints", {
         id: this.characterId,
         payload: { value: item.hitpoints, type: "class" },
       });
-
       this.$store.commit("characters/setCharacterSaving", {
         id: this.characterId,
         payload: { key: 1, saving: item.saving },
       });
-
       this.$store.commit("characters/setCharacterSkillPointsClass", {
         id: this.characterId,
         payload: { key: 1, value: item.skillTrainedPoints },
       });
-
       item.attributeBoost.forEach((t) => {
         this.$store.commit("characters/setCharacterClassBoostForAll", {
           id: this.characterId,
           payload: { key: t.key, value: t.value },
         });
       });
-
       this.$store.commit("characters/resetCharacterStats", {
         id: this.characterId,
         optional: "class",
@@ -537,7 +470,6 @@ export default {
         id: this.characterId,
         payload: { key: 1, value: item.skillTrained },
       });
-
       this.$store.commit("characters/setCharacterPerception", {
         id: this.characterId,
         payload: { key: 1, Perception: item.Perception },
@@ -555,22 +487,16 @@ export default {
         payload: { key: 1, skillClass: item.skillClass },
       });
 
-      const Saving = [];
-      const Attack = [];
-      const Defence = [];
-
+      //Атаки и Защита
       this.WeaponRepository.forEach((w) => {
         const war = {
           key: w.key,
           upgrade: item.skillAttack[w.key],
           type: "Attack",
           mode: "Upgrade",
-          level: 1,
-          // talentId: payload.content.talentId
         };
         Attack.push(war);
       });
-
       this.DefenceRepository.forEach((w) => {
         const war = {
           key: w.key,
@@ -578,11 +504,9 @@ export default {
           type: "Defence",
           mode: "Upgrade",
           level: 1,
-          // talentId: payload.content.talentId
         };
         Defence.push(war);
       });
-
       this.SavingRepository.forEach((w) => {
         const war = {
           key: w.key,
@@ -590,30 +514,9 @@ export default {
           type: "Saving",
           mode: "Upgrade",
           level: 1,
-          // talentId: payload.content.talentId
         };
         Saving.push(war);
       });
-
-      const Class = [
-        {
-          key: "class",
-          upgrade: item.skillClass,
-          type: "DC Class",
-          mode: "Upgrade",
-          level: 1,
-        },
-      ];
-
-      const Perception = [
-        {
-          key: "Perception",
-          upgrade: item.Perception,
-          mode: "Upgrade",
-          type: "Perception",
-          level: 1,
-        },
-      ];
 
       if (item.modification) {
         mods.push(...Perception);
@@ -623,13 +526,13 @@ export default {
         mods.push(...Attack);
       }
 
+      //Сохранить все модификации в персонажа. Источник обязателен, чтобы при смене класса можно удалить
       this.$store.commit("characters/setCharacterModifications", {
         id: this.characterId,
         content: { modifications: mods, source: "archetype" },
       });
-      const level = this.$store.getters["characters/characterLevelById"](
-        this.characterId
-      );
+
+      //Сначала зачищаем старые модификации и затем ставим новые
       this.$store.commit("characters/clearModification", {
         id: this.characterId,
         level,
@@ -638,21 +541,17 @@ export default {
         id: this.characterId,
         level,
       });
-
-      // if(item.skillTrained.length > 0)
-
       this.$store.commit("characters/clearCharacterTalentsBySource", {
         id: this.characterId,
         source: "archetype",
         cascade: true,
       });
+
+      //Если есть Черты от класса, устанавиливаем их
       item.archetypeFeatures
-        // get all features with modifications
         .filter((feature) => feature.modifications)
-        // for each of those features
         .forEach((feature) => {
           feature.modifications
-            // get all modifications that affect talents
             .filter((m) => m.targetGroup === "talents")
             .forEach((t) => {
               const talent = {
@@ -670,12 +569,12 @@ export default {
             });
         });
 
+      //Нужны ли теги персонажа, возможно для фильтра?
       this.$store.commit("characters/clearCharacterKeywordsBySource", {
         id: this.characterId,
         source: "archetype",
         cascade: true,
       });
-      // keywords = String[]
       if (item.keywords) {
         const itemKeywords = item.keywords.split(",").map((i) => i.trim());
         itemKeywords.forEach((keyword) => {
@@ -692,6 +591,7 @@ export default {
         });
       }
 
+      //Зачищаем все заклы и ставим новые, если класс - магический
       this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
         id: this.characterId,
         source: "archetype",
@@ -718,6 +618,7 @@ export default {
         });
       }
 
+      //Роутим на страницу выбранного класса
       this.previewDialog = false;
       this.$router.push({
         name: "forge-characters-id-builder-archetype-manage",

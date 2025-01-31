@@ -51,23 +51,24 @@
 
         <v-divider class="mb-2"></v-divider>
 
-        <p v-if="item.skillAttack">
+        <p>
           <h3 class="headline">Атаки</h3>
           <span v-for="item in WeaponRepository" v-bind:key="item.key">
-            <p>{{ item.name }} : {{ characterlabel(skillAttack[item.key]) }}</p>
+            {{ item.name }} : {{ characterlabel(skillAttack[item.key]) }}
           </span>
           
         </p>
 
-        <p v-if="item.skillDefence">
+        <p >
           <h3 class="headline">Защиты</h3>
           <span v-for="item in DefenceRepository" v-bind:key="item.key">
             <p>{{ item.name }} : {{ characterlabel(skillDefence[item.key]) }}</p>
           </span>
           
         </p>
+
         
-        <p v-if="item.saving">
+        <p >
 
           <h3 class="headline">Спасброски</h3>
           <span v-for="item in SavingRepository" v-bind:key="item.key">
@@ -83,7 +84,7 @@
 
         </p>
        
-        <p v-if="item.skillClass">
+        <p >
 
           <h3 class="headline">КС класса</h3>
 
@@ -103,9 +104,8 @@
         <div >
           
 
-          <!-- <strong></strong> <div class="text-right"> </div> -->
           <div v-if="feature.description" v-html="feature.description"></div>
-          <p v-else>{{ feature.snippet }}</p>
+          <div  v-else>{{ feature.snippet }}</div>
           <v-alert
             v-if="feature.alert"
             :type="feature.alert.type"
@@ -213,47 +213,6 @@ export default {
       if (this.item === undefined || this.item.key === 'advanced' ) return '/img/avatar_placeholder.png';
       return `/img/avatars/archetype/${this.item.key}.png`;
     },
-    attributePrerequisites() {
-      if (this.item && this.item.prerequisites) {
-        return this.item.prerequisites
-        .filter((p) => p.group === 'attributes')
-        .map((a) => `${this.getAttributeByKey(a.value).name} ${a.threshold}`)
-        .join(', ');
-      }
-      return this.item.attributes;
-    },
-    skillPrerequisites() {
-      if (this.item && this.item.prerequisites) {
-        return this.item.prerequisites
-        .filter((p) => p.group === 'skills')
-        .map((a) => {
-          const skill = this.getSkillByKey(a.value);
-          const currentSkillValue = this.characterSkills[a.value];
-          return {
-            ...skill,
-            threshold: a.threshold,
-            fulfilled: currentSkillValue >= a.threshold ? true : false,
-          };
-        });
-      }
-      return this.item.skills;
-    },
-    suggestedSkills() {
-      if (this.item.suggestedStats) {
-        return this.item.suggestedStats
-          .filter((p) => p.group === 'skills')
-          .map((a) => {
-            const skill = this.getSkillByKey(a.value);
-            const currentSkillValue = this.characterSkills[a.value];
-            return {
-              ...skill,
-              threshold: a.threshold,
-              fulfilled: currentSkillValue >= a.threshold ? true : false,
-            };
-          });
-      }
-      return this.item.skills;
-    },
     selectedKeywords() {
       const selectedKeywords = {};
       if (this.keywords) {
@@ -266,51 +225,14 @@ export default {
       }
       return selectedKeywords;
     },
-    itemKeywordPlaceholders() {
-      const placeholderKeywords = this.item.keywords.split(',').map((i)=>i.trim()).filter((k) => k.includes('['));
-
-      const placeholderSet = [];
-
-      placeholderKeywords.forEach((placeholder) => {
-        let wordy = {};
-        if (placeholder.toLowerCase() === '[any]') {
-          const levelOneKeywords = this.keywordRepository.filter((k) => k.name.toLowerCase() !== placeholder.toLowerCase());
-          wordy = { name: placeholder, options: levelOneKeywords, selected: '' };
-        } else {
-          const subKeywords = this.keywordSubwordRepository.filter((k) => k.placeholder?.toLowerCase() === placeholder.toLowerCase());
-          wordy = { name: placeholder, options: subKeywords, selected: '' };
-        }
-        if (this.selectedKeywords[placeholder]) {
-          wordy.selected = this.selectedKeywords[placeholder];
-        }
-        placeholderSet.push(wordy);
-      });
-
-      return placeholderSet;
-    },
-    wargearText() {
-      if ( this.item.wargearString ) {
-        return this.item.wargearString;
-      }
-      if ( this.item.wargear && this.item.wargear.length > 0 ) {
-        return this.item.wargear.map((g) => {
-          if (g.amount) {
-            return `${g.amount}x ${g.name}`;
-          }
-          return `${g.name}`;
-        }).join(', ');
-      }
-      return this.item.wargear;
-    },
-     sources() {
+    sources() {
       return [
         "playerCore",
-
-        // 'tnh',
+        "playerCore2",
          ...this.settingHomebrews,
       ];
     },
-        settingHomebrews() {
+    settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
         this.characterId
       );
@@ -332,10 +254,6 @@ export default {
             console.info(`Found unexpected key -> ${key}`);
             return;
           }
-          if (key === 'advanced'){
-            this.loadAdvancedArchetype();
-            return;
-          }
           this.loadArchetype(key);
         }
       },
@@ -348,19 +266,15 @@ export default {
         switch (key) {
           case "U":
             return "Нетренирован"
-
          case "T":
             return "Тренирован"
 
          case "E":
             return "Эксперт"
-
           case "M":
             return "Мастер"
-
           case "L":
             return "Легенда"
-
           default:
             break;
         }
@@ -386,52 +300,6 @@ export default {
       );
       this.abilityList = data;
     },
-    async loadAdvancedArchetype(){
-      this.loading = true;
-      console.info(`loading advanced character pseudo archetype...`);
-      let cost = -1 * this.characterSettingTier * 10;
-      const mimic = this.characterArchetypeMimic;
-      let data = {
-        archetypeFeatures: [],
-      };
-      if (mimic) {
-        const response = await this.$axios.get(`/api/archetypes/${this.characterArchetypeMimic}`);
-        data = response.data;
-        cost += data.tier * 10;
-      }
-      let advancedArchetype = {
-        // source:
-        key: `advanced`,
-        name: this.characterArchetypeLabel,
-        hint: 'Created using Advanced Character creation.',
-        cost: cost,
-        costs: {
-          total: cost,
-          archetype: cost,
-          stats: 0,
-          species: 0,
-          other: 0,
-        },
-        tier: this.characterArchetypeTier,
-        faction: this.characterFactionKey.toLowerCase(),
-        factionKey: this.characterFactionKey,
-        species: [
-          {
-            name: this.characterSpeciesLabel,
-            key: this.characterSpeciesKey,
-            sourceKey: 'core',
-          },
-        ],
-        wargearString: this.getAdvancedWargearOptionByTier(this.characterArchetypeTier).wargearString,
-        prerequisites: [],
-        archetypeFeatures: data.archetypeFeatures,
-        influence: 0,
-        keywords: this.characterArchetypeKeywords.join(','),
-      };
-      advancedArchetype = this.enrichArchetypeFeatures(advancedArchetype);
-      this.item = advancedArchetype;
-      this.loading = false;
-    },
     async loadArchetype(key) {
       this.loading = true;
 
@@ -443,31 +311,42 @@ export default {
       const level = this.$store.getters["characters/characterLevelById"](
         this.characterId
       );
+
       if (this.abilityList !== undefined) {
 
           const lowercaseKeywords = finalData.archetypeFeatures.map((s) =>
             s.toUpperCase()
           );
 
+          //Список особенностей
           const List = this.abilityList;
           let ability = List.filter((talent) =>
             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
           );
 
-              const abilityInArray = [];
+          const abilityInArray = [];
 
+           //Сюда кладем то, что дается больше одного раза и смотрим под-опции
           ability.forEach((ab) => {
             if (Array.isArray(ab.level)) {
               abilityInArray.push(ab);
             }
+
+            if (ab.option) {
+              const option = ability.filter(t => ab.option.includes(ab.key));
+              ability = [...option];
+            }
           });
 
-         ability.filter((ab) => {
-            // (Array.isArray(ab.level) && ab.level.includes(level)) ||
+          //Выкидываем из списка особенности, уровень которых перечислен в массиве
+          ability = ability.filter((ab) => {
             !Array.isArray(ab.level);
           });
 
-          abilityInArray.forEach((ab) => {
+   
+        
+        //Смотрим все особенности, и делаем их по тем уровням, что в массиве
+        abilityInArray.forEach((ab) => {
             const tal = ab;
             ab.level.forEach((talent) => {
               const ability1 = {
@@ -476,26 +355,20 @@ export default {
                 description: tal.snippet,
                 modification: tal.modification,
                 level: talent,
+                option: tal.option,
               };
 
+              //Кладем в общий "пул"
               if (talent <= level) ability.push(ability1);
             });
           });
 
+          
           if (ability.length > 0) {
-            const listAbilities = [];
-            ability.forEach((talent) => {
-              const ability1 = {
-                name: talent.name,
-                key: talent.key,
-                description: talent.description,
-                modification: talent.modification,
-              };
-
-              listAbilities.push(talent);
-            });
-            finalData.archetypeFeatures = listAbilities.filter(t => t.level <= level);
-          } ;
+            //Если нашли все особенности, то кладем их в каждый класс
+            finalData.archetypeFeatures = ability;
+        }
+          finalData.archetypeFeatures = ability.filter(t => t.level <= level).sort((a, b) => a.level - b.level);
       }
 
       this.item = finalData;
@@ -546,64 +419,15 @@ export default {
       });
     },
 
-    updateArchetypeCost() {
-      const id = this.characterId;
-      const cost = this.item.costs.archetype;
-      this.$store.commit('characters/setCharacterArchetypeCost', { id, cost });
-    },
-
-    /** Keywords */
-    keywordOptions(wildcard) {
-      if (wildcard === '[Any]') {
-        // return all but the any keyword
-        return this.keywordRepository.filter((k) => k.name.toLowerCase() !== '[any]');
-      }
-      return this.keywordSubwordRepository.filter((k) => k.placeholder.toLowerCase() === wildcard.toLowerCase());
-    },
-    keywordEffect(keyword) {
-      const keywordCombinedRepository = [...this.keywordSubwordRepository];
-      const foundKeyword = keywordCombinedRepository.find((k) => k.name.toLowerCase() === keyword.toLowerCase());
-      if (foundKeyword !== undefined) {
-        return foundKeyword.effect;
-      }
-    },
-    keywordHint(keyword, parentKeyword) {
-      let foundKeyword = this.keywordCombinedRepository.find((k) => k.name.toLowerCase() === keyword.toLowerCase());
-      if (foundKeyword !== undefined) {
-        return foundKeyword.description;
-      }
-
-      foundKeyword = this.keywordCombinedRepository.find((k) => k.name === parentKeyword);
-      if (foundKeyword !== undefined) {
-        return foundKeyword.description;
-      }
-
-      return '';
-    },
     /**
      *
      * @param placeholder {name:String, options:[]}
      * @param selection String
      */
-    updateKeyword(placeholder, selection) {
-      console.log(`selected ${selection} for ${placeholder.name}`);
-
-      this.$store.commit('characters/replaceCharacterKeywordPlaceholder', {
-        id: this.characterId,
-        // the name of the keyword to be replaced
-        placeholder: placeholder.name,
-        // the new selected choice
-        replacement: selection,
-        // the source of the keyword
-        source: 'archetype',
-      });
-      placeholder.selected = selection;
-    },
     changeSelectedOption(feature, inx) {
       const selectedOption =  feature.options.find( (o) => o.name === feature.selected[inx] );
 
       this.$store.commit('characters/clearCharacterEnhancementsBySource', { id: this.characterId, source: `archetype.${feature.name}.${inx}.` });
-      // the option has a snippet, that is thus added as a custom ability
       if ( selectedOption.snippet ) {
         const content = {
           modifications: [{
@@ -616,8 +440,6 @@ export default {
         };
         this.$store.commit('characters/addCharacterModifications', { id: this.characterId, content });
       }
-
-      // the selected option has modifications that are saved as such
       if ( selectedOption.modifications ) {
         const content = {
           modifications: selectedOption.modifications,
@@ -641,27 +463,6 @@ export default {
       }
 
     },
-    updatePsychicPowers(option) {
-      const payload = { id: this.characterId, source: `archetype.${option.name}` };
-      this.$store.commit('characters/clearCharacterPsychicPowersBySource', payload);
-      this.$store.commit('characters/addCharacterPsychicPower', {
-        id: this.characterId,
-        name: option.selected,
-        cost: option.free ? 0 : option.options.find((o)=>o.name === option.selected).cost,
-        source: `archetype.${option.name}`,
-      });
-    },
-
-    psychicPowerHint(powerName) {
-      /*
-      const power = this.psychicPowersRepository.find( p => p.name === powerName );
-
-      if ( power ) {
-        return power.effect;
-      }
-*/
-      return '';
-    },
     getPsychicPowerOptions(psychicPowerSelection) {
       const config = {
         params: {
@@ -675,42 +476,6 @@ export default {
         psychicPowerSelection.options = response.data;
       });
     },
-    learnSuggestedSkills() {
-      const archetype = this.item;
-
-      if (this.item.suggestedStats) {
-        this.item.suggestedStats
-          .filter((p) => p.group === 'skills')
-          .forEach((suggestedSkill) => {
-          // { group: 'attributes', value: 'willpower', threshold: 3, }
-          const skillValue = this.characterSkills[suggestedSkill.value];
-          if (skillValue < suggestedSkill.threshold) {
-            this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: suggestedSkill.value, value: suggestedSkill.threshold } });
-          }
-        });
-      }
-    },
-    rollCorruption(config, feature) {
-      // config: { static: 0, diceCount: 1, diceSides: 3, multiply: 1 },
-      const randomDice = config.static + this.diceRoll(config.diceSides) * config.multiply;
-      console.log(`Rolled ${randomDice}...`);
-
-      const id = this.characterId;
-      const source = `archetype.${feature.name}`;
-      const content = {
-        modifications: [{
-          targetGroup: 'traits',
-          targetValue: 'corruption',
-          modifier: parseInt(randomDice),
-        }],
-        source,
-      };
-      this.$store.commit('characters/clearCharacterEnhancementsBySource', { id, source });
-      this.$store.commit('characters/addCharacterModifications', { id, content });
-    },
-    diceRoll(sides) {
-      return Math.floor(Math.random() * sides) + 1;
-    }
   },
 };
 </script>

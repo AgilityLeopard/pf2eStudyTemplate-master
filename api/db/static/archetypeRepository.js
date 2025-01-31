@@ -163,7 +163,12 @@ const playerCore = [
             }
         ],
         archetypeFeatures: [
-            "Reactive Strike", "Shield Block", "Stat boost", "Battlefield Surveyor"
+            //Общие
+            "Initial proficiencies", "Class feat", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            //Классовые
+            "Reactive Strike", "Shield Block", "Battlefield Surveyor", "Bravery", "Fighter Weapon Mastery", "Weapon Specialization", "Combat Flexibility",
+            "Battle Hardened", "Armor Expertise", "Fighter Expertise", "Weapon Legend", "Tempered Reflexes", "Greater Weapon Specialization",
+            "Improved Flexibility", "Armor Mastery", "Versatile Legend",
         ],
         modification:
             [
@@ -174,7 +179,6 @@ const playerCore = [
                     type: "Saving",
                     level: 3,
                 },
-
                 {
                     key: "weapon-specialization",
                     // upgrade: "M",
@@ -396,6 +400,8 @@ const playerCore = [
             19: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
             20: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
         },
+        spellFocusPool: 1,
+        spellFocusBase: ["Courageous Anthem", "Counter Performance"],
         spellsClass:
         {
             attack: "T",
@@ -424,11 +430,6 @@ const playerCore = [
             will: "E",
         },
         isFeatLevelOne: false,
-        // option: [
-        //   {
-        //     level
-        //   }
-        // ],
         description: [
             {
                 name: 'encounter',
@@ -460,7 +461,10 @@ const playerCore = [
             }
         ],
         archetypeFeatures: [
-            "Reactive Strike"
+            //Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            //Классовые
+            "Composition Spells", "Muses"
         ],
         modification:
             [
