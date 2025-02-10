@@ -41,7 +41,7 @@
             @click.stop="updatePreview(item)"
           >
             <v-list-item-avatar tile>
-              <img :src="getAvatar(item.key)" />
+              <img :src="getAvatar(item.source.key)" />
             </v-list-item-avatar>
 
             <v-list-item-content>
