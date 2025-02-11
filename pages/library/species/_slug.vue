@@ -30,8 +30,8 @@ export default {
       ? `The ${this.item.name} from ${this.item.group} is an official Species described in the ${this.item.source.book}.`
       : `The ${this.item.name} from ${this.item.group} is a homebrew Species provided by ${this.item.source.book}.`;
     const image = this.item.thumbnail
-      ? `http://shadow-of-tales.ru${this.item.thumbnail}`
-      : `http://shadow-of-tales.ru/img/bestiary/faction_${this.item.group.toLowerCase()}_avatar.png`;
+      ? `http://www.shadow-of-tales.ru${this.item.thumbnail}`
+      : `http://www.shadow-of-tales.ru/img/bestiary/faction_${this.item.group.toLowerCase()}_avatar.png`;
 
     return {
       titleTemplate: "%s | Wrath & Glory Library",

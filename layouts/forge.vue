@@ -1060,7 +1060,7 @@ export default {
         { hid: "robots", name: "robots", content: "noindex,nofollow" },
       ],
       link: [
-        // { rel: 'canonical', href: `http://shadow-of-tales.ru${this.$route.path}` },
+        // { rel: 'canonical', href: `http://www.shadow-of-tales.ru${this.$route.path}` },
       ],
     };
   },
