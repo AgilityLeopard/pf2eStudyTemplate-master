@@ -169,7 +169,7 @@ export default {
     const description =
       "Oh there are way to many archetypes written by fans. Filter a little and then pick the one you want." +
       " Check the linked homebrews for details.";
-    const image = "https://pf2e-ru-builder.netlify.app/img/artwork_library.jpg";
+    const image = "http://shadow-of-tales.ru/img/artwork_library.jpg";
 
     return {
       title,

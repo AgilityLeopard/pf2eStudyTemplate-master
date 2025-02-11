@@ -8,4 +8,4 @@ Disallow: /about
 User-agent: *
 Allow: /
 
-Sitemap: https://pf2e-ru-builder.netlify.app/sitemap.xml
+Sitemap: http://shadow-of-tales.ru/sitemap.xml

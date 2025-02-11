@@ -76,6 +76,32 @@ const traitRepository = [
         key: "эльф",
     },
 
+    //Класс
+    {
+        source: {
+            ...source.playerCore,
+            page: '174',
+        },
+        desc: 'Обозначает умения класса воина.',
+        key: "воин",
+    },
+    {
+        source: {
+            ...source.playerCore,
+            page: '174',
+        },
+        desc: 'Обозначает умения класса бард.',
+        key: "бард",
+    },
+    {
+        source: {
+            ...source.playerCore,
+            page: '174',
+        },
+        desc: 'Обозначает умения класса оракул.',
+        key: "оракул",
+    },
+
     //Трейты заклинаний
     {
         source: {

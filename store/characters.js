@@ -793,12 +793,9 @@ export const mutations = {
           case ("Attack"):
             {
               if (item.mode === "Upgrade") {
-                if (item.key === 'all')
-                  Object.keys(character.skillAttack).forEach((key, index) => {
-                    character.skillAttack[key] = "U"
-                  });
-                else
-                  character.skillAttack[item.key] = "U";
+                var keys = Object.keys(character.SkillsTrained);
+                var loc = keys.indexOf(item.upgrade);
+                character.skillAttack[item.key] = "U";
               }
               break;
             }

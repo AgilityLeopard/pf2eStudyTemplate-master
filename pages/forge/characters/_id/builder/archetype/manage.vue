@@ -54,7 +54,7 @@
         <p>
           <h3 class="headline">Атаки</h3>
           <span v-for="item in WeaponRepository" v-bind:key="item.key">
-            {{ item.name }} : {{ characterlabel(skillAttack[item.key]) }}
+           <p> {{ item.name }} : {{ characterlabel(skillAttack[item.key]) }}</p>
           </span>
           
         </p>
@@ -114,10 +114,24 @@
           >{{feature.alert.text}}</v-alert>
         </div>
 
-      </div>
+        <div v-if="feature.options" class="mt-2">
+          <v-select
+            v-model="feature.selected"
+            :items="feature.options"
+            item-value="key"
+            :item-text="weaponGroup.find(s => s.group === item.key)"
+            label=""
+            dense outlined return-object
+            persistent-hint
+           
+          >
+          </v-select>
 
         </div>
 
+        </div>
+
+      </div>
     </v-col>
 
   </v-row>
@@ -129,6 +143,7 @@ import CharacterCreationMixin from '~/mixins/CharacterCreationMixin';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
 import StatRepository from '~/mixins/StatRepositoryMixin';
+import WargearTraitRepository from '~/mixins/WargearTraitRepositoryMixin';
 
 export default {
   name: 'archetype-manage',
@@ -138,6 +153,7 @@ export default {
     SluggerMixin,
     KeywordRepository,
     StatRepository,
+    WargearTraitRepository,
   ],
   asyncData({ params }) {
     return {
@@ -279,6 +295,7 @@ export default {
             break;
         }
     },
+
     characterLabelAttribute(keyAbility){
       return this.attributeRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
     },
@@ -355,7 +372,8 @@ export default {
                 description: tal.snippet,
                 modification: tal.modification,
                 level: talent,
-                option: tal.option,
+                options: tal.options,
+                selected: tal.selected,
               };
 
               //Кладем в общий "пул"

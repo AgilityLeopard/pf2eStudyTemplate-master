@@ -41,7 +41,7 @@
             @click.stop="updatePreview(item)"
           >
             <v-list-item-avatar tile>
-              <img :src="getAvatar(item.source.key)" />
+              <img :src="getAvatar(item.key)" />
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -494,6 +494,7 @@ export default {
           upgrade: item.skillAttack[w.key],
           type: "Attack",
           mode: "Upgrade",
+          level: 1,
         };
         Attack.push(war);
       });

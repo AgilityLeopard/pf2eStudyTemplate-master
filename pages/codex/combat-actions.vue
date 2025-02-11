@@ -97,7 +97,7 @@ export default {
     const description =
       "This Quick Reference for Wrath and Glory shows the various combat actions and options.";
     const image =
-      "https://pf2e-ru-builder.netlify.app/img/artwork_codex_book.jpg";
+      "https://http://shadow-of-tales.ru-builder.netlify.app/img/artwork_codex_book.jpg";
 
     return {
       title,

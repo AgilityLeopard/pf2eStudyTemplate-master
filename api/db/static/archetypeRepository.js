@@ -112,10 +112,10 @@ const playerCore = [
         Perception: "E",
         skillAttack:
         {
-            simple: "T",
-            martial: "T",
+            simple: "E",
+            martial: "E",
             advanced: "T",
-            unarmed: "T"
+            unarmed: "E"
         },
         skillDefence:
         {
@@ -180,9 +180,16 @@ const playerCore = [
                     level: 3,
                 },
                 {
-                    key: "weapon-specialization",
+                    key: "Weapon Group",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Weapon Group",
+                    level: 5,
+                },
+                {
+                    key: "Weapon Specialization",
                     // upgrade: "M",
-                    type: "weapon-specialization",
+                    type: "Weapon Specialization",
                     level: 7,
                     bonusDamage: {
                         E: 2,
@@ -565,6 +572,34 @@ const playerCore2 = [
         keyAbility: [],
         trait: ["оракул"],
         rarity: "сommon",
+        skillTrainedChoice: [],
+        skillTrained: ['occultism', 'perfomance'],
+        skillTrainedPoints: 4,
+        spellTradition: 'сакральный',
+        spellProgression: {
+            1: [5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            2: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            3: [5, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+            4: [5, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+            5: [5, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+            6: [5, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0],
+            7: [5, 3, 3, 3, 2, 0, 0, 0, 0, 0, 0],
+            8: [5, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+            9: [5, 3, 3, 3, 3, 2, 0, 0, 0, 0, 0],
+            10: [5, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+            11: [5, 3, 3, 3, 3, 3, 2, 0, 0, 0, 0],
+            12: [5, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+            13: [5, 3, 3, 3, 3, 3, 3, 2, 0, 0, 0],
+            14: [5, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0],
+            15: [5, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0],
+            16: [5, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0],
+            17: [5, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0],
+            18: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0],
+            19: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+            20: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+        },
+        spellFocusPool: 2,
+        // spellFocusBase: ["Courageous Anthem", "Counter Performance"],
         skillTrainedChoice: [],
         skillTrained: ['religion'],
         skillTrainedPoints: 3,

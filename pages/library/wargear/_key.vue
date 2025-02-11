@@ -110,8 +110,8 @@ export default {
       ? `The ${this.item.name} from ${this.item.group} is an official Species described in the ${this.item.source.book}.`
       : `The ${this.item.name} from ${this.item.group} is a homebrew Species provided by ${this.item.source.book}.`; */
     const image = this.item.thumbnail
-      ? `https://pf2e-ru-builder.netlify.app${this.item.thumbnail}`
-      : `https://pf2e-ru-builder.netlify.app/img/wargear/${this.item.type.toLowerCase()}_avatar.png`;
+      ? `http://shadow-of-tales.ru${this.item.thumbnail}`
+      : `http://shadow-of-tales.ru/img/wargear/${this.item.type.toLowerCase()}_avatar.png`;
 
     return {
       titleTemplate: "%s | Wrath & Glory Library",

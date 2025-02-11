@@ -256,7 +256,7 @@
                   <tr v-for="item in skills">
                     <td class="text-left pa-1 small">
                       {{ item.name }}
-                      <span v-if="item.custom">
+                      <!-- <span v-if="item.custom">
                         <v-hover>
                           <v-icon
                             small
@@ -266,7 +266,7 @@
                             >delete</v-icon
                           >
                         </v-hover>
-                      </span>
+                      </span> -->
                     </td>
                     <td class="text-center pa-1 small">
                       {{ item.attributeName.substring(0, 3) }}
@@ -1168,7 +1168,7 @@ export default {
     const talentResponse = await $axios.get('/api/talents/');
     const psychicPowersResponse = await $axios.get('/api/psychic-powers/');
     const psychicAbilitiesResponse = await $axios.get('/api/psychic-powers/universal-abilities');
-
+    const abilityAncestryResponse = await $axios.get('/api/abilityAncestry/');
     return {
       characterId: params.id,
       astartesChapterRepository: chaptersResponse.data,
@@ -1176,6 +1176,7 @@ export default {
       psychicPowersRepository: psychicPowersResponse.data,
       psychicAbilitiesRepository: psychicAbilitiesResponse.data,
       talentRepository: talentResponse.data,
+      abilityRepository: abilityAncestryResponse.data,
       breadcrumbItems: [
         { text: '', nuxt: true, exact: true, to: '/' },
         { text: 'Билдодельня', nuxt: true, exact: true, to: '/forge/my-characters' },
@@ -1939,7 +1940,11 @@ export default {
       const archetype = this.characterArchetype;
 
       if (archetype && archetype.archetypeFeatures) {
-        archetype.archetypeFeatures.filter(s=> s.level <= this.characterLevel()).forEach((feature) => {
+        const lowercaseKeywords = archetype.archetypeFeatures.map((s) =>
+            s.toUpperCase()
+        );
+
+      this.abilityRepository.filter(s=> s.level <= this.characterLevel() &&  lowercaseKeywords.includes(s.key.toString().toUpperCase())).forEach((feature) => {
           const ability = {
             name: feature.name,
             effect: feature.snippet ? feature.snippet : feature.description,
