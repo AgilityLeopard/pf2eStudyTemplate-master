@@ -422,6 +422,7 @@ const playerCore = [
             advanced: "U",
             unarmed: "T"
         },
+
         skillDefence:
         {
             light: "T",

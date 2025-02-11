@@ -729,7 +729,6 @@ export const mutations = {
               })
             break;
           }
-
         }
 
       }
@@ -1685,6 +1684,27 @@ export const mutations = {
     });
   },
 
+  addCharacterClassModFeature(state, payload) {
+    const character = state.characters[payload.id];
+
+    character.enhancements = character.enhancements.filter(
+      (e) => e.key !== payload.content.key
+    );
+    character.enhancements.push(payload.content);
+    // payload.content.modifications.forEach((item) => {
+    //   character.enhancements.push(item);
+    // });
+  },
+
+  clearCharacterClassModFeature(state, payload) {
+    const character = state.characters[payload.id];
+
+    character.enhancements = character.enhancements.filter(
+      (e) => e.key !== payload.content.key
+    );
+  },
+
+
   // Talents
   addCharacterTalent(state, payload) {
     const character = state.characters[payload.id];
@@ -2315,6 +2335,7 @@ const getDefaultState = () => ({
     cost: 0,
   },
 
+
   //Бусты и Понижения
   //1-й уровень, стандартный
   attributesBoost: {
@@ -2526,6 +2547,8 @@ const getDefaultState = () => ({
     label: "",
     cost: 0,
   },
+
+
   modificatorsBonus: [],
   speed: {
     land: 25,

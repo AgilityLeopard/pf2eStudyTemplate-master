@@ -95,7 +95,7 @@
           <h3 class="headline">Классовые особенности</h3>
           <div
         v-for="feature in item.archetypeFeatures"
-        class="text-lg-justify " v-bind:key="feature.name"
+        class="text-lg-justify " v-bind:key="feature.key"
       >
 
       <div >
@@ -118,12 +118,13 @@
           <v-select
             v-model="feature.selected"
             :items="feature.options"
-            item-value="key"
-            :item-text="weaponGroup.find(s => s.group === item.key)"
+            item-value="group"
+            item-text="name"
             label=""
-            dense outlined return-object
+            dense outlined 
             persistent-hint
-           
+            @input="changeSelectedOption(feature, item)"
+       
           >
           </v-select>
 
@@ -164,7 +165,7 @@ export default {
     return {
       loading: false,
       item: undefined,
-        abilityList: undefined,
+      abilityList: undefined,
     };
   },
   computed: {
@@ -329,6 +330,8 @@ export default {
         this.characterId
       );
 
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
+
       if (this.abilityList !== undefined) {
 
           const lowercaseKeywords = finalData.archetypeFeatures.map((s) =>
@@ -349,26 +352,40 @@ export default {
               abilityInArray.push(ab);
             }
 
-            if (ab.option) {
-              const option = ability.filter(t => ab.option.includes(ab.key));
-              ability = [...option];
+            if (ab.options) {
+              const options = this.weaponGroup.filter(s => ab.options.includes(s.group) );
+              ab.options = options;
+
+
+              ab.selected = enc.find(s => s.key === ab.key) ? enc.find(s => s.key === ab.key).selected : "";
             }
           });
 
           //Выкидываем из списка особенности, уровень которых перечислен в массиве
-          ability = ability.filter((ab) => {
-            !Array.isArray(ab.level);
-          });
+        ability = ability.filter((ab) => !Array.isArray(ab.level));
 
-   
-        
+        const abilityList = [];
+
+          ability.forEach((tal) => {
+            const ability1 = {
+              name: tal.name,
+              key: tal.key,
+              description: tal.snippet,
+              modification: tal.modification,
+              level: tal.level,
+              options: tal.options,
+              selected: tal.selected,
+            };
+                if (ability1.level <= level) abilityList.push(ability1);
+          }
+        );
         //Смотрим все особенности, и делаем их по тем уровням, что в массиве
         abilityInArray.forEach((ab) => {
             const tal = ab;
             ab.level.forEach((talent) => {
               const ability1 = {
                 name: tal.name,
-                key: tal.key,
+                key: tal.key+talent,
                 description: tal.snippet,
                 modification: tal.modification,
                 level: talent,
@@ -377,16 +394,16 @@ export default {
               };
 
               //Кладем в общий "пул"
-              if (talent <= level) ability.push(ability1);
+              if (talent <= level) abilityList.push(ability1);
             });
           });
 
           
           if (ability.length > 0) {
             //Если нашли все особенности, то кладем их в каждый класс
-            finalData.archetypeFeatures = ability;
+            finalData.archetypeFeatures = abilityList;
         }
-          finalData.archetypeFeatures = ability.filter(t => t.level <= level).sort((a, b) => a.level - b.level);
+          finalData.archetypeFeatures = abilityList.filter(t => t.level <= level).sort((a, b) => a.level - b.level);
       }
 
       this.item = finalData;
@@ -443,42 +460,60 @@ export default {
      * @param selection String
      */
     changeSelectedOption(feature, inx) {
-      const selectedOption =  feature.options.find( (o) => o.name === feature.selected[inx] );
+      //const selectedOption = feature.options.find((o) => o.name === feature.selected[inx]).group;
 
-      this.$store.commit('characters/clearCharacterEnhancementsBySource', { id: this.characterId, source: `archetype.${feature.name}.${inx}.` });
-      if ( selectedOption.snippet ) {
-        const content = {
-          modifications: [{
-            name: selectedOption.name,
-            targetGroup: 'abilities',
-            targetValue: '',
-            effect: selectedOption.snippet,
-          }],
-          source: `archetype.${feature.name}.${inx}.${selectedOption.name}`,
-        };
-        this.$store.commit('characters/addCharacterModifications', { id: this.characterId, content });
-      }
-      if ( selectedOption.modifications ) {
-        const content = {
-          modifications: selectedOption.modifications,
-          source: `archetype.${feature.name}.${inx}.${selectedOption.name}`,
-        };
-        this.$store.commit('characters/addCharacterModifications', { id: this.characterId, content });
-      }
+      const mod = {
+        key: feature.key,
+        selected: feature.selected,
+        value: feature.value,
+        source: "archetype"
+      };
 
-      if ( selectedOption.keywords ) {
-        const payload = { id: this.characterId, source: `archetype.${feature.name}`, cascade: true };
-        this.$store.commit('characters/clearCharacterKeywordsBySource', payload);
-        selectedOption.keywords.forEach( (keyword) => {
-          const payload = {
-            name: keyword,
-            source: `archetype.${feature.name}`,
-            type: 'keyword',
-            replacement: undefined,
-          };
-          this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
-        });
-      }
+      
+      this.$store.commit('characters/clearCharacterClassModFeature', { id: this.characterId, content: mod });
+      this.$store.commit('characters/addCharacterClassModFeature', { id: this.characterId, content: mod });
+
+
+      // this.$store.commit("characters/addCharacterModifications", {
+      //   id: this.characterId,
+      //   content: { modifications: mod, source: "archetype" },
+      // });
+
+      //this.$store.commit('characters/clearCharacterEnhancementsBySource', { id: this.characterId, source: `archetype` });
+      // if ( selectedOption.snippet ) {
+      //   const content = {
+      //     modifications: [{
+      //       name: selectedOption.name,
+      //       targetGroup: 'abilities',
+      //       targetValue: '',
+      //       effect: selectedOption.snippet,
+      //     }],
+      //     source: `archetype.${feature.name}.${inx}.${selectedOption.name}`,
+      //   };
+      //   this.$store.commit('characters/addCharacterModifications', { id: this.characterId, content });
+      // }
+
+      // if ( selectedOption.modifications ) {
+      //   const content = {
+      //     modifications: selectedOption.modifications,
+      //     source: `archetype.${feature.name}.${inx}.${selectedOption.name}`,
+      //   };
+      //   this.$store.commit('characters/addCharacterModifications', { id: this.characterId, content });
+      // }
+
+      // if ( selectedOption.keywords ) {
+      //   const payload = { id: this.characterId, source: `archetype.${feature.name}`, cascade: true };
+      //   this.$store.commit('characters/clearCharacterKeywordsBySource', payload);
+      //   selectedOption.keywords.forEach( (keyword) => {
+      //     const payload = {
+      //       name: keyword,
+      //       source: `archetype.${feature.name}`,
+      //       type: 'keyword',
+      //       replacement: undefined,
+      //     };
+      //     this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
+      //   });
+      // }
 
     },
     getPsychicPowerOptions(psychicPowerSelection) {
