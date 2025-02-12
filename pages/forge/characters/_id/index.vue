@@ -3,14 +3,15 @@
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row justify="center" align="center">
-      <v-col :cols="3" :sm="2" :md="1">
+      <!-- <v-col :cols="3" :sm="2" :md="1">
         <v-avatar tile size="64">
           <img :src="avatar" />
         </v-avatar>
-      </v-col>
+      </v-col> -->
 
       <!-- avatar, name, rank, tier, archetype, species -->
-      <v-col :cols="4" :sm="4" :md="4">
+
+      <!-- <v-col :cols="4" :sm="4" :md="4">
         <v-row no-gutters>
           <v-col :cols="12">{{ characterName }}</v-col>
           <v-col :cols="12" class="caption">{{
@@ -30,51 +31,160 @@
             keywordStrings.join(" • ")
           }}</v-col>
         </v-row>
-      </v-col>
-
-
+      </v-col> -->
 
       <v-col :cols="4" :sm="4" :md="4">
         <v-card>
-          <v-card-title class="body-1 pt-1 pb-1">
+          <v-card-title class="body-1 pt-1 pb-1 justify-center" >
            
-            <p><h2 class="subtitle-1">ХП</h2></p>
+            <h2 class="subtitle-1">Здоровье персонажа</h2>
            </v-card-title>
-           <v-card-text class="pt-4">
-            <v-row style="display: flex; align-items: baseline; justify-content:center" >  
-            <v-col :cols="3" :sm="3">
-              <v-text-field
+           <v-card-text class="pt-4" >
+            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:center"  > 
+            <v-col :cols="6" :sm="4" :md="6">
+              <h2 class="subtitle-1 ">Хит-Поинты</h2>
+            </v-col>
+            <v-col :cols="6" :md="6">
+              <h2 class="subtitle-1 ">Временные хиты</h2>
+            </v-col>
+            </v-row>
+            
+            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:left"  > 
+             
+            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+             
+              
+              <v-col :cols="2" :md="1">
+              
+              <v-text-field 
                 v-model="currentHP"
                 solo flat
-             
+                reverse
                 @keypress.enter="addCurrentHP()"
-              ></v-text-field> 
-            </v-col >
-            <v-col class="pt-0" :cols="3" :sm="2">
-              <div >/ {{ characterHitPointsMax() }}</div> 
-             </v-col>
-             <v-col :cols="6" :sm="10">
+              ></v-text-field>  
+            </v-col>
+            <v-col :cols="2"  >
+              <div style="font-size: 16px;">/ {{ characterHitPointsMax() }}</div>
+            </v-col>
 
-             </v-col>
+                          <v-col :cols="5" >
+              
+              <v-text-field 
+                v-model="currentHP"
+                solo flat
+                reverse
+                @keypress.enter="addCurrentHP()"
+              ></v-text-field>  
+            </v-col>
             </v-row>
             </v-card-text>
         </v-card>
       </v-col>
+
+      <v-col :cols="4" :sm="4" :md="4">
+        <v-card>
+          <v-card-title class="body-1 pt-1 pb-1 justify-center" >
+           
+            <h2 class="subtitle-1">Здоровье персонажа</h2>
+           </v-card-title>
+           <v-card-text class="pt-4" >
+            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:center"  > 
+            <v-col :cols="6" :sm="4" :md="6">
+              <h2 class="subtitle-1 ">Хит-Поинты</h2>
+            </v-col>
+            <v-col :cols="6" :md="6">
+              <h2 class="subtitle-1 ">Временные хиты</h2>
+            </v-col>
+            </v-row>
+            
+            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:left"  > 
+             
+            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+             
+              
+              <v-col :cols="2" :md="1">
+              
+              <v-text-field 
+                v-model="currentHP"
+                solo flat
+                reverse
+                @keypress.enter="addCurrentHP()"
+              ></v-text-field>  
+            </v-col>
+            <v-col :cols="2"  >
+              <div style="font-size: 16px;">/ {{ characterHitPointsMax() }}</div>
+            </v-col>
+
+                          <v-col :cols="5" >
+              
+              <v-text-field 
+                v-model="currentHP"
+                solo flat
+                reverse
+                @keypress.enter="addCurrentHP()"
+              ></v-text-field>  
+            </v-col>
+            </v-row>
+            </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col :cols="4" :sm="4" :md="4">
+        <v-card>
+          <v-card-title class="body-1 pt-1 pb-1 justify-center" >
+           
+            <h2 class="subtitle-1">Здоровье персонажа</h2>
+           </v-card-title>
+           <v-card-text class="pt-4" >
+            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:center"  > 
+            <v-col :cols="6" :sm="4" :md="6">
+              <h2 class="subtitle-1 ">Хит-Поинты</h2>
+            </v-col>
+            <v-col :cols="6" :md="6">
+              <h2 class="subtitle-1 ">Временные хиты</h2>
+            </v-col>
+            </v-row>
+            
+            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:left"  > 
+             
+            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+             
+              
+              <v-col :cols="2" :md="1">
+              
+              <v-text-field 
+                v-model="currentHP"
+                solo flat
+                reverse
+                @keypress.enter="addCurrentHP()"
+              ></v-text-field>  
+            </v-col>
+            <v-col :cols="2"  >
+              <div style="font-size: 16px;">/ {{ characterHitPointsMax() }}</div>
+            </v-col>
+
+                          <v-col :cols="5" >
+              
+              <v-text-field 
+                v-model="currentHP"
+                solo flat
+                reverse
+                @keypress.enter="addCurrentHP()"
+              ></v-text-field>  
+            </v-col>
+            </v-row>
+            </v-card-text>
+        </v-card>
+      </v-col>
+
+      
       <!-- actions -->
-      <v-col :cols="12" :sm="4" :md="5" align="right">
-        <!-- <v-btn small outlined color="success" v-if="false">share</v-btn>
+      <!-- <v-col :cols="4" :sm="4" :md="4" align="right">
+         <v-btn small outlined color="success" v-if="false">share</v-btn>
         <v-btn small outlined color="success" v-if="false">campaign</v-btn>
         <v-btn small outlined color="primary" v-if="false">
           <v-icon left small>group</v-icon> Regroup
-        </v-btn> -->
-        <!-- <v-btn
-          color="primary"
-          outlined small
-          @click="doRespite"
-        >
-          <v-icon left small>fireplace</v-icon>
-          Respite
-        </v-btn> -->
+        </v-btn> 
         <v-btn
           nuxt
           :to="`/forge/characters/${characterId}/builder/print`"
@@ -95,7 +205,7 @@
           <v-icon left small>edit</v-icon>
           Изменить
         </v-btn>
-      </v-col>
+      </v-col> -->
     </v-row>
 
     <v-row justify="center" no-gutters>
