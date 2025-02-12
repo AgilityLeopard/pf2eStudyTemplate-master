@@ -375,6 +375,8 @@ export default {
               level: tal.level,
               options: tal.options,
               selected: tal.selected,
+              type: tal.type,
+              value: tal.value,
             };
                 if (ability1.level <= level) abilityList.push(ability1);
           }
@@ -391,6 +393,8 @@ export default {
                 level: talent,
                 options: tal.options,
                 selected: tal.selected,
+                              type: tal.type,
+              value: tal.value,
               };
 
               //Кладем в общий "пул"
@@ -462,8 +466,10 @@ export default {
     changeSelectedOption(feature, inx) {
       //const selectedOption = feature.options.find((o) => o.name === feature.selected[inx]).group;
 
+
       const mod = {
         key: feature.key,
+        type: feature.type,
         selected: feature.selected,
         value: feature.value,
         source: "archetype"

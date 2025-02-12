@@ -1,114 +1,5 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
-    <!-- Keyword editor -->
-    <!-- <v-dialog
-      v-model="keywordsEditorDialog"
-      width="600px"
-      scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
-      <v-form ref="keywordForm" v-model="keywordFormValid">
-        <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff;">
-            Edit Custom Keyword
-            <v-spacer />
-            <v-icon dark @click="closeKeywordsSettings">close</v-icon>
-          </v-card-title>
-          <v-card-text class="pt-4">
-
-            <v-text-field
-              label="Keyword Name"
-              v-model="customKeyword.name"
-              dense required
-              class="mb-4"
-              :rules="[v => !!v || 'A name is required']"
-            ></v-text-field>
-
-            <v-textarea
-              label="Description"
-              v-model="customKeyword.description"
-              dense
-              class="mb-2"
-              :required="!keywordCombinedRepository.find(k=>k.name===customKeyword.name)"
-              :disabled="keywordCombinedRepository.find(k=>k.name===customKeyword.name)"
-            ></v-textarea>
-
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn small right color="success" @click="saveCustomKeyword" :disabled="!keywordFormValid">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-    </v-dialog> -->
-
-    <!-- Custom Skills -->
-    <!-- <v-dialog
-      v-model="skillsEditorDialog"
-      width="600px"
-      scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
-      <v-card>
-        <v-card-title style="background-color: #262e37; color: #fff;">
-          Edit Custom Skill
-          <v-spacer />
-          <v-icon dark @click="closeSkillsSettings">close</v-icon>
-        </v-card-title>
-        <v-card-text class="pt-4">
-          <v-text-field v-model="customSkill.name" dense label="Skill Name"></v-text-field>
-          <v-select
-            v-model="customSkill.attribute"
-            :items="attributeRepository"
-            item-value="name" item-text="name"
-            dense label="Accosiated Attribute"
-          ></v-select>
-          <v-textarea v-model="customSkill.description" dense label="Description"></v-textarea>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn small right color="success" @click="saveCustomSkill">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
-
-    <!-- Corruption -->
-    <!-- <v-dialog
-      v-model="showCorruptionManagerDialog"
-      width="800px"
-      scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
-      <dod-corruption-manager
-        :id="characterId"
-        :corruption="traits.find((t)=>t.key==='corruption').adjustedRating"
-        :modifiers="characterEnhancements.filter((e) => e.targetValue === 'corruption')"
-        @cancel="showCorruptionManagerDialog = false"
-      ></dod-corruption-manager>
-    </v-dialog> -->
-
-    <!-- Wealth -->
-    <!-- <v-dialog
-        v-model="showContextDialog"
-        width="800px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
-      <v-card>
-        <component
-            v-if="contextDialogComponent"
-            :is="contextDialogComponent"
-            :character-id="characterId"
-            :character-traits="traits"
-            :character-modifiers="characterEnhancements"
-            :trait-key="contextDialogTraitKey"
-            @cancel="hideContextDialog"
-        ></component>
-      </v-card>
-    </v-dialog> -->
-
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row justify="center" align="center">
@@ -119,7 +10,7 @@
       </v-col>
 
       <!-- avatar, name, rank, tier, archetype, species -->
-      <v-col :cols="8" :sm="6" :md="6">
+      <v-col :cols="4" :sm="4" :md="4">
         <v-row no-gutters>
           <v-col :cols="12">{{ characterName }}</v-col>
           <v-col :cols="12" class="caption">{{
@@ -141,6 +32,34 @@
         </v-row>
       </v-col>
 
+
+
+      <v-col :cols="4" :sm="4" :md="4">
+        <v-card>
+          <v-card-title class="body-1 pt-1 pb-1">
+           
+            <p><h2 class="subtitle-1">ХП</h2></p>
+           </v-card-title>
+           <v-card-text class="pt-4">
+            <v-row style="display: flex; align-items: baseline; justify-content:center" >  
+            <v-col :cols="3" :sm="3">
+              <v-text-field
+                v-model="currentHP"
+                solo flat
+             
+                @keypress.enter="addCurrentHP()"
+              ></v-text-field> 
+            </v-col >
+            <v-col class="pt-0" :cols="3" :sm="2">
+              <div >/ {{ characterHitPointsMax() }}</div> 
+             </v-col>
+             <v-col :cols="6" :sm="10">
+
+             </v-col>
+            </v-row>
+            </v-card-text>
+        </v-card>
+      </v-col>
       <!-- actions -->
       <v-col :cols="12" :sm="4" :md="5" align="right">
         <!-- <v-btn small outlined color="success" v-if="false">share</v-btn>
@@ -1223,6 +1142,7 @@ export default {
       ],
       descriptionSection: { selection: 'all' },
       abilitySection: { filter: 'all' },
+      currentHP: 0,
       //
       showContextDialog: false,
       contextDialogComponent: undefined,
@@ -1293,6 +1213,12 @@ export default {
     speciesKey() {
       return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
     },
+    character()
+    {
+      //При открытии компонента подгружать из Персонажа
+      this.currentHP =  this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId);
+      return 1;
+    },
     speciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
@@ -1305,11 +1231,13 @@ export default {
     },
 
     characterTalents() {
-      return this.$store.getters['characters/characterTalentsById'](this.$route.params.id);
+      return this.$store.getters['characters/characterTalentsById'](this.characterId);
     },
-
+    characterCurHP() {
+      return this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId);
+    },
     characterMutations() {
-      return this.$store.getters['characters/characterMutationsById'](this.$route.params.id);
+      return this.$store.getters['characters/characterMutationsById'](this.characterId);
     },
 
     archetypeKey() {
@@ -1331,6 +1259,12 @@ export default {
     keywordStrings() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
     },
+    characterHitPoints() {
+      return this.$store.getters["characters/characterHitPointsById"](
+        this.characterId
+      );
+    },
+
     keywords() {
       const enrichedKeywords = [];
       const characterKeywords = this.$store.getters['characters/characterKeywordsRawById'](this.characterId);
@@ -2023,6 +1957,7 @@ export default {
 
       return abilities;
     },
+
     otherAbilities() {
       const abilities = [];
 
@@ -2346,6 +2281,13 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+    character: {
+      handler(newVal) {
+
+      },
+      immediate: true, // make this watch function is called when component created
+    },
+
   },
   methods: {
     async loadSpecies(key) {
@@ -2358,6 +2300,7 @@ export default {
           finalData = data;
         }
         this.characterSpecies = finalData;
+
       }
     },
     async loadArchetype(key) {
@@ -2445,6 +2388,10 @@ export default {
     characterNotesOpenEditor() {
       this.characterNotesEditorModel = this.$store.getters['characters/characterFluffNotesById'](this.characterId);
       this.characterNotesShowEditor = true;
+    },
+    addCurrentHP() {
+      const curHP = this.currentHP > this.characterHitPointsMax ? this.characterHitPointsMax : this.currentHP;
+      this.$store.commit('characters/setCurrentHP', { id: this.characterId, curHP })
     },
     characterNotesCancel() {
       this.characterNotesEditorModel = '';
@@ -2596,6 +2543,20 @@ export default {
     groupName(name){
       return this.weaponGroup.find(item => item.group === name).name;
     },
+        characterHitPointsMax() {
+      const species = this.characterHitPoints["species"]
+        ? this.characterHitPoints["species"]
+        : 0;
+      const classh = this.characterHitPoints["class"]
+        ? this.characterHitPoints["class"]
+        : 0;
+
+      const levelClass =
+        (classh + (this.characterAttributesEnhanced["constitution"] - 10) / 2) *
+        this.characterLevel();
+      if (levelClass <= 0) return species;
+      else return species + levelClass;
+    },
     closeSkillsSettings() {
       this.customSkill = {
         key: undefined,
@@ -2680,9 +2641,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.page-title {
-}
-
 .small {
   height: 24px;
 }

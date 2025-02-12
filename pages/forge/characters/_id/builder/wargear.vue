@@ -367,7 +367,6 @@
                   dense
                   required
                   v-model="gp"
-                  :type="number"
                   outlined
                 ></v-text-field>
               </v-col>
@@ -822,16 +821,22 @@ export default {
       this.advancedShoppingChart.splice(index, 1);
     },
 
-    attackModifier(gear){
+    attackModifier(gear) {
+      //Если есть группа оружия у класса
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
+      const group = enc.find(s => s.type === "Weapon Group") ? enc.find(s => s.type === "Weapon Group") : "";
 
+      //Прибавка аттрибута
       const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
 
-      // const enhancements = this.enhancements.find()
-       const modProfiency = this.archetype ? this.skillAttack[gear.category] : "U";
+      //Смотрим проф у класса, если нет особенности с группой -- для воина
+      const modProfiency = group !== "" && group.selected === gear.group ? group.value[gear.category] : this.skillAttack[gear.category];
+
+
       const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
       const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
 
-         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+      return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
     },
     damageModifier(gear){
 

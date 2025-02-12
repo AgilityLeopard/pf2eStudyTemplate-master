@@ -179,13 +179,7 @@ const playerCore = [
                     type: "Saving",
                     level: 3,
                 },
-                {
-                    key: "Weapon Group",
-                    upgrade: "M",
-                    mode: "Upgrade",
-                    type: "Weapon Group",
-                    level: 5,
-                },
+
                 {
                     key: "Weapon Specialization",
                     // upgrade: "M",

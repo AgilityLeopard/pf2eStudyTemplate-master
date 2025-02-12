@@ -322,6 +322,8 @@ export const getters = {
   },
   characterHitPointsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].MaxHitPoints : {},
+  characterCurrentHitPointsById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].CurrentHP : 0,
   characterBackSkillById: (state) => (id) =>
     state.characters[id] ? state.characters[id].BackSkill : "",
 
@@ -1523,6 +1525,12 @@ export const mutations = {
       char.MaxHitPoints["class"] = payload.payload.value;
 
   },
+  setCurrentHP(state, payload) {
+    const char = state.characters[payload.id];
+    char.CurrentHP = payload.curHP;
+
+  },
+
   setCharacterAncestryFlawForAll(state, payload) {
     const char = state.characters[payload.id];
 
@@ -2434,7 +2442,7 @@ const getDefaultState = () => ({
     charisma: 0,
   },
   Boost20: 0,
-
+  CurrentHP: 0,
   MaxHitPoints:
   {
     species: 0,
