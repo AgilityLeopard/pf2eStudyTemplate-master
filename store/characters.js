@@ -338,7 +338,7 @@ export const getters = {
   characterPerseptionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Perception : "U",
   characterWearById: (state) => (id) =>
-    state.characters[id] ? state.characters[id].wearArmor : {},
+    state.characters[id] ? state.characters[id].wearArmor : undefined,
 
   characterTraitsById: (state, getters) => (id) => {
     const character = state.characters[id];
