@@ -823,27 +823,56 @@ export default {
 
     attackModifier(gear) {
       //Если есть группа оружия у класса
-      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
       const group = enc.find(s => s.type === "Weapon Group") ? enc.find(s => s.type === "Weapon Group") : "";
+      const groupLegend = enc.find(s => s.type === "Weapon Group Legend") ? enc.find(s => s.type === "Weapon Group Legend") : "";
+      if (groupLegend !== "") {
+        //Прибавка аттрибута
+        const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
 
-      //Прибавка аттрибута
-      const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
-
-      //Смотрим проф у класса, если нет особенности с группой -- для воина
-      const modProfiency = group !== "" && group.selected === gear.group ? group.value[gear.category] : this.skillAttack[gear.category];
+        //Смотрим проф у класса, если нет особенности с группой -- для воина
+        const modProfiency = groupLegend !== "" && groupLegend.selected === gear.group ? groupLegend.value[gear.category] : this.skillAttack[gear.category];
 
 
-      const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
-      const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+        const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
+        const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
 
-      return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+        return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+      }
+      if (group !== "") {
+        //Прибавка аттрибута
+        const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+
+        //Смотрим проф у класса, если нет особенности с группой -- для воина
+        const modProfiency = group !== "" && group.selected === gear.group ? group.value[gear.category] : this.skillAttack[gear.category];
+
+
+        const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
+        const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+
+        return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+      }
+        //Прибавка аттрибута
+        const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+
+        //Смотрим проф у класса, если нет особенности с группой -- для воина
+        const modProfiency = this.skillAttack[gear.category];
+
+
+        const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
+        const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+
+        return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
     },
     damageModifier(gear){
 
     const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
-    const mod = (modAbility - 10) / 2;
+      const mod = (modAbility - 10) / 2;
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
+      const spec = enc.find(s => s.type === "Weapon Specialization") ? enc.find(s => s.type === "Weapon Specialization") : "";
+      const damSpec = spec !== "" ? spec.bonusDamage[this.skillAttack[gear.category]] : 0;
 
-       return gear.damage.toString() + " + " + mod.toString();
+       return gear.damage.toString() + " + " + mod.toString() + " + " + damSpec.toString();
   },
     addWargearToCharacter(wargearOptions, source) {
       const finalWargear = [];

@@ -44,7 +44,7 @@
             <h2 class="subtitle-1">Здоровье персонажа</h2>
           </v-card-title> -->
 
-          <v-card-text class="pt-4" style="overflow-y: hidden; height: 100px">
+          <v-card-text class="pt-4 my-card-item">
             <v-row no-gutters>
               <v-col :cols="4">
                 <v-avatar tile size="64">
@@ -80,7 +80,7 @@
           <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
             <h2 class="subtitle-1">Здоровье персонажа</h2>
           </v-card-title> -->
-          <v-card-text class="pt-2" style="overflow-y: hidden; height: 100px">
+          <v-card-text class="pt-4 my-card-item">
             <v-row no-gutters>
               <v-col :cols="6">
                 <h2 class="subtitle-1 text-center">Хит-Поинты</h2>
@@ -103,7 +103,6 @@
               <v-col :cols="3">
                 <v-text-field
                   v-model="currentHP"
-                  style="font-size: 12px"
                   solo
                   flat
                   reverse
@@ -114,15 +113,13 @@
                 ></v-text-field>
               </v-col>
               <v-col :cols="3">
-                <div style="font-size: 12px" height="2">
-                  / {{ characterHitPointsMax() }}
-                </div>
+                <div height="2">/ {{ characterHitPointsMax() }}</div>
               </v-col>
 
               <v-col :cols="6">
                 <div class="center">
                   <v-text-field
-                    v-model="currentHP"
+                    v-model="tempHP"
                     solo
                     flat
                     reverse
@@ -131,7 +128,7 @@
                     height="2"
                     style="max-width: 60%"
                     size="1"
-                    @keypress.enter="addCurrentHP()"
+                    @keypress.enter="addTempHP()"
                   ></v-text-field>
                 </div>
               </v-col>
@@ -141,41 +138,7 @@
       </v-col>
 
       <v-col :cols="4" :sm="4" :md="4">
-        <v-card>
-          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
-            <h2 class="subtitle-1">Здоровье персонажа</h2>
-          </v-card-title> -->
-          <v-card-text class="pt-2" style="overflow-y: hidden; height: 100px">
-            <v-row no-gutters>
-              <v-col :cols="6">
-                <h2 class="subtitle-1 text-center">КД</h2>
-              </v-col>
-              <v-col :cols="6">
-                <h2 class="subtitle-1 text-center">Спасы</h2>
-              </v-col>
-            </v-row>
-
-            <v-row no-gutters>
-              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-
-              <v-col :cols="6" class="caption text-center">
-                <div>{{ characterArmor }}</div></v-col
-              >
-
-              <v-col :cols="6" class="caption">
-                <div class="center text-center">
-                  Рефлекс: {{ characterSaving["reflex"] }}
-                </div>
-                <div class="center text-center">
-                  Стойкость: {{ characterSaving["fortitude"] }}
-                </div>
-                <div class="center text-center">
-                  Воля: {{ characterSaving["will"] }}
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
+        <v-card> </v-card>
       </v-col>
 
       <!-- actions -->
@@ -214,7 +177,7 @@
           <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
             <h2 class="subtitle-1">Здоровье персонажа</h2>
           </v-card-title> -->
-          <v-card-text class="pt-2" style="overflow-y: hidden; height: 100px">
+          <v-card-text class="pt-4 my-card-item">
             <v-row
               no-gutters
               style="
@@ -253,13 +216,14 @@
 
               <v-col :cols="3" class="caption">
                 <div class="center text-center" style="font-size: 12px">
-                  {{ SkillClass }}
+                  {{ characterSpeed["land"] }}
                 </div>
               </v-col>
 
               <v-col :cols="3" class="caption">
                 <div class="center text-center" style="font-size: 12px">
-                  {{ characterSpeed["land"] }}
+                  + {{ ModAttributeClass() }}
+                  {{ characterlabelL(characterSkillClass) }}
                 </div>
               </v-col>
             </v-row>
@@ -272,7 +236,7 @@
           <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
             <h2 class="subtitle-1">Здоровье персонажа</h2>
           </v-card-title> -->
-          <v-card-text class="pt-2" style="overflow-y: hidden; height: 100px">
+          <v-card-text class="pt-4 my-card-item">
             <v-row no-gutters>
               <v-col :cols="6">
                 <h2 class="subtitle-1 text-center">КД</h2>
@@ -286,7 +250,7 @@
               <!-- <v-col :cols="6" :sm="4" :md="5" > -->
 
               <v-col :cols="6" class="caption text-center">
-                <div>25</div></v-col
+                <div>{{ characterArmor() }}</div></v-col
               >
 
               <v-col :cols="6" class="caption">
@@ -1406,6 +1370,7 @@ import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
 import DodCorruptionManager from '~/components/forge/DodCorruptionManager';
 import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
 import {marked} from 'marked';
+import { times } from 'lodash';
 
 export default {
   name: 'in-app-view',
@@ -1491,6 +1456,7 @@ export default {
       descriptionSection: { selection: 'all' },
       abilitySection: { filter: 'all' },
       currentHP: 0,
+      tempHP: 0,
       //
       showContextDialog: false,
       contextDialogComponent: undefined,
@@ -1564,7 +1530,8 @@ export default {
     character()
     {
       //При открытии компонента подгружать из Персонажа
-      this.currentHP =  this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId);
+      this.currentHP = this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId);
+      this.tempHP =  this.$store.getters['characters/characterTempHitPointsById'](this.characterId);
       return 1;
     },
     speciesLabel() {
@@ -1624,32 +1591,7 @@ export default {
       );
     },
 
-    characterArmor() {
-      const wear = this.$store.getters["characters/characterWearById"](
-         this.characterId
-      );
-      if (wear) {
-        const modDex = Math.floor(
-          (this.characterAttributes["dexterity"] - 10) / 2
-        );
-        const wearModDex = wear.modDex ? wear.modDex : 0;
-        const dex = modDex > wearModDex ? wearModDex : modDex;
-        const Def = wear.category ? this.profiencyRepository[this.skillDefence[wear.category]] : 0;
-        const bonusAC = wear.bonusAC ? wear.bonusAC : 0;
-        const arm = Def === 0 ? 0 : this.characterLevel();
-        return 10 + dex + Def + arm + bonusAC;
-      }
 
-      const modDex = Math.floor(
-        (this.characterAttributes["dexterity"] - 10) / 2
-      );
-      return 10 + modDex;
-    },
-        SkillClass() {
-      return this.$store.getters["characters/characterSkillClassById"](
-        this.characterId
-      );
-    },
       characterSpeed() {
       return this.$store.getters["characters/characterSpeedById"](
         this.characterId
@@ -2816,6 +2758,32 @@ export default {
       const curHP = this.currentHP > this.characterHitPointsMax ? this.characterHitPointsMax : this.currentHP;
       this.$store.commit('characters/setCurrentHP', { id: this.characterId, curHP })
     },
+    addTempHP() {
+
+      this.$store.commit('characters/setTempHP', { id: this.characterId, tempHP: this.tempHP })
+    },
+        characterArmor() {
+      const wear = this.$store.getters["characters/characterWearById"](
+         this.characterId
+      );
+      if (wear) {
+        const modDex = Math.floor(
+          (this.characterAttributes["dexterity"] - 10) / 2
+        );
+        const wearModDex = wear.modDex ? wear.modDex : 0;
+        const dex = modDex > wearModDex ? wearModDex : modDex;
+        const Def = wear.category ? this.profiencyRepository[this.skillDefence[wear.category]] : 0;
+        const bonusAC = wear.bonusAC ? wear.bonusAC : 0;
+        const arm = Def === 0 ? 0 : this.characterLevel();
+        return 10 + dex + Def + arm + bonusAC;
+      }
+
+      const modDex = Math.floor(
+        (this.characterAttributes["dexterity"] - 10) / 2
+      );
+      return 10 + modDex;
+    },
+
     characterNotesCancel() {
       this.characterNotesEditorModel = '';
       this.characterNotesShowEditor = false;
@@ -3017,6 +2985,11 @@ export default {
       };
       this.keywordsEditorDialog = false;
     },
+        SkillClass() {
+      return this.$store.getters["characters/characterSkillClassById"](
+        this.characterId
+      );
+    },
     saveCustomKeyword(){
 
       const keyword = {
@@ -3127,6 +3100,11 @@ td.small {
 
 .my-tab-item {
   height: 705px;
+  overflow-y: auto;
+}
+
+.my-card-item {
+  height: 120px;
   overflow-y: auto;
 }
 
