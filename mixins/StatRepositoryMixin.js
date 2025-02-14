@@ -51,13 +51,13 @@ export default {
           order: 6,
         },
       ],
-      Perception: 
-        {
-          key: "perception",
-          name: "Внимательность",
-          attribute: "wisdom",
-          description: "A character’s overall physical prowess",
-        },
+      Perception:
+      {
+        key: "perception",
+        name: "Внимательность",
+        attribute: "wisdom",
+        description: "A character’s overall physical prowess",
+      },
       WeaponRepository: [
         {
           key: "simple",
@@ -122,7 +122,7 @@ export default {
           name: "Стойкость",
           attribute: "constitution",
           description: "A character’s overall physical prowess",
-        },        
+        },
         {
           key: "will",
           name: "Воля",
@@ -261,32 +261,50 @@ export default {
           name: "Большой",
         },
       ],
-      rarityRepository: [        
-          {
-            key: "common",
-            name: "Обычный",
-          },
-          {
-            key: "uncommon",
-            name: "Необычный",
-          },
-          {
-            key: "rare",
-            name: "Редкий",
-          },
-          {
-            key: "unique",
-            name: "Уникальный"
-          },
+      rarityRepository: [
+        {
+          key: "common",
+          name: "Обычный",
+        },
+        {
+          key: "uncommon",
+          name: "Необычный",
+        },
+        {
+          key: "rare",
+          name: "Редкий",
+        },
+        {
+          key: "unique",
+          name: "Уникальный"
+        },
       ],
       profiencyRepository: {
-          U: 0,
-          T: 2,
-          E: 4,
-          M: 6,
-          L: 8,
+        U: 0,
+        T: 2,
+        E: 4,
+        M: 6,
+        L: 8,
+      },
+      statusRepository: [
+        {
+          key: "enfebled",
+          name: "Ослаблен",
+          description: "Вы ослаблены физически. Ослабление всегда имеет значение. Когда вы ослаблены, вы получаете штраф состояния равный значению состояния к броскам основанным на Силе, и КС, включая атаки ближнего боя основанные на Силе, броски урона основанные на Силе, и проверки Атлетики."
         },
-  
+        {
+          key: "uncommon",
+          name: "Необычный",
+        },
+        {
+          key: "rare",
+          name: "Редкий",
+        },
+        {
+          key: "unique",
+          name: "Уникальный"
+        },
+      ]
     };
   },
   methods: {

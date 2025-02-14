@@ -1138,8 +1138,11 @@ export default {
         const modDex = Math.floor(
           (this.characterAttributes["dexterity"] - 10) / 2
         );
-        const dex = modDex > wear.modDex ? wear.modDex : modDex;
-        const Def = this.profiencyRepository[this.skillDefence[wear.category]];
+        const wearModDex = wear.modDex ? wear.modDex : 0;
+        const dex = modDex > wearModDex ? wearModDex : modDex;
+        const Def = wear.category
+          ? this.profiencyRepository[this.skillDefence[wear.category]]
+          : 0;
         const bonusAC = wear.bonusAC ? wear.bonusAC : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();
         return 10 + dex + Def + arm + bonusAC;

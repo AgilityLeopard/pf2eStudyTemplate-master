@@ -2,9 +2,14 @@
   <div>
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
-    <v-row justify="center" align="center">
-      <!-- <v-col :cols="3" :sm="2" :md="1">
-        <v-avatar tile size="64">
+    <v-row align="stretch" class="ma-2">
+      <!-- <v-col
+        :cols="4"
+        :sm="4"
+        :md="4"
+        style="overflow-y: hidden; height: 100px"
+      >
+        <v-avatar tile size="95">
           <img :src="avatar" />
         </v-avatar>
       </v-col> -->
@@ -35,149 +40,107 @@
 
       <v-col :cols="4" :sm="4" :md="4">
         <v-card>
-          <v-card-title class="body-1 pt-1 pb-1 justify-center" >
-           
+          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
             <h2 class="subtitle-1">Здоровье персонажа</h2>
-           </v-card-title>
-           <v-card-text class="pt-4" >
-            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:center"  > 
-            <v-col :cols="6" :sm="4" :md="6">
-              <h2 class="subtitle-1 ">Хит-Поинты</h2>
-            </v-col>
-            <v-col :cols="6" :md="6">
-              <h2 class="subtitle-1 ">Временные хиты</h2>
-            </v-col>
-            </v-row>
-            
-            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:left"  > 
-             
-            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-             
-              
-              <v-col :cols="2" :md="1">
-              
-              <v-text-field 
-                v-model="currentHP"
-                solo flat
-                reverse
-                @keypress.enter="addCurrentHP()"
-              ></v-text-field>  
-            </v-col>
-            <v-col :cols="2"  >
-              <div style="font-size: 16px;">/ {{ characterHitPointsMax() }}</div>
-            </v-col>
+          </v-card-title> -->
 
-                          <v-col :cols="5" >
-              
-              <v-text-field 
-                v-model="currentHP"
-                solo flat
-                reverse
-                @keypress.enter="addCurrentHP()"
-              ></v-text-field>  
-            </v-col>
+          <v-card-text class="pt-4 my-card-item">
+            <v-row no-gutters>
+              <v-col :cols="4">
+                <v-avatar tile size="64">
+                  <img :src="avatar" />
+                </v-avatar>
+              </v-col>
+              <v-col :cols="8" class="caption">
+                <div align="center">{{ characterName }}</div>
+                <div class="caption" align="center">
+                  {{ [archetypeLabel, speciesLabel].join(" • ") }}
+                </div>
+                <div class="caption" align="center">
+                  <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
+                </div>
+                <div class="caption" align="center">
+                  <v-progress-linear
+                    :value="campaignCustomXp"
+                    height="2"
+                    color="red"
+                  ></v-progress-linear>
+                </div>
+              </v-col>
+              <!-- <v-col :cols="12" class="caption text--keyword" align="center">{{
+                keywordStrings.join(" • ")
+              }}</v-col> -->
             </v-row>
-            </v-card-text>
+          </v-card-text>
         </v-card>
       </v-col>
 
       <v-col :cols="4" :sm="4" :md="4">
         <v-card>
-          <v-card-title class="body-1 pt-1 pb-1 justify-center" >
-           
+          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
             <h2 class="subtitle-1">Здоровье персонажа</h2>
-           </v-card-title>
-           <v-card-text class="pt-4" >
-            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:center"  > 
-            <v-col :cols="6" :sm="4" :md="6">
-              <h2 class="subtitle-1 ">Хит-Поинты</h2>
-            </v-col>
-            <v-col :cols="6" :md="6">
-              <h2 class="subtitle-1 ">Временные хиты</h2>
-            </v-col>
+          </v-card-title> -->
+          <v-card-text class="pt-4 my-card-item">
+            <v-row no-gutters>
+              <v-col :cols="6">
+                <h2 class="subtitle-1 text-center">Хит-Поинты</h2>
+              </v-col>
+              <v-col :cols="6">
+                <h2 class="subtitle-1 text-center">Временные хиты</h2>
+              </v-col>
             </v-row>
-            
-            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:left"  > 
-             
-            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-             
-              
-              <v-col :cols="2" :md="1">
-              
-              <v-text-field 
-                v-model="currentHP"
-                solo flat
-                reverse
-                @keypress.enter="addCurrentHP()"
-              ></v-text-field>  
-            </v-col>
-            <v-col :cols="2"  >
-              <div style="font-size: 16px;">/ {{ characterHitPointsMax() }}</div>
-            </v-col>
 
-                          <v-col :cols="5" >
-              
-              <v-text-field 
-                v-model="currentHP"
-                solo flat
-                reverse
-                @keypress.enter="addCurrentHP()"
-              ></v-text-field>  
-            </v-col>
+            <v-row
+              no-gutters
+              style="
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+              "
+            >
+              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+
+              <v-col :cols="3">
+                <v-text-field
+                  v-model="currentHP"
+                  solo
+                  flat
+                  reverse
+                  hide-details
+                  height="2"
+                  @keypress.enter="addCurrentHP()"
+                  size="1"
+                ></v-text-field>
+              </v-col>
+              <v-col :cols="3">
+                <div height="2">/ {{ characterHitPointsMax() }}</div>
+              </v-col>
+
+              <v-col :cols="6">
+                <div class="center">
+                  <v-text-field
+                    v-model="tempHP"
+                    solo
+                    flat
+                    reverse
+                    shrink
+                    hide-details
+                    height="2"
+                    style="max-width: 60%"
+                    size="1"
+                    @keypress.enter="addTempHP()"
+                  ></v-text-field>
+                </div>
+              </v-col>
             </v-row>
-            </v-card-text>
+          </v-card-text>
         </v-card>
       </v-col>
 
       <v-col :cols="4" :sm="4" :md="4">
-        <v-card>
-          <v-card-title class="body-1 pt-1 pb-1 justify-center" >
-           
-            <h2 class="subtitle-1">Здоровье персонажа</h2>
-           </v-card-title>
-           <v-card-text class="pt-4" >
-            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:center"  > 
-            <v-col :cols="6" :sm="4" :md="6">
-              <h2 class="subtitle-1 ">Хит-Поинты</h2>
-            </v-col>
-            <v-col :cols="6" :md="6">
-              <h2 class="subtitle-1 ">Временные хиты</h2>
-            </v-col>
-            </v-row>
-            
-            <v-row no-gutters  style="display: flex; align-items: baseline; justify-content:left"  > 
-             
-            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-             
-              
-              <v-col :cols="2" :md="1">
-              
-              <v-text-field 
-                v-model="currentHP"
-                solo flat
-                reverse
-                @keypress.enter="addCurrentHP()"
-              ></v-text-field>  
-            </v-col>
-            <v-col :cols="2"  >
-              <div style="font-size: 16px;">/ {{ characterHitPointsMax() }}</div>
-            </v-col>
-
-                          <v-col :cols="5" >
-              
-              <v-text-field 
-                v-model="currentHP"
-                solo flat
-                reverse
-                @keypress.enter="addCurrentHP()"
-              ></v-text-field>  
-            </v-col>
-            </v-row>
-            </v-card-text>
-        </v-card>
+        <v-card> </v-card>
       </v-col>
 
-      
       <!-- actions -->
       <!-- <v-col :cols="4" :sm="4" :md="4" align="right">
          <v-btn small outlined color="success" v-if="false">share</v-btn>
@@ -208,6 +171,245 @@
       </v-col> -->
     </v-row>
 
+    <v-row align="stretch" class="ma-2">
+      <v-col :cols="4" :sm="4" :md="4">
+        <v-card>
+          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
+            <h2 class="subtitle-1">Здоровье персонажа</h2>
+          </v-card-title> -->
+          <v-card-text class="pt-4 my-card-item">
+            <v-row
+              no-gutters
+              style="
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+              "
+            >
+              <v-col :cols="3" :sm="3">
+                <h2 class="subtitle-1 text-center">Внимательность</h2>
+              </v-col>
+              <v-col :cols="3" :sm="3">
+                <h2 class="subtitle-1 text-center">Скорость</h2>
+              </v-col>
+              <v-col :cols="3" :sm="3">
+                <h2 class="subtitle-1 text-center">Сложность Класса</h2>
+              </v-col>
+            </v-row>
+
+            <v-row
+              no-gutters
+              style="
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+              "
+            >
+              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+
+              <v-col :cols="3" class="caption">
+                <div class="center text-center" style="font-size: 12px">
+                  +{{ ModAttributePerception("", "") }}
+                  {{ characterlabelL(characterPerseption) }}
+                </div>
+              </v-col>
+
+              <v-col :cols="3" class="caption">
+                <div class="center text-center" style="font-size: 12px">
+                  {{ characterSpeed["land"] }}
+                </div>
+              </v-col>
+
+              <v-col :cols="3" class="caption">
+                <div class="center text-center" style="font-size: 12px">
+                  + {{ ModAttributeClass() }}
+                  {{ characterlabelL(characterSkillClass) }}
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <v-col :cols="4" :sm="4" :md="4">
+        <v-card>
+          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
+            <h2 class="subtitle-1">Здоровье персонажа</h2>
+          </v-card-title> -->
+          <v-card-text class="pt-4 my-card-item">
+            <v-row no-gutters>
+              <v-col :cols="6">
+                <h2 class="subtitle-1 text-center">КД</h2>
+              </v-col>
+              <v-col :cols="6">
+                <h2 class="subtitle-1 text-center">Спасы</h2>
+              </v-col>
+            </v-row>
+
+            <v-row no-gutters>
+              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+
+              <v-col :cols="6" class="caption text-center">
+                <div>{{ characterArmor() }}</div></v-col
+              >
+
+              <v-col :cols="6" class="caption">
+                <div class="center text-center">
+                  Рефлекс: +{{ ModAttributeSaving("dexterity", "reflex") }}
+                  {{ characterlabelL(characterSaving["reflex"]) }}
+                </div>
+                <div class="center text-center">
+                  Стойкость: +{{
+                    ModAttributeSaving("constitution", "fortitude")
+                  }}
+                  {{ characterlabelL(characterSaving["fortitude"]) }}
+                </div>
+                <div class="center text-center">
+                  Воля: +{{ ModAttributeSaving("wisdom", "will") }}
+                  {{ characterlabelL(characterSaving["will"]) }}
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- actions -->
+      <v-col :cols="4" :sm="4" :md="4" align="right">
+        <v-btn small outlined color="success" v-if="false">share</v-btn>
+        <v-btn small outlined color="success" v-if="false">campaign</v-btn>
+        <v-btn small outlined color="primary" v-if="false">
+          <v-icon left small>group</v-icon> Regroup
+        </v-btn>
+        <v-btn
+          nuxt
+          :to="`/forge/characters/${characterId}/builder/print`"
+          color="success"
+          target="_blank"
+          outlined
+          small
+        >
+          <v-icon left small>print</v-icon>
+          Печать
+        </v-btn>
+        <v-btn
+          nuxt
+          :to="`/forge/characters/${characterId}/builder/setting`"
+          color="success"
+          small
+        >
+          <v-icon left small>edit</v-icon>
+          Изменить
+        </v-btn>
+      </v-col>
+
+      <!-- 
+      <v-col :cols="4" :sm="4" :md="4">
+        <v-card>
+          <v-card-title class="body-1 pt-1 pb-1 justify-center">
+            <h2 class="subtitle-1">Здоровье персонажа</h2>
+          </v-card-title>
+          <v-card-text class="pt-4">
+            <v-row
+              no-gutters
+              style="
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+              "
+            >
+
+              <v-col :cols="6" :md="6">
+
+
+                <div>
+                  <div><p style="text-align: center">Хит-Поинты</p></div>
+
+                  <v-row
+                    style="
+                      display: flex;
+                      align-items: baseline;
+                      justify-content: center;
+                      text-align: center;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: baseline;
+                        justify-content: start;
+                        text-align: center;
+                      "
+                    >
+                      <v-text-field
+                        v-model="currentHP"
+                        solo
+                        flat
+                        hide-details
+                        reverse
+                        dense
+                        filled
+                        size="1"
+                        class="shrink"
+                        style="font-size: 14px"
+                        @keypress.enter="addCurrentHP()"
+                      ></v-text-field>
+
+                      <div><p>/</p></div>
+
+                      <div style="font-size: 14px">
+                        <p>{{ characterHitPointsMax() }}</p>
+                      </div>
+                    </div>
+                  </v-row>
+                </div>
+
+              </v-col>
+
+              <v-col :cols="6">
+                <div>Временные хиты</div>
+                <v-text-field
+                  v-model="currentHP"
+                  solo
+                  flat
+                  reverse
+                  @keypress.enter="addCurrentHP()"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col> -->
+
+      <!-- actions -->
+      <!-- <v-col :cols="4" :sm="4" :md="4" align="right">
+         <v-btn small outlined color="success" v-if="false">share</v-btn>
+        <v-btn small outlined color="success" v-if="false">campaign</v-btn>
+        <v-btn small outlined color="primary" v-if="false">
+          <v-icon left small>group</v-icon> Regroup
+        </v-btn> 
+        <v-btn
+          nuxt
+          :to="`/forge/characters/${characterId}/builder/print`"
+          color="success"
+          target="_blank"
+          outlined
+          small
+        >
+          <v-icon left small>print</v-icon>
+          Печать
+        </v-btn>
+        <v-btn
+          nuxt
+          :to="`/forge/characters/${characterId}/builder/setting`"
+          color="success"
+          small
+        >
+          <v-icon left small>edit</v-icon>
+          Изменить
+        </v-btn>
+      </v-col> -->
+    </v-row>
     <v-row justify="center" no-gutters>
       <!-- attributes and traits -->
       <v-col :cols="12" :sm="6" :md="6" :lg="3">
@@ -1168,6 +1370,7 @@ import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
 import DodCorruptionManager from '~/components/forge/DodCorruptionManager';
 import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
 import {marked} from 'marked';
+import { times } from 'lodash';
 
 export default {
   name: 'in-app-view',
@@ -1253,6 +1456,7 @@ export default {
       descriptionSection: { selection: 'all' },
       abilitySection: { filter: 'all' },
       currentHP: 0,
+      tempHP: 0,
       //
       showContextDialog: false,
       contextDialogComponent: undefined,
@@ -1326,7 +1530,8 @@ export default {
     character()
     {
       //При открытии компонента подгружать из Персонажа
-      this.currentHP =  this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId);
+      this.currentHP = this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId);
+      this.tempHP =  this.$store.getters['characters/characterTempHitPointsById'](this.characterId);
       return 1;
     },
     speciesLabel() {
@@ -1372,6 +1577,29 @@ export default {
     characterHitPoints() {
       return this.$store.getters["characters/characterHitPointsById"](
         this.characterId
+      );
+    },
+    characterPerseption() {
+      return this.$store.getters["characters/characterPerseptionById"](
+        this.characterId
+      );
+    },
+
+    skillDefence() {
+      return this.$store.getters["characters/characterskillDefenceById"](
+        this.characterId
+      );
+    },
+
+
+      characterSpeed() {
+      return this.$store.getters["characters/characterSpeedById"](
+        this.characterId
+      );
+    },
+        characterAttributes() {
+      return this.$store.getters["characters/characterAttributesById"](
+        this.$route.params.id
       );
     },
 
@@ -1757,7 +1985,11 @@ export default {
     characterEnhancements() {
       return this.$store.getters['characters/characterEnhancementsById'](this.characterId);
     },
-
+    characterSaving() {
+      return this.$store.getters["characters/characterSavingById"](
+        this.characterId
+      );
+    },
     /**
      * Enriched enhancements, gather all directly given and also drived from other sources
      * modifier (current) { targetGroup, targetValue, modifier, rank, condition, source }
@@ -2457,7 +2689,30 @@ export default {
       //this.wargearRepository = data.filter((i) => i.stub === undefined || i.stub === false);
       this.wargearRepository = data;
     },
-
+            SkillPerception() {
+      return this.$store.getters["characters/characterPerseptionById"](
+        this.characterId
+      );
+    },
+        ModAttributeSaving(attribute, skill) {
+      const char1 = this.profiencyRepository[this.characterSaving[skill]];
+      const char2 = (this.characterAttributes[attribute] - 10) / 2;
+      const char3 = this.characterLevel();
+      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    ModAttributePerception(attribute, skill) {
+      const char1 = this.profiencyRepository[this.SkillPerception()];
+      const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
+      const char3 = this.characterLevel();
+      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    ModAttributeClass() {
+      const char1 = this.profiencyRepository[this.SkillClass()];
+      const char3 = this.characterLevel();
+      if (this.characterArchetype)
+        return 10 + parseInt(char1) + parseInt(char3);
+      else 0;
+    },
     showContext(type) {
       switch (type) {
         case 'wealth':
@@ -2503,6 +2758,32 @@ export default {
       const curHP = this.currentHP > this.characterHitPointsMax ? this.characterHitPointsMax : this.currentHP;
       this.$store.commit('characters/setCurrentHP', { id: this.characterId, curHP })
     },
+    addTempHP() {
+
+      this.$store.commit('characters/setTempHP', { id: this.characterId, tempHP: this.tempHP })
+    },
+        characterArmor() {
+      const wear = this.$store.getters["characters/characterWearById"](
+         this.characterId
+      );
+      if (wear) {
+        const modDex = Math.floor(
+          (this.characterAttributes["dexterity"] - 10) / 2
+        );
+        const wearModDex = wear.modDex ? wear.modDex : 0;
+        const dex = modDex > wearModDex ? wearModDex : modDex;
+        const Def = wear.category ? this.profiencyRepository[this.skillDefence[wear.category]] : 0;
+        const bonusAC = wear.bonusAC ? wear.bonusAC : 0;
+        const arm = Def === 0 ? 0 : this.characterLevel();
+        return 10 + dex + Def + arm + bonusAC;
+      }
+
+      const modDex = Math.floor(
+        (this.characterAttributes["dexterity"] - 10) / 2
+      );
+      return 10 + modDex;
+    },
+
     characterNotesCancel() {
       this.characterNotesEditorModel = '';
       this.characterNotesShowEditor = false;
@@ -2554,6 +2835,8 @@ export default {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     characterlabel(key){
+
+      if(key.value)
         switch (key.value) {
           case "U":
             return "Нетренирован"
@@ -2573,6 +2856,24 @@ export default {
           default:
             break;
         }
+
+
+    },
+        characterlabelL(key) {
+      switch (key) {
+        case "U":
+          return "Н";
+        case "T":
+          return "Т";
+        case "E":
+          return "Э";
+        case "M":
+          return "М";
+        case "L":
+          return "Л";
+        default:
+          return "Н";
+      }
     },
     attackModifier(gear){
 
@@ -2684,6 +2985,11 @@ export default {
       };
       this.keywordsEditorDialog = false;
     },
+        SkillClass() {
+      return this.$store.getters["characters/characterSkillClassById"](
+        this.characterId
+      );
+    },
     saveCustomKeyword(){
 
       const keyword = {
@@ -2751,6 +3057,34 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.attribute-box {
+  &__container {
+    box-sizing: border-box;
+    display: block;
+    width: 64px;
+    align-content: center;
+    // border: 3px double orangered;
+    padding: 0;
+    height: 64px;
+    float: left;
+    margin: 2px;
+    border-radius: 10px;
+  }
+
+  &__value {
+    justify-content: center;
+    font-size: 14px;
+    // font-weight: 600;
+    display: flex;
+  }
+
+  &__label {
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+  }
+}
+
 .small {
   height: 24px;
 }
@@ -2766,6 +3100,11 @@ td.small {
 
 .my-tab-item {
   height: 705px;
+  overflow-y: auto;
+}
+
+.my-card-item {
+  height: 120px;
   overflow-y: auto;
 }
 

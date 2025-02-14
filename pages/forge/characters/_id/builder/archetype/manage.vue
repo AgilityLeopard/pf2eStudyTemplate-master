@@ -472,6 +472,7 @@ export default {
         type: feature.type,
         selected: feature.selected,
         value: feature.value,
+        level: feature.level,
         source: "archetype"
       };
 
