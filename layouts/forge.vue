@@ -459,10 +459,22 @@
       <v-toolbar-items>
         <v-icon v-if="$nuxt.isOffline" color="warning"> offline_bolt </v-icon>
 
-        <!-- <v-btn class="d-none d-md-inline-flex" icon href="https://discordapp.com/channels/256930339878993920/600107858486493193">
+        <v-btn
+          class="d-none d-md-inline-flex"
+          icon
+          href="https://t.me/shadowtalesgm"
+        >
+          <v-icon>mdi-telegram</v-icon>
+        </v-btn>
+
+        <v-btn
+          class="d-none d-md-inline-flex"
+          icon
+          href="https://discord.gg/5rEDvSSXSZ"
+        >
           <v-icon>mdi-discord</v-icon>
         </v-btn>
-     -->
+
         <v-btn icon @click="toggleDarkTheme">
           <v-icon>mdi-brightness-6</v-icon>
         </v-btn>
@@ -635,7 +647,6 @@
       :color="spendBuildingPoints > totalBuildPoints ? 'error' : ''"
       class="caption"
     >
-      <div>{{ spendBuildingPoints }} / {{ totalBuildPoints }} XP</div>
       <v-spacer />
       <div class="caption d-none d-sm-block">
         {{ finalKeywords.join(" • ") }}

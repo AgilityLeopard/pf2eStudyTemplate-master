@@ -67,7 +67,7 @@
         <template v-slot:item.name="{ item }">
           <span>{{ item.name }}</span>
           <div>
-            <trait-view v-if="item.traitDesc" :item="item" class="mb-2" />
+            <trait-view v-if="item.trait" :item="item" class="mb-2" />
           </div>
         </template>
 

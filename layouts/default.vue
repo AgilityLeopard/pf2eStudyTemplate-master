@@ -63,14 +63,25 @@
       >
         <v-toolbar-title>
           <nuxt-link to="/" class="title brand-logo brand-logo__text">
-            Shadow Tales
+            Shadow Tales (Альфа версия)
           </nuxt-link>
         </v-toolbar-title>
 
         <v-spacer />
 
         <v-toolbar-items>
-          <v-btn class="d-none d-md-inline-flex" icon href="">
+          <v-btn
+            class="d-none d-md-inline-flex"
+            icon
+            href="https://discord.gg/5rEDvSSXSZ"
+          >
+            <v-icon>mdi-telegram</v-icon>
+          </v-btn>
+          <v-btn
+            class="d-none d-md-inline-flex"
+            icon
+            href="https://discord.gg/5rEDvSSXSZ"
+          >
             <v-icon>mdi-discord</v-icon>
           </v-btn>
           <v-btn icon @click="toggleDarkTheme">

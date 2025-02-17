@@ -1006,8 +1006,10 @@ export default {
        this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: this.gp === '' ? this.money :  this.gp, nominal: this.labelMoney });
     },
     adjustMoney() {
-       this.moneyEditorDialog = false;
-      const adj = this.gpAd === '' ? this.gp : parseInt(this.gp) + parseInt(this.gpAd);
+      this.moneyEditorDialog = false;
+
+      const adj = this.gpAd === undefined ? this.gp : parseInt(this.gp) + parseInt(this.gpAd);
+      this.gpAd = undefined;
        this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: adj, nominal: this.labelMoney });
     },
     unwear(gear) {

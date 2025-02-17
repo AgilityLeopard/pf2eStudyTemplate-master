@@ -1,13 +1,12 @@
 <template lang="html">
-
   <v-card v-if="item">
-
-    <v-card-title v-if="chooseMode" style="background-color: #262e37; color: #fff;">
+    <v-card-title
+      v-if="chooseMode"
+      style="background-color: #262e37; color: #fff"
+    >
       <span>Подтвердите Предысторию</span>
       <v-spacer />
-      <v-icon dark @click="$emit('cancel')">
-        close
-      </v-icon>
+      <v-icon dark @click="$emit('cancel')"> close </v-icon>
     </v-card-title>
 
     <v-card-title primary-title>
@@ -20,7 +19,7 @@
       <v-spacer />
       <div class="hidden-xs-only">
         <v-avatar tile size="72">
-          <img :src="`/img/avatars/species/playerCore-dwarf.png`">
+          <img :src="`/img/avatars/species/playerCore-dwarf.png`" />
         </v-avatar>
       </div>
     </v-card-title>
@@ -28,55 +27,58 @@
     <v-divider v-if="chooseMode" />
 
     <v-card-text class="pt-4">
-      
       <!-- <p class="text-lg-justify font-italic">
           <div v-html="item.description"></div> 
       </p> -->
 
-        <blockquote class="blockquote text-lg-justify font-italic">
-          <p>"{{ item.description }}"</p>
-
-        </blockquote>
-
-
-
+      <blockquote class="blockquote text-lg-justify font-italic">
+        <p>"{{ item.description }}"</p>
+      </blockquote>
     </v-card-text>
 
     <v-divider />
 
-
     <v-card-actions v-if="chooseMode">
-
       <v-divider />
 
-<div class="mt-2 body-2 text-lg-justify">
-  <!-- <p>
+      <div class="mt-2 body-2 text-lg-justify">
+        <!-- <p>
     <strong>XP Cost:</strong> {{ species.cost }}, incl. Stats ({{ species.costs.stats }} XP)
   </p> -->
 
-  <p ><strong>Характеристика на выбор:</strong> {{ characterLabelAttribute(item.boost1) }}</p>
+        <p>
+          <strong>Характеристика на выбор:</strong>
+          {{ characterLabelAttribute(item.boost1) }}
+        </p>
 
-  <p ><strong>Характеристика на выбор 2:</strong> Свободное повышение</p>
- 
+        <p><strong>Характеристика на выбор 2:</strong> Свободное повышение</p>
 
-  <p v-if="item.skill"><strong>Навык от предыстории:</strong> {{ characterLabelSkillTrainedChoice(item.skill) }} </p>
+        <p v-if="item.skill">
+          <strong>Навык от предыстории:</strong>
+          {{ characterLabelSkillTrainedChoice(item.skill) }}
+        </p>
 
-  <p v-if="item.lore"><strong>Знание от предыстории:</strong> {{ item.lore }} </p>
+        <p v-if="item.lore">
+          <strong>Знание от предыстории:</strong> {{ item.lore }}
+        </p>
 
-  <p v-if="item.description"><strong>Описание</strong>  {{ item.description }}</p>
- 
-  <!-- <p><strong>Скорость:</strong> {{ ascension.speed }}</p> -->
-</div>
+        <p v-if="item.description">
+          <strong>Описание</strong> {{ item.description }}
+        </p>
 
-
+        <!-- <p><strong>Скорость:</strong> {{ ascension.speed }}</p> -->
+      </div>
     </v-card-actions>
 
     <v-card-actions v-if="chooseMode">
-      <v-btn left outlined color="red" @click="$emit('cancel')">
-        Отмена
-      </v-btn>
+      <v-btn left outlined color="red" @click="$emit('cancel')"> Отмена </v-btn>
       <v-spacer />
-      <v-btn right color="green" @click="$emit('select', item)" :disabled="alertText">
+      <v-btn
+        right
+        color="green"
+        @click="$emit('select', item)"
+        :disabled="alertText"
+      >
         Выбор
       </v-btn>
     </v-card-actions>
@@ -153,6 +155,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-
-</style>
+<style scoped lang="css"></style>

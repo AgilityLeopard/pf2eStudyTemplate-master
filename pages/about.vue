@@ -3,27 +3,14 @@
     <v-container grid-list-md>
       <v-row justify="center">
         <v-col :cols="12" sm="10" md="8" lg="8">
-          <h1>About this page</h1>
+          <h1></h1>
 
-          <!-- <p>
-            This page is an <strong>inofficial</strong> fan page for the
-            Warhammer 40k Role Playing Game Wrath & Glory. The game is currently
-            published by
-            <a href="https://www.cubicle7games.com/?p=3870">Cubical 7</a>.
+          <p>
+            Это не официальный Билдер, вдохновленный Pathbuilder2e и Wanderers
+            Guide
           </p>
 
           <h2>The Character Generator</h2>
-
-          <p>
-            I was heavily motivated and inspired by
-            <a href="https://www.reddit.com/user/althalin/"
-              >reddit user althalin</a
-            >
-            and his
-            <a href="http://apps.ajott.io/dh2chargen/"
-              >Dark Heresy 2 Character Generator</a
-            >. You should definitely check it out!
-          </p> -->
 
           <!-- <p>
             Also, I quite often use the Official D&D Character Generator over at
@@ -34,6 +21,20 @@
           <p>
             Иконки с сайта
             <a href="https://game-icons.net/">game-icons.net</a>
+          </p>
+
+          <p>
+            Перевод взят с сайта
+            <a
+              href="https://pf2e-ru-translation.readthedocs.io/ru/latest/index.html"
+              >pf2e-ru-translation</a
+            >
+          </p>
+
+          <p>
+            Также взят перевод с модуля в фаундри (инфу можно найти в дискорде
+            переводчика)
+            <a href="https://discord.gg/NyzzcPSkZv">Discord Доктора</a>
           </p>
 
           <p />
