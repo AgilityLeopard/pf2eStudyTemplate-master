@@ -27,29 +27,54 @@
 
       <v-divider></v-divider>
 
-      <div class="mt-2 body-2 text-justify ">
+      <div class="class-block">
+        <div class="two-column-holder light-red-border">
+        <div class="two-column-left">
+          <h3 class="exclude_from_nav" >Ключевые аттрибуты</h3>
+          <p class="" v-if="item.keyAbility.length > 0"><strong> {{ characterLabelAttribute(item.keyAbility) }}</strong></p>
+          <p class="" v-else="characterLabelAttributeBoost(item.attributeBoost)"><strong> {{ characterLabelAttributeBoost(item.attributeBoost) }}</strong></p>
+          <p class="">На 1-м уровне ваш класс дает вам усиление по вашему выбору</p></div>
+          <div class="two-column-right"><h3 class="exclude_from_nav">Хиты</h3><p class=""><strong> {{ item.hitpoints}} + мод Телосложения</strong></p>
+            <p class="">Вы увеличиваете свое максимальное количество хитов на это число на 1-м уровне и на каждом последующем уровне.</p></div></div></div>
 
-        <v-alert
-          v-if="item.alerts"
-          v-for="(alert, index) in item.alerts"
-          :key="index"
-          :type="alert.type"
-          class="caption"
-          dense text
-        >{{alert.text}}</v-alert>
 
-        <p v-if="item.keyAbility.length > 0"><strong>Ключевая характеристика на выбор:</strong> {{ characterLabelAttribute(item.keyAbility) }}</p>
-        <p v-if="characterLabelAttributeBoost(item.attributeBoost)"><strong>Ключевая характеристика:</strong> {{ characterLabelAttributeBoost(item.attributeBoost) }}</p>
+            <div class="class-sidebar">
+              <div class="two-column-holder dark-red-border">
+                <div class="two-column-left">
+                  <h3 class="exclude_from_nav" id="Perception">Внимательность</h3>
+                        <p>{{  characterlabel(characterPerseption) }}</p>
 
+                  <h3 class="exclude_from_nav" id="SavingThrows">Спасброски</h3>
+          <span v-for="item in SavingRepository" v-bind:key="item.key">
+            <p>{{ characterlabel(characterSaving[item.key]) }} в {{ item.name }} </p>
+          </span>
+                  <h3 class="exclude_from_nav" id="Skills">Навыки</h3>
+                  
         <p v-if="item.skillTrainedChoice.length > 0"><strong>Обучен в навыке (на выбор):</strong> {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}</p>
 
         <p v-if="item.skillTrained.length > 0"><strong>Обучен в навыке:</strong> {{ characterLabelSkillTrainedChoice(item.skillTrained) }}</p>
 
-        <p><strong>Обучен дополнительным навыкам, в кол-ве равном:</strong> {{ item.skillTrainedPoints}} + мод Интеллекта</p>
-        
-        <p><strong>Очки здоровья:</strong>  {{ item.hitpoints}} + мод Телосложения</p>
 
-        <v-divider class="mb-2"></v-divider>
+                   <p><strong>Обучен дополнительным навыкам, в кол-ве равном:</strong> {{ item.skillTrainedPoints}} + мод Интеллекта</p>
+    
+                </div>
+                  <div class="two-column-right"><h3 class="exclude_from_nav" id="attacks">Атаки</h3>
+                  <span v-for="item in WeaponRepository" v-bind:key="item.key">
+                      <p class=""> {{ characterlabel(skillAttack[item.key]) }} в {{ item.name }} </p>
+                  </span>
+                    <h3 class="exclude_from_nav" id="defenses">Защиты</h3>
+                  <span v-for="item in DefenceRepository" v-bind:key="item.key">
+                    <p> {{ characterlabel(skillDefence[item.key]) }} в {{ item.name }} </p>
+                  </span>
+          
+                    <h3 class="exclude_from_nav" id="ClassDC">Класс Сл</h3>
+                       <p>КС класса {{ item.name }}: {{  characterlabel(item.skillClass) }}</p>
+                  </div></div></div>
+      
+      
+            <div class="mt-2 body-2 text-justify ">
+
+        <!-- <v-divider class="mb-2"></v-divider>
 
         <p>
           <h3 class="headline">Атаки</h3>
@@ -90,7 +115,7 @@
 
             <p>КС класса {{ item.name }}: {{  characterlabel(item.skillClass) }}</p>
 
-          </p>
+          </p> -->
 
           <h3 class="headline">Классовые особенности</h3>
           <div
@@ -98,10 +123,12 @@
         class="text-lg-justify " v-bind:key="feature.key"
       >
 
-      <div >
+      <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span><span class="right-header">{{ feature.level }}</span></h3>
+        <!-- <div >
           <h3 ><span style="display: inline-block; width: 50%;">{{ feature.name }}</span><span style="display: inline-block; text-align: right; width: 50%;">Уровень {{ feature.level }}</span></h3>
-          </div>
-        <div >
+          </div> -->
+
+        <p class="main-holder">
           
 
           <div v-if="feature.description" v-html="feature.description"></div>
@@ -112,7 +139,7 @@
             dense
             text
           >{{feature.alert.text}}</v-alert>
-        </div>
+        </p>
 
         <div v-if="feature.options" class="mt-2">
           <v-select
@@ -541,11 +568,88 @@ export default {
 </script>
 
 <style scoped>
-.right{
+.right-header{
     float:right;
 }
 
-.left{
+.left-header{
     float:left;
+}
+
+.h3 {
+  font-size: 24px;
+  font-weight: normal;
+  color: #5d0000;
+}
+
+.split-header {
+  border-bottom: 1.5px solid;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.two-column-holder {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.two-column-left {
+  flex: 50%;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+}
+
+@media screen and (max-width: 600px) {
+  .two-column-left {
+    flex: 100%;
+    flex-wrap: wrap;
+    padding: 20px 30px;
+  }
+}
+
+.two-column-right {
+  flex: 50%;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+}
+
+.light-red-border .two-column-left {
+  border-right: 1px solid #d85058;
+}
+
+@media screen and (max-width: 600px) {
+  .light-red-border .two-column-left {
+    border-bottom: 1px solid #d85058;
+    border-right: none;
+  }
+}
+
+.class-sidebar {
+    /* background: #fdfdfd; */
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0px 2px 12px rgb(0 0 0 / 20%);
+    /* color: #5c1c16; */
+    word-break: break-word;
+}
+
+.dark-red-border .two-column-left {
+  border-right: 1px solid #5c1c16;
+}
+
+@media screen and (max-width: 600px) {
+  .dark-red-border .two-column-left {
+    border-bottom: 1px solid #5c1c16;
+    border-right: none;
+  }
 }
 </style>

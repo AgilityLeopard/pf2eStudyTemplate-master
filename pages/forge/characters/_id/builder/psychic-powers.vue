@@ -35,9 +35,115 @@
       </span>
     </v-col>
 
-    <v-col :cols="12">
-      <v-card>
-        <v-expansion-panels
+    <v-col :cols="12" v-if="archetype && archetype.spellTradition">
+      <v-card
+        class="mb-4"
+        dark
+        dense
+        outlined
+        v-for="levelAncestry in 10"
+        :key="levelAncestry"
+        v-if="
+          levelAncestry - 1 <=
+            archetype.spellProgression[characterLevel()].findIndex(
+              (t) => t == 0
+            ) -
+              1 || characterLevel() == 20
+        "
+      >
+        <div>
+          <h2 class="subtitle-1 text-center" v-if="levelAncestry - 1 == 0">
+            Чары
+          </h2>
+          <h2 class="subtitle-1 text-center" v v-if="levelAncestry - 1 !== 0">
+            {{ levelAncestry - 1 }} уровень
+          </h2>
+
+          <v-simple-table dense>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th v-for="header in headers" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="cell in archetype.spellProgression[characterLevel()][
+                    levelAncestry - 1
+                  ]"
+                >
+                  <td>
+                    {{
+                      characterSpell(levelAncestry - 1, cell)
+                        ? characterSpell(levelAncestry - 1, cell).name
+                        : "-"
+                    }}
+                  </td>
+                  <td class="text-center pa-1 small">
+                    {{
+                      characterSpell(levelAncestry - 1, cell)
+                        ? characterSpell(levelAncestry - 1, cell).action
+                        : "-"
+                    }}
+                  </td>
+                  <td class="text-center pa-1 small">
+                    {{
+                      characterSpell(levelAncestry - 1, cell)
+                        ? characterSpell(levelAncestry - 1, cell).duration
+                        : "-"
+                    }}
+                  </td>
+                  <td class="text-center pa-1 small">
+                    {{
+                      characterSpell(levelAncestry - 1, cell)
+                        ? characterSpell(levelAncestry - 1, cell).distance
+                        : "-"
+                    }}
+                  </td>
+                  <td class="text-center pa-1 small">
+                    {{
+                      characterSpell(levelAncestry - 1, cell)
+                        ? characterSpell(levelAncestry - 1, cell).defence
+                        : "-"
+                    }}
+                  </td>
+                  <td class="text-center pa-1 small">
+                    {{
+                      characterSpell(levelAncestry - 1, cell)
+                        ? characterSpell(levelAncestry - 1, cell).area
+                        : "-"
+                    }}
+                  </td>
+                  <td>
+                    <v-btn
+                      v-if="characterSpell(levelAncestry - 1, cell)"
+                      outlined
+                      x-small
+                      color="error"
+                      @click.stop.prevent="
+                        removeTalent(characterSpell(levelAncestry - 1, cell))
+                      "
+                    >
+                      <v-icon left> delete </v-icon>Удалить
+                    </v-btn>
+                    <v-btn
+                      v-if="!characterSpell(levelAncestry - 1, cell)"
+                      outlined
+                      x-small
+                      color="success"
+                      @click="updatePreview(levelAncestry - 1, cell)"
+                    >
+                      <v-icon left> add </v-icon>Добавить
+                    </v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </div>
+        <!-- <v-expansion-panels
           multiple
           v-if="archetype && archetype.spellTradition"
         >
@@ -117,18 +223,7 @@
                     </v-expansion-panel-header>
 
                     <v-expansion-panel-content>
-                      <!-- <template
-                        v-for="child in characterSpell(levelAncestry - 1, cell)
-                          .description"
-                      >
-                        <component
-                          v-bind:is="
-                            child.includes('v-tooltip') ? 'v-tooltip' : 'span'
-                          "
-                        >
-                          {{ child }}</component
-                        >
-                      </template> -->
+
 
                       <div
                         class="body-2 mb-2"
@@ -141,31 +236,11 @@
                 </v-expansion-panels>
               </v-row>
 
-              <v-dialog
-                v-model="psychicDialog"
-                :fullscreen="$vuetify.breakpoint.xsOnly"
-                width="1000px"
-                scrollable
-              >
-                <psychic-preview
-                  :character-id="characterId"
-                  :talents="selectedPsychic"
-                  :archetype="archetype"
-                  :rank="
-                    archetype.spellProgression[characterLevel()].findIndex(
-                      (t) => t == 0
-                    ) - 1
-                  "
-                  :level="levelAncestry - 1"
-                  :list="psychicPowersList"
-                  type="spell"
-                  choose-mode
-                  @cancel="psychicDialog = false"
-                />
-              </v-dialog>
+
             </v-expansion-panel-content>
           </v-expansion-panel>
-        </v-expansion-panels>
+        </v-expansion-panels> -->
+
         <!-- 
      
 
@@ -275,6 +350,25 @@
         </v-data-table> -->
       </v-card>
     </v-col>
+
+    <v-dialog
+      v-model="psychicDialog"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="1000px"
+      scrollable
+    >
+      <psychic-preview
+        :character-id="characterId"
+        :talents="selectedPsychic"
+        :archetype="archetype"
+        :rank="rankSpell"
+        :level="levelAncestry - 1"
+        :list="psychicPowersList"
+        type="spell"
+        choose-mode
+        @cancel="psychicDialog = false"
+      />
+    </v-dialog>
   </v-row>
 </template>
 
@@ -309,29 +403,45 @@ export default {
       searchQuery: '',
       headers: [
         {
-          text: 'Имя',
+          text: 'Название',
           value: 'name',
           align: 'left',
           sortable: true,
         },
         {
-          text: 'Уровень',
-          value: 'level',
+          text: 'Действия',
+          value: 'action',
           align: 'center',
           sortable: true,
         },
         {
-          text: 'Традиция',
-          value: 'tradition',
+          text: 'Длительность',
+          value: 'duration',
           sortable: true,
         },
         {
-          text: 'Детали',
-          value: 'description',
+          text: 'Дистанция',
+          value: 'range',
+          sortable: false,
+        },
+        {
+          text: 'Спасбросок',
+          value: 'saving',
+          sortable: false,
+        },
+        {
+          text: 'Область/цель',
+          value: 'area',
+          sortable: false,
+        },
+        {
+          text: '',
+          value: 'button',
           sortable: false,
         },
       ],
       cellSpell: undefined,
+      rankSpell: undefined,
       grantAllAccess: false,
       selectedDisciplines: [],
       species: undefined,
@@ -405,8 +515,9 @@ export default {
     settingHomebrews: {
       handler(newVal) {
         if (newVal) {
-          this.getPsychicPowers(newVal);
           this.getTraitList(newVal);
+          this.getPsychicPowers(newVal);
+
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -457,7 +568,7 @@ export default {
         const aggregatedTalent = Object.assign({}, rawTalent);
         console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
 
-        aggregatedTalent.description = talent.description;
+        aggregatedTalent.description = talent.description ?talent.description : "" ;
         // const temp = "<span class=\"data-tooltip\" data-tooltip=\"Всплывающая подсказка сообщает о чём-то многозначном и полезном...\">Наведи сюда курсор.</span>"
         // aggregatedTalent.description = talent.description.replace("Ослаблена", temp);
         aggregatedTalent.id = talent.id;
@@ -495,6 +606,10 @@ export default {
         tal.cell = cell;
 
       })
+
+       this.rankSpell = this.archetype.spellProgression[this.characterLevel()].findIndex(
+                      (t) => t == 0
+                    ) - 1;
       if (levelAncestry == 0)
         this.selectedPsychic = list.filter(spell => spell.cantrip === true);
       else
@@ -542,40 +657,7 @@ export default {
     async getSpecies(key) {
       this.loading = true;
       const { data } = await this.$axios.get(`/api/species/${key}`);
-            if (this.traitList !== undefined) {
-        data.forEach((species) => {
-          const lowercaseKeywords = species.trait.map((s) =>
-            s.toUpperCase()
-          );
 
-          const List1 = this.traitList;
-          const trait = List1.filter((talent) =>
-            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
-          );
-
-          if (trait.length > 0) {
-            const listAbilities = [];
-            species.trait.forEach((talent) => {
-
-                const t = trait.find(k => k.key === talent)
-
-                if (t)
-                {
-                const ability1 = {
-                  name: t.key,
-                  description: t.desc,
-                };
-
-                listAbilities.push(ability1);
-              }
-
-
-            });
-            species.traitDesc = listAbilities;
-          }
-        });
-
-}
       this.loading = false;
       this.species = data;
     },

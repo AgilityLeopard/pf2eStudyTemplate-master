@@ -23,26 +23,19 @@
       </div>
     </v-card-title>
 
+    <v-card-title>
+      <div>
+        <trait-view
+          v-if="species.trait"
+          :item="species"
+          class="mb-2"
+          style="font-size: 14px"
+        />
+      </div>
+    </v-card-title>
     <v-divider v-if="chooseMode" />
 
     <v-card-text class="pa-6">
-      <ul class="simple">
-        <li v-if="species.traitDesc" v-for="trait in species.traitDesc" class="traits">
-          <p class="trait">
-          <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <div v-on="on" class="t">
-                  {{ trait.name }} 
-                </div>
-              </template>
-              <span>{{ trait.description }}</span>
-            </v-tooltip>
-          </p>
-          
-          <!-- <p class="trait">{{ trait }}</p> -->
-        </li>
-     
-      </ul>
       <!-- </div> -->
 
       <p></p>
@@ -68,8 +61,12 @@
 
       <p></p>
 
-      <span  v-if="species.attributeFlaw.find(t => t.value < 0)" class="mt-2 grey--text">Понижение характеристик</span>
-      <v-divider  v-if="species.attributeFlaw.find(t => t.value < 0)" />
+      <span
+        v-if="species.attributeFlaw.find((t) => t.value < 0)"
+        class="mt-2 grey--text"
+        >Понижение характеристик</span
+      >
+      <v-divider v-if="species.attributeFlaw.find((t) => t.value < 0)" />
 
       <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
         <div v-if="flaw.value < 0">
@@ -93,7 +90,9 @@
       </div>
 
       <p></p>
-      <span v-if="species.speciesFeatures.length != 0" class="mt-2 grey--text">Особенности Родословной</span>
+      <span v-if="species.speciesFeatures.length != 0" class="mt-2 grey--text"
+        >Особенности Родословной</span
+      >
       <v-divider v-if="species.speciesFeatures.length != 0" />
 
       <div v-if="species.speciesFeatures">
@@ -128,6 +127,7 @@
 <script lang="js">
 import SluggerMixin from '~/mixins/SluggerMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
+import traitView from '~/components/TraitView';
 
 export default {
   name: 'SpeciesPreview',
@@ -135,6 +135,7 @@ export default {
     SluggerMixin,
     StatRepositoryMixin,
   ],
+  components:{traitView},
   props: {
     characterId: {
       type: String,
@@ -193,6 +194,9 @@ export default {
   margin: 0;
   padding: 0 0.25em;
   cursor: pointer;
+}
+.small {
+  height: 24px;
 }
 
 .simple {

@@ -48,22 +48,23 @@
       >
         <template v-slot:no-data />
 
-        <template v-slot:item.name="{ item }">
-          <span>{{ item.name }}</span>
-        </template>
-
         <template v-slot:item.level="{ item }">
           <v-chip>
             {{ item.level }}
           </v-chip>
         </template>
 
-        <template v-slot:item.prerequisitesHtml="{ item }">
-          <span v-if="item.requirementsText" v-html="item.requirementsText" />
+        <template v-slot:item.name="{ item }">
+          <span>{{ item.name }}</span>
         </template>
 
-        <template v-slot:item.effect="{ item }">
-          <span>{{ item.effect }}</span>
+        <!-- 
+        <template v-slot:item.prerequisitesHtml="{ item }">
+          <span v-if="item.requirementsText" v-html="item.requirementsText" />
+        </template> -->
+
+        <template v-slot:item.snippet="{ item }">
+          <span>{{ item.snippet }}</span>
         </template>
 
         <template v-slot:item.buy="{ item }">
@@ -76,8 +77,25 @@
           </v-btn>
         </template>
 
+        <!-- В тексте -->
         <template v-slot:expanded-item="{ headers, item }">
           <td :colspan="headers.length">
+            <v-row class="rowFeat">
+              <div class="head">
+                <h1>{{ item.name }}</h1>
+              </div>
+              <div class="line"></div>
+              <div class="tag">Черта {{ item.level }}</div>
+            </v-row>
+            <v-row>
+              <div>
+                <trait-view v-if="item.tags" :item="item" class="mb-2" />
+              </div>
+            </v-row>
+            <div v-if="item.requirements">
+              <p class="main-holder">{{ item.requirements.key }}</p>
+            </div>
+            <p></p>
             <div class="pt-4 pb-2" v-html="item.description"></div>
           </td>
         </template>
@@ -108,6 +126,7 @@
 import { lowerCase } from 'lodash';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
+import traitView from '~/components/TraitView';
 
 export default {
   name: 'talentsPreview',
@@ -115,6 +134,9 @@ export default {
     SluggerMixin,
     StatRepositoryMixin,
   ],
+    components: {
+    traitView,
+  },
   props: {
     characterId: {
       type: String,
@@ -165,20 +187,21 @@ export default {
       },
       headers: [
         {
-          text: 'Название',
-          value: 'name',
-          align: 'left',
-          sortable: true,
-        },
-        {
           text: 'Уровень',
           value: 'level',
           align: 'center',
           sortable: true,
         },
         {
-          text: 'Требование',
-          value: 'prerequisitesHtml',
+          text: 'Название',
+          value: 'name',
+          align: 'left',
+          sortable: true,
+        },
+
+        {
+          text: 'Описание',
+          value: 'snippet',
           sortable: false,
         },
         /*{
@@ -353,10 +376,10 @@ export default {
 
       let filter;
 
-      filter = this.filters.source;
-      if (filter.model.length > 0) {
-        searchResult = searchResult.filter((i) => filter.model.includes(i.source.key));
-      }
+      // filter = this.filters.source;
+      // if (filter.model.length > 0) {
+      //   searchResult = searchResult.filter((i) => filter.model.includes(i.source.key));
+      // }
 
       return searchResult;
     },
@@ -441,5 +464,52 @@ export default {
   display: inherit;
   margin-bottom: 0;
   padding-inline-start: 0.2em;
+}
+
+.head {
+  /* color: rgb(57, 54, 54); */
+  width: fit-content;
+  /* font-size: 24px; */
+  font-style: normal;
+  /* font-family: goodOTCondBold; */
+  font-weight: normal;
+  line-height: 24px;
+  /* text-transform: uppercase; */
+}
+
+.line {
+  height: 1px;
+  margin: 0 1rem;
+  flex-grow: 1;
+  background: #676767;
+}
+
+.tag {
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  font-family: goodOTCondBold;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rowFeat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 </style>

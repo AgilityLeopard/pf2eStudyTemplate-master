@@ -21,11 +21,14 @@
         <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
       </div>
 
-      <ul class="simple">
-        <li v-if="species.trait" v-for="trait in species.trait" class="traits">
-          <p class="trait">{{ trait }}</p>
-        </li>
-      </ul>
+      <div>
+        <trait-view
+          v-if="species.trait"
+          :item="species"
+          class="mb-2"
+          style="font-size: 14px"
+        />
+      </div>
       <v-divider />
 
       <div class="mt-2 body-2 text-lg-justify">
@@ -93,11 +96,13 @@
 import SpeciesPreview from "~/components/forge/SpeciesPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
+import traitView from "~/components/TraitView";
 
 export default {
   name: "Manage",
   components: {
     SpeciesPreview,
+    traitView,
   },
   mixins: [SluggerMixin, StatRepositoryMixin],
   data() {
@@ -108,6 +113,7 @@ export default {
       chapterList: undefined,
     };
   },
+
   computed: {
     characterSpeciesKey() {
       return this.$store.getters["characters/characterSpeciesKeyById"](
@@ -180,6 +186,7 @@ export default {
     sources: {
       handler(newVal) {
         if (newVal) {
+          this.getTraitList(newVal);
           this.getChapterList(newVal);
         }
       },
@@ -212,7 +219,15 @@ export default {
       this.abilityList = data;
       this.loading = false;
     },
-
+    async getTraitList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get("/api/traits/", config.source);
+      this.traitList = data;
+    },
     getSpecies: async function (key) {
       this.loading = true;
       let finalData = {};
@@ -277,6 +292,31 @@ export default {
             }
           });
         });
+      }
+      if (this.traitList !== undefined) {
+        const lowercaseKeywords = finalData.trait.map((s) => s.toUpperCase());
+
+        const List1 = this.traitList;
+        const trait = List1.filter((talent) =>
+          lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+        );
+
+        if (trait.length > 0) {
+          const listAbilities = [];
+          finalData.trait.forEach((talent) => {
+            const t = trait.find((k) => k.key === talent);
+
+            if (t) {
+              const ability1 = {
+                name: t.key,
+                description: t.desc,
+              };
+
+              listAbilities.push(ability1);
+            }
+          });
+          finalData.traitDesc = listAbilities;
+        }
       }
 
       this.loading = false;

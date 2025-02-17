@@ -93,7 +93,54 @@
 
         <template v-slot:expanded-item="{ headers, item }">
           <td :colspan="headers.length">
+            <v-row class="rowFeat">
+              <div class="head">
+                <h1>{{ item.name }}</h1>
+              </div>
+              <div class="line"></div>
+              <div class="tag">Заклинание {{ item.level }}</div>
+            </v-row>
+            <v-row>
+              <div>
+                <trait-view v-if="item.tags" :item="item" class="mb-2" />
+              </div>
+            </v-row>
+
+            <!-- Описание закла -->
+            <div v-if="item.tradition">
+              <p class="main-holder">
+                <strong>Традиция:</strong> {{ item.tradition.join(", ") }}
+              </p>
+            </div>
+            <p></p>
+            <div v-if="item.action">
+              <p class="main-holder">
+                <strong>Сотворение:</strong> {{ item.action }} действия
+              </p>
+            </div>
+            <p></p>
+            <div v-if="item.distance">
+              <p class="main-holder">
+                <strong>Дистанция:</strong> {{ item.distance }}
+              </p>
+            </div>
+            <p></p>
+            <div v-if="item.area">
+              <p class="main-holder">
+                <strong>Область:</strong> {{ item.area }}
+              </p>
+            </div>
+            <p></p>
+            <div v-if="item.target">
+              <p class="main-holder">
+                <strong>Дистанция:</strong> {{ item.target }}
+              </p>
+            </div>
+            <p></p>
+            <div class="line"></div>
             <div class="pt-4 pb-2" v-html="item.description"></div>
+            <div class="line"></div>
+            <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
           </td>
         </template>
 
@@ -448,5 +495,61 @@ export default {
   display: inherit;
   margin-bottom: 0;
   padding-inline-start: 0.2em;
+}
+
+.head {
+  /* color: rgb(57, 54, 54); */
+  width: fit-content;
+  /* font-size: 24px; */
+  font-style: normal;
+  /* font-family: goodOTCondBold; */
+  font-weight: normal;
+  line-height: 24px;
+  /* text-transform: uppercase; */
+}
+
+.line {
+  height: 1px;
+  margin: 0 1rem;
+  flex-grow: 1;
+  background: #676767;
+}
+
+.tag {
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  font-family: goodOTCondBold;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rowFeat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.main-holder-divider p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  border-bottom: 1.5px solid black;
 }
 </style>
