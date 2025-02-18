@@ -407,7 +407,7 @@
 
     <v-col  :cols="12" :md="5" > -->
           <v-card
-            :cols="12"
+            :cols="6"
             :md="6"
             v-if="manageBoost5 && characterLevel() >= 5"
           >
@@ -754,8 +754,8 @@
         v-for="(level, index) in 20"
         :key="level"
         v-if="level <= characterLevel() && level != 1 && (level - 1) % 2 == 0"
-        :cols="12"
-        :md="7"
+        :cols="6"
+        :md="6"
       >
         <v-card>
           <v-card-title

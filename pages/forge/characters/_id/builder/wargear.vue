@@ -384,7 +384,6 @@
                   dense
                   required
                   v-model="gpAd"
-                  :type="number"
                   outlined
                 ></v-text-field>
               </v-col>

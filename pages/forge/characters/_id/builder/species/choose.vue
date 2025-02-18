@@ -204,6 +204,7 @@ export default {
         },
       };
       const { data } = await this.$axios.get("/api/traits/", config.source);
+      data.forEach((t) => (t.key = t.key.toLowerCase()));
       this.traitList = data;
     },
     getAvatar(key) {

@@ -450,7 +450,7 @@
 
       <v-toolbar-title>
         <nuxt-link to="/" class="title brand-logo brand-logo__text">
-          Shadow Tales
+          Shadow Tales (альфа версия)
         </nuxt-link>
       </v-toolbar-title>
 

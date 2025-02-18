@@ -2,7 +2,7 @@
   <div>
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
-    <v-row align="stretch" class="ma-2">
+    <v-row justify="center" class="ma-2">
       <!-- <v-col
         :cols="4"
         :sm="4"
@@ -37,12 +37,80 @@
           }}</v-col>
         </v-row>
       </v-col> -->
+      <v-col :cols="4" :sm="12" :md="4">
+        <grid-sheet>
+          <v-row style="">
+            <v-col :cols="6">
+              <div>
+                <h2 class="subtitle-1 text-center">Хит-Поинты</h2>
+                <v-text-field
+                  v-model="currentHP"
+                  solo
+                  flat
+                  reverse
+                  hide-details
+                  @keypress.enter="addCurrentHP()"
+                ></v-text-field>
+                <div>/ {{ characterHitPointsMax() }}</div>
+              </div>
+            </v-col>
 
-      <v-col :cols="4" :sm="4" :md="4">
+            <v-col :cols="6">
+              <div>
+                <h2 class="subtitle-1 text-center">Временные хиты</h2>
+                <div class="center">
+                  <v-text-field
+                    v-model="tempHP"
+                    solo
+                    flat
+                    reverse
+                    shrink
+                    hide-details
+                    height="2"
+                    style="max-width: 60%"
+                    size="1"
+                    @keypress.enter="addTempHP()"
+                  ></v-text-field>
+                </div>
+              </div>
+            </v-col>
+          </v-row>
+
+          <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+        </grid-sheet>
+      </v-col>
+
+      <v-col :cols="4" :sm="12" :md="4">
+        <grid-sheet>
+          <v-row>
+            <v-col :cols="4">
+              <v-avatar tile size="64">
+                <img :src="avatar" />
+              </v-avatar>
+            </v-col>
+            <v-col :cols="8">
+              <div align="center">{{ characterName }}</div>
+              <div class="caption" align="center">
+                {{ [archetypeLabel, speciesLabel].join(" • ") }}
+              </div>
+              <div class="caption" align="center">
+                <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
+              </div>
+              <div class="caption" align="center">
+                <v-progress-linear
+                  :value="campaignCustomXp"
+                  height="2"
+                  color="red"
+                ></v-progress-linear>
+              </div>
+            </v-col>
+          </v-row>
+        </grid-sheet>
+      </v-col>
+
+      <!-- <v-col :cols="4" :sm="4" :md="4">
         <v-card>
-          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
-            <h2 class="subtitle-1">Здоровье персонажа</h2>
-          </v-card-title> -->
+
 
           <v-card-text class="pt-4 my-card-item">
             <v-row no-gutters>
@@ -67,19 +135,15 @@
                   ></v-progress-linear>
                 </div>
               </v-col>
-              <!-- <v-col :cols="12" class="caption text--keyword" align="center">{{
-                keywordStrings.join(" • ")
-              }}</v-col> -->
+
             </v-row>
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
 
-      <v-col :cols="4" :sm="4" :md="4">
+      <!-- <v-col :cols="4" :sm="4" :md="4">
         <v-card>
-          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
-            <h2 class="subtitle-1">Здоровье персонажа</h2>
-          </v-card-title> -->
+
           <v-card-text class="pt-4 my-card-item">
             <v-row no-gutters>
               <v-col :cols="6">
@@ -98,7 +162,7 @@
                 justify-content: center;
               "
             >
-              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+
 
               <v-col :cols="3">
                 <v-text-field
@@ -135,10 +199,39 @@
             </v-row>
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
 
-      <v-col :cols="4" :sm="4" :md="4">
-        <v-card> </v-card>
+      <v-col :cols="4" :sm="12" :md="4">
+        <grid-sheet>
+          <v-row>
+            <v-col :cols="4" style="position: relative; cursor: pointer">
+              <div>
+                <h2 class="subtitle-1 text-center">Внимательность</h2>
+                <div class="center text-center" style="font-size: 12px">
+                  +{{ ModAttributePerception("", "") }}
+                  {{ characterlabelL(characterPerseption) }}
+                </div>
+              </div>
+            </v-col>
+            <v-col :cols="4" style="position: relative; cursor: pointer">
+              <div>
+                <h2 class="subtitle-1 text-center">Скорость</h2>
+                <div class="center text-center" style="font-size: 12px">
+                  {{ characterSpeed["land"] }}
+                </div>
+              </div>
+            </v-col>
+            <v-col :cols="4" style="position: relative; cursor: pointer">
+              <div>
+                <h2 class="subtitle-1 text-center">Сложность Класса</h2>
+                <div class="center text-center" style="font-size: 12px">
+                  + {{ ModAttributeClass() }}
+                  {{ characterlabelL(SkillClass) }}
+                </div>
+              </div>
+            </v-col>
+          </v-row>
+        </grid-sheet>
       </v-col>
 
       <!-- actions -->
@@ -169,92 +262,20 @@
           Изменить
         </v-btn>
       </v-col> -->
-    </v-row>
 
-    <v-row align="stretch" class="ma-2">
-      <v-col :cols="4" :sm="4" :md="4">
-        <v-card>
-          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
-            <h2 class="subtitle-1">Здоровье персонажа</h2>
-          </v-card-title> -->
-          <v-card-text class="pt-4 my-card-item">
-            <v-row
-              no-gutters
-              style="
-                display: flex;
-                align-items: baseline;
-                justify-content: center;
-              "
-            >
-              <v-col :cols="3" :sm="3">
-                <h2 class="subtitle-1 text-center">Внимательность</h2>
-              </v-col>
-              <v-col :cols="3" :sm="3">
-                <h2 class="subtitle-1 text-center">Скорость</h2>
-              </v-col>
-              <v-col :cols="3" :sm="3">
-                <h2 class="subtitle-1 text-center">Сложность Класса</h2>
-              </v-col>
-            </v-row>
 
-            <v-row
-              no-gutters
-              style="
-                display: flex;
-                align-items: baseline;
-                justify-content: center;
-              "
-            >
-              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
 
-              <v-col :cols="3" class="caption">
-                <div class="center text-center" style="font-size: 12px">
-                  +{{ ModAttributePerception("", "") }}
-                  {{ characterlabelL(characterPerseption) }}
-                </div>
-              </v-col>
-
-              <v-col :cols="3" class="caption">
-                <div class="center text-center" style="font-size: 12px">
-                  {{ characterSpeed["land"] }}
-                </div>
-              </v-col>
-
-              <v-col :cols="3" class="caption">
-                <div class="center text-center" style="font-size: 12px">
-                  + {{ ModAttributeClass() }}
-                  {{ characterlabelL(characterSkillClass) }}
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-
-      <v-col :cols="4" :sm="4" :md="4">
-        <v-card>
-          <!-- <v-card-title class="body-1 pt-1 pb-1 justify-center">
-            <h2 class="subtitle-1">Здоровье персонажа</h2>
-          </v-card-title> -->
-          <v-card-text class="pt-4 my-card-item">
+      <v-col :cols="4" :sm="12" :md="4">
+ <grid-sheet>
             <v-row no-gutters>
               <v-col :cols="6">
                 <h2 class="subtitle-1 text-center">КД</h2>
+                <div class="center text-center">{{ characterArmor() }}</div></v-col
               </v-col>
               <v-col :cols="6">
                 <h2 class="subtitle-1 text-center">Спасы</h2>
-              </v-col>
-            </v-row>
-
-            <v-row no-gutters>
-              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-
-              <v-col :cols="6" class="caption text-center">
-                <div>{{ characterArmor() }}</div></v-col
-              >
-
-              <v-col :cols="6" class="caption">
-                <div class="center text-center">
+                <div>
+                                <div class="center text-center">
                   Рефлекс: +{{ ModAttributeSaving("dexterity", "reflex") }}
                   {{ characterlabelL(characterSaving["reflex"]) }}
                 </div>
@@ -268,10 +289,13 @@
                   Воля: +{{ ModAttributeSaving("wisdom", "will") }}
                   {{ characterlabelL(characterSaving["will"]) }}
                 </div>
+                </div>
               </v-col>
+              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+
+
             </v-row>
-          </v-card-text>
-        </v-card>
+</grid-sheet>
       </v-col>
 
       <!-- actions -->
@@ -1369,6 +1393,7 @@ import MutationsMixin from '~/mixins/MutationsMixin';
 import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
 import DodCorruptionManager from '~/components/forge/DodCorruptionManager';
 import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
+import GridSheet from '~/components/forge/sheetGrid';
 import {marked} from 'marked';
 import { times } from 'lodash';
 
@@ -1386,6 +1411,7 @@ export default {
   components: {
     DodDefaultBreadcrumbs,
     DodCorruptionManager,
+    GridSheet
   },
   props: [],
   head() {
@@ -1584,6 +1610,7 @@ export default {
         this.characterId
       );
     },
+
 
     skillDefence() {
       return this.$store.getters["characters/characterskillDefenceById"](

@@ -67,7 +67,7 @@
         <template v-slot:item.name="{ item }">
           <span>{{ item.name }}</span>
           <div>
-            <trait-view v-if="item.trait" :item="item" class="mb-2" />
+            <trait-view v-if="item.traits" :item="item" class="mb-2" />
           </div>
         </template>
 
@@ -81,8 +81,8 @@
           <span v-if="item.source.book" v-html="item.book" />
         </template>
 
-        <template v-slot:item.tradition="{ item }">
-          <span>{{ item.tradition.join(", ") }}</span>
+        <template v-slot:item.traditions="{ item }">
+          <span v-if="item.traditions">{{ item.traditions.join(", ") }}</span>
         </template>
 
         <template v-slot:item.buy="{ item }">
@@ -102,14 +102,14 @@
             </v-row>
             <v-row>
               <div>
-                <trait-view v-if="item.tags" :item="item" class="mb-2" />
+                <trait-view v-if="item.traits" :item="item" class="mb-2" />
               </div>
             </v-row>
-
+            <p></p>
             <!-- Описание закла -->
-            <div v-if="item.tradition">
+            <div v-if="item.traditions">
               <p class="main-holder">
-                <strong>Традиция:</strong> {{ item.tradition.join(", ") }}
+                <strong>Традиция:</strong> {{ item.traditions.join(", ") }}
               </p>
             </div>
             <p></p>
@@ -127,7 +127,7 @@
             <p></p>
             <div v-if="item.area">
               <p class="main-holder">
-                <strong>Область:</strong> {{ item.area }}
+                <strong>Область:</strong> <span v-html="item.area"></span>
               </p>
             </div>
             <p></p>
@@ -326,7 +326,7 @@ export default {
       let searchResult = this.talents;
 
       if (this.selectedTagsFilters.length > 0) {
-        searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
+        searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
         }
 
       if (this.selectedBookFilters.length > 0) {
@@ -351,10 +351,10 @@ export default {
       //Берем обычаи из листа
       const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
       // Берем тот список, что соответствует заклинательскому
-      filteredTalents = filteredTalents.filter((talent) => talent.tradition.toString().toUpperCase().includes(lowercaseKeywords))
+      filteredTalents = filteredTalents.filter((talent) =>talent.traditions &&  talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
 
       let reduced = [];
-      filteredTalents.filter(talent => (talent.level <= this.level && talent.cantrip === false) || talent.cantrip === true).forEach((item) => {
+      filteredTalents.filter(talent => talent.level <= this.level ).forEach((item) => {
         if (item.source.book) {
           reduced.push(item.source.book);
         }
@@ -373,11 +373,12 @@ export default {
       //Берем обычаи из листа
       const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
       // Берем тот список, что соответствует заклинательскому
-      filteredTalents = filteredTalents.filter((talent) => talent.tradition.toString().toUpperCase().includes(lowercaseKeywords))
+
+        filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
 
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
       let reduced = [];
-      filteredTalents.filter(talent => (talent.level <= this.level && talent.cantrip === false) || talent.cantrip === true).forEach((item) => {
+      filteredTalents.filter(talent => talent.level <= this.level && talent.cantrip === false).forEach((item) => {
         if (item.trait) {
           reduced.push(...item.trait);
         }
@@ -401,7 +402,7 @@ export default {
       let filteredTalents = this.talents;
 
       if (this.selectedTagsFilters.length > 0) {
-        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.trait.includes(m)));
+        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
       }
 
       if (this.selectedBookFilters.length > 0) {
@@ -418,57 +419,105 @@ export default {
       //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
       const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
       // Берем тот список, что соответствует заклинательскому
-      filteredTalents = filteredTalents.filter((talent) => talent.tradition.toString().toUpperCase().includes(lowercaseKeywords))
+
+      // filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
 
       const rank = this.rank;
 
       filteredTalents.forEach(spell =>
       {
-        if (spell.powerValue1)
+        if (spell.heightening)
         {
-          if (spell.powerValue1.indexOf("d", 0) == -1)
-          {
-            const heightened = Math.floor((rank - 1) / spell.power);
-            const powerLevel1 = parseInt(spell.powerStart1) +parseInt(spell.powerValue1) * heightened;
-            spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "</span>")
-          }
-          else
-          {
-            const heightened = Math.floor((rank - 1) / spell.power);
-            const index = spell.powerValue1.indexOf("d", 0);
-            const dice = spell.powerValue1.slice(index-1, index);
-            const diceSize = spell.powerValue1.slice(index+1);
-            const powerLevel1 = parseInt(spell.powerStart1) + parseInt(dice) * heightened;
-            spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "d" + diceSize + "</span>")
-          }
+          if (spell.heightening.type == "interval") {
+            const interval = spell.heightening.interval;
+            if (spell.heightening.area)
+              for (var key of Object.keys(spell.heightening.area)) {
+                // console.log(key + " -> " + spell.heightening.area[key]);
+                const source = spell.heightening.area;
+                const mtp = Math.floor((spell.rank - spell.level) / interval);
+                const value = parseInt(spell.value[key]) + mtp * parseInt(source[key]);
+                spell.area = spell.area.replace("{{powerValue"+parseInt(key)+"}}", "<span style='color: green'>" + value +  "</span>")
+              }
+              if (spell.heightening.target)
+              for (var key of Object.keys(spell.heightening.target)) {
+                // console.log(key + " -> " + spell.heightening.area[key]);
+                const source = spell.heightening.target;
+                const mtp = Math.floor((spell.rank - spell.level) / interval);
+                const value = parseInt(spell.value[key]) + mtp * parseInt(source[key]);
+                spell.target = spell.target.replace("{{powerValue"+parseInt(key)+"}}", "<span style='color: green'>" + value +  "</span>")
+              }
+              if (spell.heightening.damage)
+              for (var key of Object.keys(spell.heightening.damage)) {
+                // console.log(key + " -> " + spell.heightening.area[key]);
+                const source = spell.heightening.damage;
+                const mtp = Math.floor((spell.rank - spell.level) / interval);
+                const index = source[key].indexOf("d", 0);
+                const dice = source[key].slice(index - 1, index);
+                const diceValue = spell.value[key].slice(index - 1, index);
+                const diceSize = source[key].slice(index+1);
+                const value = parseInt(diceValue) + mtp * parseInt(dice);
+                spell.description = spell.description.replace("{{powerValue}}" + level, "<span style='color: green'>" + value + "d" + diceSize + "</span>");
+            }
+              // const heightened = Math.floor((rank - 1) / spell.power);
+              // const index = spell.powerValue1.indexOf("d", 0);
+              // const dice = spell.powerValue1.slice(index-1, index);
+              // const diceSize = spell.powerValue1.slice(index+1);
+              // const powerLevel = parseInt(spell.powerStart1) + parseInt(dice) * heightened;
+              // spell.description = spell.description.replace("{{powerValue}}"+level, "<span style='color: green'>" + powerLevel1 + "d" + diceSize + "</span>")
 
+            }
         }
 
-        if (spell.powerValue2)
-        {
-          if (spell.powerValue2.indexOf("d", 0) == -1)
-          {
-            const heightened = Math.floor((rank - 1) / spell.power);
-            const powerLevel2 = parseInt(spell.powerStart2) +parseInt(spell.powerValue2) * heightened;
-            spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "</span>")
-          }
-          else
-          {
-            const heightened = Math.floor((rank - 1) / spell.power);
-            const index = spell.powerValue2.indexOf("d", 0);
-            const dice = spell.powerValue2.slice(index-1, index);
-            const diceSize = spell.powerValue2.slice(index+1);
-            const powerLevel2 = parseInt(spell.powerStart2) + parseInt(dice) * heightened;
-            spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>")
-          }
-
         }
-      }
-
-
       )
+      //Усиление -- закоменчено пока что
+      // filteredTalents.forEach(spell =>
+      // {
+      //   if (spell.powerValue1)
+      //   {
+      //     if (spell.powerValue1.indexOf("d", 0) == -1)
+      //     {
+      //       const heightened = Math.floor((rank - 1) / spell.power);
+      //       const powerLevel1 = parseInt(spell.powerStart1) +parseInt(spell.powerValue1) * heightened;
+      //       spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "</span>")
+      //     }
+      //     else
+      //     {
+      //       const heightened = Math.floor((rank - 1) / spell.power);
+      //       const index = spell.powerValue1.indexOf("d", 0);
+      //       const dice = spell.powerValue1.slice(index-1, index);
+      //       const diceSize = spell.powerValue1.slice(index+1);
+      //       const powerLevel1 = parseInt(spell.powerStart1) + parseInt(dice) * heightened;
+      //       spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "d" + diceSize + "</span>")
+      //     }
 
-      return filteredTalents.filter(talent => (talent.level <= this.level && talent.cantrip === false) || talent.cantrip === true);
+      //   }
+
+      //   if (spell.powerValue2)
+      //   {
+      //     if (spell.powerValue2.indexOf("d", 0) == -1)
+      //     {
+      //       const heightened = Math.floor((rank - 1) / spell.power);
+      //       const powerLevel2 = parseInt(spell.powerStart2) +parseInt(spell.powerValue2) * heightened;
+      //       spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "</span>")
+      //     }
+      //     else
+      //     {
+      //       const heightened = Math.floor((rank - 1) / spell.power);
+      //       const index = spell.powerValue2.indexOf("d", 0);
+      //       const dice = spell.powerValue2.slice(index-1, index);
+      //       const diceSize = spell.powerValue2.slice(index+1);
+      //       const powerLevel2 = parseInt(spell.powerStart2) + parseInt(dice) * heightened;
+      //       spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>")
+      //     }
+
+      //   }
+      // }
+
+
+      // )
+
+      return filteredTalents.filter(talent => talent.level <= this.level );
     },
   }
 };

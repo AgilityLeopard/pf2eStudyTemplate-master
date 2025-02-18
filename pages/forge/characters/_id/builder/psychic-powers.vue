@@ -38,7 +38,6 @@
     <v-col :cols="12" v-if="archetype && archetype.spellTradition">
       <v-card
         class="mb-4"
-        dark
         dense
         outlined
         v-for="levelAncestry in 10"
@@ -51,98 +50,97 @@
               1 || characterLevel() == 20
         "
       >
-        <div>
-          <h2 class="subtitle-1 text-center" v-if="levelAncestry - 1 == 0">
-            Чары
-          </h2>
-          <h2 class="subtitle-1 text-center" v v-if="levelAncestry - 1 !== 0">
-            {{ levelAncestry - 1 }} уровень
-          </h2>
+        <h2 class="subtitle-1 text-center" v-if="levelAncestry - 1 == 0">
+          Чары
+        </h2>
+        <h2 class="subtitle-1 text-center" v v-if="levelAncestry - 1 !== 0">
+          {{ levelAncestry - 1 }} уровень
+        </h2>
 
-          <v-simple-table dense>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th v-for="header in headers" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="cell in archetype.spellProgression[characterLevel()][
-                    levelAncestry - 1
-                  ]"
-                >
-                  <td>
-                    {{
-                      characterSpell(levelAncestry - 1, cell)
-                        ? characterSpell(levelAncestry - 1, cell).name
-                        : "-"
-                    }}
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      characterSpell(levelAncestry - 1, cell)
-                        ? characterSpell(levelAncestry - 1, cell).action
-                        : "-"
-                    }}
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      characterSpell(levelAncestry - 1, cell)
-                        ? characterSpell(levelAncestry - 1, cell).duration
-                        : "-"
-                    }}
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      characterSpell(levelAncestry - 1, cell)
-                        ? characterSpell(levelAncestry - 1, cell).distance
-                        : "-"
-                    }}
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      characterSpell(levelAncestry - 1, cell)
-                        ? characterSpell(levelAncestry - 1, cell).defence
-                        : "-"
-                    }}
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      characterSpell(levelAncestry - 1, cell)
-                        ? characterSpell(levelAncestry - 1, cell).area
-                        : "-"
-                    }}
-                  </td>
-                  <td>
-                    <v-btn
-                      v-if="characterSpell(levelAncestry - 1, cell)"
-                      outlined
-                      x-small
-                      color="error"
-                      @click.stop.prevent="
-                        removeTalent(characterSpell(levelAncestry - 1, cell))
-                      "
-                    >
-                      <v-icon left> delete </v-icon>Удалить
-                    </v-btn>
-                    <v-btn
-                      v-if="!characterSpell(levelAncestry - 1, cell)"
-                      outlined
-                      x-small
-                      color="success"
-                      @click="updatePreview(levelAncestry - 1, cell)"
-                    >
-                      <v-icon left> add </v-icon>Добавить
-                    </v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </div>
+        <v-simple-table dense>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th v-for="header in headers" :class="header.class">
+                  {{ header.text }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="cell in archetype.spellProgression[characterLevel()][
+                  levelAncestry - 1
+                ]"
+              >
+                <td>
+                  {{
+                    characterSpell(levelAncestry - 1, cell)
+                      ? characterSpell(levelAncestry - 1, cell).name
+                      : "-"
+                  }}
+                </td>
+                <td class="text-center pa-1 small">
+                  {{
+                    characterSpell(levelAncestry - 1, cell)
+                      ? characterSpell(levelAncestry - 1, cell).action
+                      : "-"
+                  }}
+                </td>
+                <td class="text-center pa-1 small">
+                  {{
+                    characterSpell(levelAncestry - 1, cell)
+                      ? characterSpell(levelAncestry - 1, cell).duration
+                      : "-"
+                  }}
+                </td>
+                <td class="text-center pa-1 small">
+                  {{
+                    characterSpell(levelAncestry - 1, cell)
+                      ? characterSpell(levelAncestry - 1, cell).distance
+                      : "-"
+                  }}
+                </td>
+                <td class="text-center pa-1 small">
+                  {{
+                    characterSpell(levelAncestry - 1, cell)
+                      ? characterSpell(levelAncestry - 1, cell).defence
+                      : "-"
+                  }}
+                </td>
+                <td class="text-center pa-1 small">
+                  {{
+                    characterSpell(levelAncestry - 1, cell)
+                      ? characterSpell(levelAncestry - 1, cell).area
+                      : "-"
+                  }}
+                </td>
+                <td>
+                  <v-btn
+                    v-if="characterSpell(levelAncestry - 1, cell)"
+                    outlined
+                    x-small
+                    color="error"
+                    @click.stop.prevent="
+                      removeTalent(characterSpell(levelAncestry - 1, cell))
+                    "
+                  >
+                    <v-icon left> delete </v-icon>Удалить
+                  </v-btn>
+                  <v-btn
+                    v-if="!characterSpell(levelAncestry - 1, cell)"
+                    outlined
+                    x-small
+                    color="success"
+                    @click="updatePreview(levelAncestry - 1, cell)"
+                  >
+                    <v-icon left> add </v-icon>Добавить
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+
         <!-- <v-expansion-panels
           multiple
           v-if="archetype && archetype.spellTradition"
@@ -362,7 +360,7 @@
         :talents="selectedPsychic"
         :archetype="archetype"
         :rank="rankSpell"
-        :level="levelAncestry - 1"
+        :level="levelSpell"
         :list="psychicPowersList"
         type="spell"
         choose-mode
@@ -442,6 +440,7 @@ export default {
       ],
       cellSpell: undefined,
       rankSpell: undefined,
+      levelSpell: undefined,
       grantAllAccess: false,
       selectedDisciplines: [],
       species: undefined,
@@ -458,6 +457,7 @@ export default {
       return [
         'playerCore',
         'playerCore2',
+        'coreRulebook', 'secretOfMagic',
         ...this.settingHomebrews
       ];
     },
@@ -568,7 +568,7 @@ export default {
         const aggregatedTalent = Object.assign({}, rawTalent);
         console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
 
-        aggregatedTalent.description = talent.description ?talent.description : "" ;
+        aggregatedTalent.description = talent.description;
         // const temp = "<span class=\"data-tooltip\" data-tooltip=\"Всплывающая подсказка сообщает о чём-то многозначном и полезном...\">Наведи сюда курсор.</span>"
         // aggregatedTalent.description = talent.description.replace("Ослаблена", temp);
         aggregatedTalent.id = talent.id;
@@ -606,15 +606,13 @@ export default {
         tal.cell = cell;
 
       })
-
+       this.levelSpell = levelAncestry;
        this.rankSpell = this.archetype.spellProgression[this.characterLevel()].findIndex(
                       (t) => t == 0
                     ) - 1;
-      if (levelAncestry == 0)
-        this.selectedPsychic = list.filter(spell => spell.cantrip === true);
-      else
-        this.selectedPsychic = list.filter(spell => spell.cantrip === false);
 
+
+      this.selectedPsychic = list
       this.psychicDialog = true;
 
     },
@@ -652,6 +650,7 @@ export default {
         "/api/traits/",
         config.source
       );
+      data.forEach(t => t.key = t.key.toLowerCase())
       this.traitList = data;
     },
     async getSpecies(key) {
@@ -676,7 +675,7 @@ export default {
       this.loading = false;
        if (this.traitList !== undefined) {
         data.forEach((species) => {
-          const lowercaseKeywords = species.trait.map((s) =>
+          const lowercaseKeywords = species.traits.map((s) =>
             s.toUpperCase()
           );
 
@@ -687,7 +686,7 @@ export default {
 
           if (trait.length > 0) {
             const listAbilities = [];
-            species.trait.forEach((talent) => {
+            species.traits.forEach((talent) => {
 
                 const t = trait.find(k => k.key === talent)
 

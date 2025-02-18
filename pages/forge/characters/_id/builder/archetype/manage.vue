@@ -342,7 +342,8 @@ export default {
       const { data } = await this.$axios.get(
         "/api/abilityAncestry/",
         config.source
-      );
+       );
+      
       this.abilityList = data;
     },
     async loadArchetype(key) {
