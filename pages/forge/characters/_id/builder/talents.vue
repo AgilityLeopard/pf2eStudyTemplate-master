@@ -27,10 +27,6 @@
           key="tab-ancestry"
           :value="`tab-ancestry`"
         >
-          <!-- <v-col :cols="8" :sm="10" class="subtitle-1">
-            Черты родословной
-          </v-col> -->
-
           <v-expansion-panels multiple>
             <v-expansion-panel
               v-for="levelAncestry in 20"
@@ -244,8 +240,6 @@
         </v-tab-item>
 
         <v-tab-item class="my-tab-item" key="tab-skill" :value="`tab-skill`">
-          <!-- <v-col :cols="8" :sm="10" class="subtitle-1"> Черты Навыков </v-col> -->
-
           <v-expansion-panels multiple>
             <v-expansion-panel>
               <v-expansion-panel-header
@@ -679,13 +673,13 @@
         <v-dialog
           v-model="talentsDialog"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="600px"
+          width="800px"
           scrollable
         >
           <talents-preview
             :character-id="characterId"
             :talents="selectedTalentsAncestry"
-            :level="levelAncestry"
+            :level="levelTalent"
             :list="talentList"
             type="ancestry"
             choose-mode
@@ -697,14 +691,14 @@
         <v-dialog
           v-model="talentsDialogSkill"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="600px"
+          width="800px"
           scrollable
         >
           <talents-preview
             :character-id="characterId"
             :talents="selectedTalentsSkill"
             :list="talentList"
-            :level="levelAncestry"
+            :level="levelTalent"
             type="skill"
             choose-mode
             @cancel="talentsDialogSkill = false"
@@ -807,6 +801,9 @@ export default {
   computed: {
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
+    },
+    characterSpeciesLabel() {
+      return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
     searchResult() {
       if (this.talentList === undefined) {
@@ -1214,70 +1211,9 @@ export default {
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
-          // aggregatedTalent.extraCost = 0;
-          // if (talent.extraCost && typeof talent.extraCost === 'object') {
-          //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
-          //     aggregatedTalent.extraCost  += talent.extraCost[extraCostKey] ? talent.extraCost[extraCostKey] : 0;
-          //   });
-          // } else {
-          //   aggregatedTalent.extraCost += talent.extraCost && parseInt(talent.extraCost) ? talent.extraCost : 0;
-          // }
-          // if (aggregatedTalent.options) {
-          //   const replacementTargetString = aggregatedTalent.options.find((t) => t.key === talent.selected).name;
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${replacementTargetString})</em>`);
-          //   console.info(`[${talent.id}] Compute label ${aggregatedTalent.label} from ${talent.selected}/${replacementTargetString}`);
-          // } else {
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${talent.selected})</em>`);
-          // }
         }
 
         // Fetch gear for selected weapon trooper
-        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-            /*
-            charGear.forEach( g => {
-              characterPackage
-              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
-              .selectList.find(s=> g.source.endsWith(s.key))
-                .itemChoice = g.name
-            });
-            */
-          }
-        }
-
-        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-          }
-        }
-
-        // Fetch gear for selected augmetis
-        if (aggregatedTalent.key.startsWith('core-augmetic')) {
-          console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
-          aggregatedTalent.wargear.forEach((g, i, warArray) => {
-            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-            console.info(`[${aggregatedTalent.id}] Searching for <${sourceKey}>...`);
-            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-            if (charGear && charGear.length > 0 && this.wargearList) {
-              console.info(`[${aggregatedTalent.id}] Found ${charGear.length} gears ${charGear[0].name} for the source...`);
-              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-              console.info(`[${aggregatedTalent.id}] found ${wargear.name}...`);
-              g.selected = wargear.name;
-              console.info(g.selected)
-
-            }
-          });
-          console.info(`[${aggregatedTalent.id}] DONE.`);
-        }
 
         return aggregatedTalent;
       }).sort((a, b) => a.id.localeCompare(b.id));

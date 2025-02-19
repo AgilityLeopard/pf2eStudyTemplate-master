@@ -283,6 +283,10 @@ export default {
         source: "species",
       });
 
+      this.$store.commit("characters/removeCharacterTalentbySource", {
+        id: this.characterId,
+        source: "ancestry",
+      });
       // modifications
       //   .filter((m) => m.targetGroup === "keywords")
 

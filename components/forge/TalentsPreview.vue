@@ -294,9 +294,10 @@ export default {
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
         choice: talent.optionsKey,
-        source: `talent.${talentUniqueId}`,
+        source:  place,
       };
 
+      //Смотрим, есть ли в черте модификация, дающая другую черты
       const linkedFeat = talent.modifications ? talent.modifications.filter(item => item.type === 'Feat') : undefined;
 
       if(linkedFeat)
@@ -309,7 +310,7 @@ export default {
             const Lore = list.find(item => item.name === 'Дополнительные знание');
 
             const loreTalent = {
-              id: LoreUniqueId,
+              id: talentUniqueId,
               name: Lore.name,
               key: Lore.key,
               cost: Lore.cost,
@@ -318,8 +319,9 @@ export default {
               link: talentUniqueId,
               selected: undefined,
               choice: Lore.optionsKey,
-              source: `talent.${talentUniqueId}`,
+              source:  place,
             };
+
 
             const LoreSkill = {
                       key: this.textToCamel(item.value),
@@ -338,9 +340,30 @@ export default {
                       // value: this.textToCamel(item.value),
                       isValueModify : false,
                       LoreSkill : LoreSkill,
-          }]
+            }]
+            //Добавляем модификацию черты
             this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
-            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: LoreUniqueId, source: 'featfree' } });
+            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: talentUniqueId, source: 'featfree' } });
+
+          }
+          else {
+            const Feat= list.find(s => s.key === item.key);
+            //Добавляем модификацию черты
+
+              const FeatTalent = {
+              id: talentUniqueId,
+              name: Feat.name,
+              key: Feat.key,
+              cost: Feat.cost,
+              place: 'free',
+
+              link: talentUniqueId,
+              selected: undefined,
+              choice: Feat.optionsKey,
+              source: `talent.${talentUniqueId}`,
+            };
+            this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: FeatTalent });
+            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: Feat.modifications, talentId: talentUniqueId, source: 'featfree' } });
 
           }
         }

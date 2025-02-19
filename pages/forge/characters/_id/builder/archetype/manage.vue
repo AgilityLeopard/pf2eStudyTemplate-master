@@ -74,49 +74,6 @@
       
             <div class="mt-2 body-2 text-justify ">
 
-        <!-- <v-divider class="mb-2"></v-divider>
-
-        <p>
-          <h3 class="headline">Атаки</h3>
-          <span v-for="item in WeaponRepository" v-bind:key="item.key">
-           <p> {{ item.name }} : {{ characterlabel(skillAttack[item.key]) }}</p>
-          </span>
-          
-        </p>
-
-        <p >
-          <h3 class="headline">Защиты</h3>
-          <span v-for="item in DefenceRepository" v-bind:key="item.key">
-            <p>{{ item.name }} : {{ characterlabel(skillDefence[item.key]) }}</p>
-          </span>
-          
-        </p>
-
-        
-        <p >
-
-          <h3 class="headline">Спасброски</h3>
-          <span v-for="item in SavingRepository" v-bind:key="item.key">
-            <p>{{ item.name }} : {{ characterlabel(characterSaving[item.key]) }}</p>
-          </span>
-        </p>
-       
-        <p v-if="item.Perception">
-
-        <h3 class="headline">Внимательность</h3>
- 
-          <p>Внимательность: {{  characterlabel(characterPerseption) }}</p>
-
-        </p>
-       
-        <p >
-
-          <h3 class="headline">КС класса</h3>
-
-            <p>КС класса {{ item.name }}: {{  characterlabel(item.skillClass) }}</p>
-
-          </p> -->
-
           <h3 class="headline">Классовые особенности</h3>
           <div
         v-for="feature in item.archetypeFeatures"
@@ -145,7 +102,7 @@
           <v-select
             v-model="feature.selected"
             :items="feature.options"
-            item-value="group"
+            item-value="key"
             item-text="name"
             label=""
             dense outlined 
@@ -154,7 +111,13 @@
        
           >
           </v-select>
-
+          
+           <div v-if="feature.selected">
+             <p><div v-if="feature.options.find(s=> s.key === feature.selected).snippet" v-html="feature.options.find(s=> s.key === feature.selected).snippet"></div></p>
+             <p v-if="feature.options.find(s=> s.key === feature.selected).feat"><strong>Черта:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).feat"></span></p>
+             <p v-if="feature.options.find(s=> s.key === feature.selected).spell"><strong>Заклинание:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).spell"></span></p>
+            
+           </div>
         </div>
 
         </div>
@@ -254,7 +217,7 @@ export default {
       return this.$store.getters['characters/characterPsychicPowersById'](this.characterId);
     },
     avatar() {
-      if (this.item === undefined || this.item.key === 'advanced' ) return '/img/avatar_placeholder.png';
+      if (this.item === undefined || this.item.key === 'advanced') return '/img/avatar_placeholder.png';
       return `/img/avatars/archetype/${this.item.key}.png`;
     },
     selectedKeywords() {
@@ -287,6 +250,7 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.getAbilityList(newVal);
+          // this.getPsychicPowers(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -346,6 +310,53 @@ export default {
       
       this.abilityList = data;
     },
+//     async getPsychicPowers(sources) {
+//       const config = {
+//         params: { source: sources.join(','), },
+//       };
+//       this.loading = true;
+//       const { data } = await this.$axios.get('/api/psychic-powers/', config);
+//       this.loading = false;
+//        if (this.traitList !== undefined) {
+//         data.forEach((species) => {
+//           const lowercaseKeywords = species.traits.map((s) =>
+//             s.toUpperCase()
+//           );
+
+//           const List1 = this.traitList;
+//           const trait = List1.filter((talent) =>
+//             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+//           );
+
+//           if (trait.length > 0) {
+//             const listAbilities = [];
+//             species.traits.forEach((talent) => {
+
+//                 const t = trait.find(k => k.key === talent)
+
+//                 if (t)
+//                 {
+//                 const ability1 = {
+//                   name: t.key,
+//                   description: t.desc,
+//                 };
+
+//                 listAbilities.push(ability1);
+//               }
+
+
+//             });
+//             species.traitDesc = listAbilities;
+//           }
+//         });
+
+// }
+//       this.psychicPowersList = data;
+//       // data.forEach(spell =>{
+//       //   spell.description = spell.description.replace("{{powers}}", spell.powerValue)
+//       // });
+//       // this.psychicPowersList = data;
+//     },
     async loadArchetype(key) {
       this.loading = true;
 
@@ -381,8 +392,25 @@ export default {
             }
 
             if (ab.options) {
-              const options = this.weaponGroup.filter(s => ab.options.includes(s.group) );
-              ab.options = options;
+              if (ab.type.includes("Weapon Group")) {
+                const options = this.weaponGroup.filter(s => ab.options.includes(s.group));
+                const listOption = [];
+                options.forEach(s => {
+                  const op = {
+                    key: s.group,
+                    ...s
+                  }
+                  listOption.push(op);
+                  ab.options = listOption;
+
+                });               
+              }
+
+              if (ab.type === "Class Feature") { 
+                const options = List.filter(ability => ab.options.includes(ability.key));
+               
+                ab.options = options;
+              }
 
 
               ab.selected = enc.find(s => s.key === ab.key) ? enc.find(s => s.key === ab.key).selected : "";
@@ -508,6 +536,7 @@ export default {
       this.$store.commit('characters/clearCharacterClassModFeature', { id: this.characterId, content: mod });
       this.$store.commit('characters/addCharacterClassModFeature', { id: this.characterId, content: mod });
 
+      
 
       // this.$store.commit("characters/addCharacterModifications", {
       //   id: this.characterId,

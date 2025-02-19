@@ -256,7 +256,7 @@ export const getters = {
   CharacterskillInitialById: (state) => (id) =>
     state.characters[id] ? state.characters[id].skillChoiceInitial : [],
   CharacterskillFromModificationById: (state) => (id) =>
-    state.characters[id] ? state.characters[id].skillFromModification : [],
+    state.characters[id] ? state.characters[id].skillFromModification : {},
   characterSkillPointsClassId: (state) => (id) =>
     state.characters[id] ? state.characters[id].SkillPointsClass : 0,
   characterMoneyById: (state) => (id) =>
@@ -669,18 +669,38 @@ export const mutations = {
             {
               if (item.mode === "Upgrade") {
 
-                const Initial = character.skillChoiceInitial.find(train => train === item.key);
+                const Initial = character.skillChoiceInitial;
                 const Back = character.BackSkill;
                 const classSkill = character.ClassSkill;
-                const trained = character.TrainedSkillClass.find(train => train === item.key);
+                const trained = character.TrainedSkillClass;
+                const modSkill = character.skillFromModification[item.key];
 
-                const list = state.characters[payload.id].skillFromModification;
-                character.skillFromModification = [...list, item.key];
+                if (modSkill > 0) character.SkillPoints = character.SkillPoints + 1;
+                else {
 
-                if (character.skills[item.key] === 'U')
-                  character.skills[item.key] = "T"
-                else
+                }
+
+                //Если он в списке 
+
+                if ([Back, classSkill, trained, Initial].join().includes(item.key)) {
                   character.SkillPoints = character.SkillPoints + 1;
+                  if (Initial.includes(item.key)) character.skillChoiceInitial = Initial.filter(s => s !== item.key);
+                }
+                else {
+                  if (!Initial.includes(item.key)) {
+
+
+
+                    var keys = Object.keys(character.SkillsTrained);
+                    var loc = keys.indexOf(character.skills[item.key]);
+                    character.skills[item.key] = keys[loc + 1];
+                  }
+
+                }
+
+                //Чтобы занести в лист модификаций
+
+                character.skillFromModification[item.key] += 1;
 
               }
               if (item.mode === "Add") {
@@ -815,23 +835,46 @@ export const mutations = {
             {
               if (item.mode === "Upgrade") {
 
-                const Initial = character.skillChoiceInitial.find(train => train === item.key);
+                const Initial = character.skillChoiceInitial;
                 const Back = character.BackSkill;
                 const classSkill = character.ClassSkill;
-                const trained = character.TrainedSkillClass.find(train => train === item.key);
+                const trained = character.TrainedSkillClass;
+                const modSkill = character.skillFromModification[item.key];
+                const skillTable = Object.values(character.SkillPointsLevel).filter(s => s === item.key).length;
 
-                const list = state.characters[payload.id].skillFromModification;
-                const list1 = list.filter(train => train !== item.key);
-                character.skillFromModification = list1;
+                if (modSkill > 0)
+                //Если он в списке 
+                {
 
 
-                if (![Initial, Back, classSkill, trained].includes(item.key))
-                  if (character.skills[item.key] === "T" || character.skills[item.key] === "U")
-                    character.skills[item.key] = "U"
-                  else
-                    character.SkillPoints = character.SkillPoints - 1;
+                  if (![Back, classSkill, trained].join().includes(item.key)) {
+                    //
 
-                character.skillChoiceInitial = character.skillChoiceInitial.filter(train => train !== item.key);
+                    var keys = Object.keys(character.SkillsTrained);
+                    character.skills[item.key] = "U";
+
+                    let t = 2;
+                    while (t <= character.level) {
+                      let lab = 'level' + t
+                      const skillLevel = character.SkillPointsLevel[lab];
+                      if (skillLevel != "") {
+
+                        var loc = keys.indexOf(character.skills[skillLevel]);
+                        const newValue = keys[loc + 1];
+                        if (newValue === 'T' || newValue === 'M' && t >= 7 || newValue === 'E' && t >= 3 || newValue === 'L' && t >= 15) {
+                          character.skills[skillLevel] = newValue;
+                        }
+                      }
+
+                      t++;
+                    }
+
+
+                  }
+                  character.skillFromModification[item.key] -= 1;
+
+                }
+
               }
               if (item.mode === "Add") {
                 if (item.key === 'Lore') {
@@ -1267,7 +1310,7 @@ export const mutations = {
 
     Object.keys(character.skills).forEach((key, index) => {
       if (character.customSkills.find(item => item.key === key) === undefined) {
-        if (payload.optional == "class" || payload.optional == "ancestry") {
+        if (payload.optional == "class") {
 
           character.skills[key] = "U";
 
@@ -1350,6 +1393,18 @@ export const mutations = {
 
         i++;
       }
+
+      Object.keys(character.skillFromModification).forEach((key, index) => {
+        if (character.skillFromModification[key] > 0) {
+          var keys = Object.keys(character.SkillsTrained);
+          var loc = keys.indexOf(character.skills[key]);
+          const newValue = keys[loc + 1];
+          character.skills[key] = newValue;
+        }
+
+      });
+
+
     }
 
 
@@ -1761,6 +1816,12 @@ export const mutations = {
         (t) => t.link !== payload.talentId
       );
     }
+  },
+
+  removeCharacterTalentbySource(state, payload) {
+    const character = state.characters[payload.id];
+    character.talents = character.talents.filter((t) => t.source !== payload.source); // cleanup
+
   },
 
   // Spell
@@ -2514,13 +2575,31 @@ const getDefaultState = () => ({
     survival: "U",
     thievery: "U",
   },
+  skillFromModification: {
+    acrobatics: 0,
+    arcana: 0,
+    athletics: 0,
+    nature: 0,
+    crafting: 0,
+    deception: 0,
+    diplomacy: 0,
+    intimidation: 0,
+    medicine: 0,
+    occultism: 0,
+    perfomance: 0,
+    religion: 0,
+    society: 0,
+    stealth: 0,
+    survival: 0,
+    thievery: 0,
+  },
   saving: {
     reflex: "U",
     fortitude: "U",
     will: "U",
   },
   skillChoiceInitial: [],
-  skillFromModification: [],
+  // skillFromModification: [],
   skillAttack:
   {
     simple: "U",

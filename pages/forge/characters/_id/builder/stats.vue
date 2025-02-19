@@ -276,15 +276,18 @@
                       skill.custom ||
                       skillChoiceInitial.find((item) => item === skill.key) !==
                         skill.key ||
-                      CharacterskillFromModification.find(
-                        (item) => item === skill.key
-                      ) === skill.key
+                      CharacterskillFromModification[skill.key] > 0
                     "
                     @click="decrementSkill(skill.key)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
                   </v-btn>
-                  {{ ModAttribute(skill.attribute, skill.key) }}
+                  <!-- {{ ModAttribute(skill.attribute, skill.key) }} -->
+                  {{
+                    characterSkills[skill.key] === "U"
+                      ? characterlabel(characterSkills[skill.key])
+                      : "Тренирован"
+                  }}
                   <v-btn
                     icon
                     :disabled="
@@ -300,7 +303,7 @@
                     </v-icon>
                   </v-btn>
                 </td>
-                <td>{{ characterlabel(characterSkills[skill.key]) }}</td>
+                <!-- <td>{{ characterSkills[skill.key] === "U" ? characterlabel(characterSkills[skill.key]) : "Тренирован" }}</td> -->
                 <span v-if="skill.custom">
                   <v-hover>
                     <v-icon
@@ -813,6 +816,21 @@
           <v-select
             v-if="level === 5"
             label="Повышение Навыка от класса"
+            v-model="skillChoice5"
+            :items="
+              finalSkillRepository.filter(
+                (item) => item.isValueModify === undefined
+              )
+            "
+            item-text="name"
+            item-value="key"
+            @change="updateSelectClassSkillLevel(skillChoice5, level)"
+          >
+          </v-select>
+
+          <v-select
+            v-if="level === 5"
+            label="Повышение Навыка от Интеллекта"
             v-model="skillChoice5"
             :items="
               finalSkillRepository.filter(
@@ -1416,8 +1434,6 @@ export default {
     async loadSkillTable(key) {
       this.loading = true;
       this.skillChoice = key;
-
-      //this.skillChoiceInitial = this.CharacterskillInitial;
 
       this.skillChoice1 = this.skillChoice[this.label(1)];
       this.skillChoice2 = this.skillChoice[this.label(2)];

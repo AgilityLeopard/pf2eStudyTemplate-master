@@ -385,7 +385,7 @@ const PlayerCoreClass = [
         level: 19,
     },
 
-    //Оракул
+    //Бард
     {
         ...sourceMod("playerCore2"),
         name: 'Заклинания-композиции',
@@ -411,8 +411,10 @@ const PlayerCoreClass = [
         name: 'Музы',
         snippet: 'Как бард, вы выбираете музу на 1-м уровне. Муза ведет вас к великим делам и может быть физическим существом, божеством, философией или пленительной тайной.',
         key: 'Muses',
-        option: ["Enigma", "Maestro", "Polymath", "Warrior"],
+        type: "Class Feature",
+        options: ["Enigma", "Maestro", "Polymath", "Warrior"],
         level: 1,
+        selected: [],
     },
     {
         ...sourceMod("playerCore2"),
@@ -443,8 +445,8 @@ const PlayerCoreClass = [
             +
             'Как бард с эрудированной музой, вы интересуетесь широким спектром тем, но редко посвящаете себя какой- либо одной, и вы редко можете принять решение, так как хотите перепробовать все.',
         key: 'Polymath',
-        feat: "Lingering Composition",
-        spell: "Soothe",
+        feat: "Versatile Performance",
+        spell: "Unseen Servant",
         level: 1,
     },
     {
@@ -458,6 +460,7 @@ const PlayerCoreClass = [
         spell: "Fear",
         level: 1,
     },
+
 
 ]
 module.exports = [...PlayerCoreAncestry, ...PlayerCoreClass];
