@@ -340,6 +340,7 @@ const PlayerCoreClass = [
             'Вы можете выбрать 1 группу оружия и увеличить свой уровень мастерства до легендарного для всего простого, воинского оружия и безоружных атак этой группы, и до мастера для всего продвинутого оружия этой группы.',
         key: 'Weapon Legend',
         level: 13,
+        options: ["axe", "bomb", "bow", "brawling", "club", "dart", "flail", "hammer", "knife", "pick", "polearm", "shield", "sling", "spear", "sword"],
         type: "Weapon Group Legend",
         value: {
             simple: "L",

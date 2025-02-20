@@ -2045,7 +2045,7 @@ export default {
           });
           if ( feature.options ) {
             const traitSelection = this.characterEnhancements.find( (e) => e.source.startsWith(`species.${feature.name}.`));
-            console.info(traitSelection);
+
             // TODO ?
           }
         })
@@ -2447,7 +2447,6 @@ export default {
               ability.name = ability.name.replace(/\[.*\]/, `(${choice.name})`);
 
               if (choice.modifications) {
-                console.info(`Additional modifications found for the selected choice.`)
                 ability.modifications.push(...choice.modifications);
               }
 
@@ -2493,7 +2492,6 @@ export default {
               const choice = rawMutation.options.find((m) => m.key === charMutation.selected);
 
               if (choice.modifications) {
-                console.info(`Additional modifications found for the selected choice.`)
                 ability.modifications.push(...choice.modifications);
               }
 
@@ -2541,7 +2539,7 @@ export default {
         } else {
           if (wargear.meta) {
             wargear.meta.forEach((meta) => {
-              console.info(['ranged-weapon', 'melee-weapon'].includes(meta.type));
+
               if (['ranged-weapon', 'melee-weapon'].includes(meta.type)) {
                 hasWeaponsProfile = true;
               }
@@ -2774,7 +2772,6 @@ export default {
       this.objectiveEditorShow = true;
     },
     addObjective(value) {
-      console.info(`Add new objective: ${value}`);
       this.objectiveEditorShow = false;
     },
     characterNotesOpenEditor() {

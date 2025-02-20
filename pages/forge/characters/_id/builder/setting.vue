@@ -313,7 +313,7 @@ export default {
         console.warn('no image');
         return undefined;
       }
-      console.info(`Create an image with size: ${url.length}`);
+
       this.setCharacterAvatar(url);
       this.selectAvatarDialog = false;
     },

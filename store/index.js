@@ -51,7 +51,6 @@ export const actions = {
       ...payload.data,
     };
     context.commit('setState', payload.data);
-    console.info(state);
   },
   saveCurrentCharacterToDatabase({ context, state, getters }) {
     const body = {

@@ -15,7 +15,6 @@ router.get('/', async (request, response) => {
     const filterSourceString = request.query.source;
     if (filterSourceString) {
         filter.source = filterSourceString.split(',');
-        console.log(items);
         if (filter.source) {
             items = items.filter((item) => filter.source.includes(item.source.key));
 

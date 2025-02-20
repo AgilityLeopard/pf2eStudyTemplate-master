@@ -40,7 +40,7 @@
           </v-list-item-content>
 
           <v-list-item-action class="hidden-xs-only">
-            {{ characterSpeed["land"] }}
+            {{ сharacterSpeedLabel() }}
           </v-list-item-action>
         </v-list-item>
 
@@ -1078,7 +1078,6 @@ export default {
   watch: {
     theme: {
       handler(newTheme, oldTheme) {
-        console.info(`handle ${newTheme}`);
         this.$vuetify.theme.dark = newTheme !== "light";
       },
       immediate: true, // make this watch function is called when component created
@@ -1141,6 +1140,28 @@ export default {
       this.drawer.clipped = false;
       this.toolbar.clippedLeft = false;
     },
+    сharacterSpeedLabel() {
+      const Bonus = this.$store.getters["characters/characterBonusById"](
+        this.$route.params.id
+      );
+      const speed = this.characterSpeed["land"];
+
+      let speedTotal = 0;
+      if (Bonus) {
+        Bonus.filter(
+          (s) =>
+            s.level <= this.characterLevel() &&
+            s.type === "Speed" &&
+            s.mode === "Bonus" &&
+            s.key === "land"
+        ).forEach((s) => {
+          speedTotal += s.valueBonus;
+        });
+      }
+
+      return speed + speedTotal;
+    },
+
     characterArmor() {
       const wear = this.$store.getters["characters/characterWearById"](
         this.$route.params.id

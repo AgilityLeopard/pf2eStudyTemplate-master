@@ -4,16 +4,23 @@
       <!-- grid list with low margin -->
       <v-container>
         <v-row no-gutters>
-          <v-col :cols="12" style="text-align: center;">
-            <h1 class="headline" >
+          <v-col :cols="12" style="text-align: center">
+            <h1 class="headline">
               {{ characterName }}
             </h1>
-            <span class="caption" >
-              {{ [ `Rank ${characterRank}`, speciesLabel, archetypeLabel, `Tier ${characterSettingTier}` ].join(' • ') }}
+            <span class="caption">
+              {{
+                [
+                  `Rank ${characterRank}`,
+                  speciesLabel,
+                  archetypeLabel,
+                  `Tier ${characterSettingTier}`,
+                ].join(" • ")
+              }}
             </span>
             <span class="sexy_line" />
             <span class="caption mb-2">
-              {{ keywords.join(' • ') }}
+              {{ keywords.join(" • ") }}
             </span>
           </v-col>
 
@@ -25,9 +32,7 @@
                   <v-toolbar-title>Attributes</v-toolbar-title>
                 </v-toolbar>
 
-                <v-simple-table
-                  dense
-                >
+                <v-simple-table dense>
                   <thead>
                     <tr>
                       <th v-for="header in attributeHeaders">
@@ -67,24 +72,48 @@
                     <tr v-for="item in groupedTraits">
                       <td class="text-left pa-1 small">
                         <span>{{ item.name }}</span>
-                        <span v-if="item.name === 'Max Wounds'" style="float: right;">{{ '☐'.repeat(item.adjustedRating) }}</span>
-                        <span v-if="item.name === 'Max Shock'" style="float: right;">{{ '☐'.repeat(item.adjustedRating) }}</span>
-                        <span v-if="item.name === 'Wealth'" style="float: right;">{{ '☐'.repeat(item.adjustedRating) }}</span>
-                        <em v-if="item.name==='Resilience' && armour.length>0">
-                          @{{ armour[0].name }} ({{ armour[0].meta[0].armourRating }})
+                        <span
+                          v-if="item.name === 'Max Wounds'"
+                          style="float: right"
+                          >{{ "☐".repeat(item.adjustedRating) }}</span
+                        >
+                        <span
+                          v-if="item.name === 'Max Shock'"
+                          style="float: right"
+                          >{{ "☐".repeat(item.adjustedRating) }}</span
+                        >
+                        <span
+                          v-if="item.name === 'Wealth'"
+                          style="float: right"
+                          >{{ "☐".repeat(item.adjustedRating) }}</span
+                        >
+                        <em
+                          v-if="item.name === 'Resilience' && armour.length > 0"
+                        >
+                          @{{ armour[0].name }} ({{
+                            armour[0].meta[0].armourRating
+                          }})
                         </em>
                       </td>
-                      <td v-if="item.name==='Resilience'" class="text-center pa-1 small">
-                        {{ item.adjustedRating}}
+                      <td
+                        v-if="item.name === 'Resilience'"
+                        class="text-center pa-1 small"
+                      >
+                        {{ item.adjustedRating }}
                       </td>
                       <td v-else class="text-center pa-1 small">
-                        {{ item.adjustedRating }}<span v-if="item.alternativeRating">/{{ item.alternativeRating }}</span>
+                        {{ item.adjustedRating
+                        }}<span v-if="item.alternativeRating"
+                          >/{{ item.alternativeRating }}</span
+                        >
                       </td>
                     </tr>
                     <tr v-if="characterFaith && characterFaith.points > 0">
                       <td class="text-left pa-1 small">
                         <span>Faith</span>
-                        <span style="float: right;">{{ '☐'.repeat(characterFaith.points) }}</span>
+                        <span style="float: right">{{
+                          "☐".repeat(characterFaith.points)
+                        }}</span>
                       </td>
                       <td class="text-center pa-1 small">
                         {{ characterFaith.points }}
@@ -96,7 +125,7 @@
                 <v-data-table
                   v-if="false"
                   :headers="traitHeaders"
-                  :items="traits.filter(i=>i.type === 'Combat')"
+                  :items="traits.filter((i) => i.type === 'Combat')"
                   hide-footer
                   hide-actions
                 >
@@ -115,7 +144,7 @@
                 <v-data-table
                   v-if="false"
                   :headers="traitHeaders"
-                  :items="traits.filter(i=>i.type === 'Mental')"
+                  :items="traits.filter((i) => i.type === 'Mental')"
                   hide-footer
                   hide-actions
                 >
@@ -134,7 +163,7 @@
                 <v-data-table
                   v-if="false"
                   :headers="traitHeaders"
-                  :items="traits.filter(i=>i.type === 'Social')"
+                  :items="traits.filter((i) => i.type === 'Social')"
                   hide-footer
                   hide-actions
                 >
@@ -161,9 +190,7 @@
                   <v-toolbar-title>Skills</v-toolbar-title>
                 </v-toolbar>
 
-                <v-simple-table
-                  dense
-                >
+                <v-simple-table dense>
                   <thead>
                     <tr>
                       <th v-for="header in skillHeaders">
@@ -180,11 +207,16 @@
                         {{ item.value }}
                       </td>
                       <td class="text-center pa-1 small">
-                        {{ item.attribute.substring(0,3) }}
-                        ({{item.attributeObject.adjustedRating}})
+                        {{ item.attribute.substring(0, 3) }}
+                        ({{ item.attributeObject.adjustedRating }})
                       </td>
                       <td class="text-center pa-1 small">
-                        {{ computeSkillPool(item) }}<span v-if="item.conditionalAdjustment !== 0">/{{ computeSkillPool(item)+item.conditionalAdjustment }}</span>
+                        {{ computeSkillPool(item)
+                        }}<span v-if="item.conditionalAdjustment !== 0"
+                          >/{{
+                            computeSkillPool(item) + item.conditionalAdjustment
+                          }}</span
+                        >
                       </td>
                     </tr>
                   </tbody>
@@ -196,7 +228,7 @@
           <v-col :cols="4">
             <v-row justify="center" no-gutters>
               <v-col :cols="12" class="pa-1">
-                <v-card >
+                <v-card>
                   <v-toolbar color="red" dark dense height="32">
                     <v-toolbar-title>Objectives</v-toolbar-title>
                   </v-toolbar>
@@ -206,33 +238,25 @@
                     :key="objective.name"
                     class="pl-2 pr-2 pt-1 pb-1 caption"
                   >
-                    <strong>{{ index+1 }}:</strong> {{ objective.text }}
+                    <strong>{{ index + 1 }}:</strong> {{ objective.text }}
                   </v-card-text>
                 </v-card>
               </v-col>
 
               <v-col :cols="12" class="pa-1" v-show="false">
-                <v-card >
+                <v-card>
                   <v-card-text class="pa-1 pl-2 pr-2">
                     <p class="caption mb-1">
                       Spend one <strong>Wrath</strong> to:
                     </p>
                     <ul class="pl-3">
-                      <li class="caption">
-                        Re-roll failures once on a test
-                      </li>
+                      <li class="caption">Re-roll failures once on a test</li>
                       <li class="caption">
                         Re-roll failures once on a soak attempt
                       </li>
-                      <li class="caption">
-                        Add +1 to a Defiance check
-                      </li>
-                      <li class="caption">
-                        Make a narrative declaration
-                      </li>
-                      <li class="caption">
-                        As an Action: restore 1d3+1 Shock
-                      </li>
+                      <li class="caption">Add +1 to a Defiance check</li>
+                      <li class="caption">Make a narrative declaration</li>
+                      <li class="caption">As an Action: restore 1d3+1 Shock</li>
                     </ul>
                   </v-card-text>
 
@@ -250,9 +274,7 @@
                       <li class="caption">
                         Increase the severity of a Critical Hit
                       </li>
-                      <li class="caption">
-                        Seize the Initiative
-                      </li>
+                      <li class="caption">Seize the Initiative</li>
                     </ul>
                   </v-card-text>
                 </v-card>
@@ -264,19 +286,17 @@
                     <v-toolbar-title>Languages</v-toolbar-title>
                   </v-toolbar>
                   <v-card-text>
-                    <p>{{ languages.map((l)=>l.name).join(' • ') }}</p>
+                    <p>{{ languages.map((l) => l.name).join(" • ") }}</p>
                   </v-card-text>
                 </v-card>
               </v-col>
-
             </v-row>
           </v-col>
-
 
           <v-col :cols="12">
             <v-card>
               <v-toolbar color="red" dark dense height="32">
-                  <v-toolbar-title>Weapons</v-toolbar-title>
+                <v-toolbar-title>Weapons</v-toolbar-title>
               </v-toolbar>
 
               <v-data-table
@@ -286,18 +306,20 @@
                 dense
               >
                 <template v-slot:item="{ item }">
-
                   <tr
-                      v-if="item.meta"
-                      v-for="(meta, metaIndex) in item.meta.filter(m => m.type.indexOf('-weapon') > 0)"
-                      :key="`${item.name}-${metaIndex}`"
+                    v-if="item.meta"
+                    v-for="(meta, metaIndex) in item.meta.filter(
+                      (m) => m.type.indexOf('-weapon') > 0
+                    )"
+                    :key="`${item.name}-${metaIndex}`"
                   >
-
                     <td class="text-left pa-1 small">
                       {{ item.name }}
                       <template v-if="item.meta.length > 1">
                         <span v-if="meta.type === 'melee-weapon'">(Melee)</span>
-                        <span v-else-if="meta.type === 'ranged-weapon'">(Ranged)</span>
+                        <span v-else-if="meta.type === 'ranged-weapon'"
+                          >(Ranged)</span
+                        >
                       </template>
                     </td>
 
@@ -305,7 +327,13 @@
                       <div v-if="meta.damage">
                         <div v-if="meta.damage.static === '*'">*</div>
                         <div v-else>
-                          <span v-if="meta.type==='melee-weapon'">{{ meta.damage.static + attributes.find((a)=>a.key==='strength').adjustedRating }}*</span>
+                          <span v-if="meta.type === 'melee-weapon'"
+                            >{{
+                              meta.damage.static +
+                              attributes.find((a) => a.key === "strength")
+                                .adjustedRating
+                            }}*</span
+                          >
                           <span v-else>{{ meta.damage.static }}</span>
                           <span> + </span>
                           <span>{{ meta.damage.ed }} ED</span>
@@ -314,27 +342,34 @@
                     </td>
 
                     <td class="text-center pa-1 small">
-                      {{meta.ap}}
+                      {{ meta.ap }}
                     </td>
 
                     <td class="text-center pa-1 small">
-                      {{ isNaN(meta.salvo) ? '-' : meta.salvo }}
+                      {{ isNaN(meta.salvo) ? "-" : meta.salvo }}
                     </td>
 
                     <td class="text-center pa-1 small">
-                        <span v-if="meta.range > 4">
-                          {{ meta.range/2 }} | {{ meta.range }} | {{ meta.range*1.5 }}
-                        </span>
+                      <span v-if="meta.range > 4">
+                        {{ meta.range / 2 }} | {{ meta.range }} |
+                        {{ meta.range * 1.5 }}
+                      </span>
                       <span v-else-if="meta.range > 1">{{ meta.range }} m</span>
                       <span v-if="meta.range === 1">melee</span>
-                      <span v-if="isNaN(meta.range) && meta.range.startsWith('STRx')">{{meta.range}}</span>
+                      <span
+                        v-if="
+                          isNaN(meta.range) && meta.range.startsWith('STRx')
+                        "
+                        >{{ meta.range }}</span
+                      >
                     </td>
 
                     <td class="text-left pa-1 small">
-                      <span v-if="meta.traits && meta.traits.length >0">{{ meta.traits.join(', ') }}</span>
+                      <span v-if="meta.traits && meta.traits.length > 0">{{
+                        meta.traits.join(", ")
+                      }}</span>
                       <span v-else>-</span>
                     </td>
-
                   </tr>
                 </template>
               </v-data-table>
@@ -347,11 +382,12 @@
                   class="body-2 caption text-snippet"
                 >
                   <strong>{{ traitByName(trait).name }}: </strong>
-                  <span v-if="traitByName(trait).crunch">{{ traitByName(trait).crunch }}</span>
+                  <span v-if="traitByName(trait).crunch">{{
+                    traitByName(trait).crunch
+                  }}</span>
                   <span v-else>{{ traitByName(trait).description }}</span>
                 </p>
               </div>
-
             </v-card>
           </v-col>
         </v-row>
@@ -364,8 +400,6 @@
         <v-row justify="center" no-gutters>
           <v-col :cols="12">
             <v-row justify="left" no-gutters>
-
-
               <!-- powers -->
               <v-col :cols="12" class="pa-1">
                 <v-card v-if="psychicPowers.length > 0">
@@ -417,35 +451,59 @@
                   </v-toolbar>
 
                   <v-card-text class="pa-0 pl-1 pr-1">
-
-                    <div v-for="ability in abilities" :key="ability.name" class="caption pb-3">
-
+                    <div
+                      v-for="ability in abilities"
+                      :key="ability.name"
+                      class="caption pb-3"
+                    >
                       <strong>{{ ability.name }}</strong>
-                      <em v-if="ability.source">  • {{ ability.source }}</em>
+                      <em v-if="ability.source"> • {{ ability.source }}</em>
 
-                      <div v-if="ability.snippet"><span v-html="computeFormatedText(ability.snippet)"></span></div>
-                      <div v-else v-html="computeFormatedText(ability.description)"></div>
+                      <div v-if="ability.snippet">
+                        <span
+                          v-html="computeFormatedText(ability.snippet)"
+                        ></span>
+                      </div>
+                      <div
+                        v-else
+                        v-html="computeFormatedText(ability.description)"
+                      ></div>
 
-                      <div v-if="ability.selectedOption" class="ml-1 pl-2 mt-1" style="border-left: solid 3px lightgrey;">
-                        <strong v-if="ability.selectedOption.name">{{ ability.selectedOption.name }}</strong>
-                        <span v-if="ability.selectedOption.snippet">{{ability.selectedOption.snippet}}</span>
+                      <div
+                        v-if="ability.selectedOption"
+                        class="ml-1 pl-2 mt-1"
+                        style="border-left: solid 3px lightgrey"
+                      >
+                        <strong v-if="ability.selectedOption.name">{{
+                          ability.selectedOption.name
+                        }}</strong>
+                        <span v-if="ability.selectedOption.snippet">{{
+                          ability.selectedOption.snippet
+                        }}</span>
                       </div>
 
                       <div
-                          v-if="ability.selectedOptions"
-                          v-for="selectedOption in ability.selectedOptions"
-                          class="ml-1 pl-2 mt-1"
-                          style="border-left: solid 3px lightgrey;"
+                        v-if="ability.selectedOptions"
+                        v-for="selectedOption in ability.selectedOptions"
+                        class="ml-1 pl-2 mt-1"
+                        style="border-left: solid 3px lightgrey"
                       >
                         <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet"><p class="mb-1" v-html="computeFormatedText(selectedOption.snippet)"></p></div>
-                        <div v-else v-html="computeFormatedText(selectedOption.description)"></div>
+                        <div v-if="selectedOption.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(selectedOption.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="
+                            computeFormatedText(selectedOption.description)
+                          "
+                        ></div>
                       </div>
-
                     </div>
-
                   </v-card-text>
-
                 </v-card>
               </v-col>
 
@@ -457,19 +515,43 @@
                     </v-toolbar>
 
                     <v-card-text class="pa-0 pl-1 pr-1">
-                      <div v-for="talent in talents" :key="talent.name" class="mb-3 caption">
+                      <div
+                        v-for="talent in talents"
+                        :key="talent.name"
+                        class="mb-3 caption"
+                      >
                         <strong>{{ talent.name }}</strong>
-                        <div v-if="talent.snippet"><p class="mb-1" v-html="computeFormatedText(talent.snippet)"></p></div>
-                        <div v-else v-html="computeFormatedText(talent.description)"></div>
+                        <div v-if="talent.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(talent.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="computeFormatedText(talent.description)"
+                        ></div>
                         <div
                           v-if="talent.selectedOptions"
                           v-for="selectedOption in talent.selectedOptions"
                           class="ml-1 pl-2"
-                          style="border-left: solid 3px lightgrey;"
+                          style="border-left: solid 3px lightgrey"
                         >
                           <strong>{{ selectedOption.name }}</strong>
-                          <div v-if="selectedOption.snippet"><p class="mb-1" v-html="computeFormatedText(selectedOption.snippet)"></p></div>
-                          <div v-else v-html="computeFormatedText(selectedOption.description)"></div>
+                          <div v-if="selectedOption.snippet">
+                            <p
+                              class="mb-1"
+                              v-html="
+                                computeFormatedText(selectedOption.snippet)
+                              "
+                            ></p>
+                          </div>
+                          <div
+                            v-else
+                            v-html="
+                              computeFormatedText(selectedOption.description)
+                            "
+                          ></div>
                         </div>
                       </div>
                     </v-card-text>
@@ -482,46 +564,59 @@
                       <v-toolbar-title>Gear</v-toolbar-title>
                     </v-toolbar>
 
-                    <v-card-text v-for="gearItem in gear" :key="gearItem.name" class="pa-1 caption">
-                      <div v-if="gearItem.variant" style="display: inline;">
-                        <strong >{{ gearItem.variant }}</strong>
+                    <v-card-text
+                      v-for="gearItem in gear"
+                      :key="gearItem.name"
+                      class="pa-1 caption"
+                    >
+                      <div v-if="gearItem.variant" style="display: inline">
+                        <strong>{{ gearItem.variant }}</strong>
                         <span> ({{ gearItem.name }})</span>
                       </div>
                       <strong v-else>{{ gearItem.name }}</strong>
-                      <em v-if="gearItem.type"> • {{gearItem.type}}</em>
+                      <em v-if="gearItem.type"> • {{ gearItem.type }}</em>
                       <span v-if="gearItem.source">
-                        <em v-if="gearItem.source.key"> • {{ gearItem.source.key }}</em><em v-if="!isNaN(gearItem.source.page)">, pg. {{ gearItem.source.page }}</em>
+                        <em v-if="gearItem.source.key">
+                          • {{ gearItem.source.key }}</em
+                        ><em v-if="!isNaN(gearItem.source.page)"
+                          >, pg. {{ gearItem.source.page }}</em
+                        >
                       </span>
-                      <p class="mb-0">{{ gearItem.snippet ? gearItem.snippet : gearItem.description }}</p>
+                      <p class="mb-0">
+                        {{
+                          gearItem.snippet
+                            ? gearItem.snippet
+                            : gearItem.description
+                        }}
+                      </p>
 
                       <div
-                        v-if="gearItem.meta !== undefined && gearItem.meta.length > 0 && ['armour'].includes(gearItem.meta[0].type)"
+                        v-if="
+                          gearItem.meta !== undefined &&
+                          gearItem.meta.length > 0 &&
+                          ['armour'].includes(gearItem.meta[0].type)
+                        "
                       >
-                          <p
-                            class="ml-1 pl-2 mb-1"
-                            style="border-left: solid 3px lightgrey;"
-                            v-for="trait in gearItem.meta[0].traits"
-                            v-if="traitByName(trait, true)"
-                            :key="trait"
-                          >
-                            <strong>{{ trait }}: </strong>
-                            {{ traitByName(trait, true).crunch }}
-                          </p>
+                        <p
+                          class="ml-1 pl-2 mb-1"
+                          style="border-left: solid 3px lightgrey"
+                          v-for="trait in gearItem.meta[0].traits"
+                          v-if="traitByName(trait, true)"
+                          :key="trait"
+                        >
+                          <strong>{{ trait }}: </strong>
+                          {{ traitByName(trait, true).crunch }}
+                        </p>
                       </div>
-
                     </v-card-text>
                   </v-card>
                 </v-col>
               </v-col>
-
             </v-row>
           </v-col>
-
-
         </v-row>
       </v-container>
     </div>
-
   </div>
 </template>
 
@@ -981,7 +1076,6 @@ export default {
           });
           if ( feature.options ) {
             const traitSelection = this.characterEnhancements.find( (e) => e.source.startsWith(`species.${feature.name}.`));
-            console.info(traitSelection)
           }
         })
       }
@@ -1364,7 +1458,7 @@ export default {
               ability.name = ability.name.replace(/\[.*\]/, `(${choice.name})`);
 
               if (choice.modifications) {
-                console.info(`Additional modifications found for the selected choice.`)
+
                 ability.modifications.push(...choice.modifications);
               }
 
@@ -1401,7 +1495,7 @@ export default {
             if (rawMutation.options) {
               const choice = rawMutation.options.find((m) => m.key === charMutation.selected);
               if (choice.modifications) {
-                console.info(`Additional modifications found for the selected choice.`)
+
                 ability.modifications.push(...choice.modifications);
               }
               if (choice.snippet ) {
@@ -1646,40 +1740,44 @@ export default {
 </script>
 
 <style scoped lang="css">
+.page {
+  page-break-inside: avoid;
+}
 
-  .page {
-    page-break-inside: avoid;
-  }
+.page--din-a-4 {
+  height: 297mm;
+  width: 220mm;
+  overflow: hidden;
+}
 
-  .page--din-a-4 {
-    height: 297mm;
-    width: 220mm;
-    overflow: hidden;
-  }
+.text-snippet {
+  margin-bottom: 1.5mm;
+  line-height: 1rem;
+}
 
-  .page-title {
-  }
+.small {
+  height: 24px;
+}
 
-  .text-snippet {
-    margin-bottom: 1.5mm;
-    line-height: 1rem;
-  }
+td.small {
+  font-size: 3mm !important;
+  height: 4mm !important;
+}
 
-  .small {
-    height: 24px;
-  }
-
-  td.small {
-    font-size: 3mm !important;
-    height: 4mm !important;
-  }
-
-  .sexy_line{
-    display:block;
-    border:none;
-    color:white;
-    height:1px;
-    background:black;
-    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 350, from(#000), to(#fff));
-  }
+.sexy_line {
+  display: block;
+  border: none;
+  color: white;
+  height: 1px;
+  background: black;
+  background: -webkit-gradient(
+    radial,
+    50% 50%,
+    0,
+    50% 50%,
+    350,
+    from(#000),
+    to(#fff)
+  );
+}
 </style>

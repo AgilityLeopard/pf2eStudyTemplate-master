@@ -23,7 +23,7 @@
     <v-card-title>
       <v-select
         label="Трейты"
-        v-model="selectedTagsFilters"
+        v-model="selectedtraitsFilters"
         multiple
         :items="tagFilters"
         item-text="name"
@@ -89,7 +89,7 @@
             </v-row>
             <v-row>
               <div>
-                <trait-view v-if="item.tags" :item="item" class="mb-2" />
+                <trait-view v-if="item.traits" :item="item" class="mb-2" />
               </div>
             </v-row>
             <div v-if="item.requirements">
@@ -167,11 +167,11 @@ export default {
       selectedTalents: undefined, // for he preview dialog box
       talentsDialog: false,
       searchQuery: '',
-      selectedTagsFilters: [],
+      selectedtraitsFilters: [],
       filters: {
-        tags: {
+        traits: {
           model: [],
-          label: 'Filter by Tags',
+          label: 'Filter by traits',
         },
       },
       filterOnlyPrerequisites: false,
@@ -393,8 +393,8 @@ export default {
       }
       let searchResult = this.talents;
 
-      if (this.selectedTagsFilters.length > 0) {
-        searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
+      if (this.selectedtraitsFilters.length > 0) {
+        searchResult = searchResult.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
       }
 
       let filter;
@@ -412,16 +412,16 @@ export default {
         return [];
       }
       let filteredTalents = this.talents;
-      //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
+      //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
 
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.tags.toString().toUpperCase().includes(lw)));
-      //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
+      //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.traits.toString().toUpperCase()));
       let reduced = [];
       filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
-        if (item.tags) {
-          reduced.push(...item.tags);
+        if (item.traits) {
+          reduced.push(...item.traits);
         }
       });
       reduced = reduced.filter(item => item.trim().length > 0);
@@ -440,25 +440,25 @@ export default {
 
       let filteredTalents = this.talents;
 
-      if (this.selectedTagsFilters.length > 0) {
-        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
+      if (this.selectedtraitsFilters.length > 0) {
+        filteredTalents = filteredTalents.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
       }
 
       filteredTalents = filteredTalents.map((talent) => {
         let fulfilled = true;
-        let TagsFilter = true;
+        let traitsFilter = true;
 
         talent.prerequisitesFulfilled = fulfilled;
         return talent;
       });
 
-      //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
+      //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
       // if () {
-       // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
+       // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
       // }
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.tags.toString().toUpperCase().includes(lw)));
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
 
       return filteredTalents//filteredTalents.filter(talent => talent.level <= this.level);
     },

@@ -816,7 +816,6 @@ export default {
       this.advancedShoppingChart.push(gear);
     },
     removeFromBasket(index) {
-      console.info(index)
       this.advancedShoppingChart.splice(index, 1);
     },
 
@@ -825,41 +824,60 @@ export default {
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
       const group = enc.find(s => s.type === "Weapon Group") ? enc.find(s => s.type === "Weapon Group") : "";
       const groupLegend = enc.find(s => s.type === "Weapon Group Legend") ? enc.find(s => s.type === "Weapon Group Legend") : "";
+
+      //Прибавка аттрибута
+      const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+
+      const category = enc.find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
+      const trait = enc.find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
+
+      let categoryItem = "";
+      if (category)
+        categoryItem = category ? category.value : gear.category;
+      if (trait)
+        categoryItem = gear.category === "advanced" ? "martial" : "simple";
+
+      categoryItem = categoryItem === "" ? gear.category : categoryItem;
+
+      let modProfiency = "";
+
+      //Группы Оружия и их разбивка
       if (groupLegend !== "") {
-        //Прибавка аттрибута
-        const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
-
         //Смотрим проф у класса, если нет особенности с группой -- для воина
-        const modProfiency = groupLegend !== "" && groupLegend.selected === gear.group ? groupLegend.value[gear.category] : this.skillAttack[gear.category];
-
-
-        const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
-        const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
-
-        return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+        modProfiency = groupLegend !== "" && groupLegend.selected === gear.group ? groupLegend.value[categoryItem] : this.skillAttack[categoryItem]
       }
       if (group !== "") {
-        //Прибавка аттрибута
-        const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
-
         //Смотрим проф у класса, если нет особенности с группой -- для воина
-        const modProfiency = group !== "" && group.selected === gear.group ? group.value[gear.category] : this.skillAttack[gear.category];
-
-
-        const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
-        const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
-
-        return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+        modProfiency = group !== "" && group.selected === gear.group ? group.value[categoryItem] : this.skillAttack[categoryItem];
       }
-        //Прибавка аттрибута
-        const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
 
-        //Смотрим проф у класса, если нет особенности с группой -- для воина
-        const modProfiency = this.skillAttack[gear.category];
+        if(modProfiency === "")
+          modProfiency = this.skillAttack[categoryItem];
 
-
-        const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
+        //руны
         const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+
+        /////Бонусы, если есть
+        let modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
+
+        const modProf = modLevel;
+        const Bonus = this.$store.getters["characters/characterBonusById"](
+        this.characterId
+        );
+
+        if (Bonus) {
+        Bonus.filter(
+          (s) =>
+            s.level <= this.characterLevel() &&
+            s.type === "Weapon" &&
+            s.mode === "Bonus" &&
+            (s.key === "all" || s.key === gear.group)
+        ).forEach((s) => {
+
+          modLevel = modProfiency === "U" ? this.characterLevel() : modProf;
+        });
+      }
+
 
         return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
     },
@@ -975,18 +993,18 @@ export default {
       }
 
 
-      const category = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
-      const trait = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
+      // const category = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
+      // const trait = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
 
-      gear = {
-        ...gear,
-        categoryOld: gear.category
+      // gear = {
+      //   ...gear,
+      //   categoryOld: gear.category
 
-      };
-      if (category)
-        gear.category = category ? category.value : gear.category;
-      if (trait)
-        gear.category = gear.category === "advanced" ? "martial" : "simple";
+      // };
+      // if (category)
+      //   gear.category = category ? category.value : gear.category;
+      // if (trait)
+      //   gear.category = gear.category === "advanced" ? "martial" : "simple";
 
          this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
       }

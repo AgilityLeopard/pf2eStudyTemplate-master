@@ -812,7 +812,7 @@ export default {
       let searchResult = this.talentList;
 
       if (this.selectedTagsFilters.length > 0) {
-        searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
+        searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
       }
       let filter;
 
@@ -829,13 +829,13 @@ export default {
         return [];
       }
       let filteredTalents = this.talentList;
-      const lowercaseKeywords = filteredTalents.map(s => s.tags.toUpperCase());
+      const lowercaseKeywords = filteredTalents.map(s => s.traits.toUpperCase());
 
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
       let reduced = [];
       filteredTalents.forEach((item) => {
-        if (item.tags) {
-          reduced.push(...item.tags);
+        if (item.traits) {
+          reduced.push(...item.traits);
         }
       });
       reduced = reduced.filter(item => item.trim().length > 0);
@@ -846,6 +846,7 @@ export default {
     sources() {
       return [
         'playerCore',
+        'playerCore2',
         ...this.settingHomebrews,
       ];
     },
@@ -889,7 +890,7 @@ export default {
       let filteredTalents = this.talentList;
 
       if (this.selectedTagsFilters.length > 0) {
-        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.tags.includes(m)));
+        filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
       }
 
       filteredTalents = filteredTalents.map((talent) => {
@@ -956,7 +957,7 @@ export default {
       });
 
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.tags.toString().toUpperCase()));
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
       return filteredTalents;
     },
     talentHatredKeywordOptions() {
@@ -979,6 +980,7 @@ export default {
     },
   },
   methods: {
+    //Вывод окна для выбора черт
      updatePreview(levelAncestry, type) {
 
 
@@ -1017,58 +1019,8 @@ export default {
         }
 
     },
-     updatePreviewSkill() {
 
-      const config = {
-        params: { source: this.sources.join(','), },
-      };
-
-      // const TalentsDetails = await this.$axios.get('/api/talents/', config);
-
-      this.selectedTalentsSkill = this.talentList.filter(s => s.type == 'skill').map(talent => {
-
-
-                       return {
-                         ...talent
-                       }
-      });
-
-      this.talentsDialogSkill = true;
-    },
-     updatePreviewClass() {
-
-      const config = {
-        params: { source: this.sources.join(','), },
-      };
-
-
-
-      this.selectedTalentsClass = this.talentList.filter(s => s.type == 'class').map(talent => {
-
-
-                       return {
-                         ...talent
-                       }
-                      });
-      this.talentsDialogClass = true;
-    },
-    updatePreviewGeneral() {
-
-      const config = {
-        params: { source: this.sources.join(','), },
-      };
-
-
-
-      this.selectedTalentsGeneral = this.talentList.filter(s => s.type == 'general').map(talent => {
-
-
-                       return {
-                         ...talent
-                       }
-                      });
-      this.talentsDialogGeneral = true;
-    },
+    //АПИ по чертам
     async getTalents(sources) {
       this.loading = true;
       const config = {
@@ -1087,8 +1039,12 @@ export default {
         });
        if (this.traitList !== undefined) {
         talents.forEach((species) => {
-          const lowercaseKeywords = species.tags.map((s) =>
-            s.toUpperCase()
+          const lowercaseKeywords = species.traits.split(',').map((s) =>
+            s.trim().toUpperCase()
+          );
+
+        species.traits = species.traits.split(',').map((s) =>
+            s.trim()
           );
 
           const List1 = this.traitList;
@@ -1098,7 +1054,7 @@ export default {
 
           if (trait.length > 0) {
             const listAbilities = [];
-            species.tags.forEach((talent) => {
+            species.traits.forEach((talent) => {
 
                 const t = trait.find(k => k.key === talent)
 
@@ -1128,7 +1084,7 @@ export default {
       const config = {
         params: { source: this.sources.join(','), },
       };
-      {
+
         const { data } = await this.$axios.get('/api/abilityAncestry/', config);
         this.abilityList = data.map(talent => {
 
@@ -1137,15 +1093,10 @@ export default {
           }
         });
 
-      }
 
-      {
-        const { data } = await this.$axios.get('/api/wargear/', config);
-        this.wargearList = data;
-      }
       this.loading = false;
     },
-        async getTraitList(sources) {
+      async getTraitList(sources) {
       const config = {
         params: {
           source: sources.join(","),
@@ -1202,7 +1153,7 @@ export default {
         }
 
         const aggregatedTalent = Object.assign({}, rawTalent);
-        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
 
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
@@ -1251,7 +1202,7 @@ export default {
         }
 
         const aggregatedTalent = Object.assign({}, rawTalent);
-        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
 
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
@@ -1308,21 +1259,21 @@ export default {
 
         // Fetch gear for selected augmetis
         if (aggregatedTalent.key.startsWith('core-augmetic')) {
-          console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
+
           aggregatedTalent.wargear.forEach((g, i, warArray) => {
             const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-            console.info(`[${aggregatedTalent.id}] Searching for <${sourceKey}>...`);
+
             const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
             if (charGear && charGear.length > 0 && this.wargearList) {
-              console.info(`[${aggregatedTalent.id}] Found ${charGear.length} gears ${charGear[0].name} for the source...`);
+
               const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-              console.info(`[${aggregatedTalent.id}] found ${wargear.name}...`);
+
               g.selected = wargear.name;
-              console.info(g.selected)
+
 
             }
           });
-          console.info(`[${aggregatedTalent.id}] DONE.`);
+
         }
 
         return aggregatedTalent;
@@ -1361,7 +1312,7 @@ export default {
         }
 
         const aggregatedTalent = Object.assign({}, rawTalent);
-        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
 
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
@@ -1418,21 +1369,21 @@ export default {
 
         // Fetch gear for selected augmetis
         if (aggregatedTalent.key.startsWith('core-augmetic')) {
-          console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
+
           aggregatedTalent.wargear.forEach((g, i, warArray) => {
             const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-            console.info(`[${aggregatedTalent.id}] Searching for <${sourceKey}>...`);
+
             const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
             if (charGear && charGear.length > 0 && this.wargearList) {
-              console.info(`[${aggregatedTalent.id}] Found ${charGear.length} gears ${charGear[0].name} for the source...`);
+
               const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-              console.info(`[${aggregatedTalent.id}] found ${wargear.name}...`);
+
               g.selected = wargear.name;
-              console.info(g.selected)
+
 
             }
           });
-          console.info(`[${aggregatedTalent.id}] DONE.`);
+
         }
 
         return aggregatedTalent;
@@ -1471,7 +1422,7 @@ export default {
         }
 
         const aggregatedTalent = Object.assign({}, rawTalent);
-        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
 
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
@@ -1528,21 +1479,21 @@ export default {
 
         // Fetch gear for selected augmetis
         if (aggregatedTalent.key.startsWith('core-augmetic')) {
-          console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
+
           aggregatedTalent.wargear.forEach((g, i, warArray) => {
             const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-            console.info(`[${aggregatedTalent.id}] Searching for <${sourceKey}>...`);
+
             const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
             if (charGear && charGear.length > 0 && this.wargearList) {
-              console.info(`[${aggregatedTalent.id}] Found ${charGear.length} gears ${charGear[0].name} for the source...`);
+
               const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-              console.info(`[${aggregatedTalent.id}] found ${wargear.name}...`);
+
               g.selected = wargear.name;
-              console.info(g.selected)
+
 
             }
           });
-          console.info(`[${aggregatedTalent.id}] DONE.`);
+
         }
 
         return aggregatedTalent;
@@ -1583,7 +1534,7 @@ export default {
         }
 
         const aggregatedTalent = Object.assign({}, rawTalent);
-        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
 
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
@@ -1640,21 +1591,21 @@ export default {
 
         // Fetch gear for selected augmetis
         if (aggregatedTalent.key.startsWith('core-augmetic')) {
-          console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
+
           aggregatedTalent.wargear.forEach((g, i, warArray) => {
             const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-            console.info(`[${aggregatedTalent.id}] Searching for <${sourceKey}>...`);
+
             const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
             if (charGear && charGear.length > 0 && this.wargearList) {
-              console.info(`[${aggregatedTalent.id}] Found ${charGear.length} gears ${charGear[0].name} for the source...`);
+
               const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-              console.info(`[${aggregatedTalent.id}] found ${wargear.name}...`);
+
               g.selected = wargear.name;
-              console.info(g.selected)
+
 
             }
           });
-          console.info(`[${aggregatedTalent.id}] DONE.`);
+
         }
 
         return aggregatedTalent;
@@ -1695,7 +1646,7 @@ export default {
         }
 
         const aggregatedTalent = Object.assign({}, rawTalent);
-        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
 
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
@@ -1744,21 +1695,21 @@ export default {
 
         // Fetch gear for selected augmetis
         if (aggregatedTalent.key.startsWith('core-augmetic')) {
-          console.info(`[${aggregatedTalent.id}] Check if gear exists for ...`)
+
           aggregatedTalent.wargear.forEach((g, i, warArray) => {
             const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-            console.info(`[${aggregatedTalent.id}] Searching for <${sourceKey}>...`);
+
             const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
             if (charGear && charGear.length > 0 && this.wargearList) {
-              console.info(`[${aggregatedTalent.id}] Found ${charGear.length} gears ${charGear[0].name} for the source...`);
+
               const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-              console.info(`[${aggregatedTalent.id}] found ${wargear.name}...`);
+
               g.selected = wargear.name;
-              console.info(g.selected)
+
 
             }
           });
-          console.info(`[${aggregatedTalent.id}] DONE.`);
+
         }
 
         return aggregatedTalent;

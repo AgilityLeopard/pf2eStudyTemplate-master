@@ -415,9 +415,6 @@ export const getters = {
       (e) => e.targetGroup === "traits"
     );
     traitEnhancements.forEach((m) => {
-      console.info(
-        `Enhance ${m.targetValue} by ${m.modifier} due to ${m.source}.`
-      );
       enhanced[m.targetValue] += m.modifier;
     });
     return enhanced;
@@ -733,26 +730,26 @@ export const mutations = {
               break;
 
             }
-          case ("Weapon"): {
-            // gear.traits.includes(item.key)
-            const war = character.wargear.filter(w => w.name === item.key)
-            //по названию
-            if (war)
-              war.forEach(w => {
-                w.category = item.value === "martial" ? "simple" : w.category;
-                w.category = item.value === "advanced" ? "martial" : w.category;
+          // case ("Weapon"): {
+          //   // gear.traits.includes(item.key)
+          //   const war = character.wargear.filter(w => w.name === item.key)
+          //   //по названию
+          //   if (war)
+          //     war.forEach(w => {
+          //       w.category = item.value === "martial" ? "simple" : w.category;
+          //       w.category = item.value === "advanced" ? "martial" : w.category;
 
-              })
-            //по трейтам
-            const traits = character.wargear.filter(w => w.traits.includes(item.key))
-            if (traits)
-              traits.forEach(w => {
-                w.category = w.category === "martial" ? "simple" : w.category;
-                w.category = w.category === "advanced" ? "martial" : w.category;
+          //     })
+          //   //по трейтам
+          //   const traits = character.wargear.filter(w => w.traits.includes(item.key))
+          //   if (traits)
+          //     traits.forEach(w => {
+          //       w.category = w.category === "martial" ? "simple" : w.category;
+          //       w.category = w.category === "advanced" ? "martial" : w.category;
 
-              })
-            break;
-          }
+          //     })
+          //   break;
+          // }
         }
 
       }
@@ -761,7 +758,7 @@ export const mutations = {
 
   },
   clearModification(state, payload) {
-    const modification = state.characters[payload.id].enhancements.sort((a, b) => a.level - b.level).reverse().filter(s => s.level <= state.characters[payload.id].level);
+    const modification = state.characters[payload.id].enhancements;
     const character = state.characters[payload.id];
 
 
@@ -890,27 +887,27 @@ export const mutations = {
               }
               break;
             }
-          case ("Weapon"): {
-            // gear.traits.includes(item.key)
-            const war = character.wargear.filter(w => w.name === item.key)
-            //по названию
-            if (war)
-              war.forEach(w => {
-                w.category = w.categoryOld;
-                // w.category = item.value === "simple" ? "martial" : w.category;
+          // case ("Weapon"): {
+          //   // gear.traits.includes(item.key)
+          //   const war = character.wargear.filter(w => w.name === item.key)
+          //   //по названию
+          //   if (war)
+          //     war.forEach(w => {
+          //       w.category = w.categoryOld;
+          //       // w.category = item.value === "simple" ? "martial" : w.category;
 
-              })
-            //по трейтам
-            const traits = character.wargear.filter(w => w.traits.includes(item.key))
-            if (traits)
-              traits.forEach(w => {
-                w.category = w.categoryOld;
-                // w.category = w.category === "martial" ? "advanced" : w.category;
-                // w.category = w.category === "simple" ? "martial" : w.category;
+          //     })
+          //   //по трейтам
+          //   const traits = character.wargear.filter(w => w.traits.includes(item.key))
+          //   if (traits)
+          //     traits.forEach(w => {
+          //       w.category = w.categoryOld;
+          //       // w.category = w.category === "martial" ? "advanced" : w.category;
+          //       // w.category = w.category === "simple" ? "martial" : w.category;
 
-              })
-            break;
-          }
+          //     })
+          //   break;
+          // }
 
         }
 
@@ -926,9 +923,6 @@ export const mutations = {
     state.characters[payload.id].species = payload.species;
   },
   setCharacterSpeciesAstartesChapter(state, payload) {
-    console.info(
-      `Set Species Astartes Chapter to ${payload.speciesAstartesChapter}.`
-    );
     state.characters[payload.id].speciesAstartesChapter =
       payload.speciesAstartesChapter;
   },
@@ -1640,7 +1634,7 @@ export const mutations = {
     const { id, key } = payload;
     const character = state.characters[id];
 
-    console.info(`Removing ${key} Skill.`);
+
     delete character.skills[key];
     character.customSkills = character.customSkills.filter(
       (s) => s.key !== key
@@ -1709,8 +1703,6 @@ export const mutations = {
       character.enhancements.push(item);
 
 
-
-      console.info(`Enhance/Modify: Adding ${item.targetValue} by '${source}'`);
     });
   },
   removeModification(state, payload) {
@@ -1789,7 +1781,7 @@ export const mutations = {
       .toString(36)
       .replace(/[^a-z]+/g, "")
       .substr(0, 8);
-    console.info(`Adding Talent [${talentUniqueId}] ${talent.name}.`);
+
     talent.id = talent.id || talentUniqueId;
     character.talents.push(talent);
 
@@ -1834,7 +1826,7 @@ export const mutations = {
       .toString(36)
       .replace(/[^a-z]+/g, "")
       .substr(0, 8);
-    console.info(`Adding Talent [${talentUniqueId}] ${talent.name}.`);
+
     talent.id = talent.id || talentUniqueId;
     character.spells.push(talent);
 
@@ -1852,13 +1844,10 @@ export const mutations = {
     const character = state.characters[payload.id];
     const { source, cascade } = payload;
     if (character.talents.length > 0) {
-      console.log(
-        `Found ${character.talents.length} talents, clearing with source ${source}...`
-      );
       character.talents = character.talents.filter(
         (k) => k.source === undefined || !k.source.includes(source)
       );
-      console.log(`${character.talents.length} talents remaining`);
+
     }
   },
   setCharacterTalentSelected(state, payload) {
@@ -1866,7 +1855,7 @@ export const mutations = {
     const { id, key, name, choice, selected } = payload.talent;
     character.talents = character.talents.filter((t) => t); // cleanup
 
-    console.info(`Update [${id}] ${name} with choice -> ${selected}`);
+
     const theTalent = character.talents.find((t) => t.id === id);
     const theOtherTalents = character.talents.filter((t) => t.id !== id);
 
@@ -1892,9 +1881,7 @@ export const mutations = {
     const character = state.characters[payload.charId];
     const { id, key, name, extraKey, extraCost } = payload;
 
-    console.info(
-      `Update ${key}/${name}/${extraKey} set extraCost to ${extraCost}`
-    );
+
     const theTalent = character.talents.find((t) => t.id === id);
     const theOtherTalents = character.talents.filter((t) => t.id !== id);
 
@@ -1917,7 +1904,7 @@ export const mutations = {
       .toString(36)
       .replace(/[^a-z]+/g, "")
       .substr(0, 8);
-    console.info(`Adding Mutation [${uuid}] ${mutation.name}.`);
+
 
     mutation.id = uuid;
     character.mutations.push(mutation);
@@ -1956,9 +1943,7 @@ export const mutations = {
       .toString(36)
       .replace(/[^a-z]+/g, "")
       .substr(0, 8);
-    console.info(
-      `Adding '${payload.name}' by '${payload.source}' [${wargearUniqueId}]`
-    );
+
     if (payload.gear && payload.gear.modifiers) {
     }
     const wargear = payload.gear;
@@ -2014,7 +1999,7 @@ export const mutations = {
       character.psychicPowers.find((t) => t.name === payload.name) !==
       undefined;
     if (!hasPower) {
-      console.info(`Adding '${payload.name}' by '${payload.source}'`);
+
       character.psychicPowers.push({
         key: payload.key,
         name: payload.name,
@@ -2029,7 +2014,7 @@ export const mutations = {
       (t) => t.name === payload.name
     );
     if (foundPower) {
-      console.info(`Removing '${payload.name}' by '${foundPower.source}'`);
+
       character.psychicPowers = character.psychicPowers.filter(
         (t) => t.name !== payload.name
       );
@@ -2038,13 +2023,11 @@ export const mutations = {
   clearCharacterPsychicPowersBySource(state, payload) {
     const character = state.characters[payload.id];
     if (character.psychicPowers.length > 0) {
-      console.log(
-        `found ${character.psychicPowers.length} psychic powers, clearing with source ${payload.source}...`
-      );
+
       character.psychicPowers = character.psychicPowers.filter(
         (k) => k.source === undefined || !k.source.includes(payload.source)
       );
-      console.log(`${character.psychicPowers.length} psychic powers remaining`);
+
     }
   },
 
@@ -2055,9 +2038,7 @@ export const mutations = {
   },
   setCharacterAscensionPackageStoryElement(state, payload) {
     const character = state.characters[payload.id];
-    console.info(
-      `Set Ascension Story Element to ${payload.ascensionPackageStoryElementKey}`
-    );
+
     // find package by payload.ascensionPackageKey and payload.ascensionPackage
     const index = character.ascensionPackages.findIndex(
       (a) =>
@@ -2071,9 +2052,7 @@ export const mutations = {
   },
   setCharacterAscensionPackageWargearOption(state, payload) {
     const character = state.characters[payload.id];
-    console.info(
-      `Set Ascension WargearOption to ${payload.ascensionPackageFeatureOptionChoiceKey}`
-    );
+
     // find package by payload.ascensionPackageKey and payload.ascensionPackage
     const index = character.ascensionPackages.findIndex(
       (a) =>
@@ -2103,13 +2082,13 @@ export const mutations = {
   setCharacterBackground(state, payload) {
     const { id, type, key } = payload;
     const character = state.characters[id];
-    console.info(`Background: ${type} > ${key} selected.`);
+
     character.background[type] = key;
   },
   setCharacterBackgroundPlusOne(state, payload) {
     const { id, type, key, plusOne } = payload;
     const character = state.characters[id];
-    console.info(`Background Focus: ${type} > ${key} for ${plusOne} selected.`);
+
     character.background.plusOne = key;
   },
 
@@ -2139,16 +2118,13 @@ export const mutations = {
   addCharacterKeyword(state, payload) {
     const character = state.characters[payload.id];
     const { keyword } = payload;
-    console.log(`Adding keyword ${keyword.name} of type ${keyword.type}.`);
     character.keywords.push(keyword);
   },
   clearCharacterKeywordsBySource(state, payload) {
     const character = state.characters[payload.id];
     const { source, cascade } = payload;
     if (character.keywords.length > 0) {
-      console.log(
-        `found ${character.keywords.length} keywords, clearing with source ${source}...`
-      );
+
       character.keywords = character.keywords.filter(
         (k) => k.source !== source
       );
@@ -2157,7 +2133,7 @@ export const mutations = {
           (k) => !k.source.startsWith(source)
         );
       }
-      console.log(`${character.keywords.length} keywords remaining`);
+
     }
   },
   /**
@@ -2234,7 +2210,7 @@ export const mutations = {
 
     switch (character.version) {
       case 10:
-        console.debug(`v10 -> v11 : fixing aeldari path.`);
+
         character.version = 11;
         character.enhancements = character.enhancements.map((e) => {
           if (e.source) {
@@ -2248,7 +2224,7 @@ export const mutations = {
           return e;
         });
         state.characters[config.characterId] = { ...character };
-        console.info(`Character migrated to v11`);
+
         break;
       case 9:
         console.debug(`v9 -> v10 : adding mutations.`);
@@ -2260,10 +2236,10 @@ export const mutations = {
           ...character,
           ...mutations,
         };
-        console.info(`Character migrated to v10`);
+
         break;
       case 8:
-        console.debug(`v8 -> v9 : adding options for fluff notes.`);
+
         const fluff = {
           fluff: getDefaultState().fluff,
         };
@@ -2272,7 +2248,7 @@ export const mutations = {
           ...character,
           ...fluff,
         };
-        console.info(`Character migrated to v9`);
+
         break;
       case 7:
         console.debug(`v7 -> v8 : Adding houserules handling.`);
@@ -2284,7 +2260,7 @@ export const mutations = {
           ...character,
           ...settingHouserules,
         };
-        console.info(`Character migrated to v8.`);
+
         break;
     }
   },
@@ -2294,44 +2270,44 @@ export const actions = {
   clearCharacterAscensionPackage({ commit, state }, payload) {
     const { id, value, key } = payload;
 
-    console.info(`Ascension [${value}] : Purge > START`);
 
-    console.info(`Ascension [${value}] : Purge > Enhancements`);
+
+
     commit("clearCharacterEnhancementsBySource", {
       id,
       source: `ascension.${key}`,
     });
 
-    console.info(`Ascension [${value}] : Purge > Keywords`);
+
     commit("clearCharacterKeywordsBySource", {
       id,
       source: `ascension.${key}`,
       cascade: true,
     });
 
-    console.info(`Ascension [${value}] : Purge > talents`);
+
     commit("clearCharacterTalentsBySource", {
       id,
       source: `ascension.${key}`,
       cascade: true,
     });
 
-    console.info(`Ascension [${value}] : Purge > Psychic Powers`);
+
     commit("clearCharacterPsychicPowersBySource", {
       id,
       source: `ascension.${key}`,
     });
 
-    console.info(`Ascension [${value}] : Purge > Wargear`);
+
     commit("removeCharacterWargearBySource", {
       id,
       source: `ascension.${key}`,
     });
 
-    console.info(`Ascension [${value}] : Purge > Package`);
+
     commit("clearCharacterAscensionPackage", { id, value, key });
 
-    console.info(`Ascension [${value}] : Purge > DONE`);
+
   },
 
   /**
@@ -2354,10 +2330,7 @@ export const actions = {
     const builderVersion = BUILDER_VERSION;
 
     if (characterVersion < builderVersion) {
-      console.info(
-        `Migrate [${character.name}] from ${characterVersion} to ${characterVersion + 1
-        }`
-      );
+
       const config = {
         characterId: character.id,
         currentVersion: characterVersion,

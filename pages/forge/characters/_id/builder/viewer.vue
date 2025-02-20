@@ -16,14 +16,14 @@
 
 <script>
 export default {
-  name: 'Viewer',
-  layout: 'print',
+  name: "Viewer",
+  layout: "print",
   data() {
     return {
-      activeComponent: 'attributes',
+      activeComponent: "attributes",
       children: {
-        attributes: { id: 1, label: 'Attributes' },
-        skills: { id: 2, label: 'skills' },
+        attributes: { id: 1, label: "Attributes" },
+        skills: { id: 2, label: "skills" },
       },
     };
   },
@@ -33,7 +33,7 @@ export default {
     },
   },
   async asyncData({ params }) {
-    const sourceFilter = '?source=core,coreab';
+    const sourceFilter = "?source=core,coreab";
 
     return {
       characterId: params.id,
@@ -41,12 +41,10 @@ export default {
   },
   methods: {
     prev() {
-      console.log('Show previous view');
-      this.loadView('attributes');
+      this.loadView("attributes");
     },
     next() {
-      console.log('Show next view');
-      this.loadView('skills');
+      this.loadView("skills");
     },
     loadView(index) {
       this.activeComponent = index;
@@ -55,6 +53,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

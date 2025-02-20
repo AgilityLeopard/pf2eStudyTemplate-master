@@ -259,7 +259,6 @@ export default {
       handler(key) {
         if (key) {
           if (key === 'unknown') {
-            console.info(`Found unexpected key -> ${key}`);
             return;
           }
           this.loadArchetype(key);
@@ -496,7 +495,7 @@ export default {
             this.getPsychicPowerOptions(powerSelections);
             const found = this.psychicPowers.find( (p) => p.source && p.source === `archetype.${powerSelections.name}`);
             if ( found ) {
-              console.info(`Power ${found.name} found for the archetype feature ${feature.name} / power ${powerSelections.name}.`);
+     
               powerSelections.selected = found.name;
             } else {
               console.warn(`No Power found for ${powerSelections.name}.`)
@@ -536,7 +535,7 @@ export default {
       this.$store.commit('characters/clearCharacterClassModFeature', { id: this.characterId, content: mod });
       this.$store.commit('characters/addCharacterClassModFeature', { id: this.characterId, content: mod });
 
-      
+
 
       // this.$store.commit("characters/addCharacterModifications", {
       //   id: this.characterId,

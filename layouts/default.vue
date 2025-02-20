@@ -242,7 +242,6 @@ export default {
   watch: {
     theme: {
       handler(newTheme, oldTheme) {
-        console.info(`handle ${newTheme}`);
         this.$vuetify.theme.dark = newTheme !== "light";
       },
       immediate: true, // make this watch function is called when component created
