@@ -1,14 +1,14 @@
 <template lang="html">
   <ul class="simple">
-    <li v-for="trait in item.traitDesc" class="traits">
+    <li v-for="trait in List(item)" class="traits">
       <p class="trait">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="t">
-              {{ trait.name }}
+              {{ trait.key }}
             </div>
           </template>
-          <span>{{ trait.description }}</span>
+          <span>{{ trait.desc }}</span>
         </v-tooltip>
       </p>
     </li>
@@ -29,13 +29,66 @@ export default {
       required: true,
     },
   },
+    data() {
+    return {
+        traitList: undefined,
+    };
+  },
+
   computed: {
-    // avatar() {
-    //   return `/img/avatars/species/${this.item.key}.png`;
-    // },
+    sources() {
+      return [
+        'playerCore',
+        'playerCore2',
+        ...this.settingHomebrews,
+      ];
+    },
+
+    settingHomebrews() {
+      return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
+    },
+  },
+  watch: {
+    sources: {
+      handler(newVal) {
+        if (newVal) {
+          this.getTraitList(newVal);
+
+        }
+      },
+      immediate: true,
+    },
   },
   methods: {
+    async getTraitList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/traits/",
+        config.source
+      );
+      data.forEach(t => t.key = t.key.toLowerCase());
+      this.traitList = data;
+    },
+        traitItem(item)
+    {
+          if (this.traitList !==undefined)
+          {
+            console.log(this.traitList.find(s => s.key === item));
+            return this.traitList.find(s => s.key === item) ? this.traitList.find(s => s.key === item) : '';
+    }
 
+      return '';
+    },
+    List(item) {
+      if (this.traitList !== undefined) {
+        return this.traitList.filter(s => item.traits.includes(s.key));
+
+      }
+    }
   },
 };
 </script>
@@ -48,6 +101,7 @@ export default {
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;

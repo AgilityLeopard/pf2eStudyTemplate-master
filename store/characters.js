@@ -635,6 +635,8 @@ export const mutations = {
               if (item.mode === "Bonus") {
                 character.Bonus.push(item);
               }
+              if (item.mode === "Upgrade")
+                char.speed[item.key] = char.speed[item.key] < item.valueBonus;
               break;
 
 
@@ -795,6 +797,8 @@ export const mutations = {
               if (item.mode === "Bonus") {
                 character.Bonus = character.Bonus.filter(i => i.talentId != item.talentId)
               }
+              if (item.mode === "Upgrade")
+                char.speed[item.key] = 0;
               break;
 
 

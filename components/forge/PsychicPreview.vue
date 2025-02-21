@@ -65,10 +65,14 @@
         <template v-slot:no-data />
 
         <template v-slot:item.name="{ item }">
-          <span>{{ item.name }}</span>
-          <div>
-            <trait-view v-if="item.traits" :item="item" class="mb-2" />
-          </div>
+          <v-row
+            ><span>{{ item.name }}</span></v-row
+          >
+          <v-row>
+            <div>
+              <trait-view v-if="item.traits" :item="item" class="mb-2" />
+            </div>
+          </v-row>
         </template>
 
         <template v-slot:item.level="{ item }">

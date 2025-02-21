@@ -37,8 +37,21 @@
               "
             >
               <v-expansion-panel-header
-                >{{ levelAncestry }} уровень</v-expansion-panel-header
-              >
+                >{{ levelAncestry }} уровень
+                <v-col :cols="4" :sm="2">
+                  <v-btn
+                    color="error"
+                    align="right"
+                    x-small
+                    v-if="characterAncestryTalent(levelAncestry)"
+                    @click.stop.prevent="
+                      removeTalent(characterAncestryTalent(levelAncestry))
+                    "
+                    >Удалить</v-btn
+                  >
+                </v-col>
+              </v-expansion-panel-header>
+
               <v-expansion-panel-content :key="levelAncestry">
                 <v-btn
                   @click="updatePreview(levelAncestry, 'ancestry')"
@@ -47,45 +60,100 @@
                   Выберите черту {{ levelAncestry }}
                 </v-btn>
 
-                <v-expansion-panels
+                <div v-if="characterAncestryTalent(levelAncestry)">
+                  <v-row class="rowFeat">
+                    <div class="head">
+                      <h1>
+                        {{ characterAncestryTalent(levelAncestry).label }}
+                      </h1>
+                    </div>
+                    <div class="line"></div>
+                    <div class="tag">
+                      Черта {{ characterAncestryTalent(levelAncestry).level }}
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div>
+                      <trait-view
+                        v-if="characterAncestryTalent(levelAncestry).traits"
+                        :item="characterAncestryTalent(levelAncestry)"
+                        class="mb-2"
+                      />
+                    </div>
+                  </v-row>
+                  <div
+                    v-if="characterAncestryTalent(levelAncestry).requirements"
+                  >
+                    <p class="main-holder">
+                      {{
+                        characterAncestryTalent(levelAncestry).requirements.key
+                      }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="characterAncestryTalent(levelAncestry).description"
+                  ></div>
+                  <p></p>
+                  <div v-if="characterAncestryTalent(levelAncestry).options">
+                    <v-select
+                      :value="characterAncestryTalent(levelAncestry).selected"
+                      :items="characterAncestryTalent(levelAncestry).options"
+                      item-text="name"
+                      item-value="key"
+                      :placeholder="
+                        characterAncestryTalent(levelAncestry)
+                          .optionsPlaceholder
+                      "
+                      filled
+                      dense
+                      @input="
+                        talentUpdateSelected(
+                          item,
+                          characterAncestryTalent(levelAncestry),
+                          levelAncestry
+                        )
+                      "
+                    />
+                  </div>
+                  <!-- <v-row no-gutters>
+                    <v-col :cols="8" :sm="10" class="subtitle-1">
+                      <span />
+                    </v-col>
+                    <v-col :cols="8" :sm="10" class="subtitle-2">
+                      <span
+                        v-html="characterAncestryTalent(levelAncestry).label"
+                      />
+                    </v-col>
+                    <v-col :cols="4" :sm="2">
+                      <v-btn
+                        color="error"
+                        x-small
+                        @click.stop.prevent="
+                          removeTalent(characterAncestryTalent(levelAncestry))
+                        "
+                        >Удалить</v-btn
+                      >
+                    </v-col>
+                    <v-col
+                      v-if="!open"
+                      :cols="8"
+                      :sm="10"
+                      class="caption grey--text"
+                    >
+                      {{ characterAncestryTalent(levelAncestry).snippet }}
+                    </v-col>
+                  </v-row> -->
+                </div>
+                <!-- <v-expansion-panels
                   multiple
                   v-if="characterAncestryTalent(levelAncestry)"
                 >
                   <v-expansion-panel>
                     <v-expansion-panel-header>
                       <template v-slot:default="{ open }">
-                        <v-row no-gutters>
-                          <v-col :cols="8" :sm="10" class="subtitle-1">
-                            <span />
-                          </v-col>
-                          <v-col :cols="8" :sm="10" class="subtitle-2">
-                            <span
-                              v-html="
-                                characterAncestryTalent(levelAncestry).label
-                              "
-                            />
-                          </v-col>
-                          <v-col :cols="4" :sm="2">
-                            <v-btn
-                              color="error"
-                              x-small
-                              @click.stop.prevent="
-                                removeTalent(
-                                  characterAncestryTalent(levelAncestry)
-                                )
-                              "
-                              >Удалить</v-btn
-                            >
-                          </v-col>
-                          <v-col
-                            v-if="!open"
-                            :cols="8"
-                            :sm="10"
-                            class="caption grey--text"
-                          >
-                            {{ characterAncestryTalent(levelAncestry).snippet }}
-                          </v-col>
-                        </v-row>
+                       
                       </template>
                     </v-expansion-panel-header>
 
@@ -125,7 +193,7 @@
                       </div>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
-                </v-expansion-panels>
+                </v-expansion-panels> -->
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -716,6 +784,7 @@ import WargearMixin from '~/mixins/WargearMixin';
 import IssueList from '~/components/IssueList.vue';
 import WargearSelect from '~/components/forge/WargearSelect.vue';
 import TalentsPreview from "~/components/forge/TalentsPreview.vue";
+import traitView from '~/components/TraitView';
 
 export default {
   name: 'Talents',
@@ -724,7 +793,7 @@ export default {
   components: {
     WargearSelect,
     IssueList,
-    TalentsPreview,
+    TalentsPreview,traitView
   },
   mixins: [
     KeywordRepositoryMixin,
@@ -777,6 +846,7 @@ export default {
         rowsPerPage: 25,
       },
       talentList: undefined,
+      traitList: undefined,
       levelTalent: undefined,
       abilityList: undefined,
       wargearList: undefined,
@@ -984,13 +1054,7 @@ export default {
      updatePreview(levelAncestry, type) {
 
 
-      const list = this.talentList.filter(s => s.type === type && s.level <= levelAncestry).map(talent => {
-
-                       return {
-                         ...talent
-
-                       }
-      });
+      const list = this.talentList.filter(s => s.type === type);
       list.forEach(t => {
         const tal = t;
         tal.place = type + levelAncestry;
@@ -1106,6 +1170,7 @@ export default {
         "/api/traits/",
         config.source
       );
+      data.forEach(t => t.key = t.key.toLowerCase());
       this.traitList = data;
     },
     dynamicSort(property) {
@@ -1154,14 +1219,17 @@ export default {
 
         const aggregatedTalent = Object.assign({}, rawTalent);
 
-
+        aggregatedTalent.traits = talent.traits;
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
+        aggregatedTalent.level = talent.level;
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
+          if()
+          agregatedTalent.options = talent.options;
         }
 
         // Fetch gear for selected weapon trooper
@@ -1321,6 +1389,7 @@ export default {
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
+
           // aggregatedTalent.extraCost = 0;
           // if (talent.extraCost && typeof talent.extraCost === 'object') {
           //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
@@ -1338,53 +1407,6 @@ export default {
           // }
         }
 
-        // Fetch gear for selected weapon trooper
-        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-            /*
-            charGear.forEach( g => {
-              characterPackage
-              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
-              .selectList.find(s=> g.source.endsWith(s.key))
-                .itemChoice = g.name
-            });
-            */
-          }
-        }
-
-        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-          }
-        }
-
-        // Fetch gear for selected augmetis
-        if (aggregatedTalent.key.startsWith('core-augmetic')) {
-
-          aggregatedTalent.wargear.forEach((g, i, warArray) => {
-            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-
-            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-            if (charGear && charGear.length > 0 && this.wargearList) {
-
-              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-
-              g.selected = wargear.name;
-
-
-            }
-          });
-
-        }
 
         return aggregatedTalent;
       }).sort((a, b) => a.id.localeCompare(b.id));
@@ -1428,6 +1450,7 @@ export default {
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
+        aggregatedTalent.level = talent.level;
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
@@ -1768,4 +1791,73 @@ export default {
 };
 </script>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.traits {
+  background-color: #d9c484;
+  display: inline-block;
+  margin: 0.1em 0.15em !important;
+  padding: 0.1em 0.25em;
+  list-style-type: none !important;
+}
+.trait {
+  background-color: #5e0000;
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+}
+
+.simple {
+  display: inherit;
+  margin-bottom: 0;
+  padding-inline-start: 0.2em;
+}
+
+.head {
+  /* color: rgb(57, 54, 54); */
+  width: fit-content;
+  /* font-size: 24px; */
+  font-style: normal;
+  /* font-family: goodOTCondBold; */
+  font-weight: normal;
+  line-height: 24px;
+  /* text-transform: uppercase; */
+}
+
+.line {
+  height: 1px;
+  margin: 0 1rem;
+  flex-grow: 1;
+  background: #676767;
+}
+
+.tag {
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  font-family: goodOTCondBold;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rowFeat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+</style>

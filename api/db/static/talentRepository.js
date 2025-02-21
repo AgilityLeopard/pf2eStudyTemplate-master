@@ -563,11 +563,12 @@ const playerCoreAncestry = [
     name: "Родовое долголетие",
     level: 1,
     traits: 'эльф',
-    optionsKey: 'skill',
+    // optionsKey: 'skill',
     options: [
       {
         key: "all",
-        restriction: "T"
+        restriction: "T",
+        type: 'skill',
       }
     ],
     requirementsText: "Ваш возраст по крайней мере 100 лет",
@@ -890,7 +891,8 @@ const playerCoreAncestry = [
     options: [
       {
         key: "all",
-        restriction: "E"
+        restriction: "E",
+        type: 'skill',
       }
     ],
   },
@@ -901,110 +903,25 @@ const playerCoreAncestry = [
     traits: 'эльф',
     name: "Потусторонняя проницательность",
     level: 9,
-    // reqOptionalText: "Родовое долголетие",
-    // requirements: [
-    //   {
-    //     type: 'feat',
-    //     key: 'Ancestral Longevity',
-    //     // value: 'T',
-    //   }
-    // ],
-    // optionsKey: 'skill',
-    // options: [
-    //   {
-    //     key: "all",
-    //     restriction: "T"
-    //   }
-    // ],
     requirementsText: "Как минимум одно врожденное заклинание, полученное от эльфийской способности родословной",
     description:
       '<p>Арканная магия, которой вы обладаете, растет в силе и сложности. Выберите одно обычное заклинание 2-го ранга в качестве врожденного, из того же магического обычая, что и в другой способности эльфа (например, из арканного списка, если у вас есть Потусторонняя магия / Otherworldly Magic. Вы можете сотворять это заклинание раз в день, как врожденное, используя тот же магический обычай, который используется для списка заклинаний из которого вы его выбрали.</p>'
       +
       '<p>Ваша магия приспосабливающаяся. Тратя 1 день отдыха, вы можете заменить это заклинание на другое обычное заклинание 2-го ранга из того же магического обычая.</p>',
-    // modifications: [
-    //   { 
-    //     targetGroup: 'Speed', 
-    //     targetValue: 'Bonus', 
-    //     isChoiceAll: true,
-    //     level: 9,
-    //     // trait: 'control',
-    //     // value: "success",
-    //     valueBonus: 'level',
-    //     typeBonus: 'untyped',
-    //     // option: ['all'],
-    //     // modifier: "T", 
-    //   },
-    //   { 
-    //     targetGroup: 'Weapon', 
-    //     targetValue: 'Upgrade', 
-    //     isChoiceAll: false,
-    //     level: 11,
-    //     // type: 'Perception',
-    //     // trait: 'control'
-    //     // action: "Sense motive",
-    //     // valueBonus: 2,
-    //     // typeBonus: 'circumstance',
-    //     // valueBonus: 1,,
-    //     // typeBonus: 'circumstance'
-    //     // option: ['all'],
-    //      modifier: "T", 
-    //   },
-    // ],
-  },
-  {
-    ...talent('playerCore', 130, 'Tree Climber'),
-    snippet: 'Вы провели большую часть своей жизни среди верхушек деревьев и стали экспертом в быстром и безопасном лазании по ним',
-    type: "ancestry",
-    traits: 'эльф',
-    name: "Древолаз",
-    level: 9,
-    // reqOptionalText: "Родовое долголетие",
-    // requirements: [
-    //   {
-    //     type: 'feat',
-    //     key: 'Ancestral Longevity',
-    //     // value: 'T',
-    //   }
-    // ],
-    // optionsKey: 'skill',
-    // options: [
-    //   {
-    //     key: "all",
-    //     restriction: "T"
-    //   }
-    // ],
-    // requirementsText: "Как минимум одно врожденное заклинание, полученное от эльфийской способности родословной",
-    description:
-      '<p>Вы провели большую часть своей жизни среди верхушек деревьев и стали экспертом в быстром и безопасном лазании по ним. Вы получаете Скорость карабканья 10 футов.</p>',
-    // modifications: [
-    //   { 
-    //     targetGroup: 'Speed', 
-    //     targetValue: 'Bonus', 
-    //     isChoiceAll: true,
-    //     level: 9,
-    //     // trait: 'control',
-    //     // value: "success",
-    //     valueBonus: 'level',
-    //     typeBonus: 'untyped',
-    //     // option: ['all'],
-    //     // modifier: "T", 
-    //   },
-    //   { 
-    //     targetGroup: 'Weapon', 
-    //     targetValue: 'Upgrade', 
-    //     isChoiceAll: false,
-    //     level: 11,
-    //     // type: 'Perception',
-    //     // trait: 'control'
-    //     // action: "Sense motive",
-    //     // valueBonus: 2,
-    //     // typeBonus: 'circumstance',
-    //     // valueBonus: 1,,
-    //     // typeBonus: 'circumstance'
-    //     // option: ['all'],
-    //      modifier: "T", 
-    //   },
-    // ],
+    modifications: [
+      {
+        targetGroup: 'Spell',
+        targetValue: 'Innate',
+        isChoiceAll: false,
+        spell: {
+          tradition: "all",
+          level: 2,
+          cell: 1,
+          // rank: "/2",
+          item: [],
+        }
+      },
+    ],
   },
   {
     ...talent('playerCore', 130, 'Tree Climber'),
@@ -1013,84 +930,82 @@ const playerCoreAncestry = [
     name: "Древолаз",
     traits: 'эльф',
     level: 9,
-    // reqOptionalText: "Родовое долголетие",
-    // requirements: [
-    //   {
-    //     type: 'feat',
-    //     key: 'Ancestral Longevity',
-    //     // value: 'T',
-    //   }
-    // ],
-    // optionsKey: 'skill',
-    // options: [
-    //   {
-    //     key: "all",
-    //     restriction: "T"
-    //   }
-    // ],
-    // requirementsText: "Как минимум одно врожденное заклинание, полученное от эльфийской способности родословной",
     description:
       '<p>Вы провели большую часть своей жизни среди верхушек деревьев и стали экспертом в быстром и безопасном лазании по ним. Вы получаете Скорость карабканья 10 футов.</p>',
     modifications: [
       {
-        targetGroup: 'Speed',
-        targetValue: 'Climb',
-        isChoiceAll: true,
-        level: 9,
-        // trait: 'control',
-        // value: "success",
+        type: 'Speed',
+        mode: 'Upgrade',
+        key: 'climb',
         valueBonus: 10,
-        typeBonus: 'untyped',
-        // option: ['all'],
-        // modifier: "T", 
+        typeBonus: 'untyped'
       },
-      //   { 
-      //     targetGroup: 'Weapon', 
-      //     targetValue: 'Upgrade', 
-      //     isChoiceAll: false,
-      //     level: 11,
-      //     // type: 'Perception',
-      //     // trait: 'control'
-      //     // action: "Sense motive",
-      //     // valueBonus: 2,
-      //     // typeBonus: 'circumstance',
-      //     // valueBonus: 1,,
-      //     // typeBonus: 'circumstance'
-      //     // option: ['all'],
-      //      modifier: "T", 
-      //   },
     ],
   },
   {
-    ...talent('playerCore', 130, 'Otherworldly Acumen'),
-    snippet: 'Арканная магия, которой вы обладаете, растет в силе и сложности',
+    ...talent('playerCore', 130, 'Universal Longevity'),
+    snippet: 'Вы усовершенствовали свое умение поддерживать все навыки, которые изучили за долгую жизнь, так что вы почти никогда не нетренированы навыку.',
     type: "ancestry",
-    name: "Потусторонняя проницательность",
-    level: 9,
+    name: "Универсальное долголетие",
     traits: 'эльф',
+    level: 13,
     description:
-      '<p>Арканная магия, которой вы обладаете, растет в силе и сложности. Выберите одно обычное заклинание 2-го ранга в качестве врожденного, из того же магического обычая,'
-      +
-      'что и в другой способности эльфа(например, из арканного списка, если у вас есть Потусторонняя магия / Otherworldly Magic.Вы можете сотворять это заклинание раз в день, как '
-      +
-      'врожденное, используя тот же магический обычай, который используется для списка заклинаний из которого вы его выбрали.</p>'
-      +
-      '<p>Ваша магия приспосабливающаяся.Тратя 1 день отдыха, вы можете заменить это заклинание на другое обычное заклинание 2-го ранга из того же магического обычая.</p>',
-    modifications: [
-      {
-        targetGroup: 'Speed',
-        targetValue: 'Climb',
-        isChoiceAll: true,
-        level: 9,
-        // trait: 'control',
-        // value: "success",
-        valueBonus: 10,
-        typeBonus: 'untyped',
-        // option: ['all'],
-        // modifier: "T", 
-      },
-    ],
+      '<p>Вы усовершенствовали свое умение поддерживать все навыки, которые изучили за долгую жизнь, так что вы почти никогда не нетренированы навыку.' +
+      'Вы вспоминаете свой жизненный опыт, изменяя навыки, которые вы выбрали для Родовое долголетие / Ancestral Longevity (и для Эксперт долголетия / Expert Longevity,' +
+      'если у вас есть эта способность).</p>',
+    // modifications: [
+    //   {
+    //     type: 'Speed',
+    //     mode: 'Upgrade',
+    //     key: 'climb',
+    //     valueBonus: 10,
+    //     typeBonus: 'untyped'
+    //   },
+    // ],
   },
+  {
+    ...talent('playerCore', 130, 'Avenge Ally'),
+    snippet: 'Вы провели большую часть своей жизни среди верхушек деревьев и стали экспертом в быстром и безопасном лазании по ним',
+    type: "ancestry",
+    name: "Отомстить за союзника",
+    traits: 'эльф, удача',
+    level: 13,
+    description:
+      '<p>Хотя вы знаете, что в конечном счете переживете своих товарищей, то, что вы видите их на пороге смерти, придаете ясности атакам.' +
+      'Совершите Удар. Сделайте бросок атаки дважды и используйте наибольший результат.</p>',
+    // modifications: [
+    //   {
+    //     type: 'Speed',
+    //     mode: 'Upgrade',
+    //     key: 'climb',
+    //     valueBonus: 10,
+    //     typeBonus: 'untyped'
+    //   },
+    // ],
+  },
+  {
+    ...talent('playerCore', 130, 'Magic Rider'),
+    snippet: 'Ваш народ использовал мощную магию для путешествий между далекими мирами, и остатки этой магии облегчают вам такое перемещение.',
+    type: "ancestry",
+    name: "Верхом на магии",
+    traits: 'эльф',
+    level: 17,
+    description:
+      '<p>Ваш народ использовал мощную магию для путешествий между далекими мирами, и остатки этой магии облегчают вам такое перемещение.' +
+      'Когда вы являетесь целью заклинания телепортации, которое перемещает более одного человека, оно может воздействовать на дополнительную цель выбранную' +
+      'заклинателем сверх обычного ограничения. Дополнительно, когда вы являетесь целью заклинания Телепортация, то вы и другие цели прибываете не дальше,' +
+      'чем в 1 миле от места назначения, независимо от расстояния на которое перемещаетесь.</p>',
+    // modifications: [
+    //   {
+    //     type: 'Speed',
+    //     mode: 'Upgrade',
+    //     key: 'climb',
+    //     valueBonus: 10,
+    //     typeBonus: 'untyped'
+    //   },
+    // ],
+  },
+
   ///////
   {
     ...talent('playerCore', 130, 'Nature Ambition', 'человек'),
@@ -1102,9 +1017,6 @@ const playerCoreAncestry = [
     traits: 'человек',
     description:
       '<p>Ваша находчивость позволяет вам изучать большое разнообразие навыков. Вы становитесь обучены двум навыкам на свой выбор</p>',
-    modifications: [
-      { targetGroup: 'traits', targetValue: 'speed', modifier: 0, rank: 1 },
-    ],
     selected: '',
     optionsPlaceholder: 'Select a skill',
     optionsKey: 'skill',

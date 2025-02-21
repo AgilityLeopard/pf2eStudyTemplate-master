@@ -43,21 +43,24 @@
         item-key="name"
         hide-default-footer
         :loading="!talents"
-        loading-text="Loading Talents... Please Wait"
+        loading-text="Загрузка черт, пожалуйста, подождите"
         @page-count="pagination.pageCount = $event"
       >
         <template v-slot:no-data />
+
+        <template v-slot:item.name="{ item }">
+          <span>{{ item.name }}</span>
+
+          <div>
+            <trait-view v-if="item.traits" :item="item" />
+          </div>
+        </template>
 
         <template v-slot:item.level="{ item }">
           <v-chip>
             {{ item.level }}
           </v-chip>
         </template>
-
-        <template v-slot:item.name="{ item }">
-          <span>{{ item.name }}</span>
-        </template>
-
         <!-- 
         <template v-slot:item.prerequisitesHtml="{ item }">
           <span v-if="item.requirementsText" v-html="item.requirementsText" />
@@ -69,8 +72,9 @@
 
         <template v-slot:item.buy="{ item }">
           <v-btn
-            :color="item.level <= level ? 'success' : 'red'"
+            color="success"
             x-small
+            v-if="!DiffrentTalent(item)"
             @click="addTalent(item, type, item.level)"
           >
             add
@@ -186,18 +190,19 @@ export default {
         ancestry2: "Черта родословной 2 Уровня",
       },
       headers: [
+                {
+          text: 'Название',
+          value: 'name',
+          align: 'left',
+          sortable: true,
+        },
         {
           text: 'Уровень',
           value: 'level',
           align: 'center',
           sortable: true,
         },
-        {
-          text: 'Название',
-          value: 'name',
-          align: 'left',
-          sortable: true,
-        },
+
 
         {
           text: 'Описание',
@@ -289,6 +294,8 @@ export default {
         name: talent.name,
         key: talent.key,
         cost: talent.cost,
+        level: level,
+        traits: talent.traits,
         place: talent.place,
         modifications: talent.modifications,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
@@ -378,6 +385,12 @@ export default {
     characterLevel(){
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
+    DiffrentTalent(item) {
+      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
+      const hasTalent = characterTalents.find(s => s.key === item.key)
+      if (hasTalent) return true;
+      return false;
+    },
   },
     computed:
     {
@@ -428,7 +441,7 @@ export default {
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
     },
-      finalKeywords() {
+    finalKeywords() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
     },
 

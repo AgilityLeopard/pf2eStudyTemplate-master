@@ -463,6 +463,7 @@ export default {
       selectedPsychic: undefined,
       archetype: undefined,
       psychicPowersList: undefined,
+        traitList: undefined,
       loading: false,
       showAlerts: false,
       psychicDialog: false,
@@ -565,6 +566,7 @@ export default {
 
       const characterTalents = this.$store.getters['characters/characterSpellsById'](this.characterId);
 
+
       const talents = characterTalents.filter((t) => t).map((talent) => {
 
       const rawTalent = this.psychicPowersList.find((r) => r.key === talent.key);
@@ -585,15 +587,15 @@ export default {
         console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
 
         aggregatedTalent.description = talent.description;
-        // const temp = "<span class=\"data-tooltip\" data-tooltip=\"Всплывающая подсказка сообщает о чём-то многозначном и полезном...\">Наведи сюда курсор.</span>"
-        // aggregatedTalent.description = talent.description.replace("Ослаблена", temp);
+
         aggregatedTalent.id = talent.id;
+
         // aggregatedTalent.cost = talent.cost;
+
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.rank = talent.rank;
         aggregatedTalent.cell = talent.cell;
-        // aggregatedTalent.place = talent.place;
-        // for each special talent, check respectively
+
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
 
@@ -606,16 +608,8 @@ export default {
       return talents.find(s => s.rank === rank && s.cell === cell);
     },
      updatePreview(levelAncestry, cell) {
+      const list = this.psychicPowersList.filter(spell => !spell.traits.join(',').includes('фокус'));
 
-
-      const list = this.psychicPowersList;
-      /*.filter(s => s.type === type).map(talent => {
-
-                       return {
-                         ...talent
-
-                       }
-      });*/
       list.forEach(t => {
         const tal = t;
         tal.rank = levelAncestry ;
@@ -724,10 +718,6 @@ export default {
 
 }
       this.psychicPowersList = data;
-      // data.forEach(spell =>{
-      //   spell.description = spell.description.replace("{{powers}}", spell.powerValue)
-      // });
-      // this.psychicPowersList = data;
     },
     removeTalent(talent) {
       const id = this.characterId;
@@ -742,31 +732,9 @@ export default {
         this.selectedDisciplines.push(name);
       }
     },
+
   },
 };
 </script>
 
-<style scoped lang="css">
-[data-tooltip] {
-  position: relative; /* Относительное позиционирование */
-}
-[data-tooltip]::after {
-  content: attr(data-tooltip); /* Выводим текст */
-  position: absolute; /* Абсолютное позиционирование */
-  width: 300px; /* Ширина подсказки */
-  left: 0;
-  top: 0; /* Положение подсказки */
-  background: #3989c9; /* Синий цвет фона */
-  color: #fff; /* Цвет текста */
-  padding: 0.5em; /* Поля вокруг текста */
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Параметры тени */
-  pointer-events: none; /* Подсказка */
-  opacity: 0; /* Подсказка невидима */
-  transition: 1s; /* Время появления подсказки */
-}
-
-[data-tooltip]:hover::after {
-  opacity: 1; /* Показываем подсказку */
-  top: 2em; /* Положение подсказки */
-}
-</style>
+<style scoped lang="css"></style>

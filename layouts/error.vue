@@ -1,26 +1,20 @@
 <template>
   <v-app dark>
-
     <v-container>
       <v-row justify="center">
         <v-col :cols="12" :md="8" class="text-center">
           <div v-if="error.statusCode === 404">
-            <h1>I register a Code 404 violation!</h1>
+            <h1>Ошибка 404!</h1>
             <p>
-              This area is non existing, and thus to dangerous to explore.
-              Please move along, citizen.
+              Этот регион не существует, или же может быть опасным. Двигайтесь
+              аккуратно, Следопыт. Или перейдите на другую страницу
             </p>
           </div>
           <div v-else>
-            <h1>Stop right here, heretic!</h1>
-            <p>
-              Something went wrong, and until I figure out who is responsible,
-              you better check out a different page.
-            </p>
+            <h1>Остановись, Челиаксец</h1>
+            <p>Перейдите в другую страницу и попробуйте вызвать Асмодея там</p>
           </div>
-          <NuxtLink to="/">
-            Home page
-          </NuxtLink>
+          <NuxtLink to="/"> Home page </NuxtLink>
         </v-col>
       </v-row>
     </v-container>
@@ -36,15 +30,16 @@ export default {
     },
   },
   head() {
-    const title = this.error.statusCode === 404 ? this.pageNotFound : this.otherError;
+    const title =
+      this.error.statusCode === 404 ? this.pageNotFound : this.otherError;
     return {
       title,
     };
   },
   data() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An unexpected error occurred',
+      pageNotFound: "404 Не найдено",
+      otherError: "Неожиданная ошибка",
     };
   },
 };
