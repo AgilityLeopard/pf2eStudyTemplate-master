@@ -300,6 +300,7 @@ export default {
         modifications: talent.modifications,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
+        options: talent.options,
         choice: talent.optionsKey,
         source:  place,
       };

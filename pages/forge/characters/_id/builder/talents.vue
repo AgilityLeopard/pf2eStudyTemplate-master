@@ -931,6 +931,11 @@ export default {
     TalentsLabel() {
       return this.$store.getters['characters/characterTalentsLabelById'](this.characterId);
     },
+    finalSkillRepository() {
+      return [
+        ...this.skillRepository,
+      ];
+    },
     finalKeywords() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
     },
@@ -1226,10 +1231,11 @@ export default {
         aggregatedTalent.place = talent.place;
         aggregatedTalent.level = talent.level;
         // for each special talent, check respectively
-        if (talent.selected) {
+        if (talent.options) {
           aggregatedTalent.selected = talent.selected;
+          if (aggregatedTalent.optionsKey === 'skill')
+            aggregatedTalent.options = this.finalSkillRepository;
 
-          agregatedTalent.options = talent.options;
         }
 
         // Fetch gear for selected weapon trooper
@@ -1277,8 +1283,10 @@ export default {
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
         // for each special talent, check respectively
-        if (talent.selected) {
+        if (talent.options) {
           aggregatedTalent.selected = talent.selected;
+          if (aggregatedTalent.choice === 'skill')
+            aggregatedTalent.options = this.finalSkillRepository;
           // aggregatedTalent.extraCost = 0;
           // if (talent.extraCost && typeof talent.extraCost === 'object') {
           //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
@@ -1778,7 +1786,8 @@ export default {
                       // value: this.textToCamel(item.value),
                       // isValueModify : false,
                       // LoreSkill : LoreSkill,
-          }]
+      }]
+
       this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: talent, level: level, modifications: mod, talentId: talent.id, optionsSelect: true, source: talent.place } });
       this.$store.commit('characters/clearModification', { id: this.characterId, level });
       this.$store.commit('characters/setModification', { id: this.characterId, level });
