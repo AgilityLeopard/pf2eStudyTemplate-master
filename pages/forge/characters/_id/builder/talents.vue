@@ -1228,7 +1228,7 @@ export default {
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
-          if()
+
           agregatedTalent.options = talent.options;
         }
 
