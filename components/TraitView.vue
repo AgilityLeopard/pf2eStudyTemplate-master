@@ -85,7 +85,7 @@ export default {
     },
     List(item) {
       if (this.traitList !== undefined) {
-        return this.traitList.filter(s => item.traits.includes(s.key));
+        return this.traitList.filter(s => item.trait.includes(s.key));
 
       }
     }

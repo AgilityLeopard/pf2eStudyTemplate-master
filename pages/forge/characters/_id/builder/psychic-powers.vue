@@ -363,6 +363,145 @@
           </v-card>
         </v-col>
       </v-tab-item>
+
+      <v-tab-item class="my-tab-item" key="tab-innate" :value="`tab-innate`">
+        <v-col v-if="!isInnate()" :cols="12">
+          <v-alert
+            type="warning"
+            class="caption ml-4 mr-4"
+            dense
+            outlined
+            border="left"
+          >
+            У персонажа нет врожденных заклинаний
+          </v-alert>
+        </v-col>
+        <!-- Характеристики заклинателя -->
+        <v-col :cols="12" v-if="archetype && archetype.spellTradition">
+          <span
+            ><br />
+            <b>Обычай:</b> {{ archetype.spellTradition }}
+          </span>
+
+          <span>
+            <br />
+            <b>Сложность заклинаний:</b> {{ ModAttributeClassSpell() }}
+          </span>
+
+          <span>
+            <br />
+            <b>Атака заклинанием:</b> +{{ ModAttributeAttackSpell() }}
+          </span>
+        </v-col>
+
+        <v-col :cols="12" v-if="archetype && archetype.spellTradition">
+          <v-card
+            class="mb-4"
+            dense
+            outlined
+            v-for="levelAncestry in 10"
+            :key="levelAncestry"
+            v-if="
+              levelAncestry - 1 <=
+                archetype.spellProgression[characterLevel()].findIndex(
+                  (t) => t == 0
+                ) -
+                  1 || characterLevel() == 20
+            "
+          >
+            <h2 class="subtitle-1 text-center" v-if="levelAncestry - 1 == 0">
+              Чары
+            </h2>
+            <h2 class="subtitle-1 text-center" v v-if="levelAncestry - 1 !== 0">
+              {{ levelAncestry - 1 }} уровень
+            </h2>
+
+            <v-simple-table dense>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th v-for="header in headers" :class="header.class">
+                      {{ header.text }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="cell in archetype.spellProgression[characterLevel()][
+                      levelAncestry - 1
+                    ]"
+                  >
+                    <td>
+                      {{
+                        characterSpell(levelAncestry - 1, cell)
+                          ? characterSpell(levelAncestry - 1, cell).name
+                          : "-"
+                      }}
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{
+                        characterSpell(levelAncestry - 1, cell)
+                          ? characterSpell(levelAncestry - 1, cell).action
+                          : "-"
+                      }}
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{
+                        characterSpell(levelAncestry - 1, cell)
+                          ? characterSpell(levelAncestry - 1, cell).duration
+                          : "-"
+                      }}
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{
+                        characterSpell(levelAncestry - 1, cell)
+                          ? characterSpell(levelAncestry - 1, cell).distance
+                          : "-"
+                      }}
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{
+                        characterSpell(levelAncestry - 1, cell)
+                          ? characterSpell(levelAncestry - 1, cell).defence
+                          : "-"
+                      }}
+                    </td>
+                    <td class="text-center pa-1 small">
+                      {{
+                        characterSpell(levelAncestry - 1, cell)
+                          ? characterSpell(levelAncestry - 1, cell).area
+                          : "-"
+                      }}
+                    </td>
+                    <td>
+                      <v-btn
+                        v-if="characterSpell(levelAncestry - 1, cell)"
+                        outlined
+                        x-small
+                        color="error"
+                        @click.stop.prevent="
+                          removeTalent(characterSpell(levelAncestry - 1, cell))
+                        "
+                      >
+                        <v-icon left> delete </v-icon>Удалить
+                      </v-btn>
+                      <v-btn
+                        v-if="!characterSpell(levelAncestry - 1, cell)"
+                        outlined
+                        x-small
+                        color="success"
+                        @click="updatePreview(levelAncestry - 1, cell)"
+                      >
+                        <v-icon left> add </v-icon>Добавить
+                      </v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card>
+        </v-col>
+      </v-tab-item>
     </v-tabs>
 
     <v-dialog
@@ -584,7 +723,7 @@ export default {
         }
 
         const aggregatedTalent = Object.assign({}, rawTalent);
-        console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+        //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
 
         aggregatedTalent.description = talent.description;
 
@@ -631,6 +770,17 @@ export default {
     },
     affordableColor(cost) {
       return (cost <= this.remainingBuildPoints) ? 'green' : 'grey';
+    },
+    InnateSpell()
+    {
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
+      const MagicInnate = enc.filter(s => s.targetGroup === 'Spell' && s.targetValue === 'Innate');
+
+    },
+    isInnate() {
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
+      if (enc.find(s => s.targetGroup === 'Spell' && s.targetValue === 'Innate')) return true;
+      return false;
     },
     // Сложность класса заклинателя и его атаки
     ModAttributeClassSpell() {

@@ -1064,6 +1064,7 @@ export default {
         const tal = t;
         tal.place = type + levelAncestry;
         tal.placeLevel = levelAncestry;
+        tal.trait = tal.traits;
 
       })
       this.levelTalent = levelAncestry;
@@ -1224,7 +1225,7 @@ export default {
 
         const aggregatedTalent = Object.assign({}, rawTalent);
 
-        aggregatedTalent.traits = talent.traits;
+        aggregatedTalent.trait = talent.traits;
         aggregatedTalent.id = talent.id;
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;

@@ -178,7 +178,7 @@ export default {
                 listAbilities.push(ability1);
               }
             });
-            species.traitDesc = listAbilities;
+            species.traits = listAbilities;
           }
         });
       }

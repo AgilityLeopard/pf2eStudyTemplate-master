@@ -863,6 +863,7 @@ const playerCoreAncestry = [
     snippet: 'Вы двигаетесь будто в грациозном танце, и даже ваши шаги длиннее обычных',
     type: "ancestry",
     name: "Эльфийский шаг",
+    action: "Elf Step",
     traits: 'эльф',
     level: 9,
     description:

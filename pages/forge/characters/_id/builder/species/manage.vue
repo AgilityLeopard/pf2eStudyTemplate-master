@@ -316,7 +316,7 @@ export default {
               listAbilities.push(ability1);
             }
           });
-          finalData.traitDesc = listAbilities;
+          finalData.traits = listAbilities;
         }
       }
 

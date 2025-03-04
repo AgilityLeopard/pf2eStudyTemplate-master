@@ -1,15 +1,15 @@
 <template lang="html">
   <v-card v-if="item" class="pa-0">
-    <v-card-title v-if="chooseMode" style="background-color: #262e37; color: #fff;">
+    <v-card-title
+      v-if="chooseMode"
+      style="background-color: #262e37; color: #fff"
+    >
       <span>Подтвердите класс</span>
       <v-spacer />
-      <v-icon dark @click="$emit('cancel')">
-        close
-      </v-icon>
+      <v-icon dark @click="$emit('cancel')"> close </v-icon>
     </v-card-title>
 
- 
-      <v-card-title primary-title>
+    <v-card-title primary-title>
       <div>
         <h3 class="headline md0">
           {{ item.name }}
@@ -21,16 +21,18 @@
       </div>
     </v-card-title>
 
-      <v-divider />
-      <v-card-text class="pt-4">
-      <ul class="simple">
-        <li v-if="item.trait" v-for="trait in item.trait" class="traits">
-          <p class="trait">{{ trait }}</p>
-        </li>
-      </ul>
-      
+    <v-divider />
+    <v-card-text class="pt-4">
+      <div>
+        <trait-view
+          v-if="item.trait"
+          :item="item"
+          class="mb-2"
+          style="font-size: 14px"
+        />
+      </div>
       <p class="text-lg-justify">
-          <i><div v-html="item.hint"></div> </i>
+        <i><div v-html="item.hint"></div> </i>
       </p>
 
       <p><v-divider /></p>
@@ -41,28 +43,18 @@
       </p> -->
       <p>Классовые особенности</p>
 
-      <div
-        v-for="feature in item.archetypeFeatures"
-        class="text-lg-justify"
-      >
+      <div v-for="feature in item.archetypeFeatures" class="text-lg-justify">
         <div>
-          
           <strong>{{ feature.name }}</strong>
           <div v-if="feature.description" v-html="feature.description"></div>
           <p v-else>{{ feature.snippet }}</p>
-          <v-alert
-            v-if="feature.alert"
-            :type="feature.alert.type"
-            dense
-            text
-          >{{feature.alert.text}}</v-alert>
+          <v-alert v-if="feature.alert" :type="feature.alert.type" dense text>{{
+            feature.alert.text
+          }}</v-alert>
         </div>
-
       </div>
 
-      <p class="text-lg-justify">
-        <strong>Wargear:</strong> {{ wargearText }}
-      </p>
+      <p class="text-lg-justify"><strong>Wargear:</strong> {{ wargearText }}</p>
 
       <div v-if="false">
         <p><v-divider /></p>
@@ -74,16 +66,13 @@
 
       <p class="text-lg-justify" v-if="item.influence && item.influence != 0">
         <strong>Influence Bonus: </strong>
-        {{ `${item.influence > 0 ? '+' : ''}${item.influence}` }}
+        {{ `${item.influence > 0 ? "+" : ""}${item.influence}` }}
       </p>
-
     </v-card-text>
 
     <v-divider v-if="chooseMode" />
     <v-card-actions v-if="chooseMode">
-      <v-btn left outlined color="red" @click="$emit('cancel')">
-        Отмена
-      </v-btn>
+      <v-btn left outlined color="red" @click="$emit('cancel')"> Отмена </v-btn>
       <v-spacer />
       <v-btn right color="green" @click="$emit('select', item)">
         Выберите класс
@@ -96,6 +85,7 @@
 import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
 import StatRepository from '~/mixins/StatRepositoryMixin';
 import SluggerMixin from '~/mixins/SluggerMixin';
+import traitView from '~/components/TraitView';
 
 export default {
   name: 'ArchetypePreview',
@@ -104,6 +94,7 @@ export default {
     StatRepository,
     SluggerMixin,
   ],
+    components:{traitView},
   props: {
     characterId: {
       type: String,
