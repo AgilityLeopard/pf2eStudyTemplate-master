@@ -1,5 +1,11 @@
 {
     "workbench.colorCustomizations": {
         "activityBar.background": "#343"
-    }
-}
+    },
+// "highlight.regexes": {
+// "([а-яА-ЯёЁ]+)": {
+// "filterFileRegex": ".*",
+// "decorations": [{"color": "#ff0000" }]
+// }},
+// }
+   
