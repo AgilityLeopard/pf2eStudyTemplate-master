@@ -10,7 +10,7 @@
             Guide
           </p>
 
-          <h2>The Character Generator</h2>
+          <h2>Генератор персонажа и архив</h2>
 
           <!-- <p>
             Also, I quite often use the Official D&D Character Generator over at
@@ -29,6 +29,11 @@
               href="https://pf2e-ru-translation.readthedocs.io/ru/latest/index.html"
               >pf2e-ru-translation</a
             >
+          </p>
+
+          <p>
+            Другой, альтернативный перевод, взят с сайта
+            <a href="https://pf2.ru">pf2.ru</a>
           </p>
 
           <p>

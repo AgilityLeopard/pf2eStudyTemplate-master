@@ -116,7 +116,9 @@
              <p><div v-if="feature.options.find(s=> s.key === feature.selected).snippet" v-html="feature.options.find(s=> s.key === feature.selected).snippet"></div></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).feat"><strong>Черта:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).feat"></span></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).spell"><strong>Заклинание:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).spell"></span></p>
-            
+             <p v-if="feature.options.find(s=> s.key === feature.selected).focusSpell"><strong>Фокусное заклинание:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).focusSpell"></span></p>
+             <p v-if="feature.options.find(s=> s.key === feature.selected).skill"><strong>Навык:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).skill"></span></p>
+         
            </div>
         </div>
 
