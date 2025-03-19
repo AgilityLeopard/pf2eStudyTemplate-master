@@ -57,30 +57,6 @@ const archetype = function (sourceKey, sourcePage, name, tier, species, stub = f
     };
 }
 
-const wargearOptionFromString = function (partString) {
-    let part = partString.trim();
-    const gear = {};
-
-    // of it does start with a number
-    if (!isNaN(part.split(' ')[0])) {
-        gear.amount = part.split(/ /)[0];
-        part = part.split(/ (.+)/)[1];
-        // remove trailing s, indicating a plural
-        part = part.replace(/s$/, "");
-    }
-
-    // if it contains a /
-    if (part.indexOf('/') > 0) {
-        let parts = part.split('/');
-        gear.name = parts[0];
-        gear.variant = parts[1];
-    } else {
-        gear.name = part;
-    }
-
-    return gear;
-}
-
 const statBoost = function (str, dex, con, int, wis, cha) {
     return {
         attributeBoost: [
@@ -95,6 +71,7 @@ const statBoost = function (str, dex, con, int, wis, cha) {
 };
 
 const playerCore = [
+    //воин
     {
         ...archetype(source.playerCore.key, 92, 'Fighter', 1, 'Human'),
         ...cost(12, 0, 12, 0, 0),
@@ -363,6 +340,7 @@ const playerCore = [
             ]
     },
 
+    //Бард
     {
         ...archetype(source.playerCore.key, 92, 'Bard', 1, 'Human'),
         ...cost(12, 0, 12, 0, 0),
@@ -580,6 +558,7 @@ const playerCore = [
             ]
     },
 
+    //Друид
     {
         ...archetype(source.playerCore.key, 92, 'Druid', 1, 'Human'),
         ...cost(12, 0, 12, 0, 0),
@@ -622,7 +601,7 @@ const playerCore = [
             20: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
         },
         spellFocusPool: 1,
-        spellFocusBase: ["Courageous Anthem", "Counter Performance"],
+        // spellFocusBase: ["Courageous Anthem", "Counter Performance"],
         spellsClass:
         {
             attack: "T",
@@ -639,8 +618,8 @@ const playerCore = [
 
         skillDefence:
         {
-            light: "T",
-            medium: "T",
+            light: "U",
+            medium: "U",
             heavy: "U",
             unarmored: "T"
         },
@@ -702,6 +681,246 @@ const playerCore = [
             //Обще-классовые
             "Perception Expertise Druid", "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
             "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
+        ],
+        modification:
+            [
+                {
+                    key: "Perception",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Perception",
+                    level: 3,
+                },
+
+                {
+                    key: "fortitude",
+                    upgrade: "E",
+                    type: "Saving",
+                    mode: "Upgrade",
+                    level: 3,
+                },
+                {
+                    key: "reflex",
+                    upgrade: "E",
+                    type: "Saving",
+                    mode: "Upgrade",
+                    level: 5,
+                },
+                {
+                    key: "attack",
+                    upgrade: "E",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 7,
+                },
+                {
+                    key: "class",
+                    upgrade: "E",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 7,
+                },
+
+                {
+                    key: "will",
+                    upgrade: "M",
+                    type: "Saving",
+                    mode: "Upgrade",
+                    level: 11,
+                },
+                {
+                    key: "simple",
+                    mode: "Upgrade",
+                    upgrade: "E",
+                    type: "Attack",
+                    level: 11,
+                },
+                {
+                    key: "unarmed",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 11,
+                },
+                {
+                    key: "light",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    level: 13,
+                },
+                {
+                    key: "medium",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    level: 13,
+                },
+                {
+                    key: "Weapon Specialization",
+                    // upgrade: "M",
+                    type: "Weapon Specialization",
+                    level: 13,
+                    bonusDamage: {
+                        E: 2,
+                        M: 3,
+                        L: 4,
+                    }
+                    // valueBonus: 2,
+                    // typeBonus: "damage"
+                },
+                {
+                    key: "attack",
+                    upgrade: "M",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 15,
+                },
+                {
+                    key: "class",
+                    upgrade: "M",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 15,
+                },
+                {
+                    key: "attack",
+                    upgrade: "L",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 19,
+                },
+                {
+                    key: "class",
+                    upgrade: "L",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 19,
+                },
+            ]
+    },
+
+    //Жрец
+    {
+        ...archetype(source.playerCore.key, 92, 'Cleric', 1, 'Human'),
+        ...cost(12, 0, 12, 0, 0),
+        ...statBoost(0, 0, 0, 0, 1, 0),
+        hint: 'Силе природы невозможно сопротивляться. Она может разрушить самую неприступную крепость за считанные минуты, превратив даже самые мощные сооружения в руины,'
+            + ' сжечь их до тла, похоронить под снежной лавиной или утопить в волнах. Она может дать нескончаемые дары и захватывающее великолепие тем, кто ее уважает, '
+            + 'и мучительную смерть тем, кто относится к ней слишком легкомысленно. Вы один из тех, кто слышит зов природы. Вы трепещите перед величием ее могущества и '
+            + 'отдаете всего себя ее службе.',
+        name: 'Жрец',
+        keywords: 'жрец',
+        hitpoints: 8,
+        // keyAbility: ["dexterity", "strength"],
+        keyAbility: [],
+        trait: ["жрец"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: ['religion'],
+        skillTrainedPoints: 2,
+        spellTradition: 'сакральный',
+        spellProgression: {
+            1: [5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            2: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            3: [5, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+            4: [5, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+            5: [5, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+            6: [5, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0],
+            7: [5, 3, 3, 3, 2, 0, 0, 0, 0, 0, 0],
+            8: [5, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+            9: [5, 3, 3, 3, 3, 2, 0, 0, 0, 0, 0],
+            10: [5, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+            11: [5, 3, 3, 3, 3, 3, 2, 0, 0, 0, 0],
+            12: [5, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+            13: [5, 3, 3, 3, 3, 3, 3, 2, 0, 0, 0],
+            14: [5, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0],
+            15: [5, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0],
+            16: [5, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0],
+            17: [5, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0],
+            18: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0],
+            19: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+            20: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+        },
+        // spellFocusPool: 1,
+        // spellFocusBase: ["Courageous Anthem", "Counter Performance"],
+        spellsClass:
+        {
+            attack: "T",
+            class: "T"
+        },
+        Perception: "T",
+        skillAttack:
+        {
+            simple: "T",
+            martial: "U",
+            advanced: "U",
+            unarmed: "T"
+        },
+
+        skillDefence:
+        {
+            light: "T",
+            medium: "T",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving:
+        {
+            reflex: "T",
+            fortitude: "T",
+            will: "E",
+        },
+        isFeatLevelOne: false,
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Если вы боевой жрец, то соблюдаете баланс между сотворением заклинаний и атаками оружием, обычно предпочитаемым оружием божества. '
+                    + 'Если вы священнослужитель, то преимущественно сотворяете заклинания. Большинство ваших заклинаний могут усиливать, защищать или лечить ваших союзников. '
+                    + 'В зависимости от вашего божества, вы получаете дополнительные заклинания, чтобы исцелять союзников или ранить ваших врагов.</p>'
+
+            },
+            {
+                name: 'social',
+                text: '<p>Вы можете совершать дипломатические предложения или устраивать впечатляющие речи. Так как вы мудры, вы улавливаете ложь, которую говорят другие.</p>'
+
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы обнаруживаете магию поблизости и интерпретируете любые религиозные тексты, с которыми сталкиваетесь. Еще вы можете сосредоточиться '
+                    + 'на защитном заклинании в случае стычки. После битвы или опасности вы можете исцелить всех кто был ранен.</p>'
+
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы можете проводит службы в храме, путешествовать чтобы нести слово вашего божества, исследовать священные писания, праздновать церковные '
+                    + 'праздники, или даже основать новый храм.</p>'
+
+            },
+            {
+                name: 'you',
+                text: '<li><p> Посещать храмы и святые места, священные для вашей веры, и быстро находить общий язык с другими почитателями вашего божества</p></li>'
+                    + '<li><p>Знать учения священных текстов вашей религии и как они применимы к дилемме</p></li>'
+                    + '<li><p>Сотрудничать со своими союзниками, если они не просят вас идти против божественной воли</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p> Считать вашу верность впечатляющей, даже если они ее не понимают</p></li>'
+                    + '<li><p>Ожидают что вы исцелите их раны</p></li>'
+                    + '<li><p>Полагаются на то, что вы будете взаимодействовать с другими религиозными фигурами</p></li>'
+            }
+        ],
+
+        archetypeFeatures: [
+            //Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            //Классовые
+            "Divine Font", "Cleric Spellcasting", "Doctrine"
+
+            //Обще-классовые
+            // "Perception Expertise Druid", "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
+            // "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
         ],
         modification:
             [

@@ -120,6 +120,14 @@
              <p v-if="feature.options.find(s=> s.key === feature.selected).skill"><strong>Навык:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).skill"></span></p>
          
            </div>
+
+        <div v-if="feature.options.find(s=> s.key === feature.selected).subFeature">
+            <div  v-for="item in feature.options.find(s=> s.key === feature.selected).subFeature.filter(t => t.level <= characterLevel())">
+               <p><h4 class="main-holder split-header1"><span class="left-header">{{ item.name }}</span><span class="right-header">{{ item.level }}</span></h4>
+               <div v-if="item.description" v-html="item.description"></div>
+              <div  v-else>{{ item.snippet }}</div></p>
+            </div>
+          </div>
         </div>
 
         </div>
@@ -384,7 +392,8 @@ export default {
             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
           );
 
-          const abilityInArray = [];
+        const abilityInArray = [];
+        let SubFeature = [];
 
            //Сюда кладем то, что дается больше одного раза и смотрим под-опции
           ability.forEach((ab) => {
@@ -415,13 +424,30 @@ export default {
 
 
               ab.selected = enc.find(s => s.key === ab.key) ? enc.find(s => s.key === ab.key).selected : "";
+
+    
+                //Наподобие подкласса Жреца
+              ab.options.forEach(s => {
+                if (s.subFeature) {
+                  const sub = s.subFeature;
+                  SubFeature = List.filter(s => sub.includes(s.key));
+                  s.subFeature = SubFeature;
+                  }
+     
+                
+              })
+      
+                
+                
             }
+            
+            
           });
 
           //Выкидываем из списка особенности, уровень которых перечислен в массиве
         ability = ability.filter((ab) => !Array.isArray(ab.level));
 
-        const abilityList = [];
+        let abilityList = [];
 
           ability.forEach((tal) => {
             const ability1 = {
@@ -430,6 +456,7 @@ export default {
               description: tal.snippet,
               modification: tal.modification,
               level: tal.level,
+              subFeature: tal.subFeature,
               options: tal.options,
               selected: tal.selected,
               type: tal.type,
@@ -447,6 +474,7 @@ export default {
                 key: tal.key+talent,
                 description: tal.snippet,
                 modification: tal.modification,
+                subFeature: tal.subFeature,
                 level: talent,
                 options: tal.options,
                 selected: tal.selected,
@@ -459,6 +487,9 @@ export default {
             });
           });
 
+        // abilityList = [
+        //     ...abilityList, ...SubFeature
+        //   ]
           
           if (ability.length > 0) {
             //Если нашли все особенности, то кладем их в каждый класс
@@ -532,7 +563,6 @@ export default {
         level: feature.level,
         source: "archetype"
       };
-
       
       this.$store.commit('characters/clearCharacterClassModFeature', { id: this.characterId, content: mod });
       this.$store.commit('characters/addCharacterClassModFeature', { id: this.characterId, content: mod });
@@ -581,6 +611,11 @@ export default {
       // }
 
     },
+        characterLevel() {
+      return this.$store.getters["characters/characterLevelById"](
+        this.characterId
+      );
+    },
     getPsychicPowerOptions(psychicPowerSelection) {
       const config = {
         params: {
@@ -613,8 +648,22 @@ export default {
   color: #5d0000;
 }
 
+.h4 {
+color: #a76652;
+    font-weight: normal;
+    font-size: 20px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
 .split-header {
   border-bottom: 1.5px solid;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+
+.split-header1 {
+  border-bottom: 1.5px;
   padding-bottom: 5px;
   overflow: hidden;
 }
