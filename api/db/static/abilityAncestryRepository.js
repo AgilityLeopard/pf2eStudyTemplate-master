@@ -1,94 +1,4 @@
 import { source } from "./_sourcesRepository";
-import { ATTRIBUTES, SKILLS, TRAITS } from "./_statUtils";
-
-const stringToKebab = function (text) {
-    return text.toLowerCase().replace(/\W/gm, "-");
-};
-
-const kebabToCamel = function (slug) {
-    return slug.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase());
-};
-
-const stringToKebabToCamel = function (text) {
-    const slug = stringToKebab(text);
-    return kebabToCamel(slug);
-};
-
-const addModifier = function (
-    targetGroup,
-    targetValue,
-    modifier = 0,
-    rank = 0,
-    condition = undefined
-) {
-    return {
-        targetGroup,
-        targetValue,
-        modifier,
-        rank,
-        condition,
-    };
-};
-
-const background = function (text, plusOne, type) {
-    const parts = text.split(": ");
-    const title = parts[0];
-    const snippet = parts[1];
-    const modification =
-        plusOne === "[ANY] Keyword"
-            ? { targetGroup: "keywords", targetValue: "[Any]" }
-            : {
-                targetGroup: "traits",
-                targetValue: stringToKebabToCamel(plusOne),
-                modifier: 1,
-            };
-    return {
-        key: `${stringToKebab(title)}`,
-        title,
-        snippet,
-        plusOne,
-        type,
-        modification,
-    };
-};
-
-const statBoost = function (str, dex, con, int, wis, cha) {
-    return {
-        attributeBoost: [
-            { name: "Сила", key: "strength", value: str },
-            { name: "Ловкость", key: "dexterity", value: dex },
-            { name: "Телосложение", key: "constitution", value: con },
-            { name: "Интеллект", key: "intellect", value: int },
-            { name: "Мудрость", key: "wisdom", value: wis },
-            { name: "Харизма", key: "charisma", value: cha },
-        ],
-    };
-};
-
-const statFlaw = function (str, dex, con, int, wis, cha) {
-    return {
-        attributeFlaw: [
-            { name: "Сила", key: "strength", value: str },
-            { name: "Ловкость", key: "dexterity", value: dex },
-            { name: "Телосложение", key: "constitution", value: con },
-            { name: "Интеллект", key: "intellect", value: int },
-            { name: "Мудрость", key: "wisdom", value: wis },
-            { name: "Харизма", key: "charisma", value: cha },
-        ],
-    };
-};
-
-const cost = function (cost, stats = 0, species = 0, other = 0) {
-    return {
-        cost,
-        costs: {
-            total: cost,
-            stats,
-            species,
-            other,
-        },
-    };
-};
 
 const sourceMod = function (
     sourceKey,
@@ -99,10 +9,6 @@ const sourceMod = function (
         },
 
     };
-};
-
-const commonNames = function (namesString) {
-    return { commonNames: namesString.split(",").map((part) => part.trim()) };
 };
 
 const PlayerCoreAncestry =
@@ -2166,115 +2072,36 @@ const PlayerCoreClass = [
         key: 'Resolute Faith',
         level: 9
     },
-
-    //до сюда
     {
         ...sourceMod("playerCore"),
         name: 'Эксперт рефлекса',
         snippet: 'Вы научились уклоняться от опасности. Ваш уровень мастерства спасбросков Рефлекса увеличивается до эксперта.',
         type: "Class Feature",
-        key: 'Reflex Expertise Bard',
-        level: 3
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Эксперт рефлекса',
-        snippet: 'Опыт позволяет вам более гибко сотворять некоторые из заклинаний. Для каждого доступного вам ранга заклинаний, выберите 1 заклинание этого ранга, '
-            + 'которое будет коронным. Вам не надо отдельно учить усиленные версии коронных заклинаний; вместо этого, вы можете свободно усиливать их. Если вы выучили коронное '
-            + 'заклинание на высоком ранге, вместо минимального, вы также можете колдовать все его версии пониженных рангов, не изучая их отдельно. Если вы меняете коронное '
-            + 'заклинание, то можете выбрать на замену другое того же ранга, на котором выучили предыдущее. Вы также можете переобучиться, специально, чтобы выбрать другое '
-            + 'коронное заклинание того же ранга, без замены заклинаний; это занимает столько же времени, сколько и обычное переизучение заклинания.',
-        key: 'Signature Spells',
-        type: "Class Feature",
-        level: 3
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Заклинатель эксперт',
-        snippet: 'Ваша способность управлять природными силами углубилась, усиливая ваши заклинания. Ваши уровни мастерства атак заклинаниями и КС заклинаний увеличиваются до эксперта.',
-        key: 'Expert Spellcaster Bard',
-        type: "Class Feature",
-        level: 7
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Эксперт стойкости',
-        snippet: 'Ваше телосложение стало выносливее во время приключений.Ваш уровень мастерства спасбросков Стойкости увеличивается до эксперта.',
-        key: 'Expert Fortitude Bard',
-        type: "Class Feature",
-        type: "Class Feature",
-        level: 9
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Сердце исполнителя',
-        snippet: 'Величайшие выступления требуют понимания собственного разума и безупречной концентрации. Ваш уровень мастерства спасбросков Воли увеличивается до мастера. Когда при броске спасброска Воли вы получаете успех, то вместо этого получаете критический успех.',
-        key: 'Performers Heart',
-        type: "Class Feature",
-        level: 9
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Опыт с оружием',
-        snippet: 'Вы стали настоящим знатоком оружия бардов. Вы становитесь экспертом в обращении с воинским оружием, простым оружием, безоружными атаками. '
-            + 'Когда вы совершаете крит.успешный бросок атаки, используя одно из этих видов оружий или безоружную атаку, пока активна одна из ваших композиций, '
-            + 'то применяете эффект критической специализации оружия или безоружной атаки.',
-        key: 'Weapon Expertise Bard',
-        type: "Class Feature",
+        key: 'Reflex Expertise Cleric',
         level: 11
     },
     {
         ...sourceMod("playerCore"),
-        name: 'Мастер восприятия',
-        snippet: 'Вы развили в себе тонкое чутьё и внимание к деталям. Ваш уровень мастерства Восприятия увеличивается до мастера.',
-        key: 'Perception Mastery Bard',
-        type: "Class Feature",
-        level: 11
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Опыт с лёгкими доспехами',
-        snippet: 'Вы научились уклоняться, нося лёгкие доспехи или вовсе не нося их. Ваше мастерство ношения лёгких доспехов, и защиты без доспехов улучшается до эксперта.',
-        key: 'Light Armor Expertise',
+        name: 'Божественная защита',
+        snippet: 'Ваши тренировки и божество защищают вас от ранений. Ваш уровень мастерства в защите без доспехов улучшается до эксперта.',
+        key: 'Divine Defense',
         type: "Class Feature",
         level: 13
     },
     {
         ...sourceMod("playerCore"),
         name: 'Специализация в оружии',
-        snippet: 'Вы научились наносить бо́льшие ранения оружием, которое знаете лучше всего. Вы наносите 2 дополнительного урона с оружием и безоружными атаками, '
-            + 'в которых вы эксперт. Этот урон увеличивается до 3 если вы мастер, и до 4 для легенды.',
-        key: 'Weapon Specialization Bard',
-        type: "Class Feature",
-        level: 13
+        snippet: 'Вы научились наносить бо́льшие ранения оружием, которое знаете лучше всего. Вы наносите 2 дополнительного урона с оружием и безоружными атаками, в которых вы эксперт. Этот урон увеличивается до 3 если вы мастер, и до 4 для легенды.',
+        key: 'Weapon Specialization',
+        level: 13,
     },
     {
         ...sourceMod("playerCore"),
-        name: 'Заклинатель мастер',
-        snippet: 'Вы перебираете нити магии, как струны арфы. Ваши уровни мастерства атак заклинаниями и КС заклинаний увеличиваются до мастера.',
-        key: 'Master Spellcaster Bard',
-        type: "Class Feature",
-        level: 15
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Легендарный заклинатель',
-        snippet: 'Ваше владение оккультной магией достойно легенд. Ваши уровни мастерства атак заклинаниями и КС заклинаний увеличиваются до легендарного.',
-        key: 'Legendary Spellcaster Bard',
-        type: "Class Feature",
-        level: 19
-    },
-    {
-        ...sourceMod("playerCore"),
-        name: 'Магнум опус',
-        snippet: 'Вы настроили свое колдовство на высший уровень. Добавьте в свой репертуар 2 обычных оккультных заклинания 10-го ранга. '
-            + 'Вы получаете 1 слот заклинания 10-го ранга, который вы можете использовать, чтобы используя колдовство барда творить одно из этих двух заклинаний. '
-            + 'Вы не получаете больше заклинаний 10-го ранга по мере повышения уровня, в отличие от других слотов заклинаний, и вы не можете использовать '
-            + 'слоты 10-го ранга с умениями, которые дают вам больше слотов заклинаний или теми, которые позволяют колдовать не тратя слоты заклинаний. Вы можете '
-            + 'взять способность Безупречный бис, чтобы получить второй слот заклинания 10-го ранга.',
+        name: 'Чудотворное заклинание',
+        snippet: 'Вы вознесены своим божеством и получаете поистине невероятные заклинания. Вы получаете один слот заклинания 10-го ранга и можете подготовить в этом слоте заклинание используя сакральное колдовство. Вы не можете использовать этот слот заклинаний для умений, которые позволяют вам сотворять заклинания без траты слотов, или тех, которые дают вам больше слотов заклинаний. Вы не получаете больше слотов заклинаний 10-го ранга при повышении уровня, однако вы можете взять способность Чудотворец, чтобы получить второй слот.',
         level: 19,
         type: "Class Feature",
-        key: 'Magnum Opus',
+        key: 'Miraculous Spell',
     },
 
 ]

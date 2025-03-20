@@ -115,10 +115,7 @@ export default {
   },
   computed: {
     sources() {
-      return [
-        "playerCore",
-        ...this.settingHomebrews,
-      ];
+      return ["playerCore", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
@@ -145,7 +142,6 @@ export default {
         this.characterId
       );
     },
-    
   },
   watch: {
     sources: {
@@ -173,13 +169,11 @@ export default {
       const { data } = await this.$axios.get("/api/heritage/", config);
       const speciesLabel = this.characterSpeciesLabel.toUpperCase();
 
-
-      
-       if(speciesLabel)
-        this.speciesList = data.filter(s => s.isUniversal === true || s.type.toUpperCase() === speciesLabel)
-      else
-        this.speciesList = data.filter(s => s.isUniversal === true);
-
+      if (speciesLabel)
+        this.speciesList = data.filter(
+          (s) => s.isUniversal === true || s.type.toUpperCase() === speciesLabel
+        );
+      else this.speciesList = data.filter((s) => s.isUniversal === true);
     },
     async getAbilityList(sources) {
       const config = {
@@ -187,12 +181,14 @@ export default {
           source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get("/api/abilityAncestry/", config.source);
+      const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
       this.abilityList = data;
-
     },
     getAvatar(key) {
-      return `/img/avatars/species/${key}.png`;
+      return `/img/avatars/species/${key.toLowerCase()}.png`;
     },
     async updatePreview(item) {
       const slug = this.camelToKebab(item.key);
@@ -204,8 +200,6 @@ export default {
       } else {
         const speciesDetails = await this.$axios.get(`/api/heritage/${slug}`);
         this.selectedSpecies = speciesDetails.data;
-
-          
       }
       this.speciesDialog = true;
     },
@@ -234,10 +228,8 @@ export default {
         content: { modifications: modifications, source: "heritage" },
       });
 
-
-
       // species.attributeBoost.forEach((t) => {
-        
+
       //     this.$store.commit("characters/setCharacterAncestryBoostForAll", {
       //       id: this.characterId,
       //       payload: { key: t.key, value: t.value },
@@ -245,7 +237,7 @@ export default {
       // });
 
       // species.attributeFlaw.forEach((t) => {
-        
+
       //     this.$store.commit("characters/setCharacterAncestryFlawForAll", {
       //       id: this.characterId,
       //       payload: { key: t.key, value: t.value },
@@ -262,19 +254,18 @@ export default {
       });
       // modifications
       //   .filter((m) => m.targetGroup === "keywords")
-      species.trait
-        .forEach((k) => {
-          const payload = {
-            name: k,
-            source: "heritage",
-            type: "keyword",
-            replacement: undefined,
-          };
-          this.$store.commit("characters/addCharacterKeyword", {
-            id: this.characterId,
-            keyword: payload,
-          });
+      species.trait.forEach((k) => {
+        const payload = {
+          name: k,
+          source: "heritage",
+          type: "keyword",
+          replacement: undefined,
+        };
+        this.$store.commit("characters/addCharacterKeyword", {
+          id: this.characterId,
+          keyword: payload,
         });
+      });
 
       this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
         id: this.characterId,

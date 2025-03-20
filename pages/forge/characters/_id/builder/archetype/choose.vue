@@ -328,7 +328,7 @@ export default {
     // },
     getAvatar(key) {
       if (key === undefined) return "/img/avatar_placeholder.png";
-      return `/img/avatars/archetype/${key}.png`;
+      return `/img/avatars/archetype/${key.toLowerCase()}.png`;
     },
     //   let archetypes = this.itemList;
 

@@ -208,7 +208,7 @@ export default {
       this.traitList = data;
     },
     getAvatar(key) {
-      return `/img/avatars/species/${key}.png`;
+      return `/img/avatars/species/${key.toLowerCase()}.png`;
     },
     async updatePreview(item) {
       const slug = this.camelToKebab(item.key);

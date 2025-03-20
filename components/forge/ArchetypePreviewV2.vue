@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
-    <div class="hidden-xs-only" style="float: right;">
-      <img :src="getAvatar(item.key)" style="width:96px">
+    <div class="hidden-xs-only" style="float: right">
+      <img :src="getAvatar(item.key)" style="width: 96px" />
     </div>
 
     <div style="width: 75%">
@@ -18,11 +18,9 @@
     <span class="mt-2 grey--text">Prerequisites</span>
     <p><v-divider /></p>
 
+    <p class="text-lg-justify"><strong>Tier:</strong> {{ item.tier }}</p>
     <p class="text-lg-justify">
-      <strong>Tier:</strong> {{ item.tier }}
-    </p>
-    <p class="text-lg-justify">
-      <strong>Species:</strong> {{ item.species.join(', ') }}
+      <strong>Species:</strong> {{ item.species.join(", ") }}
     </p>
     <p class="text-lg-justify">
       <strong>Attributes:</strong> {{ attributePrerequisites }}
@@ -34,9 +32,7 @@
     <span class="mt-2 grey--text">Benefits</span>
     <p><v-divider /></p>
 
-    <p class="text-lg-justify">
-      <strong>Keywords:</strong> {{ keywords }}
-    </p>
+    <p class="text-lg-justify"><strong>Keywords:</strong> {{ keywords }}</p>
 
     <p class="text-lg-justify">
       <strong>Influence Bonus:</strong> {{ item.influence }}
@@ -52,9 +48,7 @@
       <p v-else>{{ feature.snippet }}</p>
     </div>
 
-    <p class="text-lg-justify">
-      <strong>Wargear:</strong> {{ wargearText }}
-    </p>
+    <p class="text-lg-justify"><strong>Wargear:</strong> {{ wargearText }}</p>
 
     <div v-if="false">
       <p><v-divider /></p>
@@ -137,12 +131,10 @@ export default {
   },
   methods: {
     getAvatar(key) {
-      return `/img/avatars/archetype/${key}.png`;
+      return `/img/avatars/archetype/${key.toLowerCase()}.png`;
     },
   },
 };
 </script>
 
-<style scoped lang="css">
-
-</style>
+<style scoped lang="css"></style>

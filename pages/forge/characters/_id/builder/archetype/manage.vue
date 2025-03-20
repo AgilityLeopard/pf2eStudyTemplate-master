@@ -119,17 +119,18 @@
              <p v-if="feature.options.find(s=> s.key === feature.selected).focusSpell"><strong>Фокусное заклинание:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).focusSpell"></span></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).skill"><strong>Навык:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).skill"></span></p>
          
-           </div>
+           
 
-        <div v-if="feature.options.find(s=> s.key === feature.selected).subFeature">
-            <div  v-for="item in feature.options.find(s=> s.key === feature.selected).subFeature.filter(t => t.level <= characterLevel())">
-               <p><h4 class="main-holder split-header1"><span class="left-header">{{ item.name }}</span><span class="right-header">{{ item.level }}</span></h4>
-               <div v-if="item.description" v-html="item.description"></div>
-              <div  v-else>{{ item.snippet }}</div></p>
+            <div v-if="feature.options.find(s=> s.key === feature.selected).subFeature">
+                <div  v-for="item in feature.options.find(s=> s.key === feature.selected).subFeature.filter(t => t.level <= characterLevel())">
+                  <p><h4 class="main-holder split-header1"><span class="left-header">{{ item.name }}</span><span class="right-header">{{ item.level }}</span></h4>
+                  <div v-if="item.description" v-html="item.description"></div>
+                  <div  v-else>{{ item.snippet }}</div></p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
+          </div>
         </div>
 
       </div>
@@ -285,7 +286,6 @@ export default {
             return "Нетренирован"
          case "T":
             return "Тренирован"
-
          case "E":
             return "Эксперт"
           case "M":

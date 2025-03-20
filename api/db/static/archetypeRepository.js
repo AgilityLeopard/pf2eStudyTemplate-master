@@ -15,29 +15,29 @@ const cost = function (cost, archetype = 0, stats = 0, species = 0, other = 0) {
 }
 
 // ...archetype(source.playerCore.key, 99,'Adepta Sororitas','Sister of Battle',2,'Human',94),
-const archetype = function (sourceKey, sourcePage, name, tier, species, stub = false) {
-    let speciesSourceKey = 'playerCore';
-    let speciesName = 'Human';
-    let split = [];
-    split = species.split('/');
-    if (split.length === 2) {
-        speciesSourceKey = split[0];
-        speciesName = split[1];
-    } else {
-        split = species.split('-');
-        if (split.length >= 2) {
-            speciesSourceKey = split[0];
-            speciesName = split.splice(1).map((i) => i.charAt(0).toUpperCase() + i.slice(1)).join(' ');
-        } else {
-            speciesName = species;
-        }
-    }
+const archetype = function (sourceKey, sourcePage, name) {
+    // let speciesSourceKey = 'playerCore';
+    // let speciesName = 'Human';
+    // let split = [];
+    // // split = species.split('/');
+    // // if (split.length === 2) {
+    // //     speciesSourceKey = split[0];
+    // //     speciesName = split[1];
+    // // } else {
+    // //     split = species.split('-');
+    // //     if (split.length >= 2) {
+    // //         speciesSourceKey = split[0];
+    // //         speciesName = split.splice(1).map((i) => i.charAt(0).toUpperCase() + i.slice(1)).join(' ');
+    // //     } else {
+    // //         speciesName = species;
+    // //     }
+    // // }
 
-    const speciesObject = {
-        name: speciesName,
-        key: `${speciesSourceKey.toLowerCase()}-${stringToKebab(speciesName)}`,
-        sourceKey: speciesSourceKey.toLowerCase(),
-    };
+    // const speciesObject = {
+    //     name: speciesName,
+    //     key: `${speciesSourceKey.toLowerCase()}-${stringToKebab(speciesName)}`,
+    //     sourceKey: speciesSourceKey.toLowerCase(),
+    // };
 
     return {
         source: {
@@ -46,10 +46,6 @@ const archetype = function (sourceKey, sourcePage, name, tier, species, stub = f
         },
         key: `${stringToKebab(`${sourceKey} ${name}`)}`,
         name,
-        cost,
-        tier,
-        species: [speciesObject],
-        stub,
         wargear: [],
         prerequisites: [],
         archetypeFeatures: [],
@@ -73,7 +69,7 @@ const statBoost = function (str, dex, con, int, wis, cha) {
 const playerCore = [
     //воин
     {
-        ...archetype(source.playerCore.key, 92, 'Fighter', 1, 'Human'),
+        ...archetype(source.playerCore.key, 92, 'Fighter'),
         ...cost(12, 0, 12, 0, 0),
         ...statBoost(0, 0, 0, 0, 0, 0),
         hint: 'Сражаясь ради чести, жадности, верности или просто ради азарта битвы, вы бесспорно являетесь мастером владения оружием и боевыми техниками. Вы сочетаете свои действия в комбинациях открывающих движений, завершающих ударов, и контратак, когда ваши враги по неосторожности ослабят защиту. Являетесь ли вы рыцарем, наемником, снайпером или мастером клинка, вы искусно отточили свои боевые навыки и обрушиваете сокрушительные критические атаки на своих врагов.',
@@ -342,7 +338,7 @@ const playerCore = [
 
     //Бард
     {
-        ...archetype(source.playerCore.key, 92, 'Bard', 1, 'Human'),
+        ...archetype(source.playerCore.key, 92, 'Bard'),
         ...cost(12, 0, 12, 0, 0),
         ...statBoost(0, 0, 0, 0, 0, 1),
         hint: 'Вы мастер искусств, знаток скрытых тайн, и обольстительный мастер убеждения. С помощью эффектных выступлений, вы воздействуете на умы и вдохновляете сердца на новые героические свершения. Вы можете использовать свои силы, чтобы стать харизматическим лидером, или, вместо этого вы можете быть советником, манипулятором, ученым, проходимцем или виртуозом. В то время как ваша универсальность заставляет некоторых считать вас привлекательным негодником и мастером на все руки, но опасно списывать вас со счетов, как неумеху.',
@@ -560,7 +556,7 @@ const playerCore = [
 
     //Друид
     {
-        ...archetype(source.playerCore.key, 92, 'Druid', 1, 'Human'),
+        ...archetype(source.playerCore.key, 92, 'Druid'),
         ...cost(12, 0, 12, 0, 0),
         ...statBoost(0, 0, 0, 0, 1, 0),
         hint: 'Силе природы невозможно сопротивляться. Она может разрушить самую неприступную крепость за считанные минуты, превратив даже самые мощные сооружения в руины,'
@@ -802,7 +798,7 @@ const playerCore = [
 
     //Жрец
     {
-        ...archetype(source.playerCore.key, 92, 'Cleric', 1, 'Human'),
+        ...archetype(source.playerCore.key, 92, 'Cleric'),
         ...cost(12, 0, 12, 0, 0),
         ...statBoost(0, 0, 0, 0, 1, 0),
         hint: 'Силе природы невозможно сопротивляться. Она может разрушить самую неприступную крепость за считанные минуты, превратив даже самые мощные сооружения в руины,'
@@ -916,10 +912,11 @@ const playerCore = [
             //Общие
             "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
             //Классовые
-            "Divine Font", "Cleric Spellcasting", "Doctrine"
+            "Divine Font", "Cleric Spellcasting", "Doctrine", "Miraculous Spell", "Divine Defense", "Resolute Faith", "Deity Cleric",
 
             //Обще-классовые
-            // "Perception Expertise Druid", "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
+            "Weapon Specialization", "Perception Expertise Cleric", "Reflex Expertise Cleric"
+            //, "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
             // "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
         ],
         modification:
@@ -931,71 +928,28 @@ const playerCore = [
                     type: "Perception",
                     level: 3,
                 },
-
                 {
-                    key: "fortitude",
-                    upgrade: "E",
+                    key: "will",
+                    upgrade: "M",
                     type: "Saving",
                     mode: "Upgrade",
-                    level: 3,
+                    level: 9,
                 },
                 {
                     key: "reflex",
                     upgrade: "E",
                     type: "Saving",
                     mode: "Upgrade",
-                    level: 5,
+                    level: 11,
                 },
                 {
-                    key: "attack",
+                    key: "unarmored",
                     upgrade: "E",
-                    type: "spellsClass",
+                    type: "Defence",
                     mode: "Upgrade",
-                    level: 7,
-                },
-                {
-                    key: "class",
-                    upgrade: "E",
-                    type: "spellsClass",
-                    mode: "Upgrade",
-                    level: 7,
+                    level: 13,
                 },
 
-                {
-                    key: "will",
-                    upgrade: "M",
-                    type: "Saving",
-                    mode: "Upgrade",
-                    level: 11,
-                },
-                {
-                    key: "simple",
-                    mode: "Upgrade",
-                    upgrade: "E",
-                    type: "Attack",
-                    level: 11,
-                },
-                {
-                    key: "unarmed",
-                    upgrade: "E",
-                    mode: "Upgrade",
-                    type: "Attack",
-                    level: 11,
-                },
-                {
-                    key: "light",
-                    upgrade: "E",
-                    mode: "Upgrade",
-                    type: "Defence",
-                    level: 13,
-                },
-                {
-                    key: "medium",
-                    upgrade: "E",
-                    mode: "Upgrade",
-                    type: "Defence",
-                    level: 13,
-                },
                 {
                     key: "Weapon Specialization",
                     // upgrade: "M",
@@ -1009,41 +963,14 @@ const playerCore = [
                     // valueBonus: 2,
                     // typeBonus: "damage"
                 },
-                {
-                    key: "attack",
-                    upgrade: "M",
-                    type: "spellsClass",
-                    mode: "Upgrade",
-                    level: 15,
-                },
-                {
-                    key: "class",
-                    upgrade: "M",
-                    type: "spellsClass",
-                    mode: "Upgrade",
-                    level: 15,
-                },
-                {
-                    key: "attack",
-                    upgrade: "L",
-                    type: "spellsClass",
-                    mode: "Upgrade",
-                    level: 19,
-                },
-                {
-                    key: "class",
-                    upgrade: "L",
-                    type: "spellsClass",
-                    mode: "Upgrade",
-                    level: 19,
-                },
+                //
             ]
     },
 ];
 
 const playerCore2 = [
     {
-        ...archetype(source.playerCore.key, 92, 'Oracle', 1, 'Human'),
+        ...archetype(source.playerCore.key, 92, 'Oracle'),
         ...cost(12, 0, 12, 0, 0),
         ...statBoost(0, 0, 0, 0, 0, 1),
         hint: 'Ваш проводник божественной силы сторонится традиционных каналов молитвы и служения - вместо этого вы собираете сакральные истины, которые выходят за рамки любого отдельного божества. Вы понимаете великие тайны вселенной, воплощенные во всеобъемлющих концепциях, которые превосходят добро и зло или хаос и порядок, независимо от того, воспринимаете ли вы общую связь между несколькими божествами или полностью обходите стороной их силу. Вы исследуете одну из этих тайн и используете ее силу, чтобы творить чудесные заклинания, но эта сила стоит ужасную цену: чем больше вы ее используете, тем сильнее становится проклятие. Ваши умения - обоюдоострый меч, который вы можете поддерживать как божественный инструмент или как проклятие богов.',

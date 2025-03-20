@@ -809,7 +809,7 @@ export default {
       return '';
     },
     getAvatar(type) {
-      return `/img/icon/wargear/${this.textToKebab(type)}.svg`;
+      return `/img/icon/wargear/${this.textToKebab(type).toLowerCase()}.svg`;
     },
     groupLabel(group){
       return this.weaponGroup.find(a => a.group == group) ? this.weaponGroup.find(a => a.group == group).name : "";
