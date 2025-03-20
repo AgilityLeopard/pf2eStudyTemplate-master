@@ -30,6 +30,16 @@
         item-value="name"
       >
       </v-select>
+
+      <v-select
+        label="Источник"
+        v-model="selectedSourceFilters"
+        multiple
+        :items="sourceFilters"
+        item-text="name"
+        item-value="name"
+      >
+      </v-select>
     </v-card-title>
 
     <v-divider />
@@ -168,7 +178,8 @@ export default {
   data() {
     return {
       chapterList: undefined,
-      selectedTalents: undefined, // for he preview dialog box
+      selectedTalents: undefined,
+      selectedSourceFilters: [],
       talentsDialog: false,
       searchQuery: '',
       selectedtraitsFilters: [],
@@ -420,7 +431,28 @@ export default {
 
       return searchResult;
     },
+    sourceFilters() {
+      if (this.talents === undefined) {
+        return [];
+      }
+      let filteredTalents = this.talents;
+      //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
+      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      // only show those whose prerequisites are met
 
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
+      //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.traits.toString().toUpperCase()));
+      let reduced = [];
+      filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
+        if (item.source.book) {
+          reduced.push(item.source.book);
+        }
+      });
+
+      reduced = reduced.filter(item => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((tag) => ({ name: tag }));
+    },
     tagFilters() {
       if (this.talents === undefined) {
         return [];
@@ -458,9 +490,13 @@ export default {
         filteredTalents = filteredTalents.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
       }
 
+
+      if (this.selectedSourceFilters.length > 0) {
+        filteredTalents = filteredTalents.filter((item) => this.selectedSourceFilters.includes(item.source.book));
+      }
+
       filteredTalents = filteredTalents.map((talent) => {
         let fulfilled = true;
-        let traitsFilter = true;
 
         talent.prerequisitesFulfilled = fulfilled;
         return talent;
@@ -474,7 +510,7 @@ export default {
       // }
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
 
-      return filteredTalents//filteredTalents.filter(talent => talent.level <= this.level);
+      return filteredTalents.filter(talent => talent.level <= this.level);
     },
   }
 };

@@ -22,6 +22,8 @@
         <v-tab class="caption" key="tab-additional" :href="`#tab-additional`"
           ><h2 class="subtitle-2">Черты дополнительные</h2></v-tab
         >
+
+        <!-- Черты родословной -->
         <v-tab-item
           class="my-tab-item"
           key="tab-ancestry"
@@ -199,6 +201,7 @@
           </v-expansion-panels>
         </v-tab-item>
 
+        <!-- Черты класса -->
         <v-tab-item class="my-tab-item" key="tab-class" :value="`tab-class`">
           <!-- <v-col :cols="8" :sm="10" class="subtitle-1"> Черты Класса </v-col> -->
 

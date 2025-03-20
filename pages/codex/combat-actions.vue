@@ -85,13 +85,13 @@
 
 <script>
 import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
-import RulesCombatActionsMixin from "~/mixins/RulesCombatActionsMixin";
+// import RulesCombatActionsMixin from "~/mixins/RulesCombatActionsMixin";
 
 export default {
   components: {
     DodDefaultBreadcrumbs,
   },
-  mixins: [RulesCombatActionsMixin],
+  // mixins: [RulesCombatActionsMixin],
   head() {
     const title = "Combat Actions - Wrath & Glory Reference | Codex";
     const description =

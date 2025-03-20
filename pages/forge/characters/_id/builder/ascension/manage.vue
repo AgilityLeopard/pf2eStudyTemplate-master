@@ -7,7 +7,7 @@
       size="128"
       width="12"
     />
-  
+
     <v-col v-if="ascension" :xs="12">
       <div class="d-flex flex-no-wrap justify-space-between mb-2">
         <div>
@@ -15,7 +15,7 @@
           <h4 class="subtitle-1 grey--text">{{ ascension.hint }}</h4>
           <v-btn small outlined color="primary" @click="doChangeAscensionMode">
             <v-icon small>settings</v-icon>
-           Сменить предысторию
+            Сменить предысторию
           </v-btn>
         </div>
         <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
@@ -33,25 +33,31 @@
           <strong>XP Cost:</strong> {{ species.cost }}, incl. Stats ({{ species.costs.stats }} XP)
         </p> -->
 
-        <p ><strong>Характеристика на выбор:</strong> {{ characterLabelAttribute(ascension.boost1) }}</p>
+        <p>
+          <strong>Характеристика на выбор:</strong>
+          {{ characterLabelAttribute(ascension.boost1) }}
+        </p>
 
-        <p ><strong>Характеристика на выбор 2:</strong> Свободное повышение</p>
-       
+        <p><strong>Характеристика на выбор 2:</strong> Свободное повышение</p>
 
-        <p v-if="ascension.skill"><strong>Навык от предыстории:</strong> {{ characterLabelSkillTrainedChoice(ascension.skill) }} </p>
+        <p v-if="ascension.skill">
+          <strong>Навык от предыстории:</strong>
+          {{ characterLabelSkillTrainedChoice(ascension.skill) }}
+        </p>
 
-        <p v-if="ascension.lore"><strong>Знание от предыстории:</strong> {{ ascension.lore }} </p>
+        <p v-if="ascension.lore">
+          <strong>Знание от предыстории:</strong> {{ ascension.lore }}
+        </p>
 
-        <p v-if="ascension.description"><strong>Описание</strong>  {{ ascension.description }}</p>
-       
+        <p v-if="ascension.description">
+          <strong>Описание</strong> {{ ascension.description }}
+        </p>
+
         <!-- <p><strong>Скорость:</strong> {{ ascension.speed }}</p> -->
       </div>
 
       <div class="body-2">
         <p><v-divider /></p>
-
-
-          
       </div>
     </v-col>
   </v-row>
@@ -138,7 +144,7 @@ export default {
     },
     avatar() {
       //if (this.species === undefined) return "";
-      return `/img/avatars/species/playerCore-dwarf.png` ;
+      return `/img/avatars/species/playerCore-dwarf.png`;
     },
   },
   watch: {
@@ -165,14 +171,23 @@ export default {
     };
   },
   methods: {
-    characterLabelAttribute(keyAbility){
-      return this.attributeRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
+    characterLabelAttribute(keyAbility) {
+      return this.attributeRepository
+        .filter((a) => keyAbility.includes(a.key))
+        .map((s) => s.name)
+        .join(", ");
     },
-    characterLabelAttributeBoost(item){
-      return item.filter((a) => a.value > 0).map(s => s.name).join(', ')
+    characterLabelAttributeBoost(item) {
+      return item
+        .filter((a) => a.value > 0)
+        .map((s) => s.name)
+        .join(", ");
     },
-    characterLabelSkillTrainedChoice(keyAbility){
-      return this.skillRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
+    characterLabelSkillTrainedChoice(keyAbility) {
+      return this.skillRepository
+        .filter((a) => keyAbility.includes(a.key))
+        .map((s) => s.name)
+        .join(", ");
     },
     async getChapterList(sources) {
       const config = {
@@ -191,8 +206,8 @@ export default {
       //   const speciesDetails = this.$store.getters["species/getSpecies"](key);
       //   finalData = speciesDetails;
       // } else {
-        const { data } = await this.$axios.get(`/api/ascension-packages/${key}`);
-        finalData = data;
+      const { data } = await this.$axios.get(`/api/ascension-packages/${key}`);
+      finalData = data;
       // }
 
       this.loading = false;

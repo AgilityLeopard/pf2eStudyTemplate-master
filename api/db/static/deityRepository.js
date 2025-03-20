@@ -33,6 +33,12 @@ const playerCore = [
         domains: ["change", "magic", "protection", "time"],
         alternateDomains: ["vigil"],
         favoredWeapon: "dagger",
+        minorGift: "тут текст",
+        majorGift: "тут текст",
+        moderateGift: "тут текст",
+        minorCurse: "тут текст",
+        majorCurs: "тут текст",
+        moderateCurse: "тут текст",
     }
 ]
 

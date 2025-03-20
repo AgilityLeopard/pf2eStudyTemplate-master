@@ -444,7 +444,7 @@ import SluggerMixin from '~/mixins/SluggerMixin';
 import WargearMixin from '~/mixins/WargearMixin';
 import WargearTrait from '~/mixins/WargearTraitRepositoryMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
-import RulesMixin from '~/mixins/RulesCombatActionsMixin';
+// import RulesMixin from '~/mixins/RulesCombatActionsMixin';
 
 export default {
   name: 'Wargear',
