@@ -2,7 +2,6 @@
   <v-row justify="center">
     <v-col :cols="12">
       <h1 class="headline">Выберите Предыстория</h1>
-
     </v-col>
 
     <v-dialog
@@ -35,7 +34,6 @@
           <v-list-item
             v-for="item in ascensionList"
             :key="item.key"
-            
             @click.stop="updatePreview(item)"
           >
             <v-list-item-avatar tile>
@@ -46,9 +44,7 @@
               <v-list-item-title>
                 {{ item.nameBackground }}
                 <v-chip
-                  v-if="
-                    item.source
-                  "
+                  v-if="item.source"
                   color="info"
                   outlined
                   tags
@@ -63,16 +59,8 @@
           </v-list-item>
         </v-list>
       </v-card>
-
-   
     </v-col>
   </v-row>
-</template>
-
-
-
-
-
 </template>
 
 <script>
@@ -94,10 +82,7 @@ export default {
   },
   computed: {
     sources() {
-      return [
-        "playerCore",
-        ...this.settingHomebrews,
-      ];
+      return ["playerCore", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
@@ -115,7 +100,9 @@ export default {
       );
     },
     characterSkillPoints() {
-      return this.$store.getters['characters/characterSkillPointsById'](this.characterId);
+      return this.$store.getters["characters/characterSkillPointsById"](
+        this.characterId
+      );
     },
 
     characterSkills() {
@@ -147,7 +134,10 @@ export default {
           source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get("/api/ascension-packages/", config);
+      const { data } = await this.$axios.get(
+        "/api/ascension-packages/",
+        config
+      );
       this.ascensionList = data;
 
       // if (sources.includes("custom")) {
@@ -158,36 +148,30 @@ export default {
     async getTalents(sources) {
       this.loading = true;
       const config = {
-        params: { source: this.sources.join(','), },
+        params: { source: this.sources.join(",") },
       };
       {
-        const { data } = await this.$axios.get('/api/talents/', config);
-        this.talentList = data.map(talent => {
-                       
-          
+        const { data } = await this.$axios.get("/api/talents/", config);
+        this.talentList = data.map((talent) => {
           // const prerequisitesHtml = this.requirementsToText(talent).join(', ');
           return {
-            ...talent
-          }
+            ...talent,
+          };
         });
 
         // this.talentList.filter(talent =>{
-          
+
         //   const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
         //   return lowercaseKeywords.includes(talent.tags.toString().toUpperCase());
-              
 
         //    }
         //   )
-      
-
-
       }
-      
+
       this.loading = false;
     },
     getAvatar(key) {
-      return `/img/avatars/species/playerCore-dwarf.png` 
+      return `/img/avatars/species/playerсore-dwarf.png`;
     },
     async updatePreview(item) {
       const slug = this.camelToKebab(item.key);
@@ -197,96 +181,118 @@ export default {
       //   );
       //   this.selectedSpecies = speciesDetails;
       // } else {
-        const ascensionDetails = await this.$axios.get(`/api/ascension-packages/${slug}`);
-        this.selectedAscension = ascensionDetails.data;
+      const ascensionDetails = await this.$axios.get(
+        `/api/ascension-packages/${slug}`
+      );
+      this.selectedAscension = ascensionDetails.data;
       // }
       this.ascensionDialog = true;
     },
     selectAscensionForChar(ascensionPackage) {
       const id = this.characterId;
 
-
       const payload = {
         id,
         key: ascensionPackage.key,
         value: ascensionPackage.nameBackground,
-        
-       // cost,
+
+        // cost,
         sourceTier: ascensionPackage.sourceTier,
         // targetTier,
       };
-      this.$store.commit('characters/addCharacterAscensionPackage', payload);
+      this.$store.commit("characters/addCharacterAscensionPackage", payload);
 
-      const talent = this.talentList.find(s => s.key === ascensionPackage.feat);
-      if(talent)
-      {
+      const talent = this.talentList.find(
+        (s) => s.key === ascensionPackage.feat
+      );
+      if (talent) {
         const match = talent.name.match(/(<.*>)/);
-      const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-      
-      const payloadSkill = {
-        id: talentUniqueId,
-        name: talent.name,
-        key: talent.key,
-        cost: talent.cost,
-        place: "background",
-        placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
-        selected: undefined,
-        choice: talent.optionsKey,
-        source: `talent.${talentUniqueId}`,
+        const talentUniqueId = Math.random()
+          .toString(36)
+          .replace(/[^a-z]+/g, "")
+          .substr(0, 8);
+
+        const payloadSkill = {
+          id: talentUniqueId,
+          name: talent.name,
+          key: talent.key,
+          cost: talent.cost,
+          place: "background",
+          placeholder:
+            match !== null && match !== undefined ? match[1] : undefined,
+          selected: undefined,
+          choice: talent.optionsKey,
+          source: `talent.${talentUniqueId}`,
+        };
+
+        this.$store.commit("characters/addCharacterTalent", {
+          id: this.characterId,
+          talent: payloadSkill,
+        });
       }
 
-      this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payloadSkill });
-      }
-
-   
-    
       //добавляем лоры
-      
-      this.$store.commit('characters/removeBackgroundCustomSkill', { id, payload });
 
-      if(ascensionPackage.lore)
-      {
-            const skill = {
-                key: this.textToCamel(ascensionPackage.lore),
-                name: ascensionPackage.lore,
-                attribute: 'intellect',
-                background: true,
-                description: "",
-                optional: true,
-          };
-          this.$store.commit('characters/addCharacterCustomSkill', { id, skill });
-          //this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
+      this.$store.commit("characters/removeBackgroundCustomSkill", {
+        id,
+        payload,
+      });
+
+      if (ascensionPackage.lore) {
+        const skill = {
+          key: this.textToCamel(ascensionPackage.lore),
+          name: ascensionPackage.lore,
+          attribute: "intellect",
+          background: true,
+          description: "",
+          optional: true,
+        };
+        this.$store.commit("characters/addCharacterCustomSkill", { id, skill });
+        //this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
       }
-      
-      const back = this.$store.getters['characters/characterBackSkillById'](this.characterId); 
+
+      const back = this.$store.getters["characters/characterBackSkillById"](
+        this.characterId
+      );
 
       //Убрать скилл
-      const class1 = this.$store.getters['characters/characterTrainedSkillClassById'](this.characterId);
-      
+      const class1 = this.$store.getters[
+        "characters/characterTrainedSkillClassById"
+      ](this.characterId);
 
-      
-      if(ascensionPackage.skill)
-      {
-       // Если не классовый скилл
-        if(this.characterSkills[back] === "T" && class1.find(item => item === back) === undefined)
-           this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: back, value: "U" } });
+      if (ascensionPackage.skill) {
+        // Если не классовый скилл
+        if (
+          this.characterSkills[back] === "T" &&
+          class1.find((item) => item === back) === undefined
+        )
+          this.$store.commit("characters/setCharacterSkill", {
+            id: this.characterId,
+            payload: { key: back, value: "U" },
+          });
 
         //Добавить скилл
-        if(this.characterSkills[ascensionPackage.skill] === "U" )
-            this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: ascensionPackage.skill, value: "T" } });
-        else
-          {
-           
-            if(back != ascensionPackage.skill)
-          {
-            const point = this.$store.getters['characters/characterSkillPointsById'](this.characterId);
-            this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: ascensionPackage.skill, value: point + 1} });
+        if (this.characterSkills[ascensionPackage.skill] === "U")
+          this.$store.commit("characters/setCharacterSkill", {
+            id: this.characterId,
+            payload: { key: ascensionPackage.skill, value: "T" },
+          });
+        else {
+          if (back != ascensionPackage.skill) {
+            const point = this.$store.getters[
+              "characters/characterSkillPointsById"
+            ](this.characterId);
+            this.$store.commit("characters/setCharacterSkillPoints", {
+              id: this.characterId,
+              payload: { key: ascensionPackage.skill, value: point + 1 },
+            });
           }
-
-          }
+        }
       }
-      this.$store.commit('characters/setCharacterBackSkill', { id: this.characterId, payload: { value: ascensionPackage.skill } });
-      
+      this.$store.commit("characters/setCharacterBackSkill", {
+        id: this.characterId,
+        payload: { value: ascensionPackage.skill },
+      });
 
       this.ascensionDialog = false;
       this.$router.push({
@@ -296,7 +302,7 @@ export default {
     },
     addCustomSkill(skill) {
       const id = this.characterId;
-      this.$store.commit('characters/addCharacterCustomSkill', { id, skill });
+      this.$store.commit("characters/addCharacterCustomSkill", { id, skill });
     },
     openCustomEditor() {
       this.$router.push({
