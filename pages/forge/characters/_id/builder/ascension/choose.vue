@@ -171,7 +171,7 @@ export default {
       this.loading = false;
     },
     getAvatar(key) {
-      return `/img/avatars/species/playerсore-dwarf.png`;
+      return `/img/avatars/species/playercore-dwarf.png`;
     },
     async updatePreview(item) {
       const slug = this.camelToKebab(item.key);
