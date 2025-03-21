@@ -56,6 +56,9 @@ export const getters = {
     state.characters[id] && state.characters[id].settingHomebrewContent
       ? state.characters[id].settingHomebrewContent
       : [],
+  characterSettingOfficialOptionsById: (state) => (id) =>
+    state.characters[id] && state.characters[id].settingOfficialOptions
+      ? state.characters[id].settingOfficialOptions : [],
 
   characterSettingHouserulesById: (state) => (id) =>
     state.characters[id] && state.characters[id].settingHouserules

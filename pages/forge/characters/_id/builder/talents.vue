@@ -211,12 +211,25 @@
               :key="levelAncestry"
               v-if="
                 levelAncestry <= characterLevel() &&
-                (levelAncestry == 1 || levelAncestry % 2 == 0)
+                (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)
               "
             >
               <v-expansion-panel-header
-                >{{ levelAncestry }} уровень</v-expansion-panel-header
-              >
+                >{{ levelAncestry }} уровень
+                <v-col :cols="4" :sm="2">
+                  <v-btn
+                    color="error"
+                    align="right"
+                    x-small
+                    v-if="characterClassTalent(levelAncestry)"
+                    @click.stop.prevent="
+                      removeTalent(characterClassTalent(levelAncestry))
+                    "
+                    >Удалить</v-btn
+                  >
+                </v-col>
+              </v-expansion-panel-header>
+
               <v-expansion-panel-content :key="levelAncestry">
                 <v-btn
                   @click="updatePreview(levelAncestry, 'class')"
@@ -225,72 +238,121 @@
                   Выберите черту {{ levelAncestry }}
                 </v-btn>
 
-                <v-expansion-panels
+                <div v-if="characterClassTalent(levelAncestry)">
+                  <v-row class="rowFeat">
+                    <div class="head">
+                      <h1>
+                        {{ characterClassTalent(levelAncestry).label }}
+                      </h1>
+                    </div>
+                    <div class="line"></div>
+                    <div class="tag">
+                      Черта {{ characterClassTalent(levelAncestry).level }}
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div>
+                      <trait-view
+                        v-if="characterClassTalent(levelAncestry).traits"
+                        :item="characterClassTalent(levelAncestry)"
+                        class="mb-2"
+                      />
+                    </div>
+                  </v-row>
+                  <div v-if="characterClassTalent(levelAncestry).requirements">
+                    <p class="main-holder">
+                      {{ characterClassTalent(levelAncestry).requirements.key }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="characterClassTalent(levelAncestry).description"
+                  ></div>
+                  <p></p>
+                  <div v-if="characterClassTalent(levelAncestry).options">
+                    <v-select
+                      :value="characterClassTalent(levelAncestry).selected"
+                      :items="characterClassTalent(levelAncestry).options"
+                      item-text="name"
+                      item-value="key"
+                      :placeholder="
+                        characterClassTalent(levelAncestry).optionsPlaceholder
+                      "
+                      filled
+                      dense
+                      @input="
+                        talentUpdateSelected(
+                          item,
+                          characterClassTalent(levelAncestry),
+                          levelAncestry
+                        )
+                      "
+                    />
+                  </div>
+                  <!-- <v-row no-gutters>
+                    <v-col :cols="8" :sm="10" class="subtitle-1">
+                      <span />
+                    </v-col>
+                    <v-col :cols="8" :sm="10" class="subtitle-2">
+                      <span
+                        v-html="characterClassTalent(levelAncestry).label"
+                      />
+                    </v-col>
+                    <v-col :cols="4" :sm="2">
+                      <v-btn
+                        color="error"
+                        x-small
+                        @click.stop.prevent="
+                          removeTalent(characterClassTalent(levelAncestry))
+                        "
+                        >Удалить</v-btn
+                      >
+                    </v-col>
+                    <v-col
+                      v-if="!open"
+                      :cols="8"
+                      :sm="10"
+                      class="caption grey--text"
+                    >
+                      {{ characterClassTalent(levelAncestry).snippet }}
+                    </v-col>
+                  </v-row> -->
+                </div>
+                <!-- <v-expansion-panels
                   multiple
                   v-if="characterClassTalent(levelAncestry)"
                 >
                   <v-expansion-panel>
                     <v-expansion-panel-header>
                       <template v-slot:default="{ open }">
-                        <v-row no-gutters>
-                          <v-col :cols="8" :sm="10" class="subtitle-1">
-                            <span />
-                          </v-col>
-                          <v-col :cols="8" :sm="10" class="subtitle-2">
-                            <span
-                              v-html="characterClassTalent(levelAncestry).label"
-                            />
-                          </v-col>
-                          <v-col :cols="4" :sm="2">
-                            <v-btn
-                              color="error"
-                              x-small
-                              @click.stop.prevent="
-                                removeTalent(
-                                  characterClassTalent(levelAncestry)
-                                )
-                              "
-                              >Удалить</v-btn
-                            >
-                          </v-col>
-                          <v-col
-                            v-if="!open"
-                            :cols="8"
-                            :sm="10"
-                            class="caption grey--text"
-                          >
-                            {{ characterClassTalent(levelAncestry).snippet }}
-                          </v-col>
-                        </v-row>
+                       
                       </template>
                     </v-expansion-panel-header>
 
                     <v-expansion-panel-content>
                       <div
                         class="body-2 mb-2"
-                        v-html="characterClassTalent(levelAncestry).description"
+                        v-html="
+                          characterClassTalent(levelAncestry).description
+                        "
                       ></div>
 
-                      <v-alert
-                        v-if="characterClassTalent(levelAncestry).alert"
-                        :type="characterClassTalent(levelAncestry).alert.type"
-                        dense
-                        text
-                        >{{
-                          characterClassTalent(levelAncestry).alert.text
-                        }}</v-alert
+                      <div
+                        v-if="characterClassTalent(levelAncestry).options"
                       >
-
-                      <div v-if="characterClassTalent(levelAncestry).options">
                         <v-select
-                          :value="characterClassTalent(levelAncestry).selected"
-                          :items="characterClassTalent(levelAncestry).options"
+                          v-if="
+                            characterClassTalent(levelAncestry)
+                              .optionsKey === 'skill'
+                          "
+                          :value="
+                            characterClassTalent(levelAncestry).selected
+                          "
+                          :items="skillRepository"
                           item-text="name"
                           item-value="key"
-                          :placeholder="
-                            characterClassTalent(levelAncestry)
-                              .optionsPlaceholder
-                          "
+                          placeholder="Выберите навык"
                           filled
                           dense
                           @input="
@@ -304,7 +366,7 @@
                       </div>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
-                </v-expansion-panels>
+                </v-expansion-panels> -->
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -312,76 +374,6 @@
 
         <v-tab-item class="my-tab-item" key="tab-skill" :value="`tab-skill`">
           <v-expansion-panels multiple>
-            <v-expansion-panel>
-              <v-expansion-panel-header
-                >Черта Предыстории</v-expansion-panel-header
-              >
-              <v-expansion-panel-content>
-                <v-expansion-panels
-                  multiple
-                  v-if="characterBackgroundTalent(1)"
-                >
-                  <v-expansion-panel>
-                    <v-expansion-panel-header>
-                      <template v-slot:default="{ open }">
-                        <v-row no-gutters>
-                          <v-col :cols="8" :sm="10" class="subtitle-1">
-                            <span />
-                          </v-col>
-                          <v-col :cols="8" :sm="10" class="subtitle-2">
-                            <span v-html="characterBackgroundTalent(1).label" />
-                          </v-col>
-
-                          <v-col
-                            v-if="!open"
-                            :cols="8"
-                            :sm="10"
-                            class="caption grey--text"
-                          >
-                            {{ characterBackgroundTalent(1).snippet }}
-                          </v-col>
-                        </v-row>
-                      </template>
-                    </v-expansion-panel-header>
-
-                    <v-expansion-panel-content>
-                      <div
-                        class="body-2 mb-2"
-                        v-html="characterBackgroundTalent(1).description"
-                      ></div>
-
-                      <v-alert
-                        v-if="characterBackgroundTalent(1).alert"
-                        :type="characterBackgroundTalent(1).alert.type"
-                        dense
-                        text
-                        >{{ characterBackgroundTalent(1).alert.text }}</v-alert
-                      >
-
-                      <div v-if="characterBackgroundTalent(1).options">
-                        <v-select
-                          :value="characterBackgroundTalent(1).selected"
-                          :items="characterBackgroundTalent(1).options"
-                          item-text="name"
-                          item-value="key"
-                          :placeholder="
-                            characterBackgroundTalent(1).optionsPlaceholder
-                          "
-                          filled
-                          dense
-                          @input="
-                            talentSkillUpdateSelected(
-                              item,
-                              characterBackgroundTalent(1)
-                            )
-                          "
-                        />
-                      </div>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
             <v-expansion-panel
               v-for="levelAncestry in 20"
               :key="levelAncestry"
@@ -391,8 +383,20 @@
               "
             >
               <v-expansion-panel-header
-                >{{ levelAncestry }} уровень</v-expansion-panel-header
-              >
+                >{{ levelAncestry }} уровень
+                <v-col :cols="4" :sm="2">
+                  <v-btn
+                    color="error"
+                    align="right"
+                    x-small
+                    v-if="characterSkillTalent(levelAncestry)"
+                    @click.stop.prevent="
+                      removeTalent(characterSkillTalent(levelAncestry))
+                    "
+                    >Удалить</v-btn
+                  >
+                </v-col>
+              </v-expansion-panel-header>
 
               <v-expansion-panel-content :key="levelAncestry">
                 <v-btn
@@ -402,72 +406,121 @@
                   Выберите черту {{ levelAncestry }}
                 </v-btn>
 
-                <v-expansion-panels
+                <div v-if="characterSkillTalent(levelAncestry)">
+                  <v-row class="rowFeat">
+                    <div class="head">
+                      <h1>
+                        {{ characterSkillTalent(levelAncestry).label }}
+                      </h1>
+                    </div>
+                    <div class="line"></div>
+                    <div class="tag">
+                      Черта {{ characterSkillTalent(levelAncestry).level }}
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div>
+                      <trait-view
+                        v-if="characterSkillTalent(levelAncestry).traits"
+                        :item="characterSkillTalent(levelAncestry)"
+                        class="mb-2"
+                      />
+                    </div>
+                  </v-row>
+                  <div v-if="characterSkillTalent(levelAncestry).requirements">
+                    <p class="main-holder">
+                      {{ characterSkillTalent(levelAncestry).requirements.key }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="characterSkillTalent(levelAncestry).description"
+                  ></div>
+                  <p></p>
+                  <div v-if="characterSkillTalent(levelAncestry).options">
+                    <v-select
+                      :value="characterSkillTalent(levelAncestry).selected"
+                      :items="characterSkillTalent(levelAncestry).options"
+                      item-text="name"
+                      item-value="key"
+                      :placeholder="
+                        characterSkillTalent(levelAncestry).optionsPlaceholder
+                      "
+                      filled
+                      dense
+                      @input="
+                        talentUpdateSelected(
+                          item,
+                          characterSkillTalent(levelAncestry),
+                          levelAncestry
+                        )
+                      "
+                    />
+                  </div>
+                  <!-- <v-row no-gutters>
+                    <v-col :cols="8" :sm="10" class="subtitle-1">
+                      <span />
+                    </v-col>
+                    <v-col :cols="8" :sm="10" class="subtitle-2">
+                      <span
+                        v-html="characterSkillTalent(levelAncestry).label"
+                      />
+                    </v-col>
+                    <v-col :cols="4" :sm="2">
+                      <v-btn
+                        color="error"
+                        x-small
+                        @click.stop.prevent="
+                          removeTalent(characterSkillTalent(levelAncestry))
+                        "
+                        >Удалить</v-btn
+                      >
+                    </v-col>
+                    <v-col
+                      v-if="!open"
+                      :cols="8"
+                      :sm="10"
+                      class="caption grey--text"
+                    >
+                      {{ characterSkillTalent(levelAncestry).snippet }}
+                    </v-col>
+                  </v-row> -->
+                </div>
+                <!-- <v-expansion-panels
                   multiple
                   v-if="characterSkillTalent(levelAncestry)"
                 >
                   <v-expansion-panel>
                     <v-expansion-panel-header>
                       <template v-slot:default="{ open }">
-                        <v-row no-gutters>
-                          <v-col :cols="8" :sm="10" class="subtitle-1">
-                            <span />
-                          </v-col>
-                          <v-col :cols="8" :sm="10" class="subtitle-2">
-                            <span
-                              v-html="characterSkillTalent(levelAncestry).label"
-                            />
-                          </v-col>
-                          <v-col :cols="4" :sm="2">
-                            <v-btn
-                              color="error"
-                              x-small
-                              @click.stop.prevent="
-                                removeTalent(
-                                  characterSkillTalent(levelAncestry)
-                                )
-                              "
-                              >Удалить</v-btn
-                            >
-                          </v-col>
-                          <v-col
-                            v-if="!open"
-                            :cols="8"
-                            :sm="10"
-                            class="caption grey--text"
-                          >
-                            {{ characterSkillTalent(levelAncestry).snippet }}
-                          </v-col>
-                        </v-row>
+                       
                       </template>
                     </v-expansion-panel-header>
 
                     <v-expansion-panel-content>
                       <div
                         class="body-2 mb-2"
-                        v-html="characterSkillTalent(levelAncestry).description"
+                        v-html="
+                          characterSkillTalent(levelAncestry).description
+                        "
                       ></div>
 
-                      <v-alert
-                        v-if="characterSkillTalent(levelAncestry).alert"
-                        :type="characterSkillTalent(levelAncestry).alert.type"
-                        dense
-                        text
-                        >{{
-                          characterSkillTalent(levelAncestry).alert.text
-                        }}</v-alert
+                      <div
+                        v-if="characterSkillTalent(levelAncestry).options"
                       >
-
-                      <div v-if="characterSkillTalent(levelAncestry).options">
                         <v-select
-                          :value="characterSkillTalent(levelAncestry).selected"
-                          :items="characterSkillTalent(levelAncestry).options"
+                          v-if="
+                            characterSkillTalent(levelAncestry)
+                              .optionsKey === 'skill'
+                          "
+                          :value="
+                            characterSkillTalent(levelAncestry).selected
+                          "
+                          :items="skillRepository"
                           item-text="name"
                           item-value="key"
-                          :placeholder="
-                            characterSkillTalent(levelAncestry)
-                              .optionsPlaceholder
-                          "
+                          placeholder="Выберите навык"
                           filled
                           dense
                           @input="
@@ -481,7 +534,7 @@
                       </div>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
-                </v-expansion-panels>
+                </v-expansion-panels> -->
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -1283,6 +1336,7 @@ export default {
 
 
         aggregatedTalent.id = talent.id;
+        aggregatedTalent.trait = talent.traits;
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
@@ -1463,6 +1517,7 @@ export default {
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
         aggregatedTalent.level = talent.level;
+        aggregatedTalent.trait = talent.traits;
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;

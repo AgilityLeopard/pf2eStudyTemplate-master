@@ -104,8 +104,8 @@ export default {
   computed: {
     sources() {
       return [
-        "playerCore",
-
+        // "playerCore",
+        ...this.settingOfficial,
         // 'tnh',
         ...this.settingHomebrews,
       ];
@@ -114,6 +114,11 @@ export default {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
         this.characterId
       );
+    },
+    settingOfficial() {
+      return this.$store.getters[
+        "characters/characterSettingOfficialOptionsById"
+      ](this.characterId);
     },
     characterSettingTier() {
       return this.$store.getters["characters/characterSettingTierById"](
