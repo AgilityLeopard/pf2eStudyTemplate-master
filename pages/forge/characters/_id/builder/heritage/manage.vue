@@ -21,11 +21,14 @@
         <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
       </div>
 
-      <ul class="simple">
-        <li v-if="species.trait" v-for="trait in species.trait" class="traits">
-          <p class="trait">{{ trait }}</p>
-        </li>
-      </ul>
+      <div>
+        <trait-view
+          v-if="species.trait"
+          :item="species"
+          class="mb-2"
+          style="font-size: 14px"
+        />
+      </div>
       <v-divider />
 
       <div class="mt-2 body-2 text-lg-justify">
@@ -40,49 +43,47 @@
         <p><strong>Скорость:</strong> {{ species.speed }}</p>
       </div>
 
-      <div v-if="species.Description" class="body-2">
-        <p><v-divider /></p>
+      <!-- <div v-if="species.description" class="body-2"> -->
+      <div v-if="species.description" v-html="species.description"></div>
+      <p><v-divider /></p>
 
-        <div v-for="description in species.Description" class="text-lg-justify">
-          <div v-if="description.name == 'Faith'">
-            <span class="subtitle-1 mt-2">Верование</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-            <strong> Популярные эдикты</strong>
-            <div v-if="description.edicts" v-html="description.edicts"></div>
-
-            <p></p>
-
-            <strong> Популярные анафемы</strong>
-            <div
-              v-if="description.anathema"
-              v-html="description.anathema"
-            ></div>
-          </div>
+      <div v-for="description in species.Description" class="text-lg-justify">
+        <div v-if="description.name == 'Faith'">
+          <span class="subtitle-1 mt-2">Верование</span>
+          <p><v-divider /></p>
+          <div v-if="description.about" v-html="description.about"></div>
+          <strong> Популярные эдикты</strong>
+          <div v-if="description.edicts" v-html="description.edicts"></div>
 
           <p></p>
 
-          <div v-if="description.name == 'avanturist'">
-            <span class="subtitle-1 mt-2">Авантюристы</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-          </div>
+          <strong> Популярные анафемы</strong>
+          <div v-if="description.anathema" v-html="description.anathema"></div>
+        </div>
 
-          <div v-if="description.name == 'name'">
-            <span class="subtitle-1 mt-2">Имена</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-            <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
-            <div v-if="species.exampleName" v-html="species.exampleName"></div>
-          </div>
+        <p></p>
 
-          <div v-if="description.name == 'society'">
-            <span class="subtitle-1 mt-2">Общество</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-          </div>
+        <div v-if="description.name == 'avanturist'">
+          <span class="subtitle-1 mt-2">Авантюристы</span>
+          <p><v-divider /></p>
+          <div v-if="description.about" v-html="description.about"></div>
+        </div>
+
+        <div v-if="description.name == 'name'">
+          <span class="subtitle-1 mt-2">Имена</span>
+          <p><v-divider /></p>
+          <div v-if="description.about" v-html="description.about"></div>
+          <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
+          <div v-if="species.exampleName" v-html="species.exampleName"></div>
+        </div>
+
+        <div v-if="description.name == 'society'">
+          <span class="subtitle-1 mt-2">Общество</span>
+          <p><v-divider /></p>
+          <div v-if="description.about" v-html="description.about"></div>
         </div>
       </div>
+      <!-- </div> -->
     </v-col>
   </v-row>
 </template>
@@ -91,11 +92,13 @@
 import HeritagePreview from "~/components/forge/HeritagePreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
+import traitView from "~/components/TraitView";
 
 export default {
   name: "Manage",
   components: {
     HeritagePreview,
+    traitView,
   },
   mixins: [SluggerMixin, StatRepositoryMixin],
   data() {
@@ -176,7 +179,7 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.getAbilityList(newVal);
-           this.getHeritage(newVal);
+          this.getHeritage(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -220,12 +223,10 @@ export default {
       this.loading = true;
       let finalData = {};
 
+      const { data } = await this.$axios.get(`/api/heritage/${key}`);
+      finalData = data;
 
-        const { data } = await this.$axios.get(`/api/heritage/${key}`);
-        finalData = data;
-
-
-      // if(this.abilityList !== undefined) 
+      // if(this.abilityList !== undefined)
       //   {
       //     const ability = this.abilityList.filter(key => key.includes(this.finalData.ancestryAbility));
       //     this.selectedSpecies.push(abilityList);

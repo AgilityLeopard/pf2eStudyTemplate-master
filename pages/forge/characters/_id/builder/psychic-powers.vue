@@ -3,6 +3,7 @@
     <!-- <v-col>
       <h1 class="headline" v-if="archetype">
         Заклинания
+        
       </h1>
     </v-col> -->
     <v-tabs centered grow color="red">

@@ -2,7 +2,7 @@
   <v-row justify="center">
     <!-- manage current inventory -->
 
-    <v-col :cols="12">
+    <v-col :cols="6">
       <v-btn x-small @click="openMoneySettings(getMoney['pp'], 'pp')">
         Платина: {{ getMoney["pp"] }}
       </v-btn>
@@ -21,418 +21,723 @@
       У вас недостаточно денег на покупку
     </v-alert>
 
-    <v-col :cols="12">
-      <v-card
-        class="mb-4"
-        dark
-        dense
-        outlined
-        :color="manageWargear ? 'info' : ''"
-        @click="manageWargear = !manageWargear"
+    <v-tabs centered grow color="red">
+      <v-tab class="caption" key="tab-weapon" :href="`#tab-weapon`"
+        ><h2 class="subtitle-2">Оружие</h2></v-tab
       >
-        <v-card-text class="pa-1">
-          <v-icon>{{ manageWargear ? "expand_less" : "expand_more" }}</v-icon>
-          Управление Оружием({{ characterWeapon.length }})
-        </v-card-text>
-      </v-card>
+      <v-tab class="caption" key="tab-armor" :href="`#tab-armor`"
+        ><h2 class="subtitle-2">Доспех</h2></v-tab
+      >
+      <v-tab class="caption" key="tab-consumable" :href="`#tab-consumable`"
+        ><h2 class="subtitle-2">Расходники</h2></v-tab
+      >
+      <v-tab class="caption" key="tab-gear" :href="`#tab-gear`"
+        ><h2 class="subtitle-2">Снаряжение</h2></v-tab
+      >
 
-      <v-simple-table v-if="manageWargear && characterWeapon" dense>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th v-for="header in headers" :class="header.class">
-                {{ header.text }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="gear in characterWeapon" :key="gear.id">
-              <td>{{ gear.nameGear }}</td>
-              <td class="text-center pa-1 small">
-                + {{ attackModifier(gear) }} / {{ attackModifier(gear) - 5 }} /
-                {{ attackModifier(gear) - 10 }}
-              </td>
-              <td class="text-center pa-1 small">{{ damageModifier(gear) }}</td>
-              <td>
-                <v-btn
-                  outlined
-                  x-small
-                  color="info"
-                  @click="openWeaponSettings(gear)"
-                >
-                  <v-icon left> edit </v-icon>Изменить
-                </v-btn>
-              </td>
-              <td>
-                <v-btn outlined x-small color="error" @click="remove(gear)">
-                  <v-icon left> delete </v-icon>Удалить
-                </v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
+      <v-tab-item class="my-tab-item" key="tab-weapon" :value="`tab-weapon`">
+        <v-col :cols="12">
+          <!-- <v-card
+            class="mb-4"
+            dark
+            dense
+            outlined
+            :color="manageWargear ? 'info' : ''"
+            @click="manageWargear = !manageWargear"
+          >
+            <v-card-text class="pa-1">
+              <v-icon>{{
+                manageWargear ? "expand_less" : "expand_more"
+              }}</v-icon>
+              Управление Оружием({{ characterWeapon.length }})
+            </v-card-text>
+          </v-card> -->
 
-      <v-col :cols="12" v-if="manageWargear && characterWeapon">
-        <v-card
-          class="mb-4"
-          dark
-          outlined
-          :color="wargearSearchActive ? 'info' : ''"
-          @click="wargearSearchActive = !wargearSearchActive"
-        >
-          <v-card-text class="pa-1">
-            <v-icon>{{
-              wargearSearchActive ? "expand_less" : "expand_more"
-            }}</v-icon>
+          <h2 class="subtitle-1 text-center">Оружие</h2>
+
+          <v-btn outlined x-small color="success" @click="OpenWeaponSearch()">
             Добавить оружие
-          </v-card-text>
-        </v-card>
+          </v-btn>
 
-        <wargear-search
-          v-if="
-            wargearSearchActive &&
-            wargearList &&
-            manageWargear &&
-            characterWeapon
-          "
-          :repository="
-            wargearList.filter((item) =>
-              weaponCategoryRepository
-                .map((t) => t.category)
-                .includes(item.category)
-            )
-          "
-          @select="add"
-        />
-      </v-col>
+          <v-data-table
+            :headers="headers"
+            :items="characterWeapon"
+            :search="searchQuery"
+            :page.sync="pagination.page"
+            show-expand
+            hide-default-footer
+            item-key="id"
+            @page-count="pagination.pageCount = $event"
+          >
+            <template v-slot:no-data />
 
-      <!-- Доспехи -->
-      <v-card
-        class="mb-4"
-        dark
-        dense
-        outlined
-        :color="manageArmour ? 'info' : ''"
-        @click="manageArmour = !manageArmour"
-      >
-        <v-card-text class="pa-1">
-          <v-icon>{{ manageArmour ? "expand_less" : "expand_more" }}</v-icon>
-          Управление Доспехами({{ characterArmour.length }})
-        </v-card-text>
-      </v-card>
+            <template v-slot:item.nameGear="{ item }">
+              <v-row
+                ><span>{{ item.nameGear }}</span></v-row
+              >
+              <v-row>
+                <div>
+                  <trait-view v-if="item.traits" :item="item" class="mb-2" />
+                </div>
+              </v-row>
+            </template>
 
-      <v-simple-table v-if="manageArmour && characterArmour" dense>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th v-for="header in headers" :class="header.class">
-                {{ header.text }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="gear in characterArmour" :key="gear.id">
-              <td>{{ gear.nameGear }}</td>
-              <!-- <td class="text-center pa-1 small">
-                + {{ attackModifier(gear) }} / {{ attackModifier(gear) - 5 }} /
-                {{ attackModifier(gear) - 10 }}
-              </td> -->
-              <!-- <td class="text-center pa-1 small">{{ damageModifier(gear) }}</td> -->
-              <!-- <td>
+            <template v-slot:item.attack="{ item }">
+              <span>
+                {{ attackModifier(item) }} /
+                {{
+                  item.traits.includes("быстрое")
+                    ? attackModifier(item) - 4
+                    : attackModifier(item) - 5
+                }}
+
+                /
+                {{
+                  item.traits.includes("быстрое")
+                    ? attackModifier(item) - 8
+                    : attackModifier(item) - 10
+                }}
+              </span>
+            </template>
+
+            <template v-slot:item.damage="{ item }">
+              <span>
+                {{ damageModifier(item) }}
+                {{
+                  DamageType
+                    ? DamageType.find((s) => s.key === item.typeDamage).name
+                    : ""
+                }}
+              </span>
+            </template>
+
+            <template v-slot:item.qty="{ item }">
+              <span>
                 <v-btn
-                  outlined
-                  x-small
-                  color="info"
-                  @click="openWeaponSettings(gear)"
+                  icon
+                  :disabled="item.qty === 1"
+                  @click="decrementQty(item)"
                 >
-                  <v-icon left> edit </v-icon>Изменить
+                  <v-icon color="red"> remove_circle </v-icon>
                 </v-btn>
-              </td> -->
-              <td>
-                <v-btn
-                  outlined
-                  x-small
-                  :color="
-                    characterWearWargear && characterWearWargear.id === gear.id
-                      ? 'info'
-                      : 'warning'
-                  "
-                  @click="
-                    characterWearWargear && characterWearWargear.id === gear.id
-                      ? unwear(gear)
-                      : wear(gear)
-                  "
-                >
-                  <v-icon left> lock </v-icon>
+                {{ item.qty }}
+                <v-btn icon @click="incrementQty(item)">
+                  <!--"-->
+                  <v-icon color="orange"> add_circle </v-icon>
+                </v-btn>
+              </span>
+            </template>
 
-                  <span
-                    v-if="
+            <template v-slot:item.delete="{ item }">
+              <v-btn
+                outlined
+                x-small
+                color="info"
+                @click="openWeaponSettings(item)"
+              >
+                <v-icon left> edit </v-icon>
+              </v-btn>
+            </template>
+
+            <template v-slot:item.edit="{ item }">
+              <v-btn outlined x-small color="error" @click="remove(item)">
+                <v-icon left> delete </v-icon>
+              </v-btn>
+            </template>
+
+            <template v-slot:expanded-item="{ headers, item }">
+              <td :colspan="headers.length">
+                <v-row class="rowFeat">
+                  <div class="head">
+                    <h1>{{ item.nameGear }}</h1>
+                  </div>
+                  <div class="line"></div>
+                  <div class="tag">Оружие {{ item.level }}</div>
+                </v-row>
+                <v-row>
+                  <!-- <div>
+                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
+                  </div> -->
+                </v-row>
+                <p></p>
+                <!-- Описание закла -->
+                <div v-if="item.source.book">
+                  <strong>Источник:</strong> {{ item.source.book }}
+                </div>
+                <div v-if="item.hands">
+                  <p class="main-holder">
+                    <strong>Руки:</strong> {{ item.hands }}
+                  </p>
+                </div>
+                <p></p>
+                <div>
+                  <p class="main-holder">
+                    <strong>Цена:</strong> {{ wargearPrice(item) }}
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="item.distance">
+                  <p class="main-holder">
+                    <strong>Дистанция:</strong> {{ item.distance }}
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="item.area">
+                  <p class="main-holder">
+                    <strong>Область:</strong> <span v-html="item.area"></span>
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="item.target">
+                  <p class="main-holder">
+                    <strong>Дистанция:</strong> {{ item.target }}
+                  </p>
+                </div>
+                <p></p>
+                <div class="line"></div>
+                <div class="pt-4 pb-2" v-html="item.description"></div>
+                <div class="line"></div>
+                <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
+              </td>
+            </template>
+
+            <template v-slot:no-results>
+              <span class="text-center"
+                >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
+              >
+            </template>
+          </v-data-table>
+          <div class="text-center pt-2">
+            <v-pagination
+              v-model="pagination.page"
+              :length="pagination.pageCount"
+            />
+          </div>
+          <!-- Доспехи -->
+
+          <v-dialog
+            v-model="WeaponSearchDialog"
+            :fullscreen="$vuetify.breakpoint.xsOnly"
+            width="1000px"
+            scrollable
+          >
+            <wargear-search
+              v-if="
+                // wargearSearchActive &&
+                wargearList
+                // manageWargear &&
+                // characterWeapon
+              "
+              @cancel="WeaponSearchDialog = false"
+              :repository="
+                wargearList.filter((item) =>
+                  weaponCategoryRepository
+                    .map((t) => t.category)
+                    .includes(item.category)
+                )
+              "
+              @select="add"
+            />
+          </v-dialog>
+
+          <v-dialog
+            v-model="weaponEditorDialog"
+            :value="Weapon"
+            width="600px"
+            scrollable
+            :fullscreen="$vuetify.breakpoint.xsOnly"
+          >
+            <v-card>
+              <v-alert :value="alert" type="error" text dense border="left">
+                Количество рун больше мощи оружия
+              </v-alert>
+              <v-card-title style="background-color: #262e37; color: #fff">
+                Редактирование оружия
+                <v-spacer />
+                <v-icon dark @click="closeWeaponSettings">close</v-icon>
+              </v-card-title>
+
+              <v-card-text v-if="Weapon" class="pt-4">
+                <v-row>
+                  <!-- <v-sheet class="ma-2 pa-2"> -->
+
+                  <v-col cols="6" sm="6">
+                    <v-select
+                      label="Разящая руна"
+                      v-model="Striking"
+                      :items="weaponRuneStriking"
+                      item-text="name"
+                      item-value="key"
+                    ></v-select>
+                  </v-col>
+
+                  <v-col cols="6" sm="6">
+                    <v-select
+                      label="Руна мощи"
+                      v-model="Potency"
+                      :items="weaponRunePotency"
+                      item-text="name"
+                      item-value="key"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" sm="12">
+                    <v-select
+                      label="Руны свойств"
+                      v-model="Property"
+                      :items="WeaponRuneProperty"
+                      item-text="name"
+                      item-value="key"
+                      multiple
+                      return-object
+                    >
+                      <template #selection="{ item }">
+                        <v-chip
+                          color="blue"
+                          :close="true"
+                          @click:close="Property.pop(item)"
+                        >
+                          {{ item.name }}
+                        </v-chip>
+                      </template>
+                    </v-select>
+                  </v-col>
+                  <!-- </v-sheet> -->
+                </v-row>
+              </v-card-text>
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer />
+                <v-btn small right color="success" @click="saveWeapon"
+                  >Save</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-col>
+      </v-tab-item>
+
+      <v-tab-item class="my-tab-item" key="tab-armor" :value="`tab-armor`">
+        <h2 class="subtitle-1 text-center">Доспехи</h2>
+
+        <v-btn
+          outlined
+          x-small
+          color="success"
+          @click="ArmorSearchDialog = true"
+        >
+          Добавить доспех
+        </v-btn>
+
+        <v-data-table
+          :headers="headersArmor"
+          :items="characterArmour"
+          :search="searchQuery"
+          :page.sync="pagination1.page"
+          show-expand
+          item-key="id"
+          hide-default-footer
+          @page-count="pagination1.pageCount = $event"
+        >
+          <template v-slot:no-data />
+
+          <template v-slot:item.nameGear="{ item }">
+            <v-row
+              ><span>{{ item.nameGear }}</span></v-row
+            >
+            <v-row>
+              <div>
+                <trait-view v-if="item.traits" :item="item" class="mb-2" />
+              </div>
+            </v-row>
+          </template>
+
+          <template v-slot:item.wear="{ item }">
+            <span>
+              <v-btn
+                outlined
+                x-small
+                :color="
+                  characterWearWargear && characterWearWargear.id === item.id
+                    ? 'info'
+                    : 'warning'
+                "
+                @click="
+                  characterWearWargear && characterWearWargear.id === item.id
+                    ? unwear(item)
+                    : wear(item)
+                "
+              >
+                <v-icon left> lock </v-icon>
+
+                <span
+                  v-if="
+                    characterWearWargear && characterWearWargear.id === item.id
+                  "
+                  >Снять
+                </span>
+                <span v-else>Надеть </span>
+              </v-btn>
+            </span>
+          </template>
+
+          <template v-slot:item.qty="{ item }">
+            <span>
+              <v-btn
+                icon
+                :disabled="item.qty === 1"
+                @click="decrementQty(item)"
+              >
+                <v-icon color="red"> remove_circle </v-icon>
+              </v-btn>
+              {{ item.qty }}
+              <v-btn icon @click="incrementQty(item)">
+                <!--"-->
+                <v-icon color="orange"> add_circle </v-icon>
+              </v-btn>
+            </span>
+          </template>
+
+          <template v-slot:item.delete="{ item }">
+            <v-btn
+              outlined
+              x-small
+              color="info"
+              @click="openArmourSettings(item)"
+            >
+              <v-icon left> edit </v-icon>
+            </v-btn>
+          </template>
+
+          <template v-slot:item.edit="{ item }">
+            <v-btn outlined x-small color="error" @click="remove(item)">
+              <v-icon left> delete </v-icon>
+            </v-btn>
+          </template>
+
+          <template v-slot:expanded-item="{ headers, item }">
+            <td :colspan="headers.length">
+              <v-row class="rowFeat">
+                <div class="head">
+                  <h1>{{ item.nameGear }}</h1>
+                </div>
+                <div class="line"></div>
+                <div class="tag">Доспех {{ item.level }}</div>
+              </v-row>
+              <v-row>
+                <!-- <div>
+                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
+                  </div> -->
+              </v-row>
+              <p></p>
+              <!-- Описание закла -->
+              <div v-if="item.source.book">
+                <strong>Источник:</strong> {{ item.source.book }}
+              </div>
+              <div v-if="item.hands">
+                <p class="main-holder">
+                  <strong>Руки:</strong> {{ item.hands }}
+                </p>
+              </div>
+              <p></p>
+              <div>
+                <p class="main-holder">
+                  <strong>Цена:</strong> {{ wargearPrice(item) }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="item.distance">
+                <p class="main-holder">
+                  <strong>Дистанция:</strong> {{ item.distance }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="item.area">
+                <p class="main-holder">
+                  <strong>Область:</strong> <span v-html="item.area"></span>
+                </p>
+              </div>
+              <p></p>
+              <div v-if="item.target">
+                <p class="main-holder">
+                  <strong>Дистанция:</strong> {{ item.target }}
+                </p>
+              </div>
+              <p></p>
+              <div class="line"></div>
+              <div class="pt-4 pb-2" v-html="item.description"></div>
+              <div class="line"></div>
+              <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
+            </td>
+          </template>
+
+          <template v-slot:no-results>
+            <span class="text-center"
+              >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
+            >
+          </template>
+        </v-data-table>
+
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="pagination1.page"
+            :length="pagination1.pageCount"
+          />
+        </div>
+        <!-- <v-simple-table dense>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th v-for="header in headers" :class="header.class">
+                  {{ header.text }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="gear in characterArmour" :key="gear.id">
+                <td>{{ gear.nameGear }}</td>
+                <td>
+                  <v-btn
+                    outlined
+                    x-small
+                    :color="
                       characterWearWargear &&
                       characterWearWargear.id === gear.id
+                        ? 'info'
+                        : 'warning'
                     "
-                    >Снять
-                  </span>
-                  <span v-else>Надеть </span>
-                </v-btn>
-              </td>
-              <td>
-                <v-btn
-                  outlined
-                  x-small
-                  color="info"
-                  @click="openArmourSettings(gear)"
-                >
-                  <v-icon left> edit </v-icon>Изменить
-                </v-btn>
-              </td>
-              <td>
-                <v-btn outlined x-small color="error" @click="remove(gear)">
-                  <v-icon left> delete </v-icon>Удалить
-                </v-btn>
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
+                    @click="
+                      characterWearWargear &&
+                      characterWearWargear.id === gear.id
+                        ? unwear(gear)
+                        : wear(gear)
+                    "
+                  >
+                    <v-icon left> lock </v-icon>
 
-      <v-dialog
-        v-model="weaponEditorDialog"
-        :value="Weapon"
-        width="600px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
-        <v-card>
-          <v-alert :value="alert" type="error" text dense border="left">
-            Количество рун больше мощи оружия
-          </v-alert>
-          <v-card-title style="background-color: #262e37; color: #fff">
-            Редактирование оружия
-            <v-spacer />
-            <v-icon dark @click="closeWeaponSettings">close</v-icon>
-          </v-card-title>
+                    <span
+                      v-if="
+                        characterWearWargear &&
+                        characterWearWargear.id === gear.id
+                      "
+                      >Снять
+                    </span>
+                    <span v-else>Надеть </span>
+                  </v-btn>
+                </td>
+                <td>
+                  <v-btn
+                    outlined
+                    x-small
+                    color="info"
+                    @click="openArmourSettings(gear)"
+                  >
+                    <v-icon left> edit </v-icon>Изменить
+                  </v-btn>
+                </td>
+                <td>
+                  <v-btn outlined x-small color="error" @click="remove(gear)">
+                    <v-icon left> delete </v-icon>Удалить
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table> -->
 
-          <v-card-text v-if="Weapon" class="pt-4">
-            <v-row>
-              <!-- <v-sheet class="ma-2 pa-2"> -->
+        <v-col :cols="12">
+          <v-dialog
+            v-model="armorEditorDialog"
+            :value="Armor"
+            width="600px"
+            scrollable
+            :fullscreen="$vuetify.breakpoint.xsOnly"
+          >
+            <v-card>
+              <v-alert :value="alert1" type="error" text dense border="left">
+                Количество рун больше мощи доспеха
+              </v-alert>
+              <v-card-title style="background-color: #262e37; color: #fff">
+                Редактирование доспеха
+                <v-spacer />
+                <v-icon dark @click="closeArmourSettings">close</v-icon>
+              </v-card-title>
 
-              <v-col cols="6" sm="6">
-                <v-select
-                  label="Разящая руна"
-                  v-model="Striking"
-                  :items="weaponRuneStriking"
-                  item-text="name"
-                  item-value="key"
-                ></v-select>
-              </v-col>
+              <v-card-text v-if="Armor" class="pt-4">
+                <v-row>
+                  <!-- <v-sheet class="ma-2 pa-2"> -->
 
-              <v-col cols="6" sm="6">
-                <v-select
-                  label="Руна мощи"
-                  v-model="Potency"
-                  :items="weaponRunePotency"
-                  item-text="name"
-                  item-value="key"
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6" sm="12">
-                <v-select
-                  label="Руны свойств"
-                  v-model="Property"
-                  :items="WeaponRuneProperty"
-                  item-text="name"
-                  item-value="key"
-                  multiple
-                  return-object
-                >
-                  <template #selection="{ item }">
-                    <v-chip
-                      color="blue"
-                      :close="true"
-                      @click:close="Property.pop(item)"
+                  <v-col cols="6" sm="6">
+                    <v-select
+                      label="Стойкости руна"
+                      v-model="Resilent"
+                      :items="armourRuneResilent"
+                      item-text="name"
+                      item-value="key"
+                    ></v-select>
+                  </v-col>
+
+                  <v-col cols="6" sm="6">
+                    <v-select
+                      label="Руна мощи"
+                      v-model="Potency"
+                      :items="armourRunePotency"
+                      item-text="name"
+                      item-value="key"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" sm="12">
+                    <v-select
+                      label="Руны свойств"
+                      v-model="Property"
+                      :items="ArmorRuneProperty"
+                      item-text="name"
+                      item-value="key"
+                      multiple
+                      return-object
                     >
-                      {{ item.name }}
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-col>
-              <!-- </v-sheet> -->
-            </v-row>
-          </v-card-text>
-          <v-divider></v-divider>
+                      <template #selection="{ item }">
+                        <v-chip
+                          color="blue"
+                          :close="true"
+                          @click:close="Property.pop(item)"
+                        >
+                          {{ item.name }}
+                        </v-chip>
+                      </template>
+                    </v-select>
+                  </v-col>
+                  <!-- </v-sheet> -->
+                </v-row>
+              </v-card-text>
+              <v-divider></v-divider>
 
-          <v-card-actions>
-            <v-spacer />
-            <v-btn small right color="success" @click="saveWeapon">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <v-dialog
-        v-model="armorEditorDialog"
-        :value="Armor"
-        width="600px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
-        <v-card>
-          <v-alert :value="alert1" type="error" text dense border="left">
-            Количество рун больше мощи доспеха
-          </v-alert>
-          <v-card-title style="background-color: #262e37; color: #fff">
-            Редактирование доспеха
-            <v-spacer />
-            <v-icon dark @click="closeArmourSettings">close</v-icon>
-          </v-card-title>
-
-          <v-card-text v-if="Armor" class="pt-4">
-            <v-row>
-              <!-- <v-sheet class="ma-2 pa-2"> -->
-
-              <v-col cols="6" sm="6">
-                <v-select
-                  label="Стойкости руна"
-                  v-model="Resilent"
-                  :items="armourRuneResilent"
-                  item-text="name"
-                  item-value="key"
-                ></v-select>
-              </v-col>
-
-              <v-col cols="6" sm="6">
-                <v-select
-                  label="Руна мощи"
-                  v-model="Potency"
-                  :items="armourRunePotency"
-                  item-text="name"
-                  item-value="key"
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6" sm="12">
-                <v-select
-                  label="Руны свойств"
-                  v-model="Property"
-                  :items="ArmorRuneProperty"
-                  item-text="name"
-                  item-value="key"
-                  multiple
-                  return-object
+              <v-card-actions>
+                <v-spacer />
+                <v-btn small right color="success" @click="saveArmor"
+                  >Save</v-btn
                 >
-                  <template #selection="{ item }">
-                    <v-chip
-                      color="blue"
-                      :close="true"
-                      @click:close="Property.pop(item)"
-                    >
-                      {{ item.name }}
-                    </v-chip>
-                  </template>
-                </v-select>
-              </v-col>
-              <!-- </v-sheet> -->
-            </v-row>
-          </v-card-text>
-          <v-divider></v-divider>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
-          <v-card-actions>
-            <v-spacer />
-            <v-btn small right color="success" @click="saveArmor">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+          <!-- <v-card
+            class="mb-4"
+            dark
+            dense
+            outlined
+            :color="manageArmour ? 'info' : ''"
+            @click="manageArmour = !manageArmour"
+          >
+            <v-card-text class="pa-1">
+              <v-icon>{{
+                manageArmour ? "expand_less" : "expand_more"
+              }}</v-icon>
+              Управление Доспехами({{ characterArmour.length }})
+            </v-card-text>
+          </v-card> -->
 
-      <v-dialog
-        v-model="moneyEditorDialog"
-        width="600px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
-        <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff">
-            {{ groupMoney[labelMoney] }}
-            <v-spacer />
-            <v-icon dark @click="closeMoneySettings">close</v-icon>
-          </v-card-title>
+          <v-dialog
+            v-model="ArmorSearchDialog"
+            :fullscreen="$vuetify.breakpoint.xsOnly"
+            width="1000px"
+            scrollable
+          >
+            <v-col :cols="12" v-if="wargearList">
+              <!-- <v-card
+              class="mb-4"
+              dark
+              outlined
+              :color="armourSearchActive ? 'info' : ''"
+              @click="armourSearchActive = !armourSearchActive"
+            >
+              <v-card-text class="pa-1">
+                <v-icon>{{
+                  armourSearchActive ? "expand_less" : "expand_more"
+                }}</v-icon>
+                Добавить доспех
+              </v-card-text>
+            </v-card> -->
 
-          <v-card-text class="pt-4">
-            <v-row>
-              <v-col cols="6" sm="6">
-                <v-text-field
-                  label="Установить количество монет"
-                  dense
-                  required
-                  v-model="gp"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6" sm="6">
-                <v-btn small center color="info" @click="changeMoney()"
-                  >Установить</v-btn
-                >
-              </v-col>
-            </v-row>
+              <wargear-search
+                @cancel="ArmorSearchDialog = false"
+                :repository="
+                  wargearList.filter((item) =>
+                    armourCategoryRepository
+                      .map((t) => t.category)
+                      .includes(item.category)
+                  )
+                "
+                @select="add"
+              />
+            </v-col>
+          </v-dialog>
+        </v-col>
+      </v-tab-item>
+    </v-tabs>
 
-            <v-row>
-              <v-col cols="6" sm="6">
-                <v-text-field
-                  label="Прибавить количество монет"
-                  dense
-                  required
-                  v-model="gpAd"
-                  outlined
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6" sm="6">
-                <v-btn small right color="info" @click="adjustMoney()"
-                  >Скорректировать</v-btn
-                >
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-divider></v-divider>
+    <v-dialog
+      v-model="moneyEditorDialog"
+      width="600px"
+      scrollable
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+    >
+      <v-card>
+        <v-card-title style="background-color: #262e37; color: #fff">
+          {{ groupMoney[labelMoney] }}
+          <v-spacer />
+          <v-icon dark @click="closeMoneySettings">close</v-icon>
+        </v-card-title>
 
-          <v-card-actions>
-            <v-spacer />
-            <!-- <v-btn small right color="сфт" @click="changeMoney()"
+        <v-card-text class="pt-4">
+          <v-row>
+            <v-col cols="6" sm="6">
+              <v-text-field
+                label="Установить количество монет"
+                dense
+                required
+                v-model="gp"
+                outlined
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" sm="6">
+              <v-btn small center color="info" @click="changeMoney()"
+                >Установить</v-btn
+              >
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="6" sm="6">
+              <v-text-field
+                label="Прибавить количество монет"
+                dense
+                required
+                v-model="gpAd"
+                outlined
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" sm="6">
+              <v-btn small right color="info" @click="adjustMoney()"
+                >Скорректировать</v-btn
+              >
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer />
+          <!-- <v-btn small right color="сфт" @click="changeMoney()"
               >Save</v-btn
             > -->
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-col :cols="12" v-if="manageArmour && characterArmour">
-        <v-card
-          class="mb-4"
-          dark
-          outlined
-          :color="armourSearchActive ? 'info' : ''"
-          @click="armourSearchActive = !armourSearchActive"
-        >
-          <v-card-text class="pa-1">
-            <v-icon>{{
-              armourSearchActive ? "expand_less" : "expand_more"
-            }}</v-icon>
-            Добавить доспех
-          </v-card-text>
-        </v-card>
-
-        <wargear-search
-          v-if="armourSearchActive"
-          :repository="
-            wargearList.filter((item) =>
-              armourCategoryRepository
-                .map((t) => t.category)
-                .includes(item.category)
-            )
-          "
-          @select="add"
-        />
-      </v-col>
-    </v-col>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
@@ -444,7 +749,9 @@ import SluggerMixin from '~/mixins/SluggerMixin';
 import WargearMixin from '~/mixins/WargearMixin';
 import WargearTrait from '~/mixins/WargearTraitRepositoryMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
+import traitView from '~/components/TraitView';
 // import RulesMixin from '~/mixins/RulesCombatActionsMixin';
+
 
 export default {
   name: 'Wargear',
@@ -452,14 +759,15 @@ export default {
   components: {
     WargearSelect,
     WargearSearch,
+    traitView,
   },
+
   mixins: [
     CharacterCreationMixin,
     SluggerMixin,
     WargearMixin,
     WargearTrait,
     StatRepositoryMixin,
-    RulesMixin
   ],
   props: [],
   head() {
@@ -467,6 +775,7 @@ export default {
       title: 'Select Wargear',
     };
   },
+
   asyncData({ params }) {
     return {
       characterId: params.id,
@@ -476,9 +785,27 @@ export default {
     return {
       manageWargear: true,
       manageArmour: true,
+      //Диалоги
       weaponEditorDialog: false,
       moneyEditorDialog:false,
       armorEditorDialog: false,
+      WeaponSearchDialog: false,
+      ArmorSearchDialog: false,
+      //
+
+      searchQuery: '',
+        pagination: {
+        page: 1,
+        pageCount: 0,
+        sortBy: 'name',
+        rowsPerPage: 8,
+      },
+              pagination1: {
+        page: 1,
+        pageCount: 0,
+        sortBy: 'name',
+        rowsPerPage: 8,
+      },
       startingWargearExpand: true,
       wargearSearchActive: false,
       armourSearchActive: false,
@@ -518,19 +845,42 @@ export default {
       } ,
       headers: [
         {
-          text: 'Название', value: 'name', class: 'text-left', align: 'left',
+          text: 'Название', value: 'nameGear', class: 'text-center small pa-1', align: 'left',
         },
         {
-          text: 'Попадание', value: 'range', class: 'text-center', align: 'center',
+          text: 'Попадание', value: 'attack', class: 'text-center', align: 'center',
         },
         {
-          text: 'Урон', value: 'damage', class: 'text-center', align: 'center',
+          text: 'Урон', value: 'damage', class: 'text-center ', align: 'center',
         },
         {
-          text: '', value: 'ap', class: 'text-center', align: 'center',
+          text: 'Кол.', value: 'qty', class: 'text-center small pa-1', align: 'center', width: "15%"
         },
         {
-          text: '', value: 'salvo', class: 'text-center', align: 'center',
+          text: '', value: 'edit', class: 'text-center', align: 'center',
+        },
+        {
+          text: '', value: 'delete', class: 'text-center', align: 'center',
+        },
+        // {
+        //   text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
+        // },
+      ],
+        headersArmor: [
+        {
+          text: 'Название', value: 'nameGear', class: 'text-left', align: 'left',
+        },
+        {
+          text: 'Надето', value: 'wear', class: 'text-center', align: 'center',
+        },
+ {
+          text: 'Количество', value: 'qty', class: 'text-center', align: 'center',
+        },
+        {
+          text: '', value: 'edit', class: 'text-center', align: 'center',
+        },
+        {
+          text: '', value: 'delete', class: 'text-center', align: 'center',
         },
         // {
         //   text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
@@ -690,6 +1040,8 @@ export default {
             gear.source = chargear.source;
             characterWargear.push({
               id: chargear.id,
+              trait: gear.traits,
+              qty: gear.qty,
               // name: gear.nameGear,
               // source: chargear.source,
               ...chargear,
@@ -793,7 +1145,10 @@ export default {
           if(!item.runeArmor && ar.find(t => t.category === item.category))
           {
             item.runeArmor = rune1;
-          }
+        }
+
+        item.qty = 1;
+        item.trait = item.traits;
       });
       this.wargearList = data.filter((i) => i.stub === undefined || i.stub === false);
     },
@@ -828,7 +1183,7 @@ export default {
       const groupLegend = enc.find(s => s.type === "Weapon Group Legend") ? enc.find(s => s.type === "Weapon Group Legend") : "";
 
       //Прибавка аттрибута
-      const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+      const modAbility = gear.type === 'melee' && !gear.traits.includes('точное')  ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
 
       const category = enc.find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
       const trait = enc.find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
@@ -880,18 +1235,31 @@ export default {
         });
       }
 
-
-        return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+      const result = this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+        return (result < 0 ? "" : "+") + result.toString();
     },
     damageModifier(gear){
 
     const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
       const mod = (modAbility - 10) / 2;
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
-      const spec = enc.find(s => s.type === "Weapon Specialization") ? enc.find(s => s.type === "Weapon Specialization") : "";
-      const damSpec = spec !== "" ? spec.bonusDamage[this.skillAttack[gear.category]] : 0;
 
-       return gear.damage.toString() + " + " + mod.toString() + " + " + damSpec.toString();
+      const spec = enc.find(s => s.type === "Weapon Specialization") ? enc.find(s => s.type === "Weapon Specialization") : "";
+      const specGreater = enc.find(s => s.type === "greater-weapon-specialization") ? enc.find(s => s.type === "greater-weapon-specialization") : "";
+
+      const damSpec = spec !== "" ? spec.bonusDamage[this.skillAttack[gear.category]] : 0;
+      const damGreaterSpec = specGreater !== "" ? specGreater.bonusDamage[this.skillAttack[gear.category]] : 0;
+      const modSpec = damGreaterSpec !== 0 ? damGreaterSpec : damSpec;
+
+       return gear.damage.toString() + (mod + modSpec < 0 ? "" : "+") + (mod + modSpec).toString();
+  },
+    incrementQty(gear) {
+     this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, qty: gear.qty+1, gear: gear, notEnc: true});
+
+    },
+      decrementQty(gear) {
+     this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, qty: gear.qty-1, gear: gear, notEnc: true});
+
   },
     addWargearToCharacter(wargearOptions, source) {
       const finalWargear = [];
@@ -1008,7 +1376,10 @@ export default {
       // if (trait)
       //   gear.category = gear.category === "advanced" ? "martial" : "simple";
 
-         this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
+        this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
+        this.WeaponSearchDialog = false;
+        this.ArmorSearchDialog = false;
+
       }
 
 
@@ -1052,6 +1423,14 @@ export default {
       this.money = value;
       this.gp = value;
     },
+    OpenWeaponSearch()
+    {
+      this.WeaponSearchDialog = true;
+    },
+    CloseWeaponSearch()
+    {
+      this.WeaponSearchDialog = true;
+    },
     openArmourSettings(gear){
       this.armorEditorDialog = true;
       const armor = this.characterWargearRaw.find(t => t.id === gear.id);
@@ -1091,11 +1470,20 @@ export default {
         // console.warn(`Skill ${skill.name} already exists.`);
       }
       else{
-        this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon });
+        this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon, notEnc: false });
         // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
         this.weaponEditorDialog = false;
       }
-  },
+    },
+      wargearPrice(item) {
+      if (item) {
+        const pp = item.pp !== 0 ? item.pp + " пм" : "";
+        const gp = item.gp !== 0 ? item.gp + " зм" : "";
+        const sp = item.sp !== 0 ? item.sp + " см" : "";
+        const cp = item.cp !== 0 ? item.cp + " мм" : "";
+        return pp + gp + sp + cp;
+      }
+    },
     saveArmor() {
       this.alert = false;
       const armor =  this.Resilent;
@@ -1108,7 +1496,7 @@ export default {
       //   // console.warn(`Skill ${skill.name} already exists.`);
       // }
       // else{
-      //   this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon });
+      //   this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon, notEnc: false });
       //   // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
       //   this.weaponEditorDialog = false;
       // }
@@ -1137,4 +1525,89 @@ export default {
 };
 </script>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.traits {
+  background-color: #d9c484;
+  display: inline-block;
+  margin: 0.1em 0.15em !important;
+  padding: 0.1em 0.25em;
+  list-style-type: none !important;
+}
+.trait {
+  background-color: #5e0000;
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+}
+
+.simple {
+  display: inherit;
+  margin-bottom: 0;
+  padding-inline-start: 0.2em;
+}
+
+.head {
+  /* color: rgb(57, 54, 54); */
+  width: fit-content;
+  /* font-size: 24px; */
+  font-style: normal;
+  /* font-family: goodOTCondBold; */
+  font-weight: normal;
+  line-height: 24px;
+  /* text-transform: uppercase; */
+}
+
+.line {
+  height: 1px;
+  margin: 0 1rem;
+  flex-grow: 1;
+  background: #676767;
+}
+
+.tag {
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  font-family: goodOTCondBold;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rowFeat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.main-holder-divider p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  border-bottom: 1.5px solid black;
+}
+
+.row {
+  margin: 0px 0px 8px;
+  box-sizing: border-box;
+  /* display: flex;
+  border-radius: 4px; */
+}
+</style>

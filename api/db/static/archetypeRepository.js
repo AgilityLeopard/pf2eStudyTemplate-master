@@ -1163,141 +1163,251 @@ const playerCore2 = [
     },
 
     //Варвар
-    // {
-    //     ...archetype(source.playerCore2.key, 92, 'Barbarian'),
-    //     ...cost(12, 0, 12, 0, 0),
-    //     ...statBoost(1, 0, 0, 0, 0, 0),
-    //     hint: 'Силе природы невозможно сопротивляться. Она может разрушить самую неприступную крепость за считанные минуты, превратив даже самые мощные сооружения в руины,'
-    //         + ' сжечь их до тла, похоронить под снежной лавиной или утопить в волнах. Она может дать нескончаемые дары и захватывающее великолепие тем, кто ее уважает, '
-    //         + 'и мучительную смерть тем, кто относится к ней слишком легкомысленно. Вы один из тех, кто слышит зов природы. Вы трепещите перед величием ее могущества и '
-    //         + 'отдаете всего себя ее службе.',
-    //     name: 'Варвар',
-    //     keywords: 'варвар',
-    //     hitpoints: 12,
-    //     // keyAbility: ["dexterity", "strength"],
-    //     keyAbility: [],
-    //     trait: ["варвар"],
-    //     rarity: "common",
-    //     skillTrainedChoice: [],
-    //     skillTrained: ['athletics'],
-    //     skillTrainedPoints: 3,
-    //     Perception: "E",
-    //     skillAttack:
-    //     {
-    //         simple: "T",
-    //         martial: "T",
-    //         advanced: "U",
-    //         unarmed: "T"
-    //     },
-    //     skillDefence:
-    //     {
-    //         light: "T",
-    //         medium: "T",
-    //         heavy: "U",
-    //         unarmored: "T"
-    //     },
-    //     skillClass: "T",
-    //     saving:
-    //     {
-    //         reflex: "T",
-    //         fortitude: "E",
-    //         will: "E",
-    //     },
-    //     isFeatLevelOne: true,
+    {
+        ...archetype(source.playerCore2.key, 92, 'Barbarian'),
+        ...cost(12, 0, 12, 0, 0),
+        ...statBoost(1, 0, 0, 0, 0, 0),
+        hint: 'Ярость поглощает вас в бою. Вы наслаждаетесь тем, что сеете хаос и используете мощное оружие, чтобы пробиваться через своих врагов, полагаясь на невероятную живучесть, не нуждаясь в сложных техниках или строгих тренировках. Ваши приступы ярости проистекают из свирепого инстинкта, который вы можете ассоциировать с животным, духом или какой-то частью себя. Для многих варваров грубая сила — это молот, а каждая проблема выглядит как гвоздь, в то время как другие пытаются сдержать в себе бурю эмоций и высвободить свой гнев только тогда, когда это действительно важно.',
+        name: 'Варвар',
+        keywords: 'варвар',
+        hitpoints: 12,
+        // keyAbility: ["dexterity", "strength"],
+        keyAbility: [],
+        trait: ["варвар"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: ['athletics'],
+        skillTrainedPoints: 3,
+        Perception: "E",
+        skillAttack:
+        {
+            simple: "T",
+            martial: "T",
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence:
+        {
+            light: "T",
+            medium: "T",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving:
+        {
+            reflex: "T",
+            fortitude: "E",
+            will: "E",
+        },
+        isFeatLevelOne: true,
 
-    //     description: [
-    //         {
-    //             name: 'encounter',
-    //             text: '<p> Вы призываете свою ярость и бросаетесь на передовую, чтобы пробить себе путь.Ваша лучшая защита - нападение, вам нужно расправиться с врагам, прежде, чем они смогут воспользоваться вашей относительно слабой защитой.</p>'
+        description: [
+            {
+                name: 'encounter',
+                text: '<p> Вы призываете свою ярость и бросаетесь на передовую, чтобы пробить себе путь.Ваша лучшая защита - нападение, вам нужно расправиться с врагам, прежде, чем они смогут воспользоваться вашей относительно слабой защитой.</p>'
 
-    //         },
-    //         {
-    //             name: 'social',
-    //             text: '<p> Вы используете запугивание, чтобы получить то, что вам нужно, особенно когда более мягкое убеждение не может решить задачу.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p> Вы используете запугивание, чтобы получить то, что вам нужно, особенно когда более мягкое убеждение не может решить задачу.</p>'
 
-    //         },
-    //         {
-    //             name: 'exporation',
-    //             text: '<p> Вы высматриваете опасность, готовые в одно мгновение броситься в бой.Вы взбираетесь на сложную каменную стену и сбрасываете веревку, чтобы другие последовали за вами, и идете вброд через опасные водные потоки, чтобы добраться до спрятанного переключателя под поверхностью воды.Если надо что - то сломать, то вы тут как тут.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p> Вы высматриваете опасность, готовые в одно мгновение броситься в бой. Вы взбираетесь на сложную каменную стену и сбрасываете веревку, чтобы другие последовали за вами, и идете вброд через опасные водные потоки, чтобы добраться до спрятанного переключателя под поверхностью воды.Если надо что - то сломать, то вы тут как тут.</p>'
 
-    //         },
-    //         {
-    //             name: 'downtime',
-    //             text: 'Вы можете отправиться в таверну чтобы покутить, дополнить устрашающую легенду о своих могучих подвигах или набрать последователей, чтобы самому стать военачальником.</p>'
+            },
+            {
+                name: 'downtime',
+                text: 'Вы можете отправиться в таверну чтобы покутить, дополнить устрашающую легенду о своих могучих подвигах или набрать последователей, чтобы самому стать военачальником.</p>'
 
-    //         },
-    //         {
-    //             name: 'you',
-    //             text: '<li><p>  Иметь укоренившийся источник гнева, ненависти или разочарования</p></li>'
-    //                 + '<li><p>Предпочитать прямой подход тому, который утомительный и требует терпения</p></li>'
-    //                 + '<li><p>Заниматься интенсивной физической подготовкой и бить любого, кто говорит, что это противоречит вашему отвращению к терпению и скуке</p></li>'
-    //         },
-    //         {
-    //             name: 'other',
-    //             text: '<li><p>Полагаются на вашу храбрость и силу, и верят, что вы можете постоять за себя в бою</p></li>'
-    //                 + '<li><p>Считают вас нецивилизованным или грубым невежей, непригодным для высшего общества</p></li>'
-    //                 + '<li><p>Верят, что вы верны своим друзьям и союзникам, и никогда не сдадитесь, пока не окончен бой</p></li>'
-    //         }
-    //     ],
+            },
+            {
+                name: 'you',
+                text: '<li><p>  Иметь укоренившийся источник гнева, ненависти или разочарования</p></li>'
+                    + '<li><p>Предпочитать прямой подход тому, который утомительный и требует терпения</p></li>'
+                    + '<li><p>Заниматься интенсивной физической подготовкой и бить любого, кто говорит, что это противоречит вашему отвращению к терпению и скуке</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p>Полагаются на вашу храбрость и силу, и верят, что вы можете постоять за себя в бою</p></li>'
+                    + '<li><p>Считают вас нецивилизованным или грубым невежей, непригодным для высшего общества</p></li>'
+                    + '<li><p>Верят, что вы верны своим друзьям и союзникам, и никогда не сдадитесь, пока не окончен бой</p></li>'
+            }
+        ],
 
-    //     archetypeFeatures: [
-    //         //Общие
-    //         "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
-    //         //Классовые
-    //         "Divine Font", "Cleric Spellcasting", "Doctrine", "Miraculous Spell", "Divine Defense", "Resolute Faith", "Deity Cleric",
+        archetypeFeatures: [
+            //Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            //Классовые
+            "Divine Font", "Cleric Spellcasting", "Doctrine", "Miraculous Spell", "Divine Defense", "Resolute Faith", "Deity Cleric",
 
-    //         //Обще-классовые
-    //         "Weapon Specialization", "Perception Expertise Cleric", "Reflex Expertise Cleric"
-    //         //, "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
-    //         // "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
-    //     ],
-    //     modification:
-    //         [
-    //             {
-    //                 key: "Perception",
-    //                 upgrade: "E",
-    //                 mode: "Upgrade",
-    //                 type: "Perception",
-    //                 level: 3,
-    //             },
-    //             {
-    //                 key: "will",
-    //                 upgrade: "M",
-    //                 type: "Saving",
-    //                 mode: "Upgrade",
-    //                 level: 9,
-    //             },
-    //             {
-    //                 key: "reflex",
-    //                 upgrade: "E",
-    //                 type: "Saving",
-    //                 mode: "Upgrade",
-    //                 level: 11,
-    //             },
-    //             {
-    //                 key: "unarmored",
-    //                 upgrade: "E",
-    //                 type: "Defence",
-    //                 mode: "Upgrade",
-    //                 level: 13,
-    //             },
+            //Обще-классовые
+            "Weapon Specialization", "Perception Expertise Cleric", "Reflex Expertise Cleric"
+            //, "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
+            // "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
+        ],
+        modification:
+            [
 
-    //             {
-    //                 key: "Weapon Specialization",
-    //                 // upgrade: "M",
-    //                 type: "Weapon Specialization",
-    //                 level: 13,
-    //                 bonusDamage: {
-    //                     E: 2,
-    //                     M: 3,
-    //                     L: 4,
-    //                 }
-    //                 // valueBonus: 2,
-    //                 // typeBonus: "damage"
-    //             },
-    //             //
-    //         ]
-    // },
+                {
+                    type: 'Speed',
+                    mode: 'Bonus',
+                    key: 'land',
+                    valueBonus: 5,
+                    typeBonus: 'status'
+                },
+                {
+                    key: "simple",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 5,
+                },
+                {
+                    key: "martial",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 5,
+                },
+                {
+                    key: "unarmed",
+                    mode: "Upgrade",
+                    upgrade: "E",
+                    type: "Attack",
+                    level: 5,
+                },
+                {
+                    key: "fortitude",
+                    upgrade: "M",
+                    type: "Saving",
+                    mode: "Upgrade",
+                    level: 7,
+                },
+                {
+                    key: "Weapon Specialization",
+                    // upgrade: "M",
+                    type: "Weapon Specialization",
+                    level: 7,
+                    bonusDamage: {
+                        E: 2,
+                        M: 3,
+                        L: 4,
+                    }
+                    // valueBonus: 2,
+                    // typeBonus: "damage"
+                },
+                {
+                    key: "barbarian",
+                    value: 3,
+                    type: "Resistance",
+                    mode: "Upgrade",
+                    level: 9,
+                },
+                {
+                    key: "reflex",
+                    upgrade: "E",
+                    type: "Saving",
+                    mode: "Upgrade",
+                    level: 9,
+                },
+                {
+                    key: "class",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "DC Class",
+                    level: 11,
+                },
+                {
+                    key: "fortitude",
+                    upgrade: "L",
+                    type: "Saving",
+                    mode: "Upgrade",
+                    level: 13,
+                },
+                {
+                    key: "simple",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 13,
+                },
+                {
+                    key: "martial",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 13,
+                },
+                {
+                    key: "unarmed",
+                    mode: "Upgrade",
+                    upgrade: "M",
+                    type: "Attack",
+                    level: 13,
+                },
+                {
+                    key: "greater-weapon-specialization",
+                    // upgrade: "M",
+                    type: "greater-weapon-specialization",
+                    level: 15,
+                    bonusDamage: {
+                        E: 4,
+                        M: 6,
+                        L: 8,
+                    }
+                    // valueBonus: 2,
+                    // typeBonus: "damage"
+                },
+                {
+                    key: "will",
+                    upgrade: "M",
+                    type: "Saving",
+                    mode: "Upgrade",
+                    level: 15,
+                },
+                {
+                    key: "Perception",
+                    upgrade: "M",
+                    type: "Perception",
+                    mode: "Upgrade",
+                    level: 17,
+
+                },
+                {
+                    key: "light",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    level: 19,
+                },
+                {
+                    key: "medium",
+                    upgrade: "M",
+                    type: "Defence",
+                    mode: "Upgrade",
+                    criticalSpecialization: true,
+                    level: 19,
+                },
+                {
+                    key: "unarmored",
+                    mode: "Upgrade",
+                    upgrade: "M",
+                    type: "Defence",
+                    level: 19,
+                },
+                {
+                    key: "class",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "DC Class",
+                    level: 19,
+                },
+                //
+            ]
+    },
 ];
 const archetypeRepository = [
     ...playerCore,

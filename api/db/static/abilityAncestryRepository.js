@@ -2104,5 +2104,50 @@ const PlayerCoreClass = [
         key: 'Miraculous Spell',
     },
 
+    // Варвар
+    {
+        ...sourceMod("playerCore"),
+        name: 'Ярость',
+        snippet: 'Вы получаете действие Ярость, которое позволяет вам впадать в бешенство.',
+        level: 1,
+        //item: {key: "Rage"}
+        type: "Class Feature",
+        key: 'Rage',
+    },
+    {
+        ...sourceMod("playerCore"),
+        name: 'Священнослужитель',
+        snippet: 'Вы жрец священнослужитель, сосредотачивающийся на сакральной магии и вашей связи с доменами божества.',
+        key: 'Cloistered Cleric',
+        type: "Class Feature",
+        subFeature: ["First Doctrine Cloistered", "Second Doctrine Cloistered", "Third Doctrine Cloistered", "Fourth Doctrine Cloistered", "Five Doctrine Cloistered", "Final Doctrine Cloistered"],
+        level: 1,
+    },
+    {
+        ...sourceMod("playerCore"),
+        name: 'Финальное учение',
+        snippet: 'Ваш уровень мастерства атак заклинаниями и КС заклинаний увеличивается до легенды',
+        type: "Class Feature",
+        key: 'Final Doctrine Cloistered',
+        modification:
+            [
+                {
+                    key: "attack",
+                    upgrade: "L",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 19,
+                },
+                {
+                    key: "class",
+                    upgrade: "L",
+                    type: "spellsClass",
+                    mode: "Upgrade",
+                    level: 19,
+                },
+            ],
+        level: 2
+    },
+
 ]
 module.exports = [...PlayerCoreAncestry, ...PlayerCoreClass];

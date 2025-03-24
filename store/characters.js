@@ -1930,16 +1930,18 @@ export const mutations = {
   updateCharacterWargear(state, payload) {
     const character = state.characters[payload.id];
     const gearId = payload.gear.id;
-    const rune = payload.gear.runeWeapon;
+    const edit = payload.notEnc;
     const Wargear =
       character.wargear.find((t) => t.id === gearId);
-    if (Wargear) {
+    if (Wargear && edit === false) {
       Wargear.runeWeapon.striking = payload.striking;
       Wargear.runeWeapon.potency = payload.potency;
       Wargear.damage = payload.damage;
       Wargear.runeWeapon.property = payload.property;
     }
-
+    if (Wargear && edit === true) {
+      Wargear.qty = payload.qty;
+    }
 
   },
 

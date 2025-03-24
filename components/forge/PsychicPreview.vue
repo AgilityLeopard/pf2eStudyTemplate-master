@@ -171,7 +171,6 @@
 </template>
 
 <script lang="js">
-import { lowerCase } from 'lodash';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import traitView from '~/components/TraitView';
