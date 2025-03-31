@@ -2,6 +2,7 @@ const homebrews = require('./homebrews');
 const wargear = require('./wargear');
 const psychicPowers = require('./psychicPowers');
 const talents = require('./talents.js');
+const actions = require('./action.js');
 const abilityAncestry = require('./abilityAncestry.js');
 const heritage = require('./heritage');
 const factions = require('./factions');
@@ -30,7 +31,7 @@ module.exports = (app) => {
   app.use('/ascension-packages', ascensionPackages);
   // app.use('/threats', threats);
   app.use('/traits', traits);
-
+  app.use('/action', actions);
   //via contentfull
   // app.use('/homebrews', homebrews);
   // app.use('/posts', posts);

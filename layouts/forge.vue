@@ -133,7 +133,7 @@
                 <v-list-item-action class="hidden-xs-only">
                   <v-chip pill color="red" text-color="white">
                     <v-avatar left class="red darken-4">
-                      {{ characterlabel(characterSkills[skill.key]) }}
+                      {{ SkillLabel(skill.key) }}
                     </v-avatar>
                   </v-chip>
                 </v-list-item-action>
@@ -348,13 +348,13 @@
                 <v-col>
                   <v-sheet class="text-center small pa-1"> Владение </v-sheet>
                   <v-sheet class="text-center pa-2 ma-2">
-                    {{ profiencyRepository[characterSkills[skill.key]] }}
+                    {{ profiencyRepository[SkillProf(skill.key)] }}
                   </v-sheet>
                 </v-col>
                 <v-col>
                   <v-sheet class="text-center small pa-1"> Уровень </v-sheet>
                   <v-sheet
-                    v-if="profiencyRepository[characterSkills[skill.key]] !== 0"
+                    v-if="profiencyRepository[SkillProf(skill.key)] !== 0"
                     class="text-center pa-2 ma-2"
                   >
                     {{ characterLevel() }}
@@ -733,6 +733,13 @@ export default {
         clippedLeft: true,
       },
       characterFaction: undefined,
+      charSkill: {
+        0: "U",
+        1: "T",
+        2: "E",
+        3: "M",
+        4: "L",
+      },
     };
   },
   computed: {
@@ -990,6 +997,11 @@ export default {
         this.$route.params.id
       );
     },
+    characterSkillSheet() {
+      return this.$store.getters["characters/characterSkillSheetById"](
+        this.$route.params.id
+      );
+    },
     characterSkills() {
       return this.$store.getters["characters/characterSkillsById"](
         this.$route.params.id
@@ -1099,10 +1111,64 @@ export default {
       }
     },
     ModAttribute(attribute, skill) {
-      const char1 = this.profiencyRepository[this.characterSkills[skill]];
+      //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
+
+      const prof = this.characterSkillSheet.filter(
+        (s) => s.key === skill
+      ).length;
+
+      const char1 = this.profiencyRepository[this.charSkill[prof]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
       const char3 = char1 === 0 ? 0 : this.characterLevel();
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    SkillProf(skill) {
+      const prof = this.characterSkillSheet.filter(
+        (s) => s.key === skill
+      ).length;
+
+      switch (prof) {
+        case 0:
+          return "U";
+        case 1:
+          return "T";
+        case 2:
+          return "E";
+        case 3:
+          return "M";
+        case 4:
+          return "L";
+        default:
+          return "U";
+      }
+    },
+
+    SkillLabel(skill) {
+      //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
+
+      const prof = this.characterSkillSheet.filter(
+        (s) => s.key === skill
+      ).length;
+
+      switch (prof) {
+        case 0:
+          return "Н";
+        case 1:
+          return "Т";
+        case 2:
+          return "Э";
+        case 3:
+          return "М";
+        case 4:
+          return "Л";
+        default:
+          return "Н";
+      }
+
+      // const char1 = this.profiencyRepository[this.charSkill[prof]];
+      // const char2 = (this.characterAttributes[attribute] - 10) / 2;
+      // const char3 = char1 === 0 ? 0 : this.characterLevel();
+      // return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     ModAttributeSaving(attribute, skill) {
       const char1 = this.profiencyRepository[this.characterSaving[skill]];

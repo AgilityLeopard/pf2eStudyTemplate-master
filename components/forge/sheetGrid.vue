@@ -29,7 +29,7 @@
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
-  name: "Grid Sheet",
+  name: "GridSheet",
   mixins: [StatRepositoryMixin],
 
   data() {

@@ -200,9 +200,6 @@ export default {
     flex: 1 1 auto;
   }
 
-  &__content-subtitle {
-  }
-
   &__content-footer {
     position: absolute;
     bottom: 10px;

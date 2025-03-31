@@ -966,6 +966,220 @@ const playerCore = [
                 //
             ]
     },
+
+    //Чародей
+    {
+        ...archetype(source.playerCore.key, 93, 'Sorcerer'),
+        ...cost(6, 0, 0, 0, 0),
+        ...statBoost(0, 0, 0, 0, 0, 1),
+        hint: 'Вы не выбирали стать заклинателем — вы были рождены им. В вашей крови есть магия, независимо от того, коснулось ли божество одного из ваших предков, '
+            + 'прародитель причищался с первородным существом или могущественный оккультный ритуал повлиял на ваш род. Самоанализ и учёба позволяют вам совершенствовать '
+            + 'свои врожденные магические навыки и открывать новые, более мощные умения.',
+        name: 'Чародей',
+        keywords: 'чародей, заклинатель, магия крови',
+        hitpoints: 6,
+        keyAbility: ["charisma"],
+        trait: ["чародей"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: [], // Навыки определяются наследием крови
+        skillTrainedPoints: 2,
+        spellTradition: '', // Определяется наследием крови (арканный/оккультный/сакральный/природный)
+        spellProgression: {
+            1: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            2: [5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            3: [5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+            4: [5, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+            5: [5, 4, 4, 3, 0, 0, 0, 0, 0, 0, 0],
+            6: [5, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0],
+            7: [5, 4, 4, 4, 3, 0, 0, 0, 0, 0, 0],
+            8: [5, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+            9: [5, 4, 4, 4, 4, 3, 0, 0, 0, 0, 0],
+            10: [5, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0],
+            11: [5, 4, 4, 4, 4, 4, 3, 0, 0, 0, 0],
+            12: [5, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0],
+            13: [5, 4, 4, 4, 4, 4, 4, 3, 0, 0, 0],
+            14: [5, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0],
+            15: [5, 4, 4, 4, 4, 4, 4, 4, 3, 0, 0],
+            16: [5, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0],
+            17: [5, 4, 4, 4, 4, 4, 4, 4, 4, 3, 0],
+            18: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0],
+            19: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
+            20: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
+        },
+        spellFocusPool: 1,
+        // spellFocusBase: ["Заклинание наследия крови"],
+        spellsClass: {
+            attack: "T",
+            class: "T"
+        },
+        Perception: "T",
+        skillAttack: {
+            simple: "T",
+            martial: "U",
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence: {
+            light: "U",
+            medium: "U",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "T",
+            fortitude: "T",
+            will: "E",
+        },
+        isFeatLevelOne: false,
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы используете заклинания, чтобы ранить врагов, влиять на их умы и препятствовать их движениям. Вы можете быть слишком уязвимы, чтобы идти в ближний бой, '
+                    + 'или же ваше наследие крови может дать умения, которые помогают вам держаться в драке. Хоть ваша магия и сильна, чтобы приберечь ваши лучшие заклинания, '
+                    + 'либо когда вы использовали их все, вы также полагаетесь на чары.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p>Ваше естественное обаяние позволяет вам хорошо взаимодействовать с людьми.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы обнаруживаете магию вокруг себя, находя сокровища и предупреждая свою группу о магических ловушках. Когда группа сталкивается с тайнами или проблемами, '
+                    + 'связанными с вашим наследием крови, то вы пытаетесь решить их.</p>'
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы создаете магические предметы или пишите свитки. Ваше наследие крови может побудить вас исследовать свою родословную или общаться с относящимися к ней '
+                    + 'людьми или существами.</p>'
+            },
+            {
+                name: 'you',
+                text: '<li><p>Иметь сильную независимую черту, и неважно, принимаете ли вы или отвергаете своё магическое наследие</p></li>'
+                    + '<li><p>Смотреть на свою родословную с восхищением, страхом или чем-то по середине</p></li>'
+                    + '<li><p>Полагаться на магические предметы, такие как свитки и палочки, чтобы дополнить свой ограниченный выбор заклинаний</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p>Восхищаются вашим умением создавать магию из воздуха и смотрят на ваши способности одновременно с восхищением и недоверием</p></li>'
+                    + '<li><p>Считают вас менее посвящённым заклинателем, чем прилежные волшебники</p></li>'
+                    + '<li><p>Полагают, что вы столь же непредсказуемы, как и магия, порождаемая вами</p></li>'
+            }
+        ],
+
+        archetypeFeatures: [
+            // Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            // Классовые
+            "Bloodline Spell", "Bloodline Perk", "Blood Magic", "Signature Spells", "Bloodline Resistance",
+            // Обще-классовые
+            "Spell Penetration", "Greater Bloodline", "Bloodline Focus", "Legendary Bloodline"
+        ],
+        modification: [
+            {
+                key: "spells",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 7,
+            },
+            {
+                key: "class",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 7,
+            },
+            {
+                key: "fortitude",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 5,
+            },
+            {
+                key: "reflex",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 9,
+            },
+            {
+                key: "perception",
+                upgrade: "E",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 11,
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11,
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11,
+            },
+            {
+                key: "unarmored",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 13,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4,
+                }
+            },
+            {
+                key: "spells",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 15,
+            },
+            {
+                key: "class",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 15,
+            },
+            {
+                key: "will",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 17,
+            },
+            {
+                key: "spells",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 19,
+            },
+            {
+                key: "class",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 19,
+            }
+        ]
+    }
 ];
 
 const playerCore2 = [
@@ -1077,7 +1291,14 @@ const playerCore2 = [
             }
         ],
         archetypeFeatures: [
-            "Reactive Strike"
+            //Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            //Классовые
+            "Shield Block", "Druid Spellcasting", "Druidic Order", "Voice of nature", "Wildsong", "Wild Empathy", "Wild Willpower", "Primal Hierophant",
+
+            //Обще-классовые
+            "Perception Expertise Druid", "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
+            "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
         ],
         modification:
             [
@@ -1201,7 +1422,6 @@ const playerCore2 = [
             will: "E",
         },
         isFeatLevelOne: true,
-
         description: [
             {
                 name: 'encounter',
@@ -1241,10 +1461,10 @@ const playerCore2 = [
             //Общие
             "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
             //Классовые
-            "Divine Font", "Cleric Spellcasting", "Doctrine", "Miraculous Spell", "Divine Defense", "Resolute Faith", "Deity Cleric",
+            "Rage", "Instinct", "Juggernaut", "Rage Resistance", "Brutality", "Fast Movement", "Quick Tempered", "Mighty Rage", "Greater Juggernaut",
 
             //Обще-классовые
-            "Weapon Specialization", "Perception Expertise Cleric", "Reflex Expertise Cleric"
+            "Weapon Specialization", "Reflex Expert Barbarian", "Weapon Mastery", "Greater Weapon Specialization", "Indomitable Will", "Renewing Rage", "Armor Mastery", "Devastator"
             //, "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
             // "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
         ],
@@ -1299,13 +1519,13 @@ const playerCore2 = [
                     // valueBonus: 2,
                     // typeBonus: "damage"
                 },
-                {
-                    key: "barbarian",
-                    value: 3,
-                    type: "Resistance",
-                    mode: "Upgrade",
-                    level: 9,
-                },
+                // {
+                //     key: "barbarian",
+                //     value: 3,
+                //     type: "Resistance",
+                //     mode: "Upgrade",
+                //     level: 9,
+                // },
                 {
                     key: "reflex",
                     upgrade: "E",
@@ -1408,6 +1628,855 @@ const playerCore2 = [
                 //
             ]
     },
+
+    //Алхимик
+    {
+        ...archetype(source.playerCore2.key, 93, 'Alchemist'),
+        ...cost(8, 0, 0, 0, 0),
+        ...statBoost(0, 0, 0, 1, 0, 0),
+        hint: 'Для вас нет более прекрасного зрелища, чем странное варево, бурлящее в мензурке, и вы с самозабвением поглощаете свои гениальные эликсиры. Вы очарованы раскрытием тайн науки и природы, и постоянно, в своей лаборатории или прямо на ходу, экспериментируете с изобретательными составами на все случаи жизни. Вы бесстрашны в рисковой ситуации, бросая в своих врагов взрывчатые и токсичные склянки. Ваш уникальный путь к величию проложен алхимическими отварами, которые доводят ваш ум и тело до предела.',
+        name: 'Алхимик',
+        keywords: 'алхимик, бомбы, эликсиры, мутагены',
+        hitpoints: 8,
+        keyAbility: ["intelligence"],
+        trait: ["алхимик"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: ['crafting'],
+        skillTrainedPoints: 3,
+        Perception: "T",
+        skillAttack: {
+            simple: "T",
+            martial: "U",
+            advanced: "U",
+            unarmed: "T",
+            bombs: "T"
+        },
+        skillDefence: {
+            light: "T",
+            medium: "T",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "E",
+            fortitude: "E",
+            will: "T",
+        },
+        isFeatLevelOne: true,
+
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы бросаете бомбы в своих врагов, надоедаете им и поддерживаете остальную часть своей группы сильнодействующими эликсирами. На более высоких уровнях, ваши мутагены деформируют ваше тело в стойкое и мощное оружие.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p>Вы предоставляете знания и опыт об алхимических предметах и связанных с ними секретах, таких как яды и болезни.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы на чеку, держа бомбы наготове, в тоже время давая советы по всему алхимическому и таинственному.</p>'
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы экспериментируете в алхимической лаборатории, варите эликсиры, создаёте бомбы и продвигаете свои алхимические знания.</p>'
+            },
+            {
+                name: 'you',
+                text: '<li><p>Наслаждаться вознёй со странными формулами и алхимическими реагентами, часто с безрассудством и целеустремлённой самоотдачей.</p></li>' +
+                    '<li><p>Получать удовольствие от того, чтобы сеять хаос с помощью сделанных вами алхимических смесей.</p></li>' +
+                    '<li><p>Бесконечно экспериментировать, чтобы обнаружить новые, более мощные алхимические инструменты.</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p>Думают, что вы какой-то чародей или эксцентричный волшебник, и не понимают, что вы не сотворяете заклинаний.</p></li>' +
+                    '<li><p>Не понимают ваше рвение к алхимии, креативности и изобретательству.</p></li>' +
+                    '<li><p>Предполагают, что если вы не вызвали катастрофу своими экспериментами, то неизбежно сделаете это позже.</p></li>'
+            }
+        ],
+
+        archetypeFeatures: [
+            // Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            // Классовые
+            "Alchemical Crafting", "Research Field", "Quick Alchemy", "Powerful Alchemy", "Perpetual Infusions", "Double Brew", "Alchemical Mastery",
+            // Обще-классовые
+            "Weapon Specialization", "Bombardier", "Efficient Alchemy", "Persistent Mutagens", "Greater Weapon Specialization", "Debilitating Bomb"
+        ],
+        modification: [
+            {
+                key: "bombs",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 7,
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 7,
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 7,
+            },
+            {
+                key: "will",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 7,
+            },
+            {
+                key: "class",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 9,
+            },
+            {
+                key: "perception",
+                upgrade: "E",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 9,
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 13,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4,
+                }
+            },
+            {
+                key: "fortitude",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 11,
+            },
+            {
+                key: "reflex",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 15,
+            },
+            {
+                key: "bombs",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 15,
+            },
+            {
+                key: "simple",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 15,
+            },
+            {
+                key: "unarmed",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 15,
+            },
+            {
+                key: "greater-weapon-specialization",
+                type: "greater-weapon-specialization",
+                level: 15,
+                bonusDamage: {
+                    E: 4,
+                    M: 6,
+                    L: 8,
+                }
+            },
+            {
+                key: "light",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 19,
+            },
+            {
+                key: "medium",
+                upgrade: "M",
+                type: "Defence",
+                mode: "Upgrade",
+                level: 19,
+            },
+            {
+                key: "unarmored",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 19,
+            },
+            {
+                key: "class",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 17,
+            }
+        ]
+    },
+
+    //Ведьма
+    {
+        ...archetype(source.playerCore.key, 94, 'Witch'),
+        ...cost(6, 0, 0, 0, 0),
+        ...statBoost(0, 0, 0, 1, 0, 0),
+        hint: 'Вы повелеваете могущественной магией не через изучение или преданность какому-либо идеалу, но как сосуд или представитель таинственного, потустороннего покровителя, которого даже вы не совсем понимаете. Эта сущность может быть тайным божеством, могущественной феей, проявлением природных энергий, древним духом или любым другим могущественным сверхъестественным существом.',
+        name: 'Ведьма',
+        keywords: 'ведьма, заклинатель, покровитель, фамильяр',
+        hitpoints: 6,
+        keyAbility: ["intelligence"],
+        trait: ["ведьма"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: [], // Определяется покровителем
+        skillTrainedPoints: 3,
+        spellTradition: '', // Определяется покровителем
+        spellProgression: {
+            1: [5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            2: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            3: [5, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+            4: [5, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+            5: [5, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+            6: [5, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0],
+            7: [5, 3, 3, 3, 2, 0, 0, 0, 0, 0, 0],
+            8: [5, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+            9: [5, 3, 3, 3, 3, 2, 0, 0, 0, 0, 0],
+            10: [5, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+            11: [5, 3, 3, 3, 3, 3, 2, 0, 0, 0, 0],
+            12: [5, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+            13: [5, 3, 3, 3, 3, 3, 3, 2, 0, 0, 0],
+            14: [5, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0],
+            15: [5, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0],
+            16: [5, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0],
+            17: [5, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0],
+            18: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0],
+            19: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+            20: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+        },
+        spellFocusPool: 1,
+        // spellFocusBase: ["Марионетка покровителя", "Фазирование фамильяра"],
+        spellsClass: {
+            attack: "T",
+            class: "T"
+        },
+        Perception: "T",
+        skillAttack: {
+            simple: "T",
+            martial: "U",
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence: {
+            light: "U",
+            medium: "U",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "T",
+            fortitude: "T",
+            will: "E",
+        },
+        isFeatLevelOne: false,
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы колдуете заклинания, чтобы изменить ход сражения. Вы используете магические сглазы, чтобы мешать врагам и помогать союзникам, в то же время используя более мощные заклинания, чтобы контролировать поле боя, исцелять или вредить, при помощи вашего экстраординарного фамильяра.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p>Вы даёте знания по множеству тем, включая различные магические вопросы, и можете призывать магию своего покровителя, чтобы очаровывать или обманывать других.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы остаетесь бдительными к магическим ловушкам и сокровищам, используя хитроумный набор заклинаний, чтобы преодолеть препятствия. Ваш фамильяр может помочь вам своим собственным набором необычных умений.</p>'
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы варите зелья, создаёте магические предметы, или охотитесь за новыми заклинаниями, которые выучит ваш фамильяр. Вы можете попытаться узнать больше о своем покровителе.</p>'
+            },
+            {
+                name: 'you',
+                text: '<li><p>Стремиться узнать больше о вашем покровителе или фамильяре</p></li>' +
+                    '<li><p>Искать новые источники магии, такие как свитки и книги заклинаний</p></li>' +
+                    '<li><p>Считать своего фамильяра как надежного союзника или вынужденную помеху</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p>Задаются вопросом о природе вашего покровителя и источнике вашей магии</p></li>' +
+                    '<li><p>Ценят вашу способность помогать им магией</p></li>' +
+                    '<li><p>Стараются не обижать вас, опасаясь сглаза</p></li>'
+            }
+        ],
+
+        archetypeFeatures: [
+            // Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            // Классовые
+            "Patron Theme", "Familiar", "Witch Spellcasting", "Hexes", "Basic Lesson",
+            // Обще-классовые
+            "Spell Penetration", "Improved Familiar", "Greater Hex", "Legendary Witch"
+        ],
+        modification: [
+            {
+                key: "fortitude",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 5,
+            },
+            {
+                key: "spells",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 7,
+            },
+            {
+                key: "class",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 7,
+            },
+            {
+                key: "reflex",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 9,
+            },
+            {
+                key: "perception",
+                upgrade: "E",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 11,
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11,
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11,
+            },
+            {
+                key: "unarmored",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 13,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4,
+                }
+            },
+            {
+                key: "spells",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 15,
+            },
+            {
+                key: "class",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 15,
+            },
+            {
+                key: "will",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 17,
+            },
+            {
+                key: "spells",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 19,
+            },
+            {
+                key: "class",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 19,
+            }
+        ]
+    },
+
+    //Монах
+    {
+        ...archetype(source.playerCore.key, 95, 'Monk'),
+        ...cost(10, 0, 0, 0, 0),
+        ...statBoost(1, 0, 0, 0, 0, 0), // Сила или Ловкость (на выбор)
+        hint: 'Разум и дух, вот что дает силу вашему кулаку. Вы стремитесь к совершенству, превращая своё тело в безупречный инструмент, а ум — в дисциплинированный оплот мудрости. Вы — ожесточенный боец, известный своими навыками боевых искусств и боевыми стойками.',
+        name: 'Монах',
+        keywords: 'монах, боевые искусства, безоружный бой',
+        hitpoints: 10,
+        keyAbility: ["strength", "dexterity"], // На выбор
+        trait: ["монах"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: ['acrobatics', 'athletics'],
+        skillTrainedPoints: 4,
+        Perception: "T",
+        skillAttack: {
+            simple: "T",
+            martial: "U",
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence: {
+            light: "U",
+            medium: "U",
+            heavy: "U",
+            unarmored: "E" // Эксперт без доспехов с 1 уровня
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "E", // Эксперт с 1 уровня
+            fortitude: "E",
+            will: "E"
+        },
+        isFeatLevelOne: true,
+
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы мчитесь в бой, уклоняясь или прыгая мимо препятствий, вытворяя акробатические трюки. Вы наносите удары врагам, обрушивая на них шквал атак голыми руками или владея специальным оружием.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p>Ваша восприимчивость позволяет вам видеть ложь насквозь, а философская подготовка - постичь любую ситуацию.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы взбираетесь на стены, уклоняетесь от ловушек, преодолеваете препятствия и перепрыгиваете через ямы. Обычно вы остаетесь вне группы, чтобы защитить её более уязвимых членов.</p>'
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы усердно тренируетесь, едите здоровую пищу, занимаетесь медитацией и изучаете различные философии. Ещё вы можете заняться ремеслом, которое стремитесь отточить до идеала.</p>'
+            },
+            {
+                name: 'you',
+                text: '<li><p>Придерживаетесь режима физической тренировки и медитации</p></li>' +
+                    '<li><p>Встречаете невзгоды с холодным расчётом и спокойствием</p></li>' +
+                    '<li><p>Думаете о самосовершенствовании, оставаясь в гармонии с собой</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p>Восхищаются вашими физическими достижениями</p></li>' +
+                    '<li><p>Считают вас заносчивым из-за ваших принципов</p></li>' +
+                    '<li><p>Обращаются к вам за философскими советами</p></li>'
+            }
+        ],
+
+        archetypeFeatures: [
+            // Общие
+            "Initial proficiencies", "Ancestry and background", "Skill feat", "General feat",
+            "Skill increase", "Ancestry feat", "Stat boost",
+            // Классовые
+            "Flurry of Blows", "Powerful Fist", "Mystic Strikes", "Ki Spells",
+            // Обще-классовые
+            "Weapon Specialization", "Perfection Path", "Diamond Soul", "Quivering Palm"
+        ],
+        modification: [
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 10,
+                typeBonus: "status",
+                level: 3
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "perception",
+                upgrade: "E",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 5,
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 7,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4,
+                }
+            },
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 15,
+                typeBonus: "status",
+                level: 7
+            },
+            {
+                key: "fortitude",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 7,
+            },
+            {
+                key: "unarmored",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "unarmed",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "simple",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 20,
+                typeBonus: "status",
+                level: 11
+            },
+            {
+                key: "reflex",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 11,
+            },
+            {
+                key: "will",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 15,
+            },
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 25,
+                typeBonus: "status",
+                level: 15
+            },
+            {
+                key: "unarmored",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 17,
+            },
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 30,
+                typeBonus: "status",
+                level: 19
+            }
+        ]
+    },
+
+    //Сорвиголова
+    {
+        ...archetype(source.playerCore.key, 96, 'Swashbuckler'),
+        ...cost(10, 0, 0, 0, 0),
+        ...statBoost(0, 1, 0, 0, 0, 0), // Ловкость
+        hint: 'Для вас битва — танец, в котором вы стильно и изящно двигаетесь среди врагов. Вы со вкусом мечетесь между бойцов и наносите мощные завершающие движения с легким движением запястья и блеском клинка.',
+        name: 'Сорвиголова',
+        keywords: 'сорвиголова, фехтование, кураж',
+        hitpoints: 10,
+        keyAbility: ["dexterity"],
+        trait: ["сорвиголова"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: ['acrobatics'],
+        skillTrainedPoints: 4,
+        Perception: "E", // Эксперт с 1 уровня
+        skillAttack: {
+            simple: "T",
+            martial: "T", // Воинское оружие
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence: {
+            light: "T",
+            medium: "U",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "E", // Эксперт с 1 уровня
+            fortitude: "T",
+            will: "E"
+        },
+        isFeatLevelOne: true,
+
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы выпендриваетесь, чтобы получить кураж, уклоняясь от ударов врага и отвечая быстрыми контратаками. В зависимости от стиля, вы можете танцевать среди врагов или обманывать их.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p>Вы в равной степени можете очаровать или запугать других. Вы можете быть искусным светским львом или создавать отвлекающие маневры.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы внимательно следите за обстановкой, всегда готовы броситься в бой со своим стилем и бравадой. Вы смело взаимодействуете с окружением.</p>'
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы можете кутить в таверне, ремонтировать своё вооружение или тренироваться. Для сохранения репутации вы можете создать организацию или завоевать поклонников.</p>'
+            },
+            {
+                name: 'you',
+                text: '<li><p>Изображаете себя героическим смельчаком или плутоватым хвастуном</p></li>' +
+                    '<li><p>Высоко цените себя, будучи уверенным в своих умениях</p></li>' +
+                    '<li><p>Регулярно практикуете свои навыки и движения</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p>Восхищаются вашей театральностью и мастерством владения клинком</p></li>' +
+                    '<li><p>Считают вас высокомерным, пока не узнают лучше</p></li>' +
+                    '<li><p>Недооценивают вашу угрозу до первого удара</p></li>'
+            }
+        ],
+
+        archetypeFeatures: [
+            // Общие
+            "Initial proficiencies", "Ancestry and background", "Skill feat",
+            "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            // Классовые
+
+
+            "Panache",
+            "SwashbucklerStyle",
+            "PreciseStrike",
+            "ConfidentFinisher",
+            "SwashbucklerFeats",
+
+            "GreatFortitude",
+            "OpportuneRiposte",
+
+            "StylishTricks",
+            "VivaciousSpeed",
+
+            "WeaponExpertise",
+            "Evasion",
+            "WeaponSpecialization",
+            "ExemplaryFinisher",
+            "SwashbucklerExpertise",
+            "ContinuousFlair",
+            "VigilantSenses",
+            "ImprovedEvasion",
+            "LightArmorExpertise",
+            "WeaponMastery",
+            "GreaterWeaponSpecialization",
+            "KeenFlair",
+            "Resolve",
+            "EternalConfidence",
+            "LightArmorMastery",
+
+            "Panache", "Precise Strike", "Swashbuckler Style", "Confident Finisher",
+            // Обще-классовые
+            "Opportune Riposte", "Daring Finisher", "Perfect Finisher", "Master Duelist"
+        ],
+        modification: [
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 5,
+                typeBonus: "status",
+                condition: "hasPanache",
+                level: 1
+            },
+            {
+                key: "fortitude",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 3,
+            },
+            {
+                key: "martial",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 7,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4,
+                }
+            },
+            {
+                key: "reflex",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 7,
+            },
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 10,
+                typeBonus: "status",
+                condition: "hasPanache",
+                level: 7
+            },
+            {
+                key: "perception",
+                upgrade: "M",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 11,
+            },
+            {
+                key: "light",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "unarmored",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "martial",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "simple",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "unarmed",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "reflex",
+                upgrade: "L",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 13,
+            },
+            {
+                key: "will",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 17,
+            },
+            {
+                key: "light",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 19,
+            },
+            {
+                key: "unarmored",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 19,
+            }
+        ]
+    }
 ];
 const archetypeRepository = [
     ...playerCore,

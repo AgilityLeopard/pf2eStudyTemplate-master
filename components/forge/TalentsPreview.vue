@@ -71,6 +71,22 @@
             {{ item.level }}
           </v-chip>
         </template>
+
+        <template v-slot:item.prerequisitesKey="{ item }">
+          <!-- <v-chip> -->
+          <v-icon v-if="requirementRestriction(item) === true" color="error"
+            >close</v-icon
+          >
+          <v-icon
+            v-if="
+              requirementRestriction(item) === false || !item.prerequisitesKey
+            "
+            color="success"
+            >check</v-icon
+          >
+          <!-- {{ item.prerequisitesKey }} -->
+          <!-- </v-chip> -->
+        </template>
         <!-- 
         <template v-slot:item.prerequisitesHtml="{ item }">
           <span v-if="item.requirementsText" v-html="item.requirementsText" />
@@ -84,6 +100,7 @@
           <v-btn
             color="success"
             x-small
+            :disabled="requirementRestriction(item) === true"
             v-if="!DiffrentTalent(item)"
             @click="addTalent(item, type, item.level)"
           >
@@ -106,8 +123,14 @@
                 <trait-view v-if="item.traits" :item="item" class="mb-2" />
               </div>
             </v-row>
-            <div v-if="item.requirements">
-              <p class="main-holder">{{ item.requirements.key }}</p>
+            <p></p>
+            <div v-if="item.prerequisites">
+              <p class="main-holder">
+                <b>Требования:</b> {{ item.prerequisites }}
+              </p>
+            </div>
+            <div v-if="item.requirementsText">
+              <p class="main-holder">{{ item.requirementsText }}</p>
             </div>
             <p></p>
             <div class="pt-4 pb-2" v-html="item.description"></div>
@@ -137,7 +160,6 @@
 </template>
 
 <script lang="js">
-import { lowerCase } from 'lodash';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import traitView from '~/components/TraitView';
@@ -213,7 +235,12 @@ export default {
           align: 'center',
           sortable: true,
         },
-
+        {
+          text: 'Тр.',
+          value: 'prerequisitesKey',
+          align: 'center',
+          sortable: false,
+        },
 
         {
           text: 'Описание',
@@ -294,7 +321,8 @@ export default {
       return this.talents.prerequisites.filter(pre => pre.group === 'skills').map(pre => `${this.getSkillByKey(pre.value).name} ${pre.threshold}`).join(', ');
     },
   },
-  methods: {
+  methods:
+  {
     addTalent(talent, place, level1) {
       const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
@@ -394,6 +422,47 @@ export default {
       this.$store.commit('characters/setModification', { id: this.characterId, level });
       this.$emit('cancel');
     },
+          requirementRestriction(item)
+      {
+        const Rest = {
+          "U": 0,
+          "T": 1,
+          "E": 2,
+          "M": 3,
+          "L": 4,
+        }
+
+      if (item.prerequisitesKey) {
+        const skillList = this.characterSkillSheet();
+        const attList = this.characterAttributes();
+        const level = this.characterLevel();
+
+        if (item.prerequisitesKey.skill)
+        {
+          const skill = item.prerequisitesKey.skill;
+          const prof = skillList.filter(s => s.key === skill.key && s.level <= level).length;
+          const isVal = Rest[skill.value] <= prof ? false : true;
+          if(isVal === true )return isVal;
+        }
+        if (item.prerequisitesKey.ability)
+        {
+          const ability = item.prerequisitesKey.ability;
+          const score = (attList[ability.key] - 10) / 2;
+          const isVal = ability.value <= score ? false : true;
+          if(isVal === true )return isVal;
+      }
+        return false;
+      }
+      },
+    characterAttributes() {
+      return this.$store.getters['characters/characterAttributesById'](this.characterId);
+    },
+    characterSkillSheet(){
+      return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
+      },
+        characterLevel(){
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
     characterLevel(){
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
@@ -452,14 +521,19 @@ export default {
       reduced = reduced.filter(item => item.trim().length > 0);
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
-    },
+      },
+
     tagFilters() {
       if (this.talents === undefined) {
         return [];
       }
       let filteredTalents = this.talents;
       //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
-      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      let lowercaseKeywords = [];
+      if (this.type === 'skill' || this.type === 'general')
+        lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
+      else
+         lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
 
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
@@ -479,7 +553,7 @@ export default {
     },
 
     filteredTalents() {
-      if (this.talents === undefined || this.tagFilters.length == 0) {
+      if (this.talents === undefined || this.tagFilters.length === 0) {
         return [];
       }
 
@@ -503,7 +577,11 @@ export default {
       });
 
       //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
-      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+                 let lowercaseKeywords = [];
+      if (this.type === 'skill' || this.type === 'general')
+        lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
+      else
+         lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
       // if () {
        // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));

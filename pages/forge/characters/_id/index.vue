@@ -43,23 +43,25 @@
             <v-col :cols="6">
               <div>
                 <h2 class="subtitle-1 text-center">Хит-Поинты</h2>
-                <v-text-field
+                <!-- <v-text-field
                   v-model="currentHP"
                   solo
                   flat
                   reverse
                   hide-details
                   @keypress.enter="addCurrentHP()"
-                ></v-text-field>
-                <div>/ {{ characterHitPointsMax() }}</div>
+                ></v-text-field> -->
+                <div class="center text-center">
+                  {{ characterHitPointsMax() }}
+                </div>
               </div>
             </v-col>
 
             <v-col :cols="6">
               <div>
                 <h2 class="subtitle-1 text-center">Временные хиты</h2>
-                <div class="center">
-                  <v-text-field
+                <div class="center text-center">
+                  <!-- <v-text-field
                     v-model="tempHP"
                     solo
                     flat
@@ -70,7 +72,8 @@
                     style="max-width: 60%"
                     size="1"
                     @keypress.enter="addTempHP()"
-                  ></v-text-field>
+                  ></v-text-field> -->
+                  0
                 </div>
               </div>
             </v-col>
@@ -90,7 +93,11 @@
             </v-col>
             <v-col :cols="8">
               <div align="center">{{ characterName }}</div>
-              <div class="caption" align="center">
+              <div
+                v-if="archetypeLabel !== '' && speciesLabel !== ''"
+                class="caption"
+                align="center"
+              >
                 {{ [archetypeLabel, speciesLabel].join(" • ") }}
               </div>
               <div class="caption" align="center">
@@ -234,6 +241,50 @@
         </grid-sheet>
       </v-col>
 
+      <v-col :cols="4" :sm="12" :md="4">
+        <grid-sheet>
+          <v-row>
+            <v-col :cols="6" style="position: relative; cursor: pointer">
+              <div>
+                <!-- <h2 class="subtitle-1 text-center">Внимательность</h2> -->
+                <div
+                  class="center text-center"
+                  v-for="(attribute, index) in attributeRepository"
+                >
+                  <p v-if="index < 3">
+                    {{ attribute.name }} :
+                    {{ (characterAttributes[attribute.key] - 10) / 2 }}
+                  </p>
+                </div>
+              </div>
+            </v-col>
+            <v-col :cols="6" style="position: relative; cursor: pointer">
+              <div>
+                <!-- <h2 class="subtitle-1 text-center">Скорость</h2> -->
+                <div
+                  class="center text-center"
+                  v-for="(attribute, index) in attributeRepository"
+                >
+                  <p v-if="index > 2">
+                    {{ attribute.name }} :
+                    {{ (characterAttributes[attribute.key] - 10) / 2 }}
+                  </p>
+                </div>
+              </div>
+            </v-col>
+            <!-- <v-col :cols="4" style="position: relative; cursor: pointer">
+              <div>
+                <h2 class="subtitle-1 text-center">Сложность Класса</h2>
+                <div class="center text-center" style="font-size: 12px">
+                  + {{ ModAttributeClass() }}
+                  {{ characterlabelL(SkillClass) }}
+                </div>
+              </div>
+            </v-col> -->
+          </v-row>
+        </grid-sheet>
+      </v-col>
+
       <!-- actions -->
       <!-- <v-col :cols="4" :sm="4" :md="4" align="right">
          <v-btn small outlined color="success" v-if="false">share</v-btn>
@@ -263,19 +314,17 @@
         </v-btn>
       </v-col> -->
 
-
-
       <v-col :cols="4" :sm="12" :md="4">
- <grid-sheet>
-            <v-row no-gutters>
-              <v-col :cols="6">
-                <h2 class="subtitle-1 text-center">КД</h2>
-                <div class="center text-center">{{ characterArmor() }}</div></v-col
-              </v-col>
-              <v-col :cols="6">
-                <h2 class="subtitle-1 text-center">Спасы</h2>
-                <div>
-                                <div class="center text-center">
+        <grid-sheet>
+          <v-row no-gutters>
+            <v-col :cols="6">
+              <h2 class="subtitle-1 text-center">КД</h2>
+              <div class="center text-center">{{ characterArmor() }}</div>
+            </v-col>
+            <v-col :cols="6">
+              <h2 class="subtitle-1 text-center">Спасы</h2>
+              <div>
+                <div class="center text-center">
                   Рефлекс: +{{ ModAttributeSaving("dexterity", "reflex") }}
                   {{ characterlabelL(characterSaving["reflex"]) }}
                 </div>
@@ -289,13 +338,11 @@
                   Воля: +{{ ModAttributeSaving("wisdom", "will") }}
                   {{ characterlabelL(characterSaving["will"]) }}
                 </div>
-                </div>
-              </v-col>
-              <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-
-
-            </v-row>
-</grid-sheet>
+              </div>
+            </v-col>
+            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
+          </v-row>
+        </grid-sheet>
       </v-col>
 
       <!-- actions -->
@@ -436,7 +483,7 @@
     </v-row>
     <v-row justify="center" no-gutters>
       <!-- attributes and traits -->
-      <v-col :cols="12" :sm="6" :md="6" :lg="3">
+      <!-- <v-col :cols="12" :sm="6" :md="6" :lg="3">
         <v-row no-gutters>
           <v-col :cols="12" class="pa-1">
             <v-card>
@@ -465,18 +512,7 @@
                     <td class="text-center pa-1 small">{{ item.value }}</td>
                     <td class="text-center pa-1 small">
                       {{ item.mod }}
-                      <!-- <v-tooltip bottom v-if="item.modifiers.length > 0">
-                    <template v-slot:activator="{ on }">
-                      <v-avatar
-                        :color="valueHintColor(item)"
-                        size="12"
-                        v-on="on"
-                      >
-                        <v-icon dark small>{{valueHintIcon(item)}}</v-icon>
-                      </v-avatar>
-                    </template>
-                    <div v-for="(modifier, index) in item.modifiers" :key="index">{{modifier}}</div>
-                  </v-tooltip> -->
+
                     </td>
                   </tr>
                 </tbody>
@@ -484,7 +520,7 @@
             </v-card>
           </v-col>
         </v-row>
-      </v-col>
+      </v-col> -->
 
       <!-- skills -->
       <v-col :cols="12" :sm="6" :md="6" :lg="3">
@@ -763,7 +799,7 @@
                       class="mb-1"
                       style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
                     >
-                      <span class="body-2 red--text">Species</span>
+                      <span class="body-2 red--text">Наследие/Родословная</span>
                     </div>
                     <div
                       v-for="ability in speciesAbilities"
@@ -823,7 +859,7 @@
 
                     <div
                       v-for="ability in archetypeAbilities"
-                      :key="ability.name"
+                      :key="ability.key"
                       class="caption mb-2"
                     >
                       <strong>{{ ability.name }}</strong>
@@ -1395,7 +1431,6 @@ import DodCorruptionManager from '~/components/forge/DodCorruptionManager';
 import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
 import GridSheet from '~/components/forge/sheetGrid';
 import {marked} from 'marked';
-import { times } from 'lodash';
 
 export default {
   name: 'in-app-view',
@@ -1483,6 +1518,7 @@ export default {
       abilitySection: { filter: 'all' },
       currentHP: 0,
       tempHP: 0,
+      loading: false,
       //
       showContextDialog: false,
       contextDialogComponent: undefined,
@@ -1521,13 +1557,15 @@ export default {
       characterArchetype: undefined,
       ascensionPackagesRepository: undefined,
       wargearRepository: undefined,
+      abilityList: undefined,
+      actionList: undefined,
     };
   },
   computed: {
     sources() {
       return [
         'playerCore',
-
+ 'playerCore2',
         // 'tnh',
         ...this.settingHomebrews
       ];
@@ -2243,13 +2281,15 @@ export default {
       const archetype = this.characterArchetype;
 
       if (archetype && archetype.archetypeFeatures) {
-        const lowercaseKeywords = archetype.archetypeFeatures.map((s) =>
-            s.toUpperCase()
-        );
+        // const lowercaseKeywords = archetype.archetypeFeatures.map((s) =>
+        //     s.toUpperCase()
+        // );
+// this.abilityRepository.filter(s=> s.level <= this.characterLevel() &&  lowercaseKeywords.includes(s.key.toString().toUpperCase())).forEach((feature) => {
 
-      this.abilityRepository.filter(s=> s.level <= this.characterLevel() &&  lowercaseKeywords.includes(s.key.toString().toUpperCase())).forEach((feature) => {
+        archetype.archetypeFeatures.forEach((feature) => {
           const ability = {
             name: feature.name,
+            key: feature.key,
             effect: feature.snippet ? feature.snippet : feature.description,
             snippet: feature.snippet,
             level: feature.level,
@@ -2616,6 +2656,17 @@ export default {
     },
   },
   watch: {
+        sources: {
+      handler(newVal) {
+        if (newVal) {
+          this.getWargearList(newVal);
+          this.getAbilityList(newVal);
+          this.getActionList(newVal);
+
+        }
+      },
+      immediate: true, // make this watch function is called when component created
+    },
     speciesKey: {
       handler(newVal) {
         if (newVal && newVal !== 'unknown') {
@@ -2640,20 +2691,13 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
-    sources: {
-      handler(newVal) {
-        if (newVal) {
-          this.getWargearList(newVal);
-        }
-      },
-      immediate: true, // make this watch function is called when component created
-    },
-    character: {
-      handler(newVal) {
 
-      },
-      immediate: true, // make this watch function is called when component created
-    },
+    // character: {
+    //   handler(newVal) {
+
+    //   },
+    //   immediate: true, // make this watch function is called when component created
+    // },
 
   },
   methods: {
@@ -2666,27 +2710,235 @@ export default {
           const { data } = await this.$axios.get(`/api/species/${key}`);
           finalData = data;
         }
+
+
+      if (this.abilityList !== undefined) {
+        const lowercaseKeywords = finalData.ancestryAbility.map((s) =>
+          s.toUpperCase()
+        );
+
+        const List = this.abilityList;
+        const ability = List.filter((talent) =>
+          lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+        );
+
+        if (ability.length > 0) {
+          const listAbilities = [];
+          ability.forEach((talent) => {
+            const ability1 = {
+              name: talent.name,
+              key: talent.key,
+              description: talent.description,
+              modification: talent.modification,
+            };
+
+            listAbilities.push(talent);
+          });
+          finalData.speciesFeatures = listAbilities;
+        }
+      }
+  //  finalData.speciesFeatures
+  //       .filter((feature) => feature.options)
+  //       .forEach((feature) => {
+  //         const enhancements = this.enhancements.filter((modifier) =>
+  //           modifier.source.startsWith(`species.${feature.name}`)
+  //         );
+  //         if (enhancements) {
+  //           enhancements.forEach((e) => {
+  //             let foundInd = /\.(\d)\./.exec(e.source);
+  //             if (foundInd) {
+  //               feature.selected[foundInd[1]] = e.source.split(".").pop();
+  //             }
+  //           });
+  //         } else {
+  //           const enhancement = this.enhancements.find((modifier) =>
+  //             modifier.source.startsWith(`species.${feature.name}`)
+  //           );
+  //           if (enhancement) {
+  //             feature.selected = enhancement.source.split(".").pop();
+  //           }
+  //         }
+  //       });
+
+
         this.characterSpecies = finalData;
 
       }
     },
+    async getAbilityList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
+      this.abilityList = data;
+    },
+    async getActionList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/action/",
+        config.source
+       );
+
+      this.actionList = data;
+    },
     async loadArchetype(key) {
+      this.loading = true;
       if ( key ) {
-        if (key === 'advanced'){
-          const mimic = this.$store.getters['characters/characterArchetypeMimicById'](this.characterId);
-          if (mimic) {
-            const { data } = await this.$axios.get(`/api/archetypes/${mimic}`);
-            this.characterArchetype = {
-              faction: this.characterFactionKey.toLowerCase(),
-              factionKey: this.characterFactionKey,
-              archetypeFeatures: data.archetypeFeatures,
+        // if (key === 'advanced'){
+        //   const mimic = this.$store.getters['characters/characterArchetypeMimicById'](this.characterId);
+        //   if (mimic) {
+        //     const { data } = await this.$axios.get(`/api/archetypes/${mimic}`);
+        //     this.characterArchetype = {
+        //       faction: this.characterFactionKey.toLowerCase(),
+        //       factionKey: this.characterFactionKey,
+        //       archetypeFeatures: data.archetypeFeatures,
+        //     };
+        //   }
+        // } else {
+        //   const { data } = await this.$axios.get(`/api/archetypes/${key}`);
+        //   this.characterArchetype = data;
+        // }
+      let finalData = {};
+      const { data } = await this.$axios.get(`/api/archetypes/${key}`);
+      finalData = data;
+
+      // finalData = this.enrichArchetypeFeatures(finalData);
+      const level = this.$store.getters["characters/characterLevelById"](
+        this.characterId
+      );
+
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
+
+      if (this.abilityList !== undefined && this.actionList !== undefined ) {
+
+          const lowercaseKeywords = finalData.archetypeFeatures.map((s) =>
+            s.toUpperCase()
+          );
+
+          //Список особенностей
+          const List = this.abilityList;
+          let ability = List.filter((talent) =>
+            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+          );
+
+        const abilityInArray = [];
+        let SubFeature = [];
+
+           //Сюда кладем то, что дается больше одного раза и смотрим под-опции
+          ability.forEach((ab) => {
+            if (Array.isArray(ab.level)) {
+              abilityInArray.push(ab);
+            }
+
+            if (ab.options) {
+              if (ab.type.includes("Weapon Group")) {
+                const options = this.weaponGroup.filter(s => ab.options.includes(s.group));
+                const listOption = [];
+                options.forEach(s => {
+                  const op = {
+                    key: s.group,
+                    ...s
+                  }
+                  listOption.push(op);
+                  ab.options = listOption;
+
+                });
+              }
+
+              if (ab.type === "Class Feature") {
+                const options = List.filter(ability => ab.options.includes(ability.key));
+
+                ab.options = options;
+              }
+
+
+              ab.selected = enc.find(s => s.key === ab.key) ? enc.find(s => s.key === ab.key).selected : "";
+
+
+                //Наподобие подкласса Жреца
+              ab.options.forEach(s => {
+                if (s.subFeature) {
+                  const sub = s.subFeature;
+                  SubFeature = List.filter(s => sub.includes(s.key));
+                  s.subFeature = SubFeature;
+                  }
+
+
+              })
+            }
+
+
+          });
+
+          //Выкидываем из списка особенности, уровень которых перечислен в массиве
+        ability = ability.filter((ab) => !Array.isArray(ab.level));
+
+        let abilityList = [];
+        let ac = this.actionList;
+        ability.forEach((tal) => {
+          let action;
+          if (tal.item)
+              action = ac.find(ac => ac.key === tal.item.key)
+            const ability1 = {
+              name: tal.name,
+              key: tal.key,
+              description: tal.snippet,
+              modification: tal.modification,
+              level: tal.level,
+              subFeature: tal.subFeature,
+              options: tal.options,
+              selected: tal.selected,
+              action: action ? action : undefined,
+              type: tal.type,
+              value: tal.value,
             };
+                if (ability1.level <= level) abilityList.push(ability1);
           }
-        } else {
-          const { data } = await this.$axios.get(`/api/archetypes/${key}`);
-          this.characterArchetype = data;
+        );
+        //Смотрим все особенности, и делаем их по тем уровням, что в массиве
+        abilityInArray.forEach((ab) => {
+            const tal = ab;
+            ab.level.forEach((talent) => {
+              const ability1 = {
+                name: tal.name,
+                key: tal.key+talent,
+                description: tal.snippet,
+                modification: tal.modification,
+                subFeature: tal.subFeature,
+                level: talent,
+                options: tal.options,
+                selected: tal.selected,
+                              type: tal.type,
+              value: tal.value,
+              };
+
+              //Кладем в общий "пул"
+              if (talent <= level) abilityList.push(ability1);
+            });
+          });
+
+        // abilityList = [
+        //     ...abilityList, ...SubFeature
+        //   ]
+
+          if (ability.length > 0) {
+            //Если нашли все особенности, то кладем их в каждый класс
+            finalData.archetypeFeatures = abilityList;
         }
+          finalData.archetypeFeatures = abilityList.filter(t => t.level <= level).sort((a, b) => a.level - b.level);
+          this.characterArchetype = finalData;
       }
+      }
+      this.loading = false;
     },
     async getAscensionPackageList(ascensionList) {
 
@@ -2719,7 +2971,7 @@ export default {
         this.characterId
       );
     },
-        ModAttributeSaving(attribute, skill) {
+    ModAttributeSaving(attribute, skill) {
       const char1 = this.profiencyRepository[this.characterSaving[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
       const char3 = this.characterLevel();
@@ -2731,6 +2983,7 @@ export default {
       const char3 = this.characterLevel();
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
+
     ModAttributeClass() {
       const char1 = this.profiencyRepository[this.SkillClass()];
       const char3 = this.characterLevel();
@@ -2786,7 +3039,7 @@ export default {
 
       this.$store.commit('characters/setTempHP', { id: this.characterId, tempHP: this.tempHP })
     },
-        characterArmor() {
+  characterArmor() {
       const wear = this.$store.getters["characters/characterWearById"](
          this.characterId
       );

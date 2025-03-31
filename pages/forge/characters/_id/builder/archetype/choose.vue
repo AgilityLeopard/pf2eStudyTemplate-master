@@ -435,7 +435,7 @@ export default {
       const level = this.$store.getters["characters/characterLevelById"](
         this.characterId
       );
-
+      
       //Правила улучшения, наподобие повышения Спасбросков или навыков от класса
       if (item.modification) {
         mods.push(...item.modification);
@@ -457,6 +457,8 @@ export default {
         id: this.characterId,
         payload: { key: 1, saving: item.saving },
       });
+
+      //Сколько очков на 1 уровне
       this.$store.commit("characters/setCharacterSkillPointsClass", {
         id: this.characterId,
         payload: { key: 1, value: item.skillTrainedPoints },
@@ -471,10 +473,36 @@ export default {
         id: this.characterId,
         optional: "class",
       });
+
+      //Навыки
       this.$store.commit("characters/setCharacterTrainedClassSkill", {
         id: this.characterId,
         payload: { key: 1, value: item.skillTrained },
       });
+
+      this.$store.commit("characters/setInitialSkillSheet", {
+        id: this.characterId,
+       // payload: { key: 1, value: item.skillTrained },
+      });
+      
+      const sheet = this.$store.getters['characters/characterSkillSheetById'](this.characterId);
+      this.$store.commit("characters/setCharacterSkillPointClassUp", {
+          id: this.characterId,
+          payload: { key: 1, value: 0 },
+        });
+
+
+      item.skillTrained.forEach(s => {
+        if(sheet.find(i => i.key === s && i.level === 1)) 
+          this.$store.commit("characters/setCharacterSkillPointClassUp", {
+          id: this.characterId,
+          payload: { key: 1, value: 1 },
+        });
+
+        this.$store.commit('characters/addSkillSheet', { id: id, key: s, level: 1, type: 'class', optional: true  });
+      })
+      
+      //
       this.$store.commit("characters/setCharacterPerception", {
         id: this.characterId,
         payload: { key: 1, Perception: item.Perception },

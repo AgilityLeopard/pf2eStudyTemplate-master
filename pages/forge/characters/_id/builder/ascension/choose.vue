@@ -232,18 +232,70 @@ export default {
       }
 
       //добавляем лоры
+      // this.$store.commit('characters/removeCharacterCustomSkill', { id, key });
 
       this.$store.commit("characters/removeBackgroundCustomSkill", {
         id,
         payload,
       });
 
-      if (ascensionPackage.lore) {
+      this.$store.commit("characters/setCharacterSkillPointsBackground", {
+        id: this.characterId,
+        payload: { key: 1, value: 0 },
+      });
+
+      this.$store.commit("characters/removeSkillSheetbyType", {
+        id: this.characterId,
+        key: ascensionPackage.skill,
+        level: 1,
+        type: "background",
+        optional: true,
+      });
+
+      const sheet = this.$store.getters["characters/characterSkillSheetById"](
+        this.characterId
+      );
+
+      if (
+        sheet.find((i) => i.key === ascensionPackage.skill && i.level === 1)
+      ) {
+        // this.$store.commit("characters/setCharacterSkillPointsBackground", {
+        //   id: this.characterId,
+        //   payload: { key: 1, value: 1 },
+        // });
+
+        this.$store.commit("characters/removeSkillSheet", {
+          id: this.characterId,
+          key: ascensionPackage.skill,
+          level: 1,
+          type: "skill",
+          optional: false,
+        });
+      }
+
+      this.$store.commit("characters/addSkillSheet", {
+        id: this.characterId,
+        key: ascensionPackage.skill,
+        level: 1,
+        type: "background",
+        optional: true,
+      });
+
+      const sheet1 = this.$store.getters["characters/characterSkillSheetById"](
+        this.characterId
+      );
+      if (
+        ascensionPackage.lore
+        // &&
+        // !sheet1.find((s) => s.key === this.textToCamel(ascensionPackage.lore))
+      ) {
         const skill = {
           key: this.textToCamel(ascensionPackage.lore),
           name: ascensionPackage.lore,
           attribute: "intellect",
+          type: "background",
           background: true,
+          level: 1,
           description: "",
           optional: true,
         };

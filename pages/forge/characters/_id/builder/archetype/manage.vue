@@ -90,12 +90,8 @@
 
           <div v-if="feature.description" v-html="feature.description"></div>
           <div  v-else>{{ feature.snippet }}</div>
-          <v-alert
-            v-if="feature.alert"
-            :type="feature.alert.type"
-            dense
-            text
-          >{{feature.alert.text}}</v-alert>
+
+               <div v-if="feature.action" v-html="feature.action.description"></div>
         </p>
 
         <div v-if="feature.options" class="mt-2">
@@ -126,6 +122,7 @@
                   <p><h4 class="main-holder split-header1"><span class="left-header">{{ item.name }}</span><span class="right-header">{{ item.level }}</span></h4>
                   <div v-if="item.description" v-html="item.description"></div>
                   <div  v-else>{{ item.snippet }}</div></p>
+               
                 </div>
               </div>
             </div>
@@ -167,6 +164,7 @@ export default {
       loading: false,
       item: undefined,
       abilityList: undefined,
+      actionList: undefined,
     };
   },
   computed: {
@@ -257,10 +255,11 @@ export default {
     },
   },
   watch: {
-        sources: {
+    sources: {
       handler(newVal) {
         if (newVal) {
           this.getAbilityList(newVal);
+          this.getActionList(newVal);
           // this.getPsychicPowers(newVal);
         }
       },
@@ -319,53 +318,19 @@ export default {
       
       this.abilityList = data;
     },
-//     async getPsychicPowers(sources) {
-//       const config = {
-//         params: { source: sources.join(','), },
-//       };
-//       this.loading = true;
-//       const { data } = await this.$axios.get('/api/psychic-powers/', config);
-//       this.loading = false;
-//        if (this.traitList !== undefined) {
-//         data.forEach((species) => {
-//           const lowercaseKeywords = species.traits.map((s) =>
-//             s.toUpperCase()
-//           );
-
-//           const List1 = this.traitList;
-//           const trait = List1.filter((talent) =>
-//             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
-//           );
-
-//           if (trait.length > 0) {
-//             const listAbilities = [];
-//             species.traits.forEach((talent) => {
-
-//                 const t = trait.find(k => k.key === talent)
-
-//                 if (t)
-//                 {
-//                 const ability1 = {
-//                   name: t.key,
-//                   description: t.desc,
-//                 };
-
-//                 listAbilities.push(ability1);
-//               }
-
-
-//             });
-//             species.traitDesc = listAbilities;
-//           }
-//         });
-
-// }
-//       this.psychicPowersList = data;
-//       // data.forEach(spell =>{
-//       //   spell.description = spell.description.replace("{{powers}}", spell.powerValue)
-//       // });
-//       // this.psychicPowersList = data;
-//     },
+    async getActionList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/action/",
+        config.source
+       );
+      
+      this.actionList = data;
+    },
     async loadArchetype(key) {
       this.loading = true;
 
@@ -380,7 +345,7 @@ export default {
 
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
 
-      if (this.abilityList !== undefined) {
+      if (this.abilityList !== undefined && this.actionList !== undefined ) {
 
           const lowercaseKeywords = finalData.archetypeFeatures.map((s) =>
             s.toUpperCase()
@@ -448,8 +413,11 @@ export default {
         ability = ability.filter((ab) => !Array.isArray(ab.level));
 
         let abilityList = [];
-
-          ability.forEach((tal) => {
+        let ac = this.actionList;
+        ability.forEach((tal) => {
+          let action;
+          if (tal.item)
+              action = ac.find(ac => ac.key === tal.item.key)
             const ability1 = {
               name: tal.name,
               key: tal.key,
@@ -459,6 +427,7 @@ export default {
               subFeature: tal.subFeature,
               options: tal.options,
               selected: tal.selected,
+              action: action ? action : undefined,
               type: tal.type,
               value: tal.value,
             };

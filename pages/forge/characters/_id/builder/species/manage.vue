@@ -48,6 +48,7 @@
       <div v-if="species.Description" class="body-2">
         <p><v-divider /></p>
 
+
         <div v-for="description in species.Description" class="text-lg-justify">
           <div v-if="description.name == 'Faith'">
             <span class="subtitle-1 mt-2">Верование</span>
@@ -73,21 +74,47 @@
             <div v-if="description.about" v-html="description.about"></div>
           </div>
 
-          <div v-if="description.name == 'name'">
-            <span class="subtitle-1 mt-2">Имена</span>
+          <p></p>
+          <div v-if="description.name === 'physical'">
+            <span class="subtitle-1 mt-2">Физическое описание</span>
             <p><v-divider /></p>
             <div v-if="description.about" v-html="description.about"></div>
-            <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
-            <div v-if="species.exampleName" v-html="species.exampleName"></div>
+           
           </div>
-
-          <div v-if="description.name == 'society'">
+ <p></p>
+          <div v-if="description.name === 'society'">
             <span class="subtitle-1 mt-2">Общество</span>
             <p><v-divider /></p>
             <div v-if="description.about" v-html="description.about"></div>
           </div>
         </div>
+<p></p>
+          <div v-if="species.exampleName">
+            <span class="subtitle-1 mt-2">Имена</span>
+            <p><v-divider /></p>
+            <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
+            <div v-if="species.exampleName" v-html="species.exampleName"></div>
+          </div>
+
       </div>
+
+           <div class="mt-2 body-2 text-justify ">
+
+          <h3 class="headline">Особенности родословной</h3>
+          <div
+        v-for="feature in species.speciesFeatures"
+        class="text-lg-justify " v-bind:key="feature.key">
+              <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
+                      <p class="main-holder">
+          
+
+          <div v-if="feature.description" v-html="feature.description"></div>
+          <div  v-else>{{ feature.snippet }}</div>
+
+               <div v-if="feature.action" v-html="feature.action.description"></div>
+        </p>
+      </div>
+        </div>
     </v-col>
   </v-row>
 </template>
@@ -150,20 +177,20 @@ export default {
     },
   },
   watch: {
-    characterSpeciesKey: {
+    sources: {
       handler(newVal) {
         if (newVal) {
           this.getAbilityList(newVal);
-          this.getSpecies(newVal);
+          this.getTraitList(newVal);
+          this.getChapterList(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
     },
-    sources: {
+    characterSpeciesKey: {
       handler(newVal) {
         if (newVal) {
-          this.getTraitList(newVal);
-          this.getChapterList(newVal);
+          this.getSpecies(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -184,14 +211,17 @@ export default {
       const { data } = await this.$axios.get("/api/species/chapters/", config);
       this.chapterList = data;
     },
-    async getAbilityList(key) {
+    async getAbilityList(sources) {
       this.loading = true;
-      // const config = {
-      //   params: {
-      //     source: sources.join(","),
-      //   },
-      // };
-      const { data } = await this.$axios.get(`/api/abilityAncestry/"${key}`);
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+            const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
       this.abilityList = data;
       this.loading = false;
     },
@@ -205,7 +235,7 @@ export default {
       data.forEach((t) => (t.key = t.key.toLowerCase()));
       this.traitList = data;
     },
-    getSpecies: async function (key) {
+    async getSpecies (key) {
       this.loading = true;
       let finalData = {};
 
@@ -217,59 +247,80 @@ export default {
         finalData = data;
       }
 
-      // if(this.abilityList !== undefined)
-      //   {
-      //     const ability = this.abilityList.filter(key => key.includes(this.finalData.ancestryAbility));
-      //     this.selectedSpecies.push(abilityList);
-      //   }
+      if (this.abilityList !== undefined) {
+        const lowercaseKeywords = finalData.ancestryAbility.map((s) =>
+          s.toUpperCase()
+        );
 
-      finalData.speciesFeatures
-        .filter((feature) => feature.options)
-        .forEach((feature) => {
-          const enhancements = this.enhancements.filter((modifier) =>
-            modifier.source.startsWith(`species.${feature.name}`)
-          );
-          if (enhancements) {
-            enhancements.forEach((e) => {
-              let foundInd = /\.(\d)\./.exec(e.source);
-              if (foundInd) {
-                feature.selected[foundInd[1]] = e.source.split(".").pop();
-              }
-            });
-          } else {
-            const enhancement = this.enhancements.find((modifier) =>
-              modifier.source.startsWith(`species.${feature.name}`)
-            );
-            if (enhancement) {
-              feature.selected = enhancement.source.split(".").pop();
-            }
-          }
-        });
+        const List = this.abilityList;
+        const ability = List.filter((talent) =>
+          lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+        );
+
+        if (ability.length > 0) {
+          const listAbilities = [];
+          ability.forEach((talent) => {
+            const ability1 = {
+              name: talent.name,
+              key: talent.key,
+              description: talent.description,
+              modification: talent.modification,
+            };
+
+            listAbilities.push(talent);
+          });
+          finalData.speciesFeatures = listAbilities;
+        }
+      }
+
+      // finalData.speciesFeatures
+      //   .filter((feature) => feature.options)
+      //   .forEach((feature) => {
+      //     const enhancements = this.enhancements.filter((modifier) =>
+      //       modifier.source.startsWith(`species.${feature.name}`)
+      //     );
+      //     if (enhancements) {
+      //       enhancements.forEach((e) => {
+      //         let foundInd = /\.(\d)\./.exec(e.source);
+      //         if (foundInd) {
+      //           feature.selected[foundInd[1]] = e.source.split(".").pop();
+      //         }
+      //       });
+      //     } else {
+      //       const enhancement = this.enhancements.find((modifier) =>
+      //         modifier.source.startsWith(`species.${feature.name}`)
+      //       );
+      //       if (enhancement) {
+      //         feature.selected = enhancement.source.split(".").pop();
+      //       }
+      //     }
+      //   });
 
       const chapter = this.characterSpeciesAstartesChapter;
       if (chapter) {
         finalData.chapter = chapter;
       }
 
-      const featuresWithPowers = finalData.speciesFeatures.filter(
-        (f) => f.psychicPowers !== undefined
-      );
-      if (featuresWithPowers) {
-        featuresWithPowers.forEach((feature) => {
-          feature.psychicPowers.forEach((powerSelections) => {
-            this.getPsychicPowerOptions(powerSelections);
-            const found = this.psychicPowers.find(
-              (p) => p.source && p.source === `species.${powerSelections.name}`
-            );
-            if (found) {
-              console.info(
-                `Power ${found.name} found for the species feature ${feature.name} / power ${powerSelections.name}.`
-              );
-              powerSelections.selected = found.name;
-            }
-          });
-        });
-      }
+      // const featuresWithPowers = finalData.speciesFeatures.filter(
+      //   (f) => f.psychicPowers !== undefined
+      // );
+      // if (featuresWithPowers) {
+      //   featuresWithPowers.forEach((feature) => {
+      //     feature.psychicPowers.forEach((powerSelections) => {
+      //       this.getPsychicPowerOptions(powerSelections);
+      //       const found = this.psychicPowers.find(
+      //         (p) => p.source && p.source === `species.${powerSelections.name}`
+      //       );
+      //       if (found) {
+      //         console.info(
+      //           `Power ${found.name} found for the species feature ${feature.name} / power ${powerSelections.name}.`
+      //         );
+      //         powerSelections.selected = found.name;
+      //       }
+      //     });
+      //   });
+      // }
+
       if (this.traitList !== undefined) {
         const lowercaseKeywords = finalData.trait.map((s) => s.toUpperCase());
 
@@ -472,5 +523,47 @@ export default {
   display: inherit;
   margin-bottom: 0;
   padding-inline-start: 0.2em;
+}
+
+.right-header{
+    float:right;
+}
+
+.left-header{
+    float:left;
+}
+
+.h3 {
+  font-size: 24px;
+  font-weight: normal;
+  color: #5d0000;
+}
+
+.h4 {
+color: #a76652;
+    font-weight: normal;
+    font-size: 20px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
+.split-header {
+  border-bottom: 1.5px solid;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+
+.split-header1 {
+  border-bottom: 1.5px;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 </style>

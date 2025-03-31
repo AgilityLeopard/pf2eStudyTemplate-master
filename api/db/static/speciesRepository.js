@@ -1,55 +1,8 @@
 import { source } from "./_sourcesRepository";
-import { ATTRIBUTES, SKILLS, TRAITS } from "./_statUtils";
+
 
 const stringToKebab = function (text) {
     return text.toLowerCase().replace(/\W/gm, "-");
-};
-
-const kebabToCamel = function (slug) {
-    return slug.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase());
-};
-
-const stringToKebabToCamel = function (text) {
-    const slug = stringToKebab(text);
-    return kebabToCamel(slug);
-};
-
-const addModifier = function (
-    targetGroup,
-    targetValue,
-    modifier = 0,
-    rank = 0,
-    condition = undefined
-) {
-    return {
-        targetGroup,
-        targetValue,
-        modifier,
-        rank,
-        condition,
-    };
-};
-
-const background = function (text, plusOne, type) {
-    const parts = text.split(": ");
-    const title = parts[0];
-    const snippet = parts[1];
-    const modification =
-        plusOne === "[ANY] Keyword"
-            ? { targetGroup: "keywords", targetValue: "[Any]" }
-            : {
-                targetGroup: "traits",
-                targetValue: stringToKebabToCamel(plusOne),
-                modifier: 1,
-            };
-    return {
-        key: `${stringToKebab(title)}`,
-        title,
-        snippet,
-        plusOne,
-        type,
-        modification,
-    };
 };
 
 const statBoost = function (str, dex, con, int, wis, cha) {
@@ -78,17 +31,6 @@ const statFlaw = function (str, dex, con, int, wis, cha) {
     };
 };
 
-const cost = function (cost, stats = 0, species = 0, other = 0) {
-    return {
-        cost,
-        costs: {
-            total: cost,
-            stats,
-            species,
-            other,
-        },
-    };
-};
 
 const species = function (
     sourceKey,
@@ -111,10 +53,6 @@ const species = function (
         trait: [],
         speciesFeatures: [],
     };
-};
-
-const commonNames = function (namesString) {
-    return { commonNames: namesString.split(",").map((part) => part.trim()) };
 };
 
 const coreRep = [

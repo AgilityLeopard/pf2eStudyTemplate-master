@@ -11,186 +11,787 @@
       </h1>
     </v-col>
 
-    <v-col :cols="12">
-      <h3 class="headline">Повышение от Наследия</h3>
-    </v-col>
-
-    <v-container v-if="species" class="bg-surface-variant">
-      <v-row>
-        <v-col v-if="boost == 2" :cols="12" :md="6">
-          <v-select
-            label="Повышение от Наследия"
-            v-model="selectedAncestryBoost2"
-            :items="AncestryAttribute2"
-            item-text="name"
-            item-value="key"
-            @change="updateSelect2(selectedAncestryBoost2)"
-          ></v-select>
-        </v-col>
-
-        <v-col :cols="12" :md="6">
-          <v-select
-            label="Свободное повышение"
-            v-model="selectedAncestryBoost"
-            :items="AncestryAttribute"
-            item-text="name"
-            item-value="key"
-            @change="updateSelect(selectedAncestryBoost)"
-          ></v-select>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <v-col v-else>
-      <v-alert
-        type="warning"
-        class="caption ml-4 mr-4"
-        dense
-        outlined
-        border="left"
+    <v-expansion-panels multiple>
+      <v-expansion-panel
+        v-for="levelAncestry in 20"
+        :key="levelAncestry"
+        v-if="levelAncestry <= characterLevel()"
       >
-        Выберите наследие
-      </v-alert>
-    </v-col>
+        <v-expansion-panel-header
+          >{{ levelAncestry }} уровень
+        </v-expansion-panel-header>
 
-    <v-col :cols="12">
-      <h3 class="headline">Повышение от Предыстории</h3>
-    </v-col>
+        <v-expansion-panel-content :key="levelAncestry">
+          <v-col v-if="levelAncestry === 1">
+            <v-col :cols="12">
+              <h3 class="headline">Повышение от Наследия</h3>
+            </v-col>
 
-    <v-col v-if="!ascension" :cols="12">
-      <v-alert
-        type="warning"
-        class="caption ml-4 mr-4"
-        dense
-        outlined
-        border="left"
-      >
-        Выберите предысторию
-      </v-alert>
-    </v-col>
+            <v-container v-if="species" class="bg-surface-variant">
+              <v-row>
+                <v-col v-if="boost == 2" :cols="12" :md="6">
+                  <v-select
+                    label="Повышение от Наследия"
+                    v-model="selectedAncestryBoost2"
+                    :items="AncestryAttribute2"
+                    item-text="name"
+                    item-value="key"
+                    @change="updateSelect2(selectedAncestryBoost2)"
+                  ></v-select>
+                </v-col>
 
-    <v-container v-if="ascension" class="bg-surface-variant">
-      <v-row>
-        <v-col :cols="6" :md="6">
-          <v-select
-            label="Повышение от предыстории"
-            v-model="selectedBackgroundBoost"
-            :items="BackgroundAttribute"
-            item-text="name"
-            item-value="key"
-            @change="updateSelectBackground(selectedBackgroundBoost)"
-          ></v-select>
-        </v-col>
+                <v-col :cols="12" :md="6">
+                  <v-select
+                    label="Свободное повышение"
+                    v-model="selectedAncestryBoost"
+                    :items="AncestryAttribute"
+                    item-text="name"
+                    item-value="key"
+                    @change="updateSelect(selectedAncestryBoost)"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
 
-        <v-col :cols="6" :md="6">
-          <v-select
-            label="Свободное повышение"
-            v-model="selectedBackgroundBoost2"
-            :items="AncestryAttribute"
-            item-text="name"
-            item-value="key"
-            @change="updateSelectBackground2(selectedBackgroundBoost2)"
-          ></v-select>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-col :cols="12">
-      <h3 class="headline">
-        Повышения Класса {{ archetype ? archetype.name : "" }}
-      </h3>
-    </v-col>
+            <v-col v-else>
+              <v-alert
+                type="warning"
+                class="caption ml-4 mr-4"
+                dense
+                outlined
+                border="left"
+              >
+                Выберите наследие
+              </v-alert>
+            </v-col>
 
-    <v-col
-      v-if="archetype && archetype.keyAbility.length > 1"
-      :cols="6"
-      :md="6"
+            <v-col :cols="12">
+              <h3 class="headline">Повышение от Предыстории</h3>
+            </v-col>
+
+            <v-col v-if="!ascension" :cols="12">
+              <v-alert
+                type="warning"
+                class="caption ml-4 mr-4"
+                dense
+                outlined
+                border="left"
+              >
+                Выберите предысторию
+              </v-alert>
+            </v-col>
+
+            <v-container v-if="ascension" class="bg-surface-variant">
+              <v-row>
+                <v-col :cols="6" :md="6">
+                  <v-select
+                    label="Повышение от предыстории"
+                    v-model="selectedBackgroundBoost"
+                    :items="BackgroundAttribute"
+                    item-text="name"
+                    item-value="key"
+                    @change="updateSelectBackground(selectedBackgroundBoost)"
+                  ></v-select>
+                </v-col>
+
+                <v-col :cols="6" :md="6">
+                  <v-select
+                    label="Свободное повышение"
+                    v-model="selectedBackgroundBoost2"
+                    :items="BackgroundAttribute2"
+                    item-text="name"
+                    item-value="key"
+                    @change="updateSelectBackground2(selectedBackgroundBoost2)"
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-col :cols="12">
+              <h3 class="headline">
+                Повышения Класса {{ archetype ? archetype.name : "" }}
+              </h3>
+            </v-col>
+
+            <v-col
+              v-if="archetype && archetype.keyAbility.length > 1"
+              :cols="6"
+              :md="6"
+            >
+              <v-select
+                label="Повышение Характеристики от класса"
+                v-model="selectedClassBoost"
+                :items="ClassAttribute"
+                item-text="name"
+                item-value="key"
+                @change="updateSelectClassAttribute(selectedClassBoost)"
+              ></v-select>
+            </v-col>
+
+            <v-col
+              v-if="archetype && archetype.skillTrainedChoice.length > 1"
+              :cols="6"
+              :md="6"
+            >
+              <v-select
+                label="Повышение Навыка от класса"
+                v-model="selectedClassSkill"
+                :items="ClassSkill"
+                item-text="name"
+                item-value="key"
+                @change="updateSelectClassSkill(selectedClassSkill)"
+              ></v-select>
+            </v-col>
+
+            <v-col v-if="!archetype" :cols="12">
+              <v-alert
+                type="warning"
+                class="caption ml-4 mr-4"
+                dense
+                outlined
+                border="left"
+              >
+                Выберите Класс
+              </v-alert>
+            </v-col>
+
+            <v-col
+              v-if="
+                archetype &&
+                archetype.skillTrainedChoice.length == 0 &&
+                archetype.keyAbility.length == 0
+              "
+              :cols="12"
+            >
+              <v-alert
+                type="warning"
+                class="caption ml-4 mr-4"
+                dense
+                outlined
+                border="left"
+              >
+                У класса нет повышений на выбор
+              </v-alert>
+            </v-col>
+
+            <v-row></v-row>
+            <v-col v-if="archetype">
+              <v-btn
+                outlined
+                x-small
+                color="success"
+                @click="dialogAttributeLevel1 = true"
+              >
+                Повышение Аттрибутов
+              </v-btn>
+
+              <v-btn
+                outlined
+                x-small
+                color="success"
+                @click="dialogSkillLevel1 = true"
+              >
+                Повышение Навыков
+              </v-btn>
+            </v-col>
+          </v-col>
+
+          <v-col
+            v-if="
+              levelAncestry > 1 && (levelAncestry - 1) % 2 == 0 && archetype
+            "
+          >
+            <v-btn
+              outlined
+              x-small
+              color="success"
+              @click="openSkillLevel(levelAncestry)"
+            >
+              Повышение Навыков
+            </v-btn>
+          </v-col>
+          <v-col v-if="levelAncestry === 5">
+            <v-btn
+              outlined
+              x-small
+              color="success"
+              @click="manageBoost5 = true"
+            >
+              Повышение Аттрибутов
+            </v-btn>
+          </v-col>
+
+          <v-col v-if="levelAncestry === 10">
+            <v-btn
+              outlined
+              x-small
+              color="success"
+              @click="manageBoost10 = true"
+            >
+              Повышение Аттрибутов
+            </v-btn>
+          </v-col>
+
+          <v-col v-if="levelAncestry === 15">
+            <v-btn
+              outlined
+              x-small
+              color="success"
+              @click="manageBoost15 = true"
+            >
+              Повышение Аттрибутов
+            </v-btn>
+          </v-col>
+
+          <v-col v-if="levelAncestry === 20">
+            <v-btn
+              outlined
+              x-small
+              color="success"
+              @click="manageBoost20 = true"
+            >
+              Повышение Аттрибутов
+            </v-btn>
+          </v-col>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
+    <!-- Диалог повышения -->
+    <v-dialog
+      v-model="dialogAttributeLevel1"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
     >
-      <v-select
-        label="Повышение Характеристики от класса"
-        v-model="selectedClassBoost"
-        :items="ClassAttribute"
-        item-text="name"
-        item-value="key"
-        @change="updateSelectClassAttribute(selectedClassBoost)"
-      ></v-select>
-    </v-col>
+      <v-card>
+        <v-card-title style="background-color: #262e37; color: #fff">
+          <span>Повышение аттрибутов</span>
+          <v-spacer />
+          <v-icon @click="dialogAttributeLevel1 = false"> close </v-icon>
+        </v-card-title>
 
-    <v-col
-      v-if="archetype && archetype.skillTrainedChoice.length > 1"
-      :cols="6"
-      :md="6"
+        <v-divider />
+
+        <v-card-title> </v-card-title>
+
+        <v-divider />
+        <v-card-text class="pa-6">
+          <v-col :cols="12" :md="12">
+            <v-card>
+              <v-card-title
+                style="background-color: green; color: #fff"
+                class="body-1 pt-1 pb-1"
+              >
+                <h2 class="subtitle-1">
+                  Количество свободных повышений: {{ 4 - characterBoost }}
+                </h2>
+              </v-card-title>
+
+              <v-simple-table dense>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th
+                        v-for="header in attributeHeaders"
+                        :class="header.class"
+                      >
+                        {{ header.text }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="attribute in attributeRepository"
+                      :key="attribute.key"
+                    >
+                      <td>{{ attribute.name }}</td>
+                      <td class="text-center pa-1 small">
+                        <v-btn
+                          icon
+                          :disabled="
+                            4 - characterBoost == 4 ||
+                            characterAttributesBoost[attribute.key] < 1
+                          "
+                          @click="decrementAttribute(attribute.key, 1)"
+                        >
+                          <v-icon color="red"> remove_circle </v-icon>
+                        </v-btn>
+                        {{ characterAttributes[attribute.key] }}
+                        <v-btn
+                          icon
+                          :disabled="
+                            4 - characterBoost == 0 ||
+                            characterAttributesBoost[attribute.key] > 0
+                          "
+                          @click="incrementAttribute(attribute.key, 1)"
+                        >
+                          <!--"-->
+                          <v-icon
+                            :color="
+                              affordableAttributeColor(
+                                characterAttributes[attribute.key]
+                              )
+                            "
+                          >
+                            add_circle
+                          </v-icon>
+                        </v-btn>
+                      </td>
+                      <td class="text-center pa-1 small">
+                        {{
+                          Math.floor(
+                            (characterAttributesEnhanced[attribute.key] - 10) /
+                              2
+                          )
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-card>
+          </v-col>
+        </v-card-text>
+
+        <v-divider />
+        <v-card-actions>
+          <v-btn
+            outlined
+            color="red"
+            left
+            @click="dialogAttributeLevel1 = false"
+          >
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="dialogSkillLevel1"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
     >
-      <v-select
-        label="Повышение Навыка от класса"
-        v-model="selectedClassSkill"
-        :items="ClassSkill"
-        item-text="name"
-        item-value="key"
-        @change="updateSelectClassSkill(selectedClassSkill)"
-      ></v-select>
-    </v-col>
+      <v-card>
+        <v-card-title style="background-color: #262e37; color: #fff">
+          <span>Повышение Характеристик</span>
+          <v-spacer />
+          <v-icon @click="dialogSkillLevel1 = false"> close </v-icon>
+        </v-card-title>
 
-    <v-col v-if="!archetype" :cols="12">
-      <v-alert
-        type="warning"
-        class="caption ml-4 mr-4"
-        dense
-        outlined
-        border="left"
-      >
-        Выберите Класс
-      </v-alert>
-    </v-col>
+        <v-divider />
 
-    <v-col
-      v-if="
-        archetype &&
-        archetype.skillTrainedChoice.length == 0 &&
-        archetype.keyAbility.length == 0
-      "
-      :cols="12"
+        <v-card-title> </v-card-title>
+
+        <v-divider />
+        <v-card-text class="pa-6">
+          <v-col :cols="12" :md="12">
+            <v-card>
+              <v-card-title
+                style="background-color: green; color: #fff"
+                class="body-1 pt-1 pb-1"
+              >
+                <h2 class="subtitle-1">
+                  Количество свободных очков навыка:
+                  {{
+                    characterSkillPointClass +
+                    characterSkillPointBackground +
+                    characterSkillPointClassUp +
+                    modInt(1) -
+                    // characterOptional(1) -
+                    skillSheetPoints("", 1)
+                  }}
+                </h2>
+              </v-card-title>
+
+              <v-simple-table dense>
+                <template v-slot:default>
+                  <tbody>
+                    <tr v-for="skill in finalSkillRepository" :key="skill.key">
+                      <td>{{ skill.name }}</td>
+                      <td>
+                        <v-btn
+                          icon
+                          :disabled="
+                            skillSheetValue(skill.key, 1) === 0 ||
+                            (skill.custom &&
+                              skillSheetTrained(skill.key, 1) ===
+                                'Тренирован') ||
+                            skillSheetOptional(skill.key, 1) === true
+                          "
+                          @click="decrementSkill(skill.key, 1)"
+                        >
+                          <v-icon color="red"> remove_circle </v-icon>
+                        </v-btn>
+                      </td>
+                      <td class="text-center small pa-1">
+                        <!-- {{ ModAttribute(skill.attribute, skill.key) }} -->
+                        {{
+                          // characterSkills[skill.key] === "U"
+                          //   ? characterlabel(characterSkills[skill.key])
+                          //   : "Тренирован"
+                          skillSheetTrained(skill.key, 1)
+                        }}
+                      </td>
+                      <td>
+                        <v-btn
+                          icon
+                          :disabled="
+                            skillSheetValue(skill.key, 1) > 0 ||
+                            // skillSheetAll(skill.key, 1) >= characterSkillPointClass ||
+                            characterSkillPointClass +
+                              characterSkillPointClassUp +
+                              characterSkillPointBackground +
+                              modInt(1) -
+                              skillSheetPoints('', 1) <=
+                              0
+                          "
+                          @click="incrementSkill(skill.key, 1)"
+                        >
+                          <v-icon
+                            :color="
+                              affordableSkillColor(characterSkills[skill.key])
+                            "
+                          >
+                            add_circle
+                          </v-icon>
+                        </v-btn>
+                      </td>
+                      <!-- <td>{{ characterSkills[skill.key] === "U" ? characterlabel(characterSkills[skill.key]) : "Тренирован" }}</td> -->
+                      <span v-if="skill.custom">
+                        <v-hover>
+                          <v-icon
+                            v-if="skill.optional !== true"
+                            small
+                            @click="removeCustomSkill(skill.key, 1)"
+                            slot-scope="{ hover }"
+                            :disabled="skill.optional"
+                            :color="`${hover ? 'error' : ''}`"
+                            >delete</v-icon
+                          >
+                        </v-hover>
+                      </span>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+
+              <v-spacer></v-spacer>
+
+              <v-card-actions style="justify-content: center">
+                <v-btn x-small text @click="openSkillsSettings(1)"
+                  >Дополнительное Знание <v-icon small>settings</v-icon></v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-card-text>
+
+        <v-divider />
+        <v-card-actions>
+          <v-btn outlined color="red" left @click="dialogSkillLevel1 = false">
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Custom Skills -->
+    <v-dialog
+      v-model="skillsEditorDialog"
+      width="600px"
+      scrollable
+      :fullscreen="$vuetify.breakpoint.xsOnly"
     >
-      <v-alert
-        type="warning"
-        class="caption ml-4 mr-4"
-        dense
-        outlined
-        border="left"
-      >
-        У класса нет повышений на выбор
-      </v-alert>
-    </v-col>
+      <v-card>
+        <v-alert :value="alert" type="error" text dense border="left">
+          Знание уже существует
+        </v-alert>
+        <v-alert
+          :value="
+            skillLevel === 1
+              ? characterSkillPointClass +
+                  characterSkillPointClassUp +
+                  characterSkillPointBackground -
+                  skillSheetPoints('', 1) <=
+                0
+              : 1 - skillSheetAll('', skillLevel) <= 0
+          "
+          type="info"
+          text
+          dense
+          border="left"
+        >
+          Недостаточно очков Навыка для добавления нового Знания
+        </v-alert>
+        <v-card-title style="background-color: #262e37; color: #fff">
+          Редактирование Знаний
+          <v-spacer />
+          <v-icon dark @click="closeSkillsSettings">close</v-icon>
+        </v-card-title>
 
-    <v-col :cols="12">
-      <!-- <h3 class="headline">
-          Общие повышения
-      </h3> -->
-      <v-card
-        class="mb-4"
-        dark
-        dense
-        outlined
-        :color="manageBoost1 ? 'info' : ''"
-        @click="manageBoost1 = !manageBoost1"
-      >
-        <v-card-text class="pa-1">
-          <v-icon>{{ manageBoost1 ? "expand_less" : "expand_more" }}</v-icon>
-          Повышение на 1-й уровень
+        <v-card-text class="pt-4">
+          <v-text-field
+            v-model="customSkill.name"
+            dense
+            label="Имя Знания"
+          ></v-text-field>
+          <v-textarea
+            v-model="customSkill.description"
+            dense
+            label="Описание"
+          ></v-textarea>
+        </v-card-text>
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            small
+            right
+            color="success"
+            :disabled="
+              skillLevel === 1
+                ? characterSkillPointClass +
+                    characterSkillPointClassUp +
+                    characterSkillPointBackground -
+                    skillSheetPoints('', 1) <=
+                  0
+                : 1 - skillSheetAll('', skillLevel) <= 0
+            "
+            @click="saveCustomSkill(skillLevel)"
+            >Save</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Скилл на каждом уровне -->
+    <v-dialog
+      v-model="dialogSkill"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
+    >
+      <v-card>
+        <v-card-title style="background-color: #262e37; color: #fff">
+          <span>Повышение Характеристик</span>
+          <v-spacer />
+          <v-icon @click="dialogSkill = false"> close </v-icon>
+        </v-card-title>
+
+        <v-divider />
+
+        <v-card-title> </v-card-title>
+
+        <v-divider />
+        <v-card-text class="pa-6">
+          <v-col :cols="12" :md="12">
+            <v-card>
+              <v-card-title
+                style="background-color: green; color: #fff"
+                class="body-1 pt-1 pb-1"
+              >
+                <h2 class="subtitle-1">
+                  Количество свободных очков навыка:
+                  {{ 1 + modInt(skillLevel) - skillSheetAll("", skillLevel) }}
+                </h2>
+              </v-card-title>
+              <v-simple-table dense>
+                <template v-slot:default>
+                  <tbody>
+                    <tr v-for="skill in finalSkillRepository" :key="skill.key">
+                      <td>{{ skill.name }}</td>
+                      <td>
+                        <!-- :disabled="
+                      skill.key == characterClassSkill ||
+                      characterSkills[skill.key] == 'U' ||
+                      skill.optional === true ||
+                      characterSkillPoints === MaxSkillPoints() ||
+                      skill.custom ||
+                      skillChoiceInitial.find((item) => item === skill.key) !==
+                        skill.key ||
+                      CharacterskillFromModification[skill.key] > 0
+                    " -->
+
+                        <v-btn
+                          icon
+                          :disabled="
+                            skillSheetValue(skill.key, skillLevel) === 0 ||
+                            (skill.custom &&
+                              skillSheetTrained(skill.key, skillLevel) ===
+                                'Тренирован')
+                          "
+                          @click="decrementSkill(skill.key, skillLevel)"
+                        >
+                          <v-icon color="red"> remove_circle </v-icon>
+                        </v-btn>
+                      </td>
+                      <td class="text-center small pa-1">
+                        <!-- {{ ModAttribute(skill.attribute, skill.key) }} -->
+                        {{
+                          // characterSkills[skill.key] === "U"
+                          //   ? characterlabel(characterSkills[skill.key])
+                          //   : "Тренирован"
+                          skillSheetTrained(skill.key, skillLevel)
+                        }}
+                      </td>
+                      <td>
+                        <v-btn
+                          icon
+                          :disabled="
+                            skillSheetValue(skill.key, skillLevel) > 0 ||
+                            skillSheetAll(skill.key, skillLevel) >=
+                              1 + modInt(skillLevel) ||
+                            levelRestrict(skill.key, skillLevel) === true ||
+                            skillSheetTrained(skill.key, skillLevel) ===
+                              'Легенда'
+                          "
+                          @click="incrementSkill(skill.key, skillLevel)"
+                        >
+                          <v-icon
+                            :color="
+                              affordableSkillColor(characterSkills[skill.key])
+                            "
+                          >
+                            add_circle
+                          </v-icon>
+                        </v-btn>
+                      </td>
+                      <!-- <td>{{ characterSkills[skill.key] === "U" ? characterlabel(characterSkills[skill.key]) : "Тренирован" }}</td> -->
+                      <span v-if="skill.custom">
+                        <v-hover>
+                          <v-icon
+                            v-if="skill.optional !== true"
+                            small
+                            @click="removeCustomSkill(skill.key)"
+                            slot-scope="{ hover }"
+                            :disabled="skill.optional"
+                            :color="`${hover ? 'error' : ''}`"
+                            >delete</v-icon
+                          >
+                        </v-hover>
+                      </span>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+              <v-spacer></v-spacer>
+
+              <v-card-actions style="justify-content: center">
+                <v-btn x-small text @click="openSkillsSettings(skillLevel)"
+                  >Дополнительное Знание <v-icon small>settings</v-icon></v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-col>
         </v-card-text>
       </v-card>
-    </v-col>
+    </v-dialog>
 
-    <v-col v-if="manageBoost1" :cols="12" :md="5">
+    <!-- Аттрибуты 5, 10, 15, 20 -->
+    <v-dialog
+      v-model="manageBoost5"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
+    >
+      <v-card>
+        <v-card-title style="background-color: #262e37; color: #fff">
+          <span>Повышение аттрибутов</span>
+          <v-spacer />
+          <v-icon @click="dialogAttributeLevel1 = false"> close </v-icon>
+        </v-card-title>
+        <v-divider />
+
+        <v-card-title> </v-card-title>
+
+        <v-divider />
+        <v-card-text class="pa-6">
+          <v-card-title
+            style="background-color: green; color: #fff"
+            class="body-1 pt-1 pb-1"
+          >
+            <h2 class="subtitle-1">
+              Количество свободных повышений: {{ 4 - characterBoost5 }}
+            </h2>
+          </v-card-title>
+
+          <v-simple-table dense>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th v-for="header in attributeHeaders" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="attribute in attributeRepository">
+                  <td>{{ attribute.name }}</td>
+                  <td class="text-center pa-1 small">
+                    <v-btn
+                      icon
+                      :disabled="
+                        4 - characterBoost5 == 4 ||
+                        characterAttributesBoost5[attribute.key] < 1
+                      "
+                      @click="decrementAttribute(attribute.key, 5)"
+                    >
+                      <v-icon color="red"> remove_circle </v-icon>
+                    </v-btn>
+                    {{ characterAttributes[attribute.key] }}
+                    <v-btn
+                      icon
+                      :disabled="
+                        4 - characterBoost5 == 0 ||
+                        characterAttributesBoost5[attribute.key] > 0
+                      "
+                      @click="incrementAttribute(attribute.key, 5)"
+                    >
+                      <!--"-->
+                      <v-icon
+                        :color="
+                          affordableAttributeColor(
+                            characterAttributes[attribute.key]
+                          )
+                        "
+                      >
+                        add_circle
+                      </v-icon>
+                    </v-btn>
+                  </td>
+                  <td class="text-center pa-1 small">
+                    {{
+                      Math.floor(
+                        (characterAttributesEnhanced[attribute.key] - 10) / 2
+                      )
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="manageBoost10"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
+    >
       <v-card>
         <v-card-title
           style="background-color: green; color: #fff"
           class="body-1 pt-1 pb-1"
         >
           <h2 class="subtitle-1">
-            Количество свободных повышений: {{ 4 - characterBoost }}
+            Количество свободных повышений: {{ 4 - characterBoost10 }}
           </h2>
         </v-card-title>
-
         <v-simple-table dense>
           <template v-slot:default>
             <thead>
@@ -201,16 +802,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="attribute in attributeRepository" :key="attribute.key">
+              <tr v-for="attribute in attributeRepository">
                 <td>{{ attribute.name }}</td>
                 <td class="text-center pa-1 small">
                   <v-btn
                     icon
                     :disabled="
-                      4 - characterBoost == 4 ||
-                      characterAttributesBoost[attribute.key] < 1
+                      4 - characterBoost10 == 4 ||
+                      characterAttributesBoost10[attribute.key] < 1
                     "
-                    @click="decrementAttribute(attribute.key, 1)"
+                    @click="decrementAttribute(attribute.key, 10)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
                   </v-btn>
@@ -218,10 +819,10 @@
                   <v-btn
                     icon
                     :disabled="
-                      4 - characterBoost == 0 ||
-                      characterAttributesBoost[attribute.key] > 0
+                      4 - characterBoost10 == 0 ||
+                      characterAttributesBoost10[attribute.key] > 0
                     "
-                    @click="incrementAttribute(attribute.key, 1)"
+                    @click="incrementAttribute(attribute.key, 10)"
                   >
                     <!--"-->
                     <v-icon
@@ -247,817 +848,155 @@
           </template>
         </v-simple-table>
       </v-card>
-    </v-col>
+    </v-dialog>
 
-    <v-col v-if="manageBoost1" :cols="12" :md="7">
+    <v-dialog
+      v-model="manageBoost15"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
+    >
       <v-card>
         <v-card-title
           style="background-color: green; color: #fff"
           class="body-1 pt-1 pb-1"
         >
           <h2 class="subtitle-1">
-            Количество свободных очков навыка: {{ characterSkillPoints }}
+            Количество свободных повышений: {{ 4 - characterBoost15 }}
           </h2>
         </v-card-title>
 
         <v-simple-table dense>
           <template v-slot:default>
+            <thead>
+              <tr>
+                <th v-for="header in attributeHeaders" :class="header.class">
+                  {{ header.text }}
+                </th>
+              </tr>
+            </thead>
             <tbody>
-              <tr v-for="skill in finalSkillRepository" :key="skill.key">
-                <td>{{ skill.name }}</td>
-                <td>
+              <tr v-for="attribute in attributeRepository">
+                <td>{{ attribute.name }}</td>
+                <td class="text-center pa-1 small">
                   <v-btn
                     icon
                     :disabled="
-                      skill.key == characterClassSkill ||
-                      characterSkills[skill.key] == 'U' ||
-                      skill.optional === true ||
-                      characterSkillPoints === MaxSkillPoints() ||
-                      skill.custom ||
-                      skillChoiceInitial.find((item) => item === skill.key) !==
-                        skill.key ||
-                      CharacterskillFromModification[skill.key] > 0
+                      4 - characterBoost15 == 4 ||
+                      characterAttributesBoost15[attribute.key] < 1
                     "
-                    @click="decrementSkill(skill.key)"
+                    @click="decrementAttribute(attribute.key, 15)"
                   >
                     <v-icon color="red"> remove_circle </v-icon>
                   </v-btn>
-                  <!-- {{ ModAttribute(skill.attribute, skill.key) }} -->
-                  {{
-                    characterSkills[skill.key] === "U"
-                      ? characterlabel(characterSkills[skill.key])
-                      : "Тренирован"
-                  }}
+                  {{ characterAttributes[attribute.key] }}
                   <v-btn
                     icon
                     :disabled="
-                      characterSkillPoints <= 0 ||
-                      characterSkills[skill.key] !== 'U'
+                      4 - characterBoost15 == 0 ||
+                      characterAttributesBoost15[attribute.key] > 0
                     "
-                    @click="incrementSkill(skill.key)"
+                    @click="incrementAttribute(attribute.key, 15)"
                   >
+                    <!--"-->
                     <v-icon
-                      :color="affordableSkillColor(characterSkills[skill.key])"
+                      :color="
+                        affordableAttributeColor(
+                          characterAttributes[attribute.key]
+                        )
+                      "
                     >
                       add_circle
                     </v-icon>
                   </v-btn>
                 </td>
-                <!-- <td>{{ characterSkills[skill.key] === "U" ? characterlabel(characterSkills[skill.key]) : "Тренирован" }}</td> -->
-                <span v-if="skill.custom">
-                  <v-hover>
-                    <v-icon
-                      v-if="skill.optional !== true"
-                      small
-                      @click="removeCustomSkill(skill.key)"
-                      slot-scope="{ hover }"
-                      :disabled="skill.optional"
-                      :color="`${hover ? 'error' : ''}`"
-                      >delete</v-icon
-                    >
-                  </v-hover>
-                </span>
+                <td class="text-center pa-1 small">
+                  {{
+                    Math.floor(
+                      (characterAttributesEnhanced[attribute.key] - 10) / 2
+                    )
+                  }}
+                </td>
               </tr>
             </tbody>
           </template>
         </v-simple-table>
-
-        <v-spacer></v-spacer>
-
-        <v-card-actions style="justify-content: center">
-          <v-btn x-small text @click="openSkillsSettings"
-            >Дополнительное Знание <v-icon small>settings</v-icon></v-btn
-          >
-        </v-card-actions>
-
-        <!-- Custom Skills -->
-        <v-dialog
-          v-model="skillsEditorDialog"
-          width="600px"
-          scrollable
-          :fullscreen="$vuetify.breakpoint.xsOnly"
-        >
-          <v-card>
-            <v-alert :value="alert" type="error" text dense border="left">
-              Знание уже существует
-            </v-alert>
-            <v-alert
-              :value="characterSkillPoints <= 0"
-              type="info"
-              text
-              dense
-              border="left"
-            >
-              Недостаточно очков Навыка для добавления нового Знания
-            </v-alert>
-            <v-card-title style="background-color: #262e37; color: #fff">
-              Редактирование Знаний
-              <v-spacer />
-              <v-icon dark @click="closeSkillsSettings">close</v-icon>
-            </v-card-title>
-
-            <v-card-text class="pt-4">
-              <v-text-field
-                v-model="customSkill.name"
-                dense
-                label="Имя Знания"
-              ></v-text-field>
-              <v-textarea
-                v-model="customSkill.description"
-                dense
-                label="Описание"
-              ></v-textarea>
-            </v-card-text>
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                small
-                right
-                color="success"
-                :disabled="characterSkillPoints <= 0"
-                @click="saveCustomSkill"
-                >Save</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-card>
-    </v-col>
+    </v-dialog>
 
-    <v-container class="bg-surface-variant">
-      <v-row>
-        <!-- 5-й уровень -->
-        <v-col :cols="6" :md="6" v-if="characterLevel() >= 5">
-          <v-card
-            class="mb-4"
-            dark
-            dense
-            outlined
-            :color="manageBoost5 ? 'info' : ''"
-            @click="manageBoost5 = !manageBoost5"
-          >
-            <v-card-text class="pa-1">
-              <v-icon>{{
-                manageBoost5 ? "expand_less" : "expand_more"
-              }}</v-icon>
-              Повышение на 5-й уровень
-            </v-card-text>
-          </v-card>
-
-          <!-- </v-col>
-
-    <v-col  :cols="12" :md="5" > -->
-          <v-card
-            :cols="6"
-            :md="6"
-            v-if="manageBoost5 && characterLevel() >= 5"
-          >
-            <v-card-title
-              style="background-color: green; color: #fff"
-              class="body-1 pt-1 pb-1"
-            >
-              <h2 class="subtitle-1">
-                Количество свободных повышений: {{ 4 - characterBoost5 }}
-              </h2>
-            </v-card-title>
-
-            <v-simple-table dense>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th
-                      v-for="header in attributeHeaders"
-                      :class="header.class"
-                    >
-                      {{ header.text }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="attribute in attributeRepository">
-                    <td>{{ attribute.name }}</td>
-                    <td class="text-center pa-1 small">
-                      <v-btn
-                        icon
-                        :disabled="
-                          4 - characterBoost5 == 4 ||
-                          characterAttributesBoost5[attribute.key] < 1
-                        "
-                        @click="decrementAttribute(attribute.key, 5)"
-                      >
-                        <v-icon color="red"> remove_circle </v-icon>
-                      </v-btn>
-                      {{ characterAttributes[attribute.key] }}
-                      <v-btn
-                        icon
-                        :disabled="
-                          4 - characterBoost5 == 0 ||
-                          characterAttributesBoost5[attribute.key] > 0
-                        "
-                        @click="incrementAttribute(attribute.key, 5)"
-                      >
-                        <!--"-->
-                        <v-icon
-                          :color="
-                            affordableAttributeColor(
-                              characterAttributes[attribute.key]
-                            )
-                          "
-                        >
-                          add_circle
-                        </v-icon>
-                      </v-btn>
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{
-                        Math.floor(
-                          (characterAttributesEnhanced[attribute.key] - 10) / 2
-                        )
-                      }}
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card>
-        </v-col>
-
-        <!-- 10-й уровень -->
-        <v-col :cols="6" :md="6" v-if="characterLevel() >= 10">
-          <v-card
-            class="mb-4"
-            dark
-            dense
-            outlined
-            :color="manageBoost10 ? 'info' : ''"
-            @click="manageBoost10 = !manageBoost10"
-          >
-            <v-card-text class="pa-1">
-              <v-icon>{{
-                manageBoost10 ? "expand_less" : "expand_more"
-              }}</v-icon>
-              Повышение на 10-й уровень
-            </v-card-text>
-          </v-card>
-
-          <!-- </v-col>
-
-    <v-col  :cols="12" :md="5" > -->
-          <v-card v-if="manageBoost10 && characterLevel() >= 10">
-            <v-card-title
-              style="background-color: green; color: #fff"
-              class="body-1 pt-1 pb-1"
-            >
-              <h2 class="subtitle-1">
-                Количество свободных повышений: {{ 4 - characterBoost10 }}
-              </h2>
-            </v-card-title>
-            <v-simple-table dense>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th
-                      v-for="header in attributeHeaders"
-                      :class="header.class"
-                    >
-                      {{ header.text }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="attribute in attributeRepository">
-                    <td>{{ attribute.name }}</td>
-                    <td class="text-center pa-1 small">
-                      <v-btn
-                        icon
-                        :disabled="
-                          4 - characterBoost10 == 4 ||
-                          characterAttributesBoost10[attribute.key] < 1
-                        "
-                        @click="decrementAttribute(attribute.key, 10)"
-                      >
-                        <v-icon color="red"> remove_circle </v-icon>
-                      </v-btn>
-                      {{ characterAttributes[attribute.key] }}
-                      <v-btn
-                        icon
-                        :disabled="
-                          4 - characterBoost10 == 0 ||
-                          characterAttributesBoost10[attribute.key] > 0
-                        "
-                        @click="incrementAttribute(attribute.key, 10)"
-                      >
-                        <!--"-->
-                        <v-icon
-                          :color="
-                            affordableAttributeColor(
-                              characterAttributes[attribute.key]
-                            )
-                          "
-                        >
-                          add_circle
-                        </v-icon>
-                      </v-btn>
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{
-                        Math.floor(
-                          (characterAttributesEnhanced[attribute.key] - 10) / 2
-                        )
-                      }}
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <v-row>
-      <!-- 15-й уровень -->
-      <v-col :cols="6" :md="6" v-if="characterLevel() >= 15">
-        <v-card
-          class="mb-4"
-          dark
-          dense
-          outlined
-          :color="manageBoost15 ? 'info' : ''"
-          @click="manageBoost15 = !manageBoost15"
+    <v-dialog
+      v-model="manageBoost20"
+      :fullscreen="$vuetify.breakpoint.xsOnly"
+      width="600px"
+      scrollable
+    >
+      <v-card>
+        <v-card-title
+          style="background-color: green; color: #fff"
+          class="body-1 pt-1 pb-1"
         >
-          <v-card-text class="pa-1">
-            <v-icon>{{ manageBoost5 ? "expand_less" : "expand_more" }}</v-icon>
-            Повышение на 15-й уровень
-          </v-card-text>
-        </v-card>
+          <h2 class="subtitle-1">
+            Количество свободных повышений: {{ 4 - characterBoost20 }}
+          </h2>
+        </v-card-title>
 
-        <!-- </v-col>
-
-    <v-col  :cols="12" :md="5" > -->
-        <v-card v-if="manageBoost15 && characterLevel() >= 15">
-          <v-card-title
-            style="background-color: green; color: #fff"
-            class="body-1 pt-1 pb-1"
-          >
-            <h2 class="subtitle-1">
-              Количество свободных повышений: {{ 4 - characterBoost15 }}
-            </h2>
-          </v-card-title>
-
-          <v-simple-table dense>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="attribute in attributeRepository">
-                  <td>{{ attribute.name }}</td>
-                  <td class="text-center pa-1 small">
-                    <v-btn
-                      icon
-                      :disabled="
-                        4 - characterBoost15 == 4 ||
-                        characterAttributesBoost15[attribute.key] < 1
+        <v-simple-table dense>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th v-for="header in attributeHeaders" :class="header.class">
+                  {{ header.text }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="attribute in attributeRepository">
+                <td>{{ attribute.name }}</td>
+                <td class="text-center pa-1 small">
+                  <v-btn
+                    icon
+                    :disabled="
+                      4 - characterBoost15 == 4 ||
+                      characterAttributesBoost15[attribute.key] < 1
+                    "
+                    @click="decrementAttribute(attribute.key, 20)"
+                  >
+                    <v-icon color="red"> remove_circle </v-icon>
+                  </v-btn>
+                  {{ characterAttributes[attribute.key] }}
+                  <v-btn
+                    icon
+                    :disabled="
+                      4 - characterBoost15 == 0 ||
+                      characterAttributesBoost15[attribute.key] > 0
+                    "
+                    @click="incrementAttribute(attribute.key, 20)"
+                  >
+                    <!--"-->
+                    <v-icon
+                      :color="
+                        affordableAttributeColor(
+                          characterAttributes[attribute.key]
+                        )
                       "
-                      @click="decrementAttribute(attribute.key, 15)"
                     >
-                      <v-icon color="red"> remove_circle </v-icon>
-                    </v-btn>
-                    {{ characterAttributes[attribute.key] }}
-                    <v-btn
-                      icon
-                      :disabled="
-                        4 - characterBoost15 == 0 ||
-                        characterAttributesBoost15[attribute.key] > 0
-                      "
-                      @click="incrementAttribute(attribute.key, 15)"
-                    >
-                      <!--"-->
-                      <v-icon
-                        :color="
-                          affordableAttributeColor(
-                            characterAttributes[attribute.key]
-                          )
-                        "
-                      >
-                        add_circle
-                      </v-icon>
-                    </v-btn>
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      Math.floor(
-                        (characterAttributesEnhanced[attribute.key] - 10) / 2
-                      )
-                    }}
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </v-card>
-      </v-col>
-
-      <!-- 20-й уровень -->
-      <v-col :cols="6" :md="6" v-if="characterLevel() >= 20">
-        <v-card
-          class="mb-4"
-          dark
-          dense
-          outlined
-          :color="manageBoost20 ? 'info' : ''"
-          @click="manageBoost20 = !manageBoost20"
-        >
-          <v-card-text class="pa-1">
-            <v-icon>{{ manageBoost20 ? "expand_less" : "expand_more" }}</v-icon>
-            Повышение на 20-й уровень
-          </v-card-text>
-        </v-card>
-
-        <!-- </v-col>
-
-    <v-col  :cols="12" :md="5" > -->
-        <v-card v-if="manageBoost20 && characterLevel() >= 20">
-          <v-card-title
-            style="background-color: green; color: #fff"
-            class="body-1 pt-1 pb-1"
-          >
-            <h2 class="subtitle-1">
-              Количество свободных повышений: {{ 4 - characterBoost20 }}
-            </h2>
-          </v-card-title>
-          <v-simple-table dense>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="attribute in attributeRepository">
-                  <td>{{ attribute.name }}</td>
-                  <td class="text-center pa-1 small">
-                    <v-btn
-                      icon
-                      :disabled="
-                        4 - characterBoost20 == 4 ||
-                        characterAttributesBoost20[attribute.key] < 1
-                      "
-                      @click="decrementAttribute(attribute.key, 20)"
-                    >
-                      <v-icon color="red"> remove_circle </v-icon>
-                    </v-btn>
-                    {{ characterAttributes[attribute.key] }}
-                    <v-btn
-                      icon
-                      :disabled="
-                        4 - characterBoost20 == 0 ||
-                        characterAttributesBoost20[attribute.key] > 0
-                      "
-                      @click="incrementAttribute(attribute.key, 20)"
-                    >
-                      <!--"-->
-                      <v-icon
-                        :color="
-                          affordableAttributeColor(
-                            characterAttributes[attribute.key]
-                          )
-                        "
-                      >
-                        add_circle
-                      </v-icon>
-                    </v-btn>
-                  </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      Math.floor(
-                        (characterAttributesEnhanced[attribute.key] - 10) / 2
-                      )
-                    }}
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col
-        v-for="(level, index) in 20"
-        :key="level"
-        v-if="level <= characterLevel() && level != 1 && (level - 1) % 2 == 0"
-        :cols="6"
-        :md="6"
-      >
-        <v-card>
-          <v-card-title
-            style="background-color: green; color: #fff"
-            class="body-1 pt-1 pb-1"
-          >
-            <h2 class="subtitle-1">{{ level }} уровень</h2>
-          </v-card-title>
-
-          <v-select
-            v-if="level === 2"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice2"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice2, level)"
-          >
-          </v-select>
-
-          <v-select
-            v-if="level === 3"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice3"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice3, level)"
-          >
-          </v-select>
-
-          <v-select
-            v-if="level === 4"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice4"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice4, level)"
-          >
-          </v-select>
-
-          <v-select
-            v-if="level === 5"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice5"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice5, level)"
-          >
-          </v-select>
-
-          <v-select
-            v-if="level === 5"
-            label="Повышение Навыка от Интеллекта"
-            v-model="skillChoice5"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice5, level)"
-          >
-          </v-select>
-
-          <v-select
-            v-if="level === 6"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice6"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice6, level)"
-          >
-          </v-select>
-
-          <v-select
-            v-if="level === 7"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice7"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice7, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 8"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice8"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice8, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 9"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice9"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice9, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 10"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice10"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice10, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 11"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice11"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice11, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 12"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice12"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice12, level)"
-          >
-          </v-select>
-
-          <v-select
-            v-if="level === 13"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice13"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice13, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 14"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice14"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice14, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 15"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice15"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice15, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 16"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice16"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice16, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 17"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice17"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice17, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 18"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice18"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice18, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 19"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice19"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice19, level)"
-          >
-          </v-select>
-          <v-select
-            v-if="level === 20"
-            label="Повышение Навыка от класса"
-            v-model="skillChoice20"
-            :items="
-              finalSkillRepository.filter(
-                (item) => item.isValueModify === undefined
-              )
-            "
-            item-text="name"
-            item-value="key"
-            @change="updateSelectClassSkillLevel(skillChoice20, level)"
-          >
-          </v-select>
-        </v-card>
-      </v-col>
-    </v-row>
+                      add_circle
+                    </v-icon>
+                  </v-btn>
+                </td>
+                <td class="text-center pa-1 small">
+                  {{
+                    Math.floor(
+                      (characterAttributesEnhanced[attribute.key] - 10) / 2
+                    )
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
@@ -1094,12 +1033,18 @@ export default {
       alert: false,
       refEx: /\d+/g,
       manageBoost1: true,
-      manageBoost5: true,
-      manageBoost10: true,
+      manageBoost5: false,
+      manageBoost10: false,
       modifications: [],
-      manageBoost15: true,
-      manageBoost20: true,
+      manageBoost15: false,
+      manageBoost20: false,
+
+      skillLevel: 1,
+      dialogAttributeLevel1: false,
       skillsEditorDialog: false,
+      dialogSkillLevel1: false,
+      dialogSkill: false,
+
       selectedAncestryBoost: undefined,
       selectedClassBoost: undefined,
       selectedClassSkill: undefined,
@@ -1157,6 +1102,13 @@ export default {
         E: 4,
         M: 6,
         L: 8,
+      },
+      SkillsLenght: {
+        U: 0,
+        T: 1,
+        E: 2,
+        M: 3,
+        L: 4,
       }
     };
   },
@@ -1218,6 +1170,10 @@ export default {
     characterAttributeCosts() {
       return this.$store.getters['characters/characterAttributeCostsById'](this.characterId);
     },
+
+    characterAttributesClass() {
+      return this.$store.getters['characters/characterAttributesClassBoost'](this.characterId);
+    },
     characterAttributes() {
       return this.$store.getters['characters/characterAttributesById'](this.characterId);
     },
@@ -1251,6 +1207,12 @@ export default {
     characterAncestryBoost() {
       return this.$store.getters['characters/characterAncestryBoostById'](this.characterId);
     },
+    characterBackgroundBoost() {
+      return this.$store.getters['characters/characterBackgroundBoostId'](this.characterId);
+    },
+    characterBackground2Boost() {
+      return this.$store.getters['characters/characterBackgroundBoost2IdById'](this.characterId);
+    },
     characterAncestryFreeBoost() {
       return this.$store.getters['characters/characterAncestryFreeBoostById'](this.characterId);
     },
@@ -1266,6 +1228,7 @@ export default {
     characterClassSkill() {
       return this.$store.getters['characters/characterClassSkillById'](this.characterId);
     },
+
     characterTrainedSkillClass() {
       return this.$store.getters['characters/characterTrainedSkillClassById'](this.characterId);
     },
@@ -1291,6 +1254,12 @@ export default {
     },
     characterSkillPointClass() {
       return this.$store.getters['characters/characterSkillPointsClassId'](this.characterId);
+    },
+    characterSkillPointClassUp() {
+      return this.$store.getters['characters/characterSkillPointsClassUpId'](this.characterId);
+    },
+    characterSkillPointBackground() {
+      return this.$store.getters['characters/characterSkillPointsBackgroundId'](this.characterId);
     },
 
     characterAttributesBoost20() {
@@ -1353,6 +1322,7 @@ export default {
       return this.$store.getters['characters/CharacterskillFromModificationById'](this.characterId);
     },
   },
+
   watch: {
     characterSpeciesKey: {
       handler(newVal) {
@@ -1479,7 +1449,9 @@ export default {
       this.$store.commit('characters/clearModification', { id: this.characterId, level });
       this.$store.commit('characters/setModification', { id: this.characterId, level });
     },
-    incrementSkill(skill) {
+    incrementSkill(skill, level) {
+      //Тест
+      this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: skill, level: level, type: 'skill', optional: false  });
 
       this.$store.commit('characters/setCharacterskillInitial', { id: this.characterId, payload: { value: 1, skill: skill } });
       var keys = Object.keys(this.SkillsTrained);
@@ -1488,9 +1460,13 @@ export default {
       this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
       this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
     },
-    decrementSkill(skill) {
+    decrementSkill(skill, level) {
       this.skillChoiceInitial.filter(item => item !== skill);
       this.$store.commit('characters/setCharacterskillInitial', { id: this.characterId, payload: { value: -1, skill: skill } });
+
+      //Тест
+      this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: level, type: 'skill', optional: false  });
+
       var keys = Object.keys(this.SkillsTrained);
       var loc = keys.indexOf(this.characterSkills[skill]);
       const newValue = keys[loc-1];
@@ -1501,6 +1477,9 @@ export default {
       //level+число
       const lab = this.label(level);
       const triggerMatch = this.characterSkillPointsLevel[lab] === skill ? true : false;
+
+
+
       //Для нового значения
       const val = this.characterSkillPointsLevel[lab] ? -1 : 1;
       var keys = Object.keys(this.SkillsTrained);
@@ -1619,9 +1598,85 @@ export default {
             return "Нетренирован"
         }
     },
+    characterTrained(value){
+        switch (value) {
+          case 0:
+            return "Нетренирован"
+         case 1:
+            return "Тренирован"
+         case 2:
+            return "Эксперт"
+          case 3:
+            return "Мастер"
+          case 4:
+            return "Легенда"
+          default:
+            return "Нетренирован"
+        }
+    },
     characterLevel(){
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
+    characterSkillSheet(){
+      return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
+    },
+    skillSheetTrained(key, level){
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level <= level) : undefined;
+      return skill ? this.characterTrained(skill.length) : this.characterTrained(0);
+    },
+    skillSheetAll(key, level){
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.filter(s => s.level === level) : undefined;
+      return skill ? skill.length : 0;
+    },
+    skillSheetPoints(key, level){
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.filter(s => s.level === level && s.type === 'skill') : undefined;
+      return skill ? skill.length : 0;
+    },
+    skillSheetSkillLevel(key, level){
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level) : undefined;
+      return skill ? skill.length : 0;
+    },
+    skillSheetValue(key, level){
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level === level) : undefined;
+      return skill ? skill.length : 0;
+    },
+    skillSheetOptional(key, level){
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.find(s => s.key === key && s.level === level) : undefined;
+      return skill ? skill.optional : false;
+    },
+        characterOptional(level) {
+        const skillSheet = this.characterSkillSheet();
+          const skill = skillSheet ? skillSheet.filter(s => s.level === level && s.optional === true) : undefined;
+          const l = skill ? skill.length : 0;
+          return l;
+    },
+    levelRestrict(key, level){
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level) : undefined;
+      const ProfLen = skill ? skill.length : 0;
+
+      if(skill.length === 2 &&  level < 7)
+        return true;
+
+      if(skill.length === 3 &&  level < 15)
+        return true;
+
+        if(skill.length === 4)
+        return true;
+
+        return false;
+    },
+    // skillSheet(key, level){
+    //   const skillSheet = this.characterSkillSheet();
+    //   const skill = skillSheet ? skillSheet.find(s => s.key === key && s.level === level) : undefined;
+    //   return
+    // },
     ModAttribute(attribute, skill){
       const char1 = this.SkillsTrained[this.characterSkills[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
@@ -1654,6 +1709,22 @@ export default {
         return 0;
       return Max;
     },
+    modInt(level) {
+        switch (level) {
+          case 1:
+            return this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
+          case 5:
+            return this.characterAttributesBoost5["intellect"];
+          case 10:
+            return this.characterAttributesBoost10["intellect"];
+          case 15: ;
+            return this.characterAttributesBoost15["intellect"];
+          case 20:
+            return this.characterAttributesBoost20["intellect"];
+        }
+
+      return 0;
+  } ,
     updateSelect(boost) {
         this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
@@ -1670,12 +1741,14 @@ export default {
         this.$store.commit('characters/setCharacterClassAttribute', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
     updateSelectClassSkill(boost) {
-        this.$store.commit('characters/setCharacterClassSkill', { id: this.characterId, payload: { key: boost, value: 1 } });
+      this.$store.commit('characters/removeSkillSheetbyType', { id: this.characterId, key: boost, type: 'class', optional: false  });
+        this.$store.commit('characters/setCharacterClassSkill', { id: this.characterId, payload: { key: boost, level:1, optional: true,  value: 1 } });
     },
     updateSelectBackground2(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
     updateSelectClassSkillLevel(boost, level) {
+
         this.$store.commit('characters/setCharacterClassSkillLevel', { id: this.characterId, payload: { key: boost, level: level } });
     },
     SkillPerception(){
@@ -1708,8 +1781,13 @@ export default {
     label(level){
       return "level" + level.toString();
     },
-    openSkillsSettings(){
+    openSkillsSettings(level){
       this.skillsEditorDialog = true;
+      this.skillLevel = level;
+    },
+    openSkillLevel(level){
+      this.skillLevel = level;
+      this.dialogSkill = true;
     },
     closeSkillsSettings() {
       this.customSkill = {
@@ -1721,12 +1799,15 @@ export default {
       this.skillsEditorDialog = false;
       this.alert = false;
     },
-    saveCustomSkill() {
+
+    saveCustomSkill(level) {
       this.alert = false;
       const skill = {
         key: this.textToCamel(this.customSkill.name),
         name: this.customSkill.name,
+        level: level,
         attribute: 'intellect',
+        type: 'skill',
         description: this.customSkill.description,
         optional: false,
       };
@@ -1736,7 +1817,7 @@ export default {
         console.warn(`Skill ${skill.name} already exists.`);
       } else {
         this.addCustomSkill(skill);
-        this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
+        // this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
         this.closeSkillsSettings();
       }
     },
@@ -1747,7 +1828,7 @@ export default {
     removeCustomSkill(key) {
       const id = this.characterId;
       this.$store.commit('characters/removeCharacterCustomSkill', { id, key });
-      this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: key, value: this.characterSkillPoints + 1} });
+      // this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: key, value: this.characterSkillPoints + 1} });
     },
   },
 };
