@@ -21,7 +21,7 @@
     <v-divider />
 
     <v-card-title>
-      <v-select
+      <!-- <v-select
         label="Трейты"
         v-model="selectedtraitsFilters"
         multiple
@@ -29,13 +29,23 @@
         item-text="name"
         item-value="name"
       >
-      </v-select>
+      </v-select> -->
 
       <v-select
         label="Источник"
         v-model="selectedSourceFilters"
         multiple
         :items="sourceFilters"
+        item-text="name"
+        item-value="name"
+      >
+      </v-select>
+
+      <v-select
+        label="Трейты"
+        v-model="selectedtraitsFilters"
+        multiple
+        :items="tagFilters"
         item-text="name"
         item-value="name"
       >
@@ -74,12 +84,12 @@
 
         <template v-slot:item.prerequisitesKey="{ item }">
           <!-- <v-chip> -->
-          <v-icon v-if="requirementRestriction(item) === true" color="error"
+          <v-icon v-if="item.isVal === true" color="error"
             >close</v-icon
           >
           <v-icon
             v-if="
-              requirementRestriction(item) === false || !item.prerequisitesKey
+              item.isVal === false
             "
             color="success"
             >check</v-icon
@@ -100,7 +110,7 @@
           <v-btn
             color="success"
             x-small
-            :disabled="requirementRestriction(item) === true"
+            :disabled="item.isVal === true"
             v-if="!DiffrentTalent(item)"
             @click="addTalent(item, type, item.level)"
           >
@@ -139,7 +149,7 @@
 
         <template v-slot:no-results>
           <span class="text-center"
-            >Ваш поиск по "{{ searchQuery }}" found no results.</span
+            >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
           >
         </template>
       </v-data-table>
@@ -335,6 +345,7 @@ export default {
         cost: talent.cost,
         level: level,
         traits: talent.traits,
+        nameEng: talent.nameEng,
         place: talent.place,
         modifications: talent.modifications,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
@@ -450,7 +461,20 @@ export default {
           const score = (attList[ability.key] - 10) / 2;
           const isVal = ability.value <= score ? false : true;
           if(isVal === true )return isVal;
-      }
+        }
+        if (item.prerequisitesKey.feat)
+        {
+
+          const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
+
+          const isFeat = characterTalents.find(t => t.key === item.prerequisitesKey.feat.key);
+          const isVal = isFeat !== undefined ? true : false;
+          if (isFeat !== undefined || characterTalents.length === 0)
+            return true;
+
+
+
+        }
         return false;
       }
       },
@@ -460,7 +484,7 @@ export default {
     characterSkillSheet(){
       return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
       },
-        characterLevel(){
+    characterLevel(){
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     characterLevel(){

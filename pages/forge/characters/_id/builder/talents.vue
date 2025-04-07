@@ -1156,6 +1156,8 @@ export default {
     //Вывод окна для выбора черт
      updatePreview(levelAncestry, type) {
 
+      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
+      const archetype = this.archetype;
 
       const list = this.talentList.filter(s => s.type === type);
       list.forEach(t => {
@@ -1163,8 +1165,80 @@ export default {
         tal.place = type + levelAncestry;
         tal.placeLevel = levelAncestry;
         tal.trait = tal.traits;
+        tal.isVal = false;
+
+        let isVal = false;
+        const Rest = {
+          "U": 0,
+          "T": 1,
+          "E": 2,
+          "M": 3,
+          "L": 4,
+        }
+
+      if (tal.prerequisitesKey) {
+        const skillList = this.characterSkillSheet();
+        const attList = this.characterAttributes();
+        const level = this.characterLevel();
+
+        if (tal.prerequisitesKey.skill)
+        {
+          const skill = tal.prerequisitesKey.skill;
+          const prof = skillList.filter(s => s.key === skill.key && s.level <= level).length;
+          tal.isVal = Rest[skill.value] <= prof ? false : true;
+
+        }
+        if (tal.prerequisitesKey.ability)
+        {
+          const ability = tal.prerequisitesKey.ability;
+          const score = (attList[ability.key] - 10) / 2;
+          tal.isVal = ability.value <= score ? false : true;
+        }
+        if (tal.prerequisitesKey.feat)
+        {
+          isVal =  true;
+          if(tal.prerequisitesKey.feat.value)
+          {
+            if(tal.prerequisitesKey.feat.value === "OR")
+             {
+              const lowercaseKeywords = tal.prerequisitesKey.feat.key;
+          const isFeat = characterTalents.find(t => lowercaseKeywords.includes(t.nameEng));
+          if (isFeat === undefined )
+            tal.isVal =  true;
+          }
+          if(tal.prerequisitesKey.feat.value === "AND")
+             {
+              const lowercaseKeywords = tal.prerequisitesKey.feat.key.split(',');
+              const isFeat = characterTalents.filter(t => t.nameEng === lowercaseKeywords.find(s => s === t.nameEng));
+              if (isFeat === undefined )
+                tal.isVal =  true;
+              }
+              if (isFeat.length === lowercaseKeywords.length )
+                tal.isVal =  true;
+              }
+
+
+          else
+          {
+          const isFeat = characterTalents.find(t => t.nameEng === tal.prerequisitesKey.feat.key);
+          if (isFeat === undefined )
+            tal.isVal =  true;
+          }
+        }
+        if (tal.prerequisitesKey.features)
+        {
+          isVal =  true;
+          const isFeat = archetype.find(t => t === tal.prerequisitesKey.features.key);
+          if (isFeat === undefined )
+            tal.isVal =  true;
+        }
+
+      }
+
+      // tal.isVal = isVal;
 
       })
+
       this.levelTalent = levelAncestry;
       switch (type) {
         case "ancestry":
@@ -1174,20 +1248,28 @@ export default {
          case "class":
           this.talentsDialogClass = true;
           this.selectedTalentsClass  = list;
-             break;
+          break;
          case "skill":
           this.talentsDialogSkill = true;
           this.selectedTalentsSkill  = list;
-             break;
-          case "general":
+          break;
+        case "general":
           this.talentsDialogGeneral = true;
-            this.selectedTalentsGeneral  = list;
-             break;
+          this.selectedTalentsGeneral  = list;
+          break;
 
         }
 
     },
-
+    characterAttributes() {
+      return this.$store.getters['characters/characterAttributesById'](this.characterId);
+    },
+    characterSkillSheet(){
+      return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
+      },
+    characterLevel(){
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
     //АПИ по чертам
     async getTalents(sources) {
       this.loading = true;

@@ -13,6 +13,7 @@ const talent = function (sourceKey, sourcePage, name) {
     },
     key: `${stringToKebab(`${sourceKey} ${name}`)}`,
     name,
+    nameEng: name,
     hint: '',
     requirements: [],
     allowedMultipleTimes: false,
@@ -24,10 +25,12 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Double Slice'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Двойной разрез",
     snippet: 'Вы набрасываетесь на врага с обоими оружиями',
     level: 1,
+    item: { key: 'Double Slice' },
     requirements: [],
     requirementsText: "Вы владеете двумя оружиями ближнего боя, каждое в отдельной руке",
     description:
@@ -36,9 +39,11 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Combat Assessment'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Оценка боем",
     snippet: 'Вы делаете читаемую атаку, чтобы узнать о своем враге',
+    item: { key: "Combat Assessment" },
     level: 1,
     requirements: [],
     description:
@@ -47,10 +52,12 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Exacting Strike'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Точный удар",
     snippet: 'Вы делаете контролируемую атаку, полностью учитывая ее импульс',
     level: 1,
+    item: { key: "Exacting Strike" },
     requirements: [],
     description:
       '<p>Вы делаете контролируемую атаку, полностью учитывая ее импульс. Сделайте Удар (Strike) . Этот Удар получает следующий эффект провала.</p><p><strong>Провал:</strong> Эта атака не считается при учете штрафа множественной атаки.</p>',
@@ -58,10 +65,12 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Point Blank Stance'),
     type: "class",
+    rarity: "common",
     traits: 'воин, стойка',
     name: "Выстрел в упор",
     snippet: 'Вы прицеливаетесь, чтобы быстро подстрелить ближайшего врага',
     level: 1,
+    item: { key: "Point Blank Stance" },
     requirements: [],
     requirementsText: "Вы владеете дистанционным оружием",
     description:
@@ -70,10 +79,12 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Reactive Shield'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Защитная реакция",
     snippet: 'Вы можете внезапно поднять щит, как если бы вы получили удар, избегая попадания в последнюю секунду',
     level: 1,
+    item: { key: "Reactive Shield" },
     requirements: [],
     trigger: 'Враг попадает по вам Ударом (Strike) ближнего боя',
     requirementsText: "Вы владеете щитом",
@@ -83,6 +94,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Snagging Strike'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Удар с захватом",
     snippet: 'Вы совмещаете атаку с быстрыми движениями для захвата, чтобы вывести врага из равновесия, пока он остается в вашей досягаемости',
@@ -93,25 +105,14 @@ const playerCore = [
     description:
       '<p>Вы совмещаете атаку с быстрыми движениями для захвата, чтобы вывести врага из равновесия, пока он остается в вашей досягаемости. Совершите Удар (Strike) , имея одну свободную руку. Если этот Удар (Strike) попадает, то цель застигнута врасплох до начала вашего следующего хода, или пока она больше не будет в пределах досягаемости вашей руки, в зависимости от того, что произойдет раньше.</p>',
   },
-  {
-    ...talent('playerCore', 130, 'Sudden Charge'),
-    type: "class",
-    traits: 'воин, размах',
-    name: "Внезапное нападение",
-    snippet: 'С быстрым рывком вы бросаетесь к врагу и наносите удар',
-    level: 1,
-    requirements: [],
-    // trigger: 'Враг попадает по вам Ударом (Strike) ближнего боя',
-    // requirementsText: "У вас есть одна свободная рука, и цель в досягаемости этой руки",
-    description:
-      '<p>С быстрым рывком вы бросаетесь к врагу и наносите удар. Дважды сделайте Перемещение (Stride) . Если вы закончили перемещение в досягаемости ближнего боя хотя бы от одного врага, то можете совершить по нему Удар (Strike) ближнего боя. Вы можете использовать "Внезапное нападение" когда Роете (Burrowing), Карабкаетесь (Climbing), Летите (Flying) или Плывете (Swimming) вместо Перемещения, если у вас есть соответствующий вид движения.</p>',
-  },
+
   {
     ...talent('playerCore', 130, 'Vicious Swing'),
     type: "class",
+    rarity: "common",
     name: "Свирепый взмах",
-    traits: 'воин, размах',
-    snippet: 'С быстрым рывком вы бросаетесь к врагу и наносите удар',
+    traits: 'воин, размашистый',
+    snippet: 'Вы проводите особенно мощную атаку, которая особенно сильно бьет вашего врага, но оставляет вас немного неустойчивым',
     level: 1,
     requirements: [],
     // trigger: 'Враг попадает по вам Ударом (Strike) ближнего боя',
@@ -122,6 +123,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Aggressive Block'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Агрессивное блокирование",
     snippet: 'Вы отталкиваетесь, блокируя атаку, сбивая противника в сторону или выводя его из равновесия',
@@ -135,6 +137,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Assisting Shot'),
     type: "class",
+    rarity: "common",
     traits: 'воин, натиск',
     name: "Вспомогательный выстрел",
     snippet: 'Быстрым выстрелом вы мешаете противнику в бою',
@@ -149,6 +152,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Blade Brake'),
     type: "class",
+    rarity: "common",
     traits: 'воин, воздействие',
     name: "Тормозить клинком",
     snippet: 'Вы втыкаете оружие в пол, стену или другую прочную поверхность, закрепляя себя на месте',
@@ -163,6 +167,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Brutish Shove'),
     type: "class",
+    rarity: "common",
     name: "Грубый толчок",
     traits: 'воин, натиск',
     snippet: 'Используя импульс своей последней атаки, чтобы перебросить вес в другую, вы заставляете противника отступить назад',
@@ -181,6 +186,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Combat Grab'),
     type: "class",
+    rarity: "common",
     traits: 'воин, натиск',
     name: "Боевой захват",
     snippet: 'Вы бьете противника и хватаете его',
@@ -193,6 +199,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Dueling Parry'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Дуэльное парирование",
     snippet: 'Вы можете парировать атаки против вас, своим одноручным оружием',
@@ -207,6 +214,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Intimidating Strike'),
     type: "class",
+    rarity: "common",
     traits: 'воин, ментальный, эмоция, страх',
     name: "Запугивающий удар",
     snippet: 'Ваш удар не только ранит существо, но так же вселяет в него неуверенность',
@@ -221,7 +229,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Lightning Swap'),
     type: "class",
-    traits: 'воин, размах',
+    rarity: "common",
+    traits: 'воин, размашистый, герой',
     name: "Молниеносный обмен",
     snippet: 'Вы практиковались быстро переключаться между стилями боя и необходимым для них снаряжением',
     level: 2,
@@ -235,6 +244,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Lunge'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Выпад",
     snippet: 'Вытягивая своей тело до максимума, вы атакуете врага, который обычно был бы вне досягаемости',
@@ -242,14 +252,15 @@ const playerCore = [
     // requirementsText: "Вы владеете только одним одноручным оружием ближнего боя и ваша другая рука(и) свободны",
     requirements: [],
     // trigger: 'Вы были перемещены эффектом принудительного движения.',
-    // requirementsText: "Вы проводите особенно мощную атаку, которая особенно сильно бьет вашего врага, но оставляет вас немного неустойчивым.",
+    requirementsText: "Вы владеете оружием ближнего боя",
     description:
       '<p>Вытягивая своей тело до максимума, вы атакуете врага, который обычно был бы вне досягаемости. Сделайте Удар (Strike) оружием ближнего боя, увеличивая досягаемость этой атаки на 5 футов. Если оружие имеет признак разоружение, толчок или опрокидывание, вы можете использовать соответствующее действие вместо Удара.</p>',
   },
   {
     ...talent('playerCore', 130, 'Rebounding Toss'),
     type: "class",
-    traits: 'воин, размах',
+    rarity: "common",
+    traits: 'воин, размашистый',
     name: "Бросок с отскоком",
     snippet: 'Вытягивая своей тело до максимума, вы атакуете врага, который обычно был бы вне досягаемости',
     level: 2,
@@ -263,6 +274,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Sleek Reposition'),
     type: "class",
+    rarity: "common",
     traits: 'воин, натиск',
     name: "Плавная перестановка",
     snippet: 'Вытягивая своей тело до максимума, вы атакуете врага, который обычно был бы вне досягаемости',
@@ -281,7 +293,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Barreling Charge'),
     type: "class",
-    traits: 'воин, размах',
+    rarity: "common",
+    traits: 'воин, размашистый',
     name: "Нестись в атаку",
     snippet: 'Вы несетесь вперед, расталкивая врагов в стороны, чтобы добраться до своего противника',
     level: 4,
@@ -305,7 +318,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Double Shot'),
     type: "class",
-    traits: 'воин, размах',
+    rarity: "common",
+    traits: 'воин, размашистый',
     name: "Двойной выстрел",
     snippet: 'Вы ослепительно быстро стреляете два раза подряд',
     level: 4,
@@ -319,7 +333,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Dual-Handed Assault'),
     type: "class",
-    traits: 'воин, размах',
+    rarity: "common",
+    traits: 'воин, размашистый',
     name: "Двуручное нападение",
     snippet: 'Вы фиксируете свободную руку на рукояти, чтобы сжать свое оружие достаточно долго, чтобы вложить больше силы, и нанести более мощный удар противнику',
     level: 4,
@@ -333,6 +348,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Parting Shot'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Выстрел с отскоком",
     snippet: 'Вы отпрыгиваете назад и делаете быстрый выстрел, который застает вашего врага врасплох',
@@ -347,6 +363,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Parting Shot'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Выстрел с отскоком",
     snippet: 'Вы отпрыгиваете назад и делаете быстрый выстрел, который застает вашего врага врасплох',
@@ -372,10 +389,11 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Quick Reversal'),
     type: "class",
+    rarity: "common",
     name: "Быстрый разворот",
     snippet: 'Быстрым разворотом, вы оборачиваете взятие вас в тиски против самих врагов',
     level: 4,
-    traits: 'воин, натиск, размах',
+    traits: 'воин, натиск, размашистый',
     requirementsText: "Вы взяты в тиски минимум двумя врагами",
     requirements: [],
     // trigger: 'Вы были перемещены эффектом принудительного движения.',
@@ -386,6 +404,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shielded Stride'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Защитное перемещение",
     snippet: 'Когда вы за щитом, удары врагов не могут попасть по вам',
@@ -400,7 +419,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Slam Down'),
     type: "class",
-    traits: 'воин, размах',
+    rarity: "common",
+    traits: 'воин, размашистый',
     name: "Сбивающий сильный удар",
     snippet: 'Вы делаете атаку, чтобы вывести противника из равновесия, а затем мгновенно продолжаете нападение, опрокидывая его',
     level: 4,
@@ -420,7 +440,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Swipe'),
     type: "class",
-    traits: 'воин, размах',
+    rarity: "common",
+    traits: 'воин, размашистый',
     name: "Взмах",
     snippet: 'Вы делаете широкий удар по дуге',
     level: 4,
@@ -437,11 +458,12 @@ const playerCore = [
     description:
       '<p>Вы делаете широкий удар по дуге. Сделайте 1 Удар ближнего боя и сравните результат броска атаки с КБ вплоть до 2 врагов, каждый из которых должен быть в пределах досягаемости вашей атаки ближнего боя, и находиться рядом друг с другом. Сделайте бросок урона только 1 раз, и используйте это значение для каждого существа по которому вы попали. "Взмах" считается как 2 атаки для вашего штрафа множественной атаки.</p>'
 
-      + '<p>Если вы используете оружие с признаком размах, то его модификатор применяется для всех атак "Взмаха".</p>'
+      + '<p>Если вы используете оружие с признаком размашистый, то его модификатор применяется для всех атак "Взмаха".</p>'
   },
   {
     ...talent('playerCore', 130, 'Twin Parry'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Парное парирование",
     snippet: 'Вы можете использовать два оружия, чтобы парировать атаки',
@@ -462,6 +484,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Advantageous Assault'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
     name: "Выгодное нападение",
     snippet: 'Вы наносите более смертельный удар по ослабленному противнику',
@@ -472,6 +495,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Disarming Stance'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
     name: "Разоружающая стойка",
     snippet: 'Вы принимаете фехтовальную стойку, которая улучшает ваш контроль над оружием',
@@ -482,6 +506,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Furious Focus'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Яростное сосредоточение",
     snippet: 'Вы научились сохранять равновесие, даже когда яростно замахиваетесь',
@@ -492,6 +517,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Guardian\'s Deflection'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Отражение защитника",
     snippet: 'Вы используете свое оружие, чтобы отразить атаку по вашему союзнику',
@@ -502,6 +528,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Reflexive Shield'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Отражающий щит",
     snippet: 'Вы можете использовать свой щит, чтобы отражать худшие эффекты по области',
@@ -512,6 +539,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Revealing Stab'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Раскрывающий удар",
     snippet: 'Вы вонзаете свое колющее оружие в неприметного противника',
@@ -522,6 +550,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shatter Defenses'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
     name: "Поколебать защиту",
     snippet: 'Ваше нападение использует страх противника',
@@ -532,6 +561,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shield Warden'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Щит стража",
     snippet: 'Вы используете свой щит, чтобы защитить своих союзников',
@@ -542,6 +572,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Triple Shot'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Тройной выстрел",
     snippet: 'Вы можете быстро выстрелить несколько раз, при этом сохраняя контроль',
@@ -552,6 +583,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Dazing Blow'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
     name: "Ошеломляющий удар",
     snippet: 'Вы бьете удерживаемого врага, надеясь ошеломить его',
@@ -562,6 +594,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Ricochet Stance'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
     name: "Рикошетящая стойка",
     snippet: 'Вы принимаете стойку, чтобы брошенное оружие отскочило к вам',
@@ -572,6 +605,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Blind-Fight'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Бой вслепую",
     snippet: 'Ваши боевые инстинкты делают вас более осведомленными о скрытых и невидимых противниках',
@@ -582,6 +616,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Dueling Riposte'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Дуэльная контратака",
     snippet: 'Вы делаете ответный удар по промахнувшемуся противнику',
@@ -592,6 +627,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Felling Strike'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Сбивающая атака",
     snippet: 'Ваша атака может заставить опуститься на землю летающего противника',
@@ -602,6 +638,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Incredible Aim'),
     type: "class",
+    rarity: "common",
     traits: 'концентрация, воин',
     name: "Невероятная меткость",
     snippet: 'Вы сосредотачиваетесь, чтобы гарантировать точность атаки',
@@ -612,6 +649,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Mobile Shot Stance'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
     name: "Подвижная стрелковая стойка",
     snippet: 'Ваши выстрелы становятся легкими и смертельными',
@@ -622,7 +660,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Positioning Assault'),
     type: "class",
-    traits: 'размах, воин',
+    rarity: "common",
+    traits: 'размашистый, воин',
     name: "Сдвигающее нападение",
     snippet: 'Вы заставляете своего противника сдвинуться',
     level: 8,
@@ -632,6 +671,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Quick Shield Block'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Быстрый блок щитом",
     snippet: 'Вы можете не задумываясь подставить свой щит на пути удара',
@@ -642,6 +682,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Sudden Leap'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Внезапный прыжок",
     snippet: 'Вы делаете впечатляющий прыжок и замахиваетесь в полете',
@@ -652,6 +693,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Disorienting Opening'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Дезориентирующая возможность",
     snippet: 'Вы используете возможности для атаки своих врагов, чтобы сделать их еще уязвимее',
@@ -662,6 +704,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Resounding Bravery'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Потрясающая храбрость",
     snippet: 'Даже ваши страхи подпитывают ваш боевой дух',
@@ -672,6 +715,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Impassable Wall Stance'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, стойка, воин',
     name: "Стойка непроходимой стены",
     snippet: 'Вы отказываетесь пропускать врагов мимо своей защиты',
@@ -682,6 +726,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Agile Grace'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Грация скорости",
     snippet: 'Ваши грациозные движения с быстрым оружием не идут ни в какое сравнение',
@@ -692,6 +737,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Certain Strike'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
     name: "Уверенный удар",
     snippet: 'Даже когда вы не попали точно, то можете провести скользящий удар',
@@ -702,6 +748,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Combat Reflexes'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Боевые рефлексы",
     snippet: 'Вы особенно быстро наказываете врагов, которые оставляют вам такую возможность',
@@ -712,7 +759,8 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Debilitating Shot'),
     type: "class",
-    traits: 'размах, воин',
+    rarity: "common",
+    traits: 'размашистый, воин',
     name: "Ослабляющий выстрел",
     snippet: 'Целясь в слабое место, вы мешаете противнику точным выстрелом',
     level: 10,
@@ -722,6 +770,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Disarming Twist'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
     name: "Разоружающее движение",
     snippet: 'Вы вырываете оружие из рук противника',
@@ -732,6 +781,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Disruptive Stance'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
     name: "Прерывающая стойка",
     snippet: 'Вы готовы сорвать действия врагов',
@@ -742,6 +792,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Fearsome Brute'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Страшный громила",
     snippet: 'Страх делает ваших врагов слабее и уязвимее для ваших атак',
@@ -752,6 +803,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Improved Knockdown'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Улучшенный нокдаун",
     snippet: 'Вы можете сбить противника на землю одним ударом',
@@ -762,6 +814,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Mirror Shield'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Зеркальный щит",
     snippet: 'Вы отражаете заклинание обратно в спровоцировавшего противника',
@@ -772,6 +825,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Twin Riposte'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Двойная контратака",
     snippet: 'Умелое парирование одним оружием оставляет вашего противника открытым для атаки другим оружием',
@@ -782,6 +836,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Cut from the Air'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Разрубить в полете",
     snippet: 'Вы можете отбивать в сторону дистанционные атаки',
@@ -792,6 +847,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Overpowering Charge'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Непреодолимая атака",
     snippet: 'Вы топчете своих врагов, когда пробегаете мимо них',
@@ -799,10 +855,14 @@ const playerCore = [
     requirementsText: "Вы имеете способность Нестись в атаку (Barreling Charge) / 4",
     description: '<p>Вы топчете своих врагов, когда пробегаете мимо них. Когда вы используете Нестись в атаку (Barreling Charge) / 4 и успешно двигаетесь через пространство существа, оно получает дробящий урон, равный вашему модификатору Силы. При крит.успехе существо получает двойной урон и становится застигнуто врасплох до конца вашего следующего хода.</p>'
   },
+
+  //
   {
     ...talent('playerCore', 130, 'Brutal Finish'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
+    item: { key: 'Brutal Finish' },
     name: "Брутальное окончание",
     snippet: 'Ваш последний удар может оказать влияние, даже если он отскочит от защиты противника',
     level: 12,
@@ -812,8 +872,16 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Dueling Dance'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
+    item: { key: 'Dueling Dance' },
     name: "Дуэльный танец",
+    prerequisites: "Вы имеете способность Дуэльное Паррирование / Dueling Parry",
+    prerequisitesKey: {
+      feat: {
+        key: "Dueling Parry",
+      },
+    },
     snippet: 'Вы одновременно атакуете и защищаетесь оружием',
     level: 12,
     requirementsText: "Вы владеете только одним одноручным оружием ближнего боя и ваша другая рука(и) свободна",
@@ -822,6 +890,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Flinging Shove'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Швыряющее отталкивание",
     snippet: 'Увеличьте дистанцию на которую вы Толкаете (Shove) вашего противника',
@@ -832,6 +901,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Improved Dueling Riposte'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Улучшенная дуэльная контратака",
     snippet: 'Ваше оружие кружится и бьет, поражая противников всякий раз, когда представляется такая возможность',
@@ -842,18 +912,34 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Incredible Ricochet'),
     type: "class",
+    rarity: "common",
+    item: { key: 'Incredible Ricochet' },
     traits: 'натиск, концентрация, воин',
     name: "Невероятный рикошет",
+    prerequisites: "Вы имеете способность Невероятная меткость (Incredible Aim) / 8",
+    prerequisitesKey: {
+      feat: {
+        key: "Incredible Aim",
+      },
+    },
     snippet: 'Ваш выстрел рикошетит вокруг препятствий и безошибочно попадает',
     level: 12,
-    requirementsText: "Вы имеете способность Невероятная меткость (Incredible Aim) / 8",
     description: '<p>После того, как ваш первый выстрел выделяет позицию вашего противника, вы делаете другой, который рикошетит вокруг препятствий и безошибочно попадает. Совершите Удар (Strike) дистанционным оружием по существу, которого вы ранее атаковали в этом ходу. Вы игнорируете состояние цели скрыт и все укрытия.</p>'
   },
   {
     ...talent('playerCore', 130, 'Lunging Stance'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
+    item: { key: 'Paragon\'s Guard' },
     name: "Удлиняющая стойка",
+    prerequisites: "Вы имеете способность Возможность для атаки (Attack of Opportunity) и Выпад (Lunge) / 2",
+    prerequisitesKey: {
+      feat: {
+        key: "Attack of Opportunity, Lunge",
+        vlaue: "AND"
+      },
+    },
     snippet: 'Вы можете наброситься на отдаленных врагов',
     level: 12,
     requirementsText: "Вы владеете оружием ближнего боя",
@@ -862,7 +948,9 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Paragon\'s Guard'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
+    item: { key: 'Paragon\'s Guard' },
     name: "Образцовый страж",
     snippet: 'Вы всегда не задумываясь держите щит наготове',
     level: 12,
@@ -872,37 +960,59 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Spring Attack'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
+    item: { key: 'Spring Attack' },
     name: "Атака с отскока",
     snippet: 'Отскакивая от одного врага, вы наносите Удар другому',
     level: 12,
     requirementsText: "Вы находитесь рядом со врагом",
     description: '<p>Отскакивая от одного врага, вы наносите Удар другому. Переместитесь (Stride) вплоть до вашей Скорости, но вы должны закончить это передвижение в досягаемости ближнего боя от другого врага. В конце вашего движения, нанесите Удар (Strike) ближнего бою по противнику, который теперь в досягаемости. Вы можете использовать "Атаку с отскока" когда Роете (Burrowing), Карабкаетесь (Climbing), Летите (Flying) или Плывете (Swimming) вместо Перемещения, если у вас есть соответствующий вид передвижения.</p>'
   },
+
+  //
   {
     ...talent('playerCore', 130, 'Desperate Finisher'),
     type: "class",
-    traits: 'воин',
+    rarity: "common",
+    traits: 'воин, натиск',
+    item: { key: 'Desperate Finisher' },
     name: "Отчаянный сокрушающий удар",
     snippet: 'Вы вкладываете все в свою последнюю атаку',
     level: 14,
-    requirementsText: "Вы соответствуете требованиям для использования действия с признаком натиск",
+    // requirementsText: "Вы соответствуете требованиям для использования действия с признаком натиск",
     description: '<p>Вы вкладываете все в свою последнюю атаку. Как часть "Отчаянного сокрушающего удара", используйте одиночное действие из известных вам, которое имеет признак натиск. До начала вашего следующего хода, вы лишаетесь способности использовать реакции.</p>'
+  },
+  {
+    ...talent('playerCore', 130, 'Opening Stance'),
+    type: "class",
+    rarity: "common",
+    traits: 'воин',
+    name: "Открывающая стойка",
+    snippet: 'Когда есть неминуемая опасность, вы встаете в стойку едва подумав.',
+    item: { key: 'Opening Stance' },
+    level: 14,
+    // requirementsText: "Вы соответствуете требованиям для использования действия с признаком натиск",
+    description: '<p>Когда есть неминуемая опасность, вы встаете в стойку едва подумав. Используйте действие, которое имеет признак стойка.</p>'
   },
   {
     ...talent('playerCore', 130, 'Determination'),
     type: "class",
+    rarity: "common",
     traits: 'концентрация, воин',
+    item: { key: 'Determination' },
     name: "Целеустремленность",
     snippet: 'Ваша тренировка позволяет вам избавляться от заклинаний врагов и состояний',
     level: 14,
-    requirementsText: "",
+    // requirementsText: "",
     description: '<p>Ваша тренировка позволяет вам, когда это очень необходимо, избавляться от заклинаний врагов и состояний. Выберите 1 действующее на вас непостоянное заклинание или состояние. Если вы выбираете состояние, то для вас его эффект заканчивается. Если вы выбираете заклинание, сделайте проверку противодействия заклинанию (ваш уровень противодействия равен половине вашего уровня, округленного до большего целого, а в качестве проверки противодействия вы совершаете спасбросок Воли). Это не убирает любой урон ОЗ обычно наносимый заклинанием или состоянием, и не предотвращает заклинание или ослабляющий эффект от воздействия на других союзников, или окружение вокруг вас. Это не может убрать длящийся недуг или позднее предотвратить получения состояния от подобного недуга. Это не может убрать состояния зависящие от ситуаций (таких как ничком или взятие в тиски). Если эффект исходит от существа, опасности или предмета 20-го уровня или выше, то "Целеустремленность" не может убрать с вас эти эффекты.</p>'
   },
   {
     ...talent('playerCore', 130, 'Guiding Finish'),
     type: "class",
+    rarity: "common",
     traits: 'натиск, воин',
+    item: { key: 'Guiding Finish' },
     name: "Направляющий финальный удар",
     snippet: 'Вы заставляете своего противника оказаться именно там, где вы хотите',
     level: 14,
@@ -912,89 +1022,167 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Guiding Riposte'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
+    prerequisitesKey: {
+      feat: {
+        key: "Dueling Riposte",
+
+      },
+    },
+    prerequisites: "Вы имеете способность Дуэльная контратака / Dueling Riposte",
     name: "Направляющая контратака",
     snippet: 'Вы направляете противника в более выгодное положение',
     level: 14,
-    requirementsText: "Вы имеете способность Дуэльная контратака (Dueling Riposte) / 8",
+    // requirementsText: "Вы имеете способность Дуэльная контратака (Dueling Riposte) / 8",
     description: '<p>Перемещая свой вес и меняя угол оружия, вы направляете противника в более выгодное положение. Когда вы совершаете Удар (Strike) во время использования Дуэльная контратака (Dueling Riposte) / 8 и попадаете, то можете сдвинуть цель на расстояние вплоть до 10 футов, в пространство, в пределах вашей досягаемости. Это следует правилам для Принудительное передвижение (Forced Movement).</p>'
   },
   {
     ...talent('playerCore', 130, 'Improved Twin Riposte'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Улучшенная двойная контратака",
     snippet: 'Ваше оружие как стремительное размытое пятно, блокирующее атаки и ранящее противников',
     level: 14,
-    requirementsText: "Вы имеете способность Двойная контратака (Twin Riposte) / 10",
+    prerequisitesKey: {
+      feat: {
+        key: "Twin Riposte",
+
+      },
+    },
+    // prerequisites: "Вы имеете способность Дуэльная контратака / Dueling Riposte",
+    prerequisites: "Вы имеете способность Двойная контратака (Twin Riposte) / 10",
     description: '<p>Ваше оружие как стремительное размытое пятно, блокирующее атаки и ранящее противников. В начале каждого своего хода вы получаете дополнительную реакцию, которую можете использовать только, чтобы выполнить Двойная контратака (Twin Riposte) / 10. Вы можете использовать эту дополнительную реакцию даже, если не получаете преимущество от Парное парирование (Twin Parry) / 4.</p>'
   },
-  {
-    ...talent('playerCore', 130, 'Stance Savant'),
-    type: "class",
-    traits: 'воин',
-    name: "Специалист по стойкам",
-    snippet: 'Вы встаете в стойку едва подумав',
-    level: 14,
-    requirementsText: "",
-    description: '<p>Когда есть неминуемая опасность, вы встаете в стойку едва подумав. Используйте действие, которое имеет признак стойка.</p>'
-  },
+  // {
+  //   ...talent('playerCore', 130, 'Stance Savant'),
+  //   type: "class",
+  //   rarity: "common",
+  //   traits: 'воин',
+  //   name: "Специалист по стойкам",
+  //   snippet: 'Вы встаете в стойку едва подумав',
+  //   level: 14,
+  //   requirementsText: "",
+  //   description: '<p>Когда есть неминуемая опасность, вы встаете в стойку едва подумав. Используйте действие, которое имеет признак стойка.</p>'
+  // },
   {
     ...talent('playerCore', 130, 'Two-Weapon Flurry'),
     type: "class",
-    traits: 'натиск, размах, воин',
+    rarity: "common",
+    item: { key: 'Two-Weapon Flurry' },
+    traits: 'натиск, размашистый, воин',
     name: "Шквал атак двумя оружиями",
     snippet: 'Вы внезапно и неистово бросаетесь в атаку обоим оружием',
     level: 14,
     requirementsText: "Вы владеете двумя оружиями, каждое в отдельной руке",
     description: '<p>Вы внезапно и неистово бросаетесь в атаку обоим оружием. Сделайте 2 Удара (Strikes), по одному каждым оружием.</p>'
   },
-  {
-    ...talent('playerCore', 130, 'Whirlwind Strike'),
-    type: "class",
-    traits: 'начальный, размах, воин',
-    name: "Ураганный удар",
-    snippet: 'Вы атакуете всех неприятелей поблизости',
-    level: 14,
-    requirementsText: "",
-    description: '<p>Вы атакуете всех неприятелей поблизости. Сделайте Удар (Strike) ближнего боя по каждому противнику в пределах вашей досягаемости ближнего боя. Каждая атака считается к вашему штрафу множественной атаки, но не увеличивайте свой штраф, пока не закончите все атаки.</p>'
-  },
+  // {
+  //   ...talent('playerCore', 130, 'Whirlwind Strike'),
+  //   type: "class",
+  //   rarity: "common",
+  //   traits: 'начальный, размашистый, воин',
+  //   name: "Ураганный удар",
+  //   snippet: 'Вы атакуете всех неприятелей поблизости',
+  //   level: 14,
+  //   requirementsText: "",
+  //   description: '<p>Вы атакуете всех неприятелей поблизости. Сделайте Удар (Strike) ближнего боя по каждому противнику в пределах вашей досягаемости ближнего боя. Каждая атака считается к вашему штрафу множественной атаки, но не увеличивайте свой штраф, пока не закончите все атаки.</p>'
+  // },
+
+  //
   {
     ...talent('playerCore', 130, 'Graceful Poise'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
     name: "Грациозная готовность",
+    item: { key: 'Graceful Poise' },
     snippet: 'Ваше второстепенное оружие может наносить удар, как жало скорпиона',
     level: 16,
-    requirementsText: "Вы имеете способность Двойной разрез (Double Slice) / 1",
+    prerequisitesKey: {
+      feat: {
+        key: "Double Slice",
+
+      },
+    },
+    prerequisites: "Вы имеете способность Двойной разрез (Double Slice) / 1",
     description: '<p>При правильном позиционировании, ваше второстепенное оружие может наносить удар, как жало скорпиона. Пока вы в этой стойке, если вы совершаете второй Удар (Strike) от Двойной разрез (Double Slice) / 1 оружием с признаком быстрое, то Двойной разрез (Double Slice) / 1 считается как 1 атака при расчете вашего штрафа множественной атаки.</p>'
+  },
+  {
+    ...talent('playerCore', 130, 'Master of Many Styles'),
+    type: "class",
+    rarity: "common",
+    traits: 'монах, воин',
+    name: "Мастер многих стилей",
+    item: { key: 'Master of Many Styles' },
+    snippet: 'Ваше второстепенное оружие может наносить удар, как жало скорпиона',
+    level: 16,
+    trigger: "Ваш ход начинается",
+    prerequisitesKey: {
+      feat:
+      {
+        key: "Opening Stance, Reflexive Stance",
+        value: "OR"
+      },
+    },
+    prerequisites: "Вы имеете способность Рефлексивный захват / Reflexive Catch ИЛИ Открывающая стойка / Opening Stance",
+    description: '<p>Вы плавно переходите из одной стойки в другую, используя своё мастерство ведения боя, чтобы всегда выбирать оптимальную тактику. Вы используете действие с признаком стойка.</p>'
   },
   {
     ...talent('playerCore', 130, 'Improved Reflexive Shield'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Улучшенное отражение щитом",
     snippet: 'Ваш щит может помочь спасти союзников поблизости',
     level: 16,
-    requirementsText: "Вы имеете способность Отражающий щит (Reflexive Shield) / 6",
+    prerequisitesKey: {
+      feat:
+      {
+        key: "Reflexive Shield",
+        // value: "OR"
+      },
+    },
+    prerequisites: "Вы имеете способность Отражающий щит (Reflexive Shield) / 6",
     description: '<p>Ваш щит может помочь спасти союзников поблизости. Когда вы используете Блок щитом (Shield Block) / 1 против урона являющегося результатом спасброска Рефлекса, то находящиеся рядом союзники, которые получат урон из-за спасбросков Рефлекса того же самого эффекта что и вы, также получают преимущество снижения урона.</p>'
   },
   {
     ...talent('playerCore', 130, 'Multishot Stance'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
     name: "Стойка множественных выстрелов",
+    item: { key: 'Multishot Stance' },
+    prerequisitesKey: {
+      feat:
+      {
+        key: "Double Shot",
+        // value: "OR"
+      },
+    },
+    prerequisites: "Вы имеете способность Двойной выстрел / Double Shot",
     snippet: 'Вы фиксируете себя в устойчивом положении, чтобы стрелять быстро и точно',
     level: 16,
-    prerequisitesText: "Вы владеете дистанционным оружием с перезарядкой 0",
-    requirementsText: "Вы имеете способность Тройной выстрел (Triple Shot) / 6",
+    // prerequisitesText: "Вы владеете дистанционным оружием с перезарядкой 0",
+    requirementsText: "Вы владеете дистанционным оружием с перезарядкой 0",
     description: '<p>Вы фиксируете себя в устойчивом положении, чтобы стрелять быстро и точно. Пока вы в этой стойке, ваш штраф при Двойной выстрел (Double Shot) / 4 снижается до -1, или до -2 если вы добавляете дополнительное действие, чтобы сделать 3 Выстрела (Strikes). Если вы сдвигаетесь с вашей позиции, то стойка заканчивается.</p>'
   },
   {
     ...talent('playerCore', 130, 'Twinned Defense'),
     type: "class",
+    rarity: "common",
     traits: 'стойка, воин',
     name: "Парная защита",
+    item: { key: 'Twinned Defense' },
+    prerequisitesKey: {
+      feat:
+      {
+        key: "Twin Parry",
+        // value: "OR"
+      },
+    },
+    prerequisites: "Вы имеете способность Парное парирование",
     snippet: 'Вы всегда готовы использовать свое второстепенное оружие, чтобы прервать нападения на вас',
     level: 16,
     requirementsText: "Вы владеете 2 оружиями ближнего боя, по одному в каждой руке",
@@ -1003,77 +1191,103 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Overwhelming Blow'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
+    item: { key: 'Overwhelming Blow' },
     name: "Сокрушительный удар",
     snippet: 'Вы вкладываете свой вес в мощную атаку, которая оставляет вас уязвимым',
     level: 16,
-    requirementsText: "",
+    // requirementsText: "",
     description: '<p>Вы вкладываете свой вес в мощную атаку, которая оставляет вас уязвимым. Сделайте Удар (Strike) ближнего боя. Это считается как 3 атаки при расчете вашего штрафа множественной атаки. Если этот Удар попадает, он становится крит.попаданием. Если при броске вы получили крит.попадание, то ваша атака еще получает признак смертельное d12. Независимо от того, попадаете вы или нет, вы получаете состояния ошеломлен 1 и застигнут врасплох до начала вашего следующего хода.</p>'
   },
+
   {
     ...talent('playerCore', 130, 'Impossible Volley'),
     type: "class",
-    traits: 'начальный, размах, воин',
+    rarity: "common",
+    traits: 'рейнджер, размашистый, воин',
     name: "Невероятный залп",
     snippet: 'Вы стреляете залпом по всем врагам в области',
     level: 18,
+    item: { key: 'Impossible Volley' },
     requirementsText: "Вы владеете дистанционным оружием с перезарядкой 0 и признаком залповое",
     description: '<p>Вы стреляете залпом по всем врагам в области. Сделайте один Выстрел (Strike) со штрафом -2, по каждому врагу в области взрыва с 10-футовым радиусом, центр которого находится внутри дистанции указанной в признаке оружия залповое, или за ее пределами. Сделайте бросок костей урона только один раз для всех целей. Каждая атака считается к вашему штрафу множественной атаки, но не увеличивает его, пока вы не закончите все свои атаки.</p>'
   },
   {
     ...talent('playerCore', 130, 'Savage Critical'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Жестокое критическое попадание",
     snippet: 'Раны, наносимые вами, просто ужасны',
     level: 18,
-    requirementsText: "",
+    // requirementsText: "",
     description: '<p>Раны, наносимые вами, просто ужасны. Когда вы наносите Удар (Strike) оружием или безоружной атакой в который ваше мастерство легендарное, то вы получаете критическое попадание при натуральной 19 на кости, если итоговый результат является успешным. Это не имеет эффекта, если итоговый результат с натуральной 19 будет провалом.</p>'
   },
   {
     ...talent('playerCore', 130, 'Smash from the Air'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Разрушить в полете",
     snippet: 'Ваш опыт позволяет вам отбивать атаки заклинаниями',
     level: 18,
-    requirementsText: "Вы имеете способность Разрубить в полете (Cut from the Air) / 10",
+    prerequisitesKey: {
+      feat: {
+        key: "Cut from the Air",
+
+      },
+    },
+    prerequisites: "Вы имеете способность Разрубить в полете (Cut from the Air) / 10",
     description: '<p>Ваш опыт позволяет вам отбивать атаки заклинаниями. Вы можете использовать Разрубить в полете (Cut from the Air) / 10 против дистанционных атак заклинаниями.</p>'
   },
+
   {
     ...talent('playerCore', 130, 'Boundless Reprisals'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Безграничные ответные действия",
     snippet: 'Вы можете быстро реагировать на любую ситуацию по мере необходимости',
     level: 20,
-    requirementsText: "",
+    // requirementsText: "",
     description: '<p>Обладая шестым чувством на течение боя, вы можете быстро реагировать на любую ситуацию по мере необходимости. В начале хода каждого противника вы получаете реакцию, которую можете использовать только во время этого хода на любую реакцию от способности или классовой особенности воина.</p>'
   },
   {
     ...talent('playerCore', 130, 'Weapon Supremacy'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Оружейное превосходство",
     snippet: 'Ваше умение обращаться с оружием позволяет вам всегда быстро атаковать',
     level: 20,
-    requirementsText: "",
+    // requirementsText: "",
     description: '<p>Ваше умение обращаться с оружием позволяет вам всегда быстро атаковать. Вы постоянно ускорены. Вы можете использовать это дополнительное действие только на Удар (Strike).</p>'
   },
   {
     ...talent('playerCore', 130, 'Ultimate Flexibility'),
     type: "class",
+    rarity: "common",
     traits: 'воин',
     name: "Абсолютная гибкость",
     snippet: 'Ваш опыт держит вас в напряжении, делая вас способными адаптироваться даже к самым опасным вызовам',
     level: 20,
-    requirementsText: "Вы имеете способность Улучшенная адаптация (Improved Flexibility) / 15-й",
+    prerequisitesKey: {
+      features: {
+        key: "Improved Flexibility",
+
+      },
+    },
+    prerequisites: "Вы имеете особенность класса Улучшенная адаптация (Improved Flexibility) / 15-й",
     description: '<p>Ваш опыт держит вас в напряжении, делая вас способными адаптироваться даже к самым опасным вызовам. Когда вы получаете способность воина используя Боевая адаптация (Combat Flexibility) / 9-й, то получаете 3 способности воина вместо 2-х. В то время как 1-я способность все еще должна быть 8-го уровня или ниже, 2-я способность может быть вплоть до 14-го уровня, а 3-я может быть вплоть до 18-го уровня. Вы можете использовать 1-ю способность, чтобы соответствовать предварительным условиям 2-й или 3-й способности, а 2-ю, чтобы соответствовать предварительным условиям 3-й способности. Вы должны соответствовать всем предварительным условиям способностей. Дополнительно, вы можете адаптироваться к вызовам на поле боя потратив 1 час на тренировку. Если вы так делаете, то можете перевыбрать способности, выбранные с Боевая адаптация (Combat Flexibility) / 9-й, как будто вы делаете свои ежедневные приготовления. Вы не можете обменять способности с ограниченным количеством использований, которые вы уже потратили, как например Целеустремленность (Determination) / 14.</p>'
   },
+
+
   ////друид
   {
     ...talent('playerCore', 130, 'Animal Companion'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Зверь-компаньон",
     snippet: 'С вами путешествует молодое животное, которое подчиняется вашим командам',
@@ -1084,6 +1298,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Leshy Familiar'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Фамильяр леший",
     snippet: 'Вы получаете фамильяра лешего - растение крошечного размера',
@@ -1094,6 +1309,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Reach Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, друид',
     name: "Досягаемое заклинание",
     snippet: 'Вы можете увеличить дистанцию своих заклинаний',
@@ -1104,6 +1320,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Storm Born'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Бурерожденный",
     snippet: 'Вы чувствуете себя как дома в стихиях, упиваясь силой природы',
@@ -1114,6 +1331,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Widen Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, друид',
     name: "Расширенное заклинание",
     snippet: 'Вы управляете энергией заклинания, заставляя его воздействовать на область шире обычного',
@@ -1124,6 +1342,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Wild Shape'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Дикое обличие",
     snippet: 'Вы едины с дикой природой, всегда меняетесь и приспосабливаетесь',
@@ -1134,6 +1353,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Fire Lung'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Огненное легкое",
     snippet: 'Ваши легкие и глаза приучены к дыму благодаря близости к пламени',
@@ -1144,6 +1364,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shore Step'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Береговой шаг",
     snippet: 'Мелководье и заводи всегда манили вас и беспрепятственно пропускали',
@@ -1154,6 +1375,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Steadying Stone'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Устойчивый камень",
     snippet: 'Земля научила вас оставаться крепким и непоколебимым',
@@ -1164,6 +1386,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Verdant Weapon'),
     type: "class",
+    rarity: "common",
     traits: 'исследование, друид',
     name: "Зеленое оружие",
     snippet: 'Вы выращиваете семя, которое может прорасти в деревянное оружие',
@@ -1174,6 +1397,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Call of The Wild'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Зов природы",
     snippet: 'Вы взываете к природным существам чтобы они пришли на помощь',
@@ -1184,6 +1408,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Enhanced Familiar'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Усиленный фамильяр",
     snippet: 'Вы наполняете своего фамильяра дополнительной природной энергией',
@@ -1194,6 +1419,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Order Explorer'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Исследователь орденов",
     snippet: 'Вы узнали секреты другого ордена друидов',
@@ -1204,6 +1430,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Poison Resistance'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Сопротивление яду",
     snippet: 'Ваша близость к миру природы дает вам защиту от ядов',
@@ -1214,6 +1441,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Form Control'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, друид',
     name: "Управление формой",
     snippet: 'Вы можете принять другую форму на более длительный период времени',
@@ -1224,6 +1452,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Mature Animal Companion'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Взрослый зверь-компаньон",
     snippet: 'Ваш зверь вырастает, становясь взрослым, что дает ему дополнительные умения',
@@ -1234,6 +1463,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Order Magic'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Магия ордена",
     snippet: 'Вы глубже погружаетесь в изучение нового ордена, получая доступ к желанному заклинанию ордена',
@@ -1244,6 +1474,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Thousand Faces'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Тысяча лиц",
     snippet: 'Ваша форма так же изменчива, как погода и меняется в соответствии с вашим капризом',
@@ -1254,6 +1485,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Woodland Stride'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Лесная поступь",
     snippet: 'Вы всегда можете найти путь, как если бы листва расступилась перед вами',
@@ -1264,6 +1496,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Elemental Summons'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Стихийный призыв",
     snippet: 'Вы можете призвать к себе четыре стихии',
@@ -1274,6 +1507,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Leshy Familiar Secrets'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, друид',
     name: "Тайны фамильяра лешего",
     snippet: 'Тайны ордена листвы позволяют вашему фамильяру получать преимущество от его формы лешего',
@@ -1284,6 +1518,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Fire Resistance'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Огненная сопротивляемость",
     snippet: 'Ваша связь с жаром и пламенем означает, что огонь неохотно обрушивает на вас всю свою силу',
@@ -1294,6 +1529,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Natural Swimmer'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Прирожденный пловец",
     snippet: 'Вода обтекает вокруг вас, позволяя рассекать волны, словно вы рождены для этого',
@@ -1304,6 +1540,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Sheltering Cave'),
     type: "class",
+    rarity: "common",
     traits: 'природный, воплощение, земля, исследование, друид',
     name: "Пещера-убежище",
     snippet: 'Вы проводите 10 минут общаясь с духами земли и камня, прося у них убежища',
@@ -1315,6 +1552,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Cryptic Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, концентрация, друид',
     name: "Загадочное заклинание",
     snippet: 'Вы скрываете свою магию в кваканье лягушек, шелесте деревьев, завывании ветра и мерцании блуждающих огоньков',
@@ -1326,6 +1564,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Green Empathy'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Эмпатия растений",
     snippet: 'Вы можете общаться с растениями или грибками на базовом уровне',
@@ -1336,6 +1575,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Insect Shape'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Обличие насекомого",
     snippet: 'Ваше понимание жизни расширяется, позволяя вам подражать большему кругу существ',
@@ -1346,6 +1586,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Steady Spellcasting'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Стойкое колдовство",
     snippet: 'Уверенные в своем мастерстве, вы так просто не теряете заклинания',
@@ -1356,6 +1597,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Storm Retribution'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Штормовое возмездие",
     snippet: 'Вы набрасываетесь на существо, которое навредило вам, направляя в него порыв бушующей ярости',
@@ -1366,6 +1608,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Current Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, преграждение, концентрация, друид',
     name: "Потоковое заклинание",
     snippet: 'Когда вы используете свою магию для управления воздухом или водой, то уводите часть ее потоков, чтобы создать вокруг себя барьер',
@@ -1376,6 +1619,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Advanced Elemental Spell'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Продвинутое стихийное заклинание",
     snippet: 'Ваша связь с одним из великих стихийных аспектов природы усиливается, позволяя вам укрепить контроль над ее силами',
@@ -1386,6 +1630,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Ferocious Shape'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Свирепое обличие",
     snippet: 'Вы освоили обличие свирепых динозавров',
@@ -1396,6 +1641,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Fey Caller'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Гость фей",
     snippet: 'Вы изучили некоторые уловки, которые используют феи, чтобы подчинить природную магию для иллюзий и уловок',
@@ -1406,6 +1652,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Incredible Companion'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Невероятный компаньон",
     snippet: 'Ваш зверь-компаньон продолжает расти и развиваться',
@@ -1416,6 +1663,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Soaring Shape'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Парящее обличие",
     snippet: 'Крылья освобождают вас от земных оков',
@@ -1426,6 +1674,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Wind Caller'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Призыватель ветра",
     snippet: 'Вы приказываете ветрам поднять вас и нести по воздуху',
@@ -1436,6 +1685,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Deimatic Display'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Отпугивание хищника",
     snippet: 'Имитируя демонстрацию угрозы животным, вы кажетесь больше и внушительнее',
@@ -1446,6 +1696,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Fiery Retort'),
     type: "class",
+    rarity: "common",
     traits: 'эвокация, огонь, друид',
     name: "Огненный ответ",
     snippet: 'Игнорируя свою боль вы опаляете атакующего волной пламени',
@@ -1456,6 +1707,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Can\'t You See?'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Разве вы не видите?",
     snippet: 'Глаза не верят, разум не желает осознавать - и сколько бы те, кто может вас видеть, не пытались объяснить, что там что-то есть, взгляды их друзей лишь скользят по вам, словно боящиеся приземлиться птицы',
@@ -1466,6 +1718,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Eerie Environs'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Зловещее окружение",
     snippet: 'Мир дикой природы может быть опасным для тех, кто к нему не привык - и вы делаете его ещё более устрашающим',
@@ -1476,6 +1729,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Eerie Traces'),
     type: "class",
+    rarity: "common",
     traits: 'исследование, движение, концентрация, друид',
     name: "Зловещие следы",
     snippet: 'Следы, которые вы оставляете, кажутся странными, сбивающими с толку и пугающими',
@@ -1486,6 +1740,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Forgotten Presence'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, друид',
     name: "Забытое присутствие",
     snippet: 'Сам мир старается сделать вас незамеченным и позабытым - воспоминания о вас затуманиваются, ваши портреты трескаются и лицо на них искажается, а чернила, которыми написано ваше имя, выцветают',
@@ -1496,6 +1751,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Elemental Shape'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Стихийное обличие",
     snippet: 'Вы понимаете фундаментальные стихии природы таким образом, что можете наполнить ими свое тело и проявиться как их живое воплощение',
@@ -1506,6 +1762,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Healing Transformation'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, друид',
     name: "Исцеляющее превращение",
     snippet: 'Вы можете получить преимущество от изменяющей форму магии, для того, чтобы закрыть раны и залатать повреждения',
@@ -1516,6 +1773,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Overwhelming Energy'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, друид',
     name: "Сокрушающая энергия",
     snippet: 'С помощью сложных жестов вы взываете к природной мощи вашего заклинания, чтобы преодолеть сопротивление врага',
@@ -1526,6 +1784,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Plant Shape'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Растительное обличие",
     snippet: 'Вы можете принять форму растительного существа',
@@ -1536,6 +1795,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Side by Side'),
     type: "class",
+    rarity: "common",
     traits: 'друид',
     name: "Бок о бок",
     snippet: 'Вы и ваш зверь-компаньон сражаетесь в паре, отвлекая своих врагов и выводя их из равновесия',
@@ -1546,6 +1806,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Pristine Weapon'),
     type: "class",
+    rarity: "common",
     traits: 'оружие',
     name: "Первозданное оружие",
     snippet: 'Ваше зеленое оружие может пробивать сопротивления магических существ',
@@ -1556,6 +1817,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Затвердевание плоти'),
     type: "class",
+    rarity: "common",
     traits: 'природный, земля, друид',
     name: "Затвердевание плоти",
     snippet: 'Вы укрепляете свою кожу минералами, взятыми из земли и камня.',
@@ -1567,6 +1829,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Зловещее заявление'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, природный, некромантия, проклятие, воздействие, языковой, слуховой, концентрация, друид',
     name: "Зловещее заявление",
     snippet: 'Вы знаете, что в этом мире есть места, с которыми что-то не так - места, где птицы не поют и все время кажется, что за вами кто-то наблюдает.',
@@ -1578,6 +1841,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Драконье обличие'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансформация, друид',
     name: "Драконье обличие",
     snippet: 'Вы можете принять форму одних из наиболее страшных в мире существ.',
@@ -1589,6 +1853,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Зеленый язык'),
     type: "class",
+    rarity: "common",
     traits: 'природный, коммуникация, друид',
     name: "Зеленый язык",
     snippet: 'Вы разделяете особое родство со всем зеленым и живым.',
@@ -1600,6 +1865,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Природное сосредоточение'),
     type: "class",
+    rarity: "common",
     traits: 'природный, фокусировка, друид',
     name: "Природное сосредоточение",
     snippet: 'Ваша связь с природой особенно сильна, и духи природы кружатся вокруг вас, помогая восстановить фокусировку.',
@@ -1611,6 +1877,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Природный призыв'),
     type: "class",
+    rarity: "common",
     traits: 'природный, заклинание, друид',
     name: "Природный призыв",
     snippet: 'Всякий раз, когда вы призываете союзника, вы можете усилить его с помощью мощи стихии воздуха, земли, огня или воды.',
@@ -1622,6 +1889,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Блуждающий оазис'),
     type: "class",
+    rarity: "common",
     traits: 'природный, защита, друид',
     name: "Блуждающий оазис",
     snippet: 'Вы окружены успокаивающей энергией.',
@@ -1633,6 +1901,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Очищающее заклинание'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, вода, друид',
     name: "Очищающее заклинание",
     snippet: 'Вы очищаете воду в теле существа, чтобы избавить его от болезни.',
@@ -1644,6 +1913,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Специализация компаньона'),
     type: "class",
+    rarity: "common",
     traits: 'природный, животное, друид',
     name: "Специализация компаньона",
     snippet: 'Ваш зверь-компаньон продолжает набирать мощь и приобретать способности, и становится достаточно хитрым, чтобы получить специализацию.',
@@ -1655,6 +1925,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Нестареющая природа'),
     type: "class",
+    rarity: "common",
     traits: 'природный, защита, друид',
     name: "Нестареющая природа",
     snippet: 'Благодаря поддерживающей вас природной магии, вы перестаете стареть.',
@@ -1666,6 +1937,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Лиственная метаморфоза'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансформация, друид',
     name: "Лиственная метаморфоза",
     snippet: 'Вы превращаетесь в растительную версию самого себя.',
@@ -1677,6 +1949,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Рефлекторное превращение'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансформация, реакция, друид',
     name: "Рефлекторное превращение",
     snippet: 'Вы рефлекторно превращаетесь в момент опасности.',
@@ -1688,6 +1961,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Посеять заклинание'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, друид',
     name: "Посеять заклинание",
     snippet: 'Вы вкладываете свое заклинание в семечко.',
@@ -1699,6 +1973,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Странное превращение'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, друид',
     name: "Странное превращение",
     snippet: 'В обличия, которые вы принимаете, просто невозможно поверить.',
@@ -1710,6 +1985,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Непринужденная концентрация'),
     type: "class",
+    rarity: "common",
     traits: 'природный, фокусировка, друид',
     name: "Непринужденная концентрация",
     snippet: 'Вы поддерживаете заклинание едва подумав об этом.',
@@ -1721,6 +1997,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Прокалывающий шиповник'),
     type: "class",
+    rarity: "common",
     traits: 'природный, заклинание, друид',
     name: "Прокалывающий шиповник",
     snippet: 'Вы можете заполнить область разрушительным шиповником, который пронзает ваших врагов и мешает им.',
@@ -1732,6 +2009,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Чудовищное обличие'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансформация, друид',
     name: "Чудовищное обличие",
     snippet: 'Вы можете превращаться в мощное магическое существо.',
@@ -1743,6 +2021,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Вызвать бедствие'),
     type: "class",
+    rarity: "common",
     traits: 'природный, заклинание, друид',
     name: "Вызвать бедствие",
     snippet: 'Вы можете обрушить на своих врагов ярость природы.',
@@ -1754,6 +2033,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Идеальное управление формой'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансформация, друид',
     name: "Идеальное управление формой",
     snippet: 'Благодаря магии и мышечной памяти, вы можете оставаться в вашей альтернативной форме бесконечно.',
@@ -1765,6 +2045,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Природный источник'),
     type: "class",
+    rarity: "common",
     traits: 'природный, фокусировка, друид',
     name: "Природный источник",
     snippet: 'Ваш запас Очков Фокусировки это глубокий источник.',
@@ -1776,6 +2057,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Природная эгида'),
     type: "class",
+    rarity: "common",
     traits: 'природный, защита, друид',
     name: "Природная эгида",
     snippet: 'Вы окружаете себя толстым полем защитной природной энергии.',
@@ -1787,6 +2069,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Сила иерофанта'),
     type: "class",
+    rarity: "common",
     traits: 'природный, заклинание, друид',
     name: "Сила иерофанта",
     snippet: 'Вы переплетены с природным миром, и его полная сила течет через вас.',
@@ -1798,6 +2081,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Проводник лей-линий'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, воздействие, друид',
     name: "Проводник лей-линий",
     snippet: 'Вы можете сотворять свои заклинания без особых усилий, черпая силу из лей-линий мира.',
@@ -1809,6 +2093,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Истинный оборотень'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансформация, концентрация, друид',
     name: "Истинный оборотень",
     snippet: 'Вы выходите за пределы ограничений формы.',
@@ -1822,6 +2107,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Deadly Simplicity'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Убийственная простота",
     snippet: 'Оружие вашего божества становится особенно сильно в ваших руках',
@@ -1833,6 +2119,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Domain Initiate'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Посвящение домену",
     snippet: 'Ваше божество дарует специальное заклинание, относящееся к его силам.',
@@ -1844,6 +2131,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Harming Hands'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Ранящие руки",
     snippet: 'Растет разъедающая сила вашей негативной энергии.',
@@ -1855,6 +2143,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Healing Hands'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Исцеляющие руки",
     snippet: 'Ваша позитивная энергия сильнее восстанавливает и наполняет жизнью.',
@@ -1866,6 +2155,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Holy Castigation'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Святое наказание",
     snippet: 'Вы совмещаете святую энергию с позитивной энергией, чтобы наносить урон демонам, дьяволам и их злым потомкам.',
@@ -1877,6 +2167,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Reach Spell (Cleric)'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Досягаемое заклинание",
     snippet: 'Вы можете увеличить дистанцию своих заклинаний.',
@@ -1888,6 +2179,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Syncretism'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Синкретизм",
     snippet: 'Вы увидели пересечение между учениями двух божеств.',
@@ -1899,6 +2191,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Splinter Faith (Cleric)'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Расщепленная вера",
     snippet: 'Ваша вера в божество представлена крайне необычным образом, который некоторые могут назвать еретическим.',
@@ -1910,6 +2203,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Premonition of Avoidance'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Предотвращающее предостережение",
     snippet: 'Ваше божество дает вам небольшое прозрение, предупреждая вас об опасностях сразу до того как они случатся.',
@@ -1921,6 +2215,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Vile Desecration'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Мерзкое осквернение",
     snippet: 'Вы соединяете нечестивую мощь с негативной энергией, чтобы ранить ангелов, архонтов и других самодовольных обитателей "Внешних планов".',
@@ -1932,6 +2227,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Cantrip Expansion (Cleric)'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Расширение чар",
     snippet: 'Вы изучаете более широкий диапазон простых заклинаний.',
@@ -1943,6 +2239,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Communal Healing'),
     type: "class",
+    rarity: "common",
     traits: 'исцеление, позитивный, жрец',
     name: "Совместное исцеление",
     snippet: 'Вы проводник позитивной энергии, и когда вы проводите ее через себя, это исцеляет некоторые из ваших несильных ранений.',
@@ -1954,6 +2251,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Emblazon Armament'),
     type: "class",
+    rarity: "common",
     traits: 'исследование, жрец',
     name: "Символ на вооружении",
     snippet: 'Тщательно вытравливая священный образ на физическом объекте, вы закаляете себя для битвы.',
@@ -1965,6 +2263,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Sap Life'),
     type: "class",
+    rarity: "common",
     traits: 'исцеление, жрец',
     name: "Истощить жизнь",
     snippet: 'Вы вытягиваете жизненную силу из врагов, чтобы исцелить свои раны.',
@@ -1976,6 +2275,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Turn Undead'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Обратить нежить",
     snippet: 'Нежить, пострадавшая от вашей позитивной энергии, может сбежать, из-за врожденного отвращения к силе, противоположной неживой.',
@@ -1987,6 +2287,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Versatile Font'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Разносторонняя сила",
     snippet: 'Когда вы исследуете аспекты своего божества, вы выходите за рамки ограничений на исцеление или нанесение ран.',
@@ -1998,6 +2299,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Rapid Response'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Быстрое реагирование",
     snippet: 'Во время опасности, вы действуете быстро и эффективно, чтобы предоставить необходимую помощь.',
@@ -2009,6 +2311,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Channel Smite'),
     type: "class",
+    rarity: "common",
     traits: 'сакральный, некромантия, жрец',
     name: "Сокрушающая энергия",
     snippet: 'Вы пропускаете разрушительные силы позитивной или негативной энергии в противника, используя атаку ближнего боя.',
@@ -2020,6 +2323,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Command Undead'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Повелевать нежитью",
     snippet: 'Вы захватываете силу, оживляющую нежить и подчиняете ее своей воле.',
@@ -2031,6 +2335,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Directed Channel'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Направленная энергия",
     snippet: 'Вы можете формировать проводимую вами энергию в одном направлении, достигая дальше и более направленно.',
@@ -2042,6 +2347,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Improved Communal Healing'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Улучшенное совместное исцеление",
     snippet: 'Вы можете направлять избыточную проводимую энергию наружу, чтобы помочь союзнику.',
@@ -2053,6 +2359,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Necrotic Infusion'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Некротическое вливание",
     snippet: 'Вы изливаете негативную энергию в свою нежить, чтобы усилить ее атаки.',
@@ -2064,6 +2371,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Expanded Domain Initiate'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Расширенное посвящение домену",
     snippet: 'Вы давно почитаете один из менее известных аспектов вашего божества.',
@@ -2075,6 +2383,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Radiant Infusion'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Сияющее вливание",
     snippet: 'Вы вливаете живительную позитивную энергию в живого союзника.',
@@ -2086,6 +2395,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Undying Conviction'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, аура, некромантия, жрец',
     name: "Бессмертная уверенность",
     snippet: 'Ваше присутствие оказывает укрепляющее воздействие на ваших миньонов-нежить.',
@@ -2097,6 +2407,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Cast Down'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Низвержение",
     snippet: 'Чистая сила вашей веры может обрушиться на врага.',
@@ -2108,6 +2419,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Divine Weapon'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Божественное оружие",
     snippet: 'Вы перекачиваете остаточную энергию заклинания в оружие которым владеете.',
@@ -2119,6 +2431,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Selective Energy'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Избирательная энергия",
     snippet: 'По мере того, как вы призываете божественную силу, вы можете помешать некоторым врагам извлечь из этого выгоду или не навредить некоторым союзникам.',
@@ -2130,6 +2443,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Steady Spellcasting (Cleric)'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Стойкое колдовство",
     snippet: 'Уверенные в своем мастерстве, вы так просто не теряете заклинания.',
@@ -2141,6 +2455,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Magic Hands'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Магические руки",
     snippet: 'Благословение вашего божества усиливает ваши исцеляющие способности, заставляя ваше обычное лечение работать как по волшебству.',
@@ -2152,6 +2467,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Advanced Domain'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Совершенствование в домене",
     snippet: 'Ваше обучение или молитвы открыли более глубокие секреты домена вашего божества.',
@@ -2163,6 +2479,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Align Armament'),
     type: "class",
+    rarity: "common",
     traits: 'сакральный, эвокация, жрец',
     name: "Мировоззрение вооружения",
     snippet: 'Вы приводите оружие в метафизическое соответствие с убеждениями вашего божества.',
@@ -2174,6 +2491,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Channeled Succor'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Направленная помощь",
     snippet: 'С помощью божьей милости вы можете убирать состояния.',
@@ -2185,6 +2503,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Cremate Undead'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Испепеление нежити",
     snippet: 'Ваша позитивная энергия поджигает нежить.',
@@ -2196,6 +2515,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Emblazon Energy'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Символ энергии",
     snippet: 'С помощью силы стихий вы делаете свой символ божества более мощными.',
@@ -2207,6 +2527,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Martyr'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, жрец',
     name: "Мученик",
     snippet: 'Вы идете на крайние меры, чтобы поддержать своих союзников, даже если это означает причинение вреда самому себе.',
@@ -2218,6 +2539,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Surging Focus'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Прилив сосредоточения",
     snippet: 'Когда союзник, которого вы можете видеть, падает в битве, ваше побуждение сражаться или бежать вызывает внутри прилив мощи вашего божества.',
@@ -2229,6 +2551,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Castigating Weapon'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Наказывающее оружие",
     snippet: 'Сила наказания вашего божества укрепляет ваше тело, чтобы вы могли сразить нечестивых.',
@@ -2240,6 +2563,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Heroic Recovery'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Героическое восстановление",
     snippet: 'Ваша восстанавливающая сила бодрит исцеленного.',
@@ -2251,6 +2575,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Improved Command Undead'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Улучшенное повелевание нежитью",
     snippet: 'Существа-нежить находят почти невозможным сопротивляться вашим командам.',
@@ -2262,6 +2587,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Replenishment of War'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Наполнение войной",
     snippet: 'Сражение с врагами дает похвалу и защиту от вашего божества.',
@@ -2273,6 +2599,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shared Avoidance'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Общее предостережение",
     snippet: 'Вы можете проецировать свои предчувствия опасности на ваших союзников.',
@@ -2284,6 +2611,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shield of Faith'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Щит веры",
     snippet: 'Остаточная энергия ваших доменных заклинаний укрепляет вашу защиту.',
@@ -2295,6 +2623,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Through Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Сквозное заклинание",
     snippet: 'Заклинания, которые вы произносите, могут ненадолго трансформироваться в жизненную сущность, безвредно перемещаясь между вами и вашей целью сквозь живых существ и нежить, блокируясь только твердыми объектами.',
@@ -2306,6 +2635,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Defensive Recovery'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Защитное восстановление",
     snippet: 'В дополнение к исцелению, ваша вера дает временную защиту.',
@@ -2317,6 +2647,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Domain Focus'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Сосредоточение домена",
     snippet: 'Возрастает ваша преданность доменам божества, как и сила, дарованная вам.',
@@ -2328,6 +2659,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Emblazon Antimagic'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Символ антимагии",
     snippet: 'Символ вашего божества защищает от атакующей магии.',
@@ -2339,6 +2671,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shared Replenishment'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Совместное наполнение",
     snippet: 'Когда ваше божество благословляет ваши воинственные действия, вы можете поделиться этой милостью со своими союзниками.',
@@ -2350,6 +2683,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Necromancer\'s Visage'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, некромантия, жрец',
     name: "Облик некроманта",
     snippet: 'Некромантическая энергия демонстрирует вашу власть над нежитью, создавая образ, вызывающий у них страх и уважение.',
@@ -2361,6 +2695,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Deity\'s Protection'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Защита божества",
     snippet: 'Когда вы взываете к силе своего божества, чтобы исполнить волю его домена, то получаете божественную защиту.',
@@ -2372,6 +2707,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Extend Armament Alignment'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Продленное мировоззрение оружия",
     snippet: 'Мировоззрение накладываемое на оружие длится значительно дольше.',
@@ -2383,6 +2719,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Fast Channel'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Быстрая энергия",
     snippet: 'Божественная сила всегда рядом с вами и быстро откликается на зов.',
@@ -2394,6 +2731,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Swift Banishment'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Быстрое изгнание",
     snippet: 'Сила вашего удара отправляет жертву обратно на ее родной план бытия.',
@@ -2405,6 +2743,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Ebb and Flow'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Прилив и отлив",
     snippet: 'Вы можете одновременно извлекать как позитивную, так и негативную энергию, чтобы ранить ваших врагов и исцелять союзников.',
@@ -2416,6 +2755,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Premonition of Clarity'),
     type: "class",
+    rarity: "common",
     traits: 'удача, жрец',
     name: "Предчувствие ясности",
     snippet: 'Ваше божество отправляет вам видение судьбы, чтобы закалить вас против ментальных атак.',
@@ -2427,6 +2767,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Sepulchral Sublimation'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, метамагия, некромантия, концентрация, жрец',
     name: "Замогильное очищение",
     snippet: 'Вы в мгновение ока перерабатываете негативную энергию, протекающую через ваших миньонов.',
@@ -2438,6 +2779,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Eternal Bane'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Вечное проклятие",
     snippet: 'Жизнь во зле сделала вас связующим звеном мерзкой силы вашего божества.',
@@ -2449,6 +2791,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Eternal Blessing'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Вечное благословение",
     snippet: 'Ваши добрые дела навечно принесли благодать вашего божества.',
@@ -2460,6 +2803,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Resurrectionist'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Воскреситель",
     snippet: 'Вы можете заставить существо, возвращенное с грани смерти, жить и продолжать исцеляться.',
@@ -2471,6 +2815,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Remediate'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Устранение",
     snippet: 'Если ваше следующее действие - использовать свою Божественную силу, чтобы сотворять версию заклинания Исцеление или Нанесение ран за 3 действия для нанесения урона существам, то вы можете взять остаточную энергию, для уравновешивания противоположных сил.',
@@ -2482,6 +2827,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Domain Wellspring'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Источник домена",
     snippet: 'Выраженность вашего сосредоточения растет от сделанного вами вклада в домены.',
@@ -2493,6 +2839,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Echoing Channel'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, жрец',
     name: "Перекликающаяся энергия",
     snippet: 'Когда вы выпускаете позитивную или негативную энергию, вы также создаете небольшой карман этой энергии.',
@@ -2504,6 +2851,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Improved Swift Banishment'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Улучшенное быстрое изгнание",
     snippet: 'Вы с легкостью изгоняете существо при помощи оружия.',
@@ -2515,6 +2863,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Miraculous Possibility'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Чудесная возможность",
     snippet: 'Ваше божество наделяет вас способностью совершать небольшие чудеса, позволяя легко приспосабливаться к изменяющимся потребностям ваших обязанностей.',
@@ -2526,6 +2875,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Shared Clarity'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Общая ясность",
     snippet: 'Вы можете проецировать ваше предчувствие ясности на своих союзников.',
@@ -2537,6 +2887,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Avatar\'s Audience'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Аудиенция аватара",
     snippet: 'Ваше значительное служение сделало вас низшим вестником вашего божества, что дает вам определенные привилегии.',
@@ -2548,6 +2899,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Maker of Miracles'),
     type: "class",
+    rarity: "common",
     traits: 'жрец',
     name: "Чудотворец",
     snippet: 'Вы проводник поистине божественной силы.',
@@ -2559,6 +2911,7 @@ const playerCore = [
   {
     ...talent('playerCore', 130, 'Metamagic Channel'),
     type: "class",
+    rarity: "common",
     traits: 'концентрация, жрец',
     name: "Метамагическая энергия",
     snippet: 'Глубокое понимание божественных откровений о природе жизненной сущности, позволяет вам свободно манипулировать эффектами вашей позитивной или негативной энергии.',
@@ -4960,6 +5313,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 1, 'Glean Lore'),
     type: "class",
+    rarity: "common",
     traits: 'сакральный, прорицание, тайна, оракул',
     name: "Почерпнуть знания",
     snippet: 'Вы погружаетесь в собранные знания о божественном, получая доступ к разнообразной информации.',
@@ -4971,6 +5325,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 2, 'Cantrip Expansion'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Расширение чар",
     snippet: 'Добавьте в свой репертуар 2 дополнительных чар из вашего списка заклинаний.',
@@ -4981,6 +5336,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 4, 'Bespell Weapon'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Околдованное оружие",
     snippet: 'Вы наполняете оружие остаточной энергией последнего сотворенного заклинания.',
@@ -4993,6 +5349,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Sepulchral Sublimation'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, метамагия, некромантия, концентрация, оракул',
     name: "Замогильное очищение",
     snippet: 'Вы перерабатываете негативную энергию, уничтожая миньона-нежить для усиления заклинания.',
@@ -5005,6 +5362,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Debilitating Dichotomy'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Изнурительная дихотомия",
     snippet: 'Вы изучаете заклинание-откровение, которое демонстрирует силу вашего проклятия.',
@@ -5015,6 +5373,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Read Disaster'),
     type: "class",
+    rarity: "common",
     traits: 'прорицание, предсказание, исследование, оракул',
     name: "Предвидеть катастрофу",
     snippet: 'Вы заглядываете в будущее, чтобы узнать о надвигающихся опасностях.',
@@ -5026,6 +5385,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Oracular Warning'),
     type: "class",
+    rarity: "common",
     traits: 'сакральный, прорицание, оракул',
     name: "Предупреждение оракула",
     snippet: 'Вы предупреждаете союзника о надвигающейся опасности.',
@@ -5038,6 +5398,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Quickened Casting'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, оракул',
     name: "Ускоренное колдовство",
     snippet: 'Вы можете быстрее сотворять заклинания.',
@@ -5050,6 +5411,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Surging Might'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, оракул',
     name: "Рвущаяся мощь",
     snippet: 'Вы фокусируете божественную силу, чтобы преодолеть сопротивления врагов.',
@@ -5061,6 +5423,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Domain Fluency'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Свободное владение доменом",
     snippet: 'Вы получаете улучшенное доменное заклинание, связанное с вашим таинством.',
@@ -5072,6 +5435,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Greater Revelation'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Великое откровение",
     snippet: 'Вы изучаете великое заклинание-откровение, связанное с вашим таинством.',
@@ -5083,6 +5447,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Magic Sense'),
     type: "class",
+    rarity: "common",
     traits: 'сакральный, прорицание, обнаружение, оракул',
     name: "Ощущение магии",
     snippet: 'Вы можете ощущать присутствие магических аур вокруг себя.',
@@ -5093,6 +5458,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Necromancer\'s Visage'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, некромантия, оракул',
     name: "Облик некроманта",
     snippet: 'Ваше присутствие вызывает страх и уважение у нежити.',
@@ -5103,6 +5469,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Forestall Curse'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, оракул',
     name: "Предотвращение проклятия",
     snippet: 'Вы временно предотвращаете усиление вашего проклятия.',
@@ -5115,6 +5482,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Mysterious Repertoire'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Таинственный репертуар",
     snippet: 'Вы можете добавить в свой репертуар заклинание из другого магического обычая.',
@@ -5125,6 +5493,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Sepulchral Sublimation'),
     type: "class",
+    rarity: "common",
     traits: 'необычный, метамагия, некромантия, концентрация, оракул',
     name: "Замогильное очищение",
     snippet: 'Вы перерабатываете негативную энергию, уничтожая миньона-нежить для усиления заклинания.',
@@ -5138,6 +5507,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Sacral Monarch'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Сакральный монарх",
     snippet: 'Вы обретаете полную власть над своей территорией.',
@@ -5149,6 +5519,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Diverse Mystery'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Разнообразное таинство",
     snippet: 'Вы изучаете заклинание-откровение из другого таинства.',
@@ -5160,6 +5531,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Portentous Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, ментальный, визуальный, оракул',
     name: "Поразительное заклинание",
     snippet: 'Ваши заклинания сбивают с толку врагов.',
@@ -5171,6 +5543,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 18, 'Blaze of Revelation'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Зарево откровения",
     snippet: 'Вы временно противостоите эффектам вашего проклятия.',
@@ -5181,6 +5554,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 18, 'Divine Effusion'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Божественное излияние",
     snippet: 'Вы можете колдовать заклинания даже после исчерпания слотов.',
@@ -5191,6 +5565,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 20, 'Mystery Conduit'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Таинственный проводник",
     snippet: 'Вы можете колдовать заклинания, усиливая свое проклятие.',
@@ -5201,6 +5576,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 20, 'Oracular Providence'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Провиденье оракула",
     snippet: 'Вы получаете дополнительный слот заклинания 10-го уровня.',
@@ -5212,6 +5588,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 20, 'Paradoxical Mystery'),
     type: "class",
+    rarity: "common",
     traits: 'оракул',
     name: "Парадоксальное таинство",
     snippet: 'Вы получаете доступ к заклинаниям других таинств и доменов.',
@@ -5224,6 +5601,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 1, 'Острое зрение'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Острое зрение",
     snippet: 'Во время ярости улучшаются ваши зрительные чувства, давая вам ночное зрение',
@@ -5236,6 +5614,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 1, 'Момент ясности'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, концентрация, варвар',
     name: "Момент ясности",
     snippet: 'Вы на мгновение подавляете свой гнев, чтобы мыслить ясно',
@@ -5248,6 +5627,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 1, 'Яростное запугивание'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Яростное запугивание",
     snippet: 'Ваш гнев наполняет врагов страхом',
@@ -5260,6 +5640,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 1, 'Яростный метатель'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Яростный метатель",
     snippet: 'Когда вы в гневе, метательное оружие становится особенно смертоносным',
@@ -5270,20 +5651,23 @@ const playerCore2 = [
   },
 
   {
-    ...talent('playerCore2', 1, 'Внезапное нападение'),
+    ...talent('playerCore', 1, 'Sudden Charge'),
     type: "class",
-    traits: 'начальный, размах, варвар',
+    rarity: "common",
+    traits: 'воин, размашистый, варвар',
     name: "Внезапное нападение",
     snippet: 'С быстрым рывком вы бросаетесь к врагу и наносите удар',
     level: 1,
+    item: { key: "Sudden Charge" },
     prerequisites: "",
     requirementsText: "",
-    description: '<p>С быстрым рывком вы бросаетесь к врагу и наносите удар. Дважды сделайте Перемещение (Stride). Если вы закончили перемещение в досягаемости ближнего боя хотя бы от одного врага, то можете совершить по нему Удар (Strike) ближнего боя.</p>'
+    description: '<p>С быстрым рывком вы бросаетесь к врагу и наносите удар. Переместитесь дважды. Если вы закончили перемещение в досягаемости ближнего боя хотя бы от одного врага, то можете совершить по нему Удар ближнего боя. Вы можете использовать "Внезапное нападение", когда Карабкаетесь, Летите, Плывёте или Роете вместо "Перемещения", если у вас есть соответствующий вид движения.</p>'
   },
 
   {
     ...talent('playerCore2', 1, 'Выброс адреналина'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Выброс адреналина",
     snippet: 'В пылу битвы, вы способны на невероятные силовые подвиги',
@@ -5295,6 +5679,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 1, 'Драконье высокомерие'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Драконье высокомерие",
     snippet: 'Мало кто может отвлечь вас от ваших целей, в то время как вас наполняет ярость боя',
@@ -5306,6 +5691,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Животная ярость'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансмутация, полиморф, ярость, концентрация, варвар',
     name: "Животная ярость",
     snippet: 'Вы превращаетесь в свое животное',
@@ -5318,6 +5704,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Яростный задира'),
     type: "class",
+    rarity: "common",
     traits: 'варвар',
     name: "Яростный задира",
     snippet: 'Вы задираете врагов на поле боя',
@@ -5330,6 +5717,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Обновленная сила'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, концентрация, варвар',
     name: "Обновленная сила",
     snippet: 'Вы приостанавливаетесь, чтобы восстановить свою яростную энергию',
@@ -5342,6 +5730,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Общая ярость'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, слуховой, визуальный, варвар',
     name: "Общая ярость",
     snippet: 'Ты разжигаешь гнев союзника',
@@ -5354,6 +5743,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Внезапный прыжок'),
     type: "class",
+    rarity: "common",
     traits: 'варвар',
     name: "Внезапный прыжок",
     snippet: 'Вы атакуете врага во время прыжка',
@@ -5366,6 +5756,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Молотить'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Молотить",
     snippet: 'Вы лупите схваченного врага',
@@ -5378,7 +5769,8 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Разоружающее нападение'),
     type: "class",
-    traits: 'размах, ярость, варвар',
+    rarity: "common",
+    traits: 'размашистый, ярость, варвар',
     name: "Разоружающее нападение",
     snippet: 'Вы атакуете с достаточной силой, чтобы выбить оружие из рук врага',
     level: 8,
@@ -5390,6 +5782,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Последующая атака'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Последующая атака",
     snippet: 'Даже перед лицом неудачи вы продолжаете атаковать, полные решимости добиться успеха',
@@ -5402,6 +5795,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Дружеский бросок'),
     type: "class",
+    rarity: "common",
     traits: 'воздействие, ярость, варвар',
     name: "Дружеский бросок",
     snippet: 'Вы бросаете своих друзей по полю битвы',
@@ -5414,6 +5808,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 8, 'Инстинктивный удар'),
     type: "class",
+    rarity: "common",
     traits: 'воздействие, ярость, варвар',
     name: "Инстинктивный удар",
     snippet: 'Вы доверяете своим инстинктам и обонянию, используя все свои чувства, чтобы точно определить местоположение вашего противника',
@@ -5425,6 +5820,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Достань меня'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, концентрация, варвар',
     name: "Достань меня",
     snippet: 'Вы открываете себя для атак, так, что в свою очередь вы можете ответить',
@@ -5437,6 +5833,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Яростный спринт'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Яростный спринт",
     snippet: 'Вы рветесь вперед',
@@ -5449,6 +5846,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Большое рассечение'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Большое рассечение",
     snippet: 'Ваша ярость пробивает оружием нескольких врагов',
@@ -5461,6 +5859,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Отбрасывание'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Отбрасывание",
     snippet: 'Вес вашего замаха откидывает врага назад',
@@ -5473,6 +5872,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Ужасающий вой'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, слуховой, варвар',
     name: "Ужасающий вой",
     snippet: 'Вы издаете ужасающий вой',
@@ -5485,6 +5885,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Решительный рывок'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Решительный рывок",
     snippet: 'Ничто не может удержать вас от вашего врага',
@@ -5497,6 +5898,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Впечатляющее приземление'),
     type: "class",
+    rarity: "common",
     traits: 'варвар',
     name: "Впечатляющее приземление",
     snippet: 'Вы врезаетесь в землю, разбивая ее вокруг себя',
@@ -5509,6 +5911,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Непреодолимая атака'),
     type: "class",
+    rarity: "common",
     traits: 'варвар',
     name: "Непреодолимая атака",
     snippet: 'Вы топчете своих врагов, когда пробегаете мимо них',
@@ -5521,6 +5924,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Оглушительный удар'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Оглушительный удар",
     snippet: 'Вы бьете врага по голове с такой силой, что у него звенит в ушах',
@@ -5533,6 +5937,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Глушащий удар'),
     type: "class",
+    rarity: "common",
     traits: 'недееспособность, ярость, варвар',
     name: "Глушащий удар",
     snippet: 'Быстрый удар в лицо или рот заставляет противника замолчать',
@@ -5545,6 +5950,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 10, 'Неразбериха битвы'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Неразбериха битвы",
     snippet: 'Ваш невероятно жестокий Удар подтягивает вас вплотную, давая возможность схватить врага',
@@ -5556,6 +5962,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Крылья драконьей ярости'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансмутация, трансформация, ярость, варвар',
     name: "Крылья драконьей ярости",
     snippet: 'У вас из спины вырастают драконьи крылья',
@@ -5568,6 +5975,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Яростный захват'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Яростный захват",
     snippet: 'Вы хватаете врага, когда он отвлечен вашей атакой',
@@ -5580,7 +5988,8 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Нападение хищника'),
     type: "class",
-    traits: 'начальный, размах, ярость, варвар',
+    rarity: "common",
+    traits: 'начальный, размашистый, ярость, варвар',
     name: "Нападение хищника",
     snippet: 'Вы быстро сокращаете расстояние до своей жертвы, набрасываясь на нее прежде, чем она успевает среагировать',
     level: 12,
@@ -5592,6 +6001,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Гнев духа'),
     type: "class",
+    rarity: "common",
     traits: 'атака, концентрация, ярость, варвар',
     name: "Гнев духа",
     snippet: 'Вы взываете к эфемерному видению, обычно призраку предка или духу природы',
@@ -5604,6 +6014,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Рост титана'),
     type: "class",
+    rarity: "common",
     traits: 'трансмутация, полиморф, варвар',
     name: "Рост титана",
     snippet: 'Вы вырастаете до еще бо́льшего размера',
@@ -5616,6 +6027,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Принятие боли'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Принятие боли",
     snippet: 'Не обращая внимания на свою боль, вы протягиваете руку и хватаете существо или оружие, причинившее вам вред',
@@ -5628,6 +6040,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 12, 'Расщепление заклинания'),
     type: "class",
+    rarity: "common",
     traits: 'атака, концентрация, ярость, варвар',
     name: "Расщепление заклинания",
     snippet: 'Вы черпаете свой суеверный гнев, чтобы разрушить заклинание',
@@ -5638,10 +6051,11 @@ const playerCore2 = [
   },
 
   {
-    ...talent('playerCore2', 12, 'Выводящий из равновесия размах'),
+    ...talent('playerCore2', 12, 'Выводящий из равновесия размашистый'),
     type: "class",
-    traits: 'начальный, размах, варвар',
-    name: "Выводящий из равновесия размах",
+    rarity: "common",
+    traits: 'начальный, размашистый, варвар',
+    name: "Выводящий из равновесия размашистый",
     snippet: 'Вы делаете большой размашистый удар вокруг себя, сбивая существ с ног или отталкивая их от себя',
     level: 12,
     prerequisites: "",
@@ -5652,6 +6066,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Потрясный удар'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, концентрация, варвар',
     name: "Потрясный удар",
     snippet: 'Ваши атаки так мощны, что могут опрокинуть противников',
@@ -5664,6 +6079,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Выпад гиганта'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, концентрация, варвар',
     name: "Выпад гиганта",
     snippet: 'Вы вытягиваете свое тело и готовитесь атаковать врага за пределами вашей обычной досягаемости',
@@ -5675,6 +6091,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Мстительный удар'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Мстительный удар",
     snippet: 'Когда по вам попадает враг, вы бьете его в ответ',
@@ -5686,7 +6103,8 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Ураганный удар'),
     type: "class",
-    traits: 'начальный, размах, варвар',
+    rarity: "common",
+    traits: 'начальный, размашистый, варвар',
     name: "Ураганный удар",
     snippet: 'Вы атакуете всех неприятелей поблизости',
     level: 14,
@@ -5697,6 +6115,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Прокалывающий удар'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Прокалывающий удар",
     snippet: 'Вы пропалываете своего врага и удерживаете его на месте с помощью оружия',
@@ -5708,6 +6127,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 14, 'Расщепление зачарования'),
     type: "class",
+    rarity: "common",
     traits: 'варвар',
     name: "Расщепление зачарования",
     snippet: 'Вы можете сосредоточить свое суеверие, чтобы разрушить магию предмета',
@@ -5720,6 +6140,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Побочное избиение'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Побочное избиение",
     snippet: 'Когда вы Молотите схваченного врага, то ударяете этого врага в другого поблизости',
@@ -5732,6 +6153,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Драконье превращение'),
     type: "class",
+    rarity: "common",
     traits: 'природный, трансмутация, полиморф, концентрация, ярость, варвар',
     name: "Драконье превращение",
     snippet: 'Вы превращаетесь в яростного дракона большого размера',
@@ -5744,6 +6166,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Безрассудный отказ'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Безрассудный отказ",
     snippet: 'Ваша кровь вскипает, когда вас бьют, и вы забываете про осторожность лишь бы закончить бой',
@@ -5756,6 +6179,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Яростная месть'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Яростная месть",
     snippet: 'Удар врага подпитывает вашу ярость и провоцирует немедленное возмездие',
@@ -5768,7 +6192,8 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Пробивающий снаряд'),
     type: "class",
-    traits: 'размах, ярость, варвар',
+    rarity: "common",
+    traits: 'размашистый, ярость, варвар',
     name: "Пробивающий снаряд",
     snippet: 'Плоть и кости не препятствуют вашим снарядам',
     level: 16,
@@ -5780,6 +6205,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 16, 'Разрушающие удары'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Разрушающие удары",
     snippet: 'Ваши сильные удары с легкостью разбивают объекты',
@@ -5791,6 +6217,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 18, 'Брутальный крит'),
     type: "class",
+    rarity: "common",
     traits: 'варвар',
     name: "Брутальный крит",
     snippet: 'Ваши критические попадания особенно разрушительны',
@@ -5803,6 +6230,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 18, 'Идеальная ясность'),
     type: "class",
+    rarity: "common",
     traits: 'удача, концентрация, ярость, варвар',
     name: "Идеальная ясность",
     snippet: 'Вы сжигаете всю свою ярость, чтобы убедиться, что ваша атака попадет, и ваш ум остается свободным',
@@ -5815,6 +6243,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 18, 'Свирепое потрошение'),
     type: "class",
+    rarity: "common",
     traits: 'ярость, варвар',
     name: "Свирепое потрошение",
     snippet: 'Вы совершаете жестокую атаку, которая калечит вашего врага',
@@ -5827,6 +6256,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 20, 'Заразная ярость'),
     type: "class",
+    rarity: "common",
     traits: 'слуховой, визуальный, ярость, варвар',
     name: "Заразная ярость",
     snippet: 'Вы можете довести своих союзников до бешенства, давая им невероятные преимущества',
@@ -5839,6 +6269,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 20, 'Сотрясающий землю топот'),
     type: "class",
+    rarity: "common",
     traits: 'воздействие, ярость, варвар',
     name: "Сотрясающий землю топот",
     snippet: 'Вы наступаете на землю с такой силой, что это создает небольшое землетрясение',
@@ -5851,6 +6282,7 @@ const playerCore2 = [
   {
     ...talent('playerCore2', 20, 'Неудержимый джаггернаут'),
     type: "class",
+    rarity: "common",
     traits: 'варвар',
     name: "Неудержимый джаггернаут",
     snippet: 'Вы стали жестоким, неудержимым стихийным бедствием, способным с легкостью справляться со смертельными ранами',
@@ -5864,6 +6296,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 1, 'Bardic Lore'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Знания барда (Bardic Lore)",
     snippet: 'Ваше обучение делает вас знающим по каждой теме.',
@@ -5874,6 +6307,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 1, 'Lingering Composition'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Затяжная композиция (Lingering Composition)",
     snippet: 'Добавляя росчерк, вы делаете ваши композиции дольше.',
@@ -5884,6 +6318,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 1, 'Reach Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, концентрация, бард',
     name: "Досягаемое заклинание (Reach Spell)",
     snippet: 'Вы можете увеличить дистанцию своих заклинаний.',
@@ -5895,6 +6330,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 1, 'Versatile Performance'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Разностороннее выступление (Versatile Performance)",
     snippet: 'Вы можете использовать Выступление вместо социальных навыков.',
@@ -5907,6 +6343,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 2, 'Cantrip Expansion'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Расширение чар (Cantrip Expansion)",
     snippet: 'Учеба расширяет ваш диапазон простых заклинаний.',
@@ -5916,6 +6353,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 2, 'Esoteric Polymath'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Эзотерический эрудит (Esoteric Polymath)",
     snippet: 'Вы храните книгу оккультных заклинаний, подобную книге заклинаний волшебника.',
@@ -5928,6 +6366,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 4, 'Inspire Defense'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Вдохновить на защиту (Inspire Defense)",
     snippet: 'Ваши выступления защищают вас и союзников.',
@@ -5938,6 +6377,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 4, 'Melodious Spell'),
     type: "class",
+    rarity: "common",
     traits: 'метамагия, воздействие, концентрация, бард',
     name: "Мелодичное заклинание (Melodious Spell)",
     snippet: 'Вы скрываете колдовство в своем выступлении.',
@@ -5950,6 +6390,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 6, 'Dirge of Doom'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Роковая панихида (Dirge of Doom)",
     snippet: 'Ваши выступления пугают врагов.',
@@ -5959,6 +6400,7 @@ const playerCore2 = [
   {
     ...talent('playerCore', 6, 'Pirouette'),
     type: "class",
+    rarity: "common",
     traits: 'редкий, бард',
     name: "Пируэт (Pirouette)",
     snippet: 'Грациозный поворот уклоняет от атаки.',
@@ -5972,6 +6414,7 @@ const playerCore2 = [
   {
     ...talent('apg', 1, 'Hymn of Healing'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Гимн исцеления (Hymn of Healing)",
     snippet: 'Ваша музыка помогает союзникам восстанавливаться.',
@@ -5984,6 +6427,7 @@ const playerCore2 = [
   {
     ...talent('apg', 4, 'Combat Reading'),
     type: "class",
+    rarity: "common",
     traits: 'тайна, бард',
     name: "Боевое чтение (Combat Reading)",
     snippet: 'Используете уловки исполнителя для анализа врагов.',
@@ -6000,6 +6444,7 @@ const playerCore2 = [
   {
     ...talent('apg', 6, 'Educate Allies'),
     type: "class",
+    rarity: "common",
     traits: 'преграждение, концентрация, бард',
     name: "Просвещение союзников (Educate Allies)",
     snippet: 'Настраиваете композицию для защиты союзников.',
@@ -6015,6 +6460,7 @@ const playerCore2 = [
   {
     ...talent('apg', 8, 'Accompany'),
     type: "class",
+    rarity: "common",
     traits: 'воздействие, концентрация, бард',
     name: "Аккомпанировать (Accompany)",
     snippet: 'Дополняете заклинания союзников своей магией.',
@@ -6029,6 +6475,7 @@ const playerCore2 = [
   {
     ...talent('apg', 10, 'Annotate Composition'),
     type: "class",
+    rarity: "common",
     traits: 'исследование, языковой, бард',
     name: "Записать композицию (Annotate Composition)",
     snippet: 'Переносите композиции на бумагу для последующей активации.',
@@ -6044,6 +6491,7 @@ const playerCore2 = [
   {
     ...talent('apg', 12, 'Shared Assault'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Совместное нападение (Shared Assault)",
     snippet: 'Разделяете славу атаки с другим союзником.',
@@ -6057,6 +6505,7 @@ const playerCore2 = [
   {
     ...talent('apg', 14, 'Earworm'),
     type: "class",
+    rarity: "common",
     traits: 'исследование, бард',
     name: "Приставучая мелодия (Earworm)",
     snippet: 'Заражаете союзников навязчивой песней.',
@@ -6070,6 +6519,7 @@ const playerCore2 = [
   {
     ...talent('apg', 16, 'Resounding Finale'),
     type: "class",
+    rarity: "common",
     traits: 'преграждение, концентрация, бард',
     name: "Оглушительный финал (Resounding Finale)",
     snippet: 'Завершаете выступление драматическим аккордом.',
@@ -6085,6 +6535,7 @@ const playerCore2 = [
   {
     ...talent('apg', 20, 'Pied Piping'),
     type: "class",
+    rarity: "common",
     traits: 'бард',
     name: "Крысоловство (Pied Piping)",
     snippet: 'Контролируете действия слабоумных существ.',

@@ -322,7 +322,7 @@
               <div class="center text-center">{{ characterArmor() }}</div>
             </v-col>
             <v-col :cols="6">
-              <h2 class="subtitle-1 text-center">Спасы</h2>
+              <h2 class="subtitle-1 text-center">Спасброски</h2>
               <div>
                 <div class="center text-center">
                   Рефлекс: +{{ ModAttributeSaving("dexterity", "reflex") }}
@@ -609,11 +609,11 @@
       <v-col :cols="12" :sm="12" :md="12" :lg="6" class="pa-1">
         <v-card>
           <v-tabs centered grow color="red">
-            <v-tab class="caption" key="actions" :href="`#tab-actions`"
+            <!-- <v-tab class="caption" key="actions" :href="`#tab-actions`"
               ><h2 class="subtitle-2">Оружие</h2></v-tab
-            >
+            > -->
             <v-tab class="caption" key="wargear" :href="`#tab-wargear`"
-              ><h2 class="subtitle-2">Wargear</h2></v-tab
+              ><h2 class="subtitle-2">Снаряжение</h2></v-tab
             >
             <v-tab
               class="caption"
@@ -626,10 +626,10 @@
               key="psychic-powers"
               :href="`#tab-psychic-powers`"
               v-if="psychicPowers.length > 0"
-              ><h2 class="subtitle-2">Powers</h2></v-tab
+              ><h2 class="subtitle-2">Заклинания</h2></v-tab
             >
             <v-tab class="caption" key="objectives" :href="`#tab-objectives`"
-              ><h2 class="subtitle-2">Description</h2></v-tab
+              ><h2 class="subtitle-2">Описание</h2></v-tab
             >
 
             <!-- actions (all, weapons, powers, other) -->
@@ -709,48 +709,156 @@
               key="wargear"
               :value="`tab-wargear`"
             >
-              <div class="pa-2 pt-1 pb-1">
-                <div
-                  v-for="gearItem in wargear"
-                  :key="gearItem.id"
-                  class="caption mb-2"
+              <div class="pa-2">
+                <v-chip-group
+                  mandatory
+                  active-class="red--text"
+                  v-model="wargearSection.selection"
                 >
-                  <div v-if="gearItem.variant" style="display: inline">
-                    <strong>{{ gearItem.variant }}</strong>
-                    <span> ({{ gearItem.name }})</span>
-                  </div>
-                  <strong v-else>{{ gearItem.name }}</strong>
-                  <em v-if="gearItem.type"> • {{ gearItem.type }}</em>
-                  <span v-if="gearItem.source">
-                    <em v-if="gearItem.source.key">
-                      • {{ gearItem.source.key }}</em
-                    ><em v-if="!isNaN(gearItem.source.page)"
-                      >, pg. {{ gearItem.source.page }}</em
-                    >
-                  </span>
+                  <v-chip
+                    label
+                    small
+                    v-for="item in [
+                      `Оружие`,
+                      `Доспехи`,
+                      `Расходники`,
+                      `Сокровища`,
+                      `Снаряжение`,
+                      `Все`,
+                    ]"
+                    :key="item.toLowerCase()"
+                    :value="item.toLowerCase()"
+                  >
+                    {{ item }}
+                  </v-chip>
+                </v-chip-group>
 
-                  <p class="mb-1" v-if="gearItem.snippet">
-                    {{ gearItem.snippet }}
-                  </p>
-                  <div class="mb-1" v-else v-html="gearItem.description"></div>
-
+                <div style="height: 505px; overflow-y: auto">
+                  <!-- species < abilities -->
                   <div
-                    v-if="
-                      gearItem.meta !== undefined &&
-                      gearItem.meta.length > 0 &&
-                      ['armour'].includes(gearItem.meta[0].type)
+                    v-show="
+                      wargearSection.selection === 'оружие' ||
+                      wargearSection.selection === 'все'
                     "
                   >
-                    <p
-                      class="ml-1 pl-2 mb-1"
-                      style="border-left: solid 3px lightgrey"
-                      v-for="trait in gearItem.meta[0].traits"
-                      v-if="traitByName(trait, true)"
-                      :key="trait"
+                    <v-data-table
+                      :headers="weaponHeaders"
+                      :items="weapons"
+                      hide-default-footer
                     >
-                      <strong>{{ trait }}: </strong>
-                      {{ traitByName(trait, true).crunch }}
-                    </p>
+                      <template v-slot:item="{ item }">
+                        <tr v-if="item">
+                          <td class="text-left pa-1 small">
+                            {{ item.nameGear }}
+                          </td>
+
+                          <td class="text-center pa-1 small">
+                            <span>{{ groupName(item.group) }}</span>
+                          </td>
+
+                          <td class="text-center pa-1 small">
+                            + {{ attackModifier(item) }} /
+                            {{ attackModifier(item) - 5 }} /
+                            {{ attackModifier(item) - 10 }}
+                          </td>
+
+                          <td class="text-center pa-1 small">
+                            <div v-if="item.damage">
+                              <span
+                                >{{ item.damage }}
+                                {{ typeDamage(item.typeDamage) }}</span
+                              >
+                            </div>
+                          </td>
+
+                          <td class="text-center pa-1 small">
+                            <span>{{ category(item.category) }}</span>
+                          </td>
+
+                          <td class="text-center pa-1 small">
+                            <span>{{ item.hands }}</span>
+                          </td>
+
+                          <td class="text-left pa-1 small">
+                            <span
+                              v-if="item.traits && item.traits.length > 0"
+                              >{{ item.traits.join(", ") }}</span
+                            >
+                          </td>
+                        </tr>
+                      </template>
+                    </v-data-table>
+
+                    <div class="mt-4">
+                      <div
+                        v-for="trait in weaponsTraitSet"
+                        v-if="traitByName(trait)"
+                        :key="trait"
+                        class="body-2 mb-2 caption"
+                      >
+                        <p v-if="traitByName(trait).crunch">
+                          <strong>{{ traitByName(trait).name }}: </strong>
+                          {{ traitByName(trait).crunch }}
+                        </p>
+                        <p v-else>{{ traitByName(trait).description }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- species < abilities -->
+                  <div
+                    v-show="
+                      wargearSection.selection === 'снаряжение' ||
+                      wargearSection.selection === 'все'
+                    "
+                  >
+                    <div
+                      v-for="gearItem in wargear"
+                      :key="gearItem.id"
+                      class="caption mb-2"
+                    >
+                      <div v-if="gearItem.variant" style="display: inline">
+                        <strong>{{ gearItem.variant }}</strong>
+                        <span> ({{ gearItem.name }})</span>
+                      </div>
+                      <strong v-else>{{ gearItem.name }}</strong>
+                      <em v-if="gearItem.type"> • {{ gearItem.type }}</em>
+                      <span v-if="gearItem.source">
+                        <em v-if="gearItem.source.key">
+                          • {{ gearItem.source.key }}</em
+                        ><em v-if="!isNaN(gearItem.source.page)"
+                          >, pg. {{ gearItem.source.page }}</em
+                        >
+                      </span>
+
+                      <p class="mb-1" v-if="gearItem.snippet">
+                        {{ gearItem.snippet }}
+                      </p>
+                      <div
+                        class="mb-1"
+                        v-else
+                        v-html="gearItem.description"
+                      ></div>
+
+                      <div
+                        v-if="
+                          gearItem.meta !== undefined &&
+                          gearItem.meta.length > 0 &&
+                          ['armour'].includes(gearItem.meta[0].type)
+                        "
+                      >
+                        <p
+                          class="ml-1 pl-2 mb-1"
+                          style="border-left: solid 3px lightgrey"
+                          v-for="trait in gearItem.meta[0].traits"
+                          v-if="traitByName(trait, true)"
+                          :key="trait"
+                        >
+                          <strong>{{ trait }}: </strong>
+                          {{ traitByName(trait, true).crunch }}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1189,13 +1297,7 @@
                   <v-chip
                     label
                     small
-                    v-for="item in [
-                      `All`,
-                      `Objectives`,
-                      `Languages`,
-                      `Keywords`,
-                      `Notes`,
-                    ]"
+                    v-for="item in [`Все`, `Языки`, `Трейты`, `Заметки`]"
                     :key="item.toLowerCase()"
                     :value="item.toLowerCase()"
                   >
@@ -1205,7 +1307,7 @@
 
                 <div style="height: 505px; overflow-y: auto">
                   <!-- objectives < description -->
-                  <div
+                  <!-- <div
                     v-show="
                       ['all', 'objectives'].some(
                         (i) => i === descriptionSection.selection
@@ -1246,12 +1348,12 @@
                         v-model="objectiveEditorValue"
                       ></v-textarea>
                     </div>
-                  </div>
+                  </div> -->
 
                   <!-- languages < description -->
                   <div
                     v-show="
-                      ['all', 'languages'].some(
+                      ['все', 'языки'].some(
                         (i) => i === descriptionSection.selection
                       )
                     "
@@ -1260,7 +1362,7 @@
                       class="mb-2"
                       style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
                     >
-                      <span class="body-2 red--text">Languages</span>
+                      <span class="body-2 red--text">Языки</span>
                     </div>
                     <div v-if="languages.length > 0" class="caption">
                       {{ languages.map((l) => l.name).join(" • ") }}
@@ -1270,7 +1372,7 @@
                   <!-- keywords < description -->
                   <div
                     v-show="
-                      ['all', 'keywords'].some(
+                      ['все', 'трейты'].some(
                         (i) => i === descriptionSection.selection
                       )
                     "
@@ -1279,7 +1381,7 @@
                       class="mb-2"
                       style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
                     >
-                      <span class="body-2 red--text">Keywords</span>
+                      <span class="body-2 red--text">Трейты</span>
                     </div>
                     <div
                       v-for="keyword in keywords"
@@ -1287,8 +1389,8 @@
                       class="caption"
                     >
                       <strong>{{ keyword.name }}</strong>
-                      <em> • {{ keyword.type }}</em>
-                      <span v-if="keyword.custom">
+                      <!-- <em> • {{ keyword.type }}</em> -->
+                      <!-- <span v-if="keyword.custom">
                         <v-hover>
                           <v-icon
                             small
@@ -1298,23 +1400,23 @@
                             >delete</v-icon
                           >
                         </v-hover>
-                      </span>
+                      </span> -->
                       <p>
                         {{ keyword.description }}
                       </p>
                     </div>
-                    <div style="display: flex; justify-content: center">
+                    <!-- <div style="display: flex; justify-content: center">
                       <v-btn x-small text @click="keywordsEditorDialog = true"
                         >Additional Keywords
                         <v-icon small>settings</v-icon></v-btn
                       >
-                    </div>
+                    </div> -->
                   </div>
 
                   <!-- objectives < description -->
                   <div
                     v-show="
-                      ['all', 'notes'].some(
+                      ['все', 'заметки'].some(
                         (i) => i === descriptionSection.selection
                       )
                     "
@@ -1336,7 +1438,7 @@
                     <div v-if="characterNotesShowEditor">
                       <v-textarea
                         v-model="characterNotesEditorModel"
-                        hint="Use markdown, e.g. **bold** _italic_"
+                        hint="Используй markdown, например **жирный** _курсив_"
                         persistent-hint
                         filled
                         auto-grow
@@ -1354,7 +1456,7 @@
                       v-else
                       class="caption"
                       @click="characterNotesOpenEditor"
-                      >+ Add Notes</span
+                      >Добавить заметики</span
                     >
                   </div>
                 </div>
@@ -1516,6 +1618,7 @@ export default {
       ],
       descriptionSection: { selection: 'all' },
       abilitySection: { filter: 'all' },
+      wargearSection: { filter: 'all' },
       currentHP: 0,
       tempHP: 0,
       loading: false,
