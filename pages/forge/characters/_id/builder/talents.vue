@@ -1211,10 +1211,11 @@ export default {
               const lowercaseKeywords = tal.prerequisitesKey.feat.key.split(',');
               const isFeat = characterTalents.filter(t => t.nameEng === lowercaseKeywords.find(s => s === t.nameEng));
               if (isFeat === undefined )
+              tal.isVal = true;
+                 else if (isFeat.length === lowercaseKeywords.length )
                 tal.isVal =  true;
               }
-              else if (isFeat.length === lowercaseKeywords.length )
-                tal.isVal =  true;
+
               }
 
 
