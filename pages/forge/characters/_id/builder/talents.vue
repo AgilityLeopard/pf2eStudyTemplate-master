@@ -1213,7 +1213,7 @@ export default {
               if (isFeat === undefined )
                 tal.isVal =  true;
               }
-              if (isFeat.length === lowercaseKeywords.length )
+              else if (isFeat.length === lowercaseKeywords.length )
                 tal.isVal =  true;
               }
 
