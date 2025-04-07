@@ -1229,7 +1229,7 @@ export default {
         if (tal.prerequisitesKey.features)
         {
           isVal =  true;
-          const isFeat = archetype.find(t => t === tal.prerequisitesKey.features.key);
+          const isFeat = this.archetype.find(t => t === tal.prerequisitesKey.features.key);
           if (isFeat === undefined )
             tal.isVal =  true;
         }
