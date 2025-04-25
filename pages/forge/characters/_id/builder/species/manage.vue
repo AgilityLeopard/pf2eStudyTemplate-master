@@ -98,9 +98,9 @@
 
       </div>
 
-           <div class="mt-2 body-2 text-justify ">
+        <div class="mt-2 body-2 text-justify ">
 
-          <h3 class="headline">Особенности родословной</h3>
+          <h3 class="headline" v-if="species.speciesFeatures.length != 0" >Особенности родословной</h3>
           <div
         v-for="feature in species.speciesFeatures"
         class="text-lg-justify " v-bind:key="feature.key">

@@ -22,6 +22,14 @@
         <v-tab class="caption" key="tab-additional" :href="`#tab-additional`"
           ><h2 class="subtitle-2">Черты дополнительные</h2></v-tab
         >
+        <!-- Для воина -->
+        <v-tab
+          v-if="archetype && characterLevel() > 8"
+          class="caption"
+          key="tab-adaptation"
+          :href="`#tab-adaptation`"
+          ><h2 class="subtitle-2">Боевая адаптация</h2></v-tab
+        >
 
         <!-- Черты родословной -->
         <v-tab-item
@@ -225,7 +233,7 @@
                   levelAncestry <= characterLevel() &&
                   (levelAncestry === 2 ||
                     levelAncestry % 2 === 0 ||
-                    (archetype.isFeatLevelOne && levelAncestry === 1))
+                    /*archetype.isFeatLevelOne &&*/ levelAncestry === 1)
                 "
               >
                 <v-expansion-panel-header
@@ -794,6 +802,160 @@
             </v-expansion-panel>
           </v-expansion-panels>
         </v-tab-item>
+        <!-- адаптация -->
+        <v-tab-item
+          class="my-tab-item"
+          key="tab-adaptation"
+          :value="`tab-adaptation`"
+        >
+          <v-expansion-panels multiple>
+            <v-expansion-panel key="adaptation" v-if="characterLevel() > 8">
+              <v-expansion-panel-header
+                >{{ 8 }} уровень
+                <v-col :cols="4" :sm="2">
+                  <v-btn
+                    color="error"
+                    align="right"
+                    x-small
+                    v-if="characterClassTalent(8)"
+                    @click.stop.prevent="removeTalent(characterClassTalent(8))"
+                    >Удалить</v-btn
+                  >
+                </v-col>
+              </v-expansion-panel-header>
+
+              <v-expansion-panel-content key="adaptation">
+                <v-btn
+                  @click="updatePreview(8, 'adaptation')"
+                  v-if="!characterClassTalent(8)"
+                >
+                  Выберите черту {{ 8 }}
+                </v-btn>
+
+                <div v-if="characterClassTalent(8)">
+                  <v-row class="rowFeat">
+                    <div class="head">
+                      <h1>
+                        {{ characterClassTalent(8).label }}
+                      </h1>
+                    </div>
+                    <div class="line"></div>
+                    <div class="tag">
+                      Черта {{ characterClassTalent(8).level }}
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div>
+                      <trait-view
+                        v-if="characterClassTalent(8).traits"
+                        :item="characterClassTalent(8)"
+                        class="mb-2"
+                      />
+                    </div>
+                  </v-row>
+                  <div v-if="characterClassTalent(8).requirements">
+                    <p class="main-holder">
+                      {{ characterClassTalent(8).requirements.key }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="characterClassTalent(8).description"
+                  ></div>
+                  <p></p>
+                  <div v-if="characterClassTalent(8).options">
+                    <v-select
+                      :value="characterClassTalent(8).selected"
+                      :items="characterClassTalent(8).options"
+                      item-text="name"
+                      item-value="key"
+                      :placeholder="characterClassTalent(8).optionsPlaceholder"
+                      filled
+                      dense
+                      @input="
+                        talentUpdateSelected(item, characterClassTalent(8), 8)
+                      "
+                    />
+                  </div>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+
+            <v-expansion-panel key="adaptation14" v-if="characterLevel() > 14">
+              <v-expansion-panel-header
+                >{{ 14 }} уровень
+                <v-col :cols="4" :sm="2">
+                  <v-btn
+                    color="error"
+                    align="right"
+                    x-small
+                    v-if="characterClassTalent(14)"
+                    @click.stop.prevent="removeTalent(characterClassTalent(14))"
+                    >Удалить</v-btn
+                  >
+                </v-col>
+              </v-expansion-panel-header>
+
+              <v-expansion-panel-content key="adaptation14">
+                <v-btn
+                  @click="updatePreview(14, 'adaptation')"
+                  v-if="!characterClassTalent(14)"
+                >
+                  Выберите черту {{ 14 }}
+                </v-btn>
+
+                <div v-if="characterClassTalent(14)">
+                  <v-row class="rowFeat">
+                    <div class="head">
+                      <h1>
+                        {{ characterClassTalent(14).label }}
+                      </h1>
+                    </div>
+                    <div class="line"></div>
+                    <div class="tag">
+                      Черта {{ characterClassTalent(14).level }}
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div>
+                      <trait-view
+                        v-if="characterClassTalent(14).traits"
+                        :item="characterClassTalent(14)"
+                        class="mb-2"
+                      />
+                    </div>
+                  </v-row>
+                  <div v-if="characterClassTalent(14).requirements">
+                    <p class="main-holder">
+                      {{ characterClassTalent(14).requirements.key }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="characterClassTalent(14).description"
+                  ></div>
+                  <p></p>
+                  <div v-if="characterClassTalent(14).options">
+                    <v-select
+                      :value="characterClassTalent(14).selected"
+                      :items="characterClassTalent(14).options"
+                      item-text="name"
+                      item-value="key"
+                      :placeholder="characterClassTalent(14).optionsPlaceholder"
+                      filled
+                      dense
+                      @input="
+                        talentUpdateSelected(item, characterClassTalent(14), 14)
+                      "
+                    />
+                  </div>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-tab-item>
         <!-- Открытие диалогов выбора черт -->
         <!-- Класс -->
         <v-dialog
@@ -810,6 +972,23 @@
             type="class"
             choose-mode
             @cancel="talentsDialogClass = false"
+          />
+        </v-dialog>
+
+        <v-dialog
+          v-model="talentsDialogAdaptation"
+          :fullscreen="$vuetify.breakpoint.xsOnly"
+          width="800px"
+          scrollable
+        >
+          <talents-preview
+            :character-id="characterId"
+            :talents="selectedTalentsClass"
+            :level="levelTalent"
+            :list="talentList"
+            type="adaptation"
+            choose-mode
+            @cancel="talentsDialogAdaptation = false"
           />
         </v-dialog>
 
@@ -902,6 +1081,7 @@ export default {
       talentsDialogClass: false,
       talentsDialogSkill: false,
       talentsDialogGeneral: false,
+      talentsDialogAdaptation: false,
       levelAncestry: 0,
       levelSkill: 0,
       levelClass: 0,
@@ -1159,7 +1339,7 @@ export default {
       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
       const archetype = this.archetype;
 
-      const list = this.talentList.filter(s => s.type === type);
+      const list = this.talentList.filter(s => s.type === type || (type === 'adaptation' && s.type === 'class'));
       list.forEach(t => {
         const tal = t;
         tal.place = type + levelAncestry;
@@ -1167,7 +1347,7 @@ export default {
         tal.trait = tal.traits;
         tal.isVal = false;
 
-        let isVal = false;
+
         const Rest = {
           "U": 0,
           "T": 1,
@@ -1196,7 +1376,7 @@ export default {
         }
         if (tal.prerequisitesKey.feat)
         {
-          isVal =  true;
+
           if(tal.prerequisitesKey.feat.value)
           {
             if(tal.prerequisitesKey.feat.value === "OR")
@@ -1228,7 +1408,7 @@ export default {
         }
         if (tal.prerequisitesKey.features)
         {
-          isVal =  true;
+
           const isFeat = archetype.archetypeFeatures.find(t => t === tal.prerequisitesKey.features.key);
           if (isFeat === undefined )
             tal.isVal =  true;
@@ -1245,6 +1425,10 @@ export default {
         case "ancestry":
           this.talentsDialog = true;
           this.selectedTalentsAncestry = list;
+          break;
+        case "adaptation":
+          this.talentsDialogAdaptation = true;
+          this.selectedTalentsClass  = list;
           break;
          case "class":
           this.talentsDialogClass = true;
@@ -1717,6 +1901,105 @@ export default {
 
       //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
       return talents.find(s => s.place === 'class'+level);
+
+
+
+    },
+    characterAdaptationTalent(level)
+    {
+    // { id, name, cost, selection}
+    if (this.talentList === undefined) {
+        return false;
+      }
+
+      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
+
+      const talents = characterTalents.filter((t) => t).map((talent) => {
+
+        // find the plain talent by key
+        const rawTalent = this.talentList.find((r) => r.key === talent.key);
+
+        // not found? return a custom talent without special properties and no cost
+        if (rawTalent === undefined) {
+          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
+          return {
+            id: talent.id,
+            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
+            name: talent.name,
+            key: talent.key,
+            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
+            cost: 0,
+          }
+        }
+
+        const aggregatedTalent = Object.assign({}, rawTalent);
+
+
+        aggregatedTalent.id = talent.id;
+        aggregatedTalent.cost = talent.cost;
+        aggregatedTalent.label = aggregatedTalent.name;
+        aggregatedTalent.place = talent.place;
+        aggregatedTalent.level = talent.level;
+        aggregatedTalent.trait = talent.traits;
+        // for each special talent, check respectively
+        if (talent.selected) {
+          aggregatedTalent.selected = talent.selected;
+        }
+
+        // Fetch gear for selected weapon trooper
+        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
+          const sourceKey = `talent.${aggregatedTalent.id}`;
+          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+          if (charGear && charGear.length > 0 && this.wargearList) {
+            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+            aggregatedTalent.selected = wargear.key;
+            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
+            /*
+            charGear.forEach( g => {
+              characterPackage
+              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
+              .selectList.find(s=> g.source.endsWith(s.key))
+                .itemChoice = g.name
+            });
+            */
+          }
+        }
+
+        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
+          const sourceKey = `talent.${aggregatedTalent.id}`;
+          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+          if (charGear && charGear.length > 0 && this.wargearList) {
+            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+            aggregatedTalent.selected = wargear.key;
+            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
+          }
+        }
+
+        // Fetch gear for selected augmetis
+        if (aggregatedTalent.key.startsWith('core-augmetic')) {
+
+          aggregatedTalent.wargear.forEach((g, i, warArray) => {
+            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
+
+            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+            if (charGear && charGear.length > 0 && this.wargearList) {
+
+              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+
+              g.selected = wargear.name;
+
+
+            }
+          });
+
+        }
+
+        return aggregatedTalent;
+      }).sort((a, b) => a.id.localeCompare(b.id));
+
+
+      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
+      return talents.find(s => s.place === 'adaptation'+level);
 
 
 

@@ -1,7 +1,30 @@
 <template lang="html">
   <ul class="simple">
     <li v-for="trait in List(item)" class="traits">
-      <p class="trait">
+      <p
+        class="trait"
+        v-if="trait.key !== 'необычный' && trait.key !== 'редкий'"
+      >
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="t">
+              {{ trait.key }}
+            </div>
+          </template>
+          <span>{{ trait.desc }}</span>
+        </v-tooltip>
+      </p>
+      <p class="rare" v-if="trait.key === 'редкий'">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="t">
+              {{ trait.key }}
+            </div>
+          </template>
+          <span>{{ trait.desc }}</span>
+        </v-tooltip>
+      </p>
+      <p class="uncommon" v-if="trait.key === 'необычный'">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <div v-on="on" class="t">
@@ -104,6 +127,26 @@ export default {
 
 .trait {
   background-color: #5e0000;
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+  cursor: pointer;
+}
+
+.rare {
+  background-color: rgb(0, 38, 100);
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+  cursor: pointer;
+}
+
+.uncommon {
+  background-color: rgb(152, 81, 61);
   color: #fff;
   display: inline-block;
   font-weight: bolder;

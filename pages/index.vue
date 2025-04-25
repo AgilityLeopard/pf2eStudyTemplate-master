@@ -87,6 +87,7 @@ export default {
         //   isActive: true,
         //   classes: [],
         // },
+
         {
           key: 'forge',
           title: 'Персонажная <strong>Билдодельня</strong>',

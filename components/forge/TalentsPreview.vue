@@ -21,35 +21,47 @@
     <v-divider />
 
     <v-card-title>
-      <!-- <v-select
-        label="Трейты"
-        v-model="selectedtraitsFilters"
-        multiple
-        :items="tagFilters"
-        item-text="name"
-        item-value="name"
-      >
-      </v-select> -->
+      <v-container class="bg-surface-variant">
+        <v-row>
+          <v-col :cols="6">
+            <v-select
+              label="Редкость"
+              multiple
+              v-model="selectedRarityFilters"
+              :items="rarityFilters"
+              item-text="name"
+              item-value="name"
+            >
+            </v-select>
+          </v-col>
 
-      <v-select
-        label="Источник"
-        v-model="selectedSourceFilters"
-        multiple
-        :items="sourceFilters"
-        item-text="name"
-        item-value="name"
-      >
-      </v-select>
+          <v-col :cols="6">
+            <v-select
+              label="Источник"
+              v-model="selectedSourceFilters"
+              multiple
+              :items="sourceFilters"
+              item-text="name"
+              item-value="name"
+            >
+            </v-select>
+          </v-col>
+        </v-row>
 
-      <v-select
-        label="Трейты"
-        v-model="selectedtraitsFilters"
-        multiple
-        :items="tagFilters"
-        item-text="name"
-        item-value="name"
-      >
-      </v-select>
+        <v-row>
+          <v-col :cols="6">
+            <v-select
+              label="Трейты"
+              v-model="selectedtraitsFilters"
+              multiple
+              :items="tagFilters"
+              item-text="name"
+              item-value="name"
+            >
+            </v-select>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card-title>
 
     <v-divider />
@@ -84,16 +96,8 @@
 
         <template v-slot:item.prerequisitesKey="{ item }">
           <!-- <v-chip> -->
-          <v-icon v-if="item.isVal === true" color="error"
-            >close</v-icon
-          >
-          <v-icon
-            v-if="
-              item.isVal === false
-            "
-            color="success"
-            >check</v-icon
-          >
+          <v-icon v-if="item.isVal === true" color="error">close</v-icon>
+          <v-icon v-if="item.isVal === false" color="success">check</v-icon>
           <!-- {{ item.prerequisitesKey }} -->
           <!-- </v-chip> -->
         </template>
@@ -211,10 +215,14 @@ export default {
     return {
       chapterList: undefined,
       selectedTalents: undefined,
+
       selectedSourceFilters: [],
+      selectedtraitsFilters: [],
+      selectedRarityFilters: [],
+
       talentsDialog: false,
       searchQuery: '',
-      selectedtraitsFilters: [],
+
       filters: {
         traits: {
           model: [],
@@ -546,7 +554,28 @@ export default {
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
       },
+      rarityFilters() {
+      if (this.talents === undefined) {
+        return [];
+      }
+      let filteredTalents = this.talents;
+      //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
+      const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      // only show those whose prerequisites are met
 
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
+      //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.traits.toString().toUpperCase()));
+      let reduced = ["обычный", "необычный", "редкий", "уникальный"];
+      // filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
+      // // if (item.traits) {
+      //     reduced.push(..."обычный", "необычный", "редкий", "уникальный");
+      //   // }
+      // });
+
+        reduced = reduced.filter(item => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((tag) => ({ name: tag }));
+      },
     tagFilters() {
       if (this.talents === undefined) {
         return [];
@@ -568,6 +597,7 @@ export default {
           reduced.push(...item.traits);
         }
       });
+      reduced = reduced.filter(item => item !== "необычный" && item !== "редкий" && item !== "уникальный");
       reduced = reduced.filter(item => item.trim().length > 0);
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
@@ -593,12 +623,19 @@ export default {
         filteredTalents = filteredTalents.filter((item) => this.selectedSourceFilters.includes(item.source.book));
       }
 
-      filteredTalents = filteredTalents.map((talent) => {
-        let fulfilled = true;
+      if (this.selectedRarityFilters.length > 0) {
 
-        talent.prerequisitesFulfilled = fulfilled;
-        return talent;
-      });
+        filteredTalents = filteredTalents.filter((item) => this.selectedRarityFilters.some((m) => item.traits.includes(m)
+          || (m === 'обычный' && !item.traits.includes('редкий')))).filter((item) => this.selectedRarityFilters.some((m) => item.traits.includes(m)
+            || (m === 'обычный' && !item.traits.includes('необычный'))));
+      }
+
+      // filteredTalents = filteredTalents.map((talent) => {
+      //   let fulfilled = true;
+
+      //   talent.prerequisitesFulfilled = fulfilled;
+      //   return talent;
+      // });
 
       //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
                  let lowercaseKeywords = [];
