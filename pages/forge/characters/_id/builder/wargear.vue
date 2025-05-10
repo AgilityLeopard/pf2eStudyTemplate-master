@@ -69,7 +69,7 @@
             item-key="id"
             @page-count="pagination.pageCount = $event"
           >
-            <template v-slot:no-data />
+            <template v-slot:no-data> Нет предметов </template>
 
             <template v-slot:item.nameGear="{ item }">
               <v-row
@@ -341,7 +341,7 @@
           hide-default-footer
           @page-count="pagination1.pageCount = $event"
         >
-          <template v-slot:no-data />
+          <template v-slot:no-data> Нет предметов </template>
 
           <template v-slot:item.nameGear="{ item }">
             <v-row

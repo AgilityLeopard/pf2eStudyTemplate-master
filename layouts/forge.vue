@@ -574,7 +574,7 @@
             :to="routes.background"
             :disabled="!settingSelected"
           >
-            8. Языки
+            8. Детали Персонажа
           </v-btn>
           <v-btn
             small

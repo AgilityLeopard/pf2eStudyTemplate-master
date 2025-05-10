@@ -2,7 +2,7 @@
   <div>
     <v-card class="mb-4">
       <v-card-title style="background-color: #262e37; color: #fff">
-        <span>Подтвердите выбор Заклинания</span>
+        <span>Подтвердите выбор снаряжения</span>
         <v-spacer />
         <v-icon dark @click="$emit('cancel')"> close </v-icon>
       </v-card-title>

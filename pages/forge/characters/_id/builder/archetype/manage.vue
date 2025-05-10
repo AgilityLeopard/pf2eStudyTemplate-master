@@ -15,13 +15,13 @@
             @click="doChangeMode"
           >
             <v-icon small>settings</v-icon>
-            Сменить архетип
+            Сменить класс
           </v-btn>
         </div>
         <v-avatar size="96" tile><img :src="avatar"></v-avatar>
         <div v-if="false">
           <v-avatar size="128" tile><img :src="avatar"></v-avatar>
-          <v-btn x-small text color="primary">change archetype</v-btn>
+          <v-btn x-small text color="primary">сменить класс</v-btn>
         </div>
       </div>
 
@@ -520,6 +520,9 @@ export default {
      * @param placeholder {name:String, options:[]}
      * @param selection String
      */
+     characterSkillSheet(){
+      return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
+    },
     changeSelectedOption(feature, inx) {
       //const selectedOption = feature.options.find((o) => o.name === feature.selected[inx]).group;
 
@@ -532,9 +535,33 @@ export default {
         level: feature.level,
         source: "archetype"
       };
-      
+
+      const level = mod.level;
       this.$store.commit('characters/clearCharacterClassModFeature', { id: this.characterId, content: mod });
       this.$store.commit('characters/addCharacterClassModFeature', { id: this.characterId, content: mod });
+
+      //Навыки
+      const skill = [];
+      skill.push(feature.options.find(s => s.key === feature.selected).skill);
+      if (skill)
+      {
+        //this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: level, type: 'class', optional: false  });
+      
+        const predSkill = this.$store.getters["characters/characterTrainedAdditionalSkillClassById"](this.characterId);
+        if (predSkill)
+        {
+          // const skillSheet = this.characterSkillSheet();
+          // const skill1 = skillSheet ? skillSheet.find(s => s.key === key && s.level === feature.level && s.type === skill) : undefined;
+         this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: predSkill, level: feature.level, type: 'class', optional: true  });
+        }
+
+        this.$store.commit("characters/setCharacterAdditionalTrainedClassSkill", {
+        id: this.characterId,
+        payload: { key: 1, value: skill[0] },
+      });
+        this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: skill[0], level: feature.level, type: 'class', optional: true  });
+      }
+
 
 
 

@@ -311,6 +311,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].ClassSkill : {},
   characterTrainedSkillClassById: (state) => (id) =>
     state.characters[id] ? state.characters[id].TrainedSkillClass : [],
+  characterTrainedAdditionalSkillClassById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].TrainedAdditionalSkillClass : undefined,
   characterSkillSheetById: (state) => (id) => state.characters[id] ? state.characters[id].SkillSheet : [],
   characterBackgroundFreeBoost2ById: (state) => (id) =>
     state.characters[id] ? state.characters[id].BackgroundFreeBoost2 : {},
@@ -842,6 +844,7 @@ export const mutations = {
                 var loc = keys.indexOf(item.upgrade);
                 character.skillClass = "U";
               }
+
               break;
             }
           case ("Skill"):
@@ -991,6 +994,11 @@ export const mutations = {
     // const level = "level"+pay.level;
     state.characters[payload.id].SkillTableLevel[pay.level] = pay.value;
   },
+  setCharacterAdditionalTrainedClassSkill(state, payload) {
+    const pay = payload.payload;
+    // const level = "level"+pay.level;
+    state.characters[payload.id].TrainedAdditionalSkillClass = pay.value;
+  },
   setCharacterskillClass(state, payload) {
     state.characters[payload.id].skillClass = payload.payload.skillClass;
   },
@@ -1058,6 +1066,42 @@ export const mutations = {
     );
 
     state.characters[payload.id].TrainedSkillClass = payload.payload.value;
+    //this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
+
+  },
+  setCharacterTrainedAdditionalClassSkill(state, payload) {
+    const characterSkills = state.characters[payload.id].skills;
+
+    const trained = state.characters[payload.id].TrainedAdditionalSkillClass;
+    const SkillProf = state.characters[payload.id].SkillsTrained;
+    const keys = Object.keys(SkillProf);
+
+    //   trained.forEach(skill =>
+    //   {
+
+    //     var loc = keys.indexOf(characterSkills[skill]);
+    //     const newValue = keys[loc-1];
+    //     characterSkills[skill] = newValue;
+    //   }
+    // );
+
+    if (trained)
+      trained.forEach(skill => {
+        characterSkills[skill] = "U"
+      }
+      );
+
+    payload.payload.value.forEach(skill => {
+
+
+      if (characterSkills[skill] === "T")
+        state.characters[payload.id].SkillPoints = state.characters[payload.id].SkillPoints + 1;
+      else
+        characterSkills[skill] = "T"
+    }
+    );
+
+    state.characters[payload.id].TrainedAdditionalSkillClass = payload.payload.value;
     //this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
 
   },
@@ -2676,6 +2720,7 @@ const getDefaultState = () => ({
   skillClass: "",
   Bonus: [],
   TrainedSkillClass: [],
+  TrainedAdditionalSkillClass: undefined,
   //Окончательный вид
   skills: {
     acrobatics: "U",

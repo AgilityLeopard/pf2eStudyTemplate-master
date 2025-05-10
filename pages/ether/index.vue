@@ -294,10 +294,11 @@ export default {
     },
   },
   async asyncData({ app }) {
-    const { data } = await app.$axios.get('/api/actual-plays/');
-    return {
-      actualPlayItems: data.map((item) => item.fields),
-    };
+    // const { data } = await app.$axios.get('/api/actual-plays/');
+    // return {
+    //   actualPlayItems: data.map((item) => item.fields),
+    // };
+
   },
   methods: {
     changeSort(column) {

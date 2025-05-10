@@ -284,6 +284,7 @@ export default {
       const sheet1 = this.$store.getters["characters/characterSkillSheetById"](
         this.characterId
       );
+
       if (
         ascensionPackage.lore
         // &&

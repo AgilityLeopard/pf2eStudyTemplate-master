@@ -3,11 +3,31 @@
     <!-- headline -->
     <v-col :cols="12">
       <h2>Управление языками</h2>
-      <h2>Тест</h2>
     </v-col>
 
     <!-- Languages -->
     <v-col :cols="12">
+      <v-card>
+        <v-card-title>Детали</v-card-title>
+        <v-card-text>
+          <p><em>Божество:</em></p>
+          <p><em>Возраст:</em></p>
+          <p><em>Пол:</em></p>
+          <p><em>Внешность:</em></p>
+          <p><em>Предыстория:</em></p>
+          <p><em>Место рождения:</em></p>
+          <p><em>Характер:</em></p>
+          <p><em>Убеждения:</em></p>
+          <p><em>Эдикты:</em></p>
+          <p><em>Анафемы:</em></p>
+          <p><em>Любит:</em></p>
+          <p><em>Не любит:</em></p>
+          <p><em>Союзники:</em></p>
+          <p><em>Противники:</em></p>
+          <p><em>Организации:</em></p>
+        </v-card-text>
+      </v-card>
+
       <v-card>
         <v-card-title>Управление языками</v-card-title>
         <v-card-text>
@@ -201,7 +221,7 @@ export default {
         const modInt = (this.characterAttributes['intellect'] - 10) / 2;
         const modLang = this.characterLanguages.length - 1;
         const modAncestry = this.characterSpecies ? this.characterSpecies.freeLanguage : 0;
-        return modInt - (modLang + modAncestry);
+        return modInt - (modLang + modAncestry) < 0 ? 0 : modInt - (modLang + modAncestry);
     },
     changeBackground(key) {
       const item = this.getBackgroundBySectionByKey(key);

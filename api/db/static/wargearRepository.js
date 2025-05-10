@@ -775,6 +775,251 @@ const playerCore = [
         group: "leather",
         description: "Кольчужный комплект содержит несколько частей доспеха, состоящих из небольших металлических колец, соединенных вместе и образующих защитную сетку. Обычно он включает в себя кольчужную рубашку, поножи, рукава и койф, которые в совокупности защищают большую часть тела."
     },
+    // Одежда исследователя (Explorer's Clothing)
+    {
+        ...gear(source.playerCore.key, 100, 'Explorer\'s Clothing', '1C', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 0, 1, 0),
+        nameGear: "Одежда исследователя",
+        traits: ["удобный"],
+        category: "light",
+        rarity: "common",
+        bonusAC: 0,
+        modDex: 5,
+        penalty: 0,
+        penaltySpeed: 0,
+        weight: 0,
+        strength: 0,
+        group: "Одежда",
+        description: "Прочная и удобная одежда для путешествий, не обеспечивающая защиты, но позволяющая свободно двигаться."
+    },
+
+    // Стеганый доспех (Padded Armor)
+    {
+        ...gear(source.playerCore.key, 101, 'Padded Armor', '2C', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 0, 2, 0),
+        nameGear: "Стеганый доспех",
+        traits: ["удобный"],
+        category: "light",
+        rarity: "common",
+        bonusAC: 1,
+        modDex: 3,
+        penalty: 0,
+        penaltySpeed: 0,
+        weight: 0,
+        strength: 10,
+        group: "Одежда",
+        description: "Многослойная стеганая ткань, обеспечивающая минимальную защиту."
+    },
+
+    // Кожаный доспех (Leather)
+    {
+        ...gear(source.playerCore.key, 102, 'Leather Armor', '2G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 2, 0, 0),
+        nameGear: "Кожаный доспех",
+        traits: [],
+        category: "light",
+        rarity: "common",
+        bonusAC: 1,
+        modDex: 4,
+        penalty: -1,
+        penaltySpeed: 0,
+        weight: 1,
+        strength: 10,
+        group: "Кожаный",
+        description: "Доспех из твердой кожи, обеспечивающий базовую защиту."
+    },
+
+    // Клепаный кожаный доспех (Studded Leather)
+    {
+        ...gear(source.playerCore.key, 103, 'Studded Leather', '3G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 3, 0, 0),
+        nameGear: "Клепаный кожаный доспех",
+        traits: [],
+        category: "light",
+        rarity: "common",
+        bonusAC: 2,
+        modDex: 3,
+        penalty: -1,
+        penaltySpeed: 0,
+        weight: 1,
+        strength: 12,
+        group: "Кожаный",
+        description: "Кожаный доспех с металлическими заклепками для усиления защиты."
+    },
+
+    // Кольчужная рубаха (Chain Shirt)
+    {
+        ...gear(source.playerCore.key, 104, 'Chain Shirt', '5G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 5, 0, 0),
+        nameGear: "Кольчужная рубаха",
+        traits: ["гибкий", "шумный"],
+        category: "light",
+        rarity: "common",
+        bonusAC: 2,
+        modDex: 3,
+        penalty: -1,
+        penaltySpeed: 0,
+        weight: 1,
+        strength: 12,
+        group: "Кольчужный",
+        description: "Короткая кольчуга, защищающая торп и плечи."
+    },
+
+    // Сыромятный доспех (Hide)
+    {
+        ...gear(source.playerCore.key, 201, 'Hide Armor', '2G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 2, 0, 0),
+        nameGear: "Сыромятный доспех",
+        traits: [],
+        category: "medium",
+        rarity: "common",
+        bonusAC: 3,
+        modDex: 2,
+        penalty: -2,
+        penaltySpeed: -5,
+        weight: 2,
+        strength: 14,
+        group: "Кожаный",
+        description: "Грубый доспех из толстой кожи, обеспечивающий среднюю защиту."
+    },
+
+    // Чешуйчатый доспех (Scale Mail)
+    {
+        ...gear(source.playerCore.key, 202, 'Scale Mail', '4G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 4, 0, 0),
+        nameGear: "Чешуйчатый доспех",
+        traits: [],
+        category: "medium",
+        rarity: "common",
+        bonusAC: 3,
+        modDex: 2,
+        penalty: -2,
+        penaltySpeed: -5,
+        weight: 2,
+        strength: 14,
+        group: "Композитный",
+        description: "Доспех из металлических чешуек, нашитых на кожаную основу."
+    },
+
+    // Кольчуга (Chain Mail)
+    {
+        ...gear(source.playerCore.key, 203, 'Chain Mail', '6G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 6, 0, 0),
+        nameGear: "Кольчуга",
+        traits: ["гибкий", "шумный"],
+        category: "medium",
+        rarity: "common",
+        bonusAC: 4,
+        modDex: 1,
+        penalty: -2,
+        penaltySpeed: -5,
+        weight: 2,
+        strength: 16,
+        group: "Кольчужный",
+        description: "Полный комплект кольчуги, защищающий все тело."
+    },
+
+    // Нагрудник (Breastplate)
+    {
+        ...gear(source.playerCore.key, 204, 'Breastplate', '8G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 8, 0, 0),
+        nameGear: "Нагрудник",
+        traits: [],
+        category: "medium",
+        rarity: "common",
+        bonusAC: 4,
+        modDex: 1,
+        penalty: -2,
+        penaltySpeed: -5,
+        weight: 2,
+        strength: 16,
+        group: "Латный",
+        description: "Металлическая кираса, защищающая торс."
+    },
+    // Пластинчатый доспех (Splint Mail)
+    {
+        ...gear(source.playerCore.key, 301, 'Splint Mail', '13G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 13, 0, 0),
+        nameGear: "Пластинчатый доспех",
+        traits: [],
+        category: "heavy",
+        rarity: "common",
+        bonusAC: 5,
+        modDex: 1,
+        penalty: -3,
+        penaltySpeed: -10,
+        weight: 3,
+        strength: 16,
+        group: "Композитный",
+        description: "Доспех из металлических пластин, соединенных кольчугой."
+    },
+
+    // Полулатный доспех (Half Plate)
+    {
+        ...gear(source.playerCore.key, 302, 'Half Plate', '18G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 18, 0, 0),
+        nameGear: "Полулатный доспех",
+        traits: [],
+        category: "heavy",
+        rarity: "common",
+        bonusAC: 5,
+        modDex: 1,
+        penalty: -3,
+        penaltySpeed: -10,
+        weight: 3,
+        strength: 16,
+        group: "Латный",
+        description: "Частичный латный доспех, защищающий ключевые части тела."
+    },
+
+    // Полный латный доспех (Full Plate)
+    {
+        ...gear(source.playerCore.key, 303, 'Full Plate', '30G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 30, 0, 0),
+        nameGear: "Полный латный доспех",
+        traits: ["защитный"],
+        category: "heavy",
+        rarity: "rare",
+        bonusAC: 6,
+        modDex: 0,
+        penalty: -3,
+        penaltySpeed: -10,
+        weight: 4,
+        strength: 18,
+        group: "Латный",
+        description: "Полный комплект лат, обеспечивающий максимальную защиту."
+    },
+
+    // Латный доспех Хеллнайта (Hellknight Plate)
+    {
+        ...gear(source.playerCore.key, 304, 'Hellknight Plate', '35G', ''),
+        ...armour(undefined, 0, 0),
+        ...price(0, 35, 0, 0),
+        nameGear: "Латный доспех Хеллнайта",
+        traits: ["защитный", "необычный"],
+        category: "heavy",
+        rarity: "rare",
+        bonusAC: 6,
+        modDex: 0,
+        penalty: -3,
+        penaltySpeed: -10,
+        weight: 4,
+        strength: 18,
+        group: "Латный",
+        description: "Элитный латный доспех, используемый рыцарями Хеллнайта."
+    },
     {
         ...gear(source.playerCore.key, 226, 'Clan Dagger', '2C', 'Piercing'),
         ...price(0, 20, 0, 0),

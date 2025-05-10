@@ -614,8 +614,8 @@ const playerCore = [
 
         skillDefence:
         {
-            light: "U",
-            medium: "U",
+            light: "T",
+            medium: "T",
             heavy: "U",
             unarmored: "T"
         },
