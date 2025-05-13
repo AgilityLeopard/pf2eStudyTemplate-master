@@ -961,7 +961,7 @@
         <v-dialog
           v-model="talentsDialogClass"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="800px"
+          width="1000px"
           scrollable
         >
           <talents-preview
@@ -1474,13 +1474,13 @@ export default {
         });
        if (this.traitList !== undefined) {
         talents.forEach((species) => {
-          const lowercaseKeywords = species.traits.split(',').map((s) =>
+          const lowercaseKeywords = species.traits ? species.traits.split(',').map((s) =>
             s.trim().toUpperCase()
-          );
+          ): '';
 
-        species.traits = species.traits.split(',').map((s) =>
+          species.traits = species.traits ? species.traits.split(',').map((s) =>
             s.trim()
-          );
+          ): '';
 
           const List1 = this.traitList;
           const trait = List1.filter((talent) =>

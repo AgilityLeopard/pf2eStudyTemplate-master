@@ -1179,7 +1179,206 @@ const playerCore = [
                 level: 19,
             }
         ]
+    },
+
+    //Волшебник
+    {
+        ...archetype(source.playerCore.key, 94, 'Wizard'),
+        ...cost(6, 0, 0, 0, 0),
+        ...statBoost(0, 0, 1, 0, 0, 0),
+        hint: 'Вы вечный ученик арканных тайн вселенной. Через строгую дисциплину и изучение вы овладеваете магией, используя древние тексты и научные методы, чтобы проникнуть в её суть. '
+            + 'Ваша магия — это инструмент, дисциплина и путь к истине.',
+        name: 'Волшебник',
+        keywords: 'волшебник, арканный, заклинатель, учёный',
+        hitpoints: 6,
+        keyAbility: ["intelligence"],
+        trait: ["волшебник"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: ["arcana"],
+        skillTrainedPoints: 2, // + Int
+        spellTradition: 'arcane',
+        spellProgression: {
+            1: [5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            2: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            3: [5, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+            4: [5, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+            5: [5, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0],
+            6: [5, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0],
+            7: [5, 3, 3, 3, 2, 0, 0, 0, 0, 0, 0],
+            8: [5, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+            9: [5, 3, 3, 3, 3, 2, 0, 0, 0, 0, 0],
+            10: [5, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+            11: [5, 3, 3, 3, 3, 3, 2, 0, 0, 0, 0],
+            12: [5, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+            13: [5, 3, 3, 3, 3, 3, 3, 2, 0, 0, 0],
+            14: [5, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0],
+            15: [5, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0],
+            16: [5, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0],
+            17: [5, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0],
+            18: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0],
+            19: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+            20: [5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1]
+        },
+        spellFocusPool: 1,
+        spellsClass: {
+            attack: "T",
+            class: "T"
+        },
+        Perception: "T",
+        skillAttack: {
+            simple: "T",
+            martial: "U",
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence: {
+            light: "U",
+            medium: "U",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "T",
+            fortitude: "T",
+            will: "E"
+        },
+        isFeatLevelOne: false,
+        description: [
+            {
+                name: "encounter",
+                text: "<p>Вы держитесь позади, рассчитывая, когда использовать заклинания. Против сильных врагов вы используете мощную магию, а против слабых — чары. У вас есть ответ почти на любую угрозу, от полета до невидимости.</p>"
+            },
+            {
+                name: "social",
+                text: "<p>Вы впечатляете своей ученостью и часто объясняете происходящее через призму арканной теории.</p>"
+            },
+            {
+                name: "exporation",
+                text: "<p>Вы определяете магические ауры, читаете древние тексты и открываете скрытые тайны магии.</p>"
+            },
+            {
+                name: "downtime",
+                text: "<p>Вы создаете магические предметы, изучаете новые заклинания или обучаете других.</p>"
+            },
+            {
+                name: "you",
+                text: "<li><p>Желаете понять, как работает магия</p></li>"
+                    + "<li><p>Считаете, что магия — это инструмент, требующий дисциплины и интеллекта</p></li>"
+                    + "<li><p>Записываете заклинания, анализируете их и создаете новые теории</p></li>"
+            },
+            {
+                name: "other",
+                text: "<li><p>Видят в вас великого и опасного мага</p></li>"
+                    + "<li><p>Опасаются последствий ваших магических экспериментов</p></li>"
+                    + "<li><p>Надеются, что вы решите их проблемы одним заклинанием</p></li>"
+            }
+        ],
+        archetypeFeatures: [
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            "Arcane Spellcasting", "Arcane School", "Arcane Thesis", "Arcane Bond",
+            "Lightning Reflexes", "Magical Fortitude", "Alertness", "Wizard Weapon Expertise", "Defensive Robes", "Weapon Specialization", "Master Spellcaster",
+            "Resolve", "Archwizard's Spellcraft", "Legendary Spellcaster"
+        ],
+        modification: [
+            {
+                key: "spells",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 7
+            },
+            {
+                key: "class",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 7
+            },
+            {
+                key: "fortitude",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 9
+            },
+            {
+                key: "perception",
+                upgrade: "E",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 11
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11
+            },
+            {
+                key: "unarmored",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 13,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4
+                }
+            },
+            {
+                key: "spells",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 15
+            },
+            {
+                key: "class",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 15
+            },
+            {
+                key: "will",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 17
+            },
+            {
+                key: "spells",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 19
+            },
+            {
+                key: "class",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 19
+            }
+        ]
     }
+
 ];
 
 const playerCore2 = [
