@@ -332,7 +332,7 @@
         </v-btn>
 
         <v-data-table
-          :headers="headersArmor"
+          :headers="headersСonsumable"
           :items="characterArmour"
           :search="searchQuery"
           :page.sync="pagination1.page"
@@ -486,66 +486,6 @@
             :length="pagination1.pageCount"
           />
         </div>
-        <!-- <v-simple-table dense>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th v-for="header in headers" :class="header.class">
-                  {{ header.text }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="gear in characterArmour" :key="gear.id">
-                <td>{{ gear.nameGear }}</td>
-                <td>
-                  <v-btn
-                    outlined
-                    x-small
-                    :color="
-                      characterWearWargear &&
-                      characterWearWargear.id === gear.id
-                        ? 'info'
-                        : 'warning'
-                    "
-                    @click="
-                      characterWearWargear &&
-                      characterWearWargear.id === gear.id
-                        ? unwear(gear)
-                        : wear(gear)
-                    "
-                  >
-                    <v-icon left> lock </v-icon>
-
-                    <span
-                      v-if="
-                        characterWearWargear &&
-                        characterWearWargear.id === gear.id
-                      "
-                      >Снять
-                    </span>
-                    <span v-else>Надеть </span>
-                  </v-btn>
-                </td>
-                <td>
-                  <v-btn
-                    outlined
-                    x-small
-                    color="info"
-                    @click="openArmourSettings(gear)"
-                  >
-                    <v-icon left> edit </v-icon>Изменить
-                  </v-btn>
-                </td>
-                <td>
-                  <v-btn outlined x-small color="error" @click="remove(gear)">
-                    <v-icon left> delete </v-icon>Удалить
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table> -->
 
         <v-col :cols="12">
           <v-dialog
@@ -678,6 +618,164 @@
           </v-dialog>
         </v-col>
       </v-tab-item>
+
+      <v-tab-item
+        class="my-tab-item"
+        key="tab-consumable"
+        :value="`tab-consumable`"
+      >
+        <h2 class="subtitle-1 text-center">Расходники</h2>
+
+        <v-btn
+          outlined
+          x-small
+          color="success"
+          @click="ConsumableSearchDialog = true"
+        >
+          Добавить расходники
+        </v-btn>
+
+        <v-data-table
+          :headers="headersСonsumable"
+          :items="characterConsumable"
+          :search="searchQuery"
+          :page.sync="pagination1.page"
+          show-expand
+          item-key="id"
+          hide-default-footer
+          @page-count="pagination1.pageCount = $event"
+        >
+          <template v-slot:no-data> Нет предметов </template>
+
+          <template v-slot:item.nameGear="{ item }">
+            <v-row
+              ><span>{{ item.nameGear }}</span></v-row
+            >
+            <v-row>
+              <div>
+                <trait-view v-if="item.traits" :item="item" class="mb-2" />
+              </div>
+            </v-row>
+          </template>
+
+          <template v-slot:item.qty="{ item }">
+            <span>
+              <v-btn
+                icon
+                :disabled="item.qty === 1"
+                @click="decrementQty(item)"
+              >
+                <v-icon color="red"> remove_circle </v-icon>
+              </v-btn>
+              {{ item.qty }}
+              <v-btn icon @click="incrementQty(item)">
+                <!--"-->
+                <v-icon color="orange"> add_circle </v-icon>
+              </v-btn>
+            </span>
+          </template>
+
+          <template v-slot:item.edit="{ item }">
+            <v-btn outlined x-small color="error" @click="remove(item)">
+              <v-icon left> delete </v-icon>
+            </v-btn>
+          </template>
+
+          <template v-slot:expanded-item="{ headers, item }">
+            <td :colspan="headers.length">
+              <v-row class="rowFeat">
+                <div class="head">
+                  <h1>{{ item.nameGear }}</h1>
+                </div>
+                <div class="line"></div>
+                <div class="tag">Предмет {{ item.level }}</div>
+              </v-row>
+              <v-row>
+                <!-- <div>
+                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
+                  </div> -->
+              </v-row>
+              <p></p>
+              <!-- Описание закла -->
+              <div v-if="item.source.book">
+                <strong>Источник:</strong> {{ item.source.book }}
+              </div>
+              <div v-if="item.hands">
+                <p class="main-holder">
+                  <strong>Руки:</strong> {{ item.hands }}
+                </p>
+              </div>
+              <p></p>
+              <div>
+                <p class="main-holder">
+                  <strong>Цена:</strong> {{ wargearPrice(item) }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="item.distance">
+                <p class="main-holder">
+                  <strong>Дистанция:</strong> {{ item.distance }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="item.area">
+                <p class="main-holder">
+                  <strong>Область:</strong> <span v-html="item.area"></span>
+                </p>
+              </div>
+              <p></p>
+              <div v-if="item.target">
+                <p class="main-holder">
+                  <strong>Дистанция:</strong> {{ item.target }}
+                </p>
+              </div>
+              <p></p>
+              <div class="line"></div>
+              <div class="pt-4 pb-2" v-html="item.description"></div>
+              <div class="line"></div>
+              <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
+            </td>
+          </template>
+
+          <template v-slot:no-results>
+            <span class="text-center"
+              >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
+            >
+          </template>
+        </v-data-table>
+
+        <v-dialog
+          v-model="ConsumableSearchDialog"
+          :fullscreen="$vuetify.breakpoint.xsOnly"
+          width="1000px"
+          scrollable
+        >
+          <v-col :cols="12" v-if="wargearList">
+            <!-- <v-card
+              class="mb-4"
+              dark
+              outlined
+              :color="armourSearchActive ? 'info' : ''"
+              @click="armourSearchActive = !armourSearchActive"
+            >
+              <v-card-text class="pa-1">
+                <v-icon>{{
+                  armourSearchActive ? "expand_less" : "expand_more"
+                }}</v-icon>
+                Добавить доспех
+              </v-card-text>
+            </v-card> -->
+
+            <wargear-search
+              @cancel="ConsumableSearchDialog = false"
+              :repository="
+                wargearList.filter((item) => item.traits.includes('consumable'))
+              "
+              @select="add"
+            />
+          </v-col>
+        </v-dialog>
+      </v-tab-item>
     </v-tabs>
 
     <v-dialog
@@ -791,6 +889,7 @@ export default {
       armorEditorDialog: false,
       WeaponSearchDialog: false,
       ArmorSearchDialog: false,
+      ConsumableSearchDialog: false,
       //
 
       searchQuery: '',
@@ -873,7 +972,27 @@ export default {
         {
           text: 'Надето', value: 'wear', class: 'text-center', align: 'center',
         },
- {
+        {
+          text: 'Количество', value: 'qty', class: 'text-center', align: 'center',
+        },
+        {
+          text: '', value: 'edit', class: 'text-center', align: 'center',
+        },
+        {
+          text: '', value: 'delete', class: 'text-center', align: 'center',
+        },
+        // {
+        //   text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
+        // },
+      ],
+       headersСonsumable: [
+        {
+          text: 'Название', value: 'nameGear', class: 'text-left', align: 'left',
+        },
+        // {
+        //   text: 'Надето', value: 'wear', class: 'text-center', align: 'center',
+        // },
+        {
           text: 'Количество', value: 'qty', class: 'text-center', align: 'center',
         },
         {
@@ -946,6 +1065,7 @@ export default {
     sources() {
       return [
         'playerCore',
+        'GMCore',
         // 'tnh',
         ...this.settingHomebrews
       ];
@@ -1097,6 +1217,41 @@ export default {
         });
       }
       return characterWargear;
+    },
+        characterConsumable() {
+      const characterWargear = [];
+
+      if (this.wargearList){
+        const Category = this.armourCategoryRepository.map(item => item.category);
+        this.characterWargearRaw.filter(item => item.traits.includes("consumable")).forEach((chargear) => {
+          // this.characterWargearRaw.forEach((chargear) => {
+          let gear = {};
+          gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);
+          if (gear) {
+            gear.id = chargear.id;
+            gear.source = chargear.source;
+            characterWargear.push({
+              id: chargear.id,
+              // name: gear.nameGear,
+              // source: chargear.source,
+              ...chargear,
+              // subtitle: this.wargearSubtitle(gear),
+              // avatar: this.getAvatar(gear.type),
+
+            });
+          } else {
+            characterWargear.push({
+              id: chargear.id,
+              name: chargear.name,
+              type: 'Misc',
+              subtitle: 'Misc',
+              avatar: this.getAvatar('Misc'),
+              source: chargear.source,
+            });
+          }
+        });
+      }
+      return characterWargear;
     }
   },
   watch: {
@@ -1150,7 +1305,7 @@ export default {
         item.qty = 1;
         item.trait = item.traits;
       });
-      this.wargearList = data.filter((i) => i.stub === undefined || i.stub === false);
+      this.wargearList = data;
     },
     wargearSubtitle(item) {
       // const item = this.wargearRepository.find(i => i.name === gear);

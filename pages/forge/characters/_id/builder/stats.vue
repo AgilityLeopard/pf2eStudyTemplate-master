@@ -19,6 +19,7 @@
       >
         <v-expansion-panel-header
           >{{ levelAncestry }} уровень
+          <v-chip style="flex: none" right pill> 0/2 </v-chip>
         </v-expansion-panel-header>
 
         <v-expansion-panel-content :key="levelAncestry">
@@ -1936,6 +1937,61 @@ tr.v-data-table__selected {
     &::before {
       background-color: hsl(0, 100%, 37%);
     }
+  }
+
+  .select-chip {
+    --badge-height-xs: calc(1rem * var(--mantine-scale));
+    --badge-height-sm: calc(1.125rem * var(--mantine-scale));
+    --badge-height-md: calc(1.25rem * var(--mantine-scale));
+    --badge-height-lg: calc(1.625rem * var(--mantine-scale));
+    --badge-height-xl: calc(2rem * var(--mantine-scale));
+    --badge-fz-xs: calc(0.5625rem * var(--mantine-scale));
+    --badge-fz-sm: calc(0.625rem * var(--mantine-scale));
+    --badge-fz-md: calc(0.6875rem * var(--mantine-scale));
+    --badge-fz-lg: calc(0.8125rem * var(--mantine-scale));
+    --badge-fz-xl: calc(1rem * var(--mantine-scale));
+    --badge-padding-x-xs: calc(0.375rem * var(--mantine-scale));
+    --badge-padding-x-sm: calc(0.5rem * var(--mantine-scale));
+    --badge-padding-x-md: calc(0.625rem * var(--mantine-scale));
+    --badge-padding-x-lg: calc(0.75rem * var(--mantine-scale));
+    --badge-padding-x-xl: calc(1rem * var(--mantine-scale));
+    --badge-height: var(--badge-height-md);
+    --badge-fz: var(--badge-fz-md);
+    --badge-padding-x: var(--badge-padding-x-md);
+    --badge-radius: calc(62.5rem * var(--mantine-scale));
+    --badge-lh: calc(
+      var(--badge-height) - calc(0.125rem * var(--mantine-scale))
+    );
+    --badge-color: var(--mantine-color-white);
+    --badge-bg: var(--mantine-primary-color-filled);
+    --badge-border-width: calc(0.0625rem * var(--mantine-scale));
+    --badge-bd: var(--badge-border-width) solid transparent;
+    -webkit-tap-highlight-color: transparent;
+    font-size: var(--badge-fz);
+    border-radius: var(--badge-radius);
+    height: var(--badge-height);
+    line-height: var(--badge-lh);
+    text-decoration: none;
+    padding: 0 var(--badge-padding-x);
+    display: inline-grid;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: calc(0.015625rem * var(--mantine-scale));
+    cursor: default;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--badge-color);
+    background: var(--badge-bg);
+    border: var(--badge-bd);
+    background-color: blue;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    cursor: inherit;
   }
 }
 </style>

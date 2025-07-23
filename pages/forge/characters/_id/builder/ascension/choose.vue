@@ -148,10 +148,15 @@ export default {
     async getTalents(sources) {
       this.loading = true;
       const config = {
-        params: { source: this.sources.join(",") },
+        params: {
+          source: sources.join(","),
+        },
       };
+      // const config = {
+      //   params: { source: this.sources.join(",") },
+      // };
       {
-        const { data } = await this.$axios.get("/api/talents/", config);
+        const { data } = await this.$axios.get("/api/talents/", config.params);
         this.talentList = data.map((talent) => {
           // const prerequisitesHtml = this.requirementsToText(talent).join(', ');
           return {
@@ -203,8 +208,9 @@ export default {
       this.$store.commit("characters/addCharacterAscensionPackage", payload);
 
       const talent = this.talentList.find(
-        (s) => s.key === ascensionPackage.feat
+        (s) => s.key === ascensionPackage.feat && ascensionPackage.feat
       );
+
       if (talent) {
         const match = talent.name.match(/(<.*>)/);
         const talentUniqueId = Math.random()
