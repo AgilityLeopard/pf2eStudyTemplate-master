@@ -332,7 +332,7 @@
         </v-btn>
 
         <v-data-table
-          :headers="headersСonsumable"
+          :headers="headersArmor"
           :items="characterArmour"
           :search="searchQuery"
           :page.sync="pagination1.page"
@@ -769,7 +769,9 @@
             <wargear-search
               @cancel="ConsumableSearchDialog = false"
               :repository="
-                wargearList.filter((item) => item.traits.includes('consumable'))
+                wargearList.filter((item) =>
+                  item.traits.includes('расходуемый')
+                )
               "
               @select="add"
             />
@@ -1103,6 +1105,7 @@ export default {
     characterAttributes() {
       return this.$store.getters['characters/characterAttributesById'](this.characterId);
     },
+
     getMoney() {
       return this.$store.getters['characters/characterMoneyById'](this.characterId);
     },
@@ -1223,7 +1226,7 @@ export default {
 
       if (this.wargearList){
         const Category = this.armourCategoryRepository.map(item => item.category);
-        this.characterWargearRaw.filter(item => item.traits.includes("consumable")).forEach((chargear) => {
+        this.characterWargearRaw.filter(item => item.traits.includes("расходуемый")).forEach((chargear) => {
           // this.characterWargearRaw.forEach((chargear) => {
           let gear = {};
           gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);

@@ -808,6 +808,43 @@
                   <!-- species < abilities -->
                   <div
                     v-show="
+                      wargearSection.selection === 'доспехи' ||
+                      wargearSection.selection === 'все'
+                    "
+                  >
+                    <v-data-table
+                      :headers="armorHeaders"
+                      :items="armour"
+                      hide-default-footer
+                    >
+                      <template v-slot:item="{ item }">
+                        <tr v-if="item">
+                          <td class="text-left">
+                            {{ item.nameGear }}
+                          </td>
+                          <td class="text-center">
+                            {{ item.group }}
+                          </td>
+                          <td class="text-center">
+                            {{ item.weight }} + {{ item.weightL }}
+                          </td>
+                          <td class="text-center">
+                            {{ item.category }}
+                          </td>
+                          <td class="text-left">
+                            <span
+                              v-if="item.traits && item.traits.length > 0"
+                              >{{ item.traits.join(", ") }}</span
+                            >
+                          </td>
+                        </tr>
+                      </template>
+                    </v-data-table>
+                  </div>
+
+                  <!-- species < abilities -->
+                  <div
+                    v-show="
                       wargearSection.selection === 'снаряжение' ||
                       wargearSection.selection === 'все'
                     "
@@ -1597,6 +1634,14 @@ export default {
         { text: 'Владение', sortable: false, align: 'center', class: 'text-center small pa-1' },
         { text: 'Значение', sortable: false, align: 'center', class: 'text-center small pa-1' },
         // { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
+      ],
+      armorHeaders: [
+        { text: 'Название', sortable: false, align: 'left', class: 'small pa-1' },
+        { text: 'Группа доспеха', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Вес', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Категория', sortable: false, align: 'center', class: 'small pa-1' },
+        // { text: 'Руки', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
       ],
       weaponHeaders: [
         { text: 'Название', sortable: false, align: 'left', class: 'small pa-1' },

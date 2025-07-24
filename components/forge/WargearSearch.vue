@@ -72,6 +72,9 @@
       >
         <template v-slot:item.nameGear="{ item }">
           {{ item.nameGear }} <br />
+          <div>
+            <trait-view v-if="item.traits" :item="item" />
+          </div>
           <!-- <span class="grey--text caption">{{ wargearSubtitle(item) }}</span> -->
         </template>
 
@@ -143,12 +146,14 @@ import DodSimpleWeaponStats from "~/components/DodSimpleWeaponStats";
 import DodSimpleArmourStats from "~/components/DodSimpleArmourStats";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
+import traitView from "~/components/TraitView";
 
 export default {
   name: "WargearSearch",
   components: {
     DodSimpleArmourStats,
     DodSimpleWeaponStats,
+    traitView,
   },
   mixins: [StatRepositoryMixin, WargearTraitRepositoryMixin],
   props: {

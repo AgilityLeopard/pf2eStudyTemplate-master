@@ -304,6 +304,7 @@ export const getters = {
   characterAncestryFreeBoost2ById: (state) => (id) =>
     state.characters[id] ? state.characters[id].AncestryFreeBoost2 : {},
   characterBackgroundFreeBoostById: (state) => (id) =>
+    
     state.characters[id] ? state.characters[id].BackgroundFreeBoost : {},
   characterClassBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ClassBoost : {},

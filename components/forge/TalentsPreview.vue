@@ -184,7 +184,7 @@ export default {
     SluggerMixin,
     StatRepositoryMixin,
   ],
-    components: {
+  components: {
     traitView,
   },
   props: {

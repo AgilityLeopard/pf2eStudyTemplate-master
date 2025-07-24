@@ -49,9 +49,11 @@
 
 <script>
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
+import traitView from "~/components/TraitView";
 
 export default {
   name: "DodSimpleArmourStats",
+  components: { traitView },
   mixins: [WargearTraitRepositoryMixin],
   props: {
     name: {
@@ -95,12 +97,12 @@ export default {
           class: "text-center",
           align: "center",
         },
-        {
-          text: "Руки",
-          value: "salvo",
-          class: "text-center",
-          align: "center",
-        },
+        // {
+        //   text: "Руки",
+        //   value: "salvo",
+        //   class: "text-center",
+        //   align: "center",
+        // },
         {
           text: "Трейты",
           value: "traits",
