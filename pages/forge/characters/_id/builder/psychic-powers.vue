@@ -65,6 +65,31 @@
                   1 || characterLevel() == 20
             "
           >
+            <!-- <v-data-table
+              :headers="headers"
+              :items="
+                tableRows(
+                  levelAncestry - 1,
+                  archetype.spellProgression[characterLevel()][
+                    levelAncestry - 1
+                  ]
+                )
+              "
+              item-key="key"
+              hide-default-footer
+            >
+              <template v-slot:item.name="{ item }">
+                <v-row
+                  ><span>{{ item.name }}</span></v-row
+                >
+                <v-row>
+                  <div>
+                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
+                  </div>
+                </v-row>
+              </template>
+            </v-data-table> -->
+
             <h2 class="subtitle-1 text-center" v-if="levelAncestry - 1 == 0">
               Чары
             </h2>
@@ -129,6 +154,19 @@
                           : "-"
                       }}
                     </td>
+                    <td class="text-center pa-1 small">
+                      <v-btn
+                        v-if="characterSpell(levelAncestry - 1, cell)"
+                        outlined
+                        x-small
+                        color="info"
+                        @click="
+                          openDialog(characterSpell(levelAncestry - 1, cell))
+                        "
+                      >
+                        <v-icon left> visibility </v-icon> Просмотр
+                      </v-btn>
+                    </td>
                     <td>
                       <v-btn
                         v-if="characterSpell(levelAncestry - 1, cell)"
@@ -155,6 +193,102 @@
                 </tbody>
               </template>
             </v-simple-table>
+
+            <v-dialog v-model="dialog" max-width="800px">
+              <v-card v-if="selectedItem">
+                <v-card-title>
+                  <h2>{{ selectedItem.name }}</h2>
+                </v-card-title>
+                <v-card-text>
+                  <v-row class="rowFeat">
+                    <div class="head">
+                      <h1>{{ selectedItem.name }}</h1>
+                    </div>
+                    <div class="line"></div>
+                    <div class="tag">Заклинание {{ selectedItem.level }}</div>
+                  </v-row>
+                  <v-row>
+                    <div>
+                      <trait-view
+                        v-if="selectedItem.traits"
+                        :item="selectedItem"
+                        class="mb-2"
+                      />
+                    </div>
+                  </v-row>
+                  <p></p>
+                  <!-- Описание закла -->
+                  <div v-if="selectedItem.traditions">
+                    <p class="main-holder">
+                      <strong>Традиция:</strong>
+                      {{ selectedItem.traditions.join(", ") }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div v-if="selectedItem.time">
+                    <p class="main-holder">
+                      <strong>Сотворение:</strong>
+                      {{ selectedItem.time.value }} действия
+                    </p>
+                  </div>
+                  <p></p>
+                  <div v-if="selectedItem.range">
+                    <p class="main-holder">
+                      <strong>Дистанция:</strong> {{ selectedItem.range }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div v-if="selectedItem.area">
+                    <p class="main-holder">
+                      <strong>Область:</strong> {{ selectedItem.area.value }}
+                      {{ selectedItem.area.type }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div v-if="selectedItem.target">
+                    <p class="main-holder">
+                      <strong>Цель:</strong> {{ selectedItem.target }}
+                    </p>
+                  </div>
+                  <div v-if="selectedItem.defense">
+                    <p class="main-holder" v-if="selectedItem.defense.save">
+                      <strong>Защита:</strong>
+                      <span v-if="selectedItem.defense.save.basic === true"
+                        >Базовый
+                      </span>
+                      {{ selectedItem.defense.save.statistic }}
+                    </p>
+                  </div>
+                  <div v-if="selectedItem.duration">
+                    <p class="main-holder">
+                      <strong>Длительность:</strong>
+                      <span v-if="selectedItem.duration.sustained === true"
+                        >Поддерживомое до
+                      </span>
+                      {{ selectedItem.duration.value }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div class="line"></div>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="selectedItem.description"
+                  ></div>
+                  <div class="line"></div>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="selectedItem.powerDescription"
+                  ></div>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn color="primary" text @click="dialog = false"
+                    >Закрыть</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
 
             <!-- <v-expansion-panels
           multiple
@@ -508,7 +642,7 @@
     <v-dialog
       v-model="psychicDialog"
       :fullscreen="$vuetify.breakpoint.xsOnly"
-      width="1000px"
+      width="1200px"
       scrollable
     >
       <psychic-preview
@@ -530,6 +664,7 @@
 import PsychicDisciplineMixin from '~/mixins/PsychicDisciplineMixin';
 import PsychicPreview from "~/components/forge/PsychicPreview.vue";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
+import traitView from '~/components/TraitView';
 
 export default {
   name: 'PsychicPowers',
@@ -539,6 +674,7 @@ export default {
   ],
   components: {
     PsychicPreview,
+    traitView
   },
   props: [],
 
@@ -588,12 +724,19 @@ export default {
           value: 'area',
           sortable: false,
         },
+                {
+          text: '',
+          value: 'view',
+          sortable: false,
+        },
         {
           text: '',
           value: 'button',
           sortable: false,
         },
       ],
+      selectedItem: undefined,
+      dialog: undefined,
       cellSpell: undefined,
       rankSpell: undefined,
       levelSpell: undefined,
@@ -618,6 +761,7 @@ export default {
         ...this.settingHomebrews
       ];
     },
+
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
     },
@@ -697,6 +841,10 @@ export default {
     },
   },
   methods: {
+        openDialog(item) {
+      this.selectedItem = item
+      this.dialog = true
+    },
     characterSpell(rank, cell)
     {
     // { id, name, cost, selection}
@@ -748,7 +896,12 @@ export default {
       return talents.find(s => s.rank === rank && s.cell === cell);
     },
      updatePreview(levelAncestry, cell) {
-      const list = this.psychicPowersList.filter(spell => !spell.traits.join(',').includes('фокус'));
+      let list = this.psychicPowersList.filter(spell => !spell.traits.join(',').includes('фокус'))
+
+       if (levelAncestry === 0)
+         list = list.filter(spell => spell.traits.join(',').includes('заговор'))
+       else
+         list = list.filter(spell => !spell.traits.join(',').includes('заговор'))
 
       list.forEach(t => {
         const tal = t;
@@ -827,6 +980,7 @@ export default {
       this.loading = false;
       this.archetype = data;
     },
+
     async getPsychicPowers(sources) {
       const config = {
         params: { source: this.sources.join(','), },
@@ -839,7 +993,7 @@ export default {
           const lowercaseKeywords = species.traits.map((s) =>
             s.toUpperCase()
           );
-
+           species.trait = species.traits;
           const List1 = this.traitList;
           const trait = List1.filter((talent) =>
             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
@@ -864,6 +1018,7 @@ export default {
 
             });
             species.traitDesc = listAbilities;
+
           }
         });
 
@@ -888,4 +1043,82 @@ export default {
 };
 </script>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.traits {
+  background-color: #d9c484;
+  display: inline-block;
+  margin: 0.1em 0.15em !important;
+  padding: 0.1em 0.25em;
+  list-style-type: none !important;
+}
+.trait {
+  background-color: #5e0000;
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+}
+
+.simple {
+  display: inherit;
+  margin-bottom: 0;
+  padding-inline-start: 0.2em;
+}
+
+.head {
+  /* color: rgb(57, 54, 54); */
+  width: fit-content;
+  /* font-size: 24px; */
+  font-style: normal;
+  /* font-family: goodOTCondBold; */
+  font-weight: normal;
+  line-height: 24px;
+  /* text-transform: uppercase; */
+}
+
+.line {
+  height: 1px;
+  margin: 0 1rem;
+  flex-grow: 1;
+  background: #676767;
+}
+
+.tag {
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  font-family: goodOTCondBold;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rowFeat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.main-holder-divider p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  border-bottom: 1.5px solid black;
+}
+</style>

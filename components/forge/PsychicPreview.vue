@@ -56,6 +56,7 @@
         :search="searchQuery"
         :page.sync="pagination.page"
         show-expand
+        class="tall-rows"
         item-key="name"
         hide-default-footer
         :loading="!talents"
@@ -117,27 +118,44 @@
               </p>
             </div>
             <p></p>
-            <div v-if="item.action">
+            <div v-if="item.time">
               <p class="main-holder">
-                <strong>Сотворение:</strong> {{ item.action }} действия
+                <strong>Сотворение:</strong> {{ item.time.value }} действия
               </p>
             </div>
             <p></p>
-            <div v-if="item.distance">
+            <div v-if="item.range">
               <p class="main-holder">
-                <strong>Дистанция:</strong> {{ item.distance }}
+                <strong>Дистанция:</strong> {{ item.range }}
               </p>
             </div>
             <p></p>
             <div v-if="item.area">
               <p class="main-holder">
-                <strong>Область:</strong> <span v-html="item.area"></span>
+                <strong>Область:</strong> {{ item.area.value }}
+                {{ item.area.type }}
               </p>
             </div>
             <p></p>
             <div v-if="item.target">
               <p class="main-holder">
-                <strong>Дистанция:</strong> {{ item.target }}
+                <strong>Цель:</strong> {{ item.target }}
+              </p>
+            </div>
+            <div v-if="item.defense">
+              <p class="main-holder" v-if="item.defense.save">
+                <strong>Защита:</strong>
+                <span v-if="item.defense.save.basic === true">Базовый </span>
+                {{ item.defense.save.statistic }}
+              </p>
+            </div>
+            <div v-if="item.duration">
+              <p class="main-holder">
+                <strong>Длительность:</strong>
+                <span v-if="item.duration.sustained === true"
+                  >Поддерживомое до
+                </span>
+                {{ item.duration.value }}
               </p>
             </div>
             <p></p>
@@ -381,15 +399,15 @@ export default {
 
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
       let reduced = [];
-      filteredTalents.filter(talent => talent.level <= this.level && talent.cantrip === false).forEach((item) => {
-        if (item.trait) {
-          reduced.push(...item.trait);
+      filteredTalents.filter(talent => talent.level <= this.level && !talent.traits.includes("заговор")).forEach((item) => {
+        if (item.traits) {
+          reduced.push(...item.traits);
         }
       });
 
       reduced = reduced.filter(item => item.trim().length > 0);
       const distinct = [...new Set(reduced)];
-      return distinct.sort().map((trait) => ({ name: trait }));
+      return distinct.sort().map((traits) => ({ name: traits }));
 
     },
     finalKeywords() {
@@ -432,6 +450,9 @@ export default {
         if (spell.heightening)
         {
           if (spell.heightening.type == "interval") {
+            /*
+
+
             const interval = spell.heightening.interval;
             if (spell.heightening.area)
               for (var key of Object.keys(spell.heightening.area)) {
@@ -456,11 +477,12 @@ export default {
                 const mtp = Math.floor((spell.rank - spell.level) / interval);
                 const index = source[key].indexOf("d", 0);
                 const dice = source[key].slice(index - 1, index);
-                const diceValue = spell.value[key].slice(index - 1, index);
+                const diceValue = spell.damage.formula.slice(index - 1, index);
                 const diceSize = source[key].slice(index+1);
                 const value = parseInt(diceValue) + mtp * parseInt(dice);
                 spell.description = spell.description.replace("{{powerValue}}" + level, "<span style='color: green'>" + value + "d" + diceSize + "</span>");
-            }
+              }
+            */
               // const heightened = Math.floor((rank - 1) / spell.power);
               // const index = spell.powerValue1.indexOf("d", 0);
               // const dice = spell.powerValue1.slice(index-1, index);
@@ -520,7 +542,7 @@ export default {
 
       // )
 
-      return filteredTalents.filter(talent => talent.level <= this.level );
+      return filteredTalents.filter(talent => talent.level <= this.level || this.level === 0 && talent.traits.join(',').includes('заговор'));
     },
   }
 };
