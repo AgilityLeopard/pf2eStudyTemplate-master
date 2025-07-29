@@ -7,8 +7,8 @@
 
     <!-- Languages -->
     <v-col :cols="12">
-      <v-card>
-        <v-card-title>Детали</v-card-title>
+      <!-- <v-card> -->
+      <!-- <v-card-title>Детали</v-card-title>
         <v-card-text>
           <p><em>Божество:</em></p>
           <p><em>Возраст:</em></p>
@@ -26,7 +26,7 @@
           <p><em>Противники:</em></p>
           <p><em>Организации:</em></p>
         </v-card-text>
-      </v-card>
+      </v-card> -->
 
       <v-card>
         <v-card-title>Управление языками</v-card-title>
@@ -51,7 +51,9 @@
         <v-card-text>
           <p>
             Каждый персонаж владеет <strong>Общим языком</strong> и
-            дополнительными языками в количестве {{ MaxIntellectLanguage() }}.
+            дополнительными языками в в количестве, равном интеллекту ({{
+              MaxIntellectLanguage()
+            }}) .
           </p>
           <v-text-field
             v-model="languageInput"

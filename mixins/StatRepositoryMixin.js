@@ -304,8 +304,20 @@ export default {
           key: "unique",
           name: "Уникальный"
         },
-      ]
+      ],
+      areaRepository: {
+        burst: "взрыв",
+        emanation: "эманация",
+        line: "линия",
+        cube: "куб",
+        cone: "конус",
+        cylinder: "цилиндр"
+      },
+      levelSkill: {
+        class: [1, 3, 5, 7, 9, 10, 11, 13, 15, 17, 19, 20]
+      }
     };
+
   },
   methods: {
     getAttributeByKey(key) {

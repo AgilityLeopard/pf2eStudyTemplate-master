@@ -540,6 +540,22 @@ export default {
       this.$store.commit('characters/clearCharacterClassModFeature', { id: this.characterId, content: mod });
       this.$store.commit('characters/addCharacterClassModFeature', { id: this.characterId, content: mod });
 
+
+      ///Заклинания фокусные
+      const focusSpell = feature.options.find(s => s.key === feature.selected).focusSpell;
+       if (focusSpell) {
+  
+          const payload = {
+            id: this.characterId,
+            key: this.textToKebab(focusSpell),
+            type: feature.type,
+            source: "archetype",
+          };
+          this.$store.commit("characters/removeCharacterFocusSpellbytype", payload);
+          this.$store.commit("characters/addCharacterFocusSpell", payload);
+     
+      }
+
       //Навыки
       const skill = [];
       skill.push(feature.options.find(s => s.key === feature.selected).skill);

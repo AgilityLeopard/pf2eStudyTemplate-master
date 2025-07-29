@@ -21,7 +21,7 @@
       >
 
       <v-tab-item class="my-tab-item" key="tab-spell" :value="`tab-spell`">
-        <v-col v-if="archetype && !archetype.spellTradition" :cols="12">
+        <v-col v-if="!archetype || !archetype.spellTradition" :cols="12">
           <v-alert
             type="warning"
             class="caption ml-4 mr-4"
@@ -89,15 +89,117 @@
                 </v-row>
               </template>
             </v-data-table> -->
-
+            <!-- 
             <h2 class="subtitle-1 text-center" v-if="levelAncestry - 1 == 0">
               Чары
             </h2>
             <h2 class="subtitle-1 text-center" v v-if="levelAncestry - 1 !== 0">
               {{ levelAncestry - 1 }} уровень
+            </h2> -->
+
+            <h2 class="subtitle-1 text-center">
+              {{
+                levelAncestry - 1 === 0
+                  ? "Чары"
+                  : `${levelAncestry - 1} уровень`
+              }}
             </h2>
 
-            <v-simple-table dense>
+            <v-data-table
+              :headers="headers"
+              :items="generateTableRows(levelAncestry - 1)"
+              item-key="cellIndex"
+              hide-default-footer
+              dense
+            >
+              <template v-slot:item.name="{ item }">
+                <span v-if="!item.name"> Пустой слот </span>
+                {{ item.name }}
+              </template>
+
+              <template v-slot:item.action="{ item }">
+                <!-- {{ item?.time }} -->
+                <div v-if="item?.time">
+                  <img
+                    :src="iconAction(item?.time?.value)"
+                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                  />
+                </div>
+              </template>
+
+              <template v-slot:item.duration="{ item }">
+                <span v-if="item?.duration?.sustained === true"
+                  >Поддерживомое до
+                </span>
+                {{ item?.duration?.value }}
+              </template>
+
+              <template v-slot:item.distance="{ item }">
+                {{ item?.distance || "-" }}
+              </template>
+
+              <template v-slot:item.saving="{ item }">
+                <span v-if="item?.defense?.save">
+                  <span v-if="item?.defense?.save?.basic">Базовый </span>
+                  {{
+                    SavingRepository.find(
+                      (t) => t.key === item?.defense?.save?.statistic
+                    ).name
+                  }}
+                </span>
+
+                <span v-if="item?.traits?.includes('атака')">
+                  <span>КБ </span>
+                </span>
+              </template>
+
+              <template v-slot:item.area="{ item }">
+                <span v-if="item?.area">
+                  {{ item?.area?.value }}-фут.
+                  {{ areaRepository[item?.area?.type] }}
+                </span>
+                <span v-if="item?.area && item?.target"> / </span>
+                <span v-if="item?.target">
+                  {{ item?.target }}
+                </span>
+              </template>
+
+              <template v-slot:item.view="{ item }">
+                <v-btn
+                  v-if="item.name"
+                  outlined
+                  x-small
+                  color="info"
+                  @click="openDialog(item)"
+                >
+                  <v-icon left>visibility</v-icon> Просмотр
+                </v-btn>
+              </template>
+
+              <template v-slot:item.button="{ item }">
+                <v-btn
+                  v-if="item.name"
+                  outlined
+                  x-small
+                  color="error"
+                  @click.stop.prevent="removeTalent(item)"
+                >
+                  <v-icon left>delete</v-icon> Удалить
+                </v-btn>
+
+                <v-btn
+                  v-if="!item.name"
+                  outlined
+                  x-small
+                  color="success"
+                  @click="updatePreview(item.rank, item.cell)"
+                >
+                  <v-icon left>add</v-icon> Добавить
+                </v-btn>
+              </template>
+            </v-data-table>
+
+            <!-- <v-simple-table dense>
               <template v-slot:default>
                 <thead>
                   <tr>
@@ -130,6 +232,7 @@
                       {{
                         characterSpell(levelAncestry - 1, cell)
                           ? characterSpell(levelAncestry - 1, cell).duration
+                              .value.value
                           : "-"
                       }}
                     </td>
@@ -192,103 +295,7 @@
                   </tr>
                 </tbody>
               </template>
-            </v-simple-table>
-
-            <v-dialog v-model="dialog" max-width="800px">
-              <v-card v-if="selectedItem">
-                <v-card-title>
-                  <h2>{{ selectedItem.name }}</h2>
-                </v-card-title>
-                <v-card-text>
-                  <v-row class="rowFeat">
-                    <div class="head">
-                      <h1>{{ selectedItem.name }}</h1>
-                    </div>
-                    <div class="line"></div>
-                    <div class="tag">Заклинание {{ selectedItem.level }}</div>
-                  </v-row>
-                  <v-row>
-                    <div>
-                      <trait-view
-                        v-if="selectedItem.traits"
-                        :item="selectedItem"
-                        class="mb-2"
-                      />
-                    </div>
-                  </v-row>
-                  <p></p>
-                  <!-- Описание закла -->
-                  <div v-if="selectedItem.traditions">
-                    <p class="main-holder">
-                      <strong>Традиция:</strong>
-                      {{ selectedItem.traditions.join(", ") }}
-                    </p>
-                  </div>
-                  <p></p>
-                  <div v-if="selectedItem.time">
-                    <p class="main-holder">
-                      <strong>Сотворение:</strong>
-                      {{ selectedItem.time.value }} действия
-                    </p>
-                  </div>
-                  <p></p>
-                  <div v-if="selectedItem.range">
-                    <p class="main-holder">
-                      <strong>Дистанция:</strong> {{ selectedItem.range }}
-                    </p>
-                  </div>
-                  <p></p>
-                  <div v-if="selectedItem.area">
-                    <p class="main-holder">
-                      <strong>Область:</strong> {{ selectedItem.area.value }}
-                      {{ selectedItem.area.type }}
-                    </p>
-                  </div>
-                  <p></p>
-                  <div v-if="selectedItem.target">
-                    <p class="main-holder">
-                      <strong>Цель:</strong> {{ selectedItem.target }}
-                    </p>
-                  </div>
-                  <div v-if="selectedItem.defense">
-                    <p class="main-holder" v-if="selectedItem.defense.save">
-                      <strong>Защита:</strong>
-                      <span v-if="selectedItem.defense.save.basic === true"
-                        >Базовый
-                      </span>
-                      {{ selectedItem.defense.save.statistic }}
-                    </p>
-                  </div>
-                  <div v-if="selectedItem.duration">
-                    <p class="main-holder">
-                      <strong>Длительность:</strong>
-                      <span v-if="selectedItem.duration.sustained === true"
-                        >Поддерживомое до
-                      </span>
-                      {{ selectedItem.duration.value }}
-                    </p>
-                  </div>
-                  <p></p>
-                  <div class="line"></div>
-                  <div
-                    class="pt-4 pb-2"
-                    v-html="selectedItem.description"
-                  ></div>
-                  <div class="line"></div>
-                  <div
-                    class="pt-4 pb-2"
-                    v-html="selectedItem.powerDescription"
-                  ></div>
-                </v-card-text>
-
-                <v-card-actions>
-                  <v-spacer />
-                  <v-btn color="primary" text @click="dialog = false"
-                    >Закрыть</v-btn
-                  >
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+            </v-simple-table> -->
 
             <!-- <v-expansion-panels
           multiple
@@ -499,6 +506,332 @@
         </v-col>
       </v-tab-item>
 
+      <v-tab-item class="my-tab-item" key="tab-ritual" :value="`tab-ritual`">
+        <v-btn outlined x-small color="success" @click="updatePreviewRitual()">
+          <v-icon left>add</v-icon> Добавить
+        </v-btn>
+
+        <v-card class="mb-4" dense outlined>
+          <h2 class="subtitle-1 text-center">
+            {{ "Чары" }}
+          </h2>
+
+          <v-data-table
+            :headers="headers"
+            :items="generateTableRitualRows()"
+            item-key="cellIndex"
+            hide-default-footer
+            dense
+          >
+            <template v-slot:item.name="{ item }">
+              <span v-if="!item.name"> Пустой слот </span>
+              {{ item.name }}
+            </template>
+
+            <template v-slot:item.action="{ item }">
+              <!-- {{ item?.time }} -->
+              <div v-if="item?.time">
+                <img
+                  :src="iconAction(item?.time?.value)"
+                  :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                />
+              </div>
+            </template>
+
+            <template v-slot:item.duration="{ item }">
+              <span v-if="item?.duration?.sustained === true"
+                >Поддерживаемое до
+              </span>
+              {{ item?.duration?.value }}
+            </template>
+
+            <template v-slot:item.distance="{ item }">
+              {{ item?.distance || "-" }}
+            </template>
+
+            <template v-slot:item.saving="{ item }">
+              <span v-if="item?.defense?.save">
+                <span v-if="item?.defense?.save?.basic">Базовый </span>
+                {{
+                  SavingRepository.find(
+                    (t) => t.key === item?.defense?.save?.statistic
+                  ).name
+                }}
+              </span>
+
+              <span v-if="item?.traits?.includes('атака')">
+                <span>КБ </span>
+              </span>
+            </template>
+
+            <template v-slot:item.area="{ item }">
+              <span v-if="item?.area">
+                {{ item?.area?.value }}-фут.
+                {{ areaRepository[item?.area?.type] }}
+              </span>
+              <span v-if="item?.area && item?.target"> / </span>
+              <span v-if="item?.target">
+                {{ item?.target }}
+              </span>
+            </template>
+
+            <template v-slot:item.view="{ item }">
+              <v-btn
+                v-if="item.name"
+                outlined
+                x-small
+                color="info"
+                @click="openDialog(item)"
+              >
+                <v-icon left>visibility</v-icon> Просмотр
+              </v-btn>
+            </template>
+
+            <template v-slot:item.button="{ item }">
+              <v-btn
+                v-if="item.name"
+                outlined
+                x-small
+                color="error"
+                @click.stop.prevent="removeTalent(item)"
+              >
+                <v-icon left>delete</v-icon> Удалить
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-tab-item>
+
+      <v-tab-item class="my-tab-item" key="tab-focus" :value="`tab-focus`">
+        <v-col v-if="!archetype || !archetype.spellFocusPool" :cols="12">
+          <v-alert
+            type="warning"
+            class="caption ml-4 mr-4"
+            dense
+            outlined
+            border="left"
+          >
+            У класса нет способности к фокусным заклинаниям
+          </v-alert>
+        </v-col>
+        <!-- Характеристики заклинателя -->
+        <v-col :cols="12" v-if="archetype && archetype.spellFocusPool">
+          <span>
+            <br />
+            <b>Сложность заклинаний:</b> {{ ModAttributeClassSpell() }}
+          </span>
+
+          <span>
+            <br />
+            <b>Атака заклинанием:</b> +{{ ModAttributeAttackSpell() }}
+          </span>
+
+          <span>
+            <br />
+            <b>Запас фокуса:</b> {{ archetype.spellFocusPool }}
+          </span>
+        </v-col>
+
+        <v-col :cols="12" v-if="archetype && archetype.spellFocusPool">
+          <v-card class="mb-4" dense outlined>
+            <h2 class="subtitle-1 text-center">
+              {{ "Чары" }}
+            </h2>
+
+            <v-data-table
+              :headers="headers"
+              :items="generateTableFocusRows(0).filter((r) => r.rank === 0)"
+              item-key="cellIndex"
+              hide-default-footer
+              dense
+            >
+              <template v-slot:item.name="{ item }">
+                <span v-if="!item.name"> Пустой слот </span>
+                {{ item.name }}
+              </template>
+
+              <template v-slot:item.action="{ item }">
+                <!-- {{ item?.time }} -->
+                <div v-if="item?.time">
+                  <img
+                    :src="iconAction(item?.time?.value)"
+                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                  />
+                </div>
+              </template>
+
+              <template v-slot:item.duration="{ item }">
+                <span v-if="item?.duration?.sustained === true"
+                  >Поддерживаемое до
+                </span>
+                {{ item?.duration?.value }}
+              </template>
+
+              <template v-slot:item.distance="{ item }">
+                {{ item?.distance || "-" }}
+              </template>
+
+              <template v-slot:item.saving="{ item }">
+                <span v-if="item?.defense?.save">
+                  <span v-if="item?.defense?.save?.basic">Базовый </span>
+                  {{
+                    SavingRepository.find(
+                      (t) => t.key === item?.defense?.save?.statistic
+                    ).name
+                  }}
+                </span>
+
+                <span v-if="item?.traits?.includes('атака')">
+                  <span>КБ </span>
+                </span>
+              </template>
+
+              <template v-slot:item.area="{ item }">
+                <span v-if="item?.area">
+                  {{ item?.area?.value }}-фут.
+                  {{ areaRepository[item?.area?.type] }}
+                </span>
+                <span v-if="item?.area && item?.target"> / </span>
+                <span v-if="item?.target">
+                  {{ item?.target }}
+                </span>
+              </template>
+
+              <template v-slot:item.view="{ item }">
+                <v-btn
+                  v-if="item.name"
+                  outlined
+                  x-small
+                  color="info"
+                  @click="openDialog(item)"
+                >
+                  <v-icon left>visibility</v-icon> Просмотр
+                </v-btn>
+              </template>
+
+              <!-- <template v-slot:item.button="{ item }">
+                <v-btn
+                  v-if="item.name"
+                  outlined
+                  x-small
+                  color="error"
+                  @click.stop.prevent="removeTalent(item)"
+                >
+                  <v-icon left>delete</v-icon> Удалить
+                </v-btn>
+
+                <v-btn
+                  v-if="!item.name"
+                  outlined
+                  x-small
+                  color="success"
+                  @click="updatePreview(item.rank, item.cell)"
+                >
+                  <v-icon left>add</v-icon> Добавить
+                </v-btn>
+              </template> -->
+            </v-data-table>
+
+            <h2 class="subtitle-1 text-center">
+              {{ `Заклинания` }}
+            </h2>
+            <v-data-table
+              :headers="headers"
+              :items="generateTableFocusRows(1).filter((r) => r.rank === 1)"
+              item-key="cellIndex"
+              hide-default-footer
+              dense
+            >
+              <template v-slot:item.name="{ item }">
+                <span v-if="!item.name"> Пустой слот </span>
+                {{ item.name }}
+              </template>
+
+              <template v-slot:item.action="{ item }">
+                <!-- {{ item?.time }} -->
+                <div v-if="item?.time">
+                  <img
+                    :src="iconAction(item?.time?.value)"
+                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                  />
+                </div>
+              </template>
+
+              <template v-slot:item.duration="{ item }">
+                <span v-if="item?.duration?.sustained === true"
+                  >Поддерживомое до
+                </span>
+                {{ item?.duration?.value }}
+              </template>
+
+              <template v-slot:item.distance="{ item }">
+                {{ item?.distance || "-" }}
+              </template>
+
+              <template v-slot:item.saving="{ item }">
+                <span v-if="item?.defense?.save">
+                  <span v-if="item?.defense?.save?.basic">Базовый </span>
+                  {{
+                    SavingRepository.find(
+                      (t) => t.key === item?.defense?.save?.statistic
+                    ).name
+                  }}
+                </span>
+
+                <span v-if="item?.traits?.includes('атака')">
+                  <span>КБ </span>
+                </span>
+              </template>
+
+              <template v-slot:item.area="{ item }">
+                <span v-if="item?.area">
+                  {{ item?.area?.value }}-фут.
+                  {{ areaRepository[item?.area?.type] }}
+                </span>
+                <span v-if="item?.area && item?.target"> / </span>
+                <span v-if="item?.target">
+                  {{ item?.target }}
+                </span>
+              </template>
+
+              <template v-slot:item.view="{ item }">
+                <v-btn
+                  v-if="item.name"
+                  outlined
+                  x-small
+                  color="info"
+                  @click="openDialog(item)"
+                >
+                  <v-icon left>visibility</v-icon> Просмотр
+                </v-btn>
+              </template>
+              <!-- 
+              <template v-slot:item.button="{ item }">
+                <v-btn
+                  v-if="item.name"
+                  outlined
+                  x-small
+                  color="error"
+                  @click.stop.prevent="removeTalent(item)"
+                >
+                  <v-icon left>delete</v-icon> Удалить
+                </v-btn>
+
+                <v-btn
+                  v-if="!item.name"
+                  outlined
+                  x-small
+                  color="success"
+                  @click="updatePreview(item.rank, item.cell)"
+                >
+                  <v-icon left>add</v-icon> Добавить
+                </v-btn>
+              </template> -->
+            </v-data-table>
+          </v-card>
+        </v-col>
+      </v-tab-item>
+
       <v-tab-item class="my-tab-item" key="tab-innate" :value="`tab-innate`">
         <v-col v-if="!isInnate()" :cols="12">
           <v-alert
@@ -512,7 +845,7 @@
           </v-alert>
         </v-col>
         <!-- Характеристики заклинателя -->
-        <v-col :cols="12" v-if="archetype && archetype.spellTradition">
+        <!-- <v-col :cols="12" v-if="archetype && archetype.spellTradition">
           <span
             ><br />
             <b>Обычай:</b> {{ archetype.spellTradition }}
@@ -527,9 +860,9 @@
             <br />
             <b>Атака заклинанием:</b> +{{ ModAttributeAttackSpell() }}
           </span>
-        </v-col>
+        </v-col> -->
 
-        <v-col :cols="12" v-if="archetype && archetype.spellTradition">
+        <!-- <v-col :cols="12" v-if="archetype && archetype.spellTradition">
           <v-card
             class="mb-4"
             dense
@@ -635,9 +968,139 @@
               </template>
             </v-simple-table>
           </v-card>
-        </v-col>
+        </v-col> -->
       </v-tab-item>
     </v-tabs>
+
+    <v-dialog v-model="dialog" max-width="800px">
+      <v-card v-if="selectedItem">
+        <!-- <v-card-title>
+          <h2>{{ selectedItem.name }}</h2>
+        </v-card-title> -->
+        <v-card-text>
+          <v-row class="rowFeat">
+            <div class="head">
+              <h1>{{ selectedItem.name }}</h1>
+            </div>
+            <div class="line"></div>
+            <div class="tag" v-if="selectedItem.ritual">
+              Ритуал {{ selectedItem.level }}
+            </div>
+            <div class="tag" v-if="!selectedItem.ritual">
+              Заклинание {{ selectedItem.level }}
+            </div>
+          </v-row>
+          <v-row>
+            <div>
+              <trait-view
+                v-if="selectedItem.traits"
+                :item="selectedItem"
+                class="mb-2"
+              />
+            </div>
+          </v-row>
+          <p></p>
+          <!-- Описание закла -->
+          <div v-if="selectedItem.traditions">
+            <p class="main-holder" v-if="selectedItem.traditions.length > 0">
+              <strong>Традиция:</strong>
+              {{ selectedItem.traditions.join(", ") }}
+            </p>
+          </div>
+          <div v-if="selectedItem.ritual">
+            <p class="main-holder">
+              <strong>Первичный кастер:</strong>
+              {{ selectedItem.ritual.primary.check }}
+            </p>
+
+            <p class="main-holder" v-if="selectedItem.ritual">
+              <strong>Вторичные кастеры:</strong>
+              {{ selectedItem.ritual.secondary.casters }}
+              ( {{ selectedItem.ritual.secondary.checks }} )
+            </p>
+          </div>
+          <p></p>
+          <div v-if="selectedItem.time">
+            <p class="main-holder" v-if="!selectedItem.ritual">
+              <strong>Сотворение:</strong>
+              <img
+                :src="iconAction(selectedItem?.time?.value)"
+                :class="{ 'invert-icon': !$vuetify.theme.dark }"
+              />
+            </p>
+            <p class="main-holder" v-if="selectedItem.ritual">
+              <strong>Сотворение:</strong> {{ selectedItem?.time?.value }}
+            </p>
+          </div>
+          <div v-if="selectedItem.cost">
+            <p class="main-holder" v-if="selectedItem.cost.value">
+              <strong>Стоимость:</strong>
+              {{ selectedItem.cost.value }}
+            </p>
+          </div>
+          <p></p>
+          <div v-if="selectedItem.range">
+            <p class="main-holder">
+              <strong>Дистанция:</strong> {{ selectedItem.range }}
+            </p>
+          </div>
+          <p></p>
+          <div v-if="selectedItem.area">
+            <p class="main-holder">
+              <strong>Область:</strong> {{ selectedItem?.area?.value }}-фут.
+              {{ areaRepository[selectedItem?.area?.type] }}
+            </p>
+          </div>
+          <p></p>
+          <div v-if="selectedItem.target">
+            <p class="main-holder">
+              <strong>Цель:</strong> {{ selectedItem.target }}
+            </p>
+          </div>
+          <div v-if="selectedItem.defense">
+            <p class="main-holder" v-if="selectedItem.defense.save">
+              <strong>Защита:</strong>
+              <!-- <strong>Защита:</strong>
+              <span v-if="selectedItem.defense.save.basic === true"
+                >Базовый
+              </span>
+              {{ selectedItem.defense.save.statistic }} -->
+              <span v-if="selectedItem?.defense?.save">
+                <span v-if="selectedItem?.defense?.save?.basic">Базовый </span>
+                {{
+                  SavingRepository.find(
+                    (t) => t.key === selectedItem?.defense?.save?.statistic
+                  ).name
+                }}
+              </span>
+
+              <span v-if="selectedItem?.traits?.includes('атака')">
+                <span>КБ </span>
+              </span>
+            </p>
+          </div>
+          <div v-if="selectedItem.duration">
+            <p class="main-holder" v-if="selectedItem.duration.value">
+              <strong>Длительность:</strong>
+              <span v-if="selectedItem.duration.sustained === true"
+                >Поддерживомое до
+              </span>
+              {{ selectedItem.duration.value }}
+            </p>
+          </div>
+          <p></p>
+          <div class="line"></div>
+          <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
+          <div class="line"></div>
+          <div class="pt-4 pb-2" v-html="selectedItem.powerDescription"></div>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" text @click="dialog = false">Закрыть</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="psychicDialog"
@@ -715,7 +1178,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Спасбросок',
+          text: 'Защита',
           value: 'saving',
           sortable: false,
         },
@@ -724,7 +1187,7 @@ export default {
           value: 'area',
           sortable: false,
         },
-                {
+        {
           text: '',
           value: 'view',
           sortable: false,
@@ -811,6 +1274,7 @@ export default {
         this.characterId
       );
     },
+
   },
   watch: {
     settingHomebrews: {
@@ -845,6 +1309,138 @@ export default {
       this.selectedItem = item
       this.dialog = true
     },
+        iconAction(action) {
+      if (action === '1') return `/img/icon/action_single.png`;
+      if (action === '2') return `/img/icon/action_double.png`;
+      if (action === '3') return `/img/icon/action_triple.png`;
+      if (action === 'reaction') return `/img/icon/action_reaction.png`;
+      if (action === 'free') return `/img/icon/action_free.png`;
+    },
+    generateTableRows(levelIndex) {
+    const progression =
+      this.archetype.spellProgression[this.characterLevel()]?.[levelIndex] || 0;
+
+      if (progression !== 0)
+      {
+        let spells = [];
+        for (let i = 1; i <= progression; i++)
+        {
+          const spell = {
+            ...this.characterSpell(levelIndex, i),
+            //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
+             rank: levelIndex,
+             cell: i,
+          }
+          spells.push(spell);
+        }
+        return spells;
+      }
+
+      return [];
+  },
+  generateTableRitualRows() {
+
+    const  ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId);
+
+
+     if (ritual)
+     {
+              let spells = [];
+          let i = 0;
+          ritual.forEach(spell => {
+            const spell1 = {
+            ...this.characterSpellRitual(i, spell.key),
+            //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
+            // rank: this.characterSpellFocus(levelIndex, i, spell.key)?.traits?.includes('фокус') ? 1 : 0,
+             cell: i,
+            }
+           if(this.characterSpellRitual(i, spell.key))
+            spells.push(spell1);
+
+            i++;
+            }
+          )
+         return spells || [];
+      }
+
+  },
+
+characterSpellRitual(cell, spell)
+{
+  // { id, name, cost, selection}
+  if (this.psychicPowersList === undefined) {
+    return false;
+  }
+
+  const rawTalent = this.psychicPowersList.find(t => t.key === spell);
+
+  const ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId).find(t => t.key === spell);
+
+
+  if (rawTalent === undefined) {
+
+    return []
+  }
+
+  const aggregatedTalent = Object.assign({}, rawTalent);
+  //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
+  aggregatedTalent.description = rawTalent.description;
+
+  aggregatedTalent.id = ritual.id;
+
+  // aggregatedTalent.cost = talent.cost;
+
+  aggregatedTalent.label = aggregatedTalent.name;
+  aggregatedTalent.rank = rawTalent.rank;
+  aggregatedTalent.cell = rawTalent.cell;
+
+  if (rawTalent.selected) {
+    aggregatedTalent.selected = rawTalent.selected;
+
+  }
+
+
+
+
+  return aggregatedTalent;
+
+
+
+}, updatePreviewRitual() {
+  let list = this.psychicPowersList.filter(spell => spell.ritual)
+
+
+  this.selectedPsychic = list
+  this.psychicDialog = true;
+
+},
+  generateTableFocusRows(levelIndex) {
+    const progression =
+      this.$store.getters['characters/characterFocusPoolById'](this.characterId);
+    const spellFocus = this.$store.getters['characters/characterFocusSpellById'](this.characterId);
+
+
+
+          let spells = [];
+          let i = 0;
+          spellFocus.forEach(spell => {
+            const spell1 = {
+            ...this.characterSpellFocus(levelIndex, i, spell.key),
+            //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
+             rank: this.characterSpellFocus(levelIndex, i, spell.key)?.traits?.includes('фокус') ? 1 : 0,
+             cell: i,
+            }
+           if(this.characterSpellFocus(levelIndex, i, spell1.key))
+            spells.push(spell1);
+
+            i++;
+            }
+          )
+         return spells || [];
+
+
+  },
     characterSpell(rank, cell)
     {
     // { id, name, cost, selection}
@@ -893,10 +1489,53 @@ export default {
       }).sort((a, b) => a.id.localeCompare(b.id));
 
 
-      return talents.find(s => s.rank === rank && s.cell === cell);
+      return talents.find(s => s.rank === rank && s.cell === cell) || {};
+    },
+        characterSpellFocus(rank, cell, spell)
+    {
+    // { id, name, cost, selection}
+    if (this.psychicPowersList === undefined) {
+        return false;
+      }
+
+      const rawTalent = this.psychicPowersList.find(t => t.key === spell);
+
+
+
+
+        if (rawTalent === undefined) {
+
+          return []
+        }
+
+        const aggregatedTalent = Object.assign({}, rawTalent);
+        //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
+        aggregatedTalent.description = rawTalent.description;
+
+        aggregatedTalent.id = rawTalent.id;
+
+        // aggregatedTalent.cost = talent.cost;
+
+        aggregatedTalent.label = aggregatedTalent.name;
+        aggregatedTalent.rank = rawTalent.rank;
+        aggregatedTalent.cell = rawTalent.cell;
+
+        if (rawTalent.selected) {
+          aggregatedTalent.selected = rawTalent.selected;
+
+        }
+
+
+
+
+            return aggregatedTalent;
+
+
+
     },
      updatePreview(levelAncestry, cell) {
-      let list = this.psychicPowersList.filter(spell => !spell.traits.join(',').includes('фокус'))
+      let list = this.psychicPowersList.filter(spell => !spell.ritual).filter(spell => !spell.ritual).filter(spell => !['фокус', 'композиция'].some(trait => spell.traits.includes(trait)))//.filter(spell => spell != 'композиция')
 
        if (levelAncestry === 0)
          list = list.filter(spell => spell.traits.join(',').includes('заговор'))
@@ -1028,7 +1667,10 @@ export default {
     removeTalent(talent) {
       const id = this.characterId;
       const source = `talent.${talent.id}`;
-      this.$store.commit('characters/removeCharacterSpell', { id, talentId: talent.id });
+      if(!talent.ritual)
+        this.$store.commit('characters/removeCharacterSpell', { id, talentId: talent.id });
+      else
+        this.$store.commit('characters/removeCharacterRitualSpell', { id, talentId: talent.id });
     },
 
     toggleDisciplineFilter(name) {
@@ -1120,5 +1762,8 @@ export default {
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   border-bottom: 1.5px solid black;
+}
+.invert-icon {
+  filter: brightness(1) invert(1); /* черный цвет из светлого */
 }
 </style>

@@ -3,7 +3,11 @@
     <li v-for="trait in List(item)" class="traits">
       <p
         class="trait"
-        v-if="trait.key !== 'необычный' && trait.key !== 'редкий'"
+        v-if="
+          trait.key !== 'необычный' &&
+          trait.key !== 'редкий' &&
+          trait.key !== 'обычный'
+        "
       >
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
@@ -40,11 +44,13 @@
 
 <script lang="js">
 import SluggerMixin from '~/mixins/SluggerMixin';
+import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
+
 
 export default {
   name: 'traitDetail',
   mixins: [
-    SluggerMixin,
+    SluggerMixin, StatRepositoryMixin
   ],
   props: {
     item: {
@@ -96,7 +102,7 @@ export default {
       data.forEach(t => t.key = t.key.toLowerCase());
       this.traitList = data;
     },
-        traitItem(item)
+      traitItem(item)
     {
           if (this.traitList !==undefined)
           {
@@ -108,7 +114,13 @@ export default {
     },
     List(item) {
       if (this.traitList !== undefined) {
-        return this.traitList.filter(s => item.trait.includes(s.key));
+        const list = [];
+        this.traitList.filter(s => item.trait.includes(s.key)).forEach(tr => {
+            list.push(tr);
+        })
+        const rar = this.traitList.find(s => item.rarity === s.nameEng.toLowerCase())
+         if(rar) list.push(rar)
+        return list.filter(t => t.key !== 'обычный');
 
       }
     }

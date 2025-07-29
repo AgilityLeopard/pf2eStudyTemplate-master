@@ -79,11 +79,12 @@ import { mapMutations } from "vuex";
 import ArchetypePreview from "~/components/forge/ArchetypePreview";
 import KeywordRepositoryMixin from "~/mixins/KeywordRepositoryMixin";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
+import SluggerMixin from "~/mixins/SluggerMixin";
 
 export default {
   name: "ArchetypeChoose",
   components: { ArchetypePreview },
-  mixins: [KeywordRepositoryMixin, StatRepositoryMixin],
+  mixins: [KeywordRepositoryMixin, StatRepositoryMixin, SluggerMixin],
   asyncData({ params }) {
     return {
       characterId: params.id,
@@ -435,7 +436,7 @@ export default {
       const level = this.$store.getters["characters/characterLevelById"](
         this.characterId
       );
-      
+
       //Правила улучшения, наподобие повышения Спасбросков или навыков от класса
       if (item.modification) {
         mods.push(...item.modification);
@@ -482,26 +483,33 @@ export default {
 
       this.$store.commit("characters/setInitialSkillSheet", {
         id: this.characterId,
-       // payload: { key: 1, value: item.skillTrained },
+        // payload: { key: 1, value: item.skillTrained },
       });
-      
-      const sheet = this.$store.getters['characters/characterSkillSheetById'](this.characterId);
+
+      const sheet = this.$store.getters["characters/characterSkillSheetById"](
+        this.characterId
+      );
       this.$store.commit("characters/setCharacterSkillPointClassUp", {
-          id: this.characterId,
-          payload: { key: 1, value: 0 },
-        });
+        id: this.characterId,
+        payload: { key: 1, value: 0 },
+      });
 
-
-      item.skillTrained.forEach(s => {
-        if(sheet.find(i => i.key === s && i.level === 1)) 
+      item.skillTrained.forEach((s) => {
+        if (sheet.find((i) => i.key === s && i.level === 1))
           this.$store.commit("characters/setCharacterSkillPointClassUp", {
-          id: this.characterId,
-          payload: { key: 1, value: 1 },
-        });
+            id: this.characterId,
+            payload: { key: 1, value: 1 },
+          });
 
-        this.$store.commit('characters/addSkillSheet', { id: id, key: s, level: 1, type: 'class', optional: true  });
-      })
-      
+        this.$store.commit("characters/addSkillSheet", {
+          id: id,
+          key: s,
+          level: 1,
+          type: "class",
+          optional: true,
+        });
+      });
+
       //
       this.$store.commit("characters/setCharacterPerception", {
         id: this.characterId,
@@ -626,10 +634,34 @@ export default {
       }
 
       //Зачищаем все заклы и ставим новые, если класс - магический
-      this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
+      //Зачищаем все заклы и ставим новые, если класс - магический
+      this.$store.commit("characters/clearCharacterFocusSpell", {
         id: this.characterId,
         source: "archetype",
       });
+
+      const focusSpell = item.spellFocusBase;
+      const focus = item.spellFocusPool;
+      if (focus) {
+        const payload = {
+          id: this.characterId,
+          value: focus,
+          source: "archetype",
+        };
+        this.$store.commit("characters/addCharacterFocus", payload);
+      }
+
+      if (focusSpell) {
+        focusSpell.forEach((feature) => {
+          const payload = {
+            id: this.characterId,
+            key: this.textToKebab(feature),
+            source: "archetype",
+          };
+          this.$store.commit("characters/addCharacterFocusSpell", payload);
+        });
+      }
+
       const featuresWithPowers = item.archetypeFeatures.filter(
         (f) => f.psychicPowers !== undefined
       );

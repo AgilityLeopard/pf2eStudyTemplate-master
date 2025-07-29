@@ -56,7 +56,6 @@
         :search="searchQuery"
         :page.sync="pagination.page"
         show-expand
-        class="tall-rows"
         item-key="name"
         hide-default-footer
         :loading="!talents"
@@ -65,7 +64,7 @@
       >
         <template v-slot:no-data />
 
-        <template v-slot:item.name="{ item }">
+        <!-- <template v-slot:item.name="{ item }">
           <v-row
             ><span>{{ item.name }}</span></v-row
           >
@@ -74,8 +73,19 @@
               <trait-view v-if="item.traits" :item="item" class="mb-2" />
             </div>
           </v-row>
+        </template> -->
+        <template v-slot:item.name="{ item }">
+          <td>
+            <v-row dense no-gutters>
+              <v-col cols="12">
+                <span>{{ item.name }}</span>
+              </v-col>
+              <v-col cols="12" v-if="item.traits">
+                <trait-view :item="item" class="mt-1" />
+              </v-col>
+            </v-row>
+          </td>
         </template>
-
         <template v-slot:item.level="{ item }">
           <span>
             {{ item.level }}
@@ -86,9 +96,9 @@
           <span v-if="item.source.book" v-html="item.book" />
         </template>
 
-        <template v-slot:item.traditions="{ item }">
+        <!-- <template v-slot:item.traditions="{ item }">
           <span v-if="item.traditions">{{ item.traditions.join(", ") }}</span>
-        </template>
+        </template> -->
 
         <template v-slot:item.buy="{ item }">
           <v-btn x-small @click="addTalent(item, type, item.level)">
@@ -97,13 +107,16 @@
         </template>
 
         <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">
+          <td :colspan="12">
             <v-row class="rowFeat">
               <div class="head">
                 <h1>{{ item.name }}</h1>
               </div>
               <div class="line"></div>
-              <div class="tag">Заклинание {{ item.level }}</div>
+              <div class="tag" v-if="item.ritual">Ритуал {{ item.level }}</div>
+              <div class="tag" v-if="!item.ritual">
+                Заклинание {{ item.level }}
+              </div>
             </v-row>
             <v-row>
               <div>
@@ -113,14 +126,39 @@
             <p></p>
             <!-- Описание закла -->
             <div v-if="item.traditions">
-              <p class="main-holder">
+              <p class="main-holder" v-if="item.traditions.length > 0">
                 <strong>Традиция:</strong> {{ item.traditions.join(", ") }}
               </p>
             </div>
             <p></p>
-            <div v-if="item.time">
+            <div v-if="item.ritual">
               <p class="main-holder">
-                <strong>Сотворение:</strong> {{ item.time.value }} действия
+                <strong>Первичный кастер:</strong>
+                {{ item.ritual.primary.check }}
+              </p>
+
+              <p class="main-holder" v-if="item.ritual">
+                <strong>Вторичные кастеры:</strong>
+                {{ item.ritual.secondary.casters }}
+                ( {{ item.ritual.secondary.checks }} )
+              </p>
+            </div>
+            <div v-if="item.cost">
+              <p class="main-holder" v-if="item.cost.value">
+                <strong>Стоимость:</strong>
+                {{ item.cost.value }}
+              </p>
+            </div>
+            <div v-if="item.time">
+              <p class="main-holder" v-if="!item.ritual">
+                <strong>Сотворение:</strong>
+                <img
+                  :src="iconAction(item?.time?.value)"
+                  :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                />
+              </p>
+              <p class="main-holder" v-if="item.ritual">
+                <strong>Сотворение:</strong> {{ item?.time?.value }}
               </p>
             </div>
             <p></p>
@@ -132,25 +170,36 @@
             <p></p>
             <div v-if="item.area">
               <p class="main-holder">
-                <strong>Область:</strong> {{ item.area.value }}
-                {{ item.area.type }}
+                <strong>Область:</strong> {{ item?.area?.value }}-фут.
+                {{ areaRepository[item?.area?.type] }}
               </p>
             </div>
             <p></p>
             <div v-if="item.target">
-              <p class="main-holder">
+              <p class="main-holder" v-if="item.target">
                 <strong>Цель:</strong> {{ item.target }}
               </p>
             </div>
             <div v-if="item.defense">
               <p class="main-holder" v-if="item.defense.save">
                 <strong>Защита:</strong>
-                <span v-if="item.defense.save.basic === true">Базовый </span>
-                {{ item.defense.save.statistic }}
+
+                <span v-if="item?.defense?.save">
+                  <span v-if="item?.defense?.save?.basic">Базовый </span>
+                  {{
+                    SavingRepository.find(
+                      (t) => t.key === item?.defense?.save?.statistic
+                    ).name
+                  }}
+                </span>
+
+                <span v-if="item?.traits?.includes('атака')">
+                  <span>КБ </span>
+                </span>
               </p>
             </div>
             <div v-if="item.duration">
-              <p class="main-holder">
+              <p class="main-holder" v-if="item.duration.value">
                 <strong>Длительность:</strong>
                 <span v-if="item.duration.sustained === true"
                   >Поддерживомое до
@@ -275,11 +324,11 @@ export default {
           value: 'source.book',
           sortable: false,
         },
-        {
-          text: 'Обычай',
-          value: 'tradition',
-          sortable: false,
-        },
+        // {
+        //   text: 'Обычай',
+        //   value: 'tradition',
+        //   sortable: false,
+        // },
         {
           text: 'Добавить',
           value: 'buy',
@@ -306,8 +355,19 @@ export default {
       if (this.talents === undefined || this.talents.prerequisites === undefined) return undefined;
       return this.talents.prerequisites.filter(pre => pre.group === 'skills').map(pre => `${this.getSkillByKey(pre.value).name} ${pre.threshold}`).join(', ');
     },
+    ritual() {
+      return this.$store.getters['characters/characterRitualSpellsById'](this.characterId);
+    },
+
   },
   methods: {
+    iconAction(action) {
+      if (action === '1') return `/img/icon/action_single.png`;
+      if (action === '2') return `/img/icon/action_double.png`;
+      if (action === '3') return `/img/icon/action_triple.png`;
+      if (action === 'reaction') return `/img/icon/action_reaction.png`;
+      if (action === 'free') return `/img/icon/action_free.png`;
+    },
     addTalent(talent, place, level1) {
       const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
@@ -325,7 +385,12 @@ export default {
         source: `talent.${talentUniqueId}`,
       };
 
-      this.$store.commit('characters/addCharacterSpell', { id: this.characterId, talent: payload });
+      if(!talent.ritual)
+        this.$store.commit('characters/addCharacterSpell', { id: this.characterId, talent: payload });
+      else
+
+        this.$store.commit('characters/addCharacterRitualSpell', { id: this.characterId, talent: payload });
+
       this.$emit('cancel');
     },
     characterLevel(){
@@ -370,9 +435,14 @@ export default {
       }
       let filteredTalents = this.talents;
       //Берем обычаи из листа
-      const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+      if (!filteredTalents.find(spell => spell.ritual))
+      {
+    const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
       // Берем тот список, что соответствует заклинательскому
+
       filteredTalents = filteredTalents.filter((talent) =>talent.traditions &&  talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
+      }
+
 
       let reduced = [];
       filteredTalents.filter(talent => talent.level <= this.level ).forEach((item) => {
@@ -392,10 +462,16 @@ export default {
       }
       let filteredTalents = this.talents;
       //Берем обычаи из листа
-      const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+
       // Берем тот список, что соответствует заклинательскому
 
-        filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
+      if (!filteredTalents.find(spell => spell.ritual))
+      {
+    const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+      // Берем тот список, что соответствует заклинательскому
+
+      filteredTalents = filteredTalents.filter((talent) =>talent.traditions &&  talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
+      }
 
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
       let reduced = [];
@@ -419,8 +495,12 @@ export default {
         return [];
       }
 
+      const ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId);
 
       let filteredTalents = this.talents;
+
+       if (filteredTalents.find(spell => spell.ritual))
+        filteredTalents = filteredTalents.filter(t => !ritual.find(spell => spell.key === t.key))
 
       if (this.selectedTagsFilters.length > 0) {
         filteredTalents = filteredTalents.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
@@ -437,8 +517,8 @@ export default {
         return talent;
       });
 
-      //const lowercaseKeywords = filteredTalents.map(s => s.tags.toString().toUpperCase());
-      const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+
+     // const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
       // Берем тот список, что соответствует заклинательскому
 
       // filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
@@ -541,8 +621,10 @@ export default {
 
 
       // )
-
-      return filteredTalents.filter(talent => talent.level <= this.level || this.level === 0 && talent.traits.join(',').includes('заговор'));
+      if (!filteredTalents.find(spell => spell.ritual))
+          return filteredTalents.filter(talent => talent.level <= this.level || this.level === 0 && talent.traits.join(',').includes('заговор'));
+      else
+        return filteredTalents
     },
   }
 };
@@ -625,5 +707,22 @@ export default {
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   border-bottom: 1.5px solid black;
+}
+
+.spaced-table >>> tbody {
+  display: table-caption;
+  border-spacing: 0 8px; /* 8px вертикальный отступ между строками */
+}
+.spaced-table >>> tr {
+  /* border-radius: 6px; */
+  border-spacing: 0 8px;
+  overflow: hidden;
+}
+
+.auto-height-table >>> tr {
+  white-space: normal; /* Позволяет перенос строк и авто-высоту */
+  vertical-align: top; /* По желанию — выравнивание по верхнему краю */
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 </style>

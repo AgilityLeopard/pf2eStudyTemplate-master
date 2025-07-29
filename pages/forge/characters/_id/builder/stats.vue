@@ -15,7 +15,11 @@
       <v-expansion-panel
         v-for="levelAncestry in 20"
         :key="levelAncestry"
-        v-if="levelAncestry <= characterLevel()"
+        v-if="
+          levelAncestry <= characterLevel() &&
+          (archetype?.isFeatLevelOne === true ||
+            levelSkill['class'].includes(levelAncestry))
+        "
       >
         <v-expansion-panel-header
           >{{ levelAncestry }} уровень

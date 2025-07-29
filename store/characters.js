@@ -232,7 +232,10 @@ export const getters = {
       : getDefaultState().faction.key,
   characterFactionLabelById: (state) => (id) =>
     state.characters[id] ? state.characters[id].faction.label : "unknown",
-
+  characterFocusSpellById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].spellsFocus : [],
+  characterFocusPoolById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].FocusPool : [],
   characterArchetypeKeyById: (state) => (id) =>
     state.characters[id]
       ? state.characters[id].archetype.key
@@ -304,7 +307,7 @@ export const getters = {
   characterAncestryFreeBoost2ById: (state) => (id) =>
     state.characters[id] ? state.characters[id].AncestryFreeBoost2 : {},
   characterBackgroundFreeBoostById: (state) => (id) =>
-    
+
     state.characters[id] ? state.characters[id].BackgroundFreeBoost : {},
   characterClassBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ClassBoost : {},
@@ -447,6 +450,8 @@ export const getters = {
   characterSpellsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].spells : [],
 
+  characterRitualSpellsById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].ritualSpells : [],
   // Wargear
   characterWargearById: (state) => (id) =>
     state.characters[id] ? state.characters[id].wargear : [],
@@ -2008,6 +2013,65 @@ export const mutations = {
     character.spells = character.spells.filter((t) => t.id !== payload.talentId); // cleanup
 
   },
+  addCharacterRitualSpell(state, payload) {
+    const character = state.characters[payload.id];
+    const { talent } = payload;
+
+
+    const talentUniqueId = Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, "")
+      .substr(0, 8);
+
+    talent.id = talent.id;
+    character.ritualSpells.push(talent);
+
+  },
+  removeCharacterRitualSpell(state, payload) {
+    const character = state.characters[payload.id];
+    character.ritualSpells = character.ritualSpells.filter((t) => t.id !== payload.talentId); // cleanup
+
+  },
+
+  ///фокус
+  addCharacterFocus(state, payload) {
+    const character = state.characters[payload.id];
+    character.focusPool.push(payload);
+  },
+  removeCharacterFocus(state, payload) {
+    const character = state.characters[payload.id];
+    character.focusPool.filter(t => t.source !== payload.source);
+  },
+  addCharacterFocusSpell(state, payload) {
+    const character = state.characters[payload.id];
+    const spell = payload;
+
+
+    const talentUniqueId = Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, "")
+      .substr(0, 8);
+
+    spell.id = talentUniqueId;
+    character.spellsFocus.push(spell);
+
+  },
+  removeCharacterFocusSpell(state, payload) {
+    const character = state.characters[payload.id];
+    character.spellsFocus = character.spells?.filter((t) => t.key !== payload.key); // cleanup
+
+  },
+  removeCharacterFocusSpellbytype(state, payload) {
+    const character = state.characters[payload.id];
+    character.spellsFocus = character.spells?.filter((t) => t.payload !== payload.type); // cleanup
+
+  },
+  clearCharacterFocusSpell(state, payload) {
+    const character = state.characters[payload.id];
+    character.spellsFocus = character.spellsFocus?.filter((t) => t.source !== payload.source); // cleanup
+
+
+  },
   /**
    * @param state
    * @param payload { id, source: `ascension.${key}`, cascade: true }
@@ -2801,6 +2865,7 @@ const getDefaultState = () => ({
   keywords: [],
   talents: [],
   spells: [],
+  ritualSpells: [],
   mutations: [],
   psychicPowers: [],
   ascensionPackages: {
@@ -2832,5 +2897,7 @@ const getDefaultState = () => ({
   fluff: {
     notes: "",
   },
+  focusPool: [],
+  spellsFocus: [],
 
 });
