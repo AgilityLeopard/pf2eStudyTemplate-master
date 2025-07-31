@@ -1282,7 +1282,145 @@
               :value="`tab-psychic-powers`"
             >
               <div class="pa-2">
-                <v-data-table
+                <v-col
+                  :cols="12"
+                  v-if="
+                    characterArchetype && characterArchetype.spellProgression
+                  "
+                >
+                  <v-card
+                    class="mb-4"
+                    dense
+                    outlined
+                    v-for="levelAncestry in 10"
+                    :key="levelAncestry"
+                    v-if="
+                      levelAncestry - 1 <=
+                        characterArchetype.spellProgression[
+                          characterLevel()
+                        ].findIndex((t) => t == 0) -
+                          1 || characterLevel() == 20
+                    "
+                  >
+                    <h2 class="subtitle-1 text-center">
+                      {{
+                        levelAncestry - 1 === 0
+                          ? "Чары"
+                          : `${levelAncestry - 1} уровень`
+                      }}
+                    </h2>
+
+                    <v-data-table
+                      :headers="psychicPowersHeaders"
+                      :items="psychicPowers(levelAncestry - 1)"
+                      :item-class="getItemClass"
+                      item-key="cellIndex"
+                      hide-default-footer
+                      dense
+                    >
+                      <template v-slot:item.cast="{ item }">
+                        <v-btn
+                          v-if="item.name"
+                          outlined
+                          x-small
+                          color="error"
+                          @click="updateCast(item)"
+                        >
+                          <v-icon left>delete</v-icon> Сотв
+                        </v-btn>
+                      </template>
+
+                      <template v-slot:item.name="{ item }">
+                        <span v-if="!item.name"> Пустой слот </span>
+                        {{ item.name }}
+                      </template>
+
+                      <template v-slot:item.action="{ item }">
+                        <!-- {{ item?.time }} -->
+                        <div v-if="item?.time">
+                          <img
+                            :src="iconAction(item?.time?.value)"
+                            :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                          />
+                        </div>
+                      </template>
+
+                      <template v-slot:item.duration="{ item }">
+                        <span v-if="item?.duration?.sustained === true"
+                          >Поддерживомое до
+                        </span>
+                        {{ item?.duration?.value }}
+                      </template>
+
+                      <template v-slot:item.distance="{ item }">
+                        {{ item?.distance || "-" }}
+                      </template>
+
+                      <template v-slot:item.saving="{ item }">
+                        <span v-if="item?.defense?.save">
+                          <span v-if="item?.defense?.save?.basic"
+                            >Базовый
+                          </span>
+                          {{
+                            SavingRepository.find(
+                              (t) => t.key === item?.defense?.save?.statistic
+                            ).name
+                          }}
+                        </span>
+
+                        <span v-if="item?.traits?.includes('атака')">
+                          <span>КБ </span>
+                        </span>
+                      </template>
+
+                      <template v-slot:item.area="{ item }">
+                        <span v-if="item?.area">
+                          {{ item?.area?.value }}-фут.
+                          {{ areaRepository[item?.area?.type] }}
+                        </span>
+                        <span v-if="item?.area && item?.target"> / </span>
+                        <span v-if="item?.target">
+                          {{ item?.target }}
+                        </span>
+                      </template>
+
+                      <template v-slot:item.view="{ item }">
+                        <v-btn
+                          v-if="item.name"
+                          outlined
+                          x-small
+                          color="info"
+                          @click="openDialog(item)"
+                        >
+                          <v-icon left>visibility</v-icon> Просмотр
+                        </v-btn>
+                      </template>
+
+                      <!-- <template v-slot:item.button="{ item }">
+                        <v-btn
+                          v-if="item.name"
+                          outlined
+                          x-small
+                          color="error"
+                          @click.stop.prevent="removeTalent(item)"
+                        >
+                          <v-icon left>delete</v-icon> Удалить
+                        </v-btn>
+
+                        <v-btn
+                          v-if="!item.name"
+                          outlined
+                          x-small
+                          color="success"
+                          @click="updatePreview(item.rank, item.cell)"
+                        >
+                          <v-icon left>add</v-icon> Добавить
+                        </v-btn>
+                      </template> -->
+                    </v-data-table>
+                  </v-card>
+                </v-col>
+                <!-- <v-data-table
                   :headers="psychicPowersHeaders"
                   :items="psychicPowers"
                   hide-default-footer
@@ -1313,7 +1451,7 @@
                       </td>
                     </tr>
                   </template>
-                </v-data-table>
+                </v-data-table> -->
               </div>
 
               <!-- notes, bound, others -->
@@ -1554,6 +1692,146 @@
             </v-tab-item>
           </v-tabs>
         </v-card>
+
+        <v-dialog v-model="dialog" max-width="800px">
+          <v-card v-if="selectedItem">
+            <!-- <v-card-title>
+          <h2>{{ selectedItem.name }}</h2>
+        </v-card-title> -->
+            <v-card-text>
+              <v-row class="rowFeat">
+                <div class="head">
+                  <h1>{{ selectedItem.name }}</h1>
+                </div>
+                <div class="line"></div>
+                <div class="tag" v-if="selectedItem.ritual">
+                  Ритуал {{ selectedItem.level }}
+                </div>
+                <div class="tag" v-if="!selectedItem.ritual">
+                  Заклинание {{ selectedItem.level }}
+                </div>
+              </v-row>
+              <v-row>
+                <div>
+                  <trait-view
+                    v-if="selectedItem.traits"
+                    :item="selectedItem"
+                    class="mb-2"
+                  />
+                </div>
+              </v-row>
+              <p></p>
+              <!-- Описание закла -->
+              <div v-if="selectedItem.traditions">
+                <p
+                  class="main-holder"
+                  v-if="selectedItem.traditions.length > 0"
+                >
+                  <strong>Традиция:</strong>
+                  {{ selectedItem.traditions.join(", ") }}
+                </p>
+              </div>
+              <div v-if="selectedItem.ritual">
+                <p class="main-holder">
+                  <strong>Первичный кастер:</strong>
+                  {{ selectedItem.ritual.primary.check }}
+                </p>
+
+                <p class="main-holder" v-if="selectedItem.ritual">
+                  <strong>Вторичные кастеры:</strong>
+                  {{ selectedItem.ritual.secondary.casters }}
+                  ( {{ selectedItem.ritual.secondary.checks }} )
+                </p>
+              </div>
+              <p></p>
+              <div v-if="selectedItem.time">
+                <p class="main-holder" v-if="!selectedItem.ritual">
+                  <strong>Сотворение:</strong>
+                  <img
+                    :src="iconAction(selectedItem?.time?.value)"
+                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                  />
+                </p>
+                <p class="main-holder" v-if="selectedItem.ritual">
+                  <strong>Сотворение:</strong> {{ selectedItem?.time?.value }}
+                </p>
+              </div>
+              <div v-if="selectedItem.cost">
+                <p class="main-holder" v-if="selectedItem.cost.value">
+                  <strong>Стоимость:</strong>
+                  {{ selectedItem.cost.value }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="selectedItem.range">
+                <p class="main-holder">
+                  <strong>Дистанция:</strong> {{ selectedItem.range }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="selectedItem.area">
+                <p class="main-holder">
+                  <strong>Область:</strong> {{ selectedItem?.area?.value }}-фут.
+                  {{ areaRepository[selectedItem?.area?.type] }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="selectedItem.target">
+                <p class="main-holder">
+                  <strong>Цель:</strong> {{ selectedItem.target }}
+                </p>
+              </div>
+              <div v-if="selectedItem.defense">
+                <p class="main-holder" v-if="selectedItem.defense.save">
+                  <strong>Защита:</strong>
+                  <!-- <strong>Защита:</strong>
+              <span v-if="selectedItem.defense.save.basic === true"
+                >Базовый
+              </span>
+              {{ selectedItem.defense.save.statistic }} -->
+                  <span v-if="selectedItem?.defense?.save">
+                    <span v-if="selectedItem?.defense?.save?.basic"
+                      >Базовый
+                    </span>
+                    {{
+                      SavingRepository.find(
+                        (t) => t.key === selectedItem?.defense?.save?.statistic
+                      ).name
+                    }}
+                  </span>
+
+                  <span v-if="selectedItem?.traits?.includes('атака')">
+                    <span>КБ </span>
+                  </span>
+                </p>
+              </div>
+              <div v-if="selectedItem.duration">
+                <p class="main-holder" v-if="selectedItem.duration.value">
+                  <strong>Длительность:</strong>
+                  <span v-if="selectedItem.duration.sustained === true"
+                    >Поддерживомое до
+                  </span>
+                  {{ selectedItem.duration.value }}
+                </p>
+              </div>
+              <p></p>
+              <div class="line"></div>
+              <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
+              <div class="line"></div>
+              <div
+                class="pt-4 pb-2"
+                v-html="selectedItem.powerDescription"
+              ></div>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer />
+              <v-btn color="primary" text @click="dialog = false"
+                >Закрыть</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </div>
@@ -1570,6 +1848,7 @@ import DodCorruptionManager from '~/components/forge/DodCorruptionManager';
 import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
 import GridSheet from '~/components/forge/sheetGrid';
 import {marked} from 'marked';
+import traitView from '~/components/TraitView';
 
 export default {
   name: 'in-app-view',
@@ -1585,7 +1864,8 @@ export default {
   components: {
     DodDefaultBreadcrumbs,
     DodCorruptionManager,
-    GridSheet
+    GridSheet,
+    traitView
   },
   props: [],
   head() {
@@ -1653,20 +1933,70 @@ export default {
         { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
       ],
       psychicPowersHeaders: [
-        { text: 'Name', sortable: false, align: 'left', class: 'small pa-1' },
-        { text: 'DN', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Activation', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Duration', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Range', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Multi-Target', sortable: false, align: 'center', class: 'small pa-1' },
-        { text: 'Effect', sortable: false, align: 'left', class: 'small pa-1' },
+                 {
+          text: 'Сотв.',
+          value: 'cast',
+          align: 'left',
+          sortable: false, class: 'small pa-1'
+        },
+         {
+          text: 'Название',
+          value: 'name',
+          align: 'left',
+          sortable: true, class: 'small pa-1'
+        },
+        {
+          text: 'Действия',
+          value: 'action',
+          align: 'center',
+          sortable: true, class: 'small pa-1'
+        },
+        {
+          text: 'Длительность',
+          value: 'duration',
+          sortable: true, class: 'small pa-1'
+        },
+        {
+          text: 'Дистанция',
+          value: 'range',
+          sortable: false, class: 'small pa-1'
+        },
+        {
+          text: 'Защита',
+          value: 'saving',
+          sortable: false, class: 'small pa-1'
+        },
+        {
+          text: 'Область/цель',
+          value: 'area',
+          sortable: false, class: 'small pa-1'
+        },
+        {
+          text: '',
+          value: 'view',
+          sortable: false, class: 'small pa-1'
+        },
+        {
+          text: '',
+          value: 'button',
+          sortable: false, class: 'small pa-1'
+        },
+        // { text: 'Name', sortable: false, align: 'left', class: 'small pa-1' },
+        // { text: 'DN', sortable: false, align: 'center', class: 'small pa-1' },
+        // { text: 'Activation', sortable: false, align: 'center', class: 'small pa-1' },
+        // { text: 'Duration', sortable: false, align: 'center', class: 'small pa-1' },
+        // { text: 'Range', sortable: false, align: 'center', class: 'small pa-1' },
+        // { text: 'Multi-Target', sortable: false, align: 'center', class: 'small pa-1' },
+        // { text: 'Effect', sortable: false, align: 'left', class: 'small pa-1' },
       ],
+      crossedRows: [],
       descriptionSection: { selection: 'all' },
       abilitySection: { filter: 'all' },
       wargearSection: { filter: 'all' },
       currentHP: 0,
       tempHP: 0,
       loading: false,
+      selectedItem: undefined,
       //
       showContextDialog: false,
       contextDialogComponent: undefined,
@@ -1694,6 +2024,7 @@ export default {
         M: 6,
         L: 8,
       },
+      dialog: false,
       customKeyword: {
         key: undefined,
         name: 'Custom Keywords',
@@ -1707,6 +2038,7 @@ export default {
       wargearRepository: undefined,
       abilityList: undefined,
       actionList: undefined,
+      psychicPowersList: undefined,
     };
   },
   computed: {
@@ -2743,23 +3075,7 @@ export default {
     gear() {
       return this.wargear.filter((w) => !['Armour', 'Ranged Weapon', 'Melee Weapon'].includes(w.type));
     },
-    psychicPowers() {
-      const powers = this.$store.getters['characters/characterPsychicPowersById'](this.characterId).map((p) => p.name);
-      const items = [];
-      powers.forEach((name) => {
-        const power = this.psychicPowersRepository.find((power) => power.name === name);
-        if (power) {
-          items.push(power);
-        }
-      });
-      if (
-          (this.keywords && this.keywords.find(k => k.name === 'Psyker') )
-          || items.length > 0
-      ) {
-        items.push(...this.psychicAbilitiesRepository);
-      }
-      return items;
-    },
+
     objectives() {
       if (this.characterSpecies && this.characterSpecies.objectives) {
         return this.characterSpecies.objectives.map((objective) => ({ text: objective }));
@@ -2810,7 +3126,7 @@ export default {
           this.getWargearList(newVal);
           this.getAbilityList(newVal);
           this.getActionList(newVal);
-
+          this.getSpellList(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -2849,6 +3165,66 @@ export default {
 
   },
   methods: {
+      psychicPowers(levelIndex) {
+      const powers = this.$store.getters['characters/characterSpellsById'](this.characterId);
+
+       const progression = this.characterArchetype.spellProgression[this.characterLevel()]?.[levelIndex] || 0;
+      //const prep = this.$store.getters["characters/characterSpellsPrepareById"](this.characterId);
+      if (progression !== 0)
+      {
+        //this.crossedRows = [];
+        let spells = [];
+        for (let i = 1; i <= progression; i++)
+        {
+
+         const rawTalent = this.psychicPowersList?.find(s => s.key === powers.find((power) => power.rank === levelIndex && power.cell === i)?.key);
+          const spell = {
+            ...powers.find((power) => power.rank === levelIndex && power.cell === i),
+            ...rawTalent,
+             rank: levelIndex,
+             cell: i,
+             trait: rawTalent?.traits
+          }
+
+          // if (spell?.cast === true)
+          //   this.crossedRows.push(spell.id);
+          spells.push(spell);
+        }
+        return spells;
+      }
+
+      return [];
+
+    },
+     getItemClass(item) {
+  return item.cast ? 'crossed-row' : ''
+},
+    updateCast(item) {
+      const spell =  this.$store.getters["characters/characterSpellsById"](
+        this.characterId
+      );
+      if (spell.find(s => s.id === item.id))
+      {
+        item.cast =  item.rank !== 0 ? !item.cast : item.cast ;
+        this.$store.commit('characters/editCharacterSpell', { id :this.characterId, talentId: item.id, cast: item.cast });
+        // if (this.crossedRows?.includes(item.id))
+        //   this.crossedRows = this.crossedRows.filter(rowId => rowId !== item.id)
+        // else
+        //   this.crossedRows.push(item.id);
+      }
+
+    },
+    openDialog(item) {
+          this.selectedItem = item
+          this.dialog = true
+        },
+            iconAction(action) {
+      if (action === '1') return `/img/icon/action_single.png`;
+      if (action === '2') return `/img/icon/action_double.png`;
+      if (action === '3') return `/img/icon/action_triple.png`;
+      if (action === 'reaction') return `/img/icon/action_reaction.png`;
+      if (action === 'free') return `/img/icon/action_free.png`;
+    },
     async loadSpecies(key) {
       if ( key ) {
         let finalData = {};
@@ -2885,28 +3261,7 @@ export default {
           finalData.speciesFeatures = listAbilities;
         }
       }
-  //  finalData.speciesFeatures
-  //       .filter((feature) => feature.options)
-  //       .forEach((feature) => {
-  //         const enhancements = this.enhancements.filter((modifier) =>
-  //           modifier.source.startsWith(`species.${feature.name}`)
-  //         );
-  //         if (enhancements) {
-  //           enhancements.forEach((e) => {
-  //             let foundInd = /\.(\d)\./.exec(e.source);
-  //             if (foundInd) {
-  //               feature.selected[foundInd[1]] = e.source.split(".").pop();
-  //             }
-  //           });
-  //         } else {
-  //           const enhancement = this.enhancements.find((modifier) =>
-  //             modifier.source.startsWith(`species.${feature.name}`)
-  //           );
-  //           if (enhancement) {
-  //             feature.selected = enhancement.source.split(".").pop();
-  //           }
-  //         }
-  //       });
+
 
 
         this.characterSpecies = finalData;
@@ -2937,6 +3292,16 @@ export default {
        );
 
       this.actionList = data;
+    },
+    async getSpellList(sources) {
+            const config = {
+        params: { source: sources.join(','), },
+      };
+      this.loading = true;
+      const { data } = await this.$axios.get('/api/psychic-powers/', config);
+      this.loading = false;
+
+      this.psychicPowersList = data;
     },
     async loadArchetype(key) {
       this.loading = true;
@@ -3088,6 +3453,7 @@ export default {
       }
       this.loading = false;
     },
+
     async getAscensionPackageList(ascensionList) {
 
       let packages = [];
@@ -3550,38 +3916,69 @@ td.small {
   );
 }
 
-.resource-box {
-  $size: 12px;
-  min-height: $size;
-  max-height: $size;
-  min-width: $size;
-  max-width: $size;
-  border: 1px solid hsl(0, 0%, 85%);
-  box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
-  cursor: pointer;
-
-  box-sizing: inherit;
-  margin: 2px;
-
-  &--filled {
-    &:before {
-      content: "";
-      display: block;
-      height: 7px;
-      width: 7px;
-      margin-top: 1.5px;
-      margin-left: 1.5px;
-    }
-
-    &::before {
-      background-color: hsl(0, 100%, 37%);
-    }
-  }
-
-  &--filled-light::before {
-    background-color: hsl(62, 70%, 44%) !important;
-  }
+.line {
+  height: 1px;
+  margin: 0 1rem;
+  flex-grow: 1;
+  background: #676767;
 }
+
+.tag {
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  font-family: goodOTCondBold;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rowFeat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.head {
+  /* color: rgb(57, 54, 54); */
+  width: fit-content;
+  /* font-size: 24px; */
+  font-style: normal;
+  /* font-family: goodOTCondBold; */
+  font-weight: normal;
+  line-height: 24px;
+  /* text-transform: uppercase; */
+}
+
+.main-holder-divider p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  border-bottom: 1.5px solid black;
+}
+.invert-icon {
+  filter: brightness(1) invert(1); /* черный цвет из светлого */
+}
+
+// .crossed-row td {
+//   background-color: yellow;
+//   text-decoration: line-through;
+// }
 
 .faith-box {
   min-height: 20px;
@@ -3609,5 +4006,14 @@ td.small {
       background-color: hsl(0, 100%, 37%);
     }
   }
+}
+</style>
+
+<style>
+/* Не scoped! */
+.crossed-row td {
+  /* background-color: #f0f0f0; */
+  text-decoration: line-through;
+  color: #999;
 }
 </style>

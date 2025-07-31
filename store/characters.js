@@ -447,6 +447,10 @@ export const getters = {
     state.characters[id] ? state.characters[id].talents : [],
 
   // Spell
+  characterSpellsPrepareById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].prepareSpells : [],
+
+  // Spell
   characterSpellsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].spells : [],
 
@@ -2008,6 +2012,12 @@ export const mutations = {
     character.spells.push(talent);
 
   },
+  editCharacterSpell(state, payload) {
+    const character = state.characters[payload.id];
+    const spell = character.spells.find((t) => t.id === payload.talentId); // cleanup
+    spell.cast = payload.cast;
+
+  },
   removeCharacterSpell(state, payload) {
     const character = state.characters[payload.id];
     character.spells = character.spells.filter((t) => t.id !== payload.talentId); // cleanup
@@ -2873,7 +2883,7 @@ const getDefaultState = () => ({
     label: "",
     cost: 0,
   },
-
+  prepareSpells: [],
 
   modificatorsBonus: [],
   speed: {
