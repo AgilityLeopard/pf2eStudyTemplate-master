@@ -336,6 +336,280 @@ const playerCore = [
             ]
     },
 
+    //плут
+    {
+        ...archetype(source.playerCore.key, 92, 'Rogue'),
+        ...cost(12, 0, 12, 0, 0),
+        ...statBoost(0, 0, 0, 0, 0, 0),
+        hint: 'Вы умелы и предприимчивы. Применяя свой острый ум и быструю реакцию, вы используете ошибки ваших противников в своих интересах и наносите удар по самому больному месту. Вы ведете опасную игру, ища острых ощущений и проверяя свои навыки, мало заботясь о любых законах, которые могут встать на вашем пути. В то время, как путь каждого плута уникален и пронизан опасностью, единственное, что вас всех объединяет - широта и глубина ваших навыков.',
+        name: 'Плут',
+        keywords: 'плут',
+        hitpoints: 8,
+        keyAbility: ["dexterity", "strength", "charisma", "intellect"],
+        trait: ["плут"],
+        rarity: "Common",
+        skillTrainedChoice: [],
+        skillTrained: ["stealth"],
+        skillTrainedPoints: 7,
+        Perception: "E",
+        skillAttack:
+        {
+            simple: "T",
+            martial: "T",
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence:
+        {
+            light: "T",
+            medium: "U",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving:
+        {
+            reflex: "E",
+            fortitude: "T",
+            will: "E",
+        },
+        isFeatLevelOne: true,
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы скрытно перемещаетесь; чтобы застичь противника врасплох. Ваша задача — нанесение точечных ударов, поэтому атакуете вы чаще не рядовых солдат, а стоящих поодаль заклинателей и главарей.</p>'
+
+            },
+            {
+                name: 'social',
+                text: '<p>Благодаря навыкам у вас множество возможностей повлиять на оппонента. Вы, как никто другой, умеете выуживать информацию и устраивать различного рода аферы.</p>'
+
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы подкрадываетесь к врагам, чтобы ударить первым, и высматриваете опасности и ловушки. Вы ценный союзник, поскольку способны обезвреживать западни, решать головоломки и предчувствовать опасность.</p>'
+
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы можете заниматься карманными кражами или торговать контрабандой. Кроме этого, вы можете примкнуть к воровской гильдии или даже основать собственную.</p>'
+
+            },
+            {
+                name: 'you',
+                text: '<li>Оттачиваете свои навыки, как упражняясь, так и применяя их на практике.</li>'
+                    + '< li > Знаете, где добыть контрабандные товары.</li>'
+                    + '<li>Обходите или нарушаете закон, потому что считаете его бессмысленным или потому что придумали собственные правила.</li>',
+            },
+            {
+                name: 'other',
+                text: '<li><p>Считают вас обаятельным и интересным, даже если не особенно вам доверяют.</p></li>'
+                    + ' < li > <p>Обращаются к вам, когда нужен кто-то рисковый или не боящийся запачкать руки.</p></li>'
+                    + '<li><p>Полагают, что вами движет прежде всего алчность.</p></li>',
+            }
+        ],
+        archetypeFeatures: [
+            //Общие
+            "Initial proficiencies", "Class feat", "Ancestry and background", "Skill feat Rogue", "General feat", "Skill increase Rogue", "Ancestry feat", "Stat boost",
+            //Классовые
+            "Reactive Strike", "Shield Block", "Battlefield Surveyor", "Bravery", "Fighter Weapon Mastery", "Weapon Specialization", "Combat Flexibility",
+            "Battle Hardened", "Armor Expertise", "Fighter Expertise", "Weapon Legend", "Tempered Reflexes", "Greater Weapon Specialization",
+            "Improved Flexibility", "Armor Mastery", "Versatile Legend",
+        ],
+        modification:
+            [
+                {
+                    key: "will",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Saving",
+                    level: 3,
+                },
+
+                {
+                    key: "Weapon Specialization",
+                    // upgrade: "M",
+                    type: "Weapon Specialization",
+                    level: 7,
+                    bonusDamage: {
+                        E: 2,
+                        M: 3,
+                        L: 4,
+                    }
+                    // valueBonus: 2,
+                    // typeBonus: "damage"
+                },
+                {
+                    key: "Perception",
+                    upgrade: "M",
+                    type: "Perception",
+                    mode: "Upgrade",
+                    level: 7,
+                    valueBonus: 2,
+                    typeBonus: "circumstance"
+                },
+                {
+                    key: "fortitude",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Saving",
+                    level: 9,
+                },
+                {
+                    key: "light",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    level: 11,
+                },
+                {
+                    key: "class",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "DC Class",
+                    level: 11,
+                },
+                {
+                    key: "medium",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    criticalSpecialization: true,
+                    level: 11,
+                },
+                {
+                    key: "heavy",
+                    mode: "Upgrade",
+                    upgrade: "E",
+                    type: "Defence",
+                    criticalSpecialization: true,
+                    level: 11,
+                },
+                {
+                    key: "unarmored",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    level: 11,
+                },
+                {
+                    key: "simple",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 13,
+                },
+                {
+                    key: "martial",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 13,
+                },
+                {
+                    key: "advanced",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 13,
+                },
+                {
+                    key: "unarmed",
+                    mode: "Upgrade",
+                    upgrade: "M",
+                    type: "Attack",
+
+                    level: 13,
+                },
+                {
+                    key: "reflex",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Saving",
+                    level: 15,
+                },
+                {
+                    key: "greater-weapon-specialization",
+                    // upgrade: "M",
+                    type: "greater-weapon-specialization",
+                    level: 15,
+                    bonusDamage: {
+                        E: 4,
+                        M: 6,
+                        L: 8,
+                    }
+                    // valueBonus: 2,
+                    // typeBonus: "damage"
+                },
+                {
+                    key: "light",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    level: 17,
+                },
+                {
+                    key: "medium",
+                    upgrade: "M",
+                    type: "Defence",
+                    mode: "Upgrade",
+                    criticalSpecialization: true,
+                    level: 17,
+                },
+                {
+                    key: "heavy",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Defence",
+                    criticalSpecialization: true,
+                    level: 17,
+                },
+                {
+                    key: "unarmored",
+                    mode: "Upgrade",
+                    upgrade: "M",
+                    type: "Defence",
+                    level: 17,
+                },
+                {
+                    key: "simple",
+                    mode: "Upgrade",
+                    upgrade: "L",
+                    type: "Attack",
+                    level: 19,
+                },
+                {
+                    key: "martial",
+                    upgrade: "L",
+                    type: "Attack",
+                    mode: "Upgrade",
+                    level: 19,
+                },
+                {
+                    key: "advanced",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 19,
+                },
+                {
+                    key: "unarmed",
+                    upgrade: "L",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 19,
+                },
+                {
+                    key: "class",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "DC Class",
+                    level: 19,
+                },
+            ]
+    },
+
+
     //Бард
     {
         ...archetype(source.playerCore.key, 92, 'Bard'),
@@ -969,7 +1243,7 @@ const playerCore = [
 
     //Чародей
     {
-        ...archetype(source.playerCore.key, 93, 'Sorcerer'),
+        ...archetype(source.playerCore2.key, 93, 'Sorcerer'),
         ...cost(6, 0, 0, 0, 0),
         ...statBoost(0, 0, 0, 0, 0, 1),
         hint: 'Вы не выбирали стать заклинателем — вы были рождены им. В вашей крови есть магия, независимо от того, коснулось ли божество одного из ваших предков, '
@@ -1183,7 +1457,7 @@ const playerCore = [
 
     //Волшебник
     {
-        ...archetype(source.playerCore.key, 94, 'Wizard'),
+        ...archetype(source.playerCore2.key, 94, 'Wizard'),
         ...cost(6, 0, 0, 0, 0),
         ...statBoost(0, 0, 1, 0, 0, 0),
         hint: 'Вы вечный ученик арканных тайн вселенной. Через строгую дисциплину и изучение вы овладеваете магией, используя древние тексты и научные методы, чтобы проникнуть в её суть. '

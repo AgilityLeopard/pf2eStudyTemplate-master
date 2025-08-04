@@ -71,6 +71,7 @@ export default {
   data() {
     return {
       speciesList: undefined,
+      heritageList: undefined,
       abilityList: undefined,
       traitList: undefined,
       selectedSpecies: undefined, // for he preview dialog box
@@ -109,6 +110,7 @@ export default {
           this.getAbilityList(newVal);
           this.getTraitList(newVal);
           this.getSpeciesList(newVal);
+          //  this.getSpeciesList(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -207,6 +209,7 @@ export default {
       data.forEach((t) => (t.key = t.key.toLowerCase()));
       this.traitList = data;
     },
+
     getAvatar(key) {
       return `/img/avatars/species/${key.toLowerCase()}.png`;
     },

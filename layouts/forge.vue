@@ -503,8 +503,15 @@
             :disabled="!settingSelected"
           >
             1. Наследие
+            <v-chip
+              small
+              class="select-chip"
+              v-if="!characterSpeciesLabel || !characterHeritageLabel"
+            >
+              !
+            </v-chip>
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             small
             text
             nuxt
@@ -512,7 +519,7 @@
             :disabled="!settingSelected"
           >
             2. Родословная
-          </v-btn>
+          </v-btn> -->
           <v-btn
             small
             text
@@ -520,8 +527,10 @@
             :to="routes.archetype"
             :disabled="!settingSelected"
           >
-            3. Класс
-            <v-chip small class="select-chip"> ! </v-chip>
+            2. Класс
+            <v-chip small class="select-chip" v-if="!characterArchetype">
+              !
+            </v-chip>
             <!-- <v-alert small type="info" color="primary"> </v-alert> -->
           </v-btn>
           <v-btn
@@ -531,7 +540,10 @@
             :to="routes.ascension"
             :disabled="!settingSelected"
           >
-            4. Предыстория
+            3. Предыстория
+            <v-chip small class="select-chip" v-if="!characterAscension">
+              !
+            </v-chip>
           </v-btn>
           <v-btn
             small
@@ -540,7 +552,8 @@
             :to="routes.stats"
             :disabled="!settingSelected"
           >
-            5. Навыки и характеристики
+            4. Навыки и характеристики
+            <v-chip small class="select-chip" v-if="progress !== 0"> ! </v-chip>
           </v-btn>
           <v-btn
             small
@@ -549,7 +562,7 @@
             :to="routes.talents"
             :disabled="!settingSelected"
           >
-            6. Черты
+            5. Черты
           </v-btn>
           <v-btn
             small
@@ -558,7 +571,7 @@
             :to="routes.wargear"
             :disabled="!settingSelected"
           >
-            7. Снаряжение
+            6. Снаряжение
           </v-btn>
           <v-btn
             small
@@ -567,7 +580,7 @@
             :to="routes.psychic"
             :disabled="!settingSelected"
           >
-            8. Заклинания
+            7. Заклинания
           </v-btn>
           <v-btn
             small
@@ -884,6 +897,31 @@ export default {
       return this.$store.getters["characters/characterTotalBuildPointsById"](
         this.$route.params.id
       );
+    },
+    progress() {
+      const progress = this.$store.getters["characters/characterProgressById"](
+        this.$route.params.id
+      );
+
+      if (!progress) return 0;
+      let i = 0;
+      progress.forEach((t) => {
+        i = i + t.value;
+      });
+      return i;
+    },
+
+    progressMax() {
+      const progress = this.$store.getters[
+        "characters/characterProgressMaxById"
+      ](this.$route.params.id);
+
+      if (!progress) return 0;
+      let i = 0;
+      progress.forEach((t) => {
+        i = i + t.value;
+      });
+      return i;
     },
     skillAttack() {
       return this.$store.getters["characters/characterskillAttackById"](

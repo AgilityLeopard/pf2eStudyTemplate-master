@@ -20,6 +20,20 @@ const talent = function (sourceKey, sourcePage, name) {
   };
 };
 
+
+const sou = function (
+  sourceKey,
+  sourcePage,
+) {
+  return {
+    source: {
+      ...source[sourceKey],
+      page: sourcePage,
+    },
+  };
+};
+
+
 const playerCore = [
   // Воин
   {
@@ -13443,293 +13457,6 @@ const playerCoreAncestry = [
 ]
 
 const playerCore2 = [
-  //Оракул
-  {
-    ...talent('playerCore2', 1, 'Glean Lore'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'сакральный, прорицание, тайна, оракул',
-    name: "Почерпнуть знания",
-    snippet: 'Вы погружаетесь в собранные знания о божественном, получая доступ к разнообразной информации.',
-    level: 1,
-    action: "одиночное действие",
-    frequency: "1",
-    description: '<p>Сделайте проверку Религии, чтобы понять полученную информацию. Мастер устанавливает КС. Критический успех: Вы точно понимаете знания. Успех: Вы узнаете два кусочка информации, один истинный и один ошибочный. Провал: Вы вспоминаете неверную информацию. Критический провал: Вы вспоминаете два кусочка неверной информации.</p>'
-  },
-  {
-    ...talent('playerCore2', 2, 'Cantrip Expansion'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Расширение чар",
-    snippet: 'Добавьте в свой репертуар 2 дополнительных чар из вашего списка заклинаний.',
-    level: 2,
-    description: '<p>Вы добавляете 2 дополнительных чара в свой репертуар.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 4, 'Bespell Weapon'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Околдованное оружие",
-    snippet: 'Вы наполняете оружие остаточной энергией последнего сотворенного заклинания.',
-    level: 4,
-    action: "свободное действие",
-    frequency: "раз в ход",
-    prerequisites: "Ваше предыдущее действие - Сотворение заклинания",
-    description: '<p>Оружие наносит дополнительные 1d6 урона, тип которого зависит от школы заклинания.</p>'
-  },
-  {
-    ...talent('playerCore2', 14, 'Sepulchral Sublimation'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'необычный, метамагия, некромантия, концентрация, оракул',
-    name: "Замогильное очищение",
-    snippet: 'Вы перерабатываете негативную энергию, уничтожая миньона-нежить для усиления заклинания.',
-    level: 14,
-    action: "одиночное действие",
-    prerequisites: "возможность навсегда создавать и контролировать нежить; оракул таинства костей",
-    requirementsText: "У вас есть хотя бы 1 миньон-нежить, которого вы постоянно контролируете",
-    description: '<p>Уничтожьте 1 миньона-нежить в пределах 60 футов. Если ваше следующее действие - сотворение заклинания некромантии, вы не тратите слот заклинания.</p>'
-  },
-  {
-    ...talent('playerCore2', 8, 'Debilitating Dichotomy'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Изнурительная дихотомия",
-    snippet: 'Вы изучаете заклинание-откровение, которое демонстрирует силу вашего проклятия.',
-    level: 8,
-    description: '<p>Вы изучаете заклинание-откровение "Изнурительная дихотомия". Увеличьте запас Очков Фокусировки на 1.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 8, 'Read Disaster'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'прорицание, предсказание, исследование, оракул',
-    name: "Предвидеть катастрофу",
-    snippet: 'Вы заглядываете в будущее, чтобы узнать о надвигающихся опасностях.',
-    level: 8,
-    action: "10 минут",
-    description: '<p>Вы получаете эффекты заклинания "Предзнаменование", но узнаете только о грядущих опасностях. Если вы легенда Религии, это действие занимает 1 минуту.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 10, 'Oracular Warning'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'сакральный, прорицание, оракул',
-    name: "Предупреждение оракула",
-    snippet: 'Вы предупреждаете союзника о надвигающейся опасности.',
-    level: 10,
-    action: "свободное действие",
-    trigger: "Вы готовы кидать инициативу",
-    description: '<p>Один союзник может сделать бросок инициативы дважды и использовать лучший результат. Вы делаете два броска инициативы и используете худший результат.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 10, 'Quickened Casting'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'метамагия, концентрация, оракул',
-    name: "Ускоренное колдовство",
-    snippet: 'Вы можете быстрее сотворять заклинания.',
-    level: 10,
-    action: "свободное действие",
-    frequency: "раз в день",
-    description: '<p>Если ваше следующее действие - сотворение чара или заклинания оракула, снизьте количество действий для его сотворения на 1 (минимум 1 действие).</p>'
-  },
-
-  {
-    ...talent('playerCore2', 10, 'Surging Might'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'метамагия, воздействие, оракул',
-    name: "Рвущаяся мощь",
-    snippet: 'Вы фокусируете божественную силу, чтобы преодолеть сопротивления врагов.',
-    level: 10,
-    action: "одиночное действие",
-    description: '<p>Если ваше следующее действие - Сотворение заклинания, заклинание игнорирует сопротивление урону, равное вашему уровню, против определенных типов урона.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 12, 'Domain Fluency'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Свободное владение доменом",
-    snippet: 'Вы получаете улучшенное доменное заклинание, связанное с вашим таинством.',
-    level: 12,
-    prerequisites: "начальное доменное заклинание",
-    description: '<p>Выберите домен, связанный с вашим таинством. Вы получаете улучшенное доменное заклинание этого домена, которое колдуете как заклинание-откровение. Увеличьте запас Очков Фокусировки на 1.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 12, 'Greater Revelation'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Великое откровение",
-    snippet: 'Вы изучаете великое заклинание-откровение, связанное с вашим таинством.',
-    level: 12,
-    prerequisites: "начальное заклинание-откровение",
-    description: '<p>Вы изучаете великое заклинание-откровение. Увеличьте запас Очков Фокусировки на 1.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 12, 'Magic Sense'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'сакральный, прорицание, обнаружение, оракул',
-    name: "Ощущение магии",
-    snippet: 'Вы можете ощущать присутствие магических аур вокруг себя.',
-    level: 12,
-    description: '<p>Вы постоянно ощущаете магические ауры, как если бы использовали заклинание "Обнаружение магии".</p>'
-  },
-
-  {
-    ...talent('playerCore2', 12, 'Necromancer\'s Visage'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'необычный, некромантия, оракул',
-    name: "Облик некроманта",
-    snippet: 'Ваше присутствие вызывает страх и уважение у нежити.',
-    level: 12,
-    prerequisites: "возможность создавать или контролировать нежить; оракул таинства костей",
-    description: '<p>Существа-нежить, атакующие вас, должны совершить спасбросок Воли. В случае провала они не могут атаковать вас.</p>'
-  },
-  {
-    ...talent('playerCore2', 14, 'Forestall Curse'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'метамагия, концентрация, оракул',
-    name: "Предотвращение проклятия",
-    snippet: 'Вы временно предотвращаете усиление вашего проклятия.',
-    level: 14,
-    action: "одиночное действие",
-    frequency: "раз в день",
-    description: '<p>Если ваше следующее действие - сотворение заклинания-откровения, сила вашего проклятия не увеличивается.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 14, 'Mysterious Repertoire'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Таинственный репертуар",
-    snippet: 'Вы можете добавить в свой репертуар заклинание из другого магического обычая.',
-    level: 14,
-    description: '<p>Вы можете иметь в своем репертуаре 1 заклинание не из сакрального списка заклинаний. Вы колдуете это заклинание как сакральное.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 14, 'Sepulchral Sublimation'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'необычный, метамагия, некромантия, концентрация, оракул',
-    name: "Замогильное очищение",
-    snippet: 'Вы перерабатываете негативную энергию, уничтожая миньона-нежить для усиления заклинания.',
-    level: 14,
-    action: "одиночное действие",
-    prerequisites: "возможность навсегда создавать и контролировать нежить; оракул таинства костей",
-    requirementsText: "У вас есть хотя бы 1 миньон-нежить, которого вы постоянно контролируете",
-    description: '<p>Уничтожьте 1 миньона-нежить в пределах 60 футов. Если ваше следующее действие - сотворение заклинания некромантии, вы не тратите слот заклинания.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 14, 'Sacral Monarch'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Сакральный монарх",
-    snippet: 'Вы обретаете полную власть над своей территорией.',
-    level: 14,
-    prerequisites: "мастер Оккультизма или Религии, Сакральный лорд",
-    description: '<p>На своей территории вы можете творить "Изгнание" и "Неминуемая беда" как врожденные сакральные заклинания, каждое раз в день.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 16, 'Diverse Mystery'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Разнообразное таинство",
-    snippet: 'Вы изучаете заклинание-откровение из другого таинства.',
-    level: 16,
-    prerequisites: "Продвинутое откровение",
-    description: '<p>Выберите 1 заклинание-откровение из другого таинства. Вы можете колдовать его как заклинание-откровение, но получаете эффекты слабого проклятия этого таинства.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 16, 'Portentous Spell'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'метамагия, воздействие, ментальный, визуальный, оракул',
-    name: "Поразительное заклинание",
-    snippet: 'Ваши заклинания сбивают с толку врагов.',
-    level: 16,
-    action: "одиночное действие",
-    description: '<p>Если ваше следующее действие - Сотворение заклинания, существа, использующие реакцию, получают штраф -2 к броскам атаки и проверкам навыков. Если заклинание включает атаку или спасбросок, цели становятся завороженными вами.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 18, 'Blaze of Revelation'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Зарево откровения",
-    snippet: 'Вы временно противостоите эффектам вашего проклятия.',
-    level: 18,
-    description: '<p>Когда вы становитесь подавлены своим проклятием, вы можете предотвратить эти эффекты на 1 минуту. В течение этого времени вы можете колдовать заклинания-откровения без затрат Очков Фокусировки.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 18, 'Divine Effusion'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Божественное излияние",
-    snippet: 'Вы можете колдовать заклинания даже после исчерпания слотов.',
-    level: 18,
-    description: '<p>Дважды в день вы можете колдовать заклинание, даже если у вас закончились слоты подходящего уровня.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 20, 'Mystery Conduit'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Таинственный проводник",
-    snippet: 'Вы можете колдовать заклинания, усиливая свое проклятие.',
-    level: 20,
-    description: '<p>Когда вы колдуете заклинание 5-го уровня или ниже без продолжительности, вы можете усилить свое проклятие, не тратя слот заклинания.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 20, 'Oracular Providence'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Провиденье оракула",
-    snippet: 'Вы получаете дополнительный слот заклинания 10-го уровня.',
-    level: 20,
-    prerequisites: "Ясность оракула",
-    description: '<p>Вы получаете дополнительный слот заклинания 10-го уровня.</p>'
-  },
-
-  {
-    ...talent('playerCore2', 20, 'Paradoxical Mystery'),
-    type: "class",
-    rarity: "обычный",
-    traits: 'оракул',
-    name: "Парадоксальное таинство",
-    snippet: 'Вы получаете доступ к заклинаниям других таинств и доменов.',
-    level: 20,
-    prerequisites: "Великое откровение",
-    description: '<p>Каждый день вы можете выбрать 1 доменное заклинание или заклинание-откровение из другого таинства. Вы получаете это заклинание как заклинание-откровение до ваших следующих ежедневных приготовлений.</p>'
-  },
 
   //Варвар
   {
@@ -17527,12 +17254,3032 @@ const playerCore2 = [
     level: 2,
     prerequisites: "warrior muse",
     description: '<p>Ваши выступления вселяют силу в ваших союзников. Вы изучаете чары-композицию @UUID[Compendium.pf2e.spells-srd.Xxdwkt0EEDgP1LGc].</p>'
+  },
+
+]
+
+const rogue =
+  [
+    {
+      "name": "Адепт подкрадывания / Sneak Adept",
+      "traits": [
+        "rogue"
+      ],
+      "key": "sneak-adept",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 10,
+      "rarity": "common"
+    },
+    {
+      "name": "Анализ битвы / Battle Assessment",
+      "traits": [
+        "rogue",
+        "secret"
+      ],
+      "key": "battle-assessment",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder Core Rulebook",
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Анализировать уязвимость / Analyze Weakness",
+      "traits": [
+        "rogue"
+      ],
+      "key": "analyze-weakness",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Берегись / Watch Your Back",
+      "traits": [
+        "emotion",
+        "fear",
+        "mental",
+        "rogue"
+      ],
+      "key": "watch-your-back",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Боязнь нападения / Dread Striker",
+      "traits": [
+        "rogue"
+      ],
+      "key": "dread-striker",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Быстрое ускользание / Swift Elusion",
+      "traits": [
+        "rogue"
+      ],
+      "key": "swift-elusion",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 16,
+      "rarity": "common"
+    },
+    {
+      "name": "В яблочко / Bullseye",
+      "traits": [
+        "rogue"
+      ],
+      "key": "bullseye",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Вдохновленная уловка / Inspired Stratagem",
+      "traits": [
+        "rogue"
+      ],
+      "key": "inspired-stratagem",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Выводящий из равновесия удар / Unbalancing Blow",
+      "traits": [
+        "rogue"
+      ],
+      "key": "unbalancing-blow",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Выскочить из теней / Spring from the Shadows",
+      "traits": [
+        "flourish",
+        "rogue"
+      ],
+      "key": "spring-from-the-shadows",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Грабеж / Mug",
+      "traits": [
+        "rogue"
+      ],
+      "key": "mug",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Дальний бросок / Far Throw",
+      "traits": [
+        "rogue"
+      ],
+      "key": "far-throw",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Дать возможность атаковать / Leave an Opening",
+      "traits": [
+        "rogue"
+      ],
+      "key": "leave-an-opening",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 14,
+      "rarity": "common"
+    },
+    {
+      "name": "Двойное отвлечение / Twin Distraction",
+      "traits": [
+        "rogue"
+      ],
+      "key": "twin-distraction",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Двойной финт / Twin Feint",
+      "traits": [
+        "rogue"
+      ],
+      "key": "twin-feint",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 1,
+      "rarity": "common"
+    },
+    {
+      "name": "Действенная внезапная атака / Powerful Sneak",
+      "traits": [
+        "rogue"
+      ],
+      "key": "powerful-sneak",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 18,
+      "rarity": "common"
+    },
+    {
+      "name": "Жестокие ослабления / Vicious Debilitations",
+      "traits": [
+        "rogue"
+      ],
+      "key": "vicious-debilitations",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 10,
+      "rarity": "common"
+    },
+    {
+      "name": "Жестокое избиение / Brutal Beating",
+      "traits": [
+        "rogue"
+      ],
+      "key": "brutal-beating",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Займ заклинания / Loaner Spell",
+      "traits": [
+        "rogue"
+      ],
+      "key": "loaner-spell",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder Advanced Player's Guide",
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Замедлить ловушку / Delay Trap",
+      "traits": [
+        "rogue"
+      ],
+      "key": "delay-trap",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Защитный перекат / Defensive Roll",
+      "traits": [
+        "rogue"
+      ],
+      "key": "defensive-roll",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 14,
+      "rarity": "common"
+    },
+    {
+      "name": "Идеальное отвлечение / Perfect Distraction",
+      "traits": [
+        "rogue"
+      ],
+      "key": "perfect-distraction",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 16,
+      "rarity": "common"
+    },
+    {
+      "name": "Коварное нападение / Underhanded Assault",
+      "traits": [
+        "rogue"
+      ],
+      "key": "underhanded-assault",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Коварное разоружение / Sly Disarm",
+      "traits": [
+        "rogue"
+      ],
+      "key": "sly-disarm",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Коварный нож / Subtle Shank",
+      "traits": [
+        "flourish",
+        "rogue"
+      ],
+      "key": "subtle-shank",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #159: All or Nothing",
+      "level": 8,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Коварный удар / Sly Striker",
+      "traits": [
+        "rogue"
+      ],
+      "key": "sly-striker",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Когнитивная лазейка / Cognitive Loophole",
+      "traits": [
+        "rogue"
+      ],
+      "key": "cognitive-loophole",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 16,
+      "rarity": "common"
+    },
+    {
+      "name": "Кража заклинания / Steal Spell",
+      "traits": [
+        "magical",
+        "rogue"
+      ],
+      "key": "steal-spell",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder Advanced Player's Guide",
+      "level": 16,
+      "rarity": "common"
+    },
+    {
+      "name": "Критические ослабления / Critical Debilitation",
+      "traits": [
+        "incapacitation",
+        "rogue"
+      ],
+      "key": "critical-debilitation",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Кровавые ослабления / Bloody Debilitation",
+      "traits": [
+        "rogue"
+      ],
+      "key": "bloody-debilitation",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Лёгкий шаг / Light Step",
+      "traits": [
+        "rogue"
+      ],
+      "key": "light-step",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Лежать! / Stay Down!",
+      "traits": [
+        "rogue"
+      ],
+      "key": "stay-down",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 14,
+      "rarity": "common"
+    },
+    {
+      "name": "Ловкий перекат / Nimble Roll",
+      "traits": [
+        "rogue"
+      ],
+      "key": "nimble-roll",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Ловкий удар / Nimble Strike",
+      "traits": [
+        "rogue"
+      ],
+      "key": "nimble-strike",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 10,
+      "rarity": "common"
+    },
+    {
+      "name": "Ловкое уклонение / Nimble Dodge",
+      "traits": [
+        "rogue"
+      ],
+      "key": "nimble-dodge",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 1,
+      "rarity": "common"
+    },
+    {
+      "name": "Магический трикстер / Magical Trickster",
+      "traits": [
+        "rogue"
+      ],
+      "key": "magical-trickster",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder Core Rulebook",
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Мгновенная возможность / Instant Opening",
+      "traits": [
+        "concentrate",
+        "rogue"
+      ],
+      "key": "instant-opening",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 14,
+      "rarity": "common"
+    },
+    {
+      "name": "Мгновенное отвлечение / Reactive Distraction",
+      "traits": [
+        "concentrate",
+        "manipulate",
+        "rogue"
+      ],
+      "key": "reactive-distraction",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 20,
+      "rarity": "common"
+    },
+    {
+      "name": "Межпространственный тайник / Extradimensional Stash",
+      "traits": [
+        "extradimensional",
+        "rogue"
+      ],
+      "key": "extradimensional-stash",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #168: King of the Mountain",
+      "level": 20,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Методичные ослабления / Methodical Debilitations",
+      "traits": [
+        "rogue"
+      ],
+      "key": "methodical-debilitations",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 10,
+      "rarity": "common"
+    },
+    {
+      "name": "Невероятная покупка [Плут] / Implausible Purchase (Rogue)",
+      "traits": [
+        "rogue"
+      ],
+      "key": "implausible-purchase-rogue",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 18,
+      "rarity": "common"
+    },
+    {
+      "name": "Невероятный прыжок / Fantastic Leap",
+      "traits": [
+        "rogue"
+      ],
+      "key": "fantastic-leap",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Невесомый шаг / Cloud Step",
+      "traits": [
+        "rogue"
+      ],
+      "key": "cloud-step",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 16,
+      "rarity": "common"
+    },
+    {
+      "name": "Невозможное проникновение / Implausible Infiltration",
+      "traits": [
+        "magical",
+        "move",
+        "rogue"
+      ],
+      "key": "implausible-infiltration",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 18,
+      "rarity": "common"
+    },
+    {
+      "name": "Невозможные удары / Impossible Striker",
+      "traits": [
+        "rogue"
+      ],
+      "key": "impossible-striker",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 20,
+      "rarity": "common"
+    },
+    {
+      "name": "Нокдаун из засады / Ambushing Knockdown",
+      "traits": [
+        "rogue"
+      ],
+      "key": "ambushing-knockdown",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #159: All or Nothing",
+      "level": 8,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Ответное вмешательство / Reactive Interference",
+      "traits": [
+        "rogue"
+      ],
+      "key": "reactive-interference",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Ответное преследование / Reactive Pursuit",
+      "traits": [
+        "rogue"
+      ],
+      "key": "reactive-pursuit",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Отвлекающий финт / Distracting Feint",
+      "traits": [
+        "rogue"
+      ],
+      "key": "distracting-feint",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Отказ в поддержке / Deny Support",
+      "traits": [
+        "rogue"
+      ],
+      "key": "deny-support",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #159: All or Nothing",
+      "level": 10,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Отравленное оружие / Poison Weapon",
+      "traits": [
+        "manipulate",
+        "rogue"
+      ],
+      "key": "poison-weapon",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Пихнуть / Shove Down",
+      "traits": [
+        "rogue"
+      ],
+      "key": "shove-down",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Подвижность / Mobility",
+      "traits": [
+        "rogue"
+      ],
+      "key": "mobility",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Подготовка / Preparation",
+      "traits": [
+        "flourish",
+        "rogue"
+      ],
+      "key": "preparation",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Подкладывание улики / Plant Evidence",
+      "traits": [
+        "rogue"
+      ],
+      "key": "plant-evidence",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 1,
+      "rarity": "common"
+    },
+    {
+      "name": "Предательская возможность / Opportune Backstab",
+      "traits": [
+        "rogue"
+      ],
+      "key": "opportune-backstab",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Предсказуемо! / Predictable!",
+      "traits": [
+        "rogue"
+      ],
+      "key": "predictable",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Предугадать засаду / Anticipate Ambush",
+      "traits": [
+        "exploration",
+        "rogue"
+      ],
+      "key": "anticipate-ambush",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Предусмотрительная покупка [Плут] / Predictive Purchase (Rogue)",
+      "traits": [
+        "rogue"
+      ],
+      "key": "predictive-purchase-rogue",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Прихватить сувенир / Swipe Souvenir",
+      "traits": [
+        "rogue"
+      ],
+      "key": "swipe-souvenir",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Провернуть нож / Twist the Knife",
+      "traits": [
+        "rogue"
+      ],
+      "key": "twist-the-knife",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Проскочить за спину [Плут] / Tumble Behind (Rogue)",
+      "traits": [
+        "rogue"
+      ],
+      "key": "tumble-behind-rogue",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 1,
+      "rarity": "common"
+    },
+    {
+      "name": "Простая магия / Minor Magic",
+      "traits": [
+        "rogue"
+      ],
+      "key": "minor-magic",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder Core Rulebook",
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Разрушающий магию порез / Dispelling Slice",
+      "traits": [
+        "rogue"
+      ],
+      "key": "dispelling-slice",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 16,
+      "rarity": "common"
+    },
+    {
+      "name": "Рассредотачивающий финт / Overextending Feint",
+      "traits": [
+        "rogue"
+      ],
+      "key": "overextending-feint",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 1,
+      "rarity": "common"
+    },
+    {
+      "name": "Резануть и умыкнуть / Slice and Swipe",
+      "traits": [
+        "flourish",
+        "manipulate",
+        "rogue"
+      ],
+      "key": "slice-and-swipe",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #159: All or Nothing",
+      "level": 6,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Рикошетящая стойка [Плут] / Ricochet Stance (Rogue)",
+      "traits": [
+        "rogue",
+        "stance"
+      ],
+      "key": "ricochet-stance-rogue",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Рикошетяющий финт / Ricochet Feint",
+      "traits": [
+        "rogue"
+      ],
+      "key": "ricochet-feint",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Саботаж / Sabotage",
+      "traits": [
+        "incapacitation",
+        "rogue"
+      ],
+      "key": "sabotage",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Сбивающий выстрел / Felling Shot",
+      "traits": [
+        "rogue"
+      ],
+      "key": "felling-shot",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 12,
+      "rarity": "common"
+    },
+    {
+      "name": "Сговориться / Gang Up",
+      "traits": [
+        "rogue"
+      ],
+      "key": "gang-up",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 6,
+      "rarity": "common"
+    },
+    {
+      "name": "Сильная рука / Strong Arm",
+      "traits": [
+        "rogue"
+      ],
+      "key": "strong-arm",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Скоординированное отвлечение / Coordinated Distraction",
+      "traits": [
+        "concentrate",
+        "rogue"
+      ],
+      "key": "coordinated-distraction",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #159: All or Nothing",
+      "level": 12,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Смертельное отравленное оружие / Deadly Poison Weapon",
+      "traits": [
+        "rogue"
+      ],
+      "key": "deadly-poison-weapon",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #149: Against the Scarlet Triad",
+      "level": 12,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Совершенно скрытный / Hidden Paragon",
+      "traits": [
+        "rogue"
+      ],
+      "key": "hidden-paragon",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 20,
+      "rarity": "common"
+    },
+    {
+      "name": "Стойкое ослабление / Enduring Debilitation",
+      "traits": [
+        "rogue"
+      ],
+      "key": "enduring-debilitation",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #150: Broken Promises",
+      "level": 20,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Сюрприз негодяя / Scoundrel's Surprise",
+      "traits": [
+        "rogue"
+      ],
+      "key": "scoundrels-surprise",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Таинственные ослабления / Eldritch Debilitations",
+      "traits": [
+        "rogue"
+      ],
+      "key": "eldritch-debilitations",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder Advanced Player's Guide",
+      "level": 10,
+      "rarity": "common"
+    },
+    {
+      "name": "Тактические ослабления / Tactical Debilitations",
+      "traits": [
+        "rogue"
+      ],
+      "key": "tactical-debilitations",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 10,
+      "rarity": "common"
+    },
+    {
+      "name": "Тактическое начало / Tactical Entry",
+      "traits": [
+        "rogue"
+      ],
+      "key": "tactical-entry",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Тем выше падать / The Harder They Fall",
+      "traits": [
+        "rogue"
+      ],
+      "key": "the-harder-they-fall",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Точные ослабления / Precise Debilitations",
+      "traits": [
+        "rogue"
+      ],
+      "key": "precise-debilitations",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 10,
+      "rarity": "common"
+    },
+    {
+      "name": "Ударить лежачего / Head Stomp",
+      "traits": [
+        "rogue"
+      ],
+      "key": "head-stomp",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 4,
+      "rarity": "common"
+    },
+    {
+      "name": "Украсть эссенцию / Steal Essence",
+      "traits": [
+        "rogue"
+      ],
+      "key": "steal-essence",
+      "type": "class",
+      "prerequisites": null,
+      "source": "Pathfinder #156: The Apocalypse Prophet",
+      "level": 20,
+      "rarity": "uncommon"
+    },
+    {
+      "name": "Улучшенное отравление оружия / Improved Poison Weapon",
+      "traits": [
+        "rogue"
+      ],
+      "key": "improved-poison-weapon",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    },
+    {
+      "name": "Умная уловка / Clever Gambit",
+      "traits": [
+        "rogue"
+      ],
+      "key": "clever-gambit",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 2,
+      "rarity": "common"
+    },
+    {
+      "name": "Чистый лист / Blank Slate",
+      "traits": [
+        "rogue"
+      ],
+      "key": "blank-slate",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 16,
+      "rarity": "common"
+    },
+    {
+      "name": "Шаг в сторону / Sidestep",
+      "traits": [
+        "rogue"
+      ],
+      "key": "sidestep",
+      "type": "class",
+      "prerequisites": null,
+      ...sou("playerCore", 124),
+      "level": 8,
+      "rarity": "common"
+    }
+  ]
+
+const нефилим = [
+  {
+    "name": "Адское отродье / Hellspawn",
+    "type": "ancestry",
+    "description": "<p>Ваш род происходит от дьяволов, коварных интриганов злобной иерархии Ада. Вы умеете замечать ложь и искаженные формулировки так же хорошо, как и строить их. Вы обучены Обману и Юридическим Знаниям (Legal). Если вы автоматически станете обучены Обману (например, из-за вашей предыстории или класса), то вместо этого становитесь обучены другому навыку на свой выбор. Еще вы получаете способность навыка @UUID[Compendium.pf2e.feats-srd.Dvz54d6aPhjsmUux]{Обмани меня}.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "hellspawn",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Аксиоматические знания / Axiomatic Lore",
+    "type": "ancestry",
+    "description": "<p>Вы хорошо разбираетесь в процессах как среди смертных, так и среди принципиальных потусторонних. Источником этого знания может быть интуиция, обучение или детство, проведенное среди других афоритов. Вы становитесь обучены Дипломатии и Обществу. Если вы автоматически станете обучены одному из этих навыков (например, из-за предыстории или класса), то вместо этого вы становитесь обучены навыку на свой выбор.</p>\n<p>Также вы получаете общую способность @UUID[Compendium.pf2e.feats-srd.BocFD2KV0qgUC76x] для Знаний Оси (Axis).</p>\n<hr />\n<p data-visibility=\"owner\"><em><strong>Заметка:</strong> Если вы уже обучены навыку, предоставляемому этой способностью, вам необходимо вручную выбрать альтернативный навык. Вам также необходимо вручную ввести предоставленный навык Знаний.</em></p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "axiomatic-lore",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Аморфный аспект / Amorphous Aspect",
+    "type": "ancestry",
+    "description": "<p>Ваше тело в высшей степени гибкое. Вы получаете бонус обстоятельства +1 к проверкам @UUID[Compendium.pf2e.actionspf2e.SkZAQRkLLkmBQNB9]{Вырваться} или @UUID[Compendium.pf2e.actionspf2e.kMcV8e5EZUxa6evt]{Протиснуться}, а когда вы получаете критический провал <em>\"Протискивания\"</em>, результат считается обычным провалом.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "amorphous-aspect",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Анализ информации / Analyze Information",
+    "type": "ancestry",
+    "description": "<p>Вы можете пробудить в своем уме вспышку аналитического мастерства. Вы можете раз в день сотворять @UUID[Compendium.pf2e.spells-srd.ZYoC630tNGutgbE0] как врожденное сакральное заклинание 3-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "analyze-information",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Ангельский / Angelkin",
+    "type": "ancestry",
+    "description": "<p>Вы происходите от ангела, крылатого посланника Нирваны или другого небесного царства.</p>\n<p>Вы становитесь обучены Обществу. Если вы автоматически станете обучены Обществу (например, из-за вашей предыстории или класса), то вместо этого становитесь обучены другому навыку на свой выбор. Вы знаете Эмпирейский язык и получаете способность навыка @UUID[Compendium.pf2e.feats-srd.P9HCz0uR6xPHuw72].</p>\n<hr />\n<p data-visibility=\"owner\"><em><strong>Заметка:</strong> Если вы уже обучены навыку, предоставляемому этой способностью, вам необходимо вручную выбрать альтернативный навык.</em></p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "angelkin",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Аура доминиона / Dominion Aura",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p><p>На короткое время вы полностью воплощаете в себе ожидания бога-разрушителя. Все существа в радиусе @Template[emanation|distance:10] получают @Damage[8d6[force]|options:area-damage] с простым спасброском @Check[fortitude|against:class-spell|basic|options:area-effect]{Стойкости}. При провале, существо также сбито @UUID[Compendium.pf2e.conditionitems.Item.j91X7x0XSomq8d60]. В течение 1 минуты, любое существо, которое заканчивает свой ход в радиусе этой 10-футовой эманации, получает @Damage[5d6[force]|options:area-damage] с простым спасброском @Check[fortitude|against:class-spell|basic|options:area-effect]{Стойкости}. Если вы не @Condition[Drained]{истощены}, то можете при использовании <em>\"Ауры доминиона\"</em> стать @UUID[Compendium.pf2e.conditionitems.Item.4D2KBtexWXa6oUMR]{Истощенным 2}, чтобы увеличить радиус этой эманации с 10 до 20 футов.</p>",
+    "traits": [
+      "aura",
+      "divine",
+      "force",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 17,
+    "key": "dominion-aura",
+    "source": "Pathfinder Lost Omens Impossible Lands"
+  },
+  {
+    "name": "Бесовские удары / Fiendish Strikes",
+    "type": "ancestry",
+    "description": "<p>Ваша изнуряющая связь с силами зла наполняет ваше оружие истощающей злобой, с каждой атакой уничтожая добрых существ. Все ваши \"Удары\" оружием и безоружные атаки получают признаки @Trait[Unholy]{нечестивый} и @Trait[Magical]{магический}.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "fiendish-strikes",
+    "source": "Pathfinder Advanced Player's Guide"
+  },
+  {
+    "name": "Беспорядочная аркана / Anarchic Arcana",
+    "type": "ancestry",
+    "description": "<p>Магия в вашей крови непредсказуема. Когда вы совершаете свои ежедневные приготовления, киньте [[/r 1d12]] дважды и сверьтесь со списком:</p>\n<ol>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.9h9YCncqah6VNsKf];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.3JG1t3T4mWn6vTke];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.5KobTMrZeZxuXMgl];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.2qGqa33E4GPUCbMV];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.2oH5IufzdESuYxat];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.tlSE7Ly8vi1Dgddv];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.wzLkNU3AAqOSKFPR];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.Fr58LDSrbndgld9n];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.jwK43yKsHTkJQvQ9];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.1xbFBQDRs0hT5xZ9];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.PjhUmyKnq6K5uDby];</li>\n<li>@UUID[Compendium.pf2e.spells-srd.Item.mrDi3v933gsmnw25].</li>\n</ol>\n<p>В этот день вы можете сотворять каждое из этих заклинаний по разу (или одно заклинание 2 раза, если оно выпало дважды) как врожденные сакральные заклинания 2-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "anarchic-arcana",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Благословенная кровь [Нефилим] / Blessed Blood (нефилим)",
+    "type": "ancestry",
+    "description": "<p>Ваша свежепролитая кровь освящена, и её употребление вызывает эффекты, подобные действию @UUID[Compendium.pf2e.equipment-srd.Item.z9T4c1hXwOotsMCp]{Святой воды}.</p>\n<p>Всякий раз, когда бес, нежить или существо со слабостью к святости, пьёт вашу кровь или наносит вам колющий или рубящий урон с помощью челюстей, клыков или подобных атак, это существо получает @Damage[1d6[spirit]|traits:holy] с признаком @Trait[Holy]{святой}.</p>\n<p>Вы получаете бонус обстоятельства +4 к проверкам Ремесла, чтобы @UUID[Compendium.pf2e.actionspf2e.Item.rmwa3OyhTZ2i2AHl]{Создавать} <em>святую воду</em>, используя свою кровь как один из ингредиентов.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "blessed-blood-нефилим",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Божественная контрмера / Divine Countermeasures",
+    "type": "ancestry",
+    "description": "<p>Вы изучили свое экстрапланарное наследие с намерением лучше защитить себя как против существ со схожим наследием, так и с противоположным — и обнаружили, что ваши методы одинаково сильны против небожителей, бесов и других божественных сущностей. Вы получаете бонус обстоятельства +1 ко всем спасброскам против сакральных эффектов.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "divine-countermeasures",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Вечные крылья [Нефилим] / Eternal Wings (нефилим)",
+    "type": "ancestry",
+    "description": "<p>Теперь крылья являются постоянной частью вашего тела. Вы получаете эффект @UUID[Compendium.pf2e.feats-srd.Item.vtCrMziYxNyj8kP7]{Сакральных крыльев} все время, а не только раз в 10 минут.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 17,
+    "key": "eternal-wings-нефилим",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Внутренняя сплоченность / Internal Cohesion",
+    "type": "ancestry",
+    "description": "<p>Порядок Оси наполняет ваше тело и помогает ему поддерживать логическую связность. Вы и ваши союзники можете осуществлять @UUID[Compendium.pf2e.actionspf2e.1kGNdIIhuglAjIp9]{Лечение ваших ран} без набора лекаря. Раз в день, когда кто-либо при броске получает провал или критический провал проверки <em>\"Лечения ваших ран\"</em>, вы можете сосредоточиться на своей внутренней сплоченности, чтобы увеличить степень успеха на одну ступень.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "internal-cohesion",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Возвышающееся присутствие / Towering Presence",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в час</p><hr /><p>Вы заполняете пространство силой своей воли, возвышаясь над тем местом, где должна находится ваша истинная форма. До начала вашего следующего хода ваш размер увеличивается до Большого. Ваше снаряжение растет вместе с вами, но возвращается к естественному размеру, если его снять. Вы @UUID[Compendium.pf2e.conditionitems.Item.i3OJZU2nk64Df3xm]{Неуклюжи 1}. Ваша досягаемость увеличивается на 5 футов (или на 10 футов, если вы были Крошечным), и вы получаете бонус состояния +2 к урону ближнего боя. \"Возвышающееся присутствие\" не действует, если вы уже Большой или больше.</p>",
+    "traits": [
+      "concentrate",
+      "divine",
+      "illusion",
+      "нефилим",
+      "polymorph"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "towering-presence",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Возвышенная мобильность / Sublime Mobility",
+    "type": "ancestry",
+    "description": "<p>Ваше наследие наделяет вас либо впечатляющими атлетическими навыками, либо физической особенностью помогающей преодолевать препятствия. Вы получаете либо Скорость карабканья, либо Скорость плавания 10 футов.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "sublime-mobility",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Вороватый хвост / Larcenous Tail",
+    "type": "ancestry",
+    "description": "<p>Хаотичная и независимая природа вашего хвоста заставляет его проказничать даже тогда, когда вы этого не хотите, и он может каким-то образом красть вещи, с которыми не должен быть в состоянии справляться. Вы можете использовать свой хвост, чтобы @UUID[Compendium.pf2e.actionspf2e.RDXXE7wMrSPCLv5k]{Украсть} объект, хотя ваш хвост все еще не может удержать его по окончании вашего действия. Если у вас есть свободная рука, то вы можете перенести украденный предмет себе в руку. В противном случае ваш хвост втихаря роняет его на землю в вашем пространстве, где вы позже можете схватить его. Наблюдатели, не являющиеся вашей целью, которые не видели, как вы крадете что-то своим хвостом, обычно отвлечены, а это означает, что Мастер обычно уменьшает их КС Восприятия, как обычно для <em>\"Кражи\"</em> чего-либо.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "larcenous-tail",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Вставай, достойный! / Arise, Ye Worthy!",
+    "type": "ancestry",
+    "description": "<p>Магия валькирий в вашей крови позволяет вам сдерживать натиск смерти. Вы можете раз в день сотворять @UUID[Compendium.pf2e.spells-srd.Hnc7eGi7vyZenAIm] как врожденное сакральное заклинание.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "arise-ye-worthy",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Глаза нефилима / нефилим Eyes",
+    "type": "ancestry",
+    "description": "<p>Ваши глаза могут видеть сквозь темноту с остротой, свойственной большинству существ с других планов. Вы получаете @UUID[Compendium.pf2e.journals.JournalEntry.S55aqwWIzpQRFhcq.JournalEntryPage.q2chuQ4Am5puc9Cc#nochnoe-zrenie-i-silьnoe-nochnoe-zrenie]{Ночное зрение}.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "нефилим-eyes",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Дитя мрака / Grimspawn",
+    "type": "ancestry",
+    "description": "<p>Ваша родословная восходит к дэймону, одному из проявлений ужасных форм смерти, пожирающих души в своем отвратительном доме — Абаддоне. В результате вы цепко цепляетесь за последние клочки собственной жизненной силы. Вы получаете общую способность @UUID[Compendium.pf2e.feats-srd.I0BhPWqYf1bbzEYg]{Несгибаемый}.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "grimspawn",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Дитя музы / Musetouched",
+    "type": "ancestry",
+    "description": "<p>Ваша кровь поет с освобождающей силой азат, живых воплощений свободы, из дикого царства Элизиума. Вы получаете бонус обстоятельства +1 к @UUID[Compendium.pf2e.actionspf2e.SkZAQRkLLkmBQNB9]{Вырваться}. Когда при проверке <em>\"Вырваться\"</em> вы получаете критический провал, результат считается обычным провалом, а если получаете успех, результат считается критическим успехом.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "musetouched",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Дитя преисподней / Pitborn",
+    "type": "ancestry",
+    "description": "<p>Ваша кровь несет на себе метку демона, живого воплощения греха из зловонных глубин Внешних Разломов. Демоническая сила пульсирует в ваших венах и проявляется по-разному для каждого, есть ли у вас перепончатые пальцы и вы как рыба в воде, большие руки, способные бороться с большими врагами, или какое-то другое проявление. Вы обучены Атлетике. Если вы автоматически станете обучены Атлетике (например, из-за вашей предыстории или класса), то вместо этого становитесь обучены другому навыку на свой выбор.</p>\n<p>Еще вы получаете 1 любую способность навыка 1-го уровня, с предварительным условием быть обученным Атлетике, что отражает проявление вашей крови Бездны.</p>\n<hr />\n<p data-visibility=\"owner\"><em><strong>Заметка:</strong> Если вы уже обучены навыку, предоставляемому этой способностью, вам необходимо вручную выбрать альтернативный навык.</em></p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "pitborn",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Дополнительные частицы / Ancillary Motes",
+    "type": "ancestry",
+    "description": "<p>Вы можете использовать @UUID[Compendium.pf2e.feats-srd.Ewk7h9aQpKvy1RJo]{Хрустальную пыль} еще 1 раз в день.</p>\n<hr />\n<p><strong>Особенность:</strong> Вы можете взять эту способность более одного раза, каждый раз получая еще 1 использование <em>\"Хрустальной пыли\"</em> в день.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "ancillary-motes",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Дьявол на виду / Devil in Plain Sight",
+    "type": "ancestry",
+    "description": "<p>Вы научились собирать свою бесовскую натуру в маленький комок порчи и прятать его в своей душе. Ваши очевидные бесовские черты исчезают, включая хвосты, рога и раздвоенные копыта, однако оставляя намеки на них (например, когти превращаются в неровные ногти или глаза сохраняют странный оттенок). Вы все еще являетесь похожим на себя, но выглядите как не-тифлинг типичный представитель вашей основной родословной. Использование \"Дьявола на виду\" считается созданием маскировки при использовании Обмана для @UUID[Compendium.pf2e.actionspf2e.Item.AJstokjdG6iDjVjE] и ваше превращение автоматически побеждает КС Восприятия на определение являетесь ли вы нормальным представителем своей основной родословной; только существа активно изучающие вас и бросающие Восприятие могу заметить маскировку. Пока вы в своей измененной форме, то не можете использовать безоружные атаки, врожденные заклинания или другие умения требующие физических особенностей, полученных от родословной тифлинга, например, вы не можете использовать способность @UUID[Compendium.pf2e.feats-srd.Item.aVRuchEAJIvnd70k]. Вы можете оставаться в своей альтернативной форме неограниченное время, и можете вернуться в свою форму тифлинга снова используя это действие.</p>",
+    "traits": [
+      "concentrate",
+      "divine",
+      "нефилим",
+      "polymorph"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "devil-in-plain-sight",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Дьявольские козни / Devilish Wiles",
+    "type": "ancestry",
+    "description": "<p>Традиционно бесы исключительно хороши в убеждении людей что-то сделать, даже если их жертвы знают, что это плохая идея. У вас тоже неплохо получается, побуждая слабых и безвольных к вашим приказам. Вы можете раз в день, сотворять @UUID[Compendium.pf2e.spells-srd.Item.vLA0q0WOK2YPuJs6], как врожденное сакральное заклинание 1-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "devilish-wiles",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Законодатель / Lawbringer",
+    "type": "ancestry",
+    "description": "<p>Вы ведете свой род от архонтов: воплощений небесных добродетелей, хранителей семи-ступенчатой горы Небес и хранителей закона и добродетели среди смертных. Ваша собственная добродетель и упорядоченный ум защищают вас от врагов, которые могут обратить ваши эмоции против вас. Вы получаете бонус обстоятельства +1 к спасброскам против эффектов @Trait[Emotion]{эмоций}, и если при броске против такого эффекта вы получаете успех, результат считается критическим успехом.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "lawbringer",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Звериное дитя / Beastbrood",
+    "type": "ancestry",
+    "description": "<p>Одни из ваших предков были ракшасами, развращенным и аристократическими переродившимися душами, которые называют Голарион своим домом. У вас есть смутное эхо воспоминаний вашего предка, достаточное, чтобы при необходимости играть роль благородного человека, независимо от вашего происхождения. Вы обучены Обществу. Если вы уже обучены Обществу (например, из-за вашей предыстории или класса), то вместо этого становитесь обучены другому навыку на свой выбор. Еще вы получаете способность навыка @UUID[Compendium.pf2e.feats-srd.Item.JtjnFsOToBLnSRO9].</p>\n<hr />\n<p><em>Примечание: если вы уже обучены навыку, предоставляемому этой способностью, вам нужно вручную выбрать альтернативный навык.</em></p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "beastbrood",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Знания нефилимов / нефилим Lore",
+    "type": "ancestry",
+    "description": "<p>Вам известны тайны Мультивселенной. Вы становитесь обучены Дипломатии или Запугиванию, а также Религии. Если вы будете автоматически обучены одному из этих навыков (например, из-за предыстории или класса), то вместо этого вы становитесь обучены навыку на свой выбор.</p>\n<p>Также вы получаете общую способность @UUID[Compendium.pf2e.feats-srd.BocFD2KV0qgUC76x] для подраздела Знаний плана, с которого происходит ваш род.</p>\n<hr />\n<p data-visibility=\"owner\"><em><strong>Заметка:</strong> Если вы уже обучены навыку, предоставляемому этой способностью, вам необходимо вручную выбрать альтернативный навык. Вам также необходимо вручную ввести предоставленный навык Знания.</em></p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "нефилим-lore",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Зов Элизиума / Call of Elysium",
+    "type": "ancestry",
+    "description": "<p>Внутри вас гармонирует дикое чудо Элизиума, и в тяжелом положении вы можете поделиться его преимуществами со своими союзниками. Ваша Скорость увеличивается на 5 футов; увеличение Скорости от этой способности не складывается с любым увеличением Скорости от ваших способностей родословной (например, @UUID[Compendium.pf2e.feats-srd.Item.kCO4r8NOm8E2T3eH]). Союзники, начинающие свой ход в бою рядом с вами, получают на этот раунд бонус состояния +5 футов к своей Скорости.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "call-of-elysium",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Идиллический / Idyllkin",
+    "type": "ancestry",
+    "description": "<p>Ваши дикие, уникальные черты лица выдают ваше первородство агатиона. Спокойные небожители из плана Нирваны, агатионы ищут мирный путь, обеспечивая лучший мир для сосуществования всех. Ваша безмятежная манера поведения заставляет вас искать мирное разрешение конфликта. Вы становитесь обучены Природе. Если вы автоматически станете обучены Природе (например, из-за вашей предыстории или класса), то вместо этого становитесь обучены другому навыку на свой выбор. Вы знаете Фейский язык и получаете способность навыка @UUID[Compendium.pf2e.feats-srd.Item.WC4xLBGmBsdOdHWu].</p>\n<hr />\n<p><em>Примечание: если вы уже обучены навыку, предоставляемому этой способностью, вам нужно вручную выбрать альтернативный навык.</em></p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "idyllkin",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Извержение столпотворения / Pandemonium Eruption",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p><hr /><p>Вы высвобождаете накопившийся в вас хаос, становясь узлом безудержного разрушения, который сеет неограниченный хаос на всех, кто находится поблизости. Каждое существо в @Template[emanation|distance:15]{15-футовой эманации} от вас получают 14d6 урона @Damage[14d6[acid]|options:area-damage]{Кислотой}, @Damage[14d6[electricity]|options:area-damage]{Электричеством} или @Damage[14d6[sonic]|options:area-damage]{Звуком}, выбранного случайным образом для каждой цели. Каждая цель совершает простой спасбросок @Check[reflex|against:class-spell|basic|options:area-effect]{Стойкости} против вашего КС класса или КС заклинаний, но любое существо, подверженное тому типу урона, к которому у вас есть сопротивление от рода \"Родича протея\", получает штраф -2 к спасброску. Любая цель, критически провалившая спасбросок, также впадает в @UUID[Compendium.pf2e.conditionitems.Item.yblD8fOR1J8rDwEQ]{Замешательство} до конца своего следующего хода.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 17,
+    "key": "pandemonium-eruption",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Излучение великолепия / Radiate Glory",
+    "type": "ancestry",
+    "description": "<p>Ваша прирожденное великолепие излучается в мир всей божественной силой небесных планов в течение 1 минуты. Любое существо, которое может видеть вас, пока вы \"Излучаете великолепие\", должно совершить спасбросок @Check[will|against:class-spell|showDC:all]{Воли} против вашего КС класса или КС заклинаний, в зависимости от того, что больше. Затем существо становится временно иммунно к этому эффекту на 24 часа.</p>\n<hr />\n<p><strong>Критический успех:</strong> Существо невредимо.</p>\n<p><strong>Успех:</strong> Для существа вы @UUID[Compendium.pf2e.conditionitems.Item.DmAIPqOBomZ7H95W]{Скрыты} сияющим светом на 1 раунд, но не можете использовать это скрытие, чтобы @UUID[Compendium.pf2e.actionspf2e.Item.XMcnh4cSI32tljXa]{Спрятаться}, как и обычно, когда ваше местоположение очевидно</p>\n<p><strong>Провал:</strong> Как успех, но пока действует способность вы @UUID[Compendium.pf2e.conditionitems.Item.DmAIPqOBomZ7H95W]{Скрыты} для существа</p>\n<p><strong>Критический провал:</strong> Пока действует способность, вы @UUID[Compendium.pf2e.conditionitems.Item.iU0fEDdBp3rXpTMC]{Спрятаны} для существа, затерявшись в венце сияния. Ваше местоположение все еще очевидно, поэтому вы не можете использовать это, чтобы @UUID[Compendium.pf2e.actionspf2e.Item.VMozDqMMuK5kpoX4].</p>",
+    "traits": [
+      "divine",
+      "light",
+      "нефилим",
+      "visual"
+    ],
+    "rarity": "common",
+    "level": 17,
+    "key": "radiate-glory",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Изменение сопротивления / Alter Resistance",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в час</p>\n<p><strong>Триггер:</strong> Вы получаете урон кислотой, электричеством или звуком</p>\n<hr />\n<p>Вы сосредотачиваетесь на своих протейских предках, чтобы изменить свое энергетическое сопротивление. Энергетическое сопротивление, получаемое от вашего рода \"Родича протея\", изменяется, чтобы соответствовать спровоцировавшему урону. Это изменение происходит после нанесения урона.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "alter-resistance",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Интуитивное ремесленничество / Intuitive Crafting",
+    "type": "ancestry",
+    "description": "<p>Ваша близость к процессу и порядку делает вас прирожденным ремесленником. Вы становитесь обучены Ремеслу. Если вы обучены Ремеслу, вы получаете способность навыка @UUID[Compendium.pf2e.feats-srd.Item.QLeMH5mQgh28sa5o]{Специализация в ремесле} со специализацией на ваш выбор; если у вас есть и то и другое, то вместо этого вы становитесь обучены навыку по вашему выбору. Кроме того, когда вы получаете критический провал при проверке @UUID[Compendium.pf2e.actionspf2e.Item.bT3skovyLUtP22ME]{Ремонта} предмета, результат считается обычным провалом.</p>\n<hr />\n<p data-visibility=\"owner\"><em><strong>Заметка:</strong> Если вы уже обучены навыку, предоставляемому этой способностью, вам необходимо вручную выбрать альтернативный навык.</em></p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "intuitive-crafting",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Истинная речь / Truespeech",
+    "type": "ancestry",
+    "description": "<p>Крайне важно, чтобы понимали вас и вы понимали других; язык не должен мешать тому, что вы пытаетесь сообщить. Вы можете раз в день сотворять @UUID[Compendium.pf2e.spells-srd.Item.SwUiVavHKMWG7t5K] как врожденное сакральное заклинание 5-го ранга, только на себя. На время действия этого заклинания, вы получаете бонус состояния +1 к проверкам Дипломатии когда говорите с существами, с которыми уже имеете общий язык до момента наложения заклинания.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "uncommon",
+    "level": 13,
+    "key": "truespeech",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Кровник битвы / Battleblooded",
+    "type": "ancestry",
+    "description": "<p>Вы происходите от тех, чьих жизней коснулись легендарные эйнхерии, созданные из душ могучих воинов, убитых в битве и избранных валькириями, чтобы служить пехотинцами многих богов. Возможно, вы даже являетесь далеким смертным потомком валькирии.</p>\n<p>Вы обучены Запугиванию. Если вы уже обучены Запугиванию (к примеру, от предыстории или класса), то вместо этого вы обучены навыку по вашему выбору. Вы также получаете способность навыка @UUID[Compendium.pf2e.feats-srd.Item.xQMz6eDgX75WX2ce].</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "battleblooded",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Ловкий хвост [Нефилим] / Skillful Tail (нефилим)",
+    "type": "ancestry",
+    "description": "<p>У вас всегда был хвост, но, благодаря практике, вы научились использовать его как нечто большее, нежели индикатор вашего настроения. Вы можете совершать простые действия, чтобы @UUID[Compendium.pf2e.actionspf2e.Item.pvQ5rY2zrtPI614F]{Взаимодействовать} хвостом, как например открывать незапертую дверь. Ваш хвост не может выполнять действия, для которых нужны пальцы или значительная ловкость рук, включая любые действия, которые для выполнения потребуют совершить проверку, и вы не можете использовать его, чтобы держать предметы.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "skillful-tail-нефилим",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Лучший трюк / Finest Trick",
+    "type": "ancestry",
+    "description": "<p>Многие бесы, из них наиболее известные, ракшасы раджи и демонические суккубы, могут принимать формы других. Попрактиковавшись, вы можете делать так же. Когда вы используете \"Дьявол на виду\", то можете изменять свою внешность, чтобы она соответствовала рядовому представителю вашей основной родословной, а не той, что выглядит как вы но без очевидных черт нефилима. Дополнительно, вы можете имитировать внешность конкретной личности (любой родословной того же размера и вида, что и ваша основная родословная, для большинства родословных — гуманоида) если как часть действия поглотите частичку их крови, локон волос или подходящий эквивалент. Вы все еще должны знать как выглядит существо и должны быть осведомлены, что поглощенная часть принадлежит его телу.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "finest-trick",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Магия агатионов / Agathion Magic",
+    "type": "ancestry",
+    "description": "<p>Сквозь вас течет гармоничная магия Нирваны. Вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.wp09USMB3GIW1qbp] и @UUID[Compendium.pf2e.spells-srd.Item.b515AZlB0sridKSq] как врожденные сакральные заклинания 2-го ранга, каждое раз в день.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "agathion-magic",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Магия асуров / Asura Magic",
+    "type": "ancestry",
+    "description": "<p>Вы можете творить @UUID[Compendium.pf2e.spells-srd.Item.TaaMEYdZXQXF0Sks] и @UUID[Compendium.pf2e.spells-srd.Item.dLdRqT6UxTKlsPgp] как врожденные сакральные заклинания 2-го ранга, каждое раз в день.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "asura-magic",
+    "source": "Pathfinder Lost Omens Impossible Lands"
+  },
+  {
+    "name": "Магия бесов / Fiendish Magic",
+    "type": "ancestry",
+    "description": "<p>Вы владеете магией бесов. Выберите два из следующих заклинаний: @UUID[Compendium.pf2e.spells-srd.Item.PRrZ7anETWPm90YY], @UUID[Compendium.pf2e.spells-srd.Item.8ViwItUgwT4lOvvb], @UUID[Compendium.pf2e.spells-srd.Item.XXqE1eY3w3z6xJCB], @UUID[Compendium.pf2e.spells-srd.Item.jwK43yKsHTkJQvQ9], @UUID[Compendium.pf2e.spells-srd.Item.1xbFBQDRs0hT5xZ9] и @UUID[Compendium.pf2e.spells-srd.Item.Mkbq9xlAUxHUHyR2]. Вы можете использовать каждое из выбранных заклинаний раз в день как врождённое сакральное заклинание 2-го ранга.</p>\n<p>Дети мрака обычно выбирают <em>ложную жизнь</em> и <em>видеть незримое</em>, дети преисподней — <em>паранойю</em> и <em>разбивающий звук</em>, а адские отродья — <em>невидимость</em> и <em>маскировку магии</em></p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "fiendish-magic",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Магия вельстраков / Velstrac Magic",
+    "type": "ancestry",
+    "description": "<p>Вы знаете, что ощущения — это гораздо больше, чем кнуты и цепи, но кнуты и цепи тоже имеют свое место. Вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.mrDi3v933gsmnw25] и @UUID[Compendium.pf2e.spells-srd.Item.9s5tqqXNzcoKamWx], как врожденные сакральные заклинания 2-го уровня, каждое раз в день; в обоих случаях, заклинания проявляются как теневые цепи, а не своими обычными визуальными признаками.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "velstrac-magic",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Магия гаруд / Garuda Magic",
+    "type": "ancestry",
+    "description": "<p>Вы произошли от удивительных гаруд, и их острые чувства проявляются в вашей магическом мастерстве. Вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.3JG1t3T4mWn6vTke] и @UUID[Compendium.pf2e.spells-srd.Item.jwK43yKsHTkJQvQ9] как врожденные сакральные заклинания 2-го ранга, каждое раз в день.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "garuda-magic",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Магия клиппотов / Qlippoth Magic",
+    "type": "ancestry",
+    "description": "<p>Вы глубоко изучили секреты своей крови и можете заставить реальность действовать против её собственных желаний. Вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.3JG1t3T4mWn6vTke] и @UUID[Compendium.pf2e.spells-srd.Item.gIdDLrbswTV3OBJy], как врожденные сакральные заклинания 2-го уровня, каждое раз в день.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "qlippoth-magic",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Магия небожителей / Celestial Magic",
+    "type": "ancestry",
+    "description": "<p>Вы можете использовать магию ангелов, которая течет в вашей крови. Выберите два из следующих заклинаний: @UUID[Compendium.pf2e.spells-srd.Item.EfFMLVbmkBWmzoLF], @UUID[Compendium.pf2e.spells-srd.Item.ynm8JIU3sc3qUMpa], @UUID[Compendium.pf2e.spells-srd.Item.2qGqa33E4GPUCbMV], @UUID[Compendium.pf2e.spells-srd.Item.0qaqksrGGDj74HXE], @UUID[Compendium.pf2e.spells-srd.Item.d7Lwx6KAs47MtF0q] и @UUID[Compendium.pf2e.spells-srd.Item.BCuHKrDeJ4eq53M6]. Вы можете использовать каждое из выбранных заклинаний раз в день как врожденное сакральное заклинание 2-го ранга.</p>\n<p>Ангельские нефилимы обычно выбирают <em>ясный ум</em> и <em>форму гуманоида</em>, законодатели — <em>вечный свет</em> и <em>поделиться жизнью</em>, а дети музы — <em>свет откровения</em> и <em>уверенность в ногах</em></p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "celestial-magic",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Магия ракшас / Rakshasa Magic",
+    "type": "ancestry",
+    "description": "<p>Вы помните секреты своих предков ракшас и знаете, как применять эти воспоминания для достижения результатов. Вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.2qGqa33E4GPUCbMV] и @UUID[Compendium.pf2e.spells-srd.Item.f8SBoXiXQjlCKqly], как врожденные сакральные заклинания 2-го уровня, каждое раз в день.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "rakshasa-magic",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Магия ракшас Джалмерэя / Jalmeri Rakshasa Magic",
+    "type": "ancestry",
+    "description": "<p>Вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.9HpwDN4MYQJnW0LG] и @UUID[Compendium.pf2e.spells-srd.Item.dxOF7d5kAWusLKWF] как врожденные сакральные заклинания 2-го ранга, каждое раз в день. Фонарь жнеца проявляется как фонарь в форме головы вашего воплощения ракшасы.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "jalmeri-rakshasa-magic",
+    "source": "Pathfinder Lost Omens Impossible Lands"
+  },
+  {
+    "name": "Методичная магия / Methodical Magic",
+    "type": "ancestry",
+    "description": "<p>Вы можете изменить мир с помощью своей магии. Выберите два из следующих заклинаний: @UUID[Compendium.pf2e.spells-srd.Item.b515AZlB0sridKSq], @UUID[Compendium.pf2e.spells-srd.Item.9HpwDN4MYQJnW0LG], @UUID[Compendium.pf2e.spells-srd.Item.Azoh0BSoCASrA1lr], @UUID[Compendium.pf2e.spells-srd.Item.dINQzhqGmIsqGMUY], @UUID[Compendium.pf2e.spells-srd.Item.CXICME10TkEJxz0P] или @UUID[Compendium.pf2e.spells-srd.Item.vTQvfYu2llKQedmY]. Вы можете использовать каждое из выбранных заклинаний раз в день, как врожденное сакральное заклинание 2-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "methodical-magic",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Меченый разломом / Riftmarked",
+    "type": "ancestry",
+    "description": "<p>Давным-давно клиппот отметил кого-то в вашем роду, скорее всего, через их древние рунические камни, которые усеивают поверхность Голариона. У вас древняя родословная, исконная и извращенная, и у вас есть чутье на такие же извращенные вещи. Вы обучены Оккультизму. Если вы уже обучены Оккультизму (например, из-за вашей предыстории или класса), то вместо этого становитесь обучены другому навыку на свой выбор. Еще вы получаете способность навыка @UUID[Compendium.pf2e.feats-srd.Item.hDGosy2ZTwnyctEP].</p>\n<hr />\n<p><em>Примечание: если вы уже обучены навыку, предоставляемому этой способностью, вам нужно вручную выбрать альтернативный навык. You also need to manually enter the granted Lore skill.</em></p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "riftmarked",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Наведение порядка / Impose Order",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<p><strong>Триггер:</strong> Вы критически провалите проверку навыка или пострадаете от эффекта с признаком @Trait[Misfortune]{неудача}</p>\n<hr />\n<p>Вы изменяете основную ткань реальности, чтобы установить основополагающий порядок. Если триггером была проверка навыка, то вы вместо этого получаете результат 10 + ваш бонус мастерства (не применяйте никакие другие бонусы, штрафы или модификаторы). Если триггером был эффект с признаком @Trait[Misfortune]{неудача}, то эффекты удачи и неудачи как обычно отменяют друг друга, нивелируя спровоцировавший эффект @Trait[Misfortune]{неудачи}.</p>",
+    "traits": [
+      "fortune",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "impose-order",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Наследник многих планов / Scion of Many Planes",
+    "type": "ancestry",
+    "description": "<p>Долгая и сложная история вашей родословной проявляется в способности черпать силу из большего количества планарных источников, чем у большинства других нефилимов. Выберите одну способность нефилима с признаком <em>`род`</em>, которой вы еще не обладаете; вы получаете эту способность и все её преимущества, даже если вы уже выбирали способность рода на 1-м уровне.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "scion-of-many-planes",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Наступательный анализ / Offensive Analysis",
+    "type": "ancestry",
+    "description": "<p>Вы можете усилить свои чувства и психическое состояние, чтобы рассмотреть каждый аспект атаки. Вы можете раз в день сотворять @UUID[Compendium.pf2e.spells-srd.Gb7SeieEvd0pL2Eh]{Верный удар} как врожденное сакральное заклинание.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "offensive-analysis",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Небесное милосердие / Celestial Mercy",
+    "type": "ancestry",
+    "description": "<p>Ващи небесные силы позволяют вам с легкостью устранять незначительные недуги. Вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.SUKaxVZW2TlM8lu0] два раза в день как врожденное сакральное заклинание 2-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "celestial-mercy",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Небесные удары / Celestial Strikes",
+    "type": "ancestry",
+    "description": "<p>Ваша связь с добром заряжает все ваши атаки против сил зла. Все ваше \"Удары\" оружием и безоружные атаки получают признаки @Trait[Holy]{святой} и @Trait[Magical]{магический}.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "celestial-strikes",
+    "source": "Pathfinder Advanced Player's Guide"
+  },
+  {
+    "name": "Неугомонный [Нефилим] / Irrepressible (нефилим)",
+    "type": "ancestry",
+    "description": "<p>Ваша слегка потусторонняя природа позволяет вам легко отмахиваться от эмоциональных манипуляций. Когда при спасброске против эффекта @Trait[Emotion]{эмоций} вы получаете успех, результат считается критическим успехом.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "irrepressible-нефилим",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Нимб / Halo",
+    "type": "ancestry",
+    "description": "<p>Вы всегда окружены ореолом света и добра. Ваш нимб дает свет с эффектами сакральных чар @UUID[Compendium.pf2e.spells-srd.WBmvzNDfpwka3qT4]. Чары усиливаются до ранга, равного половине вашего уровня, округленного в большую сторону. Вы можете @UUID[Compendium.pf2e.actionspf2e.3f5DMFu8fPiqHpRg]{Поддержать}, чтобы убрать или восстановить нимб.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "halo",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Нимб целителя / Healer's Halo",
+    "type": "ancestry",
+    "description": "<p><strong>Триггер:</strong> Вы или союзники в радиусе 30 футов восстанавливаете ОЗ пока активен @UUID[Compendium.pf2e.feats-srd.Item.PGVXjbAi1Fa4uTmD].</p>\n<hr />\n<p>Ваш нимб может усиливать позитивную энергию. Существа, восстановившие ОЗ от позитивного исцеляющего эффекта, восстанавливают дополнительные @Damage[1d6[healing]] ОЗ. Существа, которые получают преимущество от этой силы, становятся временно иммунны к этому эффекту на следующие 10 минут.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "healers-halo",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Оперенный / Plumekith",
+    "type": "ancestry",
+    "description": "<p>В вашей крови витает сила великолепных гаруд, гордых и стойких птичьих воинов. Вы получаете только половину обычного урона от падения, и получаете бонус обстоятельства +2 к спасброскам против эффектов с признаком @Trait[Air]{воздух}.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "plumekith",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Очищение грехов / Purge Sins",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<hr />\n<p>Вы взываете к своим небесным предкам избавить свое тело от всех токсинов и нечистот. Совершите отдельную проверку Религии для противодействия каждой действующей на вас болезни или яду. Как обычно, ваш ранг противодействия равен половине вашего уровня, округленного до большего целого.</p>",
+    "traits": [
+      "healing",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "purge-sins",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Пламенный прыжок / Flame Jump",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<hr />\n<p>Ваша родословная пери раскрыла ваш разум чистой, очищающей сущности огня. Вы можете потратить 1 минуту на сосредоточенную подготовку, потом войти в огонь своего или бо́льшего размера, чтобы мгновенно телепортироваться в любой огонь вашего или бо́льшего размера на расстоянии вплоть до 5 миль. При использовании этого умения, вы не получаете урон от вхождения в огонь или при выходе из него. Войдя в огонь, вы мгновенно знаете примерные местоположения других больших огней в радиусе указанного расстояния, и если хотите, то можете выйти из изначального огня. Вы не можете переносить с собой во время телепортации межпространственные карманы; если вы пытаетесь это сделать, то активность проваливается.</p>",
+    "traits": [
+      "concentrate",
+      "divine",
+      "exploration",
+      "fire",
+      "manipulate",
+      "нефилим",
+      "teleportation"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "flame-jump",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Порождение изъяна / Faultspawn",
+    "type": "ancestry",
+    "description": "<p>Вы несете в себе обиду на определенное божество и его дела, унаследованную от богохульного предка асура в вашей родословной. Еще у вас есть некоторые рудиментарные признаки вашей предыдущей инкарнации, такие как вторая пара лопаток без пригодных для использования рук, пара прикрытых глаз, без самих глаз, или странные шрамы, напоминающие рот. Вы получаете реакцию @UUID[Compendium.pf2e.actionspf2e.Item.e5JscXqvBUC867oo].</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "faultspawn",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Потусторонняя мольба / Extraplanar Supplication",
+    "type": "ancestry",
+    "description": "<p>Вы призываете сакральные силы, чтобы наделить милостью своих союзников или ослабить врагов. Выберите @UUID[Compendium.pf2e.spells-srd.Item.XSujb7EsSwKl19Uu] или @UUID[Compendium.pf2e.spells-srd.Item.7ZinJNzxq0XF0oMx]. Вы можете сотворять выбранное заклинание раз в день как врождённое сакральное заклинание 1-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "extraplanar-supplication",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Превентивная реконфигурация / Preemptive Reconfiguration",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<p><strong>Триггер:</strong> Вы получите дробящий, колющий или рубящий урон</p>\n<hr />\n<p>Ваше тело ожидает удара. Область удара на мгновение реорганизуется в усиленную тканевую сетку, которая притупляет атаку. Вы получаете сопротивление типу спровоцировавшего урона, равное вашему уровню, которое применяется к спровоцировавшему урону.</p>\n<p>Если у вас есть способность @UUID[Compendium.pf2e.feats-srd.Ewk7h9aQpKvy1RJo]{Хрустальная пыль}, то вы можете использовать <em>\"Превентивную реконфигурацию\"</em> не тратя использование реакции, вместо этого расходуя частоту использования частиц. Применение считается к вашему количеству использований <em>\"Хрустальной пыли\"</em> в день, как если бы вы использовали её вместо этого.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "preemptive-reconfiguration",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Призыв к битве / Call to Battle",
+    "type": "ancestry",
+    "description": "<p><strong>Триггер:</strong> Вы перестаете быть @UUID[Compendium.pf2e.conditionitems.Item.fBnFDH2MTzgFijKf].</p><hr /><p>Вы обращаетесь к неугасающему духу эйнхерджара, чтобы вступить в бой. Вы \"Встаете\". Это движение не вызывает реакций.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "call-to-battle",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Призыв сородича / Summon нефилим Kin",
+    "type": "ancestry",
+    "description": "<p>У вас есть с Внешними Планами, что позволяет вам призывать божественного союзника. Выберите либо @UUID[Compendium.pf2e.spells-srd.Item.lTDixrrNKaCvLKwX], @UUID[Compendium.pf2e.spells-srd.Item.29ytKctjg7qSW2ff] или другое заклинание 5-го ранга, способное призывать экстрапланарное существо, соответствующее вашему роду. Раз в день вы можете сотворять выбранное заклинание как врожденное сакральное заклинание 5-го ранга, но призываемое существо должно быть из той же категории, что и ваш род — например, существо с признаком @Trait[Angel]{ангел} для ангельского нефилима.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "summon-нефилим-kin",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Провозглашение божественной воли / Divine Declaration",
+    "type": "ancestry",
+    "description": "<p>Вы способны призвать святое или нечестивое слово из потусторонних миров, чтобы покарать своих врагов. Один раз в день вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.sX2o0HH4RjJDAZ8C] как врожденное сакральное заклинание 7-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 17,
+    "key": "divine-declaration",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Проворные копыта / Nimble Hooves",
+    "type": "ancestry",
+    "description": "<p>У вас есть копыта, крылья на лодыжках или другую особенность, которая ускоряет ваше передвижение. Ваша Скорость увеличивается на 5 футов.</p>\n<p><strong>Особенность:</strong> Увеличение Скорости от этой способности не складывается с любым увеличением Скорости от других способностей родословной.</p>\n<p>Автоматически примененный эффект:</p>\n<ul>\n<li>+5 нетипичный бонус к наземной Скорости</li>\n</ul>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "nimble-hooves",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Раскрыть истинное я / Reveal Hidden Self",
+    "type": "ancestry",
+    "description": "<p><strong>Требования:</strong> Вы @UUID[Compendium.pf2e.conditionitems.Item.iU0fEDdBp3rXpTMC]{Спрятаны} хотя бы для 1 врага</p>\n<p>Пока @Condition[Hidden]{спрятаны}, вы проявляете свою звериную сущность. Вы создаете иллюзию существа Большого размера или меньше, в радиусе 60 футов от вашего местоположения с эффектами заклинания @UUID[Compendium.pf2e.spells-srd.Item.f8SBoXiXQjlCKqly]. Это существо разделяет звериные черты вашего рода. В отличие от большинства действий, совершаемых в @Condition[Hidden]{спрятанном} состоянии, использование \"Раскрытие истинного я\" и @UUID[Compendium.pf2e.actionspf2e.Item.3f5DMFu8fPiqHpRg]{Поддержание} его заклинания не приводит к автоматическому прекращению вашего @Condition[Hidden]{спрятанного} состояния. Против попыток не поверить в эту иллюзию, используйте ваш КС класса из КС заклинания, в зависимости от того, что выше. Если вы @Condition[Observed]{замечены} существом, оно автоматически не верит в эту иллюзию, и если вы больше не @Condition[Hidden]{спрятаны} хотя бы для 1 врага, то эффект заканчивается.</p>",
+    "traits": [
+      "concentrate",
+      "divine",
+      "illusion",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "reveal-hidden-self",
+    "source": "Pathfinder Lost Omens Impossible Lands"
+  },
+  {
+    "name": "Родич протея / Proteankin",
+    "type": "ancestry",
+    "description": "<p>В вашей крови бурлит квинтэссенция Водоворота, бескрайнего моря первородного хаоса, давным-давно породившего другие Внешние планы. Вы получаете сопротивление одному типу урона, равному половине вашего уровня; в начале каждого дня случайным образом определите, к чему вы получите сопротивление: к кислоте, электричеству или звуку. Вы также получаете бонус обстоятельства +1 к спасброскам против эффектов, способных вызвать у вас состояние @UUID[Compendium.pf2e.conditionitems.Item.9qGBRpbX9NEwtAAr]</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "proteankin",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Рожденный в оковах / Shackleborn",
+    "type": "ancestry",
+    "description": "<p>На вашу родословную указывают признаки вмешательств вельстрака, в том числе некоторые любопытные причуды, оставленные в наследство этими теневыми хирургами душ и плоти. Ваша плоть заживает чисто и быстро — тем лучше для вас, если вы станете предметом их ужасного искусства. Вы получаете способность @UUID[Compendium.pf2e.feats-srd.Item.N8Xz5fuW6o7GW124], даже если не соответствуете её предварительным условиям.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "shackleborn",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Рудиментарные крылья / Vestigial Wings",
+    "type": "ancestry",
+    "description": "<p>Вы обладаете маленькими, слабыми крыльями, которые помогают сохранять равновесие. Вы получаете бонусные способности навыков @UUID[Compendium.pf2e.feats-srd.CnqMJR8e9jqJR7MM]{Твердое равновесие} и @UUID[Compendium.pf2e.feats-srd.LQw0yIMDUJJkq1nD]{Кошачье падение}, даже если вы не обучены Акробатике.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "vestigial-wings",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Сакральные крылья / Divine Wings",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<hr />\n<p>Приложив усилие, вы можете вызвать из своей спины магические крылья, похожие по внешнему виду на крылья ваших экстрапланарных предков. Эти крылья остаются на 10 минут. Пока крылья открыты, вы получаете Скорость полёта, равную вашей Скорости.</p>\n<p>@UUID[Compendium.pf2e.feat-effects.Item.HfXGhXc9D120gvl5]</p>",
+    "traits": [
+      "divine",
+      "morph",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "divine-wings",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Связанный вечностью / Aeonbound",
+    "type": "ancestry",
+    "description": "<p>Ваш род находится под влиянием или напрямую связан со сверхъестественными обитателями Идеального Города Оси, мира чистого и абсолютного порядка. Эта энергия наполняет ваше тело и помогает ему сохранять слаженность, сопротивляясь эффектам, которые могли бы подорвать ваши функции или нарушить вашу упорядоченную форму. Вы и ваши союзники можете \"Лечить\" ваши раны без набора целителя. Раз в день, когда кто-то проваливает или критически проваливает проверку \"Лечения ран\", вы можете сосредоточиться на своей внутренней сплоченности, чтобы увеличить степень успеха на шаг.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "aeonbound",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Связь с божественным разумом / Channel the Godmind",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<hr />\n<p>Вы подключаетесь к коллективному мыслительному колодцу Божественного Разума, быстро анализируя почти бесконечное количество переменных, чтобы считать свое окружение. На 1 минуту вы получаете точное чувство движения на 60 футов, можете видеть невидимых существ и объекты, и получаете преимущества @UUID[Compendium.pf2e.spells-srd.Item.uqlxMQQeSGWEVjki] (с модификатором проверки противодействия, равным вашему модификатору Восприятия).</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 17,
+    "key": "channel-the-godmind",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Слава и доблесть! / Glory and Valor!",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p><hr /><p>Вы призываете свою кровь предков могучим криком, что наполняет вас живительной энергией на 1 минуту или до тех пор пока вы не провалите критически \"Удар\", в зависимости от того, что наступит раньше. В течение этого времени каждый раунд, когда вы в первый раз успешно наносите \"Удар\" существу вашего уровня или выше, вы получаете @Damage[(floor(@actor.level/2))[healing]]{ОЗ} равные половине вашего уровня.</p>",
+    "traits": [
+      "auditory",
+      "divine",
+      "healing",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "glory-and-valor",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Сокрушительный хвост / Smashing Tail",
+    "type": "ancestry",
+    "description": "<p>У вас есть хвост, который служит мощным оружием. Вы получаете безоружную атаку хвостом, которая наносит 1d6 дробящего урона, имеет признак @Trait[Sweep]{размашистое} и относится к группе оружия \"драка\".</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "smashing-tail",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Сопротивление нефилима / нефилим Resistance",
+    "type": "ancestry",
+    "description": "<p>Вы стойки к энергиям, как и ваши экстрапланарные предки. Выберите один из следующих типов энергетического урона: кислота, холод, электричество, огонь или звук. Вы получаете сопротивление 5 этому типу урона.</p>\n<p>Хоть вы и можете выбрать любой из этих типов энергетического урона, обычно он соответствует экстрапланарной сущности, связанной с вашим родом. Например, ангельский нефилим может выбрать сопротивление холоду, сопротивление а адское отродье — сопротивление огню.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "нефилим-resistance",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Спокойное убежище / Tranquil Sanctuary",
+    "type": "ancestry",
+    "description": "<p>По возможности вы следуете пути безмятежности и поощряете других делать то же самое. Вы можете раз в день сотворять @UUID[Compendium.pf2e.spells-srd.Item.8xRzLhwGL7Dgy3EZ] как врожденное сакральное заклинание 1-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "tranquil-sanctuary",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Творческий вундеркинд / Creative Prodigy",
+    "type": "ancestry",
+    "description": "<p>Вы обладаете мощным творческим потенциалом, очевидный всем, кто с вами общается. Вы обучены Выступлению. Если вы уже обучены Выступлению (к примеру, от предыстории или класса), то вместо этого вы обучены навыку по вашему выбору. Вы также получаете способность навыка @UUID[Compendium.pf2e.feats-srd.Item.xqAdXRd2gSQcqp5E], и когда вы используете [[/act make-an-impression variant=performance]] чтобы @UUID[Compendium.pf2e.actionspf2e.Item.OX4fy22hQgUHDr0q], вы получаете бонус обстоятельства +1 к этой проверке.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "creative-prodigy",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Тлеющий / Emberkin",
+    "type": "ancestry",
+    "description": "<p>Ревущий дух пери горит в вашей душе. Пери ведут постоянную борьбу, чтобы исправить ошибки своих падших предков, и эта борьба передалась вам. У вас есть прямое стремление исправлять ошибки и улучшать мир.</p>\n<p>Вы получаете бонус обстоятельства +1 к спасброскам от эффектов с признаком @Trait[Fire]{огонь}, и на ваше восприятие не влияют немагическое пламя, туман и дым.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "emberkin",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Угроза идолу / Idol Threat",
+    "type": "ancestry",
+    "description": "<p><strong>Требования:</strong> Вы держите что-то священное или ценное для существа, как например реликвию или личное изображение, либо божества или ценного личного сувенира.</p>\n<hr />\n<p>Вы угрожающе размахиваете драгоценным объектом, который держите, одновременно насмехаясь над ним и угрожая его безопасности. Попытайтесь @UUID[Compendium.pf2e.actionspf2e.Item.2u915NdUyQan6uKF]{Деморализовать} существо, чьей драгоценности вы угрожаете. Вы получаете бонус обстоятельства +2 к проверке Запугивания этой \"Деморализации\", а при успехе, существо @UUID[Compendium.pf2e.conditionitems.Item.AJh5ex99aV6VTggg]{Застигнуто врасплох} на 1 раунд из-за того, что отвлечено безопасностью этого объекта, и @UUID[Compendium.pf2e.conditionitems.Item.e1XGnhKNSQIm5IXg]{Одурманено 1} на 1 минуту (или @UUID[Compendium.pf2e.conditionitems.Item.e1XGnhKNSQIm5IXg]{Одурманено 2} при критическом успехе). Эти состояния дополняют нормальные эффекты \"Деморализации\". После этого, существо временно иммунно на 1 день к любой \"Угрозе идолу\", использующей этот конкретный объект.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "idol-threat",
+    "source": "Pathfinder Lost Omens Impossible Lands"
+  },
+  {
+    "name": "Ускользнуть от опасности / Slip Sideways",
+    "type": "ancestry",
+    "description": "<p>Как и многие бесы, вы имеете сверхъестественную способность телепортироваться в безопасное место. Раз в день вы можете сотворять @UUID[Compendium.pf2e.spells-srd.Item.VlNcjmYyu95vOUe8] как врожденное сакральное заклинание 5-го ранга.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "slip-sideways",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Устойчивая физиология / Resilient Physiology",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<p><strong>Требования:</strong> Вы затронуты болезнью или ядом, или получаете продолжительный урон.</p><hr /><p>Ваша упорядоченная физиология отторгает нежелательные элементы, позволяя вам отказаться от негативного воздействия ядов и болезней или избавиться от других длительных негативных последствий. Выберите одно:</p>\n<p><strong>Болезнь или яд:</strong> Совершите спасбросок против недуга. При провале или критическом провале стадия недуга не увеличивается.</p>\n<p><strong>Продолжительный урон:</strong> Совершите @Check[flat|dc:10|showDC:all]{Чистую проверку} чтобы оправиться от продолжительного урона.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "resilient-physiology",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Финальная форма / Final Form",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p>\n<hr />\n<p>Вы принимаете вашу чудовищную кровь и делаете её своей, крича как в небеса, так и в ад, от ярости, боли и неповиновения. Реальность сгибается и скручивается под вашей внезапной силой, с уникальной трансформацией у каждого нефилима, но она может включать в себя серное пламя, визжащий хор или извилистые змеевидные молнии. Каждое существо в радиусе 10 футов от вас получает на 1 раунд состояния @UUID[Compendium.pf2e.conditionitems.Item.9PR9y0bi4JPKnHPR] и @UUID[Compendium.pf2e.conditionitems.Item.TkIyaNPgTZFBCCuh], если только не совершит успешный спасбросок @Check[fortitude|against:class-spell|showDC:all]{Стойкости} с вашим КС класса или КС заклинания, в зависимости от того, что больше. Ваша финальная форма обладает эффектами @UUID[Compendium.pf2e.spells-srd.Item.hiVL8qsnTJtpouw0] для божества, которое разделяет мировоззрение с вашим бесовским родом. Ваша финальная форма напоминает существо из вашего бесовского рода, и вы остаетесь в этой форме на 1 минуту. Пока вы в финальной форме, то можете сотворять: @UUID[Compendium.pf2e.spells-srd.Item.sRfSBHWHdbIa0aGc], @UUID[Compendium.pf2e.spells-srd.Item.sxQZ6yqTn0czJxVd] и @UUID[Compendium.pf2e.spells-srd.Item.9AAkVUCwF6WVNNY2], как врожденные сакральные заклинания 6-го ранга, каждое по разу за использование этой способности.</p>\n<p>Когда вы выходите из своей финальной формы, то получаете состояние @UUID[Compendium.pf2e.conditionitems.Item.4D2KBtexWXa6oUMR]{Истощен 3}. Дополнительно, если у вас есть эта способность, то вы получаете признак @Trait[Unholy]{нечестивый} и слабость 10 к святому урону, даже когда вы не в финальной форме.</p>\n<hr />\n<p><strong>Особенность:</strong> На усмотрение Мастера, определенные элементы этой способности могут быть скорректированны, чтобы лучше подходить роду тифлинга, например, Мастер может решить, что определенный звериный тифлинг вместо <em>огненного шара</em> может колдовать @UUID[Compendium.pf2e.spells-srd.Item.tlcrVRqW1MSKJ5IC].</p>",
+    "traits": [
+      "concentrate",
+      "divine",
+      "morph",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 17,
+    "key": "final-form",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Чудовищная жестокость / Bestial Brutality",
+    "type": "ancestry",
+    "description": "<p>Ваша звериная безоружная атака становится все опаснее. Безоружная атака выбранная в \"Чудовищном проявлении\" приобретает признак @Trait[Deadly]{смертельное d6}. Каждый раз, когда вы критически попадаете этой атакой, вы получаете эффект критической специализации \"драки\".</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "bestial-brutality",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Чудовищные проявления / Bestial Manifestation",
+    "type": "ancestry",
+    "description": "<p>Часть вашего тела подверглась звериному влиянию планарного существа. Ваши руки заканчиваются когтями, вместо ног у вас копыта, рот заполнен острыми зубами или из позвоночника торчит хвост. Вы получаете на выбор одну из следующих безоружных атак. Эта атака относится к группе \"драка\" и имеет указанную кость урона и признаки.</p>\n<p><strong>Коготь.</strong> 1d4 рубящий (@Trait[Agile]{быстрое}, @Trait[Finesse]{точное}, @Trait[Unarmed]{безоружное}, @Trait[Versatile]{универсальное К})</p>\n<p><strong>Копыто.</strong> 1d6 дробящий (@Trait[Finesse]{точное}, @Trait[Unarmed]{безоружное})</p>\n<p><strong>Челюсти.</strong> 1d6 колющий (@Trait[Finesse]{точное}, @Trait[Unarmed]{безоружное})</p>\n<p><strong>Хвост.</strong> 1d4 дробящий (@Trait[Agile]{быстрое}, @Trait[Finesse]{точное}, @Trait[Unarmed]{безоружное})</p>\n<hr />\n<p><strong>Особенность:</strong> Вы можете выбрать эту способность только на 1 уровне, не можете переобучиться ей или получить её с помощью переобучения, а также не можете изменить вид полученной атаки.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 1,
+    "key": "bestial-manifestation",
+    ...sou("playerCore", 124),
+  },
+  {
+    "name": "Шаловливый хвост / Mischievous Tail",
+    "type": "ancestry",
+    "description": "<p>Ваш хвост может изводить ваших врагов. Вы можете своим хвостом @UUID[Compendium.pf2e.actionspf2e.Dt6B1slsBy8ipJu9]{Разоружить} и @UUID[Compendium.pf2e.actionspf2e.ge56Lu1xXVFYUnLP]{Опрокидывать} существ, даже если у вас нет свободной руки. Все остальные ограничения @UUID[Compendium.pf2e.feats-srd.Item.aVRuchEAJIvnd70k]{Ловкого хвоста} продолжают применяться. Если вы обладаете способностью @UUID[Compendium.pf2e.feats-srd.Item.8nz6gvymeTvEfdo0]{Сокрушительный хвост}, то ваша безоружная атака хвостом получает признаки @Trait[Disarm]{разоружение} и @Trait[Trip]{опрокидывание}.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 13,
+    "key": "mischievous-tail",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Шквал гаруды / Garuda's Squall",
+    "type": "ancestry",
+    "description": "<p>Меткость и магия гаруды — ваша вторая натура. Каждый раз, когда вы совершаете критическое попадание из лука, вы применяете эффект критической специализации оружия.</p>",
+    "traits": [
+      "lineage",
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "garudas-squall",
+    "source": "Pathfinder Lost Omens Ancestry Guide"
+  },
+  {
+    "name": "Экстрапланарная дымка / Extraplanar Haze",
+    "type": "ancestry",
+    "description": "<p><strong>Частота:</strong> Раз в день</p><hr /><p>Ваше тело испускает крошечные частицы внепланарной материи, такие как кристаллические молекулы или дымчатый пар, которые окружает вас в виде дымки. Вы становитесь @UUID[Compendium.pf2e.conditionitems.Item.DmAIPqOBomZ7H95W]{Скрыты}, хотя не можете использовать это сокрытие чтобы @UUID[Compendium.pf2e.actionspf2e.Item.XMcnh4cSI32tljXa] или @UUID[Compendium.pf2e.actionspf2e.Item.VMozDqMMuK5kpoX4], как обычно для сокрытия, когда ваше положение все равно очевидно. Эти частицы остаются в дюйме от вашей кожи, перемещаются вместе с вами и действуют в течение количества раундов, равного половине вашего уровня.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 5,
+    "key": "extraplanar-haze",
+    "source": "Pathfinder War of Immortals"
+  },
+  {
+    "name": "Экстрапланарное облако / Extraplanar Cloud",
+    "type": "ancestry",
+    "description": "<p>Когда вы используете \"Экстрапланарную дымку\", вы можете потратить 1 дополнительное действие, чтобы рассеять частицы не в виде дымки, а в виде облака с @Template[type:emanation|distance:10]{10-футовой эманацией}, действие приобретает признак @Trait[Concentrate]{концентрация}. Все существа внутри облака становятся @UUID[Compendium.pf2e.conditionitems.Item.DmAIPqOBomZ7H95W]{Скрыты}, и все существа вне облака становятся @Condition[Concealed]{скрытыми} для существ внутри него.</p>",
+    "traits": [
+      "нефилим"
+    ],
+    "rarity": "common",
+    "level": 9,
+    "key": "extraplanar-cloud",
+    "source": "Pathfinder War of Immortals"
   }
+]
+
+const general = [
+  {
+    "name": "Безразличие к смерти / Numb to Death",
+    "traits": [
+      "общая"
+    ],
+    "key": "numb-to-death",
+    "description": "<p>Ваше прошлое сделало вас чуть более безразличным к зову смерти. Каждый день, первый раз когда вы восстанавливаете ОЗ, имея состояние @UUID[Compendium.pf2e.conditionitems.Item.yZRUzMqrMmfLu0V1]{При смерти}, то восстанавливаете дополнительные ОЗ, равные вашему уровню, и не получаете состояние @UUID[Compendium.pf2e.conditionitems.Item.Yl48xTdMh3aeQYL2]{Ранен}, и не увеличиваете значение уже имеющегося состояния @Condition[Wounded]{ранен}.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 7,
+    "rarity": "common"
+  },
+  {
+    "name": "Блок щитом / Shield Block",
+    "traits": [
+      "общая"
+    ],
+    "key": "shield-block",
+    "description": "<p><strong>Триггер:</strong> Вы получите физический урон (дробящий, колющий или рубящий) от атаки когда у вас поднят щит.</p>\n<hr />\n<p>Вы выставляете свой щит, чтобы защититься от удара. Ваш щит защищает вас от части урона, равной вплоть до значения Твердости щита. Щит и вы, вместе получаете любой оставшийся непоглощенный урон, возможно в результате чего щит ломается или уничтожается.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Бодрость Аксума / Axuma's Vigor",
+    "traits": [
+      "общая"
+    ],
+    "key": "axumas-vigor",
+    "description": "<p>Ваша бодрость дает вам бонус обстоятельства +2 всем, кто использует проверку Медицины, чтобы оказать вам @UUID[Compendium.pf2e.actionspf2e.Item.MHLuKy4nQO2Z4Am1]{Первую помощь} или применяет к вам любое действие Лечения (@UUID[Compendium.pf2e.actionspf2e.Item.1kGNdIIhuglAjIp9]/@UUID[Compendium.pf2e.actionspf2e.Item.KjoCEEmPGTeFE4hh]/@UUID[Compendium.pf2e.actionspf2e.Item.TC7OcDa7JlWbqMaN]). Во время активности @Trait[Downtime]{отдыха}, вы исцеляете в два раза больше ОЗ.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder #191: The Destiny War",
+    "level": 11,
+    "rarity": "rare"
+  },
+  {
+    "name": "Быстро ползать / Skitter",
+    "traits": [
+      "общая"
+    ],
+    "key": "skitter",
+    "description": "<p>Вы можете быстро перемещаться по земле. Вы можете @UUID[Compendium.pf2e.actionspf2e.Item.Tj055UcNm6UEgtCg]{Ползать} вплоть до половины своей Скорости.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder Advanced Player's Guide",
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Быстрое восстановление / Fast Recovery",
+    "traits": [
+      "общая"
+    ],
+    "key": "fast-recovery",
+    "description": "<p>Ваше тело быстрее восстанавливается от недугов. Вы восстанавливаете в 2 раза больше Очков Здоровья от отдыха. Каждый раз, когда вы успешно проходите спасбросок Стойкости против действующей болезни или яда, то снижаете стадию на 2, или на 1 против вирулентной болезни или яда. Каждый получаемый вами критический успех против действующей болезни или яда, снижает стадию на 3, или на 2 против вирулентной болезни или яда. Кроме того, когда вы отдыхаете целую ночь, то снижаете значение состояния @UUID[Compendium.pf2e.conditionitems.Item.4D2KBtexWXa6oUMR]{Истощен} на 2, а не на 1.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Быстроногий / Fleet",
+    "traits": [
+      "общая"
+    ],
+    "key": "fleet",
+    "description": "<p>Вы можете двигаться быстрее. Ваша Скорость увеличивается на 5 футов.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Везде как дома / A Home in Every Port",
+    "traits": [
+      "downtime",
+      "общая"
+    ],
+    "key": "a-home-in-every-port",
+    "description": "<p>У вас есть репутация в городах и деревнях которые вы посетили, и жители всегда готовы открыть вам свои двери. Когда вы в городе или деревне во время режима отдыха, то можете потратить 8 часов, чтобы найти жителя желающего предоставить бесплатное жилье вам и вплоть до 6 союзникам на 24 часа. Уровень предоставляемого жилья комфортный, а полноценная пища предоставляется без дополнительной платы (см. <a href=\"https://clck.ru/afcma\">Услуги</a>). Через 24 часа вы должны оплатить стандартные цену за дальнейшее проживание и пищу, или снова использовать эту способность, чтобы найти нового жителя готового вас приютить.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 11,
+    "rarity": "common"
+  },
+  {
+    "name": "Владение оружием / Weapon Proficiency",
+    "traits": [
+      "общая"
+    ],
+    "key": "weapon-proficiency",
+    "description": "<p>Вы становитесь обучены обращению со всем воинскому оружию. Если вы уже были обучены обращению со всем воинским оружием, то обучаетесь обращению с одним продвинутым оружием на свой выбор. Если вы хотя бы 11-го уровня, вы становитесь экспертом обращения с этим оружии.</p>\n<hr />\n<p><strong>Особенность:</strong> Вы можете выбрать эту способность более одного раза. Каждый раз когда вы это делаете, то обучаетесь обращению с одним продвинутым оружием.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Дальновидный планировщик / Prescient Planner",
+    "traits": [
+      "общая"
+    ],
+    "key": "prescient-planner",
+    "description": "<p><strong>Стоимость:</strong> Цена выбранного предмета.</p>\n<p><strong>Требования:</strong> Вы не использовали это умение с последнего раза, когда могли купить вещи.</p>\n<hr />\n<p>Вы регулярно создаете замысловатые планы на непредвиденные обстоятельства, используя свои ресурсы для их осуществления. У вас занимает 1 минуту снять рюкзак и отыскать в нем предмет, который вы не говорили что покупали ранее, вы интуитивно предположили, что он вам понадобится и купили его в последний момент. Предмет должен быть частью снаряжения авантюриста (см. <a href=\"https://clck.ru/agCyb\">Таблица 6-9: Снаряжение для приключений</a>), и не может быть оружием, доспехом, алхимическим предметом, магическим предметом или иным сокровищем. Это должен быть обычный предмет уровня не более половины вашего уровня и достаточно малой Массы, чтобы не вызвать у вас состояние @UUID[Compendium.pf2e.conditionitems.Item.D5mg6Tc7Jzrj6ro7]{Перегружен}.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Дополнительный цирковой трюк / Additional Circus Trick",
+    "traits": [
+      "circus",
+      "общая"
+    ],
+    "key": "additional-circus-trick",
+    "description": "<p>Ваш фирменный трюк может иметь один дополнительный признак, помимо обычного количества. Если у трюка есть связанный с ним навык (например, Запугивание с признаком @Trait[Fire]{огонь}) и этот навык является одной из ваших проверок трюка, ваши проверки с этим навыком для Выполнения трюка не штрафуются, если вы выполняете трюк с помощью другого навыка. Например, если ваш фирменный трюк включает в себя проверки Акробатики и Запугивания, а вы добавили этой способностью признак @Trait[Fire]{огонь}, то можете Выполнить трюк, используя Акробатику (без штрафа), затем снова Акробатику (со штрафом −5), а затем Запугивание (без штрафа).</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder Extinction Curse Player's Guide",
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Езда верхом / Ride",
+    "traits": [
+      "общая"
+    ],
+    "key": "ride",
+    "description": "<p>Когда вы @UUID[Compendium.pf2e.actionspf2e.Item.q9nbyIF0PEBqMtYe]{Командуете животному}, на котором находитесь верхом, чтобы оно использовало действие с признаком @Trait[Move]{движение} (такое как @UUID[Compendium.pf2e.actionspf2e.Item.Bcxarzksqt9ezrs6]{Перемещение}), то вы автоматически получаете успех без необходимости выполнять проверку. Любое животное, на котором вы верхом, действует в ваш ход как @Trait[Minion]{миньон}. Если вы @UUID[Compendium.pf2e.actionspf2e.Item.PM5jvValFkbFH3TV]{Седлаете} животное посреди столкновения, оно пропускает свой следующий ход и потом действует в ваш следующий ход (см. больше информации в описании действия \"Команда животному\").</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Живучесть / Toughness",
+    "traits": [
+      "общая"
+    ],
+    "key": "toughness",
+    "description": "<p>Вы можете выдержать больше ударов, чем большинство. Увеличьте ваши максимальные Очки Здоровья на значение вашего уровня. Вы снижаете КС проверок восстановления на 1 (@UUID[Compendium.pf2e.journals.JournalEntry.S55aqwWIzpQRFhcq.JournalEntryPage.KdoLyU91c0oS2hTw#smertь-i-umiranie]{Проверки восстановления}).</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Задержка дыхания / Breath Control",
+    "traits": [
+      "общая"
+    ],
+    "key": "breath-control",
+    "description": "<p>Вы умеете невероятно задерживать дыхание, что дает вам преимущества когда воздух опасен или разряжен. Вы можете задержать дыхание на время в 25 раз дольше, чем обычно, прежде чем начнете @UUID[Compendium.pf2e.journals.JournalEntry.S55aqwWIzpQRFhcq.JournalEntryPage.OiRwxbfLNUniLg15#tonutь-i-zadyhatьsya]{Задыхаться}. Вы получаете бонус обстоятельства +1 к спасброскам против вдыхаемых угроз, таких как @Trait[Inhaled]{вдыхаемые} @Trait[Poison]{яды}, и если при броске такого спасброска вы получаете успех, то вместо этого он считается критическим успехом.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Заимствованная родословная / Adopted Ancestry",
+    "traits": [
+      "общая"
+    ],
+    "key": "adopted-ancestry",
+    "description": "<p>Вы полностью погружены в культуру и традиции другой родословной, независимо от того, родились ли вы среди нее, заработали через обряд посвящения, или связаны глубокой дружбой или романом. Выберите @Trait[Common]{обычную} родословную или другую, к которой у вас есть доступ. Когда вы выбираете способности родословной, то в дополнение к родословной своего персонажа, вы можете выбирать из выбранной вами здесь, если только способности родословной не требуют любых отсутствующих у вас физиологических особенностей (на усмотрение Мастера).</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Импровизация без тренировки / Untrained Improvisation",
+    "traits": [
+      "общая"
+    ],
+    "key": "untrained-improvisation",
+    "description": "<p>Вы научились справляться с ситуациями которые вам не по зубам. Ваш бонус мастерства для проверок навыков, которым вы нетренированы, равняется вашему уровню−2. Это значение улучшается до уровень−1 на 5-м уровне и становится равно уровню на 7-м уровне. Это не позволяет вам использовать действия навыков для которых требуется быть обученным.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Импровизированный ремонт / Improvised Repair",
+    "traits": [
+      "общая"
+    ],
+    "key": "improvised-repair",
+    "description": "<p>Вы умеете быстро чинить поврежденное снаряжение, но ваши исправления не должны длиться вечно. Вы быстро @UUID[Compendium.pf2e.actionspf2e.Item.bT3skovyLUtP22ME]{Чините} сломанный предмет, в своем распоряжении или соседнего готового существа. Пока предмет снова не получит урон, вы все еще можете использовать его как низкокачественный предмет своего вида. Если это магический предмет или другой предмет с активациями, его нельзя активировать, пока он залатан, но можно использовать для обычных функций (например наносить \"Удары\" оружием или использовать \"Блок щитом\" для щита). Этот ремонт не восстанавливает ОЗ, так что предмет легко уничтожить. Как только предмет \"Отремонтирован\" по-нормальному, так что он больше не имеет состояния @Condition[Broken]{сломан}, он перестает быть низкокачественным.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Истинное восприятие / True Perception",
+    "traits": [
+      "общая",
+      "revelation"
+    ],
+    "key": "true-perception",
+    "description": "<p>Ваши способности восприятия и обработки сенсорной информацию настолько выходят за рамки обыденного, что вы замечаете мельчайшие несоответствия во всевозможных иллюзиях и превращениях. Вы постоянно находитесь под эффектами заклинания @UUID[Compendium.pf2e.spells-srd.Item.uqlxMQQeSGWEVjki] 6-го ранга, используя свой модификатор Восприятия для проверки @UUID[Compendium.pf2e.journals.JournalEntry.S55aqwWIzpQRFhcq.JournalEntryPage.E4Q7EiSG18sIvFwg]{Противодействия}.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 19,
+    "rarity": "common"
+  },
+  {
+    "name": "Лёгкий шаг / Feather Step",
+    "traits": [
+      "общая"
+    ],
+    "key": "feather-step",
+    "description": "<p>Вы шагаете быстро и осторожно. Вы можете сделать @UUID[Compendium.pf2e.actionspf2e.Item.UHpkTuCtyaPqiCAB]{Шаг} на @UUID[Compendium.pf2e.journals.JournalEntry.S55aqwWIzpQRFhcq.JournalEntryPage.z68vgV2XWhi1KYEP#mestnostь]{Сложную местность}.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Лидер каравана / Caravan Leader",
+    "traits": [
+      "общая"
+    ],
+    "key": "caravan-leader",
+    "description": "<p>Вы знаете, как выжать из союзников максимум усилий во время путешествия. Когда вы @UUID[Compendium.pf2e.actionspf2e.Item.JuqmIAnkL9hVGai8]{Спешите} в группе во время режима исследования, ваша группа может \"Спешить\" так долго, как и участник способный \"Спешить\" дольше всех + дополнительные 20 минут сверх этого.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 11,
+    "rarity": "common"
+  },
+  {
+    "name": "Менеджер наемных рабочих / Hireling Manager",
+    "traits": [
+      "общая"
+    ],
+    "key": "hireling-manager",
+    "description": "<p>В отличие от большинства, вы можете найти и обеспечить лучшую рабочую силу. При найме наемного рабочего для услуги (см. <a href=\"https://clck.ru/afcma\">Услуги</a>), этот наемник получает бонус обстоятельств +2 ко всем проверкам навыков. Этот бонус обстоятельства применяется к обученным и необученным наемникам, и не имеет эффекта на стоимость услуги или выполняемой работы.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder Advanced Player's Guide",
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Надежное здоровье / Robust Health",
+    "traits": [
+      "общая"
+    ],
+    "key": "robust-health",
+    "description": "<p>Ваша физиология хорошо реагирует на первую помощь. Вы получаете бонус обстоятельства к количеству восстанавливаемых ОЗ, равный вашему уровню, при успешной попытке @UUID[Compendium.pf2e.actionspf2e.Item.1kGNdIIhuglAjIp9]{Лечения ваших ран} или при использовании @UUID[Compendium.pf2e.feats-srd.Item.wYerMk6F1RZb0Fwt] на вас. После того как вы или ваш союзник применили на вас <em>\"Боевую медицину\"</em>, вы становитесь временно иммунны к этой <em>\"Боевой медицине\"</em> на 1 час, а не на 1 день.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Наследник рода / Ancestral Paragon",
+    "traits": [
+      "общая"
+    ],
+    "key": "ancestral-paragon",
+    "description": "<p>Будь то инстинкт, учеба или магия, но вы чувствуете более глубокую связь со своей родословной. Вы получаете способность родословной 1-го уровня.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Невероятная инициатива / Incredible Initiative",
+    "traits": [
+      "общая"
+    ],
+    "key": "incredible-initiative",
+    "description": "<p>Вы реагируете быстрее, чем могут другие. Вы получаете бонус обстоятельства +2 к броскам инициативы.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Невероятное облачение / Incredible Investiture",
+    "traits": [
+      "общая"
+    ],
+    "key": "incredible-investiture",
+    "description": "<p>У вас есть невероятное умение инвестировать больше магических предметов. Увеличьте ваше ограничение инвестируемых магических предметов с 10 до 12.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 11,
+    "rarity": "common"
+  },
+  {
+    "name": "Невероятный разведчик / Incredible Scout",
+    "traits": [
+      "exploration",
+      "общая"
+    ],
+    "key": "incredible-scout",
+    "description": "<p>Когда вы занимаетесь разведкой, то особенно внимательны к опасности, давая своим союзникам драгоценное время на подготовку к бою. Когда вы используете активность исследования @UUID[Compendium.pf2e.actionspf2e.Item.kV3XM0YJeS2KCSOb]{Разведывать}, то даете своим союзникам бонус обстоятельства +2 к их броскам инициативы вместо обычного бонуса обстоятельства +1.</p>\n<p>@UUID[Compendium.pf2e.other-effects.Item.la8rWwUtReElgTS6]</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 11,
+    "rarity": "common"
+  },
+  {
+    "name": "Несгибаемый / Diehard",
+    "traits": [
+      "общая"
+    ],
+    "key": "diehard",
+    "description": "<p>Вас убить тяжелее, чем остальных. Вы умираете при состоянии @UUID[Compendium.pf2e.conditionitems.Item.yZRUzMqrMmfLu0V1]{При смерти 5}, а не @Condition[Dying]{при смерти 4}.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Ношение доспехов / Armor Proficiency",
+    "traits": [
+      "общая"
+    ],
+    "key": "armor-proficiency",
+    "description": "<p>Вы становитесь обучены ношению легких доспехов. Если вы уже были обучены легкими доспехами, то обучаетесь средними доспехами. Если вы уже были обучены обоим видами доспехов, то обучаетесь тяжелыми доспехами. Если вы не ниже 13-го уровня, вы становитесь экспертом ношения этих видов доспехов.</p>\n<hr />\n<p><strong>Особенность:</strong> Вы можете выбирать эту способность более одного раза. Каждый раз вы становитесь обучены ношению следующего вида доспехов, как указано выше.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Оперативный поиск / Expeditious Search",
+    "traits": [
+      "общая"
+    ],
+    "key": "expeditious-search",
+    "description": "<p>У вас есть система, позволяющая искать с большой скоростью, находя подробности и секреты в 2 раза быстрее, чем могут другие. Когда вы @UUID[Compendium.pf2e.actionspf2e.Item.TiNDYUGlMmxzxBYU]{Ищете}, то обыск области занимает половину обычного времени. Это означает, что во время исследования вы удваиваете Скорость, с которой можете двигаться, гарантируя, что вы \"Обыскали\" область прежде, чем наткнетесь на что-либо (вплоть до половины вашей скорости). Если вы являетесь легендой Восприятия, то вы обыскиваете области в 4 раза быстрее.</p>\n<p>(прим.пер: В предпоследнем предложении имеется в виду, то, что если бы вы обыскивали область с ловушками и в результате проверки заметили бы их, или какую-то их часть, но не попали бы в них, заметите затаившегося противника и т.п.)</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 7,
+    "rarity": "common"
+  },
+  {
+    "name": "Питомец / Pet",
+    "traits": [
+      "общая"
+    ],
+    "key": "pet",
+    "description": "<p>У вас появился питомец — Крошечное животное выбранного вами типа, например кошка, птица или грызун. У него признак @Trait[Minion]{миньон}, то есть он получает 2 действия во время вашего хода, если вы используете действие @UUID[Compendium.pf2e.actionspf2e.Item.q9nbyIF0PEBqMtYe]{Команда животному}; это заменяет обычные эффекты \"Команды животному\", и вам не нужно совершать проверку Природы. Питомец не может наносить \"Удары\".</p>\n<p><strong>Уровень:</strong> Уровень вашего питомца равен вашему уровню.</p>\n<p><strong>Модификаторы и КБ:</strong> Модификаторы спасбросков и КБ вашего питомца равны вашим до применения бонусов и штрафов обстоятельства и состояния. Он использует 3 + ваш уровень как модификатор для Восприятия, Акробатики и Скрытности, и только ваш уровень как модификатор для других проверок навыков. У питомца нет и не может быть собственных модификаторов атрибутов, а также бонусов предмета.</p>\n<p><strong>Очки здоровья:</strong> Ваш питомец имеет 5 ОЗ за уровень.</p>\n<p><strong>Чувства:</strong> У вашего питомца сумеречное зрение и он может получить дополнительные чувства от способностей питомца.</p>\n<p><strong>Скорость:</strong> Скорость вашего питомца — 25 футов. Вместо этого вы можете завести водного питомца, который дышит в воде, а не на воздухе, имеет признак @Trait[Aquatic]{водный}, наземная Скорость отсутствует, а Скорость плавания равна 25 футам.</p>\n<p><strong>Способности питомцев:</strong> Когда вы получаете питомца, выберите две из следующих способностей. Если ваш питомец — животное, от природы обладающее одной из этих способностей (например у совы есть Скорость полёта), вы должны выбрать именно её. Ваш питомец не может быть животным, у которого от природы больше способностей, чем максимальное количество. В некоторых случаях Мастер может добавить к способностям питомца, которые вы можете выбрать, способности фамильяра.</p>\n<ul>\n<li><strong>Земноводный:</strong> Животное получает признак @Trait[Amphibious]{земноводное}, позволяющее ему дышать как на воздухе, так и в воде, и имеет как наземную Скорость, так и Скорость плавания, каждая из них равна его максимальной Скорости из наземной или плавания.</li>\n<li><strong>Роющий:</strong> Получает Скорость рытья 5 футов, что позволяет ему рыть Крошечные норы.</li>\n<li><strong>Лазающий:</strong> Получает Скорость карабканья 25 футов.</li>\n<li><strong>Ночное зрение:</strong> Получает ночное зрение.</li>\n<li><strong>Эхолокация:</strong> Ваш питомец может использовать слух в качестве точного чувства в радиусе 20 футов.</li>\n<li><strong>Быстрый:</strong> Увеличивает одну из Скоростей вашего питомца с 25 до 40 футов.</li>\n<li><strong>Летающий:</strong> Получает Скорость полёта 25 футов.</li>\n<li><strong>Ловкость рук:</strong> Животное может использовать две свои конечности как руки, для выполнения действий @Trait[Manipulate]{воздействия}.</li>\n<li><strong>Нюх:</strong> Ваш питомец может использовать нюх в качестве неточного чувства в радиусе 30 футов.</li>\n<li><strong>Крепкий:</strong> Максимальные ОЗ вашего питомца увеличиваются на 2 за уровень.</li>\n</ul>\n<hr />\n<p><strong>Особенность:</strong> Вы можете завести нового питомца, переобучив эту способность, освободив предыдущего питомца. Если впоследствии у вас появится фамильяр или другой компаньон, использующий способность <em>\"Питомец\"</em>, вы можете немедленно переобучить эту способность.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Подхватывать ритм / Pick up the Pace",
+    "traits": [
+      "общая"
+    ],
+    "key": "pick-up-the-pace",
+    "description": "<p>Вы подаете пример и можете помочь другим выйти за пределы своих обычных возможностей. Когда вы @UUID[Compendium.pf2e.actionspf2e.Item.JuqmIAnkL9hVGai8]{Спешите} в группе во время режима исследования, ваша группа может \"Спешить\" столько, сколько может \"Спешить\" тот, кто дольше всех продержится в одиночку.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Полнокровное упорство / Sanguine Tenacity",
+    "traits": [],
+    "key": "sanguine-tenacity",
+    "description": "<p>Ваша кровь обладает постоянными восстанавливающими свойствами. Штрафы от @UUID[Compendium.pf2e.conditionitems.Item.MIRkyAjyBeXivMa7]{Ослаблен}, а также штрафы и потеря ОЗ от @UUID[Compendium.pf2e.conditionitems.Item.4D2KBtexWXa6oUMR]{Истощен} влияют на вас так, как если бы значения состояний были на 1 меньше, чем на самом деле. Вы также получаете сопротивление 5 к продолжительному урону кровотечением и снижаете КС проверки восстановления от продолжительного урона кровотечением до @Check[flat|dc:11]{КС 11}, или @Check[flat|dc:6]{КС 6}, если у вас есть особенно эффективная помощь в восстановлении.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder #213: Thirst for Blood",
+    "level": 11,
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Предусмотрительный расходник / Prescient Consumable",
+    "traits": [
+      "общая"
+    ],
+    "key": "prescient-consumable",
+    "description": "<p>Вы можете заранее предугадать, какой расходуемый предмет вам понадобится. Когда вы используете @UUID[Compendium.pf2e.feats-srd.Item.bh2jHyyYrkLMsIdX]{Дальновидного планировщика}, то можете вместо снаряжения авантюриста достать из своего рюкзака расходуемый предмет. Расходуемый предмет должен все еще быть обычной редкости, уровня не более половины вашего уровня, и достаточно малой Массы, чтобы не вызвать у вас состояние @UUID[Compendium.pf2e.conditionitems.Item.D5mg6Tc7Jzrj6ro7]{Перегружен}.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 7,
+    "rarity": "common"
+  },
+  {
+    "name": "Пробуждение Аксума / Axuma's Awakening",
+    "traits": [
+      "общая"
+    ],
+    "key": "axumas-awakening",
+    "description": "<p>Выберите две чары из списка арканных заклинаний. Вы можете сотворять эти чары как врожденные арканные заклинания. Чары усиливаются до ранга заклинания, равного половине вашего уровня, округленного вверх. Затем выберите одно заклинание 1-го ранга и одно заклинание 2-го ранга из списка арканных заклинаний. Каждое из этих заклинаний вы можете сотворить один раз в день как врожденное заклинание. Заклинания, полученные от этой способности, должны быть обычными заклинаниями или заклинаниями, к которым у вас есть доступ.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder #191: The Destiny War",
+    "level": 11,
+    "rarity": "rare"
+  },
+  {
+    "name": "Проницательность / Canny Acumen",
+    "traits": [
+      "общая"
+    ],
+    "key": "canny-acumen",
+    "description": "<p>Ваша проницательность или внимательность находится за пределами понимания большинства представителей вашей профессии. Выберите спасбросок Стойкости, Рефлекса, Воли, или Восприятие. Вы получаете экспертное мастерство для того, что выбрали. На 17-м уровне, вы становитесь мастером того, что выбрали.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore", 124),
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Проницательный ученик / Keen Follower",
+    "traits": [
+      "общая"
+    ],
+    "key": "keen-follower",
+    "description": "<p>Ваше пристальное наблюдение за союзниками помогло вам лучше следовать их примеру. Используя активность @UUID[Compendium.pf2e.actionspf2e.Item.tfa4Sh7wcxCEqL29]{Повторять за экспертом} в режиме исследования, вы получаете бонус обстоятельства +3 если союзник, за которым вы повторяете — эксперт и бонус обстоятельства +4 если он мастер.</p>\n<p>Вы можете поделиться своими наблюдениями с другими, чтобы помочь дальнейшей координации группы. Если у союзника, за которым вы повторяете, есть способность навыка @UUID[Compendium.pf2e.feats-srd.Item.pekKtubQTkG9m1xK] или другой, позволяющей группе совершить одну проверку навыка для активности исследования и использовать наименьший модификатор, он может использовать ваш модификатор, даже если он не самый низкий.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Разные миры / Different Worlds",
+    "traits": [
+      "общая"
+    ],
+    "key": "different-worlds",
+    "description": "<p>Ваш опыт жизни в разных обществах превратился в совершенно отдельные жизни. Создайте для себя вторую личность с другим именем, историей и происхождением. Эта личность должна соответствовать одной из родословных, чьи способности родословной вы можете выбрать. Вы получаете ранг мастерства обучен в навыке Знаний второй выбранной биографии (но не получаете других преимуществ этой биографии) и получаете бонус обстоятельства +4 к Обману, когда делаете заявление, которое было бы верно для вашей второй личности или когда маскируетесь под свою вторую личность.</p>\n<p><strong>Особенность:</strong> На усмотрение Мастера, эту способность можно использовать на не-гуманодиов, если они часто контактируют с гуманоидами, или вы можете замаскироваться под члена целевой родословной или типа существ.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder #147: Tomorrow Must Burn",
+    "level": 1,
+    "rarity": "uncommon"
+  },
+  {
+    "name": "Страты для спидрана / Speedrun Strats",
+    "traits": [],
+    "key": "speedrun-strats",
+    "description": "<p>Каждый раз, когда вы совершаете действие @Trait[Move]{движения} для \"Перемещения\", вы можете совершить проверку @Check[acrobatics|dc:15]{Акробатики}, чтобы продвинуться вперед.</p><hr /><p><strong>Критический успех:</strong> Вы получаете 5 дополнительных футов движения к вашим Скоростям и можете двигаться через твердые препятствия, такие как стены, до конца вашего действия \"Перемещения\".</p>\n<p><strong>Успех:</strong> Вы получаете 5 дополнительных футов движения к вашим Скоростям до конца вашего действия \"Перемещения\".</p>\n<p><strong>Провал:</strong> Вы теряете 5 футов движения к вашим Скоростям до конца вашего действия \"Перемещения\".</p>\n<p><strong>Критический провал:</strong> Ваш персонаж застревает и навсегда @UUID[Compendium.pf2e.conditionitems.Item.6uEgoh53GbXuHpTF]{Парализован}. Только ритуал @UUID[Compendium.pf2e.spells-srd.Item.6dDtGIUerazSHIOu]{Желания} или аналогичная магия могут отменить этот эффект.</p>",
+    "type": "skill",
+    "prerequisites": null,
+    "source": "Paizo Blog: Foolish Housekeeping and Other Articles",
+    "level": 1,
+    "rarity": "common"
+  },
+  {
+    "name": "Супердегустатор / Supertaster",
+    "traits": [
+      "общая"
+    ],
+    "key": "supertaster",
+    "description": "<p>Вы усовершенствовали свой вкус и обладаете тонким чувством вкуса, которое позволяет обнаружить отклонения во вкусе и текстуре пищи и напитков. Когда едите пищу или пьете напитки, вы автоматически пытаетесь определить ингредиенты, которые могут предупредить вас о присутствии добавок, таких как яды. Вы совершаете @Trait[Secret]{тайную} проверку @Check[perception|traits:secret]{Восприятия} используя уровень яда для определения КС; при успехе вы узнаете, что пища или напиток были отравлены, но не конкретный яд. Если вы успешно обнаружили, что еда или напиток были отравлены, вы можете вовремя выплюнуть, чтобы не подвергнуться воздействию этого яда (если только вы не возобновите есть или пить отравленную пищу или напиток).</p>\n<p>Если вы лижите или пробуете что-то, когда @UUID[Compendium.pf2e.actionspf2e.Item.EwgTZBWsc8qKaViP]{Исследуете} или пытаетесь @UUID[Compendium.pf2e.actionspf2e.Item.1OagaWtBpVXExToo]{Вспомнить информацию}, чтобы идентифицировать что-либо, и если вкус предоставит дополнительную информацию (на усмотрение Мастера), то вы получаете бонус обстоятельства +2 к своей проверке.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 7,
+    "rarity": "common"
+  },
+  {
+    "name": "Тщательный поиск / Thorough Search",
+    "traits": [
+      "общая"
+    ],
+    "key": "thorough-search",
+    "description": "<p>Вы не торопитесь во время поиска, чтобы убедиться, что ничего не пропустите. Когда вы @UUID[Compendium.pf2e.actionspf2e.Item.TiNDYUGlMmxzxBYU]{Ищете}, то можете потратить в 2 раза больше времени. Обычно это значит, что вы \"Ищете\" со Скоростью вплоть до 1/4 своей Скорости, до максимальных @Unit[Foot|150]{150 футов}/минуту, чтобы проверить все, или @Unit[Foot|75]{75 футов}/минуту, чтобы проверить все до того, как наткнетесь на это. Если вы так делаете, то получаете бонус обстоятельства +2 к своим проверкам Восприятия для @UUID[Compendium.pf2e.actionspf2e.Item.BlAOM2X92SI6HMtJ]{Поиска}, а если вы преуспеете, то вместо этого получите критический успех.</p>",
+    "type": "general",
+    "prerequisites": null,
+    ...sou("playerCore2", 124),
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Укрепить решимость / Steel Your Resolve",
+    "traits": [
+      "общая",
+      "stamina"
+    ],
+    "key": "steel-your-resolve",
+    "description": "<p><strong>Стоимость:</strong> 1 Очко Решимости</p>\n<hr />\n<p>Восстановите Очки Выносливости, в количестве равном половине ваших максимальных ОВ.</p>\n<p>@UUID[Compendium.pf2e.action-macros.Macro.oxowCzHbxSGOWRke]</p>\n<hr />\n<p><strong>Примечание:</strong> Эта способность относится к вариации правил <a href=\"https://clck.ru/airmt\">Выносливость</a>.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder Gamemastery Guide",
+    "level": 3,
+    "rarity": "common"
+  },
+  {
+    "name": "Чувство крови / Bloodsense",
+    "traits": [],
+    "key": "bloodsense",
+    "description": "<p>Вы необычайно чувствительны к присутствию крови. Вы получаете чувство крови как неточное чувство с радиусом 15 футов. Это позволяет вам чувствовать присутствие существ, живых или мертвых, у которых есть кровь (сюда входит большинство существ, не имеющих иммунитета к кровотечению). Вы также можете определить присутствие свежей крови в объеме от одной пинты и более, если ее возраст не превышает 24 часов.</p>",
+    "type": "general",
+    "prerequisites": null,
+    "source": "Pathfinder #213: Thirst for Blood",
+    "level": 7,
+    "rarity": "uncommon"
+  }
+]
+
+//Оракул
+const oracle = [
+  {
+    ...talent('playerCore2', 1, 'Glean Lore'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'сакральный, прорицание, тайна, оракул',
+    name: "Почерпнуть знания",
+    snippet: 'Вы погружаетесь в собранные знания о божественном, получая доступ к разнообразной информации.',
+    level: 1,
+    action: "одиночное действие",
+    frequency: "1",
+    description: '<p>Сделайте проверку Религии, чтобы понять полученную информацию. Мастер устанавливает КС. Критический успех: Вы точно понимаете знания. Успех: Вы узнаете два кусочка информации, один истинный и один ошибочный. Провал: Вы вспоминаете неверную информацию. Критический провал: Вы вспоминаете два кусочка неверной информации.</p>'
+  },
+  {
+    ...talent('playerCore2', 2, 'Cantrip Expansion'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Расширение чар",
+    snippet: 'Добавьте в свой репертуар 2 дополнительных чар из вашего списка заклинаний.',
+    level: 2,
+    description: '<p>Вы добавляете 2 дополнительных чара в свой репертуар.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 4, 'Bespell Weapon'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Околдованное оружие",
+    snippet: 'Вы наполняете оружие остаточной энергией последнего сотворенного заклинания.',
+    level: 4,
+    action: "свободное действие",
+    frequency: "раз в ход",
+    prerequisites: "Ваше предыдущее действие - Сотворение заклинания",
+    description: '<p>Оружие наносит дополнительные 1d6 урона, тип которого зависит от школы заклинания.</p>'
+  },
+  {
+    ...talent('playerCore2', 14, 'Sepulchral Sublimation'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'необычный, метамагия, некромантия, концентрация, оракул',
+    name: "Замогильное очищение",
+    snippet: 'Вы перерабатываете негативную энергию, уничтожая миньона-нежить для усиления заклинания.',
+    level: 14,
+    action: "одиночное действие",
+    prerequisites: "возможность навсегда создавать и контролировать нежить; оракул таинства костей",
+    requirementsText: "У вас есть хотя бы 1 миньон-нежить, которого вы постоянно контролируете",
+    description: '<p>Уничтожьте 1 миньона-нежить в пределах 60 футов. Если ваше следующее действие - сотворение заклинания некромантии, вы не тратите слот заклинания.</p>'
+  },
+  {
+    ...talent('playerCore2', 8, 'Debilitating Dichotomy'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Изнурительная дихотомия",
+    snippet: 'Вы изучаете заклинание-откровение, которое демонстрирует силу вашего проклятия.',
+    level: 8,
+    description: '<p>Вы изучаете заклинание-откровение "Изнурительная дихотомия". Увеличьте запас Очков Фокусировки на 1.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 8, 'Read Disaster'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'прорицание, предсказание, исследование, оракул',
+    name: "Предвидеть катастрофу",
+    snippet: 'Вы заглядываете в будущее, чтобы узнать о надвигающихся опасностях.',
+    level: 8,
+    action: "10 минут",
+    description: '<p>Вы получаете эффекты заклинания "Предзнаменование", но узнаете только о грядущих опасностях. Если вы легенда Религии, это действие занимает 1 минуту.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 10, 'Oracular Warning'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'сакральный, прорицание, оракул',
+    name: "Предупреждение оракула",
+    snippet: 'Вы предупреждаете союзника о надвигающейся опасности.',
+    level: 10,
+    action: "свободное действие",
+    trigger: "Вы готовы кидать инициативу",
+    description: '<p>Один союзник может сделать бросок инициативы дважды и использовать лучший результат. Вы делаете два броска инициативы и используете худший результат.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 10, 'Quickened Casting'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'метамагия, концентрация, оракул',
+    name: "Ускоренное колдовство",
+    snippet: 'Вы можете быстрее сотворять заклинания.',
+    level: 10,
+    action: "свободное действие",
+    frequency: "раз в день",
+    description: '<p>Если ваше следующее действие - сотворение чара или заклинания оракула, снизьте количество действий для его сотворения на 1 (минимум 1 действие).</p>'
+  },
+
+  {
+    ...talent('playerCore2', 10, 'Surging Might'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'метамагия, воздействие, оракул',
+    name: "Рвущаяся мощь",
+    snippet: 'Вы фокусируете божественную силу, чтобы преодолеть сопротивления врагов.',
+    level: 10,
+    action: "одиночное действие",
+    description: '<p>Если ваше следующее действие - Сотворение заклинания, заклинание игнорирует сопротивление урону, равное вашему уровню, против определенных типов урона.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 12, 'Domain Fluency'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Свободное владение доменом",
+    snippet: 'Вы получаете улучшенное доменное заклинание, связанное с вашим таинством.',
+    level: 12,
+    prerequisites: "начальное доменное заклинание",
+    description: '<p>Выберите домен, связанный с вашим таинством. Вы получаете улучшенное доменное заклинание этого домена, которое колдуете как заклинание-откровение. Увеличьте запас Очков Фокусировки на 1.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 12, 'Greater Revelation'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Великое откровение",
+    snippet: 'Вы изучаете великое заклинание-откровение, связанное с вашим таинством.',
+    level: 12,
+    prerequisites: "начальное заклинание-откровение",
+    description: '<p>Вы изучаете великое заклинание-откровение. Увеличьте запас Очков Фокусировки на 1.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 12, 'Magic Sense'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'сакральный, прорицание, обнаружение, оракул',
+    name: "Ощущение магии",
+    snippet: 'Вы можете ощущать присутствие магических аур вокруг себя.',
+    level: 12,
+    description: '<p>Вы постоянно ощущаете магические ауры, как если бы использовали заклинание "Обнаружение магии".</p>'
+  },
+
+  {
+    ...talent('playerCore2', 12, 'Necromancer\'s Visage'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'необычный, некромантия, оракул',
+    name: "Облик некроманта",
+    snippet: 'Ваше присутствие вызывает страх и уважение у нежити.',
+    level: 12,
+    prerequisites: "возможность создавать или контролировать нежить; оракул таинства костей",
+    description: '<p>Существа-нежить, атакующие вас, должны совершить спасбросок Воли. В случае провала они не могут атаковать вас.</p>'
+  },
+  {
+    ...talent('playerCore2', 14, 'Forestall Curse'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'метамагия, концентрация, оракул',
+    name: "Предотвращение проклятия",
+    snippet: 'Вы временно предотвращаете усиление вашего проклятия.',
+    level: 14,
+    action: "одиночное действие",
+    frequency: "раз в день",
+    description: '<p>Если ваше следующее действие - сотворение заклинания-откровения, сила вашего проклятия не увеличивается.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 14, 'Mysterious Repertoire'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Таинственный репертуар",
+    snippet: 'Вы можете добавить в свой репертуар заклинание из другого магического обычая.',
+    level: 14,
+    description: '<p>Вы можете иметь в своем репертуаре 1 заклинание не из сакрального списка заклинаний. Вы колдуете это заклинание как сакральное.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 14, 'Sepulchral Sublimation'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'необычный, метамагия, некромантия, концентрация, оракул',
+    name: "Замогильное очищение",
+    snippet: 'Вы перерабатываете негативную энергию, уничтожая миньона-нежить для усиления заклинания.',
+    level: 14,
+    action: "одиночное действие",
+    prerequisites: "возможность навсегда создавать и контролировать нежить; оракул таинства костей",
+    requirementsText: "У вас есть хотя бы 1 миньон-нежить, которого вы постоянно контролируете",
+    description: '<p>Уничтожьте 1 миньона-нежить в пределах 60 футов. Если ваше следующее действие - сотворение заклинания некромантии, вы не тратите слот заклинания.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 14, 'Sacral Monarch'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Сакральный монарх",
+    snippet: 'Вы обретаете полную власть над своей территорией.',
+    level: 14,
+    prerequisites: "мастер Оккультизма или Религии, Сакральный лорд",
+    description: '<p>На своей территории вы можете творить "Изгнание" и "Неминуемая беда" как врожденные сакральные заклинания, каждое раз в день.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 16, 'Diverse Mystery'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Разнообразное таинство",
+    snippet: 'Вы изучаете заклинание-откровение из другого таинства.',
+    level: 16,
+    prerequisites: "Продвинутое откровение",
+    description: '<p>Выберите 1 заклинание-откровение из другого таинства. Вы можете колдовать его как заклинание-откровение, но получаете эффекты слабого проклятия этого таинства.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 16, 'Portentous Spell'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'метамагия, воздействие, ментальный, визуальный, оракул',
+    name: "Поразительное заклинание",
+    snippet: 'Ваши заклинания сбивают с толку врагов.',
+    level: 16,
+    action: "одиночное действие",
+    description: '<p>Если ваше следующее действие - Сотворение заклинания, существа, использующие реакцию, получают штраф -2 к броскам атаки и проверкам навыков. Если заклинание включает атаку или спасбросок, цели становятся завороженными вами.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 18, 'Blaze of Revelation'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Зарево откровения",
+    snippet: 'Вы временно противостоите эффектам вашего проклятия.',
+    level: 18,
+    description: '<p>Когда вы становитесь подавлены своим проклятием, вы можете предотвратить эти эффекты на 1 минуту. В течение этого времени вы можете колдовать заклинания-откровения без затрат Очков Фокусировки.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 18, 'Divine Effusion'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Божественное излияние",
+    snippet: 'Вы можете колдовать заклинания даже после исчерпания слотов.',
+    level: 18,
+    description: '<p>Дважды в день вы можете колдовать заклинание, даже если у вас закончились слоты подходящего уровня.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 20, 'Mystery Conduit'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Таинственный проводник",
+    snippet: 'Вы можете колдовать заклинания, усиливая свое проклятие.',
+    level: 20,
+    description: '<p>Когда вы колдуете заклинание 5-го уровня или ниже без продолжительности, вы можете усилить свое проклятие, не тратя слот заклинания.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 20, 'Oracular Providence'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Провиденье оракула",
+    snippet: 'Вы получаете дополнительный слот заклинания 10-го уровня.',
+    level: 20,
+    prerequisites: "Ясность оракула",
+    description: '<p>Вы получаете дополнительный слот заклинания 10-го уровня.</p>'
+  },
+
+  {
+    ...talent('playerCore2', 20, 'Paradoxical Mystery'),
+    type: "class",
+    rarity: "обычный",
+    traits: 'оракул',
+    name: "Парадоксальное таинство",
+    snippet: 'Вы получаете доступ к заклинаниям других таинств и доменов.',
+    level: 20,
+    prerequisites: "Великое откровение",
+    description: '<p>Каждый день вы можете выбрать 1 доменное заклинание или заклинание-откровение из другого таинства. Вы получаете это заклинание как заклинание-откровение до ваших следующих ежедневных приготовлений.</p>'
+  },
 
 ]
 
 module.exports = [
   ...playerCore,
   ...playerCoreAncestry,
-  ...playerCore2
+  ...playerCore2,
+  ...rogue,
+  ...general,
+  ...oracle,
+  ...нефилим
 ];

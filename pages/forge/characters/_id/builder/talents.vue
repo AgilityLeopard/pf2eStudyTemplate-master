@@ -48,6 +48,9 @@
             >
               <v-expansion-panel-header
                 >{{ levelAncestry }} уровень
+                <span v-if="characterAncestryTalent(levelAncestry)">
+                  ({{ characterAncestryTalent(levelAncestry)?.label }})</span
+                >
                 <v-col :cols="4" :sm="2">
                   <v-btn
                     color="error"
@@ -238,6 +241,10 @@
               >
                 <v-expansion-panel-header
                   >{{ levelAncestry }} уровень
+                  <span v-if="characterClassTalent(levelAncestry)">
+                    ({{ characterClassTalent(levelAncestry)?.label }})</span
+                  >
+                  >
                   <v-col :cols="4" :sm="2">
                     <v-btn
                       color="error"
@@ -407,11 +414,16 @@
               :key="levelAncestry"
               v-if="
                 levelAncestry <= characterLevel() &&
-                (levelAncestry == 2 || levelAncestry % 2 == 0)
+                (levelAncestry == 2 ||
+                  levelAncestry % 2 == 0 ||
+                  archetype?.keywords === 'плут')
               "
             >
               <v-expansion-panel-header
                 >{{ levelAncestry }} уровень
+                <span v-if="characterSkillTalent(levelAncestry)">
+                  ({{ characterSkillTalent(levelAncestry)?.label }})</span
+                >
                 <v-col :cols="4" :sm="2">
                   <v-btn
                     color="error"
@@ -585,26 +597,12 @@
               "
             >
               <v-expansion-panel-header
-                >{{ levelAncestry }} уровень</v-expansion-panel-header
-              >
-              <v-expansion-panel-content :key="levelAncestry">
-                <v-dialog
-                  v-model="talentsDialogGeneral"
-                  :fullscreen="$vuetify.breakpoint.xsOnly"
-                  width="600px"
-                  scrollable
+                >{{ levelAncestry }} уровень
+                <span v-if="characterGeneralTalent(levelAncestry)">
+                  ({{ characterGeneralTalent(levelAncestry)?.label }})</span
                 >
-                  <talents-preview
-                    :character-id="characterId"
-                    :talents="selectedTalentsGeneral"
-                    :level="levelAncestry"
-                    :list="talentList"
-                    type="general"
-                    choose-mode
-                    @cancel="talentsDialogGeneral = false"
-                  />
-                </v-dialog>
-
+              </v-expansion-panel-header>
+              <v-expansion-panel-content :key="levelAncestry">
                 <v-btn
                   @click="updatePreview(levelAncestry, 'general')"
                   v-if="!characterGeneralTalent(levelAncestry)"
@@ -978,7 +976,7 @@
         <v-dialog
           v-model="talentsDialogAdaptation"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="800px"
+          width="1000px"
           scrollable
         >
           <talents-preview
@@ -996,7 +994,7 @@
         <v-dialog
           v-model="talentsDialog"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="800px"
+          width="1000px"
           scrollable
         >
           <talents-preview
@@ -1014,7 +1012,7 @@
         <v-dialog
           v-model="talentsDialogSkill"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="800px"
+          width="1000px"
           scrollable
         >
           <talents-preview
@@ -1025,6 +1023,23 @@
             type="skill"
             choose-mode
             @cancel="talentsDialogSkill = false"
+          />
+        </v-dialog>
+
+        <v-dialog
+          v-model="talentsDialogGeneral"
+          :fullscreen="$vuetify.breakpoint.xsOnly"
+          width="1000px"
+          scrollable
+        >
+          <talents-preview
+            :character-id="characterId"
+            :talents="selectedTalentsGeneral"
+            :level="levelTalent"
+            :list="talentList"
+            type="general"
+            choose-mode
+            @cancel="talentsDialogGeneral = false"
           />
         </v-dialog>
       </v-tabs>
@@ -1473,12 +1488,16 @@ export default {
           }
         });
        if (this.traitList !== undefined) {
-        talents.forEach((species) => {
-          const lowercaseKeywords = species.traits ? species.traits.split(',').map((s) =>
-            s.trim().toUpperCase()
-          ): '';
+         talents.forEach((species) => {
 
-          species.traits = species.traits ? species.traits.split(',').map((s) =>
+          const tr = Array.isArray(species.traits)
+          ? species.traits
+            : String(species.traits).split(','); // если не массив — превращаем в массив
+
+
+          const lowercaseKeywords = species.traits ? tr : '';
+
+          species.traits = species.traits ? tr.map((s) =>
             s.trim()
           ): '';
 

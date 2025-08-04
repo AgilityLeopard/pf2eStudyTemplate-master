@@ -91,6 +91,7 @@ const playerCore = [
         type: "Гном",
         trait: [],
         nameAncestry: "Гном-хамелеон",
+
         ...statBoost(0, 0, 0, 0, 0, 0),
         ...statFlaw(0, 0, 0, 0, 0, 0),
         rarity: "Сommon",

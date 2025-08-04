@@ -236,6 +236,10 @@ export const getters = {
     state.characters[id] ? state.characters[id].spellsFocus : [],
   characterFocusPoolById: (state) => (id) =>
     state.characters[id] ? state.characters[id].FocusPool : [],
+  characterProgressById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].progress : [],
+  characterProgressMaxById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].progressMax : [],
   characterArchetypeKeyById: (state) => (id) =>
     state.characters[id]
       ? state.characters[id].archetype.key
@@ -2082,6 +2086,30 @@ export const mutations = {
 
 
   },
+  characterProgress(state, payload) {
+    const character = state.characters[payload.id];
+    const pr = character.progress.find(s => s.level === payload.level);
+    if (pr)
+      character.progress.find(s => s.level === payload.level).value = payload.value;
+    else
+      character.progress.push({
+        level: payload.level,
+        value: payload.value
+      })
+
+  },
+  characterProgressMax(state, payload) {
+    const character = state.characters[payload.id];
+    const pr = character.progressMax.find(s => s.level === payload.level);
+    if (pr)
+      character.progressMax.find(s => s.level === payload.level).value = payload.value;
+    else
+      character.progressMax.push({
+        level: payload.level,
+        value: payload.value
+      })
+
+  },
   /**
    * @param state
    * @param payload { id, source: `ascension.${key}`, cascade: true }
@@ -2872,6 +2900,8 @@ const getDefaultState = () => ({
       trait: "common"
     }
   ],
+  progress: [],
+  progressMax: [],
   keywords: [],
   talents: [],
   spells: [],

@@ -1326,7 +1326,7 @@
                           color="error"
                           @click="updateCast(item)"
                         >
-                          <v-icon left>delete</v-icon> Сотв
+                          <v-icon left>view</v-icon> Сотв
                         </v-btn>
                       </template>
 

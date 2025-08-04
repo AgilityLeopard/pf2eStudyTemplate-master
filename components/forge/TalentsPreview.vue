@@ -607,7 +607,7 @@ export default {
     },
 
     filteredTalents() {
-      if (this.talents === undefined || this.tagFilters.length === 0) {
+      if (this.talents === undefined ) {
         return [];
       }
 
