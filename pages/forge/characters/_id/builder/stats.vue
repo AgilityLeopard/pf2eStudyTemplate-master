@@ -1837,12 +1837,12 @@ export default {
       if (level === 1)
       {
 
-        let class1 = (this.archetype?.keyAbility.length > 1 ? 1 : 0 ) -  (this.characterClassBoost.length > 0   ? 1 : 0);
-        let class2 =  (this.archetype?.skillTrainedChoice.length > 1 ? 1 : 0) - (this.characterClassSkill.length > 0  ? 1 : 0);
-        let back =  (this.BackgroundAttribute?.length > 1  ? 1 : 0) -  (this.characterBackgroundFreeBoost.length > 0   ? 1 : 0);
-        let back2 = (this.BackgroundAttribute2?.length > 1  ? 1 : 0) - (this.characterBackgroundFreeBoost2.length > 0   ? 1 : 0);
-        let spec = (this.AncestryAttribute?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost.length > 0   ? 1 : 0);
-        let spec2 = (this.AncestryAttribute2?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost2.length > 0  ? 1 : 0);
+        let class1 = (this.archetype?.keyAbility?.length > 1 ? 1 : 0 ) -  (this.characterClassBoost?.length > 0   ? 1 : 0);
+        let class2 =  (this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0) - (this.characterClassSkill?.length > 0  ? 1 : 0);
+        let back =  (this.BackgroundAttribute?.length > 1  ? 1 : 0) -  (this.characterBackgroundFreeBoost?.length > 0   ? 1 : 0);
+        let back2 = (this.BackgroundAttribute2?.length > 1  ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0   ? 1 : 0);
+        let spec = (this.AncestryAttribute?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0   ? 1 : 0);
+        let spec2 = (this.AncestryAttribute2?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0  ? 1 : 0);
 
         modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
         boost = 4 - this.characterBoost;
@@ -1895,8 +1895,8 @@ export default {
       if (level === 1)
       {
 
-        let class1 = this.archetype?.keyAbility.length > 1  ? 1 : 0;
-        let class2 = this.archetype?.skillTrainedChoice.length > 1  ? 1 : 0;
+        let class1 = this.archetype?.keyAbility?.length > 1  ? 1 : 0;
+        let class2 = this.archetype?.skillTrainedChoice?.length > 1  ? 1 : 0;
         let back = this.BackgroundAttribute?.length > 1  ? 1 : 0;
         let back2 = this.BackgroundAttribute2?.length > 1  ? 1 : 0;
         let spec = this.AncestryAttribute2?.length > 1 ? 1 : 0;
