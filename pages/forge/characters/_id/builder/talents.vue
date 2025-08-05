@@ -242,9 +242,7 @@
                 <v-expansion-panel-header
                   >{{ levelAncestry }} уровень
                   <span v-if="characterClassTalent(levelAncestry)">
-                    ({{ characterClassTalent(levelAncestry)?.label }})</span
-                  >
-                  >
+                    ({{ characterClassTalent(levelAncestry)?.label }})</span>
                   <v-col :cols="4" :sm="2">
                     <v-btn
                       color="error"

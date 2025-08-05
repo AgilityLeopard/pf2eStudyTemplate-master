@@ -3,40 +3,6 @@
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row justify="center" class="ma-2">
-      <!-- <v-col
-        :cols="4"
-        :sm="4"
-        :md="4"
-        style="overflow-y: hidden; height: 100px"
-      >
-        <v-avatar tile size="95">
-          <img :src="avatar" />
-        </v-avatar>
-      </v-col> -->
-
-      <!-- avatar, name, rank, tier, archetype, species -->
-
-      <!-- <v-col :cols="4" :sm="4" :md="4">
-        <v-row no-gutters>
-          <v-col :cols="12">{{ characterName }}</v-col>
-          <v-col :cols="12" class="caption">{{
-            [archetypeLabel, speciesLabel].join(" • ")
-          }}</v-col>
-          <v-col :cols="12" class="caption">
-            <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
-          </v-col>
-          <v-col :cols="12" class="caption">
-            <v-progress-linear
-              :value="campaignCustomXp"
-              height="2"
-              color="red"
-            ></v-progress-linear>
-          </v-col>
-          <v-col :cols="12" class="caption text--keyword" align="center">{{
-            keywordStrings.join(" • ")
-          }}</v-col>
-        </v-row>
-      </v-col> -->
       <v-col :cols="4" :sm="12" :md="4">
         <grid-sheet>
           <v-row style="">
@@ -114,99 +80,6 @@
           </v-row>
         </grid-sheet>
       </v-col>
-
-      <!-- <v-col :cols="4" :sm="4" :md="4">
-        <v-card>
-
-
-          <v-card-text class="pt-4 my-card-item">
-            <v-row no-gutters>
-              <v-col :cols="4">
-                <v-avatar tile size="64">
-                  <img :src="avatar" />
-                </v-avatar>
-              </v-col>
-              <v-col :cols="8" class="caption">
-                <div align="center">{{ characterName }}</div>
-                <div class="caption" align="center">
-                  {{ [archetypeLabel, speciesLabel].join(" • ") }}
-                </div>
-                <div class="caption" align="center">
-                  <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
-                </div>
-                <div class="caption" align="center">
-                  <v-progress-linear
-                    :value="campaignCustomXp"
-                    height="2"
-                    color="red"
-                  ></v-progress-linear>
-                </div>
-              </v-col>
-
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col> -->
-
-      <!-- <v-col :cols="4" :sm="4" :md="4">
-        <v-card>
-
-          <v-card-text class="pt-4 my-card-item">
-            <v-row no-gutters>
-              <v-col :cols="6">
-                <h2 class="subtitle-1 text-center">Хит-Поинты</h2>
-              </v-col>
-              <v-col :cols="6">
-                <h2 class="subtitle-1 text-center">Временные хиты</h2>
-              </v-col>
-            </v-row>
-
-            <v-row
-              no-gutters
-              style="
-                display: flex;
-                align-items: baseline;
-                justify-content: center;
-              "
-            >
-
-
-              <v-col :cols="3">
-                <v-text-field
-                  v-model="currentHP"
-                  solo
-                  flat
-                  reverse
-                  hide-details
-                  height="2"
-                  @keypress.enter="addCurrentHP()"
-                  size="1"
-                ></v-text-field>
-              </v-col>
-              <v-col :cols="3">
-                <div height="2">/ {{ characterHitPointsMax() }}</div>
-              </v-col>
-
-              <v-col :cols="6">
-                <div class="center">
-                  <v-text-field
-                    v-model="tempHP"
-                    solo
-                    flat
-                    reverse
-                    shrink
-                    hide-details
-                    height="2"
-                    style="max-width: 60%"
-                    size="1"
-                    @keypress.enter="addTempHP()"
-                  ></v-text-field>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col> -->
 
       <v-col :cols="4" :sm="12" :md="4">
         <grid-sheet>
@@ -482,46 +355,6 @@
       </v-col> -->
     </v-row>
     <v-row justify="center" no-gutters>
-      <!-- attributes and traits -->
-      <!-- <v-col :cols="12" :sm="6" :md="6" :lg="3">
-        <v-row no-gutters>
-          <v-col :cols="12" class="pa-1">
-            <v-card>
-              <v-card-title
-                style="background-color: hsl(4, 90%, 58%); color: #fff"
-                class="body-1 pt-1 pb-1"
-              >
-                <h2 class="subtitle-1">Характеристики</h2>
-              </v-card-title>
-
-              <v-simple-table dense>
-                <thead>
-                  <tr>
-                    <th
-                      v-for="header in attributeHeaders"
-                      :class="header.class"
-                    >
-                      {{ header.text }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in attributes" :key="item.key">
-                    <td class="text-left pa-1 small">{{ item.name }}</td>
-                    <td class="text-center pa-1 small">{{ item.short }}</td>
-                    <td class="text-center pa-1 small">{{ item.value }}</td>
-                    <td class="text-center pa-1 small">
-                      {{ item.mod }}
-
-                    </td>
-                  </tr>
-                </tbody>
-              </v-simple-table>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-col> -->
-
       <!-- skills -->
       <v-col :cols="12" :sm="6" :md="6" :lg="3">
         <v-row no-gutters>
@@ -638,69 +471,6 @@
               key="actions"
               :value="`tab-actions`"
             >
-              <div class="pa-2">
-                <v-data-table
-                  :headers="weaponHeaders"
-                  :items="weapons"
-                  hide-default-footer
-                >
-                  <template v-slot:item="{ item }">
-                    <tr v-if="item">
-                      <td class="text-left pa-1 small">
-                        {{ item.nameGear }}
-                      </td>
-
-                      <td class="text-center pa-1 small">
-                        <span>{{ groupName(item.group) }}</span>
-                      </td>
-
-                      <td class="text-center pa-1 small">
-                        + {{ attackModifier(item) }} /
-                        {{ attackModifier(item) - 5 }} /
-                        {{ attackModifier(item) - 10 }}
-                      </td>
-
-                      <td class="text-center pa-1 small">
-                        <div v-if="item.damage">
-                          <span
-                            >{{ item.damage }}
-                            {{ typeDamage(item.typeDamage) }}</span
-                          >
-                        </div>
-                      </td>
-
-                      <td class="text-center pa-1 small">
-                        <span>{{ category(item.category) }}</span>
-                      </td>
-
-                      <td class="text-center pa-1 small">
-                        <span>{{ item.hands }}</span>
-                      </td>
-
-                      <td class="text-left pa-1 small">
-                        <span v-if="item.traits && item.traits.length > 0">{{
-                          item.traits.join(", ")
-                        }}</span>
-                      </td>
-                    </tr>
-                  </template>
-                </v-data-table>
-
-                <div class="mt-4">
-                  <div
-                    v-for="trait in weaponsTraitSet"
-                    v-if="traitByName(trait)"
-                    :key="trait"
-                    class="body-2 mb-2 caption"
-                  >
-                    <p v-if="traitByName(trait).crunch">
-                      <strong>{{ traitByName(trait).name }}: </strong>
-                      {{ traitByName(trait).crunch }}
-                    </p>
-                    <p v-else>{{ traitByName(trait).description }}</p>
-                  </div>
-                </div>
-              </div>
             </v-tab-item>
 
             <!-- wargear (All, Weapons, Armour, Gear, Other Possessions) -->
@@ -745,6 +515,7 @@
                       :headers="weaponHeaders"
                       :items="weapons"
                       hide-default-footer
+                      v-if="weapons.length !== 0"
                     >
                       <template v-slot:item="{ item }">
                         <tr v-if="item">
@@ -785,23 +556,26 @@
                               >{{ item.traits.join(", ") }}</span
                             >
                           </td>
+                          <td class="text-left">
+                            <v-btn
+                              outlined
+                              x-small
+                              color="info"
+                              @click="openDialogItem(item)"
+                            >
+                              <v-icon left>visibility</v-icon> Просмотр
+                            </v-btn>
+                          </td>
                         </tr>
                       </template>
                     </v-data-table>
 
-                    <div class="mt-4">
-                      <div
-                        v-for="trait in weaponsTraitSet"
-                        v-if="traitByName(trait)"
-                        :key="trait"
-                        class="body-2 mb-2 caption"
-                      >
-                        <p v-if="traitByName(trait).crunch">
-                          <strong>{{ traitByName(trait).name }}: </strong>
-                          {{ traitByName(trait).crunch }}
-                        </p>
-                        <p v-else>{{ traitByName(trait).description }}</p>
-                      </div>
+                    <div
+                      v-if="weapons.length === 0"
+                      align="center"
+                      class="mt-2 mb-2"
+                    >
+                      <em>Нет оружия? Возьми на вкладке Снаряжения!</em>
                     </div>
                   </div>
 
@@ -816,6 +590,7 @@
                       :headers="armorHeaders"
                       :items="armour"
                       hide-default-footer
+                      v-if="armour.length !== 0"
                     >
                       <template v-slot:item="{ item }">
                         <tr v-if="item">
@@ -837,9 +612,27 @@
                               >{{ item.traits.join(", ") }}</span
                             >
                           </td>
+                          <td class="text-left">
+                            <v-btn
+                              outlined
+                              x-small
+                              color="info"
+                              @click="openDialogItem(item)"
+                            >
+                              <v-icon left>visibility</v-icon> Просмотр
+                            </v-btn>
+                          </td>
                         </tr>
                       </template>
                     </v-data-table>
+
+                    <div
+                      v-if="armour.length === 0"
+                      align="center"
+                      class="mt-2 mb-2"
+                    >
+                      <em>Нет доспехов? Возьми на вкладке Снаряжения!</em>
+                    </div>
                   </div>
 
                   <!-- species < abilities -->
@@ -1420,6 +1213,7 @@
                     </v-data-table>
                   </v-card>
                 </v-col>
+
                 <!-- <v-data-table
                   :headers="psychicPowersHeaders"
                   :items="psychicPowers"
@@ -1453,7 +1247,13 @@
                   </template>
                 </v-data-table> -->
               </div>
-
+              <div
+                v-if="!characterArchetype?.spellProgression"
+                align="center"
+                class="mt-2 mb-2"
+              >
+                <em>Нет заклинаний? Выберите класс заклинателя и увидите!</em>
+              </div>
               <!-- notes, bound, others -->
             </v-tab-item>
 
@@ -1832,6 +1632,76 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <v-dialog v-model="dialogItem" max-width="800px">
+          <v-card v-if="selectedItem">
+            <v-card-text>
+              <v-row class="rowFeat">
+                <div class="head">
+                  <h1>{{ selectedItem.nameGear }}</h1>
+                </div>
+                <div class="line"></div>
+                <div class="tag">
+                  <span v-if="['melee', 'ranged'].includes(selectedItem.type)">
+                    Оружие
+                  </span>
+                  <span v-if="!['melee', 'ranged'].includes(selectedItem.type)">
+                    Доспех
+                  </span>
+                  {{ selectedItem.level }}
+                </div>
+              </v-row>
+              <v-row>
+                <!-- <div>
+                    <trait-view v-if="selectedItem.traits" :selectedItem="selectedItem" class="mb-2" />
+                  </div> -->
+              </v-row>
+              <p></p>
+              <!-- Описание закла -->
+              <div v-if="selectedItem.source.book">
+                <strong>Источник:</strong> {{ selectedItem.source.book }}
+              </div>
+              <div v-if="selectedItem.hands">
+                <p class="main-holder">
+                  <strong>Руки:</strong> {{ selectedItem.hands }}
+                </p>
+              </div>
+              <p></p>
+              <div>
+                <p class="main-holder">
+                  <strong>Цена:</strong> {{ wargearPrice(selectedItem) }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="selectedItem.distance">
+                <p class="main-holder">
+                  <strong>Дистанция:</strong> {{ selectedItem.distance }}
+                </p>
+              </div>
+              <p></p>
+              <div v-if="selectedItem.area">
+                <p class="main-holder">
+                  <strong>Область:</strong>
+                  <span v-html="selectedItem.area"></span>
+                </p>
+              </div>
+              <p></p>
+              <div v-if="selectedItem.target">
+                <p class="main-holder">
+                  <strong>Дистанция:</strong> {{ selectedItem.target }}
+                </p>
+              </div>
+              <p></p>
+              <div class="line"></div>
+              <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
+              <div class="line"></div>
+              <div
+                class="pt-4 pb-2"
+                v-html="selectedItem.powerDescription"
+              ></div>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </div>
@@ -1922,6 +1792,11 @@ export default {
         { text: 'Категория', sortable: false, align: 'center', class: 'small pa-1' },
         // { text: 'Руки', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
+                {
+          text: '',
+          value: 'view',
+          sortable: false, class: 'small pa-1'
+        },
       ],
       weaponHeaders: [
         { text: 'Название', sortable: false, align: 'left', class: 'small pa-1' },
@@ -1931,6 +1806,11 @@ export default {
         { text: 'Категория', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Руки', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
+                {
+          text: '',
+          value: 'view',
+          sortable: false, class: 'small pa-1'
+        },
       ],
       psychicPowersHeaders: [
                  {
@@ -2025,6 +1905,7 @@ export default {
         L: 8,
       },
       dialog: false,
+      dialogItem: false,
       customKeyword: {
         key: undefined,
         name: 'Custom Keywords',
@@ -2034,6 +1915,7 @@ export default {
       //
       characterSpecies: undefined,
       characterArchetype: undefined,
+      characterHeritage: undefined,
       ascensionPackagesRepository: undefined,
       wargearRepository: undefined,
       abilityList: undefined,
@@ -2070,6 +1952,9 @@ export default {
     },
     speciesKey() {
       return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
+    },
+    heritageKey() {
+      return this.$store.getters['characters/characterHeritageKeyById'](this.characterId);
     },
     character()
     {
@@ -2727,6 +2612,7 @@ export default {
                 effect: feature.snippet ? feature.snippet : feature.description,
                 snippet: feature.snippet,
                 description: feature.description,
+                key: feature.key,
                 source: this.speciesLabel,
                 hint: this.speciesLabel,
                 selectedOptions: [],
@@ -2749,6 +2635,62 @@ export default {
                   })
                 }
               }
+              abilities.push(ability);
+            }
+          });
+        }
+
+      if (this.characterHeritage !== undefined && this.characterHeritage.speciesFeatures) {
+
+        const heritageName = this.characterHeritage.nameAncestry;
+          this.characterHeritage.speciesFeatures.forEach( (feature) => {
+            // Honour the Chapter
+            if (feature.name === 'Honour the Chapter') {
+              const chapter = this.astartesChapterRepository.find((a) => a.key === this.speciesAstartesChapter) || [];
+              const traditions = chapter.beliefsAndTraditions;
+              if (traditions !== undefined) {
+                traditions.forEach((t) => {
+                  const tradition = {
+                    name: t.name,
+                    effect: t.effect,
+                    snippet: t.effect,
+                    source: chapter.name,
+                  };
+                  abilities.push(tradition);
+                });
+              }
+            } else {
+            // other abilities
+              const ability = {
+                name: feature.name,
+                effect: feature.snippet ? feature.snippet : feature.description,
+                snippet: feature.snippet,
+                description: feature.description,
+                key: feature.key,
+                source: heritageName,
+                hint: heritageName,
+                selectedOptions: [],
+              };
+              if ( feature.options ) {
+                const traitSelection = this.characterEnhancements
+                  .filter( (e) => e.source.startsWith(`species.${feature.name}.`));
+                if ( traitSelection ) {
+                  traitSelection.forEach((selection) => {
+                    if (selection.effect) {
+                      ability.selectedOptions.push({
+                        name: selection.name,
+                        snippet: selection.effect,
+                      });
+                    } else if (selection.name) {
+                      ability.selectedOptions.push({
+                        name: selection.name,
+                      });
+                    }
+                  })
+                }
+              }
+
+              if(!abilities.find(s => s.key === ability.key))
               abilities.push(ability);
             }
           });
@@ -3042,10 +2984,8 @@ export default {
         chargear.forEach((gear) => {
           const { name, id, variant } = gear;
           const foundGear = this.wargearRepository.find((w) => gear.name.localeCompare(w.name, 'en', {sensitivity: 'accent'}) === 0 );
-          if (foundGear) {
+          if (foundGear && !['ranged', 'melee'].includes(gear.type)) {
             wargear.push({ ...foundGear, variant, id });
-          } else {
-            wargear.push({ name, variant, id, type: 'Misc' });
           }
         });
       }
@@ -3139,6 +3079,14 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+    heritageKey: {
+      handler(newVal) {
+        if (newVal && newVal !== 'unknown') {
+          this.loadHeritage(newVal);
+        }
+      },
+      immediate: true, // make this watch function is called when component created
+    },
     archetypeKey: {
       handler(newVal) {
         if (newVal) {
@@ -3218,6 +3166,10 @@ export default {
           this.selectedItem = item
           this.dialog = true
         },
+    openDialogItem(item) {
+          this.selectedItem = item
+          this.dialogItem = true
+        },
             iconAction(action) {
       if (action === '1') return `/img/icon/action_single.png`;
       if (action === '2') return `/img/icon/action_double.png`;
@@ -3265,6 +3217,49 @@ export default {
 
 
         this.characterSpecies = finalData;
+
+      }
+    },
+        async loadHeritage(key) {
+      if ( key ) {
+        let finalData = {};
+        if ( key.startsWith('custom-')) {
+          finalData = this.$store.getters['species/getHeritage'](key);
+        } else {
+          const { data } = await this.$axios.get(`/api/heritage/${key}`);
+          finalData = data;
+        }
+
+
+      if (this.abilityList !== undefined) {
+        const lowercaseKeywords = finalData.ancestryAbility.map((s) =>
+          s.toUpperCase()
+        );
+
+        const List = this.abilityList;
+        const ability = List.filter((talent) =>
+          lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+        );
+
+        if (ability.length > 0) {
+          const listAbilities = [];
+          ability.forEach((talent) => {
+            const ability1 = {
+              name: talent.name,
+              key: talent.key,
+              description: talent.description,
+              modification: talent.modification,
+            };
+
+            listAbilities.push(talent);
+          });
+          finalData.speciesFeatures = listAbilities;
+        }
+      }
+
+
+
+        this.characterHeritage = finalData;
 
       }
     },
@@ -3708,6 +3703,15 @@ export default {
       computed = computed.replace(/ Double Rank/g, ` <strong>${2*rank}</strong>`);
 
       return computed;
+    },
+    wargearPrice(item) {
+      if (item) {
+        const pp = item.pp !== 0 ? item.pp + " пм" : "";
+        const gp = item.gp !== 0 ? item.gp + " зм" : "";
+        const sp = item.sp !== 0 ? item.sp + " см" : "";
+        const cp = item.cp !== 0 ? item.cp + " мм" : "";
+        return pp + gp + sp + cp;
+      }
     },
     toggleResource(resourceItem, index) {
       const id = this.characterId;

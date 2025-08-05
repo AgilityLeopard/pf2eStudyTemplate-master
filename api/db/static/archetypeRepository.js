@@ -412,20 +412,51 @@ const playerCore = [
             //Общие
             "Initial proficiencies", "Class feat", "Ancestry and background", "Skill feat Rogue", "General feat", "Skill increase Rogue", "Ancestry feat", "Stat boost",
             //Классовые
-            "Reactive Strike", "Shield Block", "Battlefield Surveyor", "Bravery", "Fighter Weapon Mastery", "Weapon Specialization", "Combat Flexibility",
-            "Battle Hardened", "Armor Expertise", "Fighter Expertise", "Weapon Legend", "Tempered Reflexes", "Greater Weapon Specialization",
-            "Improved Flexibility", "Armor Mastery", "Versatile Legend",
+            "SneakAttack",
+            "RoguesRacket",
+            "Deny Advantage",
+            "WeaponTricks",
+            "PerceptionMastery",
+            "EvasiveReflexes",
+            "RogueExpertise",
+            "DebilitatingStrike",
+            "GreaterRogueReflexes",
+            "PerceptionLegend",
+            "MasterTricks",
+            "DoubleDebilitation",
+            "AgileMind",
+            "MasterStrike",
+
+            "LightArmorMastery",
+            "LightArmorExpertise",
+            "GreaterWeaponSpecialization",
+            "WeaponSpecialization",
         ],
         modification:
             [
                 {
-                    key: "will",
+                    key: "simple",
                     upgrade: "E",
                     mode: "Upgrade",
-                    type: "Saving",
-                    level: 3,
+                    type: "Attack",
+                    level: 5,
                 },
-
+                {
+                    key: "martial",
+                    upgrade: "E",
+                    mode: "Upgrade",
+                    type: "Attack",
+                    level: 5,
+                },
+                {
+                    key: "Perception",
+                    upgrade: "M",
+                    type: "Perception",
+                    mode: "Upgrade",
+                    level: 7,
+                    // valueBonus: 2,
+                    // typeBonus: "circumstance"
+                },
                 {
                     key: "Weapon Specialization",
                     // upgrade: "M",
@@ -440,27 +471,18 @@ const playerCore = [
                     // typeBonus: "damage"
                 },
                 {
-                    key: "Perception",
-                    upgrade: "M",
-                    type: "Perception",
-                    mode: "Upgrade",
-                    level: 7,
-                    valueBonus: 2,
-                    typeBonus: "circumstance"
-                },
-                {
-                    key: "fortitude",
+                    key: "reflex",
                     upgrade: "M",
                     mode: "Upgrade",
                     type: "Saving",
-                    level: 9,
+                    level: 7,
                 },
                 {
-                    key: "light",
+                    key: "fortitude",
                     upgrade: "E",
                     mode: "Upgrade",
-                    type: "Defence",
-                    level: 11,
+                    type: "Saving",
+                    level: 9,
                 },
                 {
                     key: "class",
@@ -470,64 +492,13 @@ const playerCore = [
                     level: 11,
                 },
                 {
-                    key: "medium",
-                    upgrade: "E",
-                    mode: "Upgrade",
-                    type: "Defence",
-                    criticalSpecialization: true,
-                    level: 11,
-                },
-                {
-                    key: "heavy",
-                    mode: "Upgrade",
-                    upgrade: "E",
-                    type: "Defence",
-                    criticalSpecialization: true,
-                    level: 11,
-                },
-                {
-                    key: "unarmored",
-                    upgrade: "E",
-                    mode: "Upgrade",
-                    type: "Defence",
-                    level: 11,
-                },
-                {
-                    key: "simple",
-                    upgrade: "M",
-                    mode: "Upgrade",
-                    type: "Attack",
-                    level: 13,
-                },
-                {
-                    key: "martial",
-                    upgrade: "M",
-                    mode: "Upgrade",
-                    type: "Attack",
-                    level: 13,
-                },
-                {
-                    key: "advanced",
-                    upgrade: "E",
-                    mode: "Upgrade",
-                    type: "Attack",
-                    level: 13,
-                },
-                {
-                    key: "unarmed",
-                    mode: "Upgrade",
-                    upgrade: "M",
-                    type: "Attack",
-
-                    level: 13,
-                },
-                {
                     key: "reflex",
-                    upgrade: "M",
+                    upgrade: "L",
                     mode: "Upgrade",
                     type: "Saving",
-                    level: 15,
+                    level: 13,
                 },
+
                 {
                     key: "greater-weapon-specialization",
                     // upgrade: "M",
@@ -542,61 +513,27 @@ const playerCore = [
                     // typeBonus: "damage"
                 },
                 {
+                    key: "will",
+                    upgrade: "M",
+                    mode: "Upgrade",
+                    type: "Saving",
+                    level: 15,
+                },
+
+
+                {
                     key: "light",
                     upgrade: "M",
                     mode: "Upgrade",
                     type: "Defence",
-                    level: 17,
+                    level: 19,
                 },
-                {
-                    key: "medium",
-                    upgrade: "M",
-                    type: "Defence",
-                    mode: "Upgrade",
-                    criticalSpecialization: true,
-                    level: 17,
-                },
-                {
-                    key: "heavy",
-                    upgrade: "M",
-                    mode: "Upgrade",
-                    type: "Defence",
-                    criticalSpecialization: true,
-                    level: 17,
-                },
+
                 {
                     key: "unarmored",
-                    mode: "Upgrade",
                     upgrade: "M",
+                    mode: "Upgrade",
                     type: "Defence",
-                    level: 17,
-                },
-                {
-                    key: "simple",
-                    mode: "Upgrade",
-                    upgrade: "L",
-                    type: "Attack",
-                    level: 19,
-                },
-                {
-                    key: "martial",
-                    upgrade: "L",
-                    type: "Attack",
-                    mode: "Upgrade",
-                    level: 19,
-                },
-                {
-                    key: "advanced",
-                    upgrade: "M",
-                    mode: "Upgrade",
-                    type: "Attack",
-                    level: 19,
-                },
-                {
-                    key: "unarmed",
-                    upgrade: "L",
-                    mode: "Upgrade",
-                    type: "Attack",
                     level: 19,
                 },
                 {
@@ -606,6 +543,7 @@ const playerCore = [
                     type: "DC Class",
                     level: 19,
                 },
+
             ]
     },
 
@@ -2815,6 +2753,237 @@ const playerCore2 = [
             "Panache", "Precise Strike", "Swashbuckler Style", "Confident Finisher",
             // Обще-классовые
             "Opportune Riposte", "Daring Finisher", "Perfect Finisher", "Master Duelist"
+        ],
+        modification: [
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 5,
+                typeBonus: "status",
+                condition: "hasPanache",
+                level: 1
+            },
+            {
+                key: "fortitude",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 3,
+            },
+            {
+                key: "martial",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 5,
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 7,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4,
+                }
+            },
+            {
+                key: "reflex",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 7,
+            },
+            {
+                key: "speed",
+                mode: "Bonus",
+                valueBonus: 10,
+                typeBonus: "status",
+                condition: "hasPanache",
+                level: 7
+            },
+            {
+                key: "perception",
+                upgrade: "M",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 11,
+            },
+            {
+                key: "light",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "unarmored",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "martial",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "simple",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "unarmed",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 13,
+            },
+            {
+                key: "reflex",
+                upgrade: "L",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 13,
+            },
+            {
+                key: "will",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 17,
+            },
+            {
+                key: "light",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 19,
+            },
+            {
+                key: "unarmored",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 19,
+            }
+        ]
+    },
+
+    //чемпион
+    {
+        ...archetype(source.playerCore.key, 96, 'Champion'),
+        ...cost(10, 0, 0, 0, 0),
+        ...statBoost(0, 1, 0, 0, 0, 0), // Ловкость
+        hint: 'Вы - посланник божества, преданный служитель, взявший на себя тяжелую ношу, и придерживающийся кодекса, который отличает вас от окружающих. В то время как чемпионы существуют для всех мировоззрений, как чемпион добра, вы даете уверенность и надежду невинным. У вас есть мощная защита, которой вы делитесь со своими союзниками и невинными очевидцами, а также святая сила, которую вы используете, чтобы положить конец угрозе зла. Ваша преданность даже привлекает внимание святых духов, которые помогают вам в путешествии.',
+        name: 'Чемпион',
+        keywords: 'чемпион',
+        hitpoints: 10,
+        keyAbility: ["dexterity", "strength"],
+        trait: ["чемпион"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: ['religion'],
+        skillTrainedPoints: 2,
+        Perception: "T", // Эксперт с 1 уровня
+        skillAttack: {
+            simple: "T",
+            martial: "T", // Воинское оружие
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence: {
+            light: "T",
+            medium: "T",
+            heavy: "T",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "T", // Эксперт с 1 уровня
+            fortitude: "E",
+            will: "E"
+        },
+        spellsClass: {
+            attack: "T",
+            class: "T"
+        },
+        isFeatLevelOne: true,
+
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы противостоите врагам в рукопашном бою, тщательно выбирая лучшую позицию, чтобы защитить своих союзников.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p>Вы - голос надежды, стремящийся достичь мирного решения, которое укрепит связи и принесет хорошие результаты для всех.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы преодолеваете как физические, так и духовные барьеры, вдохновляя ваших союзников своими действиями, и когда ваши товарищи-авантюристы просят об этом, даете моральное и этическое напутствие.</p>'
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы проводите много времени в священных молитвах и размышлениях, тщательных тренировках, благотворительных делах и исполнении принципов своего кодекса, но это не значит, что у вас нет времени заняться ремеслом или хобби.</p>'
+            },
+            {
+                name: 'you',
+                text: '<li><p>Верить, что всегда есть надежда, что добро восторжествует над злом, независимо от того, насколько мрачны шансы</p></li>' +
+                    '<li><p>Знать, что цель не оправдывает средства, поскольку злые деяния лишь увеличивают влияние зла</p></li>' +
+                    '<li><p>Иметь сильное чувство правильного и неправильного, и можете отчаяться, когда жадность или недальновидность порождают зло</p></li>'
+
+            },
+            {
+                name: 'other',
+                text: '<li><p>Видят в вас символ надежды, особенно в период великой нужды</p></li>' +
+                    '<li><p>Беспокоятся, что вы втайне презираете их за то, что они не соответствуют вашим запредельным стандартам, или что вы непреклонны по отношению к компромиссам, когда это необходимо</p></li>' +
+                    '<li><p>Знают, что вы дали сакральные клятвы служения, и верят, что вы сдержите их</p></li>'
+
+
+            }
+        ],
+
+        archetypeFeatures: [
+            // Общие
+            "Initial proficiencies", "Ancestry and background", "Skill feat",
+            "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            //Общеклассовые
+            "ArmorExpertise", "WeaponExpertise", "WeaponSpecialization", "GreaterWeaponSpecialization", "Reflex Expertise Champion",
+            "Perception Expertise Champion", "Armor Mastery Champion", "WeaponMastery",
+            // Классовые
+            "BlessingDevoted",
+
+            "HeroDefiance",
+            "LegendaryArmor",
+            "ChampionMastery",
+            "ExaltedReaction",
+            "DivineWill",
+
+            "SacredBody",
+            "RelentlessReaction",
+
+            "ChampionExpertise",
+
         ],
         modification: [
             {

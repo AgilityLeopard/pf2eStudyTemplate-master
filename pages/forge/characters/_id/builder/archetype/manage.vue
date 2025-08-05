@@ -45,8 +45,8 @@
                         <p>{{  characterlabel(characterPerseption) }}</p>
 
                   <h3 class="exclude_from_nav" id="SavingThrows">Спасброски</h3>
-          <span v-for="item in SavingRepository" v-bind:key="item.key">
-            <p>{{ characterlabel(characterSaving[item.key]) }} в {{ item.name }} </p>
+          <span v-for="item1 in SavingRepository" v-bind:key="item1">
+            <p>{{ characterlabel(item.saving[item1.key]) }} в  {{ item1.name }} </p>
           </span>
                   <h3 class="exclude_from_nav" id="Skills">Навыки</h3>
                   
@@ -59,12 +59,12 @@
     
                 </div>
                   <div class="two-column-right"><h3 class="exclude_from_nav" id="attacks">Атаки</h3>
-                  <span v-for="item in WeaponRepository" v-bind:key="item.key">
-                      <p class=""> {{ characterlabel(skillAttack[item.key]) }} в {{ item.name }} </p>
+                  <span v-for="item1 in WeaponRepository" v-bind:key="item1.key">
+                      <p class=""> {{ characterlabel(item.skillAttack[item1.key]) }} в {{ item1.name }} </p>
                   </span>
                     <h3 class="exclude_from_nav" id="defenses">Защиты</h3>
-                  <span v-for="item in DefenceRepository" v-bind:key="item.key">
-                    <p> {{ characterlabel(skillDefence[item.key]) }} в {{ item.name }} </p>
+                  <span v-for="item1 in DefenceRepository" v-bind:key="item1.key">
+                    <p> {{ characterlabel(item.skillDefence[item1.key]) }} в {{ item1.name }} </p>
                   </span>
           
                     <h3 class="exclude_from_nav" id="ClassDC">Класс Сл</h3>

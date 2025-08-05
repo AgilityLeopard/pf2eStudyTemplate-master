@@ -195,7 +195,7 @@
               <h3 class="headline" >Выберите Родословную</h3>
           <v-select
             v-model="selectedHeritage"
-            :items="heritageList"
+            :items="heritage"
             item-value="key"
             item-text="nameAncestry"
             label=""
@@ -269,7 +269,16 @@ export default {
         this.characterId
       );
     },
+    heritage() {
+       const speciesLabel = this.species?.nameAncestry.toUpperCase();
 
+      if (speciesLabel)
+        return this.heritageList.filter(
+          (s) => s.isUniversal === true || s.type.toUpperCase() === speciesLabel
+        );
+      else return this.heritageList.filter((s) => s.isUniversal === true);
+
+ },
     characterSpeciesAstartesChapter() {
       return this.$store.getters[
         "characters/characterSpeciesAstartesChapterById"
@@ -342,7 +351,7 @@ export default {
         },
       };
       const { data } = await this.$axios.get("/api/heritage/", config);
-      const speciesLabel = this.species?.nameAncestry.toUpperCase();
+      const speciesLabel = this.characterSpeciesKey;
 
       
       if (this.abilityList !== undefined) {
@@ -375,12 +384,7 @@ export default {
         });
 
       }
-
-      if (speciesLabel)
-        this.heritageList = data.filter(
-          (s) => s.isUniversal === true || s.type.toUpperCase() === speciesLabel
-        );
-      else this.heritageList = data.filter((s) => s.isUniversal === true);
+      this.heritageList = data;
 
 
       const key = this.$store.getters["characters/characterHeritageKeyById"](
@@ -623,6 +627,7 @@ export default {
       //   params: { id: this.characterId },
       // });
     },
+   
     size(size) {
       if (!size) return "";
       const s = this.sizeRepository.find((s) => s.key === size);
