@@ -7,26 +7,42 @@
 
     <!-- Languages -->
     <v-col :cols="12">
-      <!-- <v-card> -->
-      <!-- <v-card-title>Детали</v-card-title>
+      <v-card>
+        <v-card-title>Выбор божества</v-card-title>
         <v-card-text>
-          <p><em>Божество:</em></p>
-          <p><em>Возраст:</em></p>
-          <p><em>Пол:</em></p>
-          <p><em>Внешность:</em></p>
-          <p><em>Предыстория:</em></p>
-          <p><em>Место рождения:</em></p>
-          <p><em>Характер:</em></p>
-          <p><em>Убеждения:</em></p>
-          <p><em>Эдикты:</em></p>
-          <p><em>Анафемы:</em></p>
-          <p><em>Любит:</em></p>
-          <p><em>Не любит:</em></p>
-          <p><em>Союзники:</em></p>
-          <p><em>Противники:</em></p>
-          <p><em>Организации:</em></p>
+          <!-- <h3 class="headline">Выберите Божество</h3> -->
+          <!-- <v-select
+           v-model="selectedDeity"
+            :items="deityList"
+            item-value="key"
+            item-text="name"
+            label=""
+            dense
+            outlined
+            persistent-hint
+            return-object
+          >
+          </v-select> -->
+          <!--    v-model="selectedDeity"
+       @input="selectHeritageForChar" -->
+
+          <!-- <div v-if="selectedDeity" class="mt-2 body-2 text-lg-justify">
+     
+
+        <p> <div v-if="selectedDeity.description" v-html="selectedDeity.description"></div> </p> 
+        <p> <div v-if="selectedDeity.sanctification">
+              Санктификация: <span v-if="selectedDeity.sanctification.modal === 'can'"> Может</span> 
+              <span v-if="selectedDeity.sanctification.modal === 'must'"> Обязан</span> 
+              <br>
+              Освящение: 
+              {{ selectedDeity.sanctification.what.join(', ') }}
+
+        </div> </p> 
+        
+    
+        </div> -->
         </v-card-text>
-      </v-card> -->
+      </v-card>
 
       <v-card>
         <v-card-title>Управление языками</v-card-title>
@@ -92,7 +108,9 @@ export default {
     return {
       dialog: false,
       dialogItem: undefined,
+      deityList: undefined,
       issues: [],
+      selectedDeity: undefined,
       characterSpecies: undefined,
       characterFaction: undefined,
       characterBackground: undefined,
@@ -105,7 +123,20 @@ export default {
       title: 'Select Background',
     };
   },
-  computed: {
+  computed:
+  {
+    sources() {
+      return [
+        'playerCore',
+        'playerCore2',
+        'LODM',
+        //'coreRulebook', 'secretOfMagic',
+        ...this.settingHomebrews
+      ];
+    },
+    settingHomebrews() {
+      return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
+    },
     characterSpeciesKey() {
       return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
     },
@@ -179,8 +210,22 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+
   },
   methods: {
+        async getDeityList(sources) {
+          const config = {
+            params: {
+              source: sources.join(","),
+            },
+          };
+          const { data } = await this.$axios.get(
+            "/api/deity/",
+            config.source
+          );
+          data.forEach(t => t.key = t.key.toLowerCase())
+          this.deityList = data;
+        },
     async loadSpecies(key) {
       if ( key ) {
         const { data } = await this.$axios.get(`/api/species/${key}`);

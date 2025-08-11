@@ -5,6 +5,7 @@ const source = {
   secretOfMagic: { book: 'Секреты Магии', key: 'secretOfMagic', version: 'v0', link: '' },
   coreRulebook: { book: 'Основная книга (до ремастер)', key: 'coreRulebook', version: 'v0', link: '' },
   GMCore: { book: 'Книга Мастера', key: 'GMCore', version: 'v0', link: '' },
+  LODM: { book: 'Pathfinder Lost Omens Divine Mysteries', key: 'LODM', version: 'v0', link: '' },
 };
 
 export {

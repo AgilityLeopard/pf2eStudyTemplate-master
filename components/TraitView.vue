@@ -95,6 +95,7 @@ export default {
           source: sources.join(","),
         },
       };
+
       const { data } = await this.$axios.get(
         "/api/traits/",
         config.source

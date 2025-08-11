@@ -89,13 +89,14 @@
           
 
           <div v-if="feature.description" v-html="feature.description"></div>
-          <div  v-else>{{ feature.snippet }}</div>
+          <div  v-if="feature.snippet" v-html="feature.snippet"></div>
 
                <div v-if="feature.action" v-html="feature.action.description"></div>
         </p>
 
         <div v-if="feature.options" class="mt-2">
           <v-select
+          v-if="feature.type !== 'Weapon Choice'"
             v-model="feature.selected"
             :items="feature.options"
             item-value="key"
@@ -108,14 +109,27 @@
           >
           </v-select>
           
-           <div v-if="feature.selected">
+            <v-select
+            v-if="feature.type === 'Weapon Choice'"
+            v-model="feature.selected"
+            :items="feature.options"
+            item-value="key"
+            item-text="nameGear"
+            label=""
+            dense outlined 
+            persistent-hint
+            @input="changeSelectedOption(feature, item)"
+       
+          >
+          </v-select>
+           <div v-if="feature.selected && feature.type !== 'Skill Choice' && feature.type !== 'Weapon Choice'">
              <p><div v-if="feature.options.find(s=> s.key === feature.selected).snippet" v-html="feature.options.find(s=> s.key === feature.selected).snippet"></div></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).feat"><strong>Черта:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).feat"></span></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).spell"><strong>Заклинание:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).spell"></span></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).focusSpell"><strong>Фокусное заклинание:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).focusSpell"></span></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).skill"><strong>Навык:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).skill"></span></p>
          
-           
+           <div></div>
 
             <div v-if="feature.options.find(s=> s.key === feature.selected).subFeature">
                 <div  v-for="item in feature.options.find(s=> s.key === feature.selected).subFeature.filter(t => t.level <= characterLevel())">
@@ -126,6 +140,13 @@
                 </div>
               </div>
             </div>
+
+            
+            <div v-if="feature.selected  && feature.type === 'Weapon Choice'">
+    
+             <p><div v-if="feature.options.find(s=> s.key === feature.selected).description" v-html="feature.options.find(s=> s.key === feature.selected).description"></div></p>
+               </div>
+           <div></div>
 
           </div>
         </div>
@@ -165,6 +186,7 @@ export default {
       item: undefined,
       abilityList: undefined,
       actionList: undefined,
+      deityList: undefined,
     };
   },
   computed: {
@@ -245,6 +267,7 @@ export default {
       return [
         "playerCore",
         "playerCore2",
+        "LODM",
          ...this.settingHomebrews,
       ];
     },
@@ -260,11 +283,14 @@ export default {
         if (newVal) {
           this.getAbilityList(newVal);
           this.getActionList(newVal);
+           this.getWargearList(newVal);
+
           // this.getPsychicPowers(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
     },
+
     characterArchetypeKey: {
       handler(key) {
         if (key) {
@@ -276,9 +302,22 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+    
 
   },
   methods: {
+      async getWargearList(sources) {
+      const config = {
+        params: {
+          source: sources.join(','),
+        },
+      };
+      const { data } = await this.$axios.get('/api/wargear/', config);
+
+
+
+      this.wargearList = data;
+    },
     characterlabel(key){
         switch (key) {
           case "U":
@@ -343,6 +382,8 @@ export default {
         this.characterId
       );
 
+      const skill = this.skillRepository;
+      const weapon = this.wargearList.filter(s => ['melee', 'ranged'].includes(s.type));
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
 
       if (this.abilityList !== undefined && this.actionList !== undefined ) {
@@ -366,6 +407,8 @@ export default {
               abilityInArray.push(ab);
             }
 
+          
+            
             if (ab.options) {
               if (ab.type.includes("Weapon Group")) {
                 const options = this.weaponGroup.filter(s => ab.options.includes(s.group));
@@ -378,9 +421,22 @@ export default {
                   listOption.push(op);
                   ab.options = listOption;
 
+
                 });               
               }
 
+             
+                ab.options.forEach(s => {
+                if (s.subFeature) {
+                  const sub = s.subFeature;
+                  SubFeature = List.filter(s => sub.includes(s.key));
+                  s.subFeature = SubFeature;
+                   
+                  }
+     
+                
+                   })
+              
               if (ab.type === "Class Feature") { 
                 const options = List.filter(ability => ab.options.includes(ability.key));
                
@@ -402,7 +458,10 @@ export default {
                 
               })
       
-                
+              // if (ab.options.includes("deity"))
+              // {
+              //   ab.options = this.deityList;
+              // }
                 
             }
             
@@ -417,7 +476,27 @@ export default {
         ability.forEach((tal) => {
           let action;
           if (tal.item)
-              action = ac.find(ac => ac.key === tal.item.key)
+            action = ac.find(ac => ac.key === tal.item.key)
+            
+          if (tal.skill) {
+            if (tal.skill?.includes("all")) {
+              tal.options = skill;
+              tal.type = "Skill Choice";
+              tal.selected = enc.find(s => s.key === tal.key) ? enc.find(s => s.key === tal.key).selected : "";
+            }
+          }
+                 if (tal.weapon)
+                 {
+                 if (tal.weapon?.includes("all"))
+                        {
+                          tal.options = weapon;
+                          tal.type = "Weapon Choice";
+                          tal.selected = enc.find(s => s.key === tal.key) ? enc.find(s => s.key === tal.key).selected : "";
+
+                 }
+                 
+          }
+                    
             const ability1 = {
               name: tal.name,
               key: tal.key,
@@ -470,6 +549,19 @@ export default {
       this.item = finalData;
       this.loading = false;
     },
+     async getDeityList(sources) {
+              const config = {
+                params: {
+                  source: sources.join(","),
+                },
+              };
+              const { data } = await this.$axios.get(
+                "/api/deity/",
+                config.source
+              );
+              data.forEach(t => t.key = t.key.toLowerCase())
+              // this.deityList = data;
+            },
     enrichArchetypeFeatures(archetype){
       archetype.archetypeFeatures
       .filter((feature) => feature.options)
@@ -558,7 +650,7 @@ export default {
 
       //Навыки
       const skill = [];
-      skill.push(feature.options.find(s => s.key === feature.selected).skill);
+      skill.push(feature.options.find(s => s.key === feature.selected).key);
       if (skill)
       {
         //this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: level, type: 'class', optional: false  });
@@ -578,9 +670,26 @@ export default {
         this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: skill[0], level: feature.level, type: 'class', optional: true  });
       }
 
+      const trait = feature.options.find(s => s.key === feature.selected).trait;
+      if(trait)
+      {
+  const payload = {
+            name: trait,
+            source: feature.key,
+            type: 'keyword',
+            replacement: undefined,
+        };
+          
+        this.$store.commit("characters/clearCharacterKeywordsBySource", {
+        id: this.characterId,
+          source: feature.key,
+        cascade: true,
+        });
+        if(trait !== 'Без')
+          this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
 
-
-
+}
+          
       // this.$store.commit("characters/addCharacterModifications", {
       //   id: this.characterId,
       //   content: { modifications: mod, source: "archetype" },

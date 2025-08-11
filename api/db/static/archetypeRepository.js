@@ -1127,7 +1127,8 @@ const playerCore = [
             "Divine Font", "Cleric Spellcasting", "Doctrine", "Miraculous Spell", "Divine Defense", "Resolute Faith", "Deity Cleric",
 
             //Обще-классовые
-            "Weapon Specialization", "Perception Expertise Cleric", "Reflex Expertise Cleric"
+            "Weapon Specialization", "Perception Expertise Cleric", "Reflex Expertise Cleric", "SkillCleric", "Sanctification",
+            "WeaponCleric"
             //, "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
             // "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
         ],
@@ -1395,7 +1396,7 @@ const playerCore = [
 
     //Волшебник
     {
-        ...archetype(source.playerCore2.key, 94, 'Wizard'),
+        ...archetype(source.playerCore.key, 94, 'Wizard'),
         ...cost(6, 0, 0, 0, 0),
         ...statBoost(0, 0, 1, 0, 0, 0),
         hint: 'Вы вечный ученик арканных тайн вселенной. Через строгую дисциплину и изучение вы овладеваете магией, используя древние тексты и научные методы, чтобы проникнуть в её суть. '
@@ -2891,7 +2892,7 @@ const playerCore2 = [
 
     //чемпион
     {
-        ...archetype(source.playerCore.key, 96, 'Champion'),
+        ...archetype(source.playerCore2.key, 96, 'Champion'),
         ...cost(10, 0, 0, 0, 0),
         ...statBoost(0, 1, 0, 0, 0, 0), // Ловкость
         hint: 'Вы - посланник божества, преданный служитель, взявший на себя тяжелую ношу, и придерживающийся кодекса, который отличает вас от окружающих. В то время как чемпионы существуют для всех мировоззрений, как чемпион добра, вы даете уверенность и надежду невинным. У вас есть мощная защита, которой вы делитесь со своими союзниками и невинными очевидцами, а также святая сила, которую вы используете, чтобы положить конец угрозе зла. Ваша преданность даже привлекает внимание святых духов, которые помогают вам в путешествии.',
@@ -2968,9 +2969,14 @@ const playerCore2 = [
             "Initial proficiencies", "Ancestry and background", "Skill feat",
             "General feat", "Skill increase", "Ancestry feat", "Stat boost",
             //Общеклассовые
+
             "ArmorExpertise", "WeaponExpertise", "WeaponSpecialization", "GreaterWeaponSpecialization", "Reflex Expertise Champion",
             "Perception Expertise Champion", "Armor Mastery Champion", "WeaponMastery",
             // Классовые
+            "Shield Block",
+            "Cause",
+            "Sanctification",
+            "SkillCleric",
             "BlessingDevoted",
 
             "HeroDefiance",

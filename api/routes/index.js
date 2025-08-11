@@ -11,6 +11,7 @@ const archetypes = require('./archetypes');
 const ascensionPackages = require('./ascensionPackages');
 // const threats = require('./threats');
 const traits = require('./traits');
+// const deitys = require('./deity');
 
 // const posts = require('./posts');
 // const actualPlays = require('./actualPlays');
@@ -31,6 +32,7 @@ module.exports = (app) => {
   app.use('/ascension-packages', ascensionPackages);
   // app.use('/threats', threats);
   app.use('/traits', traits);
+  // app.use('/deity', deitys);
   app.use('/action', actions);
   //via contentfull
   // app.use('/homebrews', homebrews);

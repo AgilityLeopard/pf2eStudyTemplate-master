@@ -2396,6 +2396,17 @@ export const mutations = {
     const { keyword } = payload;
     character.keywords.push(keyword);
   },
+  clearCharacterKeywords(state, payload) {
+    const character = state.characters[payload.id];
+    const { source, cascade, name } = payload;
+    if (character.keywords.length > 0) {
+
+      character.keywords = character.keywords.filter(
+        (k) => k.name !== name
+      );
+
+    }
+  },
   clearCharacterKeywordsBySource(state, payload) {
     const character = state.characters[payload.id];
     const { source, cascade } = payload;
