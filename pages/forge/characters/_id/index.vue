@@ -1102,9 +1102,60 @@
                           : `${levelAncestry - 1} уровень`
                       }}
                     </h2>
+                    <div
+                      class="ammo-container"
+                      v-if="characterArchetype.prepared === false"
+                    >
+                      <!-- Патроны -->
+                      <div
+                        class="magazine"
+                        @click="
+                          handleClick(
+                            $event,
+                            levelAncestry - 1,
+                            characterSpont[levelAncestry - 1]
+                              ? characterSpont[levelAncestry - 1].value
+                              : characterArchetype.spellProgression[
+                                  characterLevel()
+                                ]?.[levelAncestry - 1]
+                          )
+                        "
+                        @contextmenu.prevent="
+                          handleClick(
+                            $event,
+                            levelAncestry - 1,
+                            characterSpont[levelAncestry - 1]
+                              ? characterSpont[levelAncestry - 1].value
+                              : characterArchetype.spellProgression[
+                                  characterLevel()
+                                ]?.[levelAncestry - 1]
+                          )
+                        "
+                      >
+                        <span
+                          v-for="n in characterArchetype.spellProgression[
+                            characterLevel()
+                          ]?.[levelAncestry - 1] || 0"
+                          class="bullet"
+                          :class="{
+                            filled:
+                              n <=
+                              (characterSpont[levelAncestry - 1]?.value || 0),
+                          }"
+                        >
+                          🔸
+                          <!-- 
+                          <p>
+                            Value:
+                            {{ characterSpont[levelAncestry - 1]?.value }}
+                          </p>
+                          <p>n: {{ n }}</p> -->
+                        </span>
+                      </div>
+                    </div>
 
                     <v-data-table
-                      :headers="psychicPowersHeaders"
+                      :headers="filteredHeaders"
                       :items="psychicPowers(levelAncestry - 1)"
                       :item-class="getItemClass"
                       item-key="cellIndex"
@@ -1116,10 +1167,10 @@
                           v-if="item.name"
                           outlined
                           x-small
-                          color="error"
+                          color="info"
                           @click="updateCast(item)"
                         >
-                          <v-icon left>view</v-icon> Сотв
+                          <v-icon left>mdi-auto-fix</v-icon> Сотв
                         </v-btn>
                       </template>
 
@@ -1140,7 +1191,7 @@
 
                       <template v-slot:item.duration="{ item }">
                         <span v-if="item?.duration?.sustained === true"
-                          >Поддерживомое до
+                          >Поддерживаемое до
                         </span>
                         {{ item?.duration?.value }}
                       </template>
@@ -1609,9 +1660,16 @@
                 <p class="main-holder" v-if="selectedItem.duration.value">
                   <strong>Длительность:</strong>
                   <span v-if="selectedItem.duration.sustained === true"
-                    >Поддерживомое до
+                    >Поддерживаемое до
                   </span>
                   {{ selectedItem.duration.value }}
+                </p>
+              </div>
+              <p></p>
+              <div>
+                <p class="main-holder" v-if="selectedItem.Power">
+                  <strong>Урон на этом уровне:</strong>
+                  <span v-html="selectedItem.Power"></span>
                 </p>
               </div>
               <p></p>
@@ -1768,6 +1826,8 @@ export default {
   },
   data() {
     return {
+       maxBullets: 10,      // размер обоймы
+      currentBullets: 5,    // текущее количество патронов
       attributeHeaders: [
         { text: 'Название', sortable: false, align: 'left', class: 'text-left small pa-1' },
         { text: 'Сокращение', sortable: false, align: 'center', class: 'text-center small pa-1' },
@@ -1990,6 +2050,9 @@ export default {
     archetypeLabel() {
       return this.$store.getters['characters/characterArchetypeLabelById'](this.characterId);
     },
+    characterSpont() {
+        return this.$store.getters['characters/characterSpellsSpontaneousById'](this.characterId);
+    },
     characterFactionKey() {
       return this.$store.getters['characters/characterFactionKeyById'](this.characterId);
     },
@@ -2115,45 +2178,45 @@ export default {
         };
       });
 
-      this.enhancements
-      .filter((enhancement)=>enhancement.targetGroup==='attributes')
-      .forEach((enhancement)=>{
-        let attr = attributes.find((a)=>a.key===enhancement.targetValue);
-        attr.adjustment += enhancement.modifier;
-        attr.adjustedRating += enhancement.modifier;
-        attr.modifiers.push(`${enhancement.modifier < 0 ? '-' : '+'}${enhancement.modifier} • ${enhancement.provider} • (${enhancement.category})`);
-      });
+      // this.enhancements
+      // .filter((enhancement)=>enhancement.targetGroup==='attributes')
+      // .forEach((enhancement)=>{
+      //   let attr = attributes.find((a)=>a.key===enhancement.targetValue);
+      //   attr.adjustment += enhancement.modifier;
+      //   attr.adjustedRating += enhancement.modifier;
+      //   attr.modifiers.push(`${enhancement.modifier < 0 ? '-' : '+'}${enhancement.modifier} • ${enhancement.provider} • (${enhancement.category})`);
+      // });
 
-      attributes = attributes.map((a) => {
-        if (a.adjustedRating < 1) {
-          a.adjustedRating = Math.max(1, a.adjustedRating);
-          a.modifiers.push('(i) Value is increase to at least 1.');
-        }
-        return a;
-      });
+      // attributes = attributes.map((a) => {
+      //   if (a.adjustedRating < 1) {
+      //     a.adjustedRating = Math.max(1, a.adjustedRating);
+      //     a.modifiers.push('(i) Value is increase to at least 1.');
+      //   }
+      //   return a;
+      // });
 
-      let poweredStrength = 0;
-      // enrich with (equipped) gear
-      if ( this.armour && this.armour.length > 0 ) {
-        const wornArmour = this.armour
-          .filter((armour) => !armour.meta[0].traits.includes('Shield'))
-          .filter((armour) => armour.meta[0].traits.find((trait) => trait.indexOf('Powered') >= 0 ))
-          .sort((a, b) => a.meta[0].armourRating < b.meta[0].armourRating ? 1 : -1)
-          .find((i) => true);
-        if (wornArmour) {
-          let poweredString = wornArmour.meta[0].traits.find((trait)=>trait.includes('Powered'));
-          if (poweredString) {
-            const trait = this.normalizeTrait(poweredString);
-            if ( trait.variant) {
-              poweredStrength = parseInt(trait.variant);
-              let strength = attributes.find((a)=>a.key==='strength');
-              strength.adjustedRating += poweredStrength;
-              strength.adjustment += poweredStrength;
-              strength.modifiers.push(`+${poweredStrength} • ${wornArmour.name} (Powered Armour)`);
-            }
-          }
-        }
-      }
+      // let poweredStrength = 0;
+      // // enrich with (equipped) gear
+      // if ( this.armour && this.armour.length > 0 ) {
+      //   const wornArmour = this.armour
+      //     .filter((armour) => !armour.meta[0].traits.includes('Shield'))
+      //     .filter((armour) => armour.meta[0].traits.find((trait) => trait.indexOf('Powered') >= 0 ))
+      //     .sort((a, b) => a.meta[0].armourRating < b.meta[0].armourRating ? 1 : -1)
+      //     .find((i) => true);
+      //   if (wornArmour) {
+      //     let poweredString = wornArmour.meta[0].traits.find((trait)=>trait.includes('Powered'));
+      //     if (poweredString) {
+      //       const trait = this.normalizeTrait(poweredString);
+      //       if ( trait.variant) {
+      //         poweredStrength = parseInt(trait.variant);
+      //         let strength = attributes.find((a)=>a.key==='strength');
+      //         strength.adjustedRating += poweredStrength;
+      //         strength.adjustment += poweredStrength;
+      //         strength.modifiers.push(`+${poweredStrength} • ${wornArmour.name} (Powered Armour)`);
+      //       }
+      //     }
+      //   }
+      // }
 
       return attributes;
     },
@@ -2211,38 +2274,38 @@ export default {
       });
 
       // We search all enhancements that have TRAIT modifications
-      this.enhancements
-      .filter((enhancement) => enhancement.targetGroup==='traits')
-      .forEach((enhancement) => {
-        // {"targetGroup":"attributes","targetValue":"strength","modifier":1,"source":"species"}
-        let traity = finalTraits.find((a) => a.key === enhancement.targetValue);
-        let mody = enhancement.modifier;
-        if (enhancement.rank) {
-          mody += (enhancement.rank * this.characterRank );
-        }
-        if (enhancement.modifierPerAscendedTier) {
-          mody += (enhancement.modifierPerAscendedTier * enhancement.ascendedTiers);
-        }
-        if ( traity ) {
-          const modifier = {
-            value: mody,
-            valueString: `${mody < 0 ? '-' : '+'}${mody}`,
-            type: 'MODIFIER',
-            condition: enhancement.condition || null,
-            provider: enhancement.provider,
-            category: enhancement.category,
-          };
-          traity.modifiers.push(modifier);
-          if (enhancement.condition) {
-            traity.conditionalAdjustment += mody;
-          } else {
-            traity.adjustment += mody;
-            traity.adjustedRating += mody;
-          }
-        } else {
-          console.warn(`Unexpected undefined trait for ${enhancement.targetValue}.`);
-        }
-      });
+      // this.enhancements
+      // .filter((enhancement) => enhancement.targetGroup==='traits')
+      // .forEach((enhancement) => {
+      //   // {"targetGroup":"attributes","targetValue":"strength","modifier":1,"source":"species"}
+      //   let traity = finalTraits.find((a) => a.key === enhancement.targetValue);
+      //   let mody = enhancement.modifier;
+      //   if (enhancement.rank) {
+      //     mody += (enhancement.rank * this.characterRank );
+      //   }
+      //   if (enhancement.modifierPerAscendedTier) {
+      //     mody += (enhancement.modifierPerAscendedTier * enhancement.ascendedTiers);
+      //   }
+      //   if ( traity ) {
+      //     const modifier = {
+      //       value: mody,
+      //       valueString: `${mody < 0 ? '-' : '+'}${mody}`,
+      //       type: 'MODIFIER',
+      //       condition: enhancement.condition || null,
+      //       provider: enhancement.provider,
+      //       category: enhancement.category,
+      //     };
+      //     traity.modifiers.push(modifier);
+      //     if (enhancement.condition) {
+      //       traity.conditionalAdjustment += mody;
+      //     } else {
+      //       traity.adjustment += mody;
+      //       traity.adjustedRating += mody;
+      //     }
+      //   } else {
+      //     console.warn(`Unexpected undefined trait for ${enhancement.targetValue}.`);
+      //   }
+      // });
 
       if (this.armour && this.armour.length > 0) {
         let resilience = finalTraits.find((a) => a.key === 'resilience');
@@ -2326,12 +2389,12 @@ export default {
       const spend = this.$store.getters['characters/characterFaithSpendById'](this.characterId);
 
       let points = 0;
-      this.enhancements
-          .filter((enhancement) => enhancement.targetGroup==='resources')
-          .filter((enhancement) => enhancement.targetValue==='faith')
-          .forEach((enhancement) => {
-            points += enhancement.modifier;
-          });
+      // this.enhancements
+      //     .filter((enhancement) => enhancement.targetGroup==='resources')
+      //     .filter((enhancement) => enhancement.targetValue==='faith')
+      //     .forEach((enhancement) => {
+      //       points += enhancement.modifier;
+      //     });
 
       return { points, spend };
     },
@@ -2380,34 +2443,34 @@ export default {
        */
 
       // We search all enhancements that have SKILL modifications
-      this.enhancements
-      .filter((enhancement) => enhancement.targetGroup==='skills')
-      .forEach((enhancement) => {
-        let skill = skills.find((a) => a.key === enhancement.targetValue);
-        let mody = enhancement.modifier;
-        if (enhancement.rank) {
-          mody += (enhancement.rank * this.characterRank);
-        }
-        if ( skill ) {
-          const modifier = {
-            value: mody,
-            valueString: `${mody < 0 ? '-' : '+'}${mody}`,
-            type: 'MODIFIER',
-            condition: enhancement.condition || null,
-            provider: enhancement.provider,
-            category: enhancement.category,
-          };
-          skill.modifiers.push(modifier);
-          if (enhancement.condition) {
-            skill.conditionalAdjustment += mody;
-          } else {
-            skill.adjustment += mody;
-            skill.adjustedRating += mody;
-          }
-        } else {
-          console.warn(`Unexpected undefined skill for ${enhancement.targetValue}.`);
-        }
-      });
+      // this.enhancements
+      // .filter((enhancement) => enhancement.targetGroup==='skills')
+      // .forEach((enhancement) => {
+      //   let skill = skills.find((a) => a.key === enhancement.targetValue);
+      //   let mody = enhancement.modifier;
+      //   if (enhancement.rank) {
+      //     mody += (enhancement.rank * this.characterRank);
+      //   }
+      //   if ( skill ) {
+      //     const modifier = {
+      //       value: mody,
+      //       valueString: `${mody < 0 ? '-' : '+'}${mody}`,
+      //       type: 'MODIFIER',
+      //       condition: enhancement.condition || null,
+      //       provider: enhancement.provider,
+      //       category: enhancement.category,
+      //     };
+      //     skill.modifiers.push(modifier);
+      //     if (enhancement.condition) {
+      //       skill.conditionalAdjustment += mody;
+      //     } else {
+      //       skill.adjustment += mody;
+      //       skill.adjustedRating += mody;
+      //     }
+      //   } else {
+      //     console.warn(`Unexpected undefined skill for ${enhancement.targetValue}.`);
+      //   }
+      // });
 
       return skills;
     },
@@ -2788,7 +2851,12 @@ export default {
 
       return abilities;
     },
-
+ filteredHeaders() {
+      if (this.characterArchetype.prepared === false) {
+        return this.psychicPowersHeaders.filter(h => h.value !== 'cast');
+      }
+      return this.psychicPowersHeaders;
+    },
     otherAbilities() {
       const abilities = [];
 
@@ -2932,6 +3000,7 @@ export default {
       }
       return [];
     },
+
     mutations() {
       const finalMutations = [];
 
@@ -3132,6 +3201,30 @@ export default {
              rank: levelIndex,
              cell: i,
              trait: rawTalent?.traits
+          }
+
+            if (spell.damage && spell.heightening?.damage /*&& spell.key === 'grisly-growths'*/) {
+
+
+                const cant = this.characterArchetype.spellProgression[this.characterLevel()].findIndex(
+                                    (t) => t == 0
+              ) - 1;
+
+          const index = spell.damage?.formula?.indexOf("d", 0);
+          ///Кубики до и после
+          const dice = spell.damage?.formula?.slice(0, index);
+          const diceSize = spell.damage.formula?.slice(index + 1);
+
+          const heightened = Object.values(spell.heightening?.damage)[0];
+
+          const index1 = heightened?.indexOf("d", 0);
+          const diceInterval = heightened?.slice(0, index1);
+          const interval = spell.heightening?.interval;
+
+          const rank = spell.traits.join(',').includes('заговор') ? cant : spell.rank;
+
+          const powerLevel2 = parseInt(dice) + (rank - interval) * (parseInt(diceInterval));
+          spell.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
           }
 
           // if (spell?.cast === true)
@@ -3448,7 +3541,34 @@ export default {
       }
       this.loading = false;
     },
+     handleClick(e, level, value) {
+      if (e.button === 0) { // ЛКМ
+        this.addBullet(level, value + 1);
+      } else if (e.button === 2) { // ПКМ
+        this.removeBullet(level, value - 1);
+      }
+    },
+    addBullet(level, value) {
+      const progression = this.characterArchetype.spellProgression[this.characterLevel()]?.[level] || 0;
+            if (!this.characterSpont[level] ) {
+         this.$store.commit('characters/addCharacterSpontSpell', { id: this.characterId, level: level, value: 1 })
+      }else
+      if (this.characterSpont[level].value < progression) {
+         this.$store.commit('characters/addCharacterSpontSpell', { id: this.characterId, level: level, value: value })
+      }
 
+
+    },
+    removeBullet(level, value) {
+      const progression = this.characterArchetype.spellProgression[this.characterLevel()]?.[level] || 0;
+            if (!this.characterSpont[level] ) {
+         this.$store.commit('characters/addCharacterSpontSpell', { id: this.characterId, level: level, value: 0 })
+      }else
+      if (value >= 0) {
+         this.$store.commit('characters/addCharacterSpontSpell', { id: this.characterId, level: level, value: value })
+      }
+
+    },
     async getAscensionPackageList(ascensionList) {
 
       let packages = [];
@@ -3713,6 +3833,7 @@ export default {
         return pp + gp + sp + cp;
       }
     },
+
     toggleResource(resourceItem, index) {
       const id = this.characterId;
       const resourceKey = resourceItem.key;
@@ -4019,5 +4140,28 @@ td.small {
   /* background-color: #f0f0f0; */
   text-decoration: line-through;
   color: #999;
+}
+</style>
+
+<style>
+.ammo-container {
+  font-size: 2rem;
+}
+.magazine {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+  user-select: none;
+}
+.bullet {
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+.bullet.filled {
+  opacity: 1;
+}
+.controls button {
+  margin-right: 10px;
 }
 </style>

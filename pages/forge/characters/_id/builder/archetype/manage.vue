@@ -383,7 +383,8 @@ export default {
       );
 
       const skill = this.skillRepository;
-      const weapon = this.wargearList.filter(s => ['melee', 'ranged'].includes(s.type));
+      
+      const weapon = this.wargearList ? this.wargearList.filter(s => ['melee', 'ranged'].includes(s.type)) : undefined;
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
 
       if (this.abilityList !== undefined && this.actionList !== undefined ) {
@@ -628,7 +629,7 @@ export default {
         source: "archetype"
       };
 
-      const level = mod.level;
+      const level = this.characterLevel;
       this.$store.commit('characters/clearCharacterClassModFeature', { id: this.characterId, content: mod });
       this.$store.commit('characters/addCharacterClassModFeature', { id: this.characterId, content: mod });
 
@@ -673,7 +674,7 @@ export default {
       const trait = feature.options.find(s => s.key === feature.selected).trait;
       if(trait)
       {
-  const payload = {
+        const payload = {
             name: trait,
             source: feature.key,
             type: 'keyword',
@@ -688,14 +689,52 @@ export default {
         if(trait !== 'Без')
           this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
 
-}
-          
-      // this.$store.commit("characters/addCharacterModifications", {
-      //   id: this.characterId,
-      //   content: { modifications: mod, source: "archetype" },
-      // });
+      }
 
-      //this.$store.commit('characters/clearCharacterEnhancementsBySource', { id: this.characterId, source: `archetype` });
+
+      ////модификации
+      if (feature.options.find(s => s.key === feature.selected).modification) {
+        const key = feature.key
+        const mod1 = [];
+        mod1.push(
+          {
+            ...feature.options.find(s => s.key === feature.selected).modification,
+            featureKey: key,
+          }
+
+        )
+        const second = this.item.archetypeFeatures.find(s => s.key === "Second Path")?.selected;
+        const first = this.item.archetypeFeatures.find(s => s.key === "Perfection Path")?.selected;
+
+        const match2 = second.match(/^\D+/) ? second.match(/^\D+/)[0] : '';
+
+                  this.$store.commit('characters/removeCharacterModificationByFeature', {
+            id: this.characterId,
+            featureKey: key,
+
+          });
+
+
+        if (feature.key !== "Third Path" || (feature.selected.match(/^\D+/)[0] === match2 || feature.selected.match(/^\D+/)[0] === first)) {
+
+          this.$store.commit("characters/addCharacterModifications", {
+            id: this.characterId,
+            content: { modifications: mod1, source: "archetype" },
+          });
+
+        }
+
+          this.$store.commit("characters/clearModification", {
+            id: this.characterId,
+            level,
+          });
+          this.$store.commit("characters/setModification", {
+            id: this.characterId,
+            level,
+          });
+    
+      }
+
       // if ( selectedOption.snippet ) {
       //   const content = {
       //     modifications: [{

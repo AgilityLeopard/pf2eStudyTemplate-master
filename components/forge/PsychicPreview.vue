@@ -202,9 +202,16 @@
               <p class="main-holder" v-if="item.duration.value">
                 <strong>Длительность:</strong>
                 <span v-if="item.duration.sustained === true"
-                  >Поддерживомое до
+                  >Поддерживаемое до
                 </span>
                 {{ item.duration.value }}
+              </p>
+            </div>
+
+            <div>
+              <p class="main-holder" v-if="item.Power">
+                <strong>Урон на этом уровне:</strong>
+                <span v-html="item.Power"></span>
               </p>
             </div>
             <p></p>
@@ -524,8 +531,32 @@ export default {
 
       // filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
 
-      const rank = this.rank;
+      //const rank = this.rank;
+const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
+                      (t) => t == 0
+      ) - 1;
 
+      filteredTalents.forEach(spell => {
+        if (spell.damage && spell.heightening?.damage /*&& spell.key === 'grisly-growths'*/) {
+
+          const index = spell.damage?.formula?.indexOf("d", 0);
+          ///Кубики до и после
+          const dice = spell.damage?.formula?.slice(0, index);
+          const diceSize = spell.damage.formula?.slice(index + 1);
+
+          const heightened = Object.values(spell.heightening?.damage)[0];
+
+          const index1 = heightened?.indexOf("d", 0);
+          const diceInterval = heightened?.slice(0, index1);
+          const interval = spell.heightening?.interval;
+
+          const rank = spell.traits.join(',').includes('заговор') ? cant : spell.rank;
+
+          const powerLevel2 = parseInt(dice) + (rank - interval) * (parseInt(diceInterval));
+          spell.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
+        }
+      }
+    );
       filteredTalents.forEach(spell =>
       {
         if (spell.heightening)
@@ -622,6 +653,8 @@ export default {
 
 
       // )
+
+
       if (!filteredTalents.find(spell => spell.ritual))
           return filteredTalents.filter(talent => talent.level <= this.level || this.level === 0 && talent.traits.join(',').includes('заговор'));
       else

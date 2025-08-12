@@ -458,6 +458,10 @@ export const getters = {
   characterSpellsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].spells : [],
 
+
+  characterSpellsSpontaneousById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].spellsSpontaneous : [],
+
   characterRitualSpellsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ritualSpells : [],
   // Wargear
@@ -1918,6 +1922,14 @@ export const mutations = {
 
 
   },
+  removeCharacterModificationByFeature(state, payload) {
+    const character = state.characters[payload.id];
+
+
+    character.enhancements = character.enhancements.filter(
+      (e) => payload.featureKey !== e.featureKey
+    );
+  },
   setCharacterSpeciesModifications(state, payload) {
     const character = state.characters[payload.id];
 
@@ -2016,6 +2028,22 @@ export const mutations = {
     character.spells.push(talent);
 
   },
+  addCharacterSpontSpell(state, payload) {
+    const character = state.characters[payload.id];
+    if (character.spellsSpontaneous.find(t => t.level === payload.level))
+      character.spellsSpontaneous.find(t => t.level === payload.level).value = payload.value
+    else
+      character.spellsSpontaneous.push(payload);
+  },
+  // removeCharacterSpontSpell(state, payload) {
+  //   const character = state.characters[payload.id];
+  //   if (character.spellsSpontaneous.find(t => t.level === payload.level))
+  //     character.spellsSpontaneous.find(t => t.level === payload.level).value = payload.value
+  //   else
+  //     character.spellsSpontaneous.push = payload;
+  //   character.spellsSpontaneous[payload.level] = payload.value <= 0 ? 0 : payload.value - 1 ; // cleanup
+
+  // },
   editCharacterSpell(state, payload) {
     const character = state.characters[payload.id];
     const spell = character.spells.find((t) => t.id === payload.talentId); // cleanup
@@ -2721,6 +2749,7 @@ const getDefaultState = () => ({
     wisdom: 0,
     charisma: 0,
   },
+  spellsSpontaneous: [],
   money: {
     pp: 0,
     gp: 15,

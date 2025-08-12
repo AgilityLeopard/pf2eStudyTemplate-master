@@ -562,6 +562,7 @@ const playerCore = [
         trait: ["бард"],
         rarity: "common",
         skillTrainedChoice: [],
+        prepared: false,
         skillTrained: ['occultism', 'perfomance'],
         skillTrainedPoints: 4,
         spellTradition: 'оккультный',
@@ -785,6 +786,7 @@ const playerCore = [
         skillTrainedChoice: [],
         skillTrained: ['nature'],
         skillTrainedPoints: 2,
+        prepared: true,
         spellTradition: 'природный',
         spellProgression: {
             1: [5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1020,6 +1022,7 @@ const playerCore = [
         name: 'Жрец',
         keywords: 'жрец',
         hitpoints: 8,
+        prepared: true,
         // keyAbility: ["dexterity", "strength"],
         keyAbility: [],
         trait: ["жрец"],
@@ -1191,6 +1194,7 @@ const playerCore = [
         name: 'Чародей',
         keywords: 'чародей',
         hitpoints: 6,
+        prepared: false,
         keyAbility: ["charisma"],
         trait: ["чародей"],
         rarity: "common",
@@ -1406,6 +1410,7 @@ const playerCore = [
         hitpoints: 6,
         keyAbility: ["intelligence"],
         trait: ["волшебник"],
+        prepared: true,
         rarity: "common",
         skillTrainedChoice: [],
         skillTrained: ["arcana"],
@@ -1600,6 +1605,7 @@ const playerCore2 = [
         ...archetype(source.playerCore2.key, 92, 'Oracle'),
         ...cost(12, 0, 12, 0, 0),
         ...statBoost(0, 0, 0, 0, 0, 1),
+        prepared: false,
         hint: 'Ваш проводник божественной силы сторонится традиционных каналов молитвы и служения - вместо этого вы собираете сакральные истины, которые выходят за рамки любого отдельного божества. Вы понимаете великие тайны вселенной, воплощенные во всеобъемлющих концепциях, которые превосходят добро и зло или хаос и порядок, независимо от того, воспринимаете ли вы общую связь между несколькими божествами или полностью обходите стороной их силу. Вы исследуете одну из этих тайн и используете ее силу, чтобы творить чудесные заклинания, но эта сила стоит ужасную цену: чем больше вы ее используете, тем сильнее становится проклятие. Ваши умения - обоюдоострый меч, который вы можете поддерживать как божественный инструмент или как проклятие богов.',
         name: 'Оракул',
         keywords: 'оракул',
@@ -2254,6 +2260,7 @@ const playerCore2 = [
         hint: 'Вы повелеваете могущественной магией не через изучение или преданность какому-либо идеалу, но как сосуд или представитель таинственного, потустороннего покровителя, которого даже вы не совсем понимаете. Эта сущность может быть тайным божеством, могущественной феей, проявлением природных энергий, древним духом или любым другим могущественным сверхъестественным существом.',
         name: 'Ведьма',
         keywords: 'ведьма',
+        prepared: true,
         hitpoints: 6,
         keyAbility: ["intelligence"],
         trait: ["ведьма"],
@@ -2456,9 +2463,9 @@ const playerCore2 = [
 
     //Монах
     {
-        ...archetype(source.playerCore.key, 95, 'Monk'),
+        ...archetype(source.playerCore2.key, 95, 'Monk'),
         ...cost(10, 0, 0, 0, 0),
-        ...statBoost(1, 0, 0, 0, 0, 0), // Сила или Ловкость (на выбор)
+        ...statBoost(0, 0, 0, 0, 0, 0), // Сила или Ловкость (на выбор)
         hint: 'Разум и дух, вот что дает силу вашему кулаку. Вы стремитесь к совершенству, превращая своё тело в безупречный инструмент, а ум — в дисциплинированный оплот мудрости. Вы — ожесточенный боец, известный своими навыками боевых искусств и боевыми стойками.',
         name: 'Монах',
         keywords: 'монах',
@@ -2467,7 +2474,7 @@ const playerCore2 = [
         trait: ["монах"],
         rarity: "common",
         skillTrainedChoice: [],
-        skillTrained: ['acrobatics', 'athletics'],
+        skillTrained: [],
         skillTrainedPoints: 4,
         Perception: "T",
         skillAttack: {
@@ -2523,12 +2530,15 @@ const playerCore2 = [
 
         archetypeFeatures: [
             // Общие
+
             "Initial proficiencies", "Ancestry and background", "Skill feat", "General feat",
             "Skill increase", "Ancestry feat", "Stat boost",
             // Классовые
-            "Flurry of Blows", "Powerful Fist", "Mystic Strikes", "Ki Spells",
+            "Flurry of Blows", "Powerful Fist", "Mystic Strikes", "MoveMonk", "Perfection Path", "Second Path", "Third Path",
             // Обще-классовые
-            "Weapon Specialization", "Perfection Path", "Diamond Soul", "Quivering Palm"
+            "Weapon Specialization", "Perception Expertise Cleric", "Expert Strikes", "MonkDCExpert", "MasterGrace", "MasterStrikes", "AdamantineStrikes", "LegendaryGrace", "PerfectForm"
+
+
         ],
         modification: [
             {
@@ -2577,13 +2587,6 @@ const playerCore2 = [
                 level: 7
             },
             {
-                key: "fortitude",
-                upgrade: "M",
-                type: "Saving",
-                mode: "Upgrade",
-                level: 7,
-            },
-            {
                 key: "unarmored",
                 upgrade: "M",
                 mode: "Upgrade",
@@ -2611,20 +2614,20 @@ const playerCore2 = [
                 typeBonus: "status",
                 level: 11
             },
-            {
-                key: "reflex",
-                upgrade: "M",
-                type: "Saving",
-                mode: "Upgrade",
-                level: 11,
-            },
-            {
-                key: "will",
-                upgrade: "M",
-                type: "Saving",
-                mode: "Upgrade",
-                level: 15,
-            },
+            // {
+            //     key: "reflex",
+            //     upgrade: "M",
+            //     type: "Saving",
+            //     mode: "Upgrade",
+            //     level: 11,
+            // },
+            // {
+            //     key: "will",
+            //     upgrade: "M",
+            //     type: "Saving",
+            //     mode: "Upgrade",
+            //     level: 15,
+            // },
             {
                 key: "speed",
                 mode: "Bonus",

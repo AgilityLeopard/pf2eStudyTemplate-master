@@ -3,7 +3,6 @@
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row justify="center">
-
       <!-- Attribute Dialog -->
       <v-dialog
         v-model="attributeDialog"
@@ -12,14 +11,15 @@
         :fullscreen="$vuetify.breakpoint.xsOnly"
       >
         <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff;">
+          <v-card-title style="background-color: #262e37; color: #fff">
             Select Attribute modification
             <v-spacer />
             <v-icon dark @click="attributeDialog = false">close</v-icon>
           </v-card-title>
           <v-card-text class="pt-4">
             <v-select
-              dense outlined
+              dense
+              outlined
               v-model="statKey"
               :items="attributeRepository"
               item-text="name"
@@ -30,13 +30,18 @@
               v-model="statValue"
               label="Modification"
               type="number"
-              dense outlined
+              dense
+              outlined
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-btn color="error" @click="attributeDialog = false">Cancel</v-btn>
             <v-spacer />
-            <v-btn color="success" @click="addPrereqisite('attributes', statKey, statValue)">Add modification</v-btn>
+            <v-btn
+              color="success"
+              @click="addPrereqisite('attributes', statKey, statValue)"
+              >Add modification</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -49,14 +54,15 @@
         :fullscreen="$vuetify.breakpoint.xsOnly"
       >
         <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff;">
+          <v-card-title style="background-color: #262e37; color: #fff">
             Select Skill modification
             <v-spacer />
             <v-icon dark @click="skillDialog = false">close</v-icon>
           </v-card-title>
           <v-card-text class="pt-4">
             <v-select
-              dense outlined
+              dense
+              outlined
               v-model="statKey"
               :items="skillRepository"
               item-text="name"
@@ -67,13 +73,18 @@
               v-model="statValue"
               label="Modification"
               type="number"
-              dense outlined
+              dense
+              outlined
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-btn color="error" @click="skillDialog = false">Cancel</v-btn>
             <v-spacer />
-            <v-btn color="success" @click="addPrereqisite('skills', statKey, statValue)">Add modification</v-btn>
+            <v-btn
+              color="success"
+              @click="addPrereqisite('skills', statKey, statValue)"
+              >Add modification</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -86,16 +97,26 @@
         :fullscreen="$vuetify.breakpoint.xsOnly"
       >
         <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff;">
+          <v-card-title style="background-color: #262e37; color: #fff">
             Create Ability
             <v-spacer />
-            <v-icon dark @click="abilityDialog = false">
-              close
-            </v-icon>
+            <v-icon dark @click="abilityDialog = false"> close </v-icon>
           </v-card-title>
           <v-card-text class="pt-4">
-            <v-text-field v-model="featureName" label="Name" dense outlined required></v-text-field>
-            <v-textarea v-model="featureSnippet" label="Effect" dense outlined required></v-textarea>
+            <v-text-field
+              v-model="featureName"
+              label="Name"
+              dense
+              outlined
+              required
+            ></v-text-field>
+            <v-textarea
+              v-model="featureSnippet"
+              label="Effect"
+              dense
+              outlined
+              required
+            ></v-textarea>
           </v-card-text>
           <v-card-actions>
             <v-btn color="error" @click="abilityDialog = false">Cancel</v-btn>
@@ -106,17 +127,24 @@
       </v-dialog>
 
       <v-col :cols="12">
-
         <v-card v-if="species">
           <v-card-title></v-card-title>
           <v-divider></v-divider>
           <v-card-text class="pt-4">
             <v-row>
-              <v-col :cols="12" :sm="4"><v-text-field v-model="species.name" label="Species Name" dense outlined></v-text-field></v-col>
+              <v-col :cols="12" :sm="4"
+                ><v-text-field
+                  v-model="species.name"
+                  label="Species Name"
+                  dense
+                  outlined
+                ></v-text-field
+              ></v-col>
               <v-col :cols="12" :sm="4">
                 <v-select
                   label="Species Variant"
-                  dense outlined
+                  dense
+                  outlined
                   v-model="species.variant"
                   :items="speciesVariants"
                   item-text="name"
@@ -128,7 +156,8 @@
               <v-col :cols="12" :sm="4">
                 <v-select
                   label="Group / Faction"
-                  dense outlined
+                  dense
+                  outlined
                   v-model="species.group"
                   :items="groupOptions"
                   item-text="name"
@@ -137,82 +166,170 @@
                   persistent-hint
                 ></v-select>
               </v-col>
-              <v-col><v-text-field v-model="species.cost" label="XP Cost" dense outlined></v-text-field></v-col>
-              <v-col><v-text-field v-model="species.baseTier" label="Base Tier" dense outlined></v-text-field></v-col>
-              <v-col><v-text-field v-model="species.speed" label="Speed" dense outlined></v-text-field></v-col>
+              <v-col
+                ><v-text-field
+                  v-model="species.cost"
+                  label="XP Cost"
+                  dense
+                  outlined
+                ></v-text-field
+              ></v-col>
+              <v-col
+                ><v-text-field
+                  v-model="species.baseTier"
+                  label="Base Tier"
+                  dense
+                  outlined
+                ></v-text-field
+              ></v-col>
+              <v-col
+                ><v-text-field
+                  v-model="species.speed"
+                  label="Speed"
+                  dense
+                  outlined
+                ></v-text-field
+              ></v-col>
             </v-row>
             <div>
-              <p v-if="attributes"><strong>Attributes:</strong>
-                <span v-for="attribute in attributes">{{`${getAttributeByKey(attribute.value).name} ${attribute.threshold}`}}
-                    <v-icon color="error" small @click="removePrerequisite(attribute.value)">remove_circle</v-icon>, </span>
+              <p v-if="attributes">
+                <strong>Attributes:</strong>
+                <span v-for="attribute in attributes"
+                  >{{
+                    `${getAttributeByKey(attribute.value).name} ${
+                      attribute.threshold
+                    }`
+                  }}
+                  <v-icon
+                    color="error"
+                    small
+                    @click="removePrerequisite(attribute.value)"
+                    >remove_circle</v-icon
+                  >,
+                </span>
               </p>
             </div>
             <div>
-              <p v-if="skills"><strong>Skills:</strong>
-                <span v-for="skill in skills">{{`${getSkillByKey(skill.value).name} ${skill.threshold}`}}
-                    <v-icon color="error" small @click="removePrerequisite(skill.value)">remove_circle</v-icon>, </span>
+              <p v-if="skills">
+                <strong>Skills:</strong>
+                <span v-for="skill in skills"
+                  >{{
+                    `${getSkillByKey(skill.value).name} ${skill.threshold}`
+                  }}
+                  <v-icon
+                    color="error"
+                    small
+                    @click="removePrerequisite(skill.value)"
+                    >remove_circle</v-icon
+                  >,
+                </span>
               </p>
             </div>
             <div>
               <div v-for="feature in species.speciesFeatures">
-                <p v-if="feature.modifications"><strong>{{ feature.name }}:</strong>
-                  <span v-for="m in feature.modifications">{{`${m.targetValue} ${m.modifier>0?'+':''}${m.modifier}`}}
-                    <v-icon color="error" small @click="removeModification(m.targetValue)">remove_circle</v-icon>, </span>
+                <p v-if="feature.modifications">
+                  <strong>{{ feature.name }}:</strong>
+                  <span v-for="m in feature.modifications"
+                    >{{
+                      `${m.targetValue} ${m.modifier > 0 ? "+" : ""}${
+                        m.modifier
+                      }`
+                    }}
+                    <v-icon
+                      color="error"
+                      small
+                      @click="removeModification(m.targetValue)"
+                      >remove_circle</v-icon
+                    >,
+                  </span>
                 </p>
-                <p v-else><strong>{{ feature.name }}:</strong> {{ feature.snippet }} <v-icon color="error" small @click="removeAbility(feature.name)">remove_circle</v-icon></p>
+                <p v-else>
+                  <strong>{{ feature.name }}:</strong> {{ feature.snippet }}
+                  <v-icon
+                    color="error"
+                    small
+                    @click="removeAbility(feature.name)"
+                    >remove_circle</v-icon
+                  >
+                </p>
               </div>
             </div>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-text>
-            <v-btn outlined small color="primary" @click="attributeDialog = true">Add Attribute</v-btn>
-            <v-btn outlined small color="primary" @click="skillDialog = true">Add Skill</v-btn>
-            <v-btn outlined small color="primary" @click="abilityDialog = true">Add Ability</v-btn>
+            <v-btn
+              outlined
+              small
+              color="primary"
+              @click="attributeDialog = true"
+              >Add Attribute</v-btn
+            >
+            <v-btn outlined small color="primary" @click="skillDialog = true"
+              >Add Skill</v-btn
+            >
+            <v-btn outlined small color="primary" @click="abilityDialog = true"
+              >Add Ability</v-btn
+            >
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="success" small @click="addCustomSpecies">Save Species</v-btn>
+            <v-btn color="success" small @click="addCustomSpecies"
+              >Save Species</v-btn
+            >
           </v-card-actions>
         </v-card>
-
       </v-col>
 
       <v-col :cols="12">
         <v-card class="mt-2">
           <v-card-text>
-            <pre>{{species}}</pre>
+            <pre>{{ species }}</pre>
           </v-card-text>
         </v-card>
-
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import SluggerMixin from '~/mixins/SluggerMixin';
-import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
-import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
+import SluggerMixin from "~/mixins/SluggerMixin";
+import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
+import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
 
 export default {
-  name: 'Edit',
+  name: "Edit",
   components: {
     DodDefaultBreadcrumbs,
   },
-  mixins: [
-    SluggerMixin,
-    StatRepositoryMixin,
-  ],
+  mixins: [SluggerMixin, StatRepositoryMixin],
   asyncData({ params }) {
     return {
       speciesKey: params.key,
       breadcrumbItems: [
-        { text: '', disabled: false, nuxt: true, exact: true, to: '/' },
-        { text: 'Forge', disabled: false, nuxt: true, exact: true, to: '/forge/my-characters' },
-        { text: 'Species', disabled: false, nuxt: true, exact: true, to: '/forge/species' },
-        { text: 'Some fancy name', disabled: false, nuxt: true, exact: true, to: '' },
-      ]
+        { text: "", disabled: false, nuxt: true, exact: true, to: "/" },
+        {
+          text: "Forge",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/forge/my-characters",
+        },
+        {
+          text: "Species",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/forge/species",
+        },
+        {
+          text: "Some fancy name",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "",
+        },
+      ],
     };
   },
   data() {
@@ -221,43 +338,55 @@ export default {
       showAttributeEditor: true,
       showSkillEditor: true,
       showAbilityEditor: true,
-      statKey: '',
+      statKey: "",
       statValue: 0,
-      featureName: '',
-      featureSnippet: '',
+      featureName: "",
+      featureSnippet: "",
       attributeDialog: false,
       skillDialog: false,
       abilityDialog: false,
       species: undefined,
       groupOptions: [
-        { name: 'Other' },
-        { name: 'Mankind' },
-        { name: 'Aeldari' },
-        { name: 'Orks' },
-        { name: 'Chaos' },
-        { name: 'Necrons' },
-        { name: 'Tau' },
-        { name: 'Tyranids' },
+        { name: "Other" },
+        { name: "Mankind" },
+        { name: "Aeldari" },
+        { name: "Orks" },
+        { name: "Chaos" },
+        { name: "Necrons" },
+        { name: "Tau" },
+        { name: "Tyranids" },
       ],
       speciesVariants: [
-        { key: '', name: 'No Variant', source: '' },
-        { key: 'core-human', name: 'Human', source: 'core' },
-        { key: 'core-eldar', name: 'Eldar', source: 'core' },
-        { key: 'core-ork', name: 'Ork', source: 'core' },
-        { key: 'core-adeptus-astartes', name: 'Adeptus Astartes', source: 'core' },
-        { key: 'core-primaris-astartes', name: 'Primaris Astartes', source: 'core' },
+        { key: "", name: "No Variant", source: "" },
+        { key: "core-human", name: "Human", source: "core" },
+        { key: "core-eldar", name: "Eldar", source: "core" },
+        { key: "core-ork", name: "Ork", source: "core" },
+        {
+          key: "core-adeptus-astartes",
+          name: "Adeptus Astartes",
+          source: "core",
+        },
+        {
+          key: "core-primaris-astartes",
+          name: "Primaris Astartes",
+          source: "core",
+        },
       ],
     };
   },
   computed: {
     speciesListener() {
-      return this.$store.getters['species/getSpecies'](this.speciesKey);
+      return this.$store.getters["species/getSpecies"](this.speciesKey);
     },
     attributes() {
-      return this.species.prerequisites ? this.species.prerequisites.filter((p)=>p.group==='attributes') : undefined;
+      return this.species.prerequisites
+        ? this.species.prerequisites.filter((p) => p.group === "attributes")
+        : undefined;
     },
     skills() {
-      return this.species.prerequisites ? this.species.prerequisites.filter((p)=>p.group==='skills') : undefined;
+      return this.species.prerequisites
+        ? this.species.prerequisites.filter((p) => p.group === "skills")
+        : undefined;
     },
   },
   watch: {
@@ -272,35 +401,56 @@ export default {
   },
   methods: {
     loadSpecies() {
-      const species = this.$store.getters['species/getSpecies'](this.speciesKey);
+      const species = this.$store.getters["species/getSpecies"](
+        this.speciesKey
+      );
       this.species = JSON.parse(JSON.stringify(species));
     },
     addModification() {
       const reps = [...this.attributeRepository, ...this.traitRepository];
       const newModification = reps.find((i) => i.key === this.statKey);
-      let currentAttributeMod = this.species.speciesFeatures.find((f) => f.name === 'Attribute Modifications');
-      if ( currentAttributeMod === undefined ) {
+      let currentAttributeMod = this.species.speciesFeatures.find(
+        (f) => f.name === "Attribute Modifications"
+      );
+      if (currentAttributeMod === undefined) {
         this.addAttributes();
-        currentAttributeMod = this.species.speciesFeatures.find((f) => f.name === 'Attribute Modifications');
+        currentAttributeMod = this.species.speciesFeatures.find(
+          (f) => f.name === "Attribute Modifications"
+        );
       }
       const modification = {
-        targetGroup: newModification.type ? 'traits' : 'attributes',
+        targetGroup: newModification.type ? "traits" : "attributes",
         targetValue: this.statKey,
         modifier: parseInt(this.statValue),
       };
       currentAttributeMod.modifications.push(modification);
-      currentAttributeMod.snippet = currentAttributeMod.modifications.map((m) => `${m.targetValue} ${m.modifier>0?'+':''}${m.modifier}`).join(', ');
+      currentAttributeMod.snippet = currentAttributeMod.modifications
+        .map(
+          (m) => `${m.targetValue} ${m.modifier > 0 ? "+" : ""}${m.modifier}`
+        )
+        .join(", ");
       this.attributeDialog = false;
     },
     removeModification(key) {
-      let currentAttributeMod = this.species.speciesFeatures.find((f) => f.name === 'Attribute Modifications');
+      let currentAttributeMod = this.species.speciesFeatures.find(
+        (f) => f.name === "Attribute Modifications"
+      );
       if (currentAttributeMod) {
-        currentAttributeMod.modifications = currentAttributeMod.modifications.filter((m)=>m.targetValue !== key);
+        currentAttributeMod.modifications =
+          currentAttributeMod.modifications.filter(
+            (m) => m.targetValue !== key
+          );
       }
-      if (currentAttributeMod.modifications.length<=0) {
-        this.species.speciesFeatures = this.species.speciesFeatures.filter((f) => f.name !== 'Attribute Modifications');
+      if (currentAttributeMod.modifications.length <= 0) {
+        this.species.speciesFeatures = this.species.speciesFeatures.filter(
+          (f) => f.name !== "Attribute Modifications"
+        );
       } else {
-        currentAttributeMod.snippet = currentAttributeMod.modifications.map((m) => `${m.targetValue} ${m.modifier>0?'+':''}${m.modifier}`).join(', ');
+        currentAttributeMod.snippet = currentAttributeMod.modifications
+          .map(
+            (m) => `${m.targetValue} ${m.modifier > 0 ? "+" : ""}${m.modifier}`
+          )
+          .join(", ");
       }
     },
     addPrereqisite(group, value, thresholdString) {
@@ -309,13 +459,16 @@ export default {
         value: value,
         threshold: parseInt(thresholdString),
       };
-      if (this.species.prerequisites === undefined) this.species.prerequisites = [];
+      if (this.species.prerequisites === undefined)
+        this.species.prerequisites = [];
       this.species.prerequisites.push(prerequisite);
       this.attributeDialog = false;
       this.skillDialog = false;
     },
     removePrerequisite(prerequisiteValueKey) {
-      this.species.prerequisites = this.species.prerequisites.filter((p) => p.value !== prerequisiteValueKey);
+      this.species.prerequisites = this.species.prerequisites.filter(
+        (p) => p.value !== prerequisiteValueKey
+      );
     },
     addCustomSpecies() {
       const key = this.speciesKey;
@@ -324,10 +477,10 @@ export default {
       species.costs.total = species.cost;
       species.costs.species = species.cost;
 
-      this.$store.commit('species/update', { key, species });
+      this.$store.commit("species/update", { key, species });
 
       this.$router.push({
-        name: 'forge-species',
+        name: "forge-species",
       });
     },
     addAbility() {
@@ -336,18 +489,20 @@ export default {
         snippet: this.featureSnippet,
       };
       this.species.speciesFeatures.push(ability);
-      this.featureName  = '';
-      this.featureSnippet  = '';
+      this.featureName = "";
+      this.featureSnippet = "";
       this.abilityDialog = false;
     },
-    removeAbility(abilityName){
-      this.species.speciesFeatures = this.species.speciesFeatures.filter((f) => f.name !== abilityName);
+    removeAbility(abilityName) {
+      this.species.speciesFeatures = this.species.speciesFeatures.filter(
+        (f) => f.name !== abilityName
+      );
     },
     addAttributes() {
       const modifications = [];
-      const attributeSnippet = '';
+      const attributeSnippet = "";
       const ability = {
-        name:'Attribute Modifications',
+        name: "Attribute Modifications",
         snippet: attributeSnippet,
         modifications: [],
       };
@@ -358,10 +513,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  pre {
-    white-space: pre-wrap;       /* Since CSS 2.1 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
-  }
+pre {
+  white-space: pre-wrap; /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
 </style>

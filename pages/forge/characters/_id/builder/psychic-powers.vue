@@ -129,7 +129,7 @@
 
               <template v-slot:item.duration="{ item }">
                 <span v-if="item?.duration?.sustained === true"
-                  >Поддерживомое до
+                  >Поддерживаемое до
                 </span>
                 {{ item?.duration?.value }}
               </template>
@@ -759,7 +759,7 @@
 
               <template v-slot:item.duration="{ item }">
                 <span v-if="item?.duration?.sustained === true"
-                  >Поддерживомое до
+                  >Поддерживаемое до
                 </span>
                 {{ item?.duration?.value }}
               </template>
@@ -1083,11 +1083,18 @@
             <p class="main-holder" v-if="selectedItem.duration.value">
               <strong>Длительность:</strong>
               <span v-if="selectedItem.duration.sustained === true"
-                >Поддерживомое до
+                >Поддерживаемое до
               </span>
               {{ selectedItem.duration.value }}
             </p>
           </div>
+          <div>
+            <p class="main-holder" v-if="selectedItem.Power">
+              <strong>Урон на этом уровне:</strong>
+              <span v-html="selectedItem.Power"></span>
+            </p>
+          </div>
+          <p></p>
           <p></p>
           <div class="line"></div>
           <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
@@ -1450,7 +1457,9 @@ characterSpellRitual(cell, spell)
 
       const characterTalents = this.$store.getters['characters/characterSpellsById'](this.characterId);
 
-
+      const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
+                      (t) => t == 0
+                    ) - 1;
       const talents = characterTalents.filter((t) => t).map((talent) => {
 
       const rawTalent = this.psychicPowersList.find((r) => r.key === talent.key);
@@ -1474,6 +1483,23 @@ characterSpellRitual(cell, spell)
 
         aggregatedTalent.id = talent.id;
 
+        if (aggregatedTalent.damage && aggregatedTalent.heightening?.damage /*&& spell.key === 'grisly-growths'*/) {
+
+          const index = aggregatedTalent.damage?.formula?.indexOf("d", 0);
+          ///Кубики до и после
+          const dice = aggregatedTalent.damage?.formula?.slice(0, index);
+          const diceSize = aggregatedTalent.damage.formula?.slice(index + 1);
+
+          const heightened = Object.values(aggregatedTalent.heightening?.damage)[0];
+
+          const index1 = heightened?.indexOf("d", 0);
+          const diceInterval = heightened?.slice(0, index1);
+          const interval = aggregatedTalent.heightening?.interval;
+          const rank = aggregatedTalent.traits.join(',').includes('заговор') ? cant : talent.rank;
+          
+          const powerLevel2 = parseInt(dice) + (rank - interval) * (parseInt(diceInterval));
+          aggregatedTalent.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
+        }
         // aggregatedTalent.cost = talent.cost;
 
         aggregatedTalent.label = aggregatedTalent.name;
