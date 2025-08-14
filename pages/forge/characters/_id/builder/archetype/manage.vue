@@ -121,8 +121,18 @@
             @input="changeSelectedOption(feature, item)"
        
           >
+
           </v-select>
+
            <div v-if="feature.selected && feature.type !== 'Skill Choice' && feature.type !== 'Weapon Choice'">
+             <div>
+              <trait-view
+                v-if="feature.options.find(s=> s.key === feature.selected)"
+                :item="feature.options.find(s=> s.key === feature.selected)"
+                class="mb-2"
+                style="font-size: 14px"
+              />
+            </div>
              <p><div v-if="feature.options.find(s=> s.key === feature.selected).snippet" v-html="feature.options.find(s=> s.key === feature.selected).snippet"></div></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).feat"><strong>Черта:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).feat"></span></p>
              <p v-if="feature.options.find(s=> s.key === feature.selected).spell"><strong>Заклинание:</strong> <span  v-html="feature.options.find(s=> s.key === feature.selected).spell"></span></p>
@@ -164,10 +174,11 @@ import SluggerMixin from '~/mixins/SluggerMixin';
 import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
 import StatRepository from '~/mixins/StatRepositoryMixin';
 import WargearTraitRepository from '~/mixins/WargearTraitRepositoryMixin';
+import traitView from '~/components/TraitView';
 
 export default {
   name: 'archetype-manage',
-  components: { ArchetypePreview },
+  components: { ArchetypePreview, traitView },
   mixins: [
     CharacterCreationMixin,
     SluggerMixin,
@@ -641,17 +652,31 @@ export default {
           const payload = {
             id: this.characterId,
             key: this.textToKebab(focusSpell),
+            featureKey: mod.key,
             type: feature.type,
             source: "archetype",
           };
-          this.$store.commit("characters/removeCharacterFocusSpellbytype", payload);
+          this.$store.commit("characters/removeCharacterFocusSpell", payload);
           this.$store.commit("characters/addCharacterFocusSpell", payload);
+     
+      }
+
+      const tradition = feature.options.find(s => s.key === feature.selected).spellTraditions;
+       if (tradition) {
+  
+          const payload = {
+            id: this.characterId,
+            value: tradition,
+           
+          };
+          this.$store.commit("characters/setCharacterSpellTraditions", payload);
+
      
       }
 
       //Навыки
       const skill = [];
-      skill.push(feature.options.find(s => s.key === feature.selected).key);
+      feature.type === 'Skill Choice' ? skill.push(feature.options.find(s => s.key === feature.selected).key) : skill.push(feature.options.find(s => s.key === feature.selected).skill);
       if (skill)
       {
         //this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: level, type: 'class', optional: false  });
@@ -692,6 +717,7 @@ export default {
       }
 
 
+
       ////модификации
       if (feature.options.find(s => s.key === feature.selected).modification) {
         const key = feature.key
@@ -706,9 +732,9 @@ export default {
         const second = this.item.archetypeFeatures.find(s => s.key === "Second Path")?.selected;
         const first = this.item.archetypeFeatures.find(s => s.key === "Perfection Path")?.selected;
 
-        const match2 = second.match(/^\D+/) ? second.match(/^\D+/)[0] : '';
+        const match2 = second ? second.match(/^\D+/)[0] : '';
 
-                  this.$store.commit('characters/removeCharacterModificationByFeature', {
+            this.$store.commit('characters/removeCharacterModificationByFeature', {
             id: this.characterId,
             featureKey: key,
 

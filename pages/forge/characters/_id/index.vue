@@ -3539,6 +3539,10 @@ export default {
           this.characterArchetype = finalData;
       }
       }
+
+      if (this.characterArchetype)
+        this.characterArchetype.spellTradition = this.$store.getters['characters/characterSpellTraditionsById'](this.characterId);
+
       this.loading = false;
     },
      handleClick(e, level, value) {

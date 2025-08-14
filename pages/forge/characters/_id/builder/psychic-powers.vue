@@ -1496,7 +1496,7 @@ characterSpellRitual(cell, spell)
           const diceInterval = heightened?.slice(0, index1);
           const interval = aggregatedTalent.heightening?.interval;
           const rank = aggregatedTalent.traits.join(',').includes('заговор') ? cant : talent.rank;
-          
+
           const powerLevel2 = parseInt(dice) + (rank - interval) * (parseInt(diceInterval));
           aggregatedTalent.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
         }
@@ -1579,6 +1579,8 @@ characterSpellRitual(cell, spell)
                       (t) => t == 0
                     ) - 1;
 
+       if (this.archetype.spellTradition)
+         list = list.filter(spell => spell.traditions.join(',').includes(this.archetype.spellTradition))
 
       this.selectedPsychic = list
       this.psychicDialog = true;
@@ -1644,6 +1646,8 @@ characterSpellRitual(cell, spell)
       const { data } = await this.$axios.get(`/api/archetypes/${key}`);
       this.loading = false;
       this.archetype = data;
+      if (this.archetype)
+        this.archetype.spellTradition = this.$store.getters['characters/characterSpellTraditionsById'](this.characterId);
     },
 
     async getPsychicPowers(sources) {

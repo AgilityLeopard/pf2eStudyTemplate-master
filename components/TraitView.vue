@@ -107,7 +107,7 @@ export default {
     {
           if (this.traitList !==undefined)
           {
-            console.log(this.traitList.find(s => s.key === item));
+
             return this.traitList.find(s => s.key === item) ? this.traitList.find(s => s.key === item) : '';
     }
 
@@ -116,11 +116,12 @@ export default {
     List(item) {
       if (this.traitList !== undefined) {
         const list = [];
-        this.traitList.filter(s => item.trait.includes(s.key)).forEach(tr => {
-            list.push(tr);
-        })
+        if(item.trait)
+          this.traitList.filter(s => item.trait.includes(s.key)).forEach(tr => {
+              list.push(tr);
+          })
         const rar = this.traitList.find(s => item.rarity === s.nameEng.toLowerCase())
-         if(rar) list.push(rar)
+        if(rar) list.push(rar)
         return list.filter(t => t.key !== 'обычный');
 
       }

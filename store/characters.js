@@ -317,6 +317,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].ClassBoost : {},
   characterClassSkillById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ClassSkill : {},
+  characterSpellTraditionsById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].spellTraditions : '',
   characterTrainedSkillClassById: (state) => (id) =>
     state.characters[id] ? state.characters[id].TrainedSkillClass : [],
   characterTrainedAdditionalSkillClassById: (state) => (id) =>
@@ -1732,14 +1734,19 @@ export const mutations = {
       payload.payload.value;
   },
   setCharacterClassBoostForAll(state, payload) {
-    const char = state.characters[payload.id].attributesClassBoost[payload.key];
 
+    const char = state.characters[payload.id].attributesClassBoost[payload.key];
 
     let theAttribute =
       state.characters[payload.id].attributesClassBoost[payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesClassBoost[payload.payload.key] =
       payload.payload.value;
+  },
+  setCharacterSpellTraditions(state, payload) {
+    const char = state.characters[payload.id];
+
+    char.spellTraditions = payload.value;
   },
   setCharacterHitPoints(state, payload) {
     const char = state.characters[payload.id];
@@ -2100,12 +2107,12 @@ export const mutations = {
   },
   removeCharacterFocusSpell(state, payload) {
     const character = state.characters[payload.id];
-    character.spellsFocus = character.spells?.filter((t) => t.key !== payload.key); // cleanup
+    character.spellsFocus = character.spellsFocus?.filter((t) => t.featureKey !== payload.featureKey); // cleanup
 
   },
   removeCharacterFocusSpellbytype(state, payload) {
     const character = state.characters[payload.id];
-    character.spellsFocus = character.spells?.filter((t) => t.payload !== payload.type); // cleanup
+    character.spellsFocus = character.spellsFocus?.filter((t) => t.payload !== payload.type); // cleanup
 
   },
   clearCharacterFocusSpell(state, payload) {
@@ -2979,5 +2986,6 @@ const getDefaultState = () => ({
   },
   focusPool: [],
   spellsFocus: [],
+  spellTraditions: undefined,
 
 });

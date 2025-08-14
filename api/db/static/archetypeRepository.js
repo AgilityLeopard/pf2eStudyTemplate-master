@@ -2351,10 +2351,12 @@ const playerCore2 = [
         archetypeFeatures: [
             // Общие
             "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
-            // Классовые
-            "Patron Theme", "Familiar", "Witch Spellcasting", "Hexes", "Basic Lesson",
-            // Обще-классовые
-            "Spell Penetration", "Improved Familiar", "Greater Hex", "Legendary Witch"
+
+            ///классовые
+            "Witch Spellcasting", "WitchFamiliar", "WitchHexSpells", "WitchHexCantrips", "WitchPatron", "Spell Witch", "Magical Witch", "Reflex Expertise Champion", "Perception Expertise Champion"
+            , "Weapon Witch", "Armor Witch", "Weapon Specialization Bard", "Master Spellcaster Bard", "Legendary Spellcaster Bard", "Gift Patron"
+            // "WitchHexCantrips", "WitchFortitudeExpert", "WitchSpellcasterExpert", "WitchReflexExpert", "WitchPerceptionExpert", "WitchWeaponExpertise", "WitchUnarmoredExpert", "WitchWeaponSpecialization", "WitchSpellcasterMaster", "WitchWillMaster", "WitchSpellcasterLegendary", "WitchPatronsGift", "WitchLessons", "WitchSkillFeat", "WitchAbilityBoost", "WitchPatronMagic", "Witch5thRank", "WitchGreaterLesson", "Witch7thRank", "WitchMajorLesson", "Witch9thRank"
+
         ],
         modification: [
             {

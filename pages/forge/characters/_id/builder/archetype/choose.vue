@@ -568,6 +568,12 @@ export default {
         mods.push(...Attack);
       }
 
+      //Традиция, если это спеллкастер
+      this.$store.commit("characters/setCharacterSpellTraditions", {
+        id: this.characterId,
+        value: item.spellTradition,
+      });
+
       //Сохранить все модификации в персонажа. Источник обязателен, чтобы при смене класса можно удалить
       this.$store.commit("characters/setCharacterModifications", {
         id: this.characterId,
