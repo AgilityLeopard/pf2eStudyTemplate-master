@@ -2,359 +2,505 @@
   <div>
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
-    <v-row justify="center" class="ma-2">
-      <v-col :cols="4" :sm="12" :md="4">
-        <grid-sheet>
-          <v-row style="">
-            <v-col :cols="6">
-              <div>
-                <h2 class="subtitle-1 text-center">Хит-Поинты</h2>
-                <!-- <v-text-field
-                  v-model="currentHP"
-                  solo
-                  flat
-                  reverse
-                  hide-details
-                  @keypress.enter="addCurrentHP()"
-                ></v-text-field> -->
-                <div class="center text-center">
-                  {{ characterHitPointsMax() }}
+    <v-container fluid class="pa-0" style="max-width: 1200px">
+      <v-row justify="center" align="stretch">
+        <v-col cols="12" md="4">
+          <v-card class="glass-card pa-3" height="100%">
+            <div class="card-content">
+              <!-- <v-col :cols="8">
+                <div align="center">{{ characterName }}</div>
+                <div
+                  v-if="archetypeLabel !== '' && speciesLabel !== ''"
+                  class="caption"
+                  align="center"
+                >
+                  {{ [archetypeLabel, speciesLabel].join(" • ") }}
+                </div>
+                <div class="caption" align="center">
+                  <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
+                </div>
+                <div class="caption" align="center">
+                  <v-progress-linear
+                    :value="campaignCustomXp"
+                    height="2"
+                    color="red"
+                  ></v-progress-linear> -->
+
+              <v-avatar size="75" color="#25262b">
+                <v-icon size="40">mdi-account</v-icon>
+              </v-avatar>
+
+              <!-- Имя + теги -->
+              <div class="side">
+                <div class="name">{{ characterName }}</div>
+                <div class="tags">
+                  <v-btn small depressed class="tag-btn">
+                    <v-icon left small>mdi-tree</v-icon>{{ speciesLabel }}
+                  </v-btn>
+                  <v-btn small depressed class="tag-btn">
+                    <v-icon left small>mdi-window-maximize</v-icon
+                    >{{ archetypeLabel }}
+                  </v-btn>
+                  <v-btn small depressed class="tag-btn">
+                    <v-icon left small>mdi-book</v-icon> {{ backgroundLabel }}
+                  </v-btn>
                 </div>
               </div>
-            </v-col>
 
-            <v-col :cols="6">
-              <div>
-                <h2 class="subtitle-1 text-center">Временные хиты</h2>
-                <div class="center text-center">
-                  <!-- <v-text-field
-                    v-model="tempHP"
+              <!-- Кнопки + уровень -->
+              <div class="side">
+                <div class="actions">
+                  <!-- <v-btn
+            nuxt
+            
+            color="success"
+           
+            outlined
+            small
+          >
+            <v-icon left small>print</v-icon>
+            Печать
+          </v-btn>
+          <v-btn
+            nuxt
+            
+            color="success"
+            small
+          >
+            <v-icon left small>edit</v-icon>
+            Изменить
+          </v-btn> -->
+                  <v-btn
+                    target="_blank"
+                    :to="`/forge/characters/${characterId}/builder/print`"
+                    small
+                    depressed
+                    class="action-btn"
+                    >Печать</v-btn
+                  >
+                  <v-btn
+                    :to="`/forge/characters/${characterId}/builder/setting`"
+                    small
+                    depressed
+                    class="action-btn"
+                    >Изменить</v-btn
+                  >
+                </div>
+                <div class="level-xp">
+                  <span class="level">Уровень {{ characterRank }}</span>
+                  <v-text-field
+                    dense
+                    hide-details
                     solo
                     flat
-                    reverse
-                    shrink
-                    hide-details
-                    height="2"
-                    style="max-width: 60%"
-                    size="1"
-                    @keypress.enter="addTempHP()"
-                  ></v-text-field> -->
-                  0
+                    placeholder="XP"
+                    class="xp-input"
+                  />
                 </div>
               </div>
-            </v-col>
-          </v-row>
+            </div>
+          </v-card>
+        </v-col>
 
-          <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-        </grid-sheet>
-      </v-col>
-
-      <v-col :cols="4" :sm="12" :md="4">
-        <grid-sheet>
-          <v-row>
-            <v-col :cols="4">
-              <v-avatar tile size="64">
-                <img :src="avatar" />
-              </v-avatar>
-            </v-col>
-            <v-col :cols="8">
-              <div align="center">{{ characterName }}</div>
-              <div
-                v-if="archetypeLabel !== '' && speciesLabel !== ''"
-                class="caption"
-                align="center"
-              >
-                {{ [archetypeLabel, speciesLabel].join(" • ") }}
-              </div>
-              <div class="caption" align="center">
-                <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
-              </div>
-              <div class="caption" align="center">
-                <v-progress-linear
-                  :value="campaignCustomXp"
-                  height="2"
-                  color="red"
-                ></v-progress-linear>
-              </div>
-            </v-col>
-          </v-row>
-        </grid-sheet>
-      </v-col>
-
-      <v-col :cols="4" :sm="12" :md="4">
-        <grid-sheet>
-          <v-row>
-            <v-col :cols="4" style="position: relative; cursor: pointer">
-              <div>
-                <h2 class="subtitle-1 text-center">Внимательность</h2>
-                <div class="center text-center" style="font-size: 12px">
-                  +{{ ModAttributePerception("", "") }}
-                  {{ characterlabelL(characterPerseption) }}
-                </div>
-              </div>
-            </v-col>
-            <v-col :cols="4" style="position: relative; cursor: pointer">
-              <div>
-                <h2 class="subtitle-1 text-center">Скорость</h2>
-                <div class="center text-center" style="font-size: 12px">
-                  {{ characterSpeed["land"] }}
-                </div>
-              </div>
-            </v-col>
-            <v-col :cols="4" style="position: relative; cursor: pointer">
-              <div>
-                <h2 class="subtitle-1 text-center">Сложность Класса</h2>
-                <div class="center text-center" style="font-size: 12px">
-                  + {{ ModAttributeClass() }}
-                  {{ characterlabelL(SkillClass) }}
-                </div>
-              </div>
-            </v-col>
-          </v-row>
-        </grid-sheet>
-      </v-col>
-
-      <v-col :cols="4" :sm="12" :md="4">
-        <grid-sheet>
-          <v-row>
-            <v-col :cols="6" style="position: relative; cursor: pointer">
-              <div>
-                <!-- <h2 class="subtitle-1 text-center">Внимательность</h2> -->
-                <div
-                  class="center text-center"
-                  v-for="(attribute, index) in attributeRepository"
-                >
-                  <p v-if="index < 3">
-                    {{ attribute.name }} :
-                    {{ (characterAttributes[attribute.key] - 10) / 2 }}
-                  </p>
-                </div>
-              </div>
-            </v-col>
-            <v-col :cols="6" style="position: relative; cursor: pointer">
-              <div>
-                <!-- <h2 class="subtitle-1 text-center">Скорость</h2> -->
-                <div
-                  class="center text-center"
-                  v-for="(attribute, index) in attributeRepository"
-                >
-                  <p v-if="index > 2">
-                    {{ attribute.name }} :
-                    {{ (characterAttributes[attribute.key] - 10) / 2 }}
-                  </p>
-                </div>
-              </div>
-            </v-col>
-            <!-- <v-col :cols="4" style="position: relative; cursor: pointer">
-              <div>
-                <h2 class="subtitle-1 text-center">Сложность Класса</h2>
-                <div class="center text-center" style="font-size: 12px">
-                  + {{ ModAttributeClass() }}
-                  {{ characterlabelL(SkillClass) }}
-                </div>
-              </div>
-            </v-col> -->
-          </v-row>
-        </grid-sheet>
-      </v-col>
-
-      <!-- actions -->
-      <!-- <v-col :cols="4" :sm="4" :md="4" align="right">
-         <v-btn small outlined color="success" v-if="false">share</v-btn>
-        <v-btn small outlined color="success" v-if="false">campaign</v-btn>
-        <v-btn small outlined color="primary" v-if="false">
-          <v-icon left small>group</v-icon> Regroup
-        </v-btn> 
-        <v-btn
-          nuxt
-          :to="`/forge/characters/${characterId}/builder/print`"
-          color="success"
-          target="_blank"
-          outlined
-          small
-        >
-          <v-icon left small>print</v-icon>
-          Печать
-        </v-btn>
-        <v-btn
-          nuxt
-          :to="`/forge/characters/${characterId}/builder/setting`"
-          color="success"
-          small
-        >
-          <v-icon left small>edit</v-icon>
-          Изменить
-        </v-btn>
-      </v-col> -->
-
-      <v-col :cols="4" :sm="12" :md="4">
-        <grid-sheet>
-          <v-row no-gutters>
-            <v-col :cols="6">
-              <h2 class="subtitle-1 text-center">КД</h2>
-              <div class="center text-center">{{ characterArmor() }}</div>
-            </v-col>
-            <v-col :cols="6">
-              <h2 class="subtitle-1 text-center">Спасброски</h2>
-              <div>
-                <div class="center text-center">
-                  Рефлекс: +{{ ModAttributeSaving("dexterity", "reflex") }}
-                  {{ characterlabelL(characterSaving["reflex"]) }}
-                </div>
-                <div class="center text-center">
-                  Стойкость: +{{
-                    ModAttributeSaving("constitution", "fortitude")
-                  }}
-                  {{ characterlabelL(characterSaving["fortitude"]) }}
-                </div>
-                <div class="center text-center">
-                  Воля: +{{ ModAttributeSaving("wisdom", "will") }}
-                  {{ characterlabelL(characterSaving["will"]) }}
-                </div>
-              </div>
-            </v-col>
-            <!-- <v-col :cols="6" :sm="4" :md="5" > -->
-          </v-row>
-        </grid-sheet>
-      </v-col>
-
-      <!-- actions -->
-      <v-col :cols="4" :sm="4" :md="4" align="right">
-        <v-btn small outlined color="success" v-if="false">share</v-btn>
-        <v-btn small outlined color="success" v-if="false">campaign</v-btn>
-        <v-btn small outlined color="primary" v-if="false">
-          <v-icon left small>group</v-icon> Regroup
-        </v-btn>
-        <v-btn
-          nuxt
-          :to="`/forge/characters/${characterId}/builder/print`"
-          color="success"
-          target="_blank"
-          outlined
-          small
-        >
-          <v-icon left small>print</v-icon>
-          Печать
-        </v-btn>
-        <v-btn
-          nuxt
-          :to="`/forge/characters/${characterId}/builder/setting`"
-          color="success"
-          small
-        >
-          <v-icon left small>edit</v-icon>
-          Изменить
-        </v-btn>
-      </v-col>
-
-      <!-- 
-      <v-col :cols="4" :sm="4" :md="4">
-        <v-card>
-          <v-card-title class="body-1 pt-1 pb-1 justify-center">
-            <h2 class="subtitle-1">Здоровье персонажа</h2>
-          </v-card-title>
-          <v-card-text class="pt-4">
+        <!-- Правая карточка -->
+        <v-col cols="12" md="4">
+          <v-card
+            class="glass-card pa-4 d-flex flex-column align-center stat-card"
+            height="100%"
+          >
             <v-row
               no-gutters
-              style="
-                display: flex;
-                align-items: baseline;
-                justify-content: center;
-              "
+              align="center"
+              justify="start"
+              style="width: 100%"
             >
+              <v-col cols="6" class="d-flex flex-column align-center">
+                <div class="title white--text mb-2">Хиты</div>
 
-              <v-col :cols="6" :md="6">
-
-
-                <div>
-                  <div><p style="text-align: center">Хит-Поинты</p></div>
-
-                  <v-row
-                    style="
-                      display: flex;
-                      align-items: baseline;
-                      justify-content: center;
-                      text-align: center;
-                    "
+                <div class="d-flex align-center">
+                  <!-- <span class="hp-value"> {{ characterHitPointsMax() }}</span> -->
+                  <div
+                    v-if="!editingHp"
+                    class="hp-value"
+                    @click="editingHp = true"
+                    :style="{
+                      width: '3ch',
+                      fontSize: '1.5rem',
+                      textAlign: 'center',
+                      color: hpColor(),
+                    }"
                   >
-                    <div
-                      style="
-                        display: flex;
-                        align-items: baseline;
-                        justify-content: start;
-                        text-align: center;
-                      "
-                    >
-                      <v-text-field
-                        v-model="currentHP"
-                        solo
-                        flat
-                        hide-details
-                        reverse
-                        dense
-                        filled
-                        size="1"
-                        class="shrink"
-                        style="font-size: 14px"
-                        @keypress.enter="addCurrentHP()"
-                      ></v-text-field>
+                    {{ characterCurHP() }}
+                  </div>
 
-                      <div><p>/</p></div>
+                  <!-- Поле ввода -->
+                  <v-text-field
+                    v-else
+                    v-model.number="currentHP"
+                    type="number"
+                    hide-details
+                    single-line
+                    solo
+                    flat
+                    background-color="transparent"
+                    class="hp-input"
+                    :style="{
+                      width: '4ch',
+                      fontSize: '1.5rem',
+                      textAlign: 'center',
+                    }"
+                    @input="addCurrentHP"
+                    @blur="editingHp = false"
+                    @keyup.enter="editingHp = false"
+                  ></v-text-field>
 
-                      <div style="font-size: 14px">
-                        <p>{{ characterHitPointsMax() }}</p>
-                      </div>
-                    </div>
-                  </v-row>
+                  <span class="grey--text mx-2">/</span>
+                  <span class="hp-value grey--text">
+                    {{ characterHitPointsMax() }}</span
+                  >
                 </div>
-
               </v-col>
 
-              <v-col :cols="6">
-                <div>Временные хиты</div>
-                <v-text-field
-                  v-model="currentHP"
-                  solo
-                  flat
-                  reverse
-                  @keypress.enter="addCurrentHP()"
-                ></v-text-field>
+              <v-col cols="6" class="d-flex flex-column align-center">
+                <div class="title white--text align-start mb-4">Временные</div>
+
+                <div class="grey--text d-flex flex-end">—</div>
               </v-col>
             </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col> -->
+            <v-row justify="center" class="mt-4">
+              <v-btn small text class="mt-4 grey--text text--lighten-1">
+                Сопротивление
+              </v-btn>
+            </v-row>
+          </v-card>
+        </v-col>
 
-      <!-- actions -->
-      <!-- <v-col :cols="4" :sm="4" :md="4" align="right">
-         <v-btn small outlined color="success" v-if="false">share</v-btn>
-        <v-btn small outlined color="success" v-if="false">campaign</v-btn>
-        <v-btn small outlined color="primary" v-if="false">
-          <v-icon left small>group</v-icon> Regroup
-        </v-btn> 
-        <v-btn
-          nuxt
-          :to="`/forge/characters/${characterId}/builder/print`"
-          color="success"
-          target="_blank"
-          outlined
-          small
-        >
-          <v-icon left small>print</v-icon>
-          Печать
-        </v-btn>
-        <v-btn
-          nuxt
-          :to="`/forge/characters/${characterId}/builder/setting`"
-          color="success"
-          small
-        >
-          <v-icon left small>edit</v-icon>
-          Изменить
-        </v-btn>
-      </v-col> -->
-    </v-row>
-    <v-row justify="center" no-gutters>
+        <v-col cols="12" md="4">
+          <v-card class="glass-card pa-3 stat-card" height="100%">
+            <div class="d-flex align-center justify-space-between mb-2">
+              <span class="subtitle-2 white--text">Conditions</span>
+              <v-btn icon small>
+                <v-icon small>mdi-plus</v-icon>
+              </v-btn>
+            </div>
+            <div class="grey--text text-center caption mb-4">None active</div>
+
+            <!-- Hero Points -->
+            <div class="subtitle-2 white--text text-center mb-1">
+              Hero Points
+            </div>
+            <div class="d-flex justify-center">
+              <v-icon small color="yellow darken-1">mdi-star</v-icon>
+              <v-icon small color="yellow darken-1">mdi-star-outline</v-icon>
+              <v-icon small color="yellow darken-1">mdi-star-outline</v-icon>
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- <v-row dense align="stretch"> -->
+        <v-col cols="12" md="4">
+          <v-card class="glass-card pa-3 stat-card" height="100%">
+            <v-row dense>
+              <v-col
+                v-for="(attribute, index) in attributeRepository"
+                :key="index"
+                cols="12"
+                sm="6"
+                class="d-flex stat-row"
+              >
+                <div class="stat-group">
+                  <v-btn block small class="stat-name-btn" depressed>
+                    <span class="truncate"> {{ attribute.name }}</span>
+                  </v-btn>
+                  <v-btn small class="stat-mod-btn" depressed>
+                    {{
+                      (characterAttributes[attribute.key] - 10) / 2 >= 0
+                        ? "+"
+                        : ""
+                    }}{{ (characterAttributes[attribute.key] - 10) / 2 }}
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+
+        <!-- 2. Armor Class -->
+        <v-col cols="12" md="4">
+          <v-card
+            class="glass-card pa-3 d-flex flex-column align-center stat-card"
+            height="100%"
+          >
+            <v-row
+              no-gutters
+              align="center"
+              justify="start"
+              style="width: 100%"
+            >
+              <v-col
+                cols="4"
+                class="d-flex justify-center align-center"
+                style="position: relative"
+              >
+                <svg viewBox="100 90 55 160" width="100" height="100">
+                  <g>
+                    <path
+                      fill="rgba(70,130,180,0.8)"
+                      stroke="#ffffffaa"
+                      stroke-width="1"
+                      d="M89.5,109.1c-6.5,1.1-12,2.2-12.1,2.3c-0.1,0.1,0.4,2.1,1.2,4.3c3.7,10.2,5.6,19.5,5.1,25.1c-0.4,4.1-2.6,10.8-4.9,15.2l-1.8,3.2l3.2,4.7C91,180.1,93.4,186.3,91.3,193c-0.4,1.3-0.7,2.5-0.7,2.6c0,0.4,4.3,5.4,8,9.2c4.6,4.8,12.6,8.5,25.1,11.7l4.6,1.2l6.6-1.9c7.7-2.2,15.1-5.1,18.5-7.2c1.3-0.9,4.5-4,7.1-7l4.8-5.5l-0.8-3c-1.8-7.1,0.3-12.8,10.7-28.6l3.6-5.5l-1.7-3.2c-1-1.8-2.4-5.3-3.3-7.8c-1.4-4-1.6-5.2-1.6-9.8c0-4.5,0.2-6.3,1.6-11.5c0.9-3.5,2.3-8.2,3.3-10.7c0.9-2.4,1.5-4.6,1.4-4.7c-0.1-0.1-5.2-1.1-11.2-2.1c-6-1-11.6-2-12.4-2.1l-1.4-0.2l-4.3,8.6l-4.3,8.6h-17h-17l-4.3-8.6c-2.4-4.7-4.5-8.6-4.8-8.6C101.6,107,96,107.9,89.5,109.1z"
+                    />
+                  </g>
+                </svg>
+
+                <!-- Число КД и подпись -->
+                <div
+                  style="
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: center;
+                    z-index: 1;
+                  "
+                >
+                  <div class="text-h5">{{ characterArmor() }}</div>
+                  <div class="text-subtitle-2">КД</div>
+                </div>
+              </v-col>
+
+              <!-- Кнопки -->
+              <v-col
+                cols="8"
+                class="d-flex stat-row"
+                style="flex-direction: column; gap: 8px"
+              >
+                <div class="stat-group">
+                  <v-btn small class="stat-name-btn" depressed>Рефлекс:</v-btn>
+
+                  <v-btn small class="stat-mod-btn" depressed>
+                    +{{ ModAttributeSaving("dexterity", "reflex") }}
+                    {{ characterlabelL(characterSaving["reflex"]) }}
+                  </v-btn>
+                </div>
+
+                <div class="stat-group">
+                  <v-btn small class="stat-name-btn" depressed
+                    >Стойкость:</v-btn
+                  >
+
+                  <v-btn small class="stat-mod-btn" depressed>
+                    +{{ ModAttributeSaving("constitution", "fortitude") }}
+                    {{ characterlabelL(characterSaving["fortitude"]) }}
+                  </v-btn>
+                </div>
+
+                <div class="stat-group">
+                  <v-btn small class="stat-name-btn" depressed>Воля:</v-btn>
+
+                  <v-btn small class="stat-mod-btn" depressed>
+                    +{{ ModAttributeSaving("wisdom", "will") }}
+                    {{ characterlabelL(characterSaving["will"]) }}
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+
+        <!-- 3. Speed -->
+        <v-col cols="12" md="4">
+          <v-card
+            class="glass-card pa-3 d-flex flex-column align-center stat-card"
+            height="100%"
+          >
+            <v-row
+              no-gutters
+              align="center"
+              justify="start"
+              style="width: 100%"
+            >
+              <v-col
+                cols="4"
+                class="d-flex flex-column align-center"
+                style="position: relative"
+              >
+                <!-- Надпись сверху -->
+                <div class="stat-title">Скорость</div>
+                <div class="stat-icon-wrapper">
+                  <svg
+                    version="1.0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="75"
+                    height="75"
+                    viewBox="0 0 1280.000000 1002.000000"
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    <g
+                      transform="translate(0.000000,1002.000000) scale(0.100000,-0.100000)"
+                      fill="#dee2e625"
+                      stroke="none"
+                    >
+                      <path
+                        d="M4765 10014 c-22 -2 -80 -11 -130 -20 -496 -88 -933 -478 -1239
+-1109 -65 -133 -82 -190 -130 -435 -70 -351 -99 -722 -85 -1070 9 -200 12
+-222 69 -575 51 -315 60 -374 61 -432 1 -26 6 -1 10 57 16 198 41 302 162 680
+36 113 84 264 107 335 155 496 415 991 636 1211 260 259 505 345 764 270 207
+-60 373 -164 665 -415 55 -48 116 -99 135 -115 19 -16 99 -87 177 -158 198
+-181 302 -260 418 -318 125 -63 189 -79 341 -87 234 -12 329 37 427 218 60
+109 81 189 81 314 0 130 -17 190 -98 356 -192 386 -534 697 -1077 978 -256
+133 -547 237 -779 281 -36 6 -87 16 -115 21 -54 11 -336 20 -400 13z"
+                      ></path>
+                      <path
+                        d="M8925 9614 c-102 -20 -140 -30 -205 -51 -284 -95 -514 -289 -644
+-543 -97 -191 -130 -350 -114 -542 29 -343 246 -681 539 -842 185 -101 364
+-148 569 -148 203 0 359 36 528 121 290 147 476 382 574 729 29 104 32 313 4
+417 -39 150 -95 271 -189 408 -155 227 -451 404 -747 447 -63 9 -275 12 -315
+4z"
+                      ></path>
+                      <path
+                        d="M12700 7683 c-18 -95 -47 -168 -143 -361 -128 -254 -265 -475 -419
+-669 -237 -301 -787 -753 -1129 -928 -147 -75 -207 -95 -290 -95 -164 0 -334
+100 -499 295 -99 116 -147 217 -290 605 -131 356 -247 549 -395 658 -81 59
+-122 80 -213 103 -67 17 -85 18 -140 8 -81 -15 -158 -65 -240 -155 -152 -167
+-219 -372 -209 -634 6 -146 19 -217 68 -374 171 -546 518 -1004 1009 -1333 95
+-64 140 -86 234 -118 221 -74 509 -75 746 -1 334 103 761 377 1065 681 273
+273 455 545 649 967 184 401 248 597 292 897 3 24 0 151 -7 282 l-13 239 -32
+0 c-31 0 -32 -1 -44 -67z"
+                      ></path>
+                      <path
+                        d="M4205 5883 c-138 -16 -280 -77 -351 -149 -50 -52 -116 -179 -140
+-269 -57 -217 -5 -491 130 -678 54 -77 136 -160 305 -311 131 -117 132 -118
+114 -139 -225 -264 -861 -924 -1439 -1493 -741 -731 -1057 -1051 -1663 -1687
+-156 -164 -419 -427 -585 -584 -276 -262 -579 -564 -572 -570 1 -2 38 6 82 18
+149 39 670 336 1744 994 434 266 540 329 1470 875 744 437 872 515 1160 704
+273 180 390 265 515 375 119 103 163 137 400 306 99 71 204 148 234 172 l53
+43 112 -58 c138 -73 258 -150 358 -231 115 -92 125 -107 133 -195 7 -69 5 -77
+-21 -122 -44 -77 -216 -241 -330 -317 -56 -37 -236 -137 -400 -221 -165 -84
+-445 -231 -624 -326 -511 -270 -984 -498 -1295 -622 -167 -67 -390 -187 -375
+-201 3 -3 55 -9 115 -14 117 -9 328 -2 528 16 67 6 174 16 237 22 330 29 556
+70 845 150 226 63 261 73 550 149 556 148 852 248 1130 385 436 214 806 562
+961 902 55 120 64 152 64 233 0 101 -30 214 -89 335 -63 130 -109 196 -260
+385 -276 343 -520 595 -836 863 -71 61 -173 150 -225 198 -289 266 -789 630
+-1045 761 -114 58 -538 233 -635 262 -60 19 -247 46 -295 44 -16 0 -43 -3 -60
+-5z"
+                      ></path>
+                    </g>
+                  </svg>
+                  <!-- SVG с числом внутри -->
+
+                  <div class="stat-number">
+                    <div class="text-h5">
+                      {{ characterSpeed["land"] }}
+                    </div>
+                  </div>
+                </div>
+              </v-col>
+
+              <v-col
+                cols="4"
+                class="d-flex flex-column align-center"
+                style="position: relative"
+              >
+                <!-- Надпись сверху -->
+                <div class="stat-title">Внимательность</div>
+
+                <!-- SVG с числом внутри -->
+                <div class="stat-icon-wrapper">
+                  <svg
+                    version="1.0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="80"
+                    height="72"
+                    viewBox="0 0 1280.000000 863.000000"
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    <g
+                      transform="translate(0.000000,863.000000) scale(0.100000,-0.100000)"
+                      fill="#dee2e625"
+                      stroke="none"
+                    >
+                      <path
+                        d="M8120 8624 c-554 -26 -956 -72 -1425 -164 -1186 -232 -2320 -725
+                      -3304 -1438 -425 -308 -727 -567 -1132 -971 -603 -603 -1071 -1201 -1511
+                      -1931 -165 -274 -430 -782 -415 -796 10 -11 24 5 98 109 253 354 559 708 916
+                      1057 222 218 347 330 318 285 -194 -300 -514 -899 -699 -1310 -135 -298 -306
+                      -729 -367 -925 -22 -69 -45 -103 -311 -457 -159 -210 -288 -386 -288 -392 0
+                      -27 105 -122 178 -159 124 -65 214 -85 347 -80 130 6 194 27 284 93 115 84
+                      170 181 271 473 331 959 723 1779 1173 2457 96 144 239 346 243 343 1 -2 -6
+                      -50 -17 -106 -66 -361 -81 -810 -39 -1157 135 -1108 708 -2081 1605 -2726 338
+                      -244 754 -447 1150 -562 66 -20 129 -37 140 -40 66 -13 -413 -35 -960 -43
+                      -374 -6 -926 3 -1512 23 -292 10 -252 -13 117 -66 945 -137 2001 -175 2894
+                      -105 231 18 292 24 701 74 409 51 564 79 810 150 55 15 177 49 270 74 519 140
+                      913 316 1340 601 973 649 1771 1745 2295 3150 136 365 244 724 329 1095 43
+                      187 111 571 111 629 0 47 7 56 60 84 93 48 350 203 485 292 368 242 553 444
+                      521 568 -16 64 -56 90 -304 200 -1180 522 -2283 870 -3192 1007 -80 12 -153
+                      25 -164 29 -31 11 760 138 1409 226 187 25 381 53 430 61 157 27 142 39 -115
+                      93 -583 122 -1030 186 -1640 232 -250 18 -903 32 -1100 23z m1191 -1880 c264
+                      -85 581 -204 844 -316 239 -101 894 -423 901 -442 3 -7 -4 -87 -16 -177 -129
+                      -1024 -464 -2044 -947 -2886 -36 -62 -66 -113 -68 -113 -2 0 7 33 21 73 36
+                      104 100 373 123 512 73 442 73 879 0 1310 -128 762 -497 1501 -1013 2033 -39
+                      39 -65 72 -59 72 6 0 102 -30 214 -66z"
+                      ></path>
+                    </g>
+                    <!-- Число внутри SVG -->
+                  </svg>
+
+                  <div class="stat-number">
+                    <div class="text-h5">
+                      + {{ ModAttributePerception("", "") }}
+                    </div>
+                  </div>
+                </div>
+              </v-col>
+
+              <v-col
+                cols="4"
+                class="d-flex flex-column align-center"
+                style="position: relative"
+              >
+                <!-- Надпись сверху -->
+                <div class="stat-title">Сл Класса</div>
+
+                <!-- SVG с числом внутри -->
+                <div class="stat-icon-wrapper">
+                  <svg
+                    version="1.0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="75"
+                    height="75"
+                    viewBox="0 0 1278.000000 1280.000000"
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    <g
+                      transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
+                      fill="#dee2e625"
+                      stroke="none"
+                    >
+                      <path
+                        d="M1535 12720 c-372 -7 -468 -19 -660 -81 -367 -118 -619 -382 -730
+-767 -35 -120 -53 -236 -65 -417 -14 -218 -14 -9972 0 -10180 51 -765 429
+-1143 1195 -1194 218 -15 10004 -15 10230 -1 253 16 453 64 617 146 99 50 148
+85 236 168 211 201 315 469 342 881 14 222 14 9970 0 10190 -28 421 -128 690
+-339 908 -181 188 -410 289 -762 338 -63 9 -1277 12 -4904 14 -2651 1 -4973
+-1 -5160 -5z"
+                      ></path>
+                    </g>
+                  </svg>
+
+                  <div class="stat-number">
+                    <div class="text-h5">+ {{ ModAttributeClass() }}</div>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+        <!-- </v-row> -->
+      </v-row>
+    </v-container>
+
+    <v-row justify="center ma-2" no-gutters>
       <!-- skills -->
       <v-col :cols="12" :sm="6" :md="6" :lg="3">
         <v-row no-gutters>
@@ -1929,11 +2075,13 @@ export default {
         // { text: 'Multi-Target', sortable: false, align: 'center', class: 'small pa-1' },
         // { text: 'Effect', sortable: false, align: 'left', class: 'small pa-1' },
       ],
+        editingHp: false,
       crossedRows: [],
       descriptionSection: { selection: 'all' },
       abilitySection: { filter: 'all' },
       wargearSection: { filter: 'all' },
       currentHP: 0,
+
       tempHP: 0,
       loading: false,
       selectedItem: undefined,
@@ -2037,9 +2185,7 @@ export default {
     characterTalents() {
       return this.$store.getters['characters/characterTalentsById'](this.characterId);
     },
-    characterCurHP() {
-      return this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId);
-    },
+
     characterMutations() {
       return this.$store.getters['characters/characterMutationsById'](this.characterId);
     },
@@ -2049,6 +2195,9 @@ export default {
     },
     archetypeLabel() {
       return this.$store.getters['characters/characterArchetypeLabelById'](this.characterId);
+    },
+    backgroundLabel() {
+      return this.$store.getters['characters/characterAscensionLabelById'](this.characterId);
     },
     characterSpont() {
         return this.$store.getters['characters/characterSpellsSpontaneousById'](this.characterId);
@@ -3664,8 +3813,19 @@ export default {
       this.characterNotesEditorModel = this.$store.getters['characters/characterFluffNotesById'](this.characterId);
       this.characterNotesShowEditor = true;
     },
+        characterCurHP() {
+      this.currentHP = this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId) || 0;
+      return this.currentHP;
+    },
+      hpColor() {
+      const ratio = this.characterHitPointsMax() !== 0 ? this.currentHP / this.characterHitPointsMax() : 0;
+      if (ratio >= 0.75) return 'green';
+      if (ratio >= 0.5) return '#9acd32'; // салатовый
+      if (ratio >= 0.25) return 'orange';
+      return 'red';
+    },
     addCurrentHP() {
-      const curHP = this.currentHP > this.characterHitPointsMax ? this.characterHitPointsMax : this.currentHP;
+      const curHP = this.currentHP > this.characterHitPointsMax() ? this.characterHitPointsMax() : this.currentHP;
       this.$store.commit('characters/setCurrentHP', { id: this.characterId, curHP })
     },
     addTempHP() {
@@ -4167,5 +4327,280 @@ td.small {
 }
 .controls button {
   margin-right: 10px;
+}
+</style>
+
+<style scoped>
+.glass-card {
+  background: linear-gradient(145deg, #2a2b31, #1f1f23); /* мягкий градиент */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* легкая обводка */
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6); /* мягкая тень */
+  backdrop-filter: blur(12px) brightness(1.05); /* эффект стекла */
+  padding: 1rem;
+  color: #e0e0e0; /* мягкий светло-серый текст */
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(14px) brightness(1.1);
+}
+.tag-chip {
+  background-color: transparent !important;
+  font-weight: 400;
+  margin: 2px;
+}
+.action-btn {
+  background-color: rgba(233, 236, 239, 0.1) !important;
+  color: #dee2e6 !important;
+  backdrop-filter: blur(6px);
+  font-weight: 500;
+}
+.hp-value {
+  color: rgb(0, 224, 122);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.xp-input-wrapper {
+  display: inline-block;
+  padding: 4px; /* небольшие внутренние отступы */
+  background-color: rgba(222, 226, 230, 0.15); /* похожий фон на твой пример */
+  border-radius: 50px; /* полностью круглое */
+  backdrop-filter: blur(6px);
+}
+
+.xp-input {
+  border: none;
+  outline: none;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background: transparent;
+  color: #fff; /* цвет текста */
+  font-size: 0.9rem;
+  width: 80px; /* компактная ширина */
+  text-align: center;
+}
+
+.xp-input::placeholder {
+  color: #bbb; /* цвет placeholder */
+}
+
+.stat-btn {
+  background-color: rgba(233, 236, 239, 0.1) !important;
+  color: #dee2e6 !important;
+  font-weight: 400;
+  backdrop-filter: blur(6px);
+}
+.mod-btn {
+  background-color: rgba(144, 146, 150, 0.1) !important;
+  color: #fff !important;
+  min-width: 40px;
+}
+.ac-value {
+  color: rgb(0, 224, 122);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.speed-value {
+  color: rgb(0, 224, 122);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.stat-row {
+  margin-bottom: 4px;
+}
+
+.stat-group {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+}
+
+.stat-name-btn {
+  flex: 1 1 auto;
+  min-width: 0 !important;
+  max-width: 100%;
+  overflow: hidden;
+  background-color: rgba(233, 236, 239, 0.1) !important;
+  color: #dee2e6 !important;
+  font-weight: 400;
+  backdrop-filter: blur(6px);
+  text-transform: none;
+  border-radius: 12px 0 0 12px !important;
+  height: 28px !important;
+  padding: 0 8px !important;
+}
+
+.stat-mod-btn {
+  flex: 0 0 35px;
+  background-color: rgba(144, 146, 150, 0.1) !important;
+  color: #fff !important;
+  border-radius: 0 12px 12px 0 !important;
+  height: 28px !important;
+  padding: 0 !important;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-card {
+  min-height: 80px; /* фиксированная высота */
+}
+
+/* Общий контейнер в одну линию */
+.card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.tag-btn {
+  background-color: transparent !important;
+  color: rgba(222, 226, 230, 0.75) !important;
+  text-transform: none;
+  height: 22px !important;
+  min-height: 22px !important;
+  padding: 0 8px !important;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn {
+  background-color: rgba(233, 236, 239, 0.1) !important;
+  color: #dee2e6 !important;
+  text-transform: none;
+}
+
+.level {
+  color: #adb5bd;
+  font-size: 0.75rem;
+}
+
+.level-xp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+/* .xp-input {
+  max-width: 60px;
+} */
+
+.text-h5 {
+  color: white;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.text-subtitle-2 {
+  color: #ccc;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.stack {
+  margin-top: 80%;
+}
+
+.label {
+  color: var(--mantine-color-gray-0);
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 500;
+}
+
+.value {
+  color: var(--mantine-color-gray-0);
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 500;
+  line-height: 1.5em;
+  position: relative;
+}
+
+.asterisk {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  color: var(--mantine-color-guide-5);
+}
+
+.description {
+  color: var(--mantine-color-gray-5);
+  font-size: calc(0.625rem * var(--mantine-scale));
+}
+
+.unit {
+  color: var(--mantine-color-gray-3);
+  font-size: var(--mantine-font-size-xs);
+}
+.stat-icon-wrapper {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-title {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 14px; /* подгони под свой стиль */
+  line-height: 1.2;
+}
+.stat-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 1;
+}
+
+/* Vuetify 2 — убираем спиннеры у поля внутри */
+.hp-input >>> input[type="number"]::-webkit-inner-spin-button,
+.hp-input >>> input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.hp-input >>> input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  text-align: center;
 }
 </style>
