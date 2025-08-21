@@ -563,6 +563,9 @@
             :disabled="!settingSelected"
           >
             5. Черты
+            <v-chip small class="select-chip" v-if="progressFeats !== 0">
+              !
+            </v-chip>
           </v-btn>
           <v-btn
             small
@@ -910,6 +913,26 @@ export default {
       });
       return i;
     },
+    progressFeats() {
+      const characterTalents = this.$store.getters[
+        "characters/characterTalentsById"
+      ](this.$route.params.id);
+      const level = this.characterLevel();
+      const max = characterTalents
+        .filter((s) => level >= s.level)
+        .filter((s) => !s.place.includes("free")).length;
+      const arLevel =
+        Math.trunc(this.characterLevel() / 2) +
+        (this.characterLevelOne() === true ? 1 : 0);
+
+      const ancestry = Math.trunc((this.characterLevel() - 1) / 4) + 1;
+      let levelFeats =
+        ancestry +
+        arLevel +
+        Math.trunc(this.characterLevel() / 2) +
+        Math.trunc((this.characterLevel() + 1) / 4);
+      return levelFeats > max ? levelFeats - max : 0;
+    },
 
     progressMax() {
       const progress = this.$store.getters[
@@ -921,6 +944,7 @@ export default {
       progress.forEach((t) => {
         i = i + t.value;
       });
+
       return i;
     },
     skillAttack() {
@@ -1027,6 +1051,7 @@ export default {
         this.$route.params.id
       );
     },
+
     characterBackground() {
       return this.$store.getters["characters/characterBackgroundLabelById"](
         this.$route.params.id
@@ -1267,7 +1292,13 @@ export default {
 
       return speed + speedTotal;
     },
-
+    characterLevelOne() {
+      return (
+        this.$store.getters["characters/characterLevelOneById"](
+          this.$route.params.id
+        ) === true
+      );
+    },
     characterArmor() {
       const wear = this.$store.getters["characters/characterWearById"](
         this.$route.params.id

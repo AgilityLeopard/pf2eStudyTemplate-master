@@ -459,7 +459,7 @@
                 class="body-1 pt-1 pb-1"
               >
                 <h2 class="subtitle-1">
-                  Количество свободных очков навыка:
+                  Количество свободных повышений навыков:
                   {{
                     characterSkillPointClass +
                     characterSkillPointBackground +
@@ -476,7 +476,8 @@
                   <tbody>
                     <tr v-for="skill in finalSkillRepository" :key="skill.key">
                       <td>{{ skill.name }}</td>
-                      <td>
+
+                      <td class="text-right small pa-1">
                         <v-btn
                           icon
                           :disabled="
@@ -491,16 +492,15 @@
                           <v-icon color="red"> remove_circle </v-icon>
                         </v-btn>
                       </td>
+
                       <td class="text-center small pa-1">
-                        <!-- {{ ModAttribute(skill.attribute, skill.key) }} -->
                         {{
-                          // characterSkills[skill.key] === "U"
-                          //   ? characterlabel(characterSkills[skill.key])
-                          //   : "Тренирован"
-                          skillSheetTrained(skill.key, 1)
+                          (ModAttribute(skill.attribute, skill.key) < 0
+                            ? ""
+                            : "+") + ModAttribute(skill.attribute, skill.key)
                         }}
                       </td>
-                      <td>
+                      <td class="text-left small pa-1">
                         <v-btn
                           icon
                           :disabled="
@@ -524,7 +524,15 @@
                           </v-icon>
                         </v-btn>
                       </td>
-                      <!-- <td>{{ characterSkills[skill.key] === "U" ? characterlabel(characterSkills[skill.key]) : "Тренирован" }}</td> -->
+                      <td class="text-center small pa-1">
+                        {{
+                          // characterSkills[skill.key] === "U"
+                          //   ? characterlabel(characterSkills[skill.key])
+                          //   : "Тренирован"
+                          skillSheetTrained(skill.key, 1)
+                        }}
+                      </td>
+
                       <span v-if="skill.custom">
                         <v-hover>
                           <v-icon
@@ -1096,6 +1104,14 @@ export default {
         { text: 'Владение', value: 'attribute', align: 'center', class: 'text-center small pa-1' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
+      headers: [
+      { text: "Навык", value: "name", sortable: false },
+      { text: "", value: "decrement", sortable: false },
+      { text: "Значение", value: "value", sortable: false },
+      { text: "", value: "increment", sortable: false },
+      { text: "", value: "delete", sortable: false }
+    ],
+
       alert: false,
       refEx: /\d+/g,
       manageBoost1: true,
@@ -1460,7 +1476,7 @@ export default {
       this.species = data;
       this.boost = this.species ? this.species.abilityBoost : 0;
       this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
-      this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
+       this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
 
       this.selectedAncestryBoost = this.characterAncestryFreeBoost;
       this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2;
@@ -1842,7 +1858,7 @@ export default {
         let back =  (this.BackgroundAttribute?.length > 1  ? 1 : 0) -  (this.characterBackgroundFreeBoost?.length > 0   ? 1 : 0);
         let back2 = (this.BackgroundAttribute2?.length > 1  ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0   ? 1 : 0);
         let spec = (this.AncestryAttribute?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0   ? 1 : 0);
-        let spec2 = (this.AncestryAttribute2?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0  ? 1 : 0);
+        let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2  ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0  ? 1 : 0);
 
         modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
         boost = 4 - this.characterBoost;
@@ -1899,8 +1915,8 @@ export default {
         let class2 = this.archetype?.skillTrainedChoice?.length > 1  ? 1 : 0;
         let back = this.BackgroundAttribute?.length > 1  ? 1 : 0;
         let back2 = this.BackgroundAttribute2?.length > 1  ? 1 : 0;
-        let spec = this.AncestryAttribute2?.length > 1 ? 1 : 0;
-        let spec2 = this.AncestryAttribute?.length > 1  ? 1 : 0;
+         let spec = this.AncestryAttribute?.length > 1 ? 1 : 0;
+        let spec2 = this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0;
 
 
         modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
@@ -2253,5 +2269,10 @@ tr.v-data-table__selected {
     text-align: center;
     cursor: inherit;
   }
+}
+
+.compact-btn {
+  min-width: 28px !important;
+  height: 28px !important;
 }
 </style>

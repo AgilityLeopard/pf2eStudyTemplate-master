@@ -449,6 +449,11 @@ export default {
           });
         });
 
+      this.$store.commit("characters/setCharacterLevelOne", {
+        id: this.characterId,
+        payload: { value: item.isFeatLevelOne, type: "class" },
+      });
+
       //Добавление хитов, спасов и т.д. в Персонажа
       this.$store.commit("characters/setCharacterHitPoints", {
         id: this.characterId,

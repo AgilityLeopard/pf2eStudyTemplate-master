@@ -279,6 +279,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].speed : {},
   characterBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Boost : 0,
+  characterLevelOneById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].isFeatLevelOne : false,
   characterBoost5ById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Boost5 : 0,
   characterBoost10ById: (state) => (id) =>
@@ -1748,6 +1750,11 @@ export const mutations = {
 
     char.spellTraditions = payload.value;
   },
+  setCharacterLevelOne(state, payload) {
+    const char = state.characters[payload.id];
+    char.isFeatLevelOne = payload.value === true;
+
+  },
   setCharacterHitPoints(state, payload) {
     const char = state.characters[payload.id];
     if (payload.payload.type === "ancestry")
@@ -2123,26 +2130,31 @@ export const mutations = {
   },
   characterProgress(state, payload) {
     const character = state.characters[payload.id];
-    const pr = character.progress.find(s => s.level === payload.level);
-    if (pr)
-      character.progress.find(s => s.level === payload.level).value = payload.value;
-    else
-      character.progress.push({
-        level: payload.level,
-        value: payload.value
-      })
+    if (character) {
+      const pr = character.progress.find(s => s.level === payload.level);
+      if (pr)
+        character.progress.find(s => s.level === payload.level).value = payload.value;
+      else
+        character.progress.push({
+          level: payload.level,
+          value: payload.value
+        })
+    }
 
   },
   characterProgressMax(state, payload) {
     const character = state.characters[payload.id];
-    const pr = character.progressMax.find(s => s.level === payload.level);
-    if (pr)
-      character.progressMax.find(s => s.level === payload.level).value = payload.value;
-    else
-      character.progressMax.push({
-        level: payload.level,
-        value: payload.value
-      })
+    if (character) {
+      const pr = character.progressMax?.find(s => s.level === payload.level);
+      if (pr)
+        character.progressMax.find(s => s.level === payload.level).value = payload.value;
+      else
+        character.progressMax.push({
+          level: payload.level,
+          value: payload.value
+        })
+    }
+
 
   },
   /**
@@ -2987,5 +2999,5 @@ const getDefaultState = () => ({
   focusPool: [],
   spellsFocus: [],
   spellTraditions: undefined,
-
+  isFeatLevelOne: false,
 });

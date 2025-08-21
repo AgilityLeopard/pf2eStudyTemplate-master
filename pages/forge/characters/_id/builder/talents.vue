@@ -8,16 +8,49 @@
       <!-- Динамическое изменение столбцов -->
       <v-tabs centered grow color="red">
         <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`"
-          ><h2 class="subtitle-2">Черты родословной</h2></v-tab
+          ><h2 class="subtitle-2">
+            Черты родословной
+            <v-chip style="flex: none" right pill>
+              {{ characterMaxType("ancestry") }} /
+              {{ Math.trunc((characterLevel() - 1) / 4) + 1 }}
+            </v-chip>
+          </h2></v-tab
         >
         <v-tab class="caption" key="tab-class" :href="`#tab-class`"
-          ><h2 class="subtitle-2">Черты класса</h2></v-tab
+          ><h2 class="subtitle-2">
+            Черты класса
+            <v-chip v-if="archetype" style="flex: none" right pill>
+              {{ characterMaxType("class") }} /
+              {{
+                Math.trunc(characterLevel() / 2) +
+                (archetype.isFeatLevelOne && archetype.isFeatLevelOne === true
+                  ? 1
+                  : 0)
+              }}
+            </v-chip>
+          </h2></v-tab
         >
         <v-tab class="caption" key="tab-skill" :href="`#tab-skill`"
-          ><h2 class="subtitle-2">Черты Навыков</h2></v-tab
+          ><h2 class="subtitle-2">
+            Черты Навыков
+            <v-chip v-if="archetype" style="flex: none" right pill>
+              {{ characterMaxType("skill") }} /
+              {{
+                archetype?.keywords === "плут"
+                  ? Math.trunc(characterLevel() / 1)
+                  : Math.trunc(characterLevel() / 2)
+              }}
+            </v-chip>
+          </h2></v-tab
         >
         <v-tab class="caption" key="tab-general" :href="`#tab-general`"
-          ><h2 class="subtitle-2">Черты общие</h2></v-tab
+          ><h2 class="subtitle-2">
+            Черты общие
+            <v-chip v-if="archetype" style="flex: none" right pill>
+              {{ characterMaxType("general") }} /
+              {{ Math.trunc((characterLevel() + 1) / 4) }}
+            </v-chip>
+          </h2></v-tab
         >
         <v-tab class="caption" key="tab-additional" :href="`#tab-additional`"
           ><h2 class="subtitle-2">Черты дополнительные</h2></v-tab
@@ -242,7 +275,8 @@
                 <v-expansion-panel-header
                   >{{ levelAncestry }} уровень
                   <span v-if="characterClassTalent(levelAncestry)">
-                    ({{ characterClassTalent(levelAncestry)?.label }})</span>
+                    ({{ characterClassTalent(levelAncestry)?.label }})</span
+                  >
                   <v-col :cols="4" :sm="2">
                     <v-btn
                       color="error"
@@ -2231,6 +2265,13 @@ export default {
       }).sort((a, b) => a.id.localeCompare(b.id));
       return talents.find(s => s.place === 'free'+level);
 
+    },
+    characterMaxType(item) {
+       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
+      const level = this.characterLevel();
+      const max = characterTalents.filter(s => s.place.includes(item)).filter(s => level >= s.level).length;
+
+      return max;
     },
     FreeTalentsLength(){
       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);

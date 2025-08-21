@@ -9,33 +9,33 @@
           trait.key !== 'обычный'
         "
       >
-        <v-tooltip bottom>
+        <v-tooltip bottom :max-width="280" content-class="trait-tooltip">
           <template v-slot:activator="{ on }">
             <div v-on="on" class="t">
               {{ trait.key }}
             </div>
           </template>
-          <span>{{ trait.desc }}</span>
+          <span class="trait-tooltip__inner">{{ trait.desc }}</span>
         </v-tooltip>
       </p>
       <p class="rare" v-if="trait.key === 'редкий'">
-        <v-tooltip bottom>
+        <v-tooltip bottom :max-width="280" content-class="trait-tooltip">
           <template v-slot:activator="{ on }">
             <div v-on="on" class="t">
               {{ trait.key }}
             </div>
           </template>
-          <span>{{ trait.desc }}</span>
+          <span class="trait-tooltip__inner">{{ trait.desc }}</span>
         </v-tooltip>
       </p>
       <p class="uncommon" v-if="trait.key === 'необычный'">
-        <v-tooltip bottom>
+        <v-tooltip bottom :max-width="280" content-class="trait-tooltip">
           <template v-slot:activator="{ on }">
             <div v-on="on" class="t">
               {{ trait.key }}
             </div>
           </template>
-          <span>{{ trait.desc }}</span>
+          <span class="trait-tooltip__inner">{{ trait.desc }}</span>
         </v-tooltip>
       </p>
     </li>
@@ -185,7 +185,8 @@ export default {
   display: inline;
   padding: 0;
   margin: 0;
-  background-color: transparent;
+  /* background-color: transparent; */
+  background-color: linear-gradient(145deg, #2a2b31, #1f1f23);
   cursor: pointer;
 }
 
@@ -199,7 +200,20 @@ export default {
   display: inline;
   padding: 0;
   margin: 0;
-  background-color: transparent;
+  background: linear-gradient(145deg, #2a2b31, #1f1f23);
   cursor: pointer;
+}
+
+/* scoped, но с пробросом внутрь тултипа */
+:deep(.trait-tooltip) {
+  /* ограничение ширины; можно адаптивно: max-width: min(80vw, 280px); */
+  max-width: 280px;
+  white-space: normal !important; /* переопределяем Vuetify nowrap */
+}
+
+:deep(.trait-tooltip .trait-tooltip__inner) {
+  display: inline-block;
+  overflow-wrap: anywhere; /* переносим длинные слова/URL */
+  word-break: break-word; /* на случай очень длинных токенов */
 }
 </style>

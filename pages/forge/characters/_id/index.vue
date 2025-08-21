@@ -498,895 +498,1044 @@
         </v-col>
         <!-- </v-row> -->
       </v-row>
-    </v-container>
 
-    <v-row justify="center ma-2" no-gutters>
       <!-- skills -->
-      <v-col :cols="12" :sm="6" :md="6" :lg="3">
-        <v-row no-gutters>
-          <v-col :cols="12" class="pa-1">
-            <v-card style="height: 755px; display: flex; flex-flow: column">
-              <v-card-title
-                style="background-color: hsl(4, 90%, 58%); color: #fff"
-                class="body-1 pt-1 pb-1"
-              >
-                <h2 class="subtitle-1">Навыки</h2>
-              </v-card-title>
-
-              <v-simple-table dense style="overflow-y: auto">
-                <thead>
-                  <tr>
-                    <th v-for="header in skillHeaders" :class="header.class">
-                      {{ header.text }}
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr v-for="item in skills">
-                    <td class="text-left pa-1 small">
-                      {{ item.name }}
-                      <!-- <span v-if="item.custom">
-                        <v-hover>
-                          <v-icon
-                            small
-                            @click="removeCustomSkill(item.key)"
-                            slot-scope="{ hover }"
-                            :color="`${hover ? 'error' : ''}`"
-                            >delete</v-icon
-                          >
-                        </v-hover>
-                      </span> -->
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{ item.attributeName.substring(0, 3) }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{ characterlabel(item) }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{ computeSkillPool(item) }}
-                    </td>
-                    <!-- <td class="text-center pa-1 small">
-                  <v-tooltip bottom v-if="item.modifiers.length > 0">
-                    <template v-slot:activator="{ on }">
-                      <v-avatar
-                        :color="valueHintColor(item)"
-                        size="12"
-                        v-on="on"
-                      >
-                        <v-icon dark small>{{valueHintIcon(item)}}</v-icon>
-                      </v-avatar>
-                    </template>
-                    <div>Pool {{ item.rating + item.adjustedAttributeValue }} = Skill ({{item.rating}}) + {{item.attributeObject.name}} ({{item.attributeObject.adjustedRating}})</div>
-                    <div v-for="modifier in item.modifiers.filter((m) => m.condition === null)">
-                      {{modifier.valueString}} • {{modifier.provider}} ({{modifier.category}})
-                    </div>
-                    <div v-if="item.modifiers.find((m) => m.condition !== null)">
-                      <div><strong>Conditional modifiers:</strong></div>
-                      <div v-for="modifier in item.modifiers.filter((m) => m.condition !== null)">
-                        {{modifier.valueString}} {{modifier.condition}} • {{modifier.provider}} ({{modifier.category}})
-                      </div>
-                    </div>
-                  </v-tooltip>
-                </td> -->
-                  </tr>
-                </tbody>
-              </v-simple-table>
-
-              <v-spacer></v-spacer>
-
-              <!-- <v-card-actions style="justify-content: center;">
-              <v-btn x-small text @click="openSkillsSettings">Additional Skill <v-icon small>settings</v-icon></v-btn>
-            </v-card-actions> -->
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-col>
-
-      <!-- actions, gear, feats, spells, ... -->
-      <v-col :cols="12" :sm="12" :md="12" :lg="6" class="pa-1">
-        <v-card>
-          <v-tabs centered grow color="red">
-            <!-- <v-tab class="caption" key="actions" :href="`#tab-actions`"
+      <!-- <v-col :cols="12" :sm="6" :md="6" :lg="3">
+        <v-row no-gutters> </v-row>
+      </v-col> -->
+      <v-row justify="center">
+        <!-- actions, gear, feats, spells, ... -->
+        <v-col cols="12" md="12">
+          <v-card>
+            <v-tabs centered grow color="red">
+              <!-- <v-tab class="caption" key="actions" :href="`#tab-actions`"
               ><h2 class="subtitle-2">Оружие</h2></v-tab
             > -->
-            <v-tab class="caption" key="wargear" :href="`#tab-wargear`"
-              ><h2 class="subtitle-2">Снаряжение</h2></v-tab
-            >
-            <v-tab
-              class="caption"
-              key="abilities-talents"
-              :href="`#tab-abilities-talents`"
-              ><h2 class="subtitle-2">Способности</h2></v-tab
-            >
-            <v-tab
-              class="caption"
-              key="psychic-powers"
-              :href="`#tab-psychic-powers`"
-              v-if="psychicPowers.length > 0"
-              ><h2 class="subtitle-2">Заклинания</h2></v-tab
-            >
-            <v-tab class="caption" key="objectives" :href="`#tab-objectives`"
-              ><h2 class="subtitle-2">Описание</h2></v-tab
-            >
+              <v-tab class="caption" key="wargear" :href="`#tab-wargear`"
+                ><h2 class="subtitle-2">Снаряжение</h2></v-tab
+              >
+              <v-tab
+                class="caption"
+                key="abilities-talents"
+                :href="`#tab-abilities-talents`"
+                ><h2 class="subtitle-2">Способности</h2></v-tab
+              >
+              <v-tab class="caption" key="actions" :href="`#tab-actions`"
+                ><h2 class="subtitle-2">Скиллы</h2>
+              </v-tab>
+              <v-tab
+                class="caption"
+                key="psychic-powers"
+                :href="`#tab-psychic-powers`"
+                v-if="psychicPowers.length > 0"
+                ><h2 class="subtitle-2">Заклинания</h2></v-tab
+              >
+              <v-tab class="caption" key="objectives" :href="`#tab-objectives`"
+                ><h2 class="subtitle-2">Описание</h2></v-tab
+              >
 
-            <!-- actions (all, weapons, powers, other) -->
-            <v-tab-item
-              class="my-tab-item"
-              key="actions"
-              :value="`tab-actions`"
-            >
-            </v-tab-item>
+              <!-- actions (all, weapons, powers, other) -->
+              <v-tab-item
+                class="my-tab-item"
+                key="actions"
+                :value="`tab-actions`"
+              >
+                <v-col :cols="12" class="pa-1">
+                  <v-card style="display: flex; flex-flow: column">
+                    <v-row no-gutters style="height: 100%">
+                      <!-- Левая колонка (30%) -->
+                      <v-col cols="12" md="4" class="pa-2 left-col">
+                        <v-card-title
+                          style="
+                            background-color: hsl(4, 90%, 58%);
+                            color: #fff;
+                          "
+                          class="body-1 pt-1 pb-1"
+                        >
+                          <h2 class="subtitle-1">Навыки</h2>
+                        </v-card-title>
 
-            <!-- wargear (All, Weapons, Armour, Gear, Other Possessions) -->
-            <v-tab-item
-              class="my-tab-item"
-              key="wargear"
-              :value="`tab-wargear`"
-            >
-              <div class="pa-2">
-                <v-chip-group
-                  mandatory
-                  active-class="red--text"
-                  v-model="wargearSection.selection"
-                >
-                  <v-chip
-                    label
-                    small
-                    v-for="item in [
-                      `Оружие`,
-                      `Доспехи`,
-                      `Расходники`,
-                      `Сокровища`,
-                      `Снаряжение`,
-                      `Все`,
-                    ]"
-                    :key="item.toLowerCase()"
-                    :value="item.toLowerCase()"
-                  >
-                    {{ item }}
-                  </v-chip>
-                </v-chip-group>
-
-                <div style="height: 505px; overflow-y: auto">
-                  <!-- species < abilities -->
-                  <div
-                    v-show="
-                      wargearSection.selection === 'оружие' ||
-                      wargearSection.selection === 'все'
-                    "
-                  >
-                    <v-data-table
-                      :headers="weaponHeaders"
-                      :items="weapons"
-                      hide-default-footer
-                      v-if="weapons.length !== 0"
-                    >
-                      <template v-slot:item="{ item }">
-                        <tr v-if="item">
-                          <td class="text-left pa-1 small">
-                            {{ item.nameGear }}
-                          </td>
-
-                          <td class="text-center pa-1 small">
-                            <span>{{ groupName(item.group) }}</span>
-                          </td>
-
-                          <td class="text-center pa-1 small">
-                            + {{ attackModifier(item) }} /
-                            {{ attackModifier(item) - 5 }} /
-                            {{ attackModifier(item) - 10 }}
-                          </td>
-
-                          <td class="text-center pa-1 small">
-                            <div v-if="item.damage">
-                              <span
-                                >{{ item.damage }}
-                                {{ typeDamage(item.typeDamage) }}</span
-                              >
+                        <!-- сюда что-то -->
+                        <v-data-table
+                          :headers="skillHeaders"
+                          :items="skills"
+                          dense
+                          :items-per-page="25"
+                          class="elevation-1"
+                          hide-default-footer
+                        >
+                          <template v-slot:item.name="{ item }">
+                            <div class="text-left pa-1 small">
+                              {{ item.name }}
                             </div>
-                          </td>
+                          </template>
 
-                          <td class="text-center pa-1 small">
-                            <span>{{ category(item.category) }}</span>
-                          </td>
-
-                          <td class="text-center pa-1 small">
-                            <span>{{ item.hands }}</span>
-                          </td>
-
-                          <td class="text-left pa-1 small">
-                            <span
-                              v-if="item.traits && item.traits.length > 0"
-                              >{{ item.traits.join(", ") }}</span
-                            >
-                          </td>
-                          <td class="text-left">
-                            <v-btn
-                              outlined
-                              x-small
-                              color="info"
-                              @click="openDialogItem(item)"
-                            >
-                              <v-icon left>visibility</v-icon> Просмотр
-                            </v-btn>
-                          </td>
-                        </tr>
-                      </template>
-                    </v-data-table>
-
-                    <div
-                      v-if="weapons.length === 0"
-                      align="center"
-                      class="mt-2 mb-2"
-                    >
-                      <em>Нет оружия? Возьми на вкладке Снаряжения!</em>
-                    </div>
-                  </div>
-
-                  <!-- species < abilities -->
-                  <div
-                    v-show="
-                      wargearSection.selection === 'доспехи' ||
-                      wargearSection.selection === 'все'
-                    "
-                  >
-                    <v-data-table
-                      :headers="armorHeaders"
-                      :items="armour"
-                      hide-default-footer
-                      v-if="armour.length !== 0"
-                    >
-                      <template v-slot:item="{ item }">
-                        <tr v-if="item">
-                          <td class="text-left">
-                            {{ item.nameGear }}
-                          </td>
-                          <td class="text-center">
-                            {{ item.group }}
-                          </td>
-                          <td class="text-center">
-                            {{ item.weight }} + {{ item.weightL }}
-                          </td>
-                          <td class="text-center">
-                            {{ item.category }}
-                          </td>
-                          <td class="text-left">
-                            <span
-                              v-if="item.traits && item.traits.length > 0"
-                              >{{ item.traits.join(", ") }}</span
-                            >
-                          </td>
-                          <td class="text-left">
-                            <v-btn
-                              outlined
-                              x-small
-                              color="info"
-                              @click="openDialogItem(item)"
-                            >
-                              <v-icon left>visibility</v-icon> Просмотр
-                            </v-btn>
-                          </td>
-                        </tr>
-                      </template>
-                    </v-data-table>
-
-                    <div
-                      v-if="armour.length === 0"
-                      align="center"
-                      class="mt-2 mb-2"
-                    >
-                      <em>Нет доспехов? Возьми на вкладке Снаряжения!</em>
-                    </div>
-                  </div>
-
-                  <!-- species < abilities -->
-                  <div
-                    v-show="
-                      wargearSection.selection === 'снаряжение' ||
-                      wargearSection.selection === 'все'
-                    "
-                  >
-                    <div
-                      v-for="gearItem in wargear"
-                      :key="gearItem.id"
-                      class="caption mb-2"
-                    >
-                      <div v-if="gearItem.variant" style="display: inline">
-                        <strong>{{ gearItem.variant }}</strong>
-                        <span> ({{ gearItem.name }})</span>
-                      </div>
-                      <strong v-else>{{ gearItem.name }}</strong>
-                      <em v-if="gearItem.type"> • {{ gearItem.type }}</em>
-                      <span v-if="gearItem.source">
-                        <em v-if="gearItem.source.key">
-                          • {{ gearItem.source.key }}</em
-                        ><em v-if="!isNaN(gearItem.source.page)"
-                          >, pg. {{ gearItem.source.page }}</em
-                        >
-                      </span>
-
-                      <p class="mb-1" v-if="gearItem.snippet">
-                        {{ gearItem.snippet }}
-                      </p>
-                      <div
-                        class="mb-1"
-                        v-else
-                        v-html="gearItem.description"
-                      ></div>
-
-                      <div
-                        v-if="
-                          gearItem.meta !== undefined &&
-                          gearItem.meta.length > 0 &&
-                          ['armour'].includes(gearItem.meta[0].type)
-                        "
-                      >
-                        <p
-                          class="ml-1 pl-2 mb-1"
-                          style="border-left: solid 3px lightgrey"
-                          v-for="trait in gearItem.meta[0].traits"
-                          v-if="traitByName(trait, true)"
-                          :key="trait"
-                        >
-                          <strong>{{ trait }}: </strong>
-                          {{ traitByName(trait, true).crunch }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </v-tab-item>
-
-            <!-- abilities (All, Race, Archetype, Talents, Faith?, Other) -->
-            <v-tab-item
-              class="my-tab-item"
-              key="abilities-talents"
-              :value="`tab-abilities-talents`"
-            >
-              <div class="pa-2">
-                <v-chip-group
-                  mandatory
-                  active-class="red--text"
-                  v-model="abilitySection.selection"
-                >
-                  <v-chip
-                    label
-                    small
-                    v-for="item in [
-                      `Все`,
-                      `Наследие`,
-                      `Класс`,
-                      `Предыстория`,
-                      `Черты`,
-                      `Другое`,
-                    ]"
-                    :key="item.toLowerCase()"
-                    :value="item.toLowerCase()"
-                  >
-                    {{ item }}
-                  </v-chip>
-                </v-chip-group>
-
-                <div style="height: 505px; overflow-y: auto">
-                  <!-- species < abilities -->
-                  <div
-                    v-show="
-                      abilitySection.selection === 'наследие' ||
-                      (abilitySection.selection === 'все' &&
-                        speciesAbilities.length > 0)
-                    "
-                  >
-                    <div
-                      class="mb-1"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
-                    >
-                      <span class="body-2 red--text">Наследие/Родословная</span>
-                    </div>
-                    <div
-                      v-for="ability in speciesAbilities"
-                      :key="ability.name"
-                      class="caption mb-2"
-                    >
-                      <strong>{{ ability.name }}</strong
-                      ><em v-if="ability.source"> • {{ ability.source }}</em>
-                      <div v-html="computeFormatedText(ability.effect)" />
-
-                      <div
-                        v-if="ability.selectedOptions"
-                        v-for="selectedOption in ability.selectedOptions"
-                        class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey"
-                      >
-                        <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet">
-                          <p
-                            class="mb-1"
-                            v-html="computeFormatedText(selectedOption.snippet)"
-                          ></p>
+                          <!-- <template v-slot:item.attributeName="{ item }">
+                        <div class="text-center pa-1 small">
+                          {{ item.attributeName.substring(0, 3) }}
                         </div>
-                        <div
-                          v-else
-                          v-html="
-                            computeFormatedText(selectedOption.description)
-                          "
-                        ></div>
-                      </div>
-                    </div>
-                    <div
-                      v-if="speciesAbilities.length === 0"
-                      align="center"
-                      class="mt-2 mb-2"
-                    >
-                      <em
-                        >Нет особенностей? Выберите наследие и все увидите!</em
-                      >
-                    </div>
-                  </div>
+                      </template> -->
 
-                  <!-- archetype < abilities -->
-                  <div
-                    v-show="
-                      ['все', 'класс'].some(
-                        (i) => i === abilitySection.selection
-                      )
-                    "
-                  >
-                    <div
-                      class="mb-1"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
-                    >
-                      <span class="body-2 red--text">Класс</span>
-                    </div>
+                          <template v-slot:item.rating="{ item }">
+                            <div class="text-center pa-1 small">
+                              {{ characterlabel(item) }}
+                            </div>
+                          </template>
 
-                    <div
-                      v-for="ability in archetypeAbilities"
-                      :key="ability.key"
-                      class="caption mb-2"
-                    >
-                      <strong>{{ ability.name }}</strong>
-                      <em v-if="ability.source"> • {{ ability.source }}</em>
-                      <em v-if="ability.level"> {{ ability.level }}</em>
-                      <div v-if="ability.snippet">
-                        <p
-                          class="mb-1"
-                          v-html="computeFormatedText(ability.snippet)"
-                        ></p>
-                      </div>
-                      <div
-                        v-else
-                        v-html="computeFormatedText(ability.description)"
-                      ></div>
+                          <template v-slot:item.value="{ item }">
+                            <div class="text-center pa-1 small">
+                              {{ computeSkillPool(item) }}
+                            </div>
+                          </template>
+                        </v-data-table>
+                      </v-col>
 
-                      <div
-                        v-if="ability.selectedOptions"
-                        v-for="selectedOption in ability.selectedOptions"
-                        class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey"
-                      >
-                        <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet">
-                          <p
-                            class="mb-1"
-                            v-html="computeFormatedText(selectedOption.snippet)"
-                          ></p>
+                      <!-- Правая колонка (70%) -->
+                      <v-col cols="12" md="8" class="pa-2 right-col">
+                        <div class="content-box"></div>
+                        <div v-if="actionList"></div>
+                        <div>
+                          <v-expansion-panels multiple>
+                            <!-- Панель для Исследование -->
+                            <v-expansion-panel v-if="explorationActions">
+                              <v-expansion-panel-header>
+                                <div
+                                  class="d-flex align-center justify-space-between w-100"
+                                >
+                                  <span class="section-title"
+                                    >Исследование</span
+                                  >
+                                  <!-- <v-badge
+                                    color="grey"
+                                    :content="explorationActions"
+                                    bordered
+                                    overlap
+                                    class="ml-2"
+                                  ></v-badge> -->
+                                </div>
+                              </v-expansion-panel-header>
+                              <v-expansion-panel-content>
+                                <v-list dense class="action-list">
+                                  <v-list-item
+                                    v-for="(action, i) in explorationActions"
+                                    :key="i"
+                                    class="action-item"
+                                    @click="openDialogAction(action)"
+                                  >
+                                    <div class="action-title">
+                                      <span class="action-symbol">{{
+                                        action.symbol
+                                      }}</span>
+                                      <span>{{ action.name }}</span>
+                                      <div v-if="action?.actions">
+                                        <img
+                                          :src="
+                                            iconAction(action?.actions?.value)
+                                          "
+                                          :class="{
+                                            'invert-icon': !$vuetify.theme.dark,
+                                          }"
+                                        />
+                                      </div>
+                                    </div>
+                                    <!-- <v-badge color="grey" bordered class="ml-2">
+                                      <span class="badge-label">{{
+                                        action.category
+                                      }}</span>
+                                    </v-badge> -->
+                                  </v-list-item>
+                                </v-list>
+                              </v-expansion-panel-content>
+                            </v-expansion-panel>
+
+                            <!-- Панель для Отдых -->
+                            <v-expansion-panel v-if="restActions">
+                              <v-expansion-panel-header>
+                                <div
+                                  class="d-flex align-center justify-space-between w-100"
+                                >
+                                  <span class="section-title">Отдых</span>
+                                  <!-- <v-badge
+                                    color="grey"
+                                    :content="restActions"
+                                    bordered
+                                    overlap
+                                    class="ml-2"
+                                  ></v-badge> -->
+                                </div>
+                              </v-expansion-panel-header>
+                              <v-expansion-panel-content>
+                                <v-list dense class="action-list">
+                                  <v-list-item
+                                    v-for="(action, i) in restActions"
+                                    :key="i"
+                                    class="action-item"
+                                    @click="openDialogAction(action)"
+                                  >
+                                    <div class="action-title">
+                                      <span class="action-symbol">{{
+                                        action.symbol
+                                      }}</span>
+                                      <span>{{ action.name }}</span>
+                                      <div v-if="action?.actions">
+                                        <img
+                                          :src="
+                                            iconAction(action?.actions?.value)
+                                          "
+                                          :class="{
+                                            'invert-icon': !$vuetify.theme.dark,
+                                          }"
+                                        />
+                                      </div>
+                                    </div>
+                                    <!-- <v-badge color="grey" bordered class="ml-2">
+                                      <span class="badge-label">{{
+                                        action.category
+                                      }}</span> -->
+                                    <!-- </v-badge> -->
+                                  </v-list-item>
+                                </v-list>
+                              </v-expansion-panel-content>
+                            </v-expansion-panel>
+
+                            <!-- Панель для всех остальных -->
+                            <v-expansion-panel v-if="otherActions">
+                              <v-expansion-panel-header>
+                                <div
+                                  class="d-flex align-center justify-space-between w-100"
+                                >
+                                  <span class="section-title">Прочие</span>
+                                  <!-- <v-badge
+                                    color="grey"
+                                    :content="otherActions"
+                                    bordered
+                                    overlap
+                                    class="ml-2"
+                                  ></v-badge> -->
+                                </div>
+                              </v-expansion-panel-header>
+                              <v-expansion-panel-content>
+                                <v-list dense class="action-list">
+                                  <v-list-item
+                                    v-for="(action, i) in otherActions"
+                                    :key="i"
+                                    class="action-item"
+                                    @click="openDialogAction(action)"
+                                  >
+                                    <div class="action-title">
+                                      <span class="action-symbol">{{
+                                        action.symbol
+                                      }}</span>
+                                      <span>{{ action.name }}</span>
+                                      <div v-if="action?.actions">
+                                        <img
+                                          :src="
+                                            iconAction(action?.actions?.value)
+                                          "
+                                          :class="{
+                                            'invert-icon': !$vuetify.theme.dark,
+                                          }"
+                                        />
+                                      </div>
+                                    </div>
+                                    <!-- <v-badge color="grey" bordered class="ml-2">
+                                      <span class="badge-label">{{
+                                        action.category
+                                      }}</span>
+                                    </v-badge> -->
+                                  </v-list-item>
+                                </v-list>
+                              </v-expansion-panel-content>
+                            </v-expansion-panel>
+                          </v-expansion-panels>
                         </div>
-                        <div
-                          v-else
-                          v-html="
-                            computeFormatedText(selectedOption.description)
-                          "
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
+                      </v-col>
+                    </v-row>
 
-                  <!-- Ascensions < abilities (Background, Other) -->
-                  <div
-                    v-show="
-                      abilitySection.selection === 'предыстория' ||
-                      (abilitySection.selection === 'все' &&
-                        ascensionAbilities.length > 0)
-                    "
+                    <v-spacer></v-spacer>
+                  </v-card>
+                </v-col>
+              </v-tab-item>
+
+              <!-- wargear (All, Weapons, Armour, Gear, Other Possessions) -->
+              <v-tab-item
+                class="my-tab-item"
+                key="wargear"
+                :value="`tab-wargear`"
+              >
+                <div class="pa-2">
+                  <v-chip-group
+                    mandatory
+                    active-class="red--text"
+                    v-model="wargearSection.selection"
                   >
-                    <div
-                      class="mb-1"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                    <v-chip
+                      label
+                      small
+                      v-for="item in [
+                        `Оружие`,
+                        `Доспехи`,
+                        `Расходники`,
+                        `Сокровища`,
+                        `Снаряжение`,
+                        `Все`,
+                      ]"
+                      :key="item.toLowerCase()"
+                      :value="item.toLowerCase()"
                     >
-                      <span class="body-2 red--text">Предыстория</span>
-                    </div>
+                      {{ item }}
+                    </v-chip>
+                  </v-chip-group>
 
+                  <div style="height: 505px; overflow-y: auto">
+                    <!-- species < abilities -->
                     <div
-                      v-for="ability in ascensionAbilities"
-                      :key="ability.name"
-                      class="caption mb-2"
-                    >
-                      <strong>{{ ability.name }}</strong>
-                      <em v-if="ability.source"> • {{ ability.source }}</em>
-
-                      <div v-if="ability.snippet">
-                        <p
-                          class="mb-1"
-                          v-html="computeFormatedText(ability.snippet)"
-                        ></p>
-                      </div>
-                      <div
-                        v-else
-                        v-html="computeFormatedText(ability.description)"
-                      ></div>
-
-                      <div
-                        v-if="ability.selectedOption"
-                        class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey"
-                      >
-                        <strong v-if="ability.selectedOption.name">{{
-                          ability.selectedOption.name
-                        }}</strong>
-                        <div v-if="ability.selectedOption.snippet">
-                          <p
-                            class="mb-1"
-                            v-html="ability.selectedOption.snippet"
-                          ></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- talents < abilities -->
-                  <div
-                    v-show="
-                      ['все', 'черты'].some(
-                        (i) => i === abilitySection.selection
-                      )
-                    "
-                  >
-                    <div
-                      class="mb-1"
-                      style="
-                        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-                        display: flex;
+                      v-show="
+                        wargearSection.selection === 'оружие' ||
+                        wargearSection.selection === 'все'
                       "
                     >
-                      <span class="body-2 red--text" style="flex: 1"
-                        >Черты</span
+                      <v-data-table
+                        :headers="weaponHeaders"
+                        :items="weapons"
+                        hide-default-footer
+                        v-if="weapons.length !== 0"
                       >
+                        <template v-slot:item="{ item }">
+                          <tr v-if="item">
+                            <td class="text-left pa-1 small">
+                              {{ item.nameGear }}
+                            </td>
+
+                            <td class="text-center pa-1 small">
+                              <span>{{ groupName(item.group) }}</span>
+                            </td>
+
+                            <td class="text-center pa-1 small">
+                              + {{ attackModifier(item) }} /
+                              {{ attackModifier(item) - 5 }} /
+                              {{ attackModifier(item) - 10 }}
+                            </td>
+
+                            <td class="text-center pa-1 small">
+                              <div v-if="item.damage">
+                                <span
+                                  >{{ item.damage }}
+                                  {{ typeDamage(item.typeDamage) }}</span
+                                >
+                              </div>
+                            </td>
+
+                            <td class="text-center pa-1 small">
+                              <span>{{ category(item.category) }}</span>
+                            </td>
+
+                            <td class="text-center pa-1 small">
+                              <span>{{ item.hands }}</span>
+                            </td>
+
+                            <td class="text-left pa-1 small">
+                              <span
+                                v-if="item.traits && item.traits.length > 0"
+                                >{{ item.traits.join(", ") }}</span
+                              >
+                            </td>
+                            <td class="text-left">
+                              <v-btn
+                                outlined
+                                x-small
+                                color="info"
+                                @click="openDialogItem(item)"
+                              >
+                                <v-icon left>visibility</v-icon> Просмотр
+                              </v-btn>
+                            </td>
+                          </tr>
+                        </template>
+                      </v-data-table>
+
+                      <div
+                        v-if="weapons.length === 0"
+                        align="center"
+                        class="mt-2 mb-2"
+                      >
+                        <em>Нет оружия? Возьми на вкладке Снаряжения!</em>
+                      </div>
                     </div>
 
+                    <!-- species < abilities -->
                     <div
-                      v-if="talents.length > 0"
-                      v-for="talent in talents"
-                      :key="talent.name"
-                      class="caption mb-2"
+                      v-show="
+                        wargearSection.selection === 'доспехи' ||
+                        wargearSection.selection === 'все'
+                      "
                     >
-                      <strong>{{ talent.name }}</strong>
-                      <em> • Черта </em>
-                      <span v-if="talent.type && talent.level">
-                        <em v-if="talent.type"> • {{ talent.type }}</em
-                        ><em v-if="talent.level"> • {{ talent.level }}</em>
-                      </span>
-                      <div v-if="talent.snippet">
-                        <p
-                          class="mb-1"
-                          v-html="computeFormatedText(talent.snippet)"
-                        ></p>
-                      </div>
-                      <div
-                        v-else
-                        v-html="computeFormatedText(talent.description)"
-                      ></div>
+                      <v-data-table
+                        :headers="armorHeaders"
+                        :items="armour"
+                        hide-default-footer
+                        v-if="armour.length !== 0"
+                      >
+                        <template v-slot:item="{ item }">
+                          <tr v-if="item">
+                            <td class="text-left">
+                              {{ item.nameGear }}
+                            </td>
+                            <td class="text-center">
+                              {{ item.group }}
+                            </td>
+                            <td class="text-center">
+                              {{ item.weight }} + {{ item.weightL }}
+                            </td>
+                            <td class="text-center">
+                              {{ item.category }}
+                            </td>
+                            <td class="text-left">
+                              <span
+                                v-if="item.traits && item.traits.length > 0"
+                                >{{ item.traits.join(", ") }}</span
+                              >
+                            </td>
+                            <td class="text-left">
+                              <v-btn
+                                outlined
+                                x-small
+                                color="info"
+                                @click="openDialogItem(item)"
+                              >
+                                <v-icon left>visibility</v-icon> Просмотр
+                              </v-btn>
+                            </td>
+                          </tr>
+                        </template>
+                      </v-data-table>
 
                       <div
-                        v-if="talent.selectedOptions"
-                        v-for="selectedOption in talent.selectedOptions"
-                        class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey"
+                        v-if="armour.length === 0"
+                        align="center"
+                        class="mt-2 mb-2"
                       >
-                        <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet">
-                          <p
-                            class="mb-1"
-                            v-html="computeFormatedText(selectedOption.snippet)"
-                          ></p>
+                        <em>Нет доспехов? Возьми на вкладке Снаряжения!</em>
+                      </div>
+                    </div>
+
+                    <!-- species < abilities -->
+                    <div
+                      v-show="
+                        wargearSection.selection === 'снаряжение' ||
+                        wargearSection.selection === 'все'
+                      "
+                    >
+                      <div
+                        v-for="gearItem in wargear"
+                        :key="gearItem.id"
+                        class="caption mb-2"
+                      >
+                        <div v-if="gearItem.variant" style="display: inline">
+                          <strong>{{ gearItem.variant }}</strong>
+                          <span> ({{ gearItem.name }})</span>
                         </div>
-                        <div
-                          v-else
-                          v-html="
-                            computeFormatedText(selectedOption.description)
-                          "
-                        ></div>
-                      </div>
-
-                      <div
-                        v-if="false"
-                        class="mt-1 mb-1 ml-1 pl-2"
-                        style="
-                          flex-wrap: wrap;
-                          display: flex;
-                          border-left: solid 3px lightgrey;
-                        "
-                      >
-                        <div
-                          v-for="pointIndex in characterFaith.points"
-                          class="faith-box"
-                          :class="{
-                            'faith-box--filled':
-                              pointIndex <= characterFaith.spend,
-                          }"
-                          @click="toggleResourceFaith(pointIndex)"
-                        ></div>
-                        <span class="caption ml-2">/ Faith Points</span>
-                      </div>
-                    </div>
-
-                    <div
-                      v-if="talents.length === 0"
-                      align="center"
-                      class="mt-2 mb-2"
-                    >
-                      <em>Knowledge is treason.</em>
-                    </div>
-                  </div>
-
-                  <!-- other < abilities (Ascensions, Background, Other) -->
-                  <div
-                    v-show="
-                      abilitySection.selection === 'другое' ||
-                      (abilitySection.selection === 'все' &&
-                        otherAbilities.length > 0)
-                    "
-                  >
-                    <div
-                      class="mb-1"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
-                    >
-                      <span class="body-2 red--text">Other</span>
-                    </div>
-
-                    <div
-                      v-for="ability in otherAbilities"
-                      :key="`${ability.id ? ability.id : ability.name}`"
-                      class="caption mb-3"
-                    >
-                      <strong>{{ ability.name }}</strong>
-                      <em v-if="ability.source"> • {{ ability.source }}</em>
-                      <span v-if="ability.source === 'Mutation'">
-                        <v-hover>
-                          <v-icon
-                            small
-                            @click="removeMutation(ability.id)"
-                            slot-scope="{ hover }"
-                            :color="`${hover ? 'error' : ''}`"
-                            >delete</v-icon
+                        <strong v-else>{{ gearItem.name }}</strong>
+                        <em v-if="gearItem.type"> • {{ gearItem.type }}</em>
+                        <span v-if="gearItem.source">
+                          <em v-if="gearItem.source.key">
+                            • {{ gearItem.source.key }}</em
+                          ><em v-if="!isNaN(gearItem.source.page)"
+                            >, pg. {{ gearItem.source.page }}</em
                           >
-                        </v-hover>
-                      </span>
+                        </span>
 
-                      <div v-if="ability.snippet">
-                        <p
-                          class="mb-1"
-                          v-html="computeFormatedText(ability.snippet)"
-                        ></p>
-                      </div>
-                      <div
-                        v-else
-                        v-html="computeFormatedText(ability.description)"
-                      ></div>
-
-                      <div
-                        v-if="ability.selectedOption"
-                        class="ml-1 pl-2 mt-1"
-                        style="border-left: solid 3px lightgrey"
-                      >
-                        <strong v-if="ability.selectedOption.name">{{
-                          ability.selectedOption.name
-                        }}</strong>
-                        <p v-if="ability.selectedOption.snippet">
-                          {{ ability.selectedOption.snippet }}
+                        <p class="mb-1" v-if="gearItem.snippet">
+                          {{ gearItem.snippet }}
                         </p>
-                      </div>
-
-                      <div
-                        v-if="ability.selectedOptions"
-                        v-for="selectedOption in ability.selectedOptions"
-                        class="ml-1 pl-2"
-                        style="border-left: solid 3px lightgrey"
-                      >
-                        <strong>{{ selectedOption.name }}</strong>
-                        <div v-if="selectedOption.snippet">
-                          <p
-                            class="mb-1"
-                            v-html="computeFormatedText(selectedOption.snippet)"
-                          ></p>
-                        </div>
                         <div
+                          class="mb-1"
                           v-else
-                          v-html="
-                            computeFormatedText(selectedOption.description)
-                          "
+                          v-html="gearItem.description"
                         ></div>
+
+                        <div
+                          v-if="
+                            gearItem.meta !== undefined &&
+                            gearItem.meta.length > 0 &&
+                            ['armour'].includes(gearItem.meta[0].type)
+                          "
+                        >
+                          <p
+                            class="ml-1 pl-2 mb-1"
+                            style="border-left: solid 3px lightgrey"
+                            v-for="trait in gearItem.meta[0].traits"
+                            v-if="traitByName(trait, true)"
+                            :key="trait"
+                          >
+                            <strong>{{ trait }}: </strong>
+                            {{ traitByName(trait, true).crunch }}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </v-tab-item>
+              </v-tab-item>
 
-            <!-- powers -->
-            <v-tab-item
-              class="my-tab-item"
-              key="psychic-powers"
-              :value="`tab-psychic-powers`"
-            >
-              <div class="pa-2">
-                <v-col
-                  :cols="12"
-                  v-if="
-                    characterArchetype && characterArchetype.spellProgression
-                  "
-                >
-                  <v-card
-                    class="mb-4"
-                    dense
-                    outlined
-                    v-for="levelAncestry in 10"
-                    :key="levelAncestry"
-                    v-if="
-                      levelAncestry - 1 <=
-                        characterArchetype.spellProgression[
-                          characterLevel()
-                        ].findIndex((t) => t == 0) -
-                          1 || characterLevel() == 20
-                    "
+              <!-- abilities (All, Race, Archetype, Talents, Faith?, Other) -->
+              <v-tab-item
+                class="my-tab-item"
+                key="abilities-talents"
+                :value="`tab-abilities-talents`"
+              >
+                <div class="pa-2">
+                  <v-chip-group
+                    mandatory
+                    active-class="red--text"
+                    v-model="abilitySection.selection"
                   >
-                    <h2 class="subtitle-1 text-center">
-                      {{
-                        levelAncestry - 1 === 0
-                          ? "Чары"
-                          : `${levelAncestry - 1} уровень`
-                      }}
-                    </h2>
-                    <div
-                      class="ammo-container"
-                      v-if="characterArchetype.prepared === false"
+                    <v-chip
+                      label
+                      small
+                      v-for="item in [
+                        `Все`,
+                        `Наследие`,
+                        `Класс`,
+                        `Предыстория`,
+                        `Черты`,
+                        `Другое`,
+                      ]"
+                      :key="item.toLowerCase()"
+                      :value="item.toLowerCase()"
                     >
-                      <!-- Патроны -->
+                      {{ item }}
+                    </v-chip>
+                  </v-chip-group>
+
+                  <div style="height: 505px; overflow-y: auto">
+                    <!-- species < abilities -->
+                    <div
+                      v-show="
+                        abilitySection.selection === 'наследие' ||
+                        (abilitySection.selection === 'все' &&
+                          speciesAbilities.length > 0)
+                      "
+                    >
                       <div
-                        class="magazine"
-                        @click="
-                          handleClick(
-                            $event,
-                            levelAncestry - 1,
-                            characterSpont[levelAncestry - 1]
-                              ? characterSpont[levelAncestry - 1].value
-                              : characterArchetype.spellProgression[
-                                  characterLevel()
-                                ]?.[levelAncestry - 1]
-                          )
-                        "
-                        @contextmenu.prevent="
-                          handleClick(
-                            $event,
-                            levelAncestry - 1,
-                            characterSpont[levelAncestry - 1]
-                              ? characterSpont[levelAncestry - 1].value
-                              : characterArchetype.spellProgression[
-                                  characterLevel()
-                                ]?.[levelAncestry - 1]
-                          )
+                        class="mb-1"
+                        style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      >
+                        <span class="body-2 red--text"
+                          >Наследие/Родословная</span
+                        >
+                      </div>
+                      <div
+                        v-for="ability in speciesAbilities"
+                        :key="ability.name"
+                        class="caption mb-2"
+                      >
+                        <strong>{{ ability.name }}</strong
+                        ><em v-if="ability.source"> • {{ ability.source }}</em>
+                        <div v-html="computeFormatedText(ability.effect)" />
+
+                        <div
+                          v-if="ability.selectedOptions"
+                          v-for="selectedOption in ability.selectedOptions"
+                          class="ml-1 pl-2"
+                          style="border-left: solid 3px lightgrey"
+                        >
+                          <strong>{{ selectedOption.name }}</strong>
+                          <div v-if="selectedOption.snippet">
+                            <p
+                              class="mb-1"
+                              v-html="
+                                computeFormatedText(selectedOption.snippet)
+                              "
+                            ></p>
+                          </div>
+                          <div
+                            v-else
+                            v-html="
+                              computeFormatedText(selectedOption.description)
+                            "
+                          ></div>
+                        </div>
+                      </div>
+                      <div
+                        v-if="speciesAbilities.length === 0"
+                        align="center"
+                        class="mt-2 mb-2"
+                      >
+                        <em
+                          >Нет особенностей? Выберите наследие и все
+                          увидите!</em
+                        >
+                      </div>
+                    </div>
+
+                    <!-- archetype < abilities -->
+                    <div
+                      v-show="
+                        ['все', 'класс'].some(
+                          (i) => i === abilitySection.selection
+                        )
+                      "
+                    >
+                      <div
+                        class="mb-1"
+                        style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      >
+                        <span class="body-2 red--text">Класс</span>
+                      </div>
+
+                      <div
+                        v-for="ability in archetypeAbilities"
+                        :key="ability.key"
+                        class="caption mb-2"
+                      >
+                        <strong>{{ ability.name }}</strong>
+                        <em v-if="ability.source"> • {{ ability.source }}</em>
+                        <em v-if="ability.level"> {{ ability.level }}</em>
+                        <div v-if="ability.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(ability.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="computeFormatedText(ability.description)"
+                        ></div>
+
+                        <div
+                          v-if="ability.selectedOptions"
+                          v-for="selectedOption in ability.selectedOptions"
+                          class="ml-1 pl-2"
+                          style="border-left: solid 3px lightgrey"
+                        >
+                          <strong>{{ selectedOption.name }}</strong>
+                          <div v-if="selectedOption.snippet">
+                            <p
+                              class="mb-1"
+                              v-html="
+                                computeFormatedText(selectedOption.snippet)
+                              "
+                            ></p>
+                          </div>
+                          <div
+                            v-else
+                            v-html="
+                              computeFormatedText(selectedOption.description)
+                            "
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Ascensions < abilities (Background, Other) -->
+                    <div
+                      v-show="
+                        abilitySection.selection === 'предыстория' ||
+                        (abilitySection.selection === 'все' &&
+                          ascensionAbilities.length > 0)
+                      "
+                    >
+                      <div
+                        class="mb-1"
+                        style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      >
+                        <span class="body-2 red--text">Предыстория</span>
+                      </div>
+
+                      <div
+                        v-for="ability in ascensionAbilities"
+                        :key="ability.name"
+                        class="caption mb-2"
+                      >
+                        <strong>{{ ability.name }}</strong>
+                        <em v-if="ability.source"> • {{ ability.source }}</em>
+
+                        <div v-if="ability.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(ability.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="computeFormatedText(ability.description)"
+                        ></div>
+
+                        <div
+                          v-if="ability.selectedOption"
+                          class="ml-1 pl-2"
+                          style="border-left: solid 3px lightgrey"
+                        >
+                          <strong v-if="ability.selectedOption.name">{{
+                            ability.selectedOption.name
+                          }}</strong>
+                          <div v-if="ability.selectedOption.snippet">
+                            <p
+                              class="mb-1"
+                              v-html="ability.selectedOption.snippet"
+                            ></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- talents < abilities -->
+                    <div
+                      v-show="
+                        ['все', 'черты'].some(
+                          (i) => i === abilitySection.selection
+                        )
+                      "
+                    >
+                      <div
+                        class="mb-1"
+                        style="
+                          border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                          display: flex;
                         "
                       >
-                        <span
-                          v-for="n in characterArchetype.spellProgression[
-                            characterLevel()
-                          ]?.[levelAncestry - 1] || 0"
-                          class="bullet"
-                          :class="{
-                            filled:
-                              n <=
-                              (characterSpont[levelAncestry - 1]?.value || 0),
-                          }"
+                        <span class="body-2 red--text" style="flex: 1"
+                          >Черты</span
                         >
-                          🔸
-                          <!-- 
+                      </div>
+
+                      <div
+                        v-if="talents.length > 0"
+                        v-for="talent in talents"
+                        :key="talent.name"
+                        class="caption mb-2"
+                      >
+                        <strong>{{ talent.name }}</strong>
+                        <em> • Черта </em>
+                        <span v-if="talent.type && talent.level">
+                          <em v-if="talent.type"> • {{ talent.type }}</em
+                          ><em v-if="talent.level"> • {{ talent.level }}</em>
+                        </span>
+                        <div v-if="talent.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(talent.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="computeFormatedText(talent.description)"
+                        ></div>
+
+                        <div
+                          v-if="talent.selectedOptions"
+                          v-for="selectedOption in talent.selectedOptions"
+                          class="ml-1 pl-2"
+                          style="border-left: solid 3px lightgrey"
+                        >
+                          <strong>{{ selectedOption.name }}</strong>
+                          <div v-if="selectedOption.snippet">
+                            <p
+                              class="mb-1"
+                              v-html="
+                                computeFormatedText(selectedOption.snippet)
+                              "
+                            ></p>
+                          </div>
+                          <div
+                            v-else
+                            v-html="
+                              computeFormatedText(selectedOption.description)
+                            "
+                          ></div>
+                        </div>
+
+                        <div
+                          v-if="false"
+                          class="mt-1 mb-1 ml-1 pl-2"
+                          style="
+                            flex-wrap: wrap;
+                            display: flex;
+                            border-left: solid 3px lightgrey;
+                          "
+                        >
+                          <div
+                            v-for="pointIndex in characterFaith.points"
+                            class="faith-box"
+                            :class="{
+                              'faith-box--filled':
+                                pointIndex <= characterFaith.spend,
+                            }"
+                            @click="toggleResourceFaith(pointIndex)"
+                          ></div>
+                          <span class="caption ml-2">/ Faith Points</span>
+                        </div>
+                      </div>
+
+                      <div
+                        v-if="talents.length === 0"
+                        align="center"
+                        class="mt-2 mb-2"
+                      >
+                        <em>Knowledge is treason.</em>
+                      </div>
+                    </div>
+
+                    <!-- other < abilities (Ascensions, Background, Other) -->
+                    <div
+                      v-show="
+                        abilitySection.selection === 'другое' ||
+                        (abilitySection.selection === 'все' &&
+                          otherAbilities.length > 0)
+                      "
+                    >
+                      <div
+                        class="mb-1"
+                        style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      >
+                        <span class="body-2 red--text">Other</span>
+                      </div>
+
+                      <div
+                        v-for="ability in otherAbilities"
+                        :key="`${ability.id ? ability.id : ability.name}`"
+                        class="caption mb-3"
+                      >
+                        <strong>{{ ability.name }}</strong>
+                        <em v-if="ability.source"> • {{ ability.source }}</em>
+                        <span v-if="ability.source === 'Mutation'">
+                          <v-hover>
+                            <v-icon
+                              small
+                              @click="removeMutation(ability.id)"
+                              slot-scope="{ hover }"
+                              :color="`${hover ? 'error' : ''}`"
+                              >delete</v-icon
+                            >
+                          </v-hover>
+                        </span>
+
+                        <div v-if="ability.snippet">
+                          <p
+                            class="mb-1"
+                            v-html="computeFormatedText(ability.snippet)"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
+                          v-html="computeFormatedText(ability.description)"
+                        ></div>
+
+                        <div
+                          v-if="ability.selectedOption"
+                          class="ml-1 pl-2 mt-1"
+                          style="border-left: solid 3px lightgrey"
+                        >
+                          <strong v-if="ability.selectedOption.name">{{
+                            ability.selectedOption.name
+                          }}</strong>
+                          <p v-if="ability.selectedOption.snippet">
+                            {{ ability.selectedOption.snippet }}
+                          </p>
+                        </div>
+
+                        <div
+                          v-if="ability.selectedOptions"
+                          v-for="selectedOption in ability.selectedOptions"
+                          class="ml-1 pl-2"
+                          style="border-left: solid 3px lightgrey"
+                        >
+                          <strong>{{ selectedOption.name }}</strong>
+                          <div v-if="selectedOption.snippet">
+                            <p
+                              class="mb-1"
+                              v-html="
+                                computeFormatedText(selectedOption.snippet)
+                              "
+                            ></p>
+                          </div>
+                          <div
+                            v-else
+                            v-html="
+                              computeFormatedText(selectedOption.description)
+                            "
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </v-tab-item>
+
+              <!-- powers -->
+              <v-tab-item
+                class="my-tab-item"
+                key="psychic-powers"
+                :value="`tab-psychic-powers`"
+              >
+                <div class="pa-2">
+                  <v-col
+                    :cols="12"
+                    v-if="
+                      characterArchetype && characterArchetype.spellProgression
+                    "
+                  >
+                    <v-card
+                      class="mb-4"
+                      dense
+                      outlined
+                      v-for="levelAncestry in 10"
+                      :key="levelAncestry"
+                      v-if="
+                        levelAncestry - 1 <=
+                          characterArchetype.spellProgression[
+                            characterLevel()
+                          ].findIndex((t) => t == 0) -
+                            1 || characterLevel() == 20
+                      "
+                    >
+                      <h2 class="subtitle-1 text-center">
+                        {{
+                          levelAncestry - 1 === 0
+                            ? "Чары"
+                            : `${levelAncestry - 1} уровень`
+                        }}
+                      </h2>
+                      <div
+                        class="ammo-container"
+                        v-if="characterArchetype.prepared === false"
+                      >
+                        <!-- Патроны -->
+                        <div
+                          class="magazine"
+                          @click="
+                            handleClick(
+                              $event,
+                              levelAncestry - 1,
+                              characterSpont[levelAncestry - 1]
+                                ? characterSpont[levelAncestry - 1].value
+                                : characterArchetype.spellProgression[
+                                    characterLevel()
+                                  ]?.[levelAncestry - 1]
+                            )
+                          "
+                          @contextmenu.prevent="
+                            handleClick(
+                              $event,
+                              levelAncestry - 1,
+                              characterSpont[levelAncestry - 1]
+                                ? characterSpont[levelAncestry - 1].value
+                                : characterArchetype.spellProgression[
+                                    characterLevel()
+                                  ]?.[levelAncestry - 1]
+                            )
+                          "
+                        >
+                          <span
+                            v-for="n in characterArchetype.spellProgression[
+                              characterLevel()
+                            ]?.[levelAncestry - 1] || 0"
+                            class="bullet"
+                            :class="{
+                              filled:
+                                n <=
+                                (characterSpont[levelAncestry - 1]?.value || 0),
+                            }"
+                          >
+                            🔸
+                            <!-- 
                           <p>
                             Value:
                             {{ characterSpont[levelAncestry - 1]?.value }}
                           </p>
                           <p>n: {{ n }}</p> -->
-                        </span>
-                      </div>
-                    </div>
-
-                    <v-data-table
-                      :headers="filteredHeaders"
-                      :items="psychicPowers(levelAncestry - 1)"
-                      :item-class="getItemClass"
-                      item-key="cellIndex"
-                      hide-default-footer
-                      dense
-                    >
-                      <template v-slot:item.cast="{ item }">
-                        <v-btn
-                          v-if="item.name"
-                          outlined
-                          x-small
-                          color="info"
-                          @click="updateCast(item)"
-                        >
-                          <v-icon left>mdi-auto-fix</v-icon> Сотв
-                        </v-btn>
-                      </template>
-
-                      <template v-slot:item.name="{ item }">
-                        <span v-if="!item.name"> Пустой слот </span>
-                        {{ item.name }}
-                      </template>
-
-                      <template v-slot:item.action="{ item }">
-                        <!-- {{ item?.time }} -->
-                        <div v-if="item?.time">
-                          <img
-                            :src="iconAction(item?.time?.value)"
-                            :class="{ 'invert-icon': !$vuetify.theme.dark }"
-                          />
-                        </div>
-                      </template>
-
-                      <template v-slot:item.duration="{ item }">
-                        <span v-if="item?.duration?.sustained === true"
-                          >Поддерживаемое до
-                        </span>
-                        {{ item?.duration?.value }}
-                      </template>
-
-                      <template v-slot:item.distance="{ item }">
-                        {{ item?.distance || "-" }}
-                      </template>
-
-                      <template v-slot:item.saving="{ item }">
-                        <span v-if="item?.defense?.save">
-                          <span v-if="item?.defense?.save?.basic"
-                            >Базовый
                           </span>
-                          {{
-                            SavingRepository.find(
-                              (t) => t.key === item?.defense?.save?.statistic
-                            ).name
-                          }}
-                        </span>
+                        </div>
+                      </div>
 
-                        <span v-if="item?.traits?.includes('атака')">
-                          <span>КБ </span>
-                        </span>
-                      </template>
+                      <v-data-table
+                        :headers="filteredHeaders"
+                        :items="psychicPowers(levelAncestry - 1)"
+                        :item-class="getItemClass"
+                        item-key="cellIndex"
+                        hide-default-footer
+                        dense
+                      >
+                        <template v-slot:item.cast="{ item }">
+                          <v-btn
+                            v-if="item.name"
+                            outlined
+                            x-small
+                            color="info"
+                            @click="updateCast(item)"
+                          >
+                            <v-icon left>mdi-auto-fix</v-icon> Сотв
+                          </v-btn>
+                        </template>
 
-                      <template v-slot:item.area="{ item }">
-                        <span v-if="item?.area">
-                          {{ item?.area?.value }}-фут.
-                          {{ areaRepository[item?.area?.type] }}
-                        </span>
-                        <span v-if="item?.area && item?.target"> / </span>
-                        <span v-if="item?.target">
-                          {{ item?.target }}
-                        </span>
-                      </template>
+                        <template v-slot:item.name="{ item }">
+                          <span v-if="!item.name"> Пустой слот </span>
+                          {{ item.name }}
+                        </template>
 
-                      <template v-slot:item.view="{ item }">
-                        <v-btn
-                          v-if="item.name"
-                          outlined
-                          x-small
-                          color="info"
-                          @click="openDialog(item)"
-                        >
-                          <v-icon left>visibility</v-icon> Просмотр
-                        </v-btn>
-                      </template>
+                        <template v-slot:item.action="{ item }">
+                          <!-- {{ item?.time }} -->
+                          <div v-if="item?.time">
+                            <img
+                              :src="iconAction(item?.time?.value)"
+                              :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                            />
+                          </div>
+                        </template>
 
-                      <!-- <template v-slot:item.button="{ item }">
+                        <template v-slot:item.duration="{ item }">
+                          <span v-if="item?.duration?.sustained === true"
+                            >Поддерживаемое до
+                          </span>
+                          {{ item?.duration?.value }}
+                        </template>
+
+                        <template v-slot:item.distance="{ item }">
+                          {{ item?.distance || "-" }}
+                        </template>
+
+                        <template v-slot:item.saving="{ item }">
+                          <span v-if="item?.defense?.save">
+                            <span v-if="item?.defense?.save?.basic"
+                              >Базовый
+                            </span>
+                            {{
+                              SavingRepository.find(
+                                (t) => t.key === item?.defense?.save?.statistic
+                              ).name
+                            }}
+                          </span>
+
+                          <span v-if="item?.traits?.includes('атака')">
+                            <span>КБ </span>
+                          </span>
+                        </template>
+
+                        <template v-slot:item.area="{ item }">
+                          <span v-if="item?.area">
+                            {{ item?.area?.value }}-фут.
+                            {{ areaRepository[item?.area?.type] }}
+                          </span>
+                          <span v-if="item?.area && item?.target"> / </span>
+                          <span v-if="item?.target">
+                            {{ item?.target }}
+                          </span>
+                        </template>
+
+                        <template v-slot:item.view="{ item }">
+                          <v-btn
+                            v-if="item.name"
+                            outlined
+                            x-small
+                            color="info"
+                            @click="openDialog(item)"
+                          >
+                            <v-icon left>visibility</v-icon> Просмотр
+                          </v-btn>
+                        </template>
+
+                        <!-- <template v-slot:item.button="{ item }">
                         <v-btn
                           v-if="item.name"
                           outlined
@@ -1407,11 +1556,11 @@
                           <v-icon left>add</v-icon> Добавить
                         </v-btn>
                       </template> -->
-                    </v-data-table>
-                  </v-card>
-                </v-col>
+                      </v-data-table>
+                    </v-card>
+                  </v-col>
 
-                <!-- <v-data-table
+                  <!-- <v-data-table
                   :headers="psychicPowersHeaders"
                   :items="psychicPowers"
                   hide-default-footer
@@ -1443,43 +1592,43 @@
                     </tr>
                   </template>
                 </v-data-table> -->
-              </div>
-              <div
-                v-if="!characterArchetype?.spellProgression"
-                align="center"
-                class="mt-2 mb-2"
-              >
-                <em>Нет заклинаний? Выберите класс заклинателя и увидите!</em>
-              </div>
-              <!-- notes, bound, others -->
-            </v-tab-item>
-
-            <!-- objectives -->
-            <v-tab-item
-              class="my-tab-item"
-              key="objectives"
-              :value="`tab-objectives`"
-            >
-              <div class="pa-2">
-                <v-chip-group
-                  mandatory
-                  active-class="red--text"
-                  v-model="descriptionSection.selection"
+                </div>
+                <div
+                  v-if="!characterArchetype?.spellProgression"
+                  align="center"
+                  class="mt-2 mb-2"
                 >
-                  <v-chip
-                    label
-                    small
-                    v-for="item in [`Все`, `Языки`, `Трейты`, `Заметки`]"
-                    :key="item.toLowerCase()"
-                    :value="item.toLowerCase()"
-                  >
-                    {{ item }}
-                  </v-chip>
-                </v-chip-group>
+                  <em>Нет заклинаний? Выберите класс заклинателя и увидите!</em>
+                </div>
+                <!-- notes, bound, others -->
+              </v-tab-item>
 
-                <div style="height: 505px; overflow-y: auto">
-                  <!-- objectives < description -->
-                  <!-- <div
+              <!-- objectives -->
+              <v-tab-item
+                class="my-tab-item"
+                key="objectives"
+                :value="`tab-objectives`"
+              >
+                <div class="pa-2">
+                  <v-chip-group
+                    mandatory
+                    active-class="red--text"
+                    v-model="descriptionSection.selection"
+                  >
+                    <v-chip
+                      label
+                      small
+                      v-for="item in [`Все`, `Языки`, `Трейты`, `Заметки`]"
+                      :key="item.toLowerCase()"
+                      :value="item.toLowerCase()"
+                    >
+                      {{ item }}
+                    </v-chip>
+                  </v-chip-group>
+
+                  <div style="height: 505px; overflow-y: auto">
+                    <!-- objectives < description -->
+                    <!-- <div
                     v-show="
                       ['all', 'objectives'].some(
                         (i) => i === descriptionSection.selection
@@ -1522,47 +1671,47 @@
                     </div>
                   </div> -->
 
-                  <!-- languages < description -->
-                  <div
-                    v-show="
-                      ['все', 'языки'].some(
-                        (i) => i === descriptionSection.selection
-                      )
-                    "
-                  >
+                    <!-- languages < description -->
                     <div
-                      class="mb-2"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      v-show="
+                        ['все', 'языки'].some(
+                          (i) => i === descriptionSection.selection
+                        )
+                      "
                     >
-                      <span class="body-2 red--text">Языки</span>
+                      <div
+                        class="mb-2"
+                        style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      >
+                        <span class="body-2 red--text">Языки</span>
+                      </div>
+                      <div v-if="languages.length > 0" class="caption">
+                        {{ languages.map((l) => l.name).join(" • ") }}
+                      </div>
                     </div>
-                    <div v-if="languages.length > 0" class="caption">
-                      {{ languages.map((l) => l.name).join(" • ") }}
-                    </div>
-                  </div>
 
-                  <!-- keywords < description -->
-                  <div
-                    v-show="
-                      ['все', 'трейты'].some(
-                        (i) => i === descriptionSection.selection
-                      )
-                    "
-                  >
+                    <!-- keywords < description -->
                     <div
-                      class="mb-2"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      v-show="
+                        ['все', 'трейты'].some(
+                          (i) => i === descriptionSection.selection
+                        )
+                      "
                     >
-                      <span class="body-2 red--text">Трейты</span>
-                    </div>
-                    <div
-                      v-for="keyword in keywords"
-                      :key="keyword.name"
-                      class="caption"
-                    >
-                      <strong>{{ keyword.name }}</strong>
-                      <!-- <em> • {{ keyword.type }}</em> -->
-                      <!-- <span v-if="keyword.custom">
+                      <div
+                        class="mb-2"
+                        style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      >
+                        <span class="body-2 red--text">Трейты</span>
+                      </div>
+                      <div
+                        v-for="keyword in keywords"
+                        :key="keyword.name"
+                        class="caption"
+                      >
+                        <strong>{{ keyword.name }}</strong>
+                        <!-- <em> • {{ keyword.type }}</em> -->
+                        <!-- <span v-if="keyword.custom">
                         <v-hover>
                           <v-icon
                             small
@@ -1573,68 +1722,68 @@
                           >
                         </v-hover>
                       </span> -->
-                      <p>
-                        {{ keyword.description }}
-                      </p>
-                    </div>
-                    <!-- <div style="display: flex; justify-content: center">
+                        <p>
+                          {{ keyword.description }}
+                        </p>
+                      </div>
+                      <!-- <div style="display: flex; justify-content: center">
                       <v-btn x-small text @click="keywordsEditorDialog = true"
                         >Additional Keywords
                         <v-icon small>settings</v-icon></v-btn
                       >
                     </div> -->
-                  </div>
-
-                  <!-- objectives < description -->
-                  <div
-                    v-show="
-                      ['все', 'заметки'].some(
-                        (i) => i === descriptionSection.selection
-                      )
-                    "
-                  >
-                    <div
-                      class="mb-1"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
-                    >
-                      <span class="body-2 red--text">
-                        Notes
-                        <v-icon
-                          v-if="!characterNotesShowEditor"
-                          small
-                          @click="characterNotesOpenEditor"
-                          >edit</v-icon
-                        >
-                      </span>
                     </div>
-                    <div v-if="characterNotesShowEditor">
-                      <v-textarea
-                        v-model="characterNotesEditorModel"
-                        hint="Используй markdown, например **жирный** _курсив_"
-                        persistent-hint
-                        filled
-                        auto-grow
-                      ></v-textarea>
-                      <v-btn @click="characterNotesSave" small color="success"
-                        >Save</v-btn
+
+                    <!-- objectives < description -->
+                    <div
+                      v-show="
+                        ['все', 'заметки'].some(
+                          (i) => i === descriptionSection.selection
+                        )
+                      "
+                    >
+                      <div
+                        class="mb-1"
+                        style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
+                      >
+                        <span class="body-2 red--text">
+                          Notes
+                          <v-icon
+                            v-if="!characterNotesShowEditor"
+                            small
+                            @click="characterNotesOpenEditor"
+                            >edit</v-icon
+                          >
+                        </span>
+                      </div>
+                      <div v-if="characterNotesShowEditor">
+                        <v-textarea
+                          v-model="characterNotesEditorModel"
+                          hint="Используй markdown, например **жирный** _курсив_"
+                          persistent-hint
+                          filled
+                          auto-grow
+                        ></v-textarea>
+                        <v-btn @click="characterNotesSave" small color="success"
+                          >Save</v-btn
+                        >
+                      </div>
+                      <div
+                        v-else-if="characterNotes"
+                        class="caption"
+                        v-html="characterNotes"
+                      ></div>
+                      <span
+                        v-else
+                        class="caption"
+                        @click="characterNotesOpenEditor"
+                        >Добавить заметики</span
                       >
                     </div>
-                    <div
-                      v-else-if="characterNotes"
-                      class="caption"
-                      v-html="characterNotes"
-                    ></div>
-                    <span
-                      v-else
-                      class="caption"
-                      @click="characterNotesOpenEditor"
-                      >Добавить заметики</span
-                    >
                   </div>
                 </div>
-              </div>
 
-              <!-- <v-row v-if="false" no-gutters>
+                <!-- <v-row v-if="false" no-gutters>
                 <v-col :cols="6" class="pa-1">
                   <v-card height="100%" class="flexcard">
                     <v-card-text>
@@ -1686,228 +1835,272 @@
                   </v-card>
                 </v-col>
               </v-row> -->
-            </v-tab-item>
-          </v-tabs>
-        </v-card>
+              </v-tab-item>
+            </v-tabs>
+          </v-card>
 
-        <v-dialog v-model="dialog" max-width="800px">
-          <v-card v-if="selectedItem">
-            <!-- <v-card-title>
+          <v-dialog v-model="dialog" max-width="800px">
+            <v-card v-if="selectedItem">
+              <!-- <v-card-title>
           <h2>{{ selectedItem.name }}</h2>
         </v-card-title> -->
-            <v-card-text>
-              <v-row class="rowFeat">
-                <div class="head">
-                  <h1>{{ selectedItem.name }}</h1>
+              <v-card-text>
+                <v-row class="rowFeat">
+                  <div class="head">
+                    <h1>{{ selectedItem.name }}</h1>
+                  </div>
+                  <div class="line"></div>
+                  <div class="tag" v-if="selectedItem.ritual">
+                    Ритуал {{ selectedItem.level }}
+                  </div>
+                  <div class="tag" v-if="!selectedItem.ritual">
+                    Заклинание {{ selectedItem.level }}
+                  </div>
+                </v-row>
+                <v-row>
+                  <div>
+                    <trait-view
+                      v-if="selectedItem.traits"
+                      :item="selectedItem"
+                      class="mb-2"
+                    />
+                  </div>
+                </v-row>
+                <p></p>
+                <!-- Описание закла -->
+                <div v-if="selectedItem.traditions">
+                  <p
+                    class="main-holder"
+                    v-if="selectedItem.traditions.length > 0"
+                  >
+                    <strong>Традиция:</strong>
+                    {{ selectedItem.traditions.join(", ") }}
+                  </p>
                 </div>
-                <div class="line"></div>
-                <div class="tag" v-if="selectedItem.ritual">
-                  Ритуал {{ selectedItem.level }}
-                </div>
-                <div class="tag" v-if="!selectedItem.ritual">
-                  Заклинание {{ selectedItem.level }}
-                </div>
-              </v-row>
-              <v-row>
-                <div>
-                  <trait-view
-                    v-if="selectedItem.traits"
-                    :item="selectedItem"
-                    class="mb-2"
-                  />
-                </div>
-              </v-row>
-              <p></p>
-              <!-- Описание закла -->
-              <div v-if="selectedItem.traditions">
-                <p
-                  class="main-holder"
-                  v-if="selectedItem.traditions.length > 0"
-                >
-                  <strong>Традиция:</strong>
-                  {{ selectedItem.traditions.join(", ") }}
-                </p>
-              </div>
-              <div v-if="selectedItem.ritual">
-                <p class="main-holder">
-                  <strong>Первичный кастер:</strong>
-                  {{ selectedItem.ritual.primary.check }}
-                </p>
+                <div v-if="selectedItem.ritual">
+                  <p class="main-holder">
+                    <strong>Первичный кастер:</strong>
+                    {{ selectedItem.ritual.primary.check }}
+                  </p>
 
-                <p class="main-holder" v-if="selectedItem.ritual">
-                  <strong>Вторичные кастеры:</strong>
-                  {{ selectedItem.ritual.secondary.casters }}
-                  ( {{ selectedItem.ritual.secondary.checks }} )
-                </p>
-              </div>
-              <p></p>
-              <div v-if="selectedItem.time">
-                <p class="main-holder" v-if="!selectedItem.ritual">
-                  <strong>Сотворение:</strong>
-                  <img
-                    :src="iconAction(selectedItem?.time?.value)"
-                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
-                  />
-                </p>
-                <p class="main-holder" v-if="selectedItem.ritual">
-                  <strong>Сотворение:</strong> {{ selectedItem?.time?.value }}
-                </p>
-              </div>
-              <div v-if="selectedItem.cost">
-                <p class="main-holder" v-if="selectedItem.cost.value">
-                  <strong>Стоимость:</strong>
-                  {{ selectedItem.cost.value }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="selectedItem.range">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ selectedItem.range }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="selectedItem.area">
-                <p class="main-holder">
-                  <strong>Область:</strong> {{ selectedItem?.area?.value }}-фут.
-                  {{ areaRepository[selectedItem?.area?.type] }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="selectedItem.target">
-                <p class="main-holder">
-                  <strong>Цель:</strong> {{ selectedItem.target }}
-                </p>
-              </div>
-              <div v-if="selectedItem.defense">
-                <p class="main-holder" v-if="selectedItem.defense.save">
-                  <strong>Защита:</strong>
-                  <!-- <strong>Защита:</strong>
+                  <p class="main-holder" v-if="selectedItem.ritual">
+                    <strong>Вторичные кастеры:</strong>
+                    {{ selectedItem.ritual.secondary.casters }}
+                    ( {{ selectedItem.ritual.secondary.checks }} )
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="selectedItem.time">
+                  <p class="main-holder" v-if="!selectedItem.ritual">
+                    <strong>Сотворение:</strong>
+                    <img
+                      :src="iconAction(selectedItem?.time?.value)"
+                      :class="{ 'invert-icon': !$vuetify.theme.dark }"
+                    />
+                  </p>
+                  <p class="main-holder" v-if="selectedItem.ritual">
+                    <strong>Сотворение:</strong> {{ selectedItem?.time?.value }}
+                  </p>
+                </div>
+                <div v-if="selectedItem.cost">
+                  <p class="main-holder" v-if="selectedItem.cost.value">
+                    <strong>Стоимость:</strong>
+                    {{ selectedItem.cost.value }}
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="selectedItem.range">
+                  <p class="main-holder">
+                    <strong>Дистанция:</strong> {{ selectedItem.range }}
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="selectedItem.area">
+                  <p class="main-holder">
+                    <strong>Область:</strong>
+                    {{ selectedItem?.area?.value }}-фут.
+                    {{ areaRepository[selectedItem?.area?.type] }}
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="selectedItem.target">
+                  <p class="main-holder">
+                    <strong>Цель:</strong> {{ selectedItem.target }}
+                  </p>
+                </div>
+                <div v-if="selectedItem.defense">
+                  <p class="main-holder" v-if="selectedItem.defense.save">
+                    <strong>Защита:</strong>
+                    <!-- <strong>Защита:</strong>
               <span v-if="selectedItem.defense.save.basic === true"
                 >Базовый
               </span>
               {{ selectedItem.defense.save.statistic }} -->
-                  <span v-if="selectedItem?.defense?.save">
-                    <span v-if="selectedItem?.defense?.save?.basic"
-                      >Базовый
+                    <span v-if="selectedItem?.defense?.save">
+                      <span v-if="selectedItem?.defense?.save?.basic"
+                        >Базовый
+                      </span>
+                      {{
+                        SavingRepository.find(
+                          (t) =>
+                            t.key === selectedItem?.defense?.save?.statistic
+                        ).name
+                      }}
                     </span>
-                    {{
-                      SavingRepository.find(
-                        (t) => t.key === selectedItem?.defense?.save?.statistic
-                      ).name
-                    }}
-                  </span>
 
-                  <span v-if="selectedItem?.traits?.includes('атака')">
-                    <span>КБ </span>
-                  </span>
-                </p>
-              </div>
-              <div v-if="selectedItem.duration">
-                <p class="main-holder" v-if="selectedItem.duration.value">
-                  <strong>Длительность:</strong>
-                  <span v-if="selectedItem.duration.sustained === true"
-                    >Поддерживаемое до
-                  </span>
-                  {{ selectedItem.duration.value }}
-                </p>
-              </div>
-              <p></p>
-              <div>
-                <p class="main-holder" v-if="selectedItem.Power">
-                  <strong>Урон на этом уровне:</strong>
-                  <span v-html="selectedItem.Power"></span>
-                </p>
-              </div>
-              <p></p>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
-              <div class="line"></div>
-              <div
-                class="pt-4 pb-2"
-                v-html="selectedItem.powerDescription"
-              ></div>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer />
-              <v-btn color="primary" text @click="dialog = false"
-                >Закрыть</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <v-dialog v-model="dialogItem" max-width="800px">
-          <v-card v-if="selectedItem">
-            <v-card-text>
-              <v-row class="rowFeat">
-                <div class="head">
-                  <h1>{{ selectedItem.nameGear }}</h1>
+                    <span v-if="selectedItem?.traits?.includes('атака')">
+                      <span>КБ </span>
+                    </span>
+                  </p>
                 </div>
+                <div v-if="selectedItem.duration">
+                  <p class="main-holder" v-if="selectedItem.duration.value">
+                    <strong>Длительность:</strong>
+                    <span v-if="selectedItem.duration.sustained === true"
+                      >Поддерживаемое до
+                    </span>
+                    {{ selectedItem.duration.value }}
+                  </p>
+                </div>
+                <p></p>
+                <div>
+                  <p class="main-holder" v-if="selectedItem.Power">
+                    <strong>Урон на этом уровне:</strong>
+                    <span v-html="selectedItem.Power"></span>
+                  </p>
+                </div>
+                <p></p>
                 <div class="line"></div>
-                <div class="tag">
-                  <span v-if="['melee', 'ranged'].includes(selectedItem.type)">
-                    Оружие
-                  </span>
-                  <span v-if="!['melee', 'ranged'].includes(selectedItem.type)">
-                    Доспех
-                  </span>
-                  {{ selectedItem.level }}
-                </div>
-              </v-row>
-              <v-row>
-                <!-- <div>
+                <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
+                <div class="line"></div>
+                <div
+                  class="pt-4 pb-2"
+                  v-html="selectedItem.powerDescription"
+                ></div>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer />
+                <v-btn color="primary" text @click="dialog = false"
+                  >Закрыть</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <v-dialog v-model="dialogItem" max-width="800px">
+            <v-card v-if="selectedItem">
+              <v-card-text>
+                <v-row class="rowFeat">
+                  <div class="head">
+                    <h1>{{ selectedItem.nameGear }}</h1>
+                  </div>
+                  <div class="line"></div>
+                  <div class="tag">
+                    <span
+                      v-if="['melee', 'ranged'].includes(selectedItem.type)"
+                    >
+                      Оружие
+                    </span>
+                    <span
+                      v-if="!['melee', 'ranged'].includes(selectedItem.type)"
+                    >
+                      Доспех
+                    </span>
+                    {{ selectedItem.level }}
+                  </div>
+                </v-row>
+                <v-row>
+                  <!-- <div>
                     <trait-view v-if="selectedItem.traits" :selectedItem="selectedItem" class="mb-2" />
                   </div> -->
-              </v-row>
-              <p></p>
-              <!-- Описание закла -->
-              <div v-if="selectedItem.source.book">
-                <strong>Источник:</strong> {{ selectedItem.source.book }}
-              </div>
-              <div v-if="selectedItem.hands">
-                <p class="main-holder">
-                  <strong>Руки:</strong> {{ selectedItem.hands }}
+                </v-row>
+                <p></p>
+                <!-- Описание закла -->
+                <div v-if="selectedItem.source.book">
+                  <strong>Источник:</strong> {{ selectedItem.source.book }}
+                </div>
+                <div v-if="selectedItem.hands">
+                  <p class="main-holder">
+                    <strong>Руки:</strong> {{ selectedItem.hands }}
+                  </p>
+                </div>
+                <p></p>
+                <div>
+                  <p class="main-holder">
+                    <strong>Цена:</strong> {{ wargearPrice(selectedItem) }}
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="selectedItem.distance">
+                  <p class="main-holder">
+                    <strong>Дистанция:</strong> {{ selectedItem.distance }}
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="selectedItem.area">
+                  <p class="main-holder">
+                    <strong>Область:</strong>
+                    <span v-html="selectedItem.area"></span>
+                  </p>
+                </div>
+                <p></p>
+                <div v-if="selectedItem.target">
+                  <p class="main-holder">
+                    <strong>Дистанция:</strong> {{ selectedItem.target }}
+                  </p>
+                </div>
+                <p></p>
+                <div class="line"></div>
+                <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
+                <div class="line"></div>
+                <div
+                  class="pt-4 pb-2"
+                  v-html="selectedItem.powerDescription"
+                ></div>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+
+          <v-dialog v-model="dialogAction" max-width="800px">
+            <v-card class="glass-card pa-4">
+              <v-card-title class="headline">
+                {{ selectedAction?.name }}
+              </v-card-title>
+              <v-card-text>
+                <v-row>
+                  <div>
+                    <trait-view
+                      v-if="selectedAction"
+                      :item="selectedAction"
+                      class="mb-2"
+                    />
+                  </div>
+                </v-row>
+                <div
+                  class="pt-4 pb-2"
+                  v-html="selectedAction?.description"
+                ></div>
+                <p><strong>Category:</strong> {{ selectedAction?.category }}</p>
+                <p v-if="selectedAction?.requirements">
+                  <strong>Requirements:</strong>
+                  {{ selectedAction.requirements }}
                 </p>
-              </div>
-              <p></p>
-              <div>
-                <p class="main-holder">
-                  <strong>Цена:</strong> {{ wargearPrice(selectedItem) }}
+                <p v-if="selectedAction?.source">
+                  <strong>Source:</strong> {{ selectedAction.source }}
                 </p>
-              </div>
-              <p></p>
-              <div v-if="selectedItem.distance">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ selectedItem.distance }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="selectedItem.area">
-                <p class="main-holder">
-                  <strong>Область:</strong>
-                  <span v-html="selectedItem.area"></span>
-                </p>
-              </div>
-              <p></p>
-              <div v-if="selectedItem.target">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ selectedItem.target }}
-                </p>
-              </div>
-              <p></p>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="selectedItem.description"></div>
-              <div class="line"></div>
-              <div
-                class="pt-4 pb-2"
-                v-html="selectedItem.powerDescription"
-              ></div>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </v-col>
-    </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text color="grey" @click="dialogAction = false"
+                  >Close</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -1985,12 +2178,13 @@ export default {
         { text: 'Rating', sortable: false, align: 'center', class: 'small pa-1' },
       ],
       skillHeaders: [
-        { text: 'Навык', sortable: false, align: 'left', class: 'text-left small pa-1' },
-        { text: 'Характеристика', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Владение', sortable: false, align: 'center', class: 'text-center small pa-1' },
-        { text: 'Значение', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Навык', value: 'name', sortable: false, align: 'left', class: 'text-left small pa-1' },
+        // { text: 'Характеристика', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Владение', value: 'rating', sortable: false, align: 'center', class: 'text-center small pa-1' },
+        { text: 'Значение', value: 'value', sortable: false, align: 'center', class: 'text-center small pa-1' },
         // { text: 'Notes', sortable: false, style: 'center', class: 'text-center small pa-1' },
       ],
+
       armorHeaders: [
         { text: 'Название', sortable: false, align: 'left', class: 'small pa-1' },
         { text: 'Группа доспеха', sortable: false, align: 'center', class: 'small pa-1' },
@@ -2085,6 +2279,8 @@ export default {
       tempHP: 0,
       loading: false,
       selectedItem: undefined,
+      selectedAction: undefined,
+      dialogAction: false,
       //
       showContextDialog: false,
       contextDialogComponent: undefined,
@@ -2549,6 +2745,7 @@ export default {
     },
     skills() {
       const customSkills = this.$store.getters['characters/characterCustomSkillsById'](this.characterId);
+
       const adHocSkillRepository = [
         ...this.skillRepository,
         ...customSkills,
@@ -2573,15 +2770,7 @@ export default {
           attributeObject: {},
         };
         const attribute = this.attributes.find((a) => a.name === skill.attribute);
-        if (attribute) {
-          skill.attributeObject = attribute;
-          skill.adjustedAttributeValue = attribute.adjustedRating;
-        }
-        if (skill.name === 'Intimidation' && this.talents.includes('Imposing Presence')) {
-          const strength = this.attributes.find((a) => a.name === 'Strength');
-          skill.attributeObject = strength;
-          skill.adjustedAttributeValue = strength.adjustedRating;
-        }
+
         return skill;
       });
 
@@ -3276,6 +3465,20 @@ export default {
       weaponsTraitSet = weaponsTraitSet.map((t) => t.split(/ ?\(/)[0]);
       return [...new Set(weaponsTraitSet)].sort();
     },
+     explorationActions() {
+       if(this.actionList)
+      return this.actionList.filter(a => a.traits?.includes("исследование"));
+    },
+    restActions() {
+      if(this.actionList)
+      return this.actionList.filter(a => a.traits?.includes("отдых"));
+    },
+    otherActions() {
+       if(this.actionList)
+      return this.actionList.filter(
+        a => !a.traits?.includes("исследование") && !a.traits?.includes("отдых")
+      );
+    },
   },
   watch: {
         sources: {
@@ -3412,10 +3615,14 @@ export default {
           this.selectedItem = item
           this.dialogItem = true
         },
+    openDialogAction(action) {
+      this.selectedAction = action;
+      this.dialogAction = true;
+    },
             iconAction(action) {
-      if (action === '1') return `/img/icon/action_single.png`;
-      if (action === '2') return `/img/icon/action_double.png`;
-      if (action === '3') return `/img/icon/action_triple.png`;
+      if (action == '1') return `/img/icon/action_single.png`;
+      if (action == '2') return `/img/icon/action_double.png`;
+      if (action == '3') return `/img/icon/action_triple.png`;
       if (action === 'reaction') return `/img/icon/action_reaction.png`;
       if (action === 'free') return `/img/icon/action_free.png`;
     },
@@ -3528,7 +3735,11 @@ export default {
         config.source
        );
 
-      this.actionList = data;
+
+ data.forEach(s => {
+         s.trait = s.traits;
+       })
+      this.actionList =  data;
     },
     async getSpellList(sources) {
             const config = {
@@ -4602,5 +4813,49 @@ td.small {
 .hp-input >>> input[type="number"] {
   -moz-appearance: textfield; /* Firefox */
   text-align: center;
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #adb5bd;
+}
+
+.action-list {
+  background: transparent;
+  padding: 0;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #25262b;
+  padding: 6px 4px;
+}
+
+.action-title {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.action-symbol {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #868e96;
+  font-family: "ActionIcons", sans-serif;
+  pointer-events: none;
+  user-select: none;
+}
+
+.badge-label {
+  font-size: 0.75rem;
+  color: #a6a7ab;
 }
 </style>

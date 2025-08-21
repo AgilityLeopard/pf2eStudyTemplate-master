@@ -7,6 +7,7 @@
       size="128"
       width="12"
     />
+    
 
     <v-col v-if="species" :xs="12">
       <div class="d-flex flex-no-wrap justify-space-between mb-2">
@@ -309,25 +310,33 @@ export default {
   },
   watch: {
     sources: {
-      handler(newVal) {
+     handler: async function (newVal) {
         if (newVal) {
-          this.getAbilityList(newVal);
-          this.getTraitList(newVal);
-          this.getChapterList(newVal);
-          this.getHeritageList(newVal);
+           await this.getAbilityList(newVal);
+           await this.getTraitList(newVal);
+           await this.getChapterList(newVal);
+           await this.getHeritageList(newVal);
        
         }
-      },
-      immediate: true, // make this watch function is called when component created
-    },
-    characterSpeciesKey: {
-      handler(newVal) {
-        if (newVal) {
-          this.getSpecies(newVal);
+         if (
+          this.characterSpeciesKey &&
+          this.characterSpeciesKey !== "unknown"
+        ) {
+          this.getSpecies(this.characterSpeciesKey);
         }
+    
       },
+      
       immediate: true, // make this watch function is called when component created
     },
+    // characterSpeciesKey: {
+    //   handler(newVal) {
+    //     if (newVal) {
+    //       this.getSpecies(newVal);
+    //     }
+    //   },
+    //   immediate: true, // make this watch function is called when component created
+    // },
   },
   asyncData({ params }) {
     return {

@@ -82,6 +82,10 @@
           {{ wargearPrice(item) }}
         </template>
 
+        <template v-slot:item.level="{ item }">
+          {{ item.level }}
+        </template>
+
         <template v-slot:item.rarity="{ item }">
           {{ rarity(item.rarity) }}
         </template>
@@ -173,6 +177,7 @@ export default {
       headers: [
         { text: "Название", align: "left", value: "nameGear", class: "" },
         { text: "Цена", align: "left", value: "price", class: "" },
+        { text: "Уровень", align: "left", value: "level", class: "" },
         { text: "Редкость", align: "left", value: "rarity", class: "" },
         { text: "", align: "right", value: "action-add", class: "" },
         { text: "", align: "right", value: "action-buy", class: "" },

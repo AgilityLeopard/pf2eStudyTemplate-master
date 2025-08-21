@@ -99,15 +99,17 @@
           </div>
           <div class="two-column-right">
             <h3 class="exclude_from_nav" id="attacks">Атаки</h3>
-            <span v-for="item in WeaponRepository" v-bind:key="item.key">
+            <span v-for="item1 in WeaponRepository" v-bind:key="item1.key">
               <p class="">
-                {{ characterlabel(skillAttack[item.key]) }} в {{ item.name }}
+                {{ characterlabel(item.skillAttack[item1.key]) }} в
+                {{ item1.name }}
               </p>
             </span>
             <h3 class="exclude_from_nav" id="defenses">Защиты</h3>
-            <span v-for="item in DefenceRepository" v-bind:key="item.key">
+            <span v-for="item1 in DefenceRepository" v-bind:key="item.key">
               <p>
-                {{ characterlabel(skillDefence[item.key]) }} в {{ item.name }}
+                {{ characterlabel(item.skillDefence[item1.key]) }} в
+                {{ item1.name }}
               </p>
             </span>
 
