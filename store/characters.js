@@ -236,6 +236,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].spellsFocus : [],
   characterFocusPoolById: (state) => (id) =>
     state.characters[id] ? state.characters[id].FocusPool : [],
+  characterHeroPointsById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].HeroPoints : 0,
   characterProgressById: (state) => (id) =>
     state.characters[id] ? state.characters[id].progress : [],
   characterProgressMaxById: (state) => (id) =>
@@ -254,6 +256,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].archetype.keywords : [],
   characterArchetypeMimicById: (state) => (id) =>
     state.characters[id] ? state.characters[id].archetype.mimic : undefined,
+  characterStatusById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].status : [],
 
   characterFluffNotesById: (state) => (id) =>
     state.characters[id]?.fluff?.notes
@@ -354,6 +358,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].TempHP : 0,
   characterBackSkillById: (state) => (id) =>
     state.characters[id] ? state.characters[id].BackSkill : "",
+  characterXpById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].customXp : 0,
 
   characterSkillsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].skills : {},
@@ -956,6 +962,9 @@ export const mutations = {
       )
     }
 
+  },
+  setCharacterHeritage(state, payload) {
+    state.characters[payload.id].heritage = payload.heritage;
   },
   setCharacterHeritage(state, payload) {
     state.characters[payload.id].heritage = payload.heritage;
@@ -1755,6 +1764,11 @@ export const mutations = {
     char.isFeatLevelOne = payload.value === true;
 
   },
+  setCharacterHeroPoints(state, payload) {
+    const char = state.characters[payload.id];
+    char.HeroPoints = payload.value;
+
+  },
   setCharacterHitPoints(state, payload) {
     const char = state.characters[payload.id];
     if (payload.payload.type === "ancestry")
@@ -2157,6 +2171,7 @@ export const mutations = {
 
 
   },
+
   /**
    * @param state
    * @param payload { id, source: `ascension.${key}`, cascade: true }
@@ -2353,7 +2368,21 @@ export const mutations = {
 
     }
   },
-
+  setCharacterValueStatusById(state, payload) {
+    const character = state.characters[payload.id];
+    character.status.find(s => s.key === payload.status.key).value = payload.value;
+    // character.status.push(payload.status);
+  },
+  setCharacterStatusById(state, payload) {
+    const character = state.characters[payload.id];
+    character.status = character.status.filter(s => s.key !== payload.status.key);
+    character.status.push(payload.status);
+  },
+  deleteCharacterStatusById(state, payload) {
+    const character = state.characters[payload.id];
+    character.status = character.status.filter(s => s.key !== payload.status.key);
+    // character.status.push(payload.status);
+  },
   // Ascension & Ascension Packages
   addCharacterAscensionPackage(state, payload) {
     const character = state.characters[payload.id];
@@ -2996,8 +3025,10 @@ const getDefaultState = () => ({
   fluff: {
     notes: "",
   },
+  HeroPoints: 0,
   focusPool: [],
   spellsFocus: [],
   spellTraditions: undefined,
   isFeatLevelOne: false,
+  status: [],
 });

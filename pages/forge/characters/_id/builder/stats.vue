@@ -26,9 +26,9 @@
           <v-chip
             v-if="
               !(
-                characterProgressionMax(levelAncestry) -
-                  characterProgression(levelAncestry) ===
-                characterProgressionMax(levelAncestry)
+                getDisplayProgress(levelAncestry).max -
+                  getDisplayProgress(levelAncestry).current ===
+                getDisplayProgress(levelAncestry).max
               ) && archetype
             "
             style="flex: none"
@@ -36,11 +36,11 @@
             pill
           >
             {{
-              characterProgressionMax(levelAncestry) -
-              characterProgression(levelAncestry)
+              getDisplayProgress(levelAncestry).max -
+              getDisplayProgress(levelAncestry).current
             }}
             /
-            {{ characterProgressionMax(levelAncestry) }}
+            {{ getDisplayProgress(levelAncestry).max }}
           </v-chip>
         </v-expansion-panel-header>
 
@@ -1437,7 +1437,40 @@ export default {
         }
       },
       immediate: true,
-    }
+    },
+     characterAttributes: {
+      handler() {
+        this.needsProgressUpdate = true;
+      },
+      deep: true
+    },
+    characterBoost() {
+      this.needsProgressUpdate = true;
+    },
+    characterBoost5() {
+      this.needsProgressUpdate = true;
+    },
+    characterBoost10() {
+      this.needsProgressUpdate = true;
+    },
+    characterBoost15() {
+      this.needsProgressUpdate = true;
+    },
+    characterBoost20() {
+      this.needsProgressUpdate = true;
+    },
+    characterSkills: {
+      handler() {
+        this.needsProgressUpdate = true;
+      },
+      deep: true
+    },
+    // ... остальные вотчеры
+
+  },
+    mounted() {
+    // Сохраняем прогресс при загрузке компонента
+    this.saveProgress();
   },
   methods: {
     async loadArchetype(key) {
@@ -1821,61 +1854,61 @@ export default {
 
       return 0;
     },
-    characterProgression(level) {
-      let boost = 0;
-      let modInt = 0;
-      if (level % 5 === 0 ) {
-         switch (level) {
-           case 5:
-             boost = 4 - this.characterBoost5;
-             modInt = this.characterAttributesBoost5["intellect"];
-             break;
-          case 10:
-            boost = 4 - this.characterBoost10;
-             modInt = this.characterAttributesBoost10["intellect"];
-             break;
-           case 15:
-             boost = 4 - this.characterBoost15;
-             modInt = this.characterAttributesBoost15["intellect"];
-             break;
-          case 20:
-             boost = 4 - this.characterBoost20;
-             modInt = this.characterAttributesBoost20["intellect"];
-             break;
-        }
-      }
+  //   getDisplayProgress(level) {
+  //     let boost = 0;
+  //     let modInt = 0;
+  //     if (level % 5 === 0 ) {
+  //        switch (level) {
+  //          case 5:
+  //            boost = 4 - this.characterBoost5;
+  //            modInt = this.characterAttributesBoost5["intellect"];
+  //            break;
+  //         case 10:
+  //           boost = 4 - this.characterBoost10;
+  //            modInt = this.characterAttributesBoost10["intellect"];
+  //            break;
+  //          case 15:
+  //            boost = 4 - this.characterBoost15;
+  //            modInt = this.characterAttributesBoost15["intellect"];
+  //            break;
+  //         case 20:
+  //            boost = 4 - this.characterBoost20;
+  //            modInt = this.characterAttributesBoost20["intellect"];
+  //            break;
+  //       }
+  //     }
 
-      let skill = 0
-      if (level !== 1) {
-        skill = 1 + modInt - this.skillSheetAll("", level)
-      }
+  //     let skill = 0
+  //     if (level !== 1) {
+  //       skill = 1 + modInt - this.skillSheetAll("", level)
+  //     }
 
-      if (level === 1)
-      {
+  //     if (level === 1)
+  //     {
 
-        let class1 = (this.archetype?.keyAbility?.length > 1 ? 1 : 0 ) -  (this.characterClassBoost?.length > 0   ? 1 : 0);
-        let class2 =  (this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0) - (this.characterClassSkill?.length > 0  ? 1 : 0);
-        let back =  (this.BackgroundAttribute?.length > 1  ? 1 : 0) -  (this.characterBackgroundFreeBoost?.length > 0   ? 1 : 0);
-        let back2 = (this.BackgroundAttribute2?.length > 1  ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0   ? 1 : 0);
-        let spec = (this.AncestryAttribute?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0   ? 1 : 0);
-        let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2  ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0  ? 1 : 0);
+  //       let class1 = (this.archetype?.keyAbility?.length > 1 ? 1 : 0 ) -  (this.characterClassBoost?.length > 0   ? 1 : 0);
+  //       let class2 =  (this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0) - (this.characterClassSkill?.length > 0  ? 1 : 0);
+  //       let back =  (this.BackgroundAttribute?.length > 1  ? 1 : 0) -  (this.characterBackgroundFreeBoost?.length > 0   ? 1 : 0);
+  //       let back2 = (this.BackgroundAttribute2?.length > 1  ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0   ? 1 : 0);
+  //       let spec = (this.AncestryAttribute?.length > 1  ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0   ? 1 : 0);
+  //       let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2  ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0  ? 1 : 0);
 
-        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-        boost = 4 - this.characterBoost;
-        skill = this.characterSkillPointClass +
-                    this.characterSkillPointBackground +
-                    this.characterSkillPointClassUp  + modInt - this.skillSheetPoints("", 1)
-        //let other = this.selectedAncestryBoost?.length + this.selectedAncestryBoost2?.length + this.selectedBackgroundBoost?.length + this.selectedBackgroundBoost2?.length;
-  this.$store.commit('characters/characterProgress', { id: this.characterId,  level: level, value: boost + skill + class1 + class2 + back + back2 + spec + spec2  });
-
-
-        return boost + skill + class1 + class2 + back + back2 + spec + spec2;
-      }
-  this.$store.commit('characters/characterProgressMax', { id: this.characterId,  level: level, value: boost + skill  });
+  //       modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
+  //       boost = 4 - this.characterBoost;
+  //       skill = this.characterSkillPointClass +
+  //                   this.characterSkillPointBackground +
+  //                   this.characterSkillPointClassUp  + modInt - this.skillSheetPoints("", 1)
+  //       //let other = this.selectedAncestryBoost?.length + this.selectedAncestryBoost2?.length + this.selectedBackgroundBoost?.length + this.selectedBackgroundBoost2?.length;
+  // this.$store.commit('characters/characterProgress', { id: this.characterId,  level: level, value: boost + skill + class1 + class2 + back + back2 + spec + spec2  });
 
 
-      return boost  + skill;
-    },
+  //       return boost + skill + class1 + class2 + back + back2 + spec + spec2;
+  //     }
+  // this.$store.commit('characters/characterProgressMax', { id: this.characterId,  level: level, value: boost + skill  });
+
+
+  //     return boost  + skill;
+  //   },
     characterProgressionMax(level) {
       let boost = 0;
       let modInt = 0;
@@ -2076,7 +2109,236 @@ export default {
       this.skillsEditorDialog = false;
       this.alert = false;
     },
+// Новые методы для работы с прогрессом
+    getDisplayProgress(level) {
+      return {
+        current: this.calculateProgress(level),
+        max: this.calculateProgressMax(level)
+      };
+    },
 
+    calculateProgress(level) {
+      let boost = 0;
+      let modInt = 0;
+
+      if (level % 5 === 0 ) {
+        switch (level) {
+          case 5:
+            boost = 4 - this.characterBoost5;
+            modInt = this.characterAttributesBoost5["intellect"];
+            break;
+          case 10:
+            boost = 4 - this.characterBoost10;
+            modInt = this.characterAttributesBoost10["intellect"];
+            break;
+          case 15:
+            boost = 4 - this.characterBoost15;
+            modInt = this.characterAttributesBoost15["intellect"];
+            break;
+          case 20:
+            boost = 4 - this.characterBoost20;
+            modInt = this.characterAttributesBoost20["intellect"];
+            break;
+        }
+      }
+
+      let skill = 0;
+      // if (level !== 1 ) {
+      //   skill = 1 + modInt - this.skillSheetAll("", level);
+      // }
+
+      if (level !== 1) {
+        if(this.archetype?.keywords === 'плут')
+         skill = 1 + modInt - this.skillSheetAll("", level);
+        else if (level % 2 !== 0)
+          skill = 1 + modInt - this.skillSheetAll("", level);
+        else
+          skill = modInt - this.skillSheetAll("", level);
+      }
+
+      if (level === 1) {
+        let class1 = (this.archetype?.keyAbility?.length > 1 ? 1 : 0 ) - (this.characterClassBoost?.length > 0 ? 1 : 0);
+        let class2 = (this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0) - (this.characterClassSkill?.length > 0 ? 1 : 0);
+        let back = (this.BackgroundAttribute?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost?.length > 0 ? 1 : 0);
+        let back2 = (this.BackgroundAttribute2?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0 ? 1 : 0);
+        let spec = (this.AncestryAttribute?.length > 1 ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0 ? 1 : 0);
+        let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0 ? 1 : 0);
+
+        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
+        boost = 4 - this.characterBoost;
+        skill = this.characterSkillPointClass +
+               this.characterSkillPointBackground +
+               this.characterSkillPointClassUp + modInt - this.skillSheetPoints("", 1);
+
+        return boost + skill + class1 + class2 + back + back2 + spec + spec2;
+      }
+
+      return boost + skill;
+    },
+
+    calculateProgressMax(level) {
+      let boost = 0;
+      let modInt = 0;
+      let skill = 0;
+
+      if (level % 5 === 0 ) {
+        switch (level) {
+          case 5:
+            boost = 4;
+            modInt = this.characterAttributesBoost5["intellect"];
+            break;
+          case 10:
+            boost = 4;
+            modInt = this.characterAttributesBoost10["intellect"];
+            break;
+          case 15:
+            boost = 4;
+            modInt = this.characterAttributesBoost15["intellect"];
+            break;
+          case 20:
+            boost = 4;
+            modInt = this.characterAttributesBoost20["intellect"];
+            break;
+        }
+      }
+
+      if (level !== 1) {
+        if(this.archetype?.keywords === 'плут')
+          skill = 1 + modInt;
+        else if (level % 2 !== 0)
+          skill = 1 + modInt;
+        else
+          skill =  modInt;
+      }
+
+
+
+      if (level === 1) {
+        let class1 = this.archetype?.keyAbility?.length > 1 ? 1 : 0;
+        let class2 = this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0;
+        let back = this.BackgroundAttribute?.length > 1 ? 1 : 0;
+        let back2 = this.BackgroundAttribute2?.length > 1 ? 1 : 0;
+        let spec = this.AncestryAttribute?.length > 1 ? 1 : 0;
+        let spec2 = this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0;
+
+        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
+        boost = 4;
+        skill = this.characterSkillPointClass +
+               this.characterSkillPointBackground +
+               this.characterSkillPointClassUp + modInt;
+
+        return boost + skill + class1 + class2 + back + back2 + spec + spec2;
+      }
+
+      return boost + skill;
+    },
+
+    characterProgression(level) {
+      return this.calculateProgress(level);
+    },
+
+    characterProgressionMax(level) {
+      return this.calculateProgressMax(level);
+    },
+
+    characterProgressionBoost(level) {
+      let boost = 0;
+      let modInt = 0;
+
+      if (level % 5 === 0 ) {
+        switch (level) {
+          case 5:
+            boost = 4 - this.characterBoost5;
+            modInt = this.characterAttributesBoost5["intellect"];
+            break;
+          case 10:
+            boost = 4 - this.characterBoost10;
+            modInt = this.characterAttributesBoost10["intellect"];
+            break;
+          case 15:
+            boost = 4 - this.characterBoost15;
+            modInt = this.characterAttributesBoost15["intellect"];
+            break;
+          case 20:
+            boost = 4 - this.characterBoost20;
+            modInt = this.characterAttributesBoost20["intellect"];
+            break;
+        }
+      }
+
+      let skill = 0;
+      if (level === 1) {
+        boost = 4 - this.characterBoost;
+      }
+
+      return boost + skill;
+    },
+
+    characterProgressionSkill(level) {
+      let boost = 0;
+      let modInt = 0;
+
+      if (level % 5 === 0 ) {
+        switch (level) {
+          case 5:
+            modInt = this.characterAttributesBoost5["intellect"];
+            break;
+          case 10:
+            modInt = this.characterAttributesBoost10["intellect"];
+            break;
+          case 15:
+            modInt = this.characterAttributesBoost15["intellect"];
+            break;
+          case 20:
+            modInt = this.characterAttributesBoost20["intellect"];
+            break;
+        }
+      }
+
+      let skill = 0;
+      if (level !== 1) {
+        skill = 1 + modInt - this.skillSheetAll("", level);
+      }
+
+      if (level === 1) {
+        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
+        skill = this.characterSkillPointClass +
+               this.characterSkillPointBackground +
+               this.characterSkillPointClassUp + modInt - this.skillSheetPoints("", 1);
+      }
+
+      return skill;
+    },
+
+    // Метод для сохранения прогресса
+    saveProgress() {
+      for (let level = 1; level <= 20; level++) {
+        const progress = this.calculateProgress(level);
+        const progressMax = this.calculateProgressMax(level);
+
+        this.$store.commit('characters/characterProgress', {
+          id: this.characterId,
+          level,
+          value: progress
+        });
+
+        this.$store.commit('characters/characterProgressMax', {
+          id: this.characterId,
+          level,
+          value: progressMax
+        });
+      }
+      this.needsProgressUpdate = false;
+    },
+    /////
+
+
+    // Добавляем вызов сохранения при важных событиях
+    beforeDestroy() {
+      if (this.needsProgressUpdate) {
+        this.saveProgress();
+      }
+    },
     saveCustomSkill(level) {
       this.alert = false;
       const skill = {

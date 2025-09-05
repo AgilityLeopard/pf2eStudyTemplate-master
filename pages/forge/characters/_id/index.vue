@@ -50,26 +50,6 @@
               <!-- Кнопки + уровень -->
               <div class="side">
                 <div class="actions">
-                  <!-- <v-btn
-            nuxt
-            
-            color="success"
-           
-            outlined
-            small
-          >
-            <v-icon left small>print</v-icon>
-            Печать
-          </v-btn>
-          <v-btn
-            nuxt
-            
-            color="success"
-            small
-          >
-            <v-icon left small>edit</v-icon>
-            Изменить
-          </v-btn> -->
                   <v-btn
                     target="_blank"
                     :to="`/forge/characters/${characterId}/builder/print`"
@@ -88,13 +68,25 @@
                 </div>
                 <div class="level-xp">
                   <span class="level">Уровень {{ characterRank }}</span>
+                  <!-- <v-text-field
+                    dense
+                    hide-details
+                   
+                    solo
+                    flat
+                    placeholder="Опыт"
+                    class="xp-input"
+                  /> -->
                   <v-text-field
                     dense
                     hide-details
                     solo
                     flat
-                    placeholder="XP"
+                    placeholder="Опыт"
                     class="xp-input"
+                    :value="characterXp"
+                    @input="handleXpInput"
+                    ref="xpInput"
                   />
                 </div>
               </div>
@@ -175,7 +167,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="12" md="4">
+        <!-- <v-col cols="12" md="4">
           <v-card class="glass-card pa-3 stat-card" height="100%">
             <div class="d-flex align-center justify-space-between mb-2">
               <span class="subtitle-2 white--text">Conditions</span>
@@ -185,7 +177,7 @@
             </div>
             <div class="grey--text text-center caption mb-4">None active</div>
 
-            <!-- Hero Points -->
+        
             <div class="subtitle-2 white--text text-center mb-1">
               Hero Points
             </div>
@@ -195,6 +187,312 @@
               <v-icon small color="yellow darken-1">mdi-star-outline</v-icon>
             </div>
           </v-card>
+        </v-col> -->
+
+        <v-col cols="12" md="4">
+          <v-card class="glass-card pa-3 stat-card" height="100%">
+            <div class="d-flex align-center justify-space-between mb-2">
+              <span class="subtitle-2 white--text">Состояния</span>
+              <v-btn icon small @click="statusDialog = true">
+                <v-icon small>mdi-plus</v-icon>
+              </v-btn>
+            </div>
+
+            <!-- Активные состояния -->
+            <!-- <div v-if="activeStatuses.length > 0" class="mb-3">
+              <v-chip
+                v-for="status in activeStatuses"
+                :key="status.key"
+                small
+                close
+                @click:close="removeStatus(status.key)"
+                class="ma-1"
+              >
+                <span > {{ status.name }}</span>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon small v-bind="attrs" v-on="on" class="ml-1"
+                      >mdi-information</v-icon
+                    >
+                  </template>
+                  <span>{{ status.description }}</span>
+                </v-tooltip>
+                <span >{{ status.value }}</span>
+              </v-chip>
+            </div> -->
+            <div v-if="activeStatuses.length > 0" class="mb-3">
+              <v-tooltip
+                bottom
+                v-for="status in activeStatuses"
+                :key="status.key"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-chip
+                    small
+                    close
+                    @click:close="removeStatus(status.key)"
+                    class="ma-1"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <span>{{ status.name }}</span>
+                    <span
+                      class="ml-1"
+                      v-if="
+                        status.rules?.find((s) => s.key === 'FlatModifier') &&
+                        status.rules?.find((s) => s.value === '-value')
+                      "
+                      >{{ status.value }}</span
+                    >
+                  </v-chip>
+                </template>
+                <span v-html="status.description"></span>
+              </v-tooltip>
+            </div>
+            <div v-else class="grey--text text-center caption mb-4">
+              Нет активных состояний
+            </div>
+
+            <!-- Hero Points -->
+            <div class="subtitle-2 white--text text-center mb-1">
+              Очки Героизма
+            </div>
+            <div class="d-flex justify-center">
+              <div
+                class="magazine"
+                @click="handleClick2($event, characterHeroPoints)"
+                @contextmenu.prevent="
+                  handleClick2(
+                    $event,
+
+                    characterHeroPoints
+                  )
+                "
+              >
+                <span
+                  v-for="n in 3"
+                  class="bullet"
+                  :class="{
+                    filled: n <= characterHeroPoints,
+                  }"
+                >
+                  <v-icon small color="yellow darken-1">mdi-star</v-icon>
+                  <!-- 
+                          <p>
+                            Value:
+                            {{ characterSpont[levelAncestry - 1]?.value }}
+                          </p>
+                          <p>n: {{ n }}</p> -->
+                </span>
+              </div>
+            </div>
+            <!-- <div class="d-flex justify-center">
+              <v-icon small color="yellow darken-1">mdi-star</v-icon>
+              <v-icon small color="yellow darken-1">mdi-star-outline</v-icon>
+              <v-icon small color="yellow darken-1">mdi-star-outline</v-icon>
+            </div> -->
+          </v-card>
+
+          <!-- Диалог выбора состояний -->
+          <!-- <v-dialog v-model="statusDialog" max-width="500">
+            <v-card>
+              <v-card-title>Select Conditions</v-card-title>
+              <v-card-text>
+                <v-list>
+                  <v-list-item
+                    v-for="status in availableStatuses"
+                    :key="status.key"
+                    @click="toggleStatus(status)"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>{{ status.name }}</v-list-item-title>
+                      <v-list-item-subtitle>{{
+                        status.description
+                      }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-icon v-if="isStatusActive(status.key)" color="green"
+                        >mdi-check</v-icon
+                      >
+                    </v-list-item-action>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn @click="statusDialog = false">Close</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog> -->
+
+          <!-- Единое диалоговое окно для управления состояниями -->
+          <v-dialog v-model="statusDialog" max-width="700">
+            <v-card>
+              <v-card-title class="headline">
+                Управление состояниями
+                <v-spacer></v-spacer>
+                <v-text-field
+                  v-model="statusSearch"
+                  append-icon="mdi-magnify"
+                  label="Поиск состояний"
+                  single-line
+                  hide-details
+                  class="search-field"
+                ></v-text-field>
+              </v-card-title>
+
+              <v-card-text>
+                <v-tabs v-model="tab" grow>
+                  <v-tab>Активные</v-tab>
+                  <v-tab>Доступные</v-tab>
+                </v-tabs>
+
+                <v-tabs-items v-model="tab">
+                  <!-- Вкладка активных состояний -->
+                  <v-tab-item>
+                    <v-list v-if="activeStatuses.length > 0" class="pt-3">
+                      <v-list-item
+                        v-for="status in activeStatuses"
+                        :key="status.key"
+                      >
+                        <v-list-item-content>
+                          <v-list-item-title
+                            >{{ status.name }}
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-icon
+                                  small
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  class="ml-1"
+                                  >mdi-information</v-icon
+                                >
+                              </template>
+                              <span v-html="status.description"></span>
+                            </v-tooltip>
+                          </v-list-item-title>
+
+                          <!-- <v-list-item-subtitle>
+                            <p v-html="status.description"></p>
+                          </v-list-item-subtitle> -->
+                        </v-list-item-content>
+
+                        <v-list-item-action class="action-buttons">
+                          <!-- Управление значением для состояний с числовым значением -->
+                          <div
+                            v-if="
+                              status.rules?.find(
+                                (s) => s.key === 'FlatModifier'
+                              ) &&
+                              status.rules?.find((s) => s.value === '-value')
+                            "
+                            class="value-controls"
+                          >
+                            <v-btn
+                              x-small
+                              icon
+                              @click="updateStatusValue(status, -1)"
+                              :disabled="status.value <= 1"
+                            >
+                              <v-icon x-small>mdi-minus</v-icon>
+                            </v-btn>
+                            <span class="value-display mx-2">{{
+                              status.value
+                            }}</span>
+                            <v-btn
+                              x-small
+                              icon
+                              @click="updateStatusValue(status, 1)"
+                              :disabled="status.value >= 10"
+                            >
+                              <v-icon x-small>mdi-plus</v-icon>
+                            </v-btn>
+                          </div>
+
+                          <v-btn
+                            icon
+                            color="error"
+                            @click="removeStatus(status.key)"
+                          >
+                            <v-icon>mdi-delete</v-icon>
+                          </v-btn>
+                        </v-list-item-action>
+                      </v-list-item>
+                    </v-list>
+                    <div v-else class="text-center grey--text py-4">
+                      Нет активных
+                    </div>
+                  </v-tab-item>
+
+                  <!-- Вкладка доступных состояний -->
+                  <v-tab-item>
+                    <v-list class="pt-3">
+                      <v-list-item
+                        v-for="status in filteredStatuses"
+                        :key="status.key"
+                        @click="toggleStatus(status)"
+                        :class="{ 'active-status': isStatusActive(status.key) }"
+                      >
+                        <v-list-item-action>
+                          <v-checkbox
+                            :input-value="isStatusActive(status.key)"
+                            color="primary"
+                          ></v-checkbox>
+                        </v-list-item-action>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            >{{ status.name }}
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-icon
+                                  small
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  class="ml-1"
+                                  >mdi-information</v-icon
+                                >
+                              </template>
+                              <span
+                                v-html="status.description"
+                              ></span> </v-tooltip
+                          ></v-list-item-title>
+                          <!-- <v-list-item-subtitle>{{
+                            status.description
+                          }}</v-list-item-subtitle> -->
+                          <v-list-item-subtitle
+                            v-if="statusEffects[status.key]?.hasValue"
+                            class="caption text--primary"
+                          >
+                            <v-icon x-small>mdi-numeric</v-icon>
+                            Имеет значение
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-action
+                          v-if="
+                            isStatusActive(status.key) &&
+                            statusEffects[status.key]?.hasValue
+                          "
+                        >
+                          <span class="value-badge">{{
+                            getStatusValue(status.key)
+                          }}</span>
+                        </v-list-item-action>
+                      </v-list-item>
+                    </v-list>
+                  </v-tab-item>
+                </v-tabs-items>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn @click="statusDialog = false" color="primary"
+                  >Close</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-col>
 
         <!-- <v-row dense align="stretch"> -->
@@ -279,7 +577,7 @@
                   <v-btn small class="stat-name-btn" depressed>Рефлекс:</v-btn>
 
                   <v-btn small class="stat-mod-btn" depressed>
-                    +{{ ModAttributeSaving("dexterity", "reflex") }}
+                    {{ ModAttributeSavingWithStatuses("dexterity", "reflex") }}
                     {{ characterlabelL(characterSaving["reflex"]) }}
                   </v-btn>
                 </div>
@@ -290,7 +588,12 @@
                   >
 
                   <v-btn small class="stat-mod-btn" depressed>
-                    +{{ ModAttributeSaving("constitution", "fortitude") }}
+                    {{
+                      ModAttributeSavingWithStatuses(
+                        "constitution",
+                        "fortitude"
+                      )
+                    }}
                     {{ characterlabelL(characterSaving["fortitude"]) }}
                   </v-btn>
                 </div>
@@ -299,7 +602,7 @@
                   <v-btn small class="stat-name-btn" depressed>Воля:</v-btn>
 
                   <v-btn small class="stat-mod-btn" depressed>
-                    +{{ ModAttributeSaving("wisdom", "will") }}
+                    {{ ModAttributeSavingWithStatuses("wisdom", "will") }}
                     {{ characterlabelL(characterSaving["will"]) }}
                   </v-btn>
                 </div>
@@ -448,7 +751,7 @@
 
                   <div class="stat-number">
                     <div class="text-h5">
-                      + {{ ModAttributePerception("", "") }}
+                      {{ ModAttributePerceptionWithStatuses("", "") }}
                     </div>
                   </div>
                 </div>
@@ -489,7 +792,9 @@
                   </svg>
 
                   <div class="stat-number">
-                    <div class="text-h5">+ {{ ModAttributeClass() }}</div>
+                    <div v-if="ModAttributeClass()" class="text-h5">
+                      {{ ModAttributeClass() }}
+                    </div>
                   </div>
                 </div>
               </v-col>
@@ -2285,6 +2590,7 @@ export default {
       showContextDialog: false,
       contextDialogComponent: undefined,
       contextDialogTraitKey: undefined,
+      statusDialog: false,
       //
       objectiveEditorShow: false,
       objectiveEditorValue: '',
@@ -2295,6 +2601,9 @@ export default {
       skillsEditorDialog: false,
       keywordsEditorDialog: false,
       showCorruptionManagerDialog: false,
+          // activeStatuses: [],
+
+      statusEffects: [],
       customSkill: {
         key: undefined,
         name: 'Custom Skill',
@@ -2308,6 +2617,8 @@ export default {
         M: 6,
         L: 8,
       },
+        statusSearch: '',
+    tab: 0,
       dialog: false,
       dialogItem: false,
       customKeyword: {
@@ -2328,6 +2639,40 @@ export default {
     };
   },
   computed: {
+    availableStatuses() {
+    return this.statusRepository;
+  },
+
+    filteredStatuses() {
+    if (!this.statusSearch) return this.statusRepository;
+
+    const search = this.statusSearch.toLowerCase();
+    return this.statusRepository.filter(status =>
+      status.name.toLowerCase().includes(search) ||
+      status.description.toLowerCase().includes(search)
+    );
+  },
+
+  // Модифицированные характеристики с учетом состояний
+  characterAttributesWithStatuses() {
+    const baseAttributes = {...this.characterAttributes};
+    // this.activeStatuses.forEach(status => {
+    //   this.applyStatusEffect(status, baseAttributes);
+    // });
+    return baseAttributes;
+  },
+
+  // Модифицированные навыки с учетом состояний
+  skillsWithStatuses() {
+    const baseSkills = this.skills;
+    return baseSkills.map(skill => {
+      const modifiedSkill = {...skill};
+      this.activeStatuses.forEach(status => {
+        this.applyStatusEffects(status, modifiedSkill);
+      });
+      return modifiedSkill;
+    });
+  },
     sources() {
       return [
         'playerCore',
@@ -2350,6 +2695,9 @@ export default {
     },
     characterRank() {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
+    activeStatuses() {
+      return this.$store.getters['characters/characterStatusById'](this.characterId);
     },
     campaignCustomXp() {
       return this.$store.getters['characters/characterCampaignCustomXpById'](this.characterId);
@@ -2431,9 +2779,36 @@ export default {
 
 
       characterSpeed() {
-      return this.$store.getters["characters/characterSpeedById"](
-        this.characterId
-      );
+        let status = 0
+          this.activeStatuses.forEach(effect => {
+          if (effect && effect.rules) {
+            if (effect.rules.find(s => s.selector))
+              if (effect.rules.find(s => s.key === 'FlatModifier')) {
+                const att = effect.rules.find(s => s.selector).selector.filter(s => s.slice(3) === '-based' || s === 'speeds' || s === 'skill-check').map(s => s.slice(0, 3));
+
+
+                if (att.find(s => s === att.find(s => s === 'spe')) )
+                  if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+                    status = effect.value
+                  else
+                    status = -effect.rules.find(s => s.key === 'FlatModifier').value;
+
+              }
+          }
+          })
+
+  // Получаем speed из store
+  const originalSpeed = this.$store.getters["characters/characterSpeedById"](this.characterId);
+
+  // Создаем копию объекта, чтобы не мутировать store
+  const speed = { ...originalSpeed };
+
+         Object.keys(speed).forEach(key => {
+       speed[key] = speed[key] - status; // чтобы не стало отрицательным
+      });
+
+
+      return speed
     },
         characterAttributes() {
       return this.$store.getters["characters/characterAttributesById"](
@@ -2462,6 +2837,10 @@ export default {
     },
     languages() {
       return this.$store.getters['characters/characterLanguagesById'](this.characterId);
+    },
+    characterHeroPoints()
+    {
+          return this.$store.getters['characters/characterHeroPointsById'](this.characterId);
     },
     avatar() {
       const customAvatarUrl = this.$store.getters['characters/characterAvatarUrlById'](this.characterId);
@@ -2522,6 +2901,19 @@ export default {
           conditionalAdjustment: 0,
         };
       });
+
+
+        this.activeStatuses.forEach(status => {
+    const effect = this.statusEffects[status.key];
+    if (effect && effect.type === 'attribute') {
+      const attr = attributes.find(a => a.key === effect.target);
+      if (attr) {
+        attr.adjustment += effect.value;
+        attr.adjustedRating += effect.value;
+        attr.modifiers.push(`${effect.value} • ${status.name}`);
+      }
+    }
+        });
 
       // this.enhancements
       // .filter((enhancement)=>enhancement.targetGroup==='attributes')
@@ -2771,44 +3163,34 @@ export default {
         };
         const attribute = this.attributes.find((a) => a.name === skill.attribute);
 
+         // Добавим модификаторы от состояний
+    // this.statusRepository.forEach(status => {
+    //   const effect = this.activeStatuses[status.key];
+    //   if (effect) {
+    //     // Логика применения эффектов к навыкам
+    //     skill.modifiers.push(`${effect.value} • ${status.name}`);
+    //   }
+    // });
+
+        this.activeStatuses.forEach(effect => {
+          if (effect && effect.rules) {
+            if (effect.rules.find(s => s.selector))
+              if (effect.rules.find(s => s.key === 'FlatModifier')) {
+                const att = effect.rules.find(s => s.selector).selector.filter(s => s.slice(3) === '-based' || s === 'all' || s === 'skill-check').map(s => s.slice(0, 3));
+
+
+                if (att.find(s => s === skill.attribute.slice(0, 3)) || att.find(s => s === 'all') || att.find(s => s === 'ski'))
+                  if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+                    skill.conditionalAdjustment = effect.value
+                  else
+                    skill.conditionalAdjustment = -effect.rules.find(s => s.key === 'FlatModifier').value;
+
+              }
+          }
+        })
+
         return skill;
       });
-
-      /**
-       * modifiers [
-       *  { value: 3, type: 'BONUS_DICE', condition: null || 'when attacking AELDARI', provider: 'Hatret (AELDARI)', category: 'Talent' },
-       * ]
-       */
-
-      // We search all enhancements that have SKILL modifications
-      // this.enhancements
-      // .filter((enhancement) => enhancement.targetGroup==='skills')
-      // .forEach((enhancement) => {
-      //   let skill = skills.find((a) => a.key === enhancement.targetValue);
-      //   let mody = enhancement.modifier;
-      //   if (enhancement.rank) {
-      //     mody += (enhancement.rank * this.characterRank);
-      //   }
-      //   if ( skill ) {
-      //     const modifier = {
-      //       value: mody,
-      //       valueString: `${mody < 0 ? '-' : '+'}${mody}`,
-      //       type: 'MODIFIER',
-      //       condition: enhancement.condition || null,
-      //       provider: enhancement.provider,
-      //       category: enhancement.category,
-      //     };
-      //     skill.modifiers.push(modifier);
-      //     if (enhancement.condition) {
-      //       skill.conditionalAdjustment += mody;
-      //     } else {
-      //       skill.adjustment += mody;
-      //       skill.adjustedRating += mody;
-      //     }
-      //   } else {
-      //     console.warn(`Unexpected undefined skill for ${enhancement.targetValue}.`);
-      //   }
-      // });
 
       return skills;
     },
@@ -3384,6 +3766,9 @@ export default {
     characterSkills() {
       return this.$store.getters['characters/characterSkillsById'](this.characterId);
     },
+     characterXp() {
+    return this.$store.getters['characters/characterXpById'](this.characterId) || '';
+  },
     wargear() {
       const chargear = this.charGear;
       const wargear = [];
@@ -3488,6 +3873,7 @@ export default {
           this.getAbilityList(newVal);
           this.getActionList(newVal);
           this.getSpellList(newVal);
+          this.getStatus(newVal);
         }
       },
       immediate: true, // make this watch function is called when component created
@@ -3534,6 +3920,142 @@ export default {
 
   },
   methods: {
+    // Переключение состояния
+  toggleStatus(status) {
+    if (this.isStatusActive(status.key)) {
+      this.removeStatus(status.key);
+    } else {
+      this.addStatus(status);
+    }
+  },
+
+  // Добавление состояния
+  addStatus(status) {
+
+    const newStatus = {
+      ...status,
+      value: 1 // Значение по умолчанию
+    };
+
+    // this.activeStatuses.push(newStatus);
+
+
+    this.applyStatusEffects(newStatus.value, newStatus);
+  },
+
+  // Обновление значения состояния
+  updateStatusValue(status, delta) {
+    const index = this.activeStatuses.findIndex(s => s.key === status.key);
+    if (index !== -1) {
+      // if(this.statusRepository.find(s => s.key === status.key) !== '')
+      const newValue = this.activeStatuses.find(s => s.key === status.key).value + delta;
+
+      // Ограничиваем значения от 1 до 10
+      if (newValue >= 1 && newValue <= 10) {
+
+           this.$store.commit('characters/setCharacterValueStatusById', { id :this.characterId, status: status, value: newValue });
+        // this.activeStatuses.find(s => s.key === status.key).value = newValue;
+
+        this.applyStatusEffects(newValue, status);
+      }
+    }
+  },
+
+  // Удаление состояния
+  removeStatus(statusKey) {
+    this.$store.commit('characters/deleteCharacterStatusById', { id :this.characterId, status: this.activeStatuses.find(s => s.key === statusKey) });
+    // this.activeStatuses = this.activeStatuses.filter(s => s.key !== statusKey);
+  },
+
+  // Проверка активности состояния
+  isStatusActive(statusKey) {
+    return this.activeStatuses.some(s => s.key === statusKey);
+  },
+
+  // Получение значения состояния
+  getStatusValue(statusKey) {
+    const status = this.activeStatuses.find(s => s.key === statusKey);
+    return status ? status.value : 0;
+  },
+
+  // Получение цвета для состояния
+  getStatusColor(status) {
+    const effect = this.statusEffects[status.key];
+    if (!effect) return 'grey';
+
+    if (effect.value > 0) return 'green';
+    if (effect.value < 0) return 'red';
+    return 'blue';
+  },
+
+  // Применение эффектов состояний
+  applyStatusEffects(baseValue, status) {
+    let result = baseValue;
+     const skills = this.skills;
+    const effect = this.activeStatuses.find(s => s.key === status.key);
+    this.$store.commit('characters/setCharacterStatusById', { id :this.characterId, status: status });
+
+    return Math.max(result, 1); // Минимальное значение 1
+    },
+
+
+
+  // Обновленные методы с учетом состояний
+  ModAttributeSavingWithStatuses(attribute, skill) {
+    const char1 = this.profiencyRepository[this.characterSaving[skill]];
+    const char2 = (this.characterAttributesWithStatuses[attribute] - 10) / 2;
+    const char3 = this.characterLevel();
+
+
+       let status = 0;
+
+        this.activeStatuses.forEach(effect => {
+          if (effect && effect.rules) {
+            if (effect.rules.find(s => s.selector))
+              if (effect.rules.find(s => s.key === 'FlatModifier')) {
+                const att = effect.rules.find(s => s.selector).selector.filter(s=> s === 'saving-throw' || s === 'all');
+
+
+                 if (att.length !== 0)
+                  if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+                    status = effect.value
+                  else
+                    status = -effect.rules.find(s => s.key === 'FlatModifier').value;
+
+              }
+          }
+        })
+    const result = parseInt(char1) + parseInt(char2) + parseInt(char3) - status;
+
+    return result > 0 ? "+" + result : result;
+
+  },
+
+ ModAttributePerceptionWithStatuses(attribute, skill) {
+    const char1 = this.profiencyRepository[this.SkillPerception()];
+    const char2 = (this.characterAttributesWithStatuses["wisdom"] - 10) / 2;
+    const char3 = this.characterLevel();
+   let status = 0;
+
+        this.activeStatuses.forEach(effect => {
+          if (effect && effect.rules) {
+            if (effect.rules.find(s => s.selector))
+              if (effect.rules.find(s => s.key === 'FlatModifier')) {
+                const att = effect.rules.find(s => s.selector).selector.filter(s=> s === 'perception' || s === 'all');
+
+
+                if (att.length !== 0)
+                  if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+                    status = effect.value
+                  else
+                    status = -effect.rules.find(s => s.key === 'FlatModifier').value;
+
+              }
+          }
+        })
+        const result = parseInt(char1) + parseInt(char2) + parseInt(char3) - status;
+   return result > 0 ? "+" + result : result;
+  },
       psychicPowers(levelIndex) {
       const powers = this.$store.getters['characters/characterSpellsById'](this.characterId);
 
@@ -3741,6 +4263,16 @@ export default {
        })
       this.actionList =  data;
     },
+  async getStatus(sources) {
+
+    this.loading = true;
+
+      const status = this.$store.getters['characters/characterStatusById'](this.characterId);
+    // this.activeStatuses = status;
+      this.loading = false;
+
+      // this.psychicPowersList = data;
+    },
     async getSpellList(sources) {
             const config = {
         params: { source: sources.join(','), },
@@ -3912,6 +4444,13 @@ export default {
         this.removeBullet(level, value - 1);
       }
     },
+    handleClick2(e, value) {
+      if (e.button === 0) { // ЛКМ
+        this.addBullet2(value + 1);
+      } else if (e.button === 2) { // ПКМ
+        this.removeBullet2(value - 1);
+      }
+    },
     addBullet(level, value) {
       const progression = this.characterArchetype.spellProgression[this.characterLevel()]?.[level] || 0;
             if (!this.characterSpont[level] ) {
@@ -3932,6 +4471,16 @@ export default {
          this.$store.commit('characters/addCharacterSpontSpell', { id: this.characterId, level: level, value: value })
       }
 
+    },
+    addBullet2(value) {
+
+      if (value < 4 )
+         this.$store.commit('characters/setCharacterHeroPoints', { id: this.characterId, value: value })
+
+    },
+    removeBullet2(value) {
+        if (value >= 0 )
+         this.$store.commit('characters/setCharacterHeroPoints', { id: this.characterId, value: value })
     },
     async getAscensionPackageList(ascensionList) {
 
@@ -3964,18 +4513,18 @@ export default {
         this.characterId
       );
     },
-    ModAttributeSaving(attribute, skill) {
-      const char1 = this.profiencyRepository[this.characterSaving[skill]];
-      const char2 = (this.characterAttributes[attribute] - 10) / 2;
-      const char3 = this.characterLevel();
-      return parseInt(char1) + parseInt(char2) + parseInt(char3);
-    },
-    ModAttributePerception(attribute, skill) {
-      const char1 = this.profiencyRepository[this.SkillPerception()];
-      const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
-      const char3 = this.characterLevel();
-      return parseInt(char1) + parseInt(char2) + parseInt(char3);
-    },
+    // ModAttributeSavingWithStatuses(attribute, skill) {
+    //   const char1 = this.profiencyRepository[this.characterSaving[skill]];
+    //   const char2 = (this.characterAttributes[attribute] - 10) / 2;
+    //   const char3 = this.characterLevel();
+    //   return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    // },
+    //ModAttributePerceptionWithStatuses(attribute, skill) {
+    //   const char1 = this.profiencyRepository[this.SkillPerception()];
+    //   const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
+    //   const char3 = this.characterLevel();
+    //   return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    // },
 
     ModAttributeClass() {
       const char1 = this.profiencyRepository[this.SkillClass()];
@@ -4024,9 +4573,29 @@ export default {
       this.characterNotesEditorModel = this.$store.getters['characters/characterFluffNotesById'](this.characterId);
       this.characterNotesShowEditor = true;
     },
-        characterCurHP() {
+    characterCurHP() {
       this.currentHP = this.$store.getters['characters/characterCurrentHitPointsById'](this.characterId) || 0;
-      return this.currentHP;
+
+       let status = 0;
+
+        // this.activeStatuses.forEach(effect => {
+        //   if (effect && effect.rules) {
+        //     if (effect.rules.find(s => s.selector))
+        //       if (effect.rules.find(s => s.key === 'FlatModifier')) {
+        //         const att = effect.rules.find(s => s.selector).selector.filter(s=> s === 'hp');
+
+
+        //         if (att)
+        //           if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+        //             status = effect.value * this.characterLevel();
+
+        //       }
+        //   }
+        // })
+
+      return this.currentHP - status;
+
+
     },
       hpColor() {
       const ratio = this.characterHitPointsMax() !== 0 ? this.currentHP / this.characterHitPointsMax() : 0;
@@ -4047,6 +4616,26 @@ export default {
       const wear = this.$store.getters["characters/characterWearById"](
          this.characterId
       );
+
+        let status = 0;
+
+        this.activeStatuses.forEach(effect => {
+          if (effect && effect.rules) {
+            if (effect.rules.find(s => s.selector))
+              if (effect.rules.find(s => s.key === 'FlatModifier')) {
+                const att = effect.rules.find(s => s.selector).selector.filter(s=> s === 'ac' || s === 'all');
+
+
+                if (att)
+                  if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+                    status = effect.value
+                  else
+                    status = -effect.rules.find(s => s.key === 'FlatModifier').value;
+
+              }
+          }
+        })
+
       if (wear) {
         const modDex = Math.floor(
           (this.characterAttributes["dexterity"] - 10) / 2
@@ -4056,13 +4645,13 @@ export default {
         const Def = wear.category ? this.profiencyRepository[this.skillDefence[wear.category]] : 0;
         const bonusAC = wear.bonusAC ? wear.bonusAC : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();
-        return 10 + dex + Def + arm + bonusAC;
+        return 10 + dex + Def + arm + bonusAC - status;
       }
 
       const modDex = Math.floor(
         (this.characterAttributes["dexterity"] - 10) / 2
       );
-      return 10 + modDex;
+      return 10 + modDex - status;
     },
 
     characterNotesCancel() {
@@ -4104,7 +4693,8 @@ export default {
       const char1 = this.SkillsTrained[this.characterSkills[skill.key]];
       const char2 = (this.characterAttributesEnhanced[skill.attribute.toLowerCase()] - 10) / 2;
       const char3 = char1 === 0 ? 0 : this.characterLevel();
-      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+
+      return parseInt(char1) + parseInt(char2) + parseInt(char3) - skill.conditionalAdjustment;
 
       // const attribute = (this.characterAttributesEnhanced[skill.attribute.toLowerCase()] - 10) / 2;
 
@@ -4112,6 +4702,22 @@ export default {
 
 
     },
+     handleXpInput(value) {
+    // Немедленная фильтрация
+    const numericValue = value.replace(/[^\d]/g, '');
+
+    // Обновляем значение в поле
+    this.$refs.xpInput.internalValue = numericValue;
+
+    // Дебаунс для сохранения в хранилище
+    clearTimeout(this.xpTimeout);
+    this.xpTimeout = setTimeout(() => {
+      this.$store.commit('characters/setCustomXp', {
+        id: this.characterId,
+        xp: numericValue
+      });
+    }, 300);
+  },
     characterLevel(){
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
@@ -4245,7 +4851,7 @@ export default {
     groupName(name){
       return this.weaponGroup.find(item => item.group === name).name;
     },
-        characterHitPointsMax() {
+    characterHitPointsMax() {
       const species = this.characterHitPoints["species"]
         ? this.characterHitPoints["species"]
         : 0;
@@ -4256,8 +4862,26 @@ export default {
       const levelClass =
         (classh + (this.characterAttributesEnhanced["constitution"] - 10) / 2) *
         this.characterLevel();
-      if (levelClass <= 0) return species;
-      else return species + levelClass;
+
+         let status = 0;
+
+        this.activeStatuses.forEach(effect => {
+          if (effect && effect.rules) {
+            if (effect.rules.find(s => s.selector))
+              if (effect.rules.find(s => s.key === 'FlatModifier')) {
+                const att = effect.rules.filter(s => s.selector).find(s => s.selector.join(',').includes('hp'))
+
+
+                if (att)
+                  // if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+                    status = effect.value * this.characterLevel();
+
+              }
+          }
+        })
+
+      if (levelClass <= 0) return species - status;
+      else return species + levelClass - status;
     },
     closeSkillsSettings() {
       this.customSkill = {
@@ -4589,7 +5213,7 @@ td.small {
   background: transparent;
   color: #fff; /* цвет текста */
   font-size: 0.9rem;
-  width: 80px; /* компактная ширина */
+  width: 100px; /* компактная ширина */
   text-align: center;
 }
 
@@ -4857,5 +5481,96 @@ td.small {
 .badge-label {
   font-size: 0.75rem;
   color: #a6a7ab;
+}
+
+/* Добавьте в стили компонента */
+.status-effect {
+  border-left: 3px solid orange;
+  padding-left: 8px;
+}
+
+.modified-value {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+/* .status-chip {
+  transition: all 0.3s ease;
+}
+
+.status-chip:hover {
+  transform: scale(1.05);
+} */
+</style>
+
+<style scoped>
+.search-field {
+  max-width: 250px;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.value-controls {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.value-display {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.value-badge {
+  background: #2196f3;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.active-status {
+  background-color: rgba(33, 150, 243, 0.1) !important;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* .status-chip {
+  transition: all 0.3s ease;
+} */
+
+.status-chip:hover {
+  transform: scale(1.05);
+}
+
+/* Анимация для вкладок */
+.v-tab-item {
+  transition: all 0.3s ease;
+}
+
+/* Стили для списка */
+.v-list-item {
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+.v-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

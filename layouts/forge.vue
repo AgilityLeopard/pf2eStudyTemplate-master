@@ -116,25 +116,43 @@
                 :key="skill.key"
                 two-line
                 @click="openSkills(skill)"
+                :style="{ backgroundColor: getSkillRankColor(skill.key) }"
+                class="skill-item"
               >
-                <v-list-item-content>
-                  <v-list-item-title>
+                <v-list-item-content class="skill-row">
+                  <v-list-item-title class="skill-label">
                     {{ skill.name }}
+                    <!-- <v-chip
+                      v-if="getSkillRank(skill.key) > 0"
+                      x-small
+                      label
+                      class="ml-1"
+                      :color="getRankChipColor(skill.key)"
+                      dark
+                    >
+                      {{ getSkillRankName(skill.key) }}
+                    </v-chip> -->
                   </v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-action class="hidden-xs-only">
-                  <v-chip pill color="green" text-color="white">
-                    <v-avatar left class="green darken-4">
-                      {{ ModAttribute(skill.attribute, skill.key) }}
-                    </v-avatar>
+                  <v-chip
+                    pill
+                    :color="getRankChipColor(skill.key)"
+                    dark
+                    class="ml-2"
+                  >
+                    {{ ModAttribute(skill.attribute, skill.key) }}
                   </v-chip>
                 </v-list-item-action>
                 <v-list-item-action class="hidden-xs-only">
-                  <v-chip pill color="red" text-color="white">
-                    <v-avatar left class="red darken-4">
-                      {{ SkillLabel(skill.key) }}
-                    </v-avatar>
+                  <v-chip
+                    small
+                    :color="getRankChipColor(skill.key)"
+                    dark
+                    class="ml-2"
+                  >
+                    {{ SkillLabel(skill.key) }}
                   </v-chip>
                 </v-list-item-action>
               </v-list-item>
@@ -311,7 +329,7 @@
       </v-expansion-panels>
 
       <!-- Диалог по нажатию на навы -->
-      <v-dialog
+      <!-- <v-dialog
         v-model="skillsDialog"
         width="600px"
         scrollable
@@ -370,6 +388,261 @@
           </v-card-text>
           <v-divider></v-divider>
 
+          <v-card-actions>
+            <v-spacer />
+          </v-card-actions>
+        </v-card>
+      </v-dialog> -->
+
+      <v-dialog
+        v-model="skillsDialog"
+        width="1000px"
+        scrollable
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+      >
+        <v-card>
+          <!-- Заголовок -->
+          <v-card-title style="background-color: #262e37; color: #fff">
+            {{ skill.name }}
+            <v-spacer />
+            <v-icon dark @click="closeSkills">close</v-icon>
+          </v-card-title>
+
+          <!-- Контент -->
+          <v-card-text class="pt-4">
+            <!-- Основная инфа -->
+            <!-- <v-container class="bg-primary mb-6">
+              <v-row align-items="start" style="height: 150px">
+                <v-col>
+                  <v-sheet class="text-center small pa-1"> Навык </v-sheet>
+                  <v-sheet class="text-center pa-2 ma-2">
+                    {{ skill.name }}
+                  </v-sheet>
+                </v-col>
+                <v-col>
+                  <v-sheet class="text-center small pa-1">
+                    {{
+                      attributeRepository.find(
+                        (item) => item.key === skill.attribute
+                      ).short
+                    }}
+                  </v-sheet>
+                  <v-sheet class="text-center pa-2 ma-2">
+                    {{ (characterAttributes[skill.attribute] - 10) / 2 }}
+                  </v-sheet>
+                </v-col>
+                <v-col>
+                  <v-sheet class="text-center small pa-1"> Владение </v-sheet>
+                  <v-sheet class="text-center pa-2 ma-2">
+                    {{ profiencyRepository[SkillProf(skill.key)] }}
+                  </v-sheet>
+                </v-col>
+                <v-col>
+                  <v-sheet class="text-center small pa-1"> Уровень </v-sheet>
+                  <v-sheet
+                    v-if="profiencyRepository[SkillProf(skill.key)] !== 0"
+                    class="text-center pa-2 ma-2"
+                  >
+                    {{ characterLevel() }}
+                  </v-sheet>
+                  <v-sheet v-else class="text-center pa-2 ma-2"> 0 </v-sheet>
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <v-row>
+                <div class="pt-4 pb-2" v-html="skill.description"></div>
+              </v-row>
+            </v-container> -->
+
+            <!-- Аккордеон -->
+            <v-expansion-panels multiple>
+              <v-expansion-panel>
+                <v-expansion-panel-header
+                  >Описание навыка</v-expansion-panel-header
+                >
+                <v-expansion-panel-content>
+                  <div class="pt-4 pb-2" v-html="skill.description"></div>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <!-- Actions -->
+              <v-expansion-panel>
+                <v-expansion-panel-header
+                  >Действия навыка</v-expansion-panel-header
+                >
+                <v-expansion-panel-content>
+                  <v-list dense>
+                    <v-list-item
+                      v-for="(action, i) in skill.actions || []"
+                      :key="i"
+                    >
+                      <v-expansion-panel>
+                        <v-expansion-panel-header>
+                          {{ action?.name }}</v-expansion-panel-header
+                        >
+                        <v-expansion-panel-content>
+                          <v-card class="glass-card pa-4">
+                            <v-card-title class="headline">
+                              {{ action?.name }}
+                            </v-card-title>
+                            <v-card-text>
+                              <v-row>
+                                <div>
+                                  <trait-view
+                                    v-if="action"
+                                    :item="action"
+                                    class="mb-2"
+                                  />
+                                </div>
+                              </v-row>
+                              <div
+                                class="pt-4 pb-2"
+                                v-html="action?.description"
+                              ></div>
+                              <p>
+                                <strong>Category:</strong>
+                                {{ action?.category }}
+                              </p>
+                              <p v-if="action?.requirements">
+                                <strong>Requirements:</strong>
+                                {{ action.requirements }}
+                              </p>
+                              <p v-if="action?.source">
+                                <strong>Source:</strong> {{ action.source }}
+                              </p>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                            </v-card-actions>
+                          </v-card>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-list-item>
+                    <!-- <v-list-item
+                      v-for="(action, i) in skill.actions || []"
+                      :key="i"
+                    >
+                      <v-list-item-content>{{
+                        action.name
+                      }}</v-list-item-content>
+                      <v-list-item-action>
+                        <v-chip small>{{ action.cost }}</v-chip>
+                      </v-list-item-action>
+                    </v-list-item> -->
+                  </v-list>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+
+              <!-- Breakdown -->
+              <v-expansion-panel>
+                <v-expansion-panel-header>Расшифровка</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <span class="font-weight-bold">
+                    <span v-if="skillTotal(skill) < 0"></span>
+                    <span v-else>+</span>
+                    {{ skillTotal(skill) }}
+                  </span>
+                  =
+                  <!-- Бонус владения -->
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <kbd v-bind="attrs" v-on="on">
+                        {{ profiencyRepository[SkillProf(skill.key)] }}
+                      </kbd>
+                    </template>
+                    <span
+                      >Вы {{ SkillLabelName(skill.key) }}, что дает вам бонус
+                      {{ profiencyRepository[SkillProf(skill.key)] }}</span
+                    >
+                  </v-tooltip>
+
+                  +
+
+                  <!-- Модификатор атрибута -->
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <kbd v-bind="attrs" v-on="on">
+                        {{ (characterAttributes[skill.attribute] - 10) / 2 }}
+                      </kbd>
+                    </template>
+                    <span>
+                      Модификатор атрибута
+                      {{
+                        attributeRepository.find(
+                          (i) => i.key === skill.attribute
+                        )?.short
+                      }}
+                    </span>
+                  </v-tooltip>
+
+                  +
+
+                  <!-- Бонус уровня (только если есть владение) -->
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <kbd v-bind="attrs" v-on="on">
+                        {{
+                          profiencyRepository[SkillProf(skill.key)] !== 0
+                            ? characterLevel()
+                            : 0
+                        }}
+                      </kbd>
+                    </template>
+                    <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0"
+                      >Поскольку вы обучены этому навыку, вы добавляете свой
+                      уровень.</span
+                    >
+                    <span v-if="profiencyRepository[SkillProf(skill.key)] === 0"
+                      >Поскольку вы не обучены этому навыку, вы не добавляете
+                      свой уровень.</span
+                    >
+                  </v-tooltip>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+
+              <!-- Timeline -->
+              <v-expansion-panel>
+                <v-expansion-panel-header
+                  >Таймлайн навыка</v-expansion-panel-header
+                >
+                <v-expansion-panel-content>
+                  <v-list dense>
+                    <v-list-item
+                      v-for="(event, index) in skill.event"
+                      :key="index"
+                    >
+                      <v-list-item-content>
+                        <v-list-item-title
+                          style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                          "
+                        >
+                          <span>{{ event.source }}</span>
+                          <span style="font-size: 0.8rem; font-weight: normal"
+                            >Уровень. {{ event.level }}</span
+                          >
+                        </v-list-item-title>
+                        <v-list-item-subtitle
+                          style="font-style: italic; font-size: 0.75rem"
+                        >
+                          {{ event.details }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-icon>
+                        <v-icon :color="event.active ? 'green' : 'grey'"
+                          >mdi-badge-account</v-icon
+                        >
+                      </v-list-item-icon>
+                    </v-list-item>
+                  </v-list>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card-text>
+
+          <!-- Нижняя панель -->
+          <v-divider></v-divider>
           <v-card-actions>
             <v-spacer />
           </v-card-actions>
@@ -713,6 +986,7 @@ export default {
     return {
       skillsDialog: false,
       savesDialog: false,
+      actionList: undefined,
       skill: {
         key: "acrobatics",
         name: "Акробатика",
@@ -761,6 +1035,15 @@ export default {
     };
   },
   computed: {
+    sources() {
+      return [
+        "playerCore",
+        "playerCore2",
+        // 'tnh',
+        // ...this.settingHomebrews,
+      ];
+    },
+
     routes() {
       return {
         species: this.routeBuilder(
@@ -1167,13 +1450,47 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+    sources: {
+      handler(newVal) {
+        if (newVal) {
+          // this.getWargearList(newVal);
+          // this.getAbilityList(newVal);
+          this.getActionList(newVal);
+          // this.getSpellList(newVal);
+        }
+      },
+      immediate: true, // make this watch function is called when component created
+    },
   },
   methods: {
+    skillTotal(skill) {
+      const prof = this.profiencyRepository[this.SkillProf(skill.key)];
+      const attr = (this.characterAttributes[skill.attribute] - 10) / 2;
+      const lvl = prof !== 0 ? this.characterLevel() : 0;
+      return prof + attr + lvl;
+    },
+    settingHomebrews() {
+      return this.$store.getters["characters/characterSettingHomebrewsById"](
+        this.$route.params.id
+      );
+    },
     async loadFaction(key) {
       if (key) {
         const { data } = await this.$axios.get(`/api/factions/${key}`);
         this.characterFaction = data;
       }
+    },
+    async getActionList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get("/api/action/", config.source);
+      data.forEach((s) => {
+        s.trait = s.traits;
+      });
+      this.actionList = data;
     },
     ModAttribute(attribute, skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
@@ -1207,7 +1524,28 @@ export default {
           return "U";
       }
     },
+    SkillLabelName(skill) {
+      //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
 
+      const prof = this.characterSkillSheet.filter(
+        (s) => s.key === skill
+      ).length;
+
+      switch (prof) {
+        case 0:
+          return "нетренированы";
+        case 1:
+          return "тренированы";
+        case 2:
+          return "эксперт";
+        case 3:
+          return "мастер";
+        case 4:
+          return "легенда";
+        default:
+          return "нетренированыН";
+      }
+    },
     SkillLabel(skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
 
@@ -1397,8 +1735,69 @@ export default {
         characterId: this.$route.params.id,
       });
     },
+    getRank(skill) {
+      // Твой способ получения уровня тренированности
+      const s = this.characterSkillSheet.find((s) => s.key === skill.key);
+      return s ? s.length : 0; // если не найдено — 0 (нетрен.)
+    },
+    rankColorClass(skill) {
+      const rank = this.getRank(skill);
+      switch (rank) {
+        case 0:
+          return "rank-untrained";
+        case 1:
+          return "rank-trained";
+        case 2:
+          return "rank-expert";
+        case 3:
+          return "rank-master";
+        case 4:
+          return "rank-legend";
+        default:
+          return "";
+      }
+    },
+
     openSkills(skill) {
-      this.skill = skill;
+      ///добавляем действия к навыку
+      const actions = this.actionList
+        .filter((s) => s.skills)
+        .filter((s) => s.skills.join(", ").includes(skill.key));
+
+      const prof = this.characterSkillSheet
+        .filter((s) => s.key === skill.key)
+        .sort((a, b) => a.level - b.level);
+
+      const event = [];
+      const train = {
+        0: "Нетреннированый",
+        1: "Тренированный",
+        2: "Эксперт",
+        3: "Мастер",
+        4: "Легенда",
+      };
+
+      if (prof) {
+        let i = 0;
+
+        prof.forEach((s) => {
+          event.push({
+            level: s.level,
+            source: s.type,
+            details: train[i] + "->" + train[i + 1],
+          });
+          i++;
+        });
+      }
+
+      const skill1 = {
+        ...skill,
+        actions: actions,
+        event: event,
+      };
+
+      this.skill = skill1;
+
       this.skillsDialog = true;
     },
     closeSkills() {
@@ -1410,6 +1809,79 @@ export default {
     },
     closeSaves() {
       this.savesDialog = false;
+    },
+    getSkillRankColor(skillKey) {
+      const rank = this.getSkillRank(skillKey);
+      switch (rank) {
+        case 0: // Нетренирован
+          return "grey lighten-3";
+        case 1: // Тренирован
+          return "blue lighten-4";
+        case 2: // Эксперт
+          return "green lighten-4";
+        case 3: // Мастер
+          return "orange lighten-4";
+        case 4: // Легенда
+          return "purple lighten-4";
+        default:
+          return "grey lighten-3";
+      }
+    },
+
+    getSkillRank(skillKey) {
+      const skillSheet = this.characterSkillSheet || [];
+      return skillSheet.filter((s) => s.key === skillKey).length;
+    },
+
+    getSkillRankName(skillKey) {
+      const rank = this.getSkillRank(skillKey);
+      switch (rank) {
+        case 0:
+          return "Нетренирован";
+        case 1:
+          return "Тренирован";
+        case 2:
+          return "Эксперт";
+        case 3:
+          return "Мастер";
+        case 4:
+          return "Легенда";
+        default:
+          return "Нетренирован";
+      }
+    },
+    getRankChipColor(skillKey) {
+      const rank = this.getSkillRank(skillKey);
+      switch (rank) {
+        case 0: // Нетренирован
+          return "grey";
+        case 1: // Тренирован
+          return "#171f69";
+        case 2: // Эксперт
+          return "#3c005e";
+        case 3: // Мастер
+          return "#664400";
+        case 4: // Легенда
+          return "#5e0000";
+        default:
+          return "grey";
+      }
+
+      //       .rank-chip-0 {
+      //   background-color: #9e9e9e !important;
+      // }
+      // .rank-chip-1 {
+      //   background-color: #171f69 !important;
+      // }
+      // .rank-chip-2 {
+      //   background-color: #3c005e !important;
+      // }
+      // .rank-chip-3 {
+      //   background-color: #664400 !important;
+      // }
+      // .rank-chip-4 {
+      //   background-color: #5e0000 !important;
+      // }
     },
   },
 };
@@ -1514,5 +1986,76 @@ export default {
     text-align: center;
     cursor: inherit;
   }
+}
+</style>
+
+<style scoped>
+.skill-button {
+  justify-content: space-between;
+  background: #333;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.skill-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.skill-label {
+  font-size: 14px;
+  color: #fff;
+}
+
+.skill-values {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-value {
+  font-size: 14px;
+  color: #fff;
+}
+</style>
+
+<style scoped>
+.skill-item.rank-0 {
+  background-color: #f5f5f5;
+}
+.skill-item.rank-1 {
+  background-color: #e3f2fd;
+}
+.skill-item.rank-2 {
+  background-color: #e8f5e9;
+}
+.skill-item.rank-3 {
+  background-color: #fff3e0;
+}
+.skill-item.rank-4 {
+  background-color: #f3e5f5;
+}
+
+.rank-chip-0 {
+  background-color: #9e9e9e !important;
+}
+.rank-chip-1 {
+  background-color: #171f69 !important;
+}
+.rank-chip-2 {
+  background-color: #3c005e !important;
+}
+.rank-chip-3 {
+  background-color: #664400 !important;
+}
+.rank-chip-4 {
+  background-color: #5e0000 !important;
+}
+
+.skill-label {
+  display: flex;
+  align-items: center;
 }
 </style>

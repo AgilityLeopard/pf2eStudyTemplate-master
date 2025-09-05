@@ -2727,7 +2727,6 @@ const playerCore2 = [
             "General feat", "Skill increase", "Ancestry feat", "Stat boost",
             // Классовые
 
-
             "Panache",
             "SwashbucklerStyle",
             "PreciseStrike",

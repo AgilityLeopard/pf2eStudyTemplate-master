@@ -448,6 +448,7 @@ const playerCore = [
             "концентрация",
             "тайна"
         ],
+        "skills": ["arcana", "nature", "religion", "crafting", "medicine", "occultism"],
         "key": "recall-knowledge",
         "source": "Pathfinder Player Core"
     },
@@ -485,6 +486,7 @@ const playerCore = [
         "key": "escape",
         "source": "Pathfinder Player Core"
     },
+
     {
         "name": "Выслеживание / Track",
         "actions": {
@@ -522,6 +524,7 @@ const playerCore = [
             "исследование"
         ],
         "key": "learn-a-spell",
+        "skills": ["arcana", "nature", "occultism", "religion"],
         "source": "Pathfinder Player Core"
     },
     {
@@ -537,6 +540,7 @@ const playerCore = [
             "fear",
             "ментальный"
         ],
+        "skills": ["intimidation"],
         "key": "demoralize",
         "source": "Pathfinder Player Core"
     },
@@ -591,6 +595,7 @@ const playerCore = [
             "исследование",
             "тайна"
         ],
+        "skills": ["arcana", "nature", "occultism", "religion"],
         "key": "identify-magic",
         "source": "Pathfinder Player Core"
     },
@@ -890,6 +895,7 @@ const playerCore = [
             "отдых"
         ],
         "key": "subsist",
+        "skills": ["society", "survival"],
         "source": "Pathfinder Player Core"
     },
     {
@@ -958,6 +964,7 @@ const playerCore = [
             "исследование",
             "тайна"
         ],
+        "skills": ["arcana", "nature", "occultism", "religion"],
         "key": "decipher-writing",
         "source": "Pathfinder Player Core"
     },
@@ -972,6 +979,7 @@ const playerCore = [
             "воздействие"
         ],
         "key": "repair",
+        "skills": ["crafting"],
         "source": "Pathfinder Player Core"
     },
     {
@@ -1147,4 +1155,5 @@ const playerCore = [
         "source": "Pathfinder Player Core"
     }
 ]
+
 module.exports = [...playerCore];
