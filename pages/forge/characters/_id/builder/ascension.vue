@@ -1,5 +1,5 @@
 <template lang="html">
-    <nuxt-child />
+  <nuxt-child />
 </template>
 
 <script lang="js">
@@ -9,7 +9,7 @@ export default {
   props: [],
   head() {
     return {
-      title: 'Select Ascension Package',
+      title: 'Выбор предысторию',
     };
   },
   data() {
@@ -19,5 +19,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

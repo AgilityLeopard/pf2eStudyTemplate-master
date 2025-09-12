@@ -11,11 +11,10 @@ export default {
   props: [],
   head() {
     return {
-      title: 'Select Species',
+      title: 'Выбор родословной',
     };
   },
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

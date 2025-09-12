@@ -140,7 +140,10 @@
             <p></p>
             <div v-if="item.prerequisites">
               <p class="main-holder">
-                <b>Требования:</b> {{ item.prerequisites }}
+                <b>Требования:</b>
+                {{
+                  item.prerequisites.value.map((item) => item.value).join(", ")
+                }}
               </p>
             </div>
             <div v-if="item.requirementsText">

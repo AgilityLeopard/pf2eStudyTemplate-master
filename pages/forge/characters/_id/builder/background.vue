@@ -9,39 +9,7 @@
     <v-col :cols="12">
       <v-card>
         <v-card-title>Выбор божества</v-card-title>
-        <v-card-text>
-          <!-- <h3 class="headline">Выберите Божество</h3> -->
-          <!-- <v-select
-           v-model="selectedDeity"
-            :items="deityList"
-            item-value="key"
-            item-text="name"
-            label=""
-            dense
-            outlined
-            persistent-hint
-            return-object
-          >
-          </v-select> -->
-          <!--    v-model="selectedDeity"
-       @input="selectHeritageForChar" -->
-
-          <!-- <div v-if="selectedDeity" class="mt-2 body-2 text-lg-justify">
-     
-
-        <p> <div v-if="selectedDeity.description" v-html="selectedDeity.description"></div> </p> 
-        <p> <div v-if="selectedDeity.sanctification">
-              Санктификация: <span v-if="selectedDeity.sanctification.modal === 'can'"> Может</span> 
-              <span v-if="selectedDeity.sanctification.modal === 'must'"> Обязан</span> 
-              <br>
-              Освящение: 
-              {{ selectedDeity.sanctification.what.join(', ') }}
-
-        </div> </p> 
-        
-    
-        </div> -->
-        </v-card-text>
+        <v-card-text> </v-card-text>
       </v-card>
 
       <v-card>
@@ -54,8 +22,8 @@
               :key="language.name"
               label
               small
-              :close="language.name != 'Всеобщий'"
-              @click:close="removeLanguage(language.name)"
+              :close="language.source === 'creation'"
+              @click:close="removeLanguage(language.name, language.source)"
             >
               <strong>{{ language.name }}</strong
               >&nbsp;
@@ -67,7 +35,7 @@
         <v-card-text>
           <p>
             Каждый персонаж владеет <strong>Общим языком</strong> и
-            дополнительными языками в в количестве, равном интеллекту ({{
+            дополнительными языками в количестве, равном ({{
               MaxIntellectLanguage()
             }}) .
           </p>
@@ -75,7 +43,7 @@
             v-model="languageInput"
             persistent-hint
             hint="Введите язык"
-            :disabled="MaxIntellectLanguage() < 1"
+            :disabled="MaxIntellectLanguage() === 0"
             append-outer-icon="add_box"
             @click:append-outer="addLanguage(languageInput)"
             @keypress.enter="addLanguage(languageInput)"
@@ -120,7 +88,7 @@ export default {
   },
   head() {
     return {
-      title: 'Select Background',
+      title: 'Выбор деталей',
     };
   },
   computed:
@@ -266,9 +234,11 @@ export default {
     },
     MaxIntellectLanguage() {
         const modInt = (this.characterAttributes['intellect'] - 10) / 2;
-        const modLang = this.characterLanguages.length - 1;
-        const modAncestry = this.characterSpecies ? this.characterSpecies.freeLanguage : 0;
-        return modInt - (modLang + modAncestry) < 0 ? 0 : modInt - (modLang + modAncestry);
+      const modLang = this.characterLanguages.length - 1;
+      const langSpec = this.characterSpecies ? this.characterSpecies.language.length : 0;
+      const modAncestry = this.characterSpecies ? this.characterSpecies.freeLanguage : 0;
+
+        return modLang - (langSpec - 1 < 0 ? 0 : langSpec - 1) < (modInt + modAncestry)  ?   (modInt + modAncestry) - (modLang - ((langSpec - 1 < 0 ? 0 : langSpec - 1))) : 0 ;
     },
     changeBackground(key) {
       const item = this.getBackgroundBySectionByKey(key);
@@ -338,8 +308,8 @@ export default {
       this.$store.commit('characters/addCharacterLanguage', { id: this.characterId, name, cost, source })
       this.languageInput = '';
     },
-    removeLanguage(name) {
-      this.$store.commit('characters/removeCharacterLanguage', { id: this.characterId, name })
+    removeLanguage(name, source) {
+      this.$store.commit('characters/removeCharacterLanguage', { id: this.characterId, name, source })
     },
   },
 };

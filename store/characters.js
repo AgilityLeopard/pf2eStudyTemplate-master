@@ -234,6 +234,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].faction.label : "unknown",
   characterFocusSpellById: (state) => (id) =>
     state.characters[id] ? state.characters[id].spellsFocus : [],
+  characterPreparedById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].prepared : [],
   characterFocusPoolById: (state) => (id) =>
     state.characters[id] ? state.characters[id].FocusPool : [],
   characterHeroPointsById: (state) => (id) =>
@@ -2112,6 +2114,24 @@ export const mutations = {
     const character = state.characters[payload.id];
     character.focusPool.filter(t => t.source !== payload.source);
   },
+  addCharacterPreparedSpell(state, payload) {
+    const character = state.characters[payload.id];
+    const { spell } = payload;
+
+    //character.prepared = character.prepared.filter(s => s.key !== spell.key);
+    character.prepared.push(spell);
+
+  },
+  removeCharacterPreparedSpell(state, payload) {
+    const character = state.characters[payload.id];
+    character.prepared = character.prepared?.filter((t) => t.key !== payload.key); // cleanup
+
+  },
+  clearCharacterPreparedSpell(state, payload) {
+    const character = state.characters[payload.id];
+    character.prepared = [] // cleanup
+
+  },
   addCharacterFocusSpell(state, payload) {
     const character = state.characters[payload.id];
     const spell = payload;
@@ -2453,12 +2473,18 @@ export const mutations = {
   },
   removeCharacterLanguage(state, payload) {
     const character = state.characters[payload.id];
-    const { name } = payload;
+    const { name, source } = payload;
     character.languages = character.languages.filter(
-      (language) => language.name.localeCompare(name, "en") !== 0
+      (language) => language.name.localeCompare(name, "en") !== 0 || language.source !== source
     );
   },
-
+  removeCharacterLanguagebySource(state, payload) {
+    const character = state.characters[payload.id];
+    const { source } = payload;
+    character.languages = character.languages.filter(
+      (language) => language.source !== source
+    );
+  },
   setCharacterFluffNotes(state, payload) {
     const { id, notes } = payload;
     const character = state.characters[id];
@@ -3028,6 +3054,7 @@ const getDefaultState = () => ({
   HeroPoints: 0,
   focusPool: [],
   spellsFocus: [],
+  prepared: [],
   spellTraditions: undefined,
   isFeatLevelOne: false,
   status: [],

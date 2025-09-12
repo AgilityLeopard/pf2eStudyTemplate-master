@@ -30,9 +30,77 @@
       />
 
       <v-card v-if="ascensionList">
+        <v-card-title>
+          <v-text-field
+            v-model="searchQuery"
+            filled
+            dense
+            prepend-inner-icon="search"
+            clearable
+            label="Поиск"
+          />
+        </v-card-title>
+        <v-divider />
+
+        <v-card-title>
+          <v-container class="bg-surface-variant">
+            <v-row>
+              <v-col :cols="6">
+                <v-select
+                  label="Редкость"
+                  multiple
+                  v-model="selectedRarityFilters"
+                  :items="rarityFilters"
+                  item-text="name"
+                  item-value="name"
+                >
+                </v-select>
+              </v-col>
+
+              <v-col :cols="6">
+                <v-select
+                  label="Источник"
+                  v-model="selectedSourceFilters"
+                  multiple
+                  :items="sourceFilters"
+                  item-text="name"
+                  item-value="name"
+                >
+                </v-select>
+              </v-col>
+
+              <v-col :cols="6">
+                <v-select
+                  label="Характеристика"
+                  v-model="selectedAbilityFilters"
+                  multiple
+                  :items="abilityFilters"
+                  item-text="name"
+                  item-value="key"
+                >
+                </v-select>
+              </v-col>
+            </v-row>
+
+            <!-- <v-row>
+          <v-col :cols="6">
+            <v-select
+              label="Трейты"
+              v-model="selectedtraitsFilters"
+              multiple
+              :items="tagFilters"
+              item-text="name"
+              item-value="name"
+            >
+            </v-select>
+          </v-col>
+        </v-row> -->
+          </v-container>
+        </v-card-title>
+
         <v-list>
           <v-list-item
-            v-for="item in ascensionList"
+            v-for="item in filteredTalents"
             :key="item.key"
             @click.stop="updatePreview(item)"
           >
@@ -66,21 +134,122 @@
 <script>
 import AscensionPreview from "~/components/forge/AscensionPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
+import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
   name: "Choose",
   components: {
     AscensionPreview,
   },
-  mixins: [SluggerMixin],
+  mixins: [SluggerMixin, StatRepositoryMixin],
   data() {
     return {
       ascensionList: undefined,
       selectedAscension: undefined, // for he preview dialog box
       ascensionDialog: false,
+      searchQuery: "",
+      selectedSourceFilters: [],
+      selectedtraitsFilters: [],
+      selectedRarityFilters: [],
+      selectedAbilityFilters: [],
     };
   },
   computed: {
+    sourceFilters() {
+      if (this.ascensionList === undefined) {
+        return [];
+      }
+      let filteredTalents = this.ascensionList;
+
+      let reduced = [];
+      filteredTalents.forEach((item) => {
+        if (item.source.book) {
+          reduced.push(item.source.book);
+        }
+      });
+
+      reduced = reduced.filter((item) => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((tag) => ({ name: tag }));
+    },
+    abilityFilters() {
+      if (this.ascensionList === undefined) {
+        return [];
+      }
+      let filteredTalents = this.ascensionList;
+
+      let reduced = [];
+
+      this.attributeRepository.forEach((item) => {
+        reduced.push({
+          name: item.name,
+          key: item.key,
+        });
+      });
+
+      // reduced = reduced.filter((item) => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+
+      return reduced;
+    },
+    rarityFilters() {
+      if (this.ascensionList === undefined) {
+        return [];
+      }
+
+      let reduced = ["обычный", "необычный", "редкий", "уникальный"];
+
+      reduced = reduced.filter((item) => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((tag) => ({ name: tag }));
+    },
+    filteredTalents() {
+      if (this.ascensionList === undefined) {
+        return [];
+      }
+
+      let filteredTalents = this.ascensionList;
+
+      if (this.searchQuery) {
+        const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
+        filteredTalents = filteredTalents.filter((a) => {
+          const lowerCaseArchetype = a.nameBackground.toLowerCase();
+          return lowerCaseArchetype.startsWith(lowerCaseSearchQuery);
+        });
+      }
+
+      if (this.selectedSourceFilters.length > 0) {
+        filteredTalents = filteredTalents.filter((item) =>
+          this.selectedSourceFilters.includes(item.source.book)
+        );
+      }
+
+      if (this.selectedAbilityFilters.length > 0) {
+        filteredTalents = filteredTalents.filter((item) =>
+          this.selectedAbilityFilters.some((m) => item.boost1.includes(m))
+        );
+      }
+
+      if (this.selectedRarityFilters.length > 0) {
+        filteredTalents = filteredTalents
+          .filter((item) =>
+            this.selectedRarityFilters.some(
+              (m) =>
+                item.rarity.includes(m) ||
+                (m === "обычный" && !item.rarity.includes("редкий"))
+            )
+          )
+          .filter((item) =>
+            this.selectedRarityFilters.some(
+              (m) =>
+                item.rarity.includes(m) ||
+                (m === "обычный" && !item.rarity.includes("необычный"))
+            )
+          );
+      }
+
+      return filteredTalents;
+    },
     sources() {
       return ["playerCore", ...this.settingHomebrews];
     },

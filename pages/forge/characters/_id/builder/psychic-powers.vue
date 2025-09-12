@@ -1150,7 +1150,7 @@ export default {
 
   head() {
     return {
-      title: 'Выберите заклинания',
+      title: 'Выбор заклинания',
     };
   },
   asyncData({ params }) {
@@ -1568,11 +1568,13 @@ characterSpellRitual(cell, spell)
        else
          list = list.filter(spell => !spell.traits.join(',').includes('заговор'))
 
+
+         const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
       list.forEach(t => {
         const tal = t;
         tal.rank = levelAncestry ;
         tal.cell = cell;
-
+        tal.prepared = prepare.find(s => s.key === t.key) === true;
       })
        this.levelSpell = levelAncestry;
        this.rankSpell = this.archetype.spellProgression[this.characterLevel()].findIndex(

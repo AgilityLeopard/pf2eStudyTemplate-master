@@ -19,7 +19,7 @@
       <v-spacer />
       <div class="hidden-xs-only">
         <v-avatar tile size="72">
-          <img :src="`/img/avatars/species/playerCore-dwarf.png`" />
+          <img :src="`/img/avatars/species/playercore-dwarf.png`" />
         </v-avatar>
       </div>
     </v-card-title>

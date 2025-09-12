@@ -119,11 +119,13 @@
             <span class="left-header">{{ feature.name }}</span
             ><span class="right-header">{{ feature.level }}</span>
           </h3>
+
+           
           <!-- <div >
           <h3 ><span style="display: inline-block; width: 50%;">{{ feature.name }}</span><span style="display: inline-block; text-align: right; width: 50%;">Уровень {{ feature.level }}</span></h3>
           </div> -->
 
-          <div class="main-holder">
+          <p class="main-holder">
             <div v-if="feature.description" v-html="feature.description"></div>
             <div v-if="feature.snippet" v-html="feature.snippet"></div>
 
@@ -131,7 +133,7 @@
               v-if="feature.action"
               v-html="feature.action.description"
             ></div>
-          </div>
+          </p>
 
           <div v-if="feature.options" class="mt-2">
             <v-select
@@ -205,16 +207,22 @@
               </div>
               <div
                 v-if="
-                  feature.options.find((s) => s.key === feature.selected).spell
+                  feature.options.find((s) => s.key === feature.selected).spells
                 "
               >
                 <strong>Заклинание:</strong>
                 <span
-                  v-html="
-                    feature.options.find((s) => s.key === feature.selected)
-                      .spell
-                  "
-                ></span>
+                v-for="(spells, level) in feature.options.find((s) => s.key === feature.selected)
+                      .spells"
+                >
+              
+               <h3>Уровень {{ level }}</h3>
+      <ul>
+        <li v-for="spell in spells" :key="spell">
+          {{ SpellName(spell) }}
+        </li>
+      </ul>
+              </span>
               </div>
               <div
                 v-if="
@@ -224,11 +232,8 @@
               >
                 <strong>Фокусное заклинание:</strong>
                 <span
-                  v-html="
-                    feature.options.find((s) => s.key === feature.selected)
-                      .focusSpell
-                  "
-                ></span>
+ 
+                > {{SpellName(spell)}}</span>
               </div>
               <div
                 v-if="
@@ -448,6 +453,7 @@ export default {
         this.characterId
       );
     },
+
   },
   watch: {
     sources: {
@@ -458,6 +464,7 @@ export default {
         await this.getAbilityList(newVal);
         await this.getActionList(newVal);
         await this.getWargearList(newVal);
+        await this.getPsychicPowers(newVal);
 
         // теперь безопасно загружаем архетип
         if (
@@ -498,6 +505,9 @@ export default {
 
       this.wargearList = data;
     },
+        SpellName(spell) {
+      return this.psychicPowersList.find(s => s.key === spell)?.name || '';
+    },
     characterlabel(key) {
       switch (key) {
         case "U":
@@ -514,7 +524,16 @@ export default {
           break;
       }
     },
+    async getPsychicPowers(sources) {
+      const config = {
+        params: { source: this.sources.join(','), },
+      };
+      this.loading = true;
+      const { data } = await this.$axios.get('/api/psychic-powers/');
+      this.loading = false;
 
+      this.psychicPowersList = data;
+    },
     characterLabelAttribute(keyAbility) {
       return this.attributeRepository
         .filter((a) => keyAbility.includes(a.key))
@@ -822,10 +841,16 @@ export default {
       };
 
       const level = this.characterLevel;
-      this.$store.commit("characters/clearCharacterClassModFeature", {
+      this.$store.commit("characters/clearCharacterPreparedSpell", {
+        id: this.characterId,
+      
+      });
+
+        this.$store.commit("characters/clearCharacterClassModFeature", {
         id: this.characterId,
         content: mod,
-      });
+            });
+      
       this.$store.commit("characters/addCharacterClassModFeature", {
         id: this.characterId,
         content: mod,

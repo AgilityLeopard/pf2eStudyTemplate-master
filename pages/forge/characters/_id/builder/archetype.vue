@@ -17,7 +17,7 @@ export default {
   props: [],
   head() {
     return {
-      title: 'Select Archetype',
+      title: 'Выбор Класса',
     };
   },
   data() {
@@ -63,5 +63,4 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>

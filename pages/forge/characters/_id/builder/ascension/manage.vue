@@ -144,7 +144,8 @@ export default {
     },
     avatar() {
       //if (this.species === undefined) return "";
-      return `/img/avatars/species/playerCore-dwarf.png`;
+
+      return `/img/avatars/species/playercore-dwarf.png`;
     },
   },
   watch: {

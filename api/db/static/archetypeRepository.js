@@ -1415,7 +1415,7 @@ const playerCore = [
         skillTrainedChoice: [],
         skillTrained: ["arcana"],
         skillTrainedPoints: 2, // + Int
-        spellTradition: 'arcane',
+        spellTradition: 'арканный',
         spellProgression: {
             1: [5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             2: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -1466,36 +1466,41 @@ const playerCore = [
         description: [
             {
                 name: "encounter",
-                text: "<p>Вы держитесь позади, рассчитывая, когда использовать заклинания. Против сильных врагов вы используете мощную магию, а против слабых — чары. У вас есть ответ почти на любую угрозу, от полета до невидимости.</p>"
+                text: "<p>Вы, вероятно, стараетесь держаться подальше от сражения, тщательно оценивая, когда использовать свои заклинания."
+
+                    + "<br>Вы бережете свою самую мощную магию, чтобы вывести из строя грозных врагов и использовать свои чары, когда остаются только более слабые враги.Когда враги выкидывают такие трюки, как Невидимость / Invisibility или Полёт / Fly, вы отвечаете такими заклинаниями как Разоблачающий свет / Revealing Light или Земные оковы / Earthbind, уравнивая шансы для ваших союзников.</p>"
             },
             {
                 name: "social",
-                text: "<p>Вы впечатляете своей ученостью и часто объясняете происходящее через призму арканной теории.</p>"
+                text: "<p>Вы предоставляете много знаний об арканных материях и решаете споры с помощью логики.</p>"
             },
             {
                 name: "exporation",
-                text: "<p>Вы определяете магические ауры, читаете древние тексты и открываете скрытые тайны магии.</p>"
+                text: "<p>Вы находите магические ауры и определяете арканное значение обнаруженного магического писания или явления. Когда вы сталкиваетесь с необычным препятствием, мешающим дальнейшему исследованию, то вероятно у вас есть свиток, который облегчит его преодоление.</p>"
             },
             {
                 name: "downtime",
-                text: "<p>Вы создаете магические предметы, изучаете новые заклинания или обучаете других.</p>"
+                text: "<p>Вы изучаете новые заклинания, создаете магические предметы или пишете свитки для своей группы, а также в дополнение к заклинаниям ищете новые и захватывающие формулы. Вы можете даже наладить научные связи и основать собственную школу или гильдию.</p>"
             },
             {
                 name: "you",
-                text: "<li><p>Желаете понять, как работает магия</p></li>"
-                    + "<li><p>Считаете, что магия — это инструмент, требующий дисциплины и интеллекта</p></li>"
-                    + "<li><p>Записываете заклинания, анализируете их и создаете новые теории</p></li>"
+                text: "<li><p>Испытывать неутолимое интеллектуальное любопытство по поводу того, как все устроено в мире вокруг вас, в частности, магия</p></li>"
+                    + "<li><p>Искренне верить, что ваша школа магии наилучшая(если вы специалист) или что истинное мастерство магии требует знания всех школ(если вы универсалист)</p></li>"
+                    + "<li><p>Использовать эзотерический жаргон и технические термины, чтобы точно описать мельчайшие детали магических эффектов, даже если разница, вероятно, неуловима для других людей</p></li>"
             },
             {
                 name: "other",
-                text: "<li><p>Видят в вас великого и опасного мага</p></li>"
-                    + "<li><p>Опасаются последствий ваших магических экспериментов</p></li>"
-                    + "<li><p>Надеются, что вы решите их проблемы одним заклинанием</p></li>"
+                text: "<li><p>Считают вас невероятно могущественным и потенциально опасным</p></li>"
+                    + "<li><p>Боятся того, что ваша магия может сделать с их умами, телами и душами, и просят вас избегать произнесения заклинаний в нормальной компании, поскольку мало кто может определить, является ли одно из ваших заклинаний безвредным или злонамеренным, пока не станет слишком поздно</p></li>"
+                    + "<li><p>Полагают, что вы можете легко решить все их проблемы, от ненастной погоды до плохой урожайности, и просят вас о заклинаниях, которые могут помочь им получить все, что они пожелают</p></li>"
             }
         ],
         archetypeFeatures: [
             "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
-            "Arcane Spellcasting", "Arcane School", "Arcane Thesis", "Arcane Bond",
+            "Arcane Spellcasting", "Arcane Thesis",
+
+            "Arcane Bond", "Arcane School",
+
             "Lightning Reflexes", "Magical Fortitude", "Alertness", "Wizard Weapon Expertise", "Defensive Robes", "Weapon Specialization", "Master Spellcaster",
             "Resolve", "Archwizard's Spellcraft", "Legendary Spellcaster"
         ],
@@ -1712,11 +1717,14 @@ const playerCore2 = [
             //Общие
             "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
             //Классовые
-            "Shield Block", "Druid Spellcasting", "Druidic Order", "Voice of nature", "Wildsong", "Wild Empathy", "Wild Willpower", "Primal Hierophant",
-
+            // "Shield Block", "Druid Spellcasting", "Druidic Order", "Voice of nature", "Wildsong", "Wild Empathy", "Wild Willpower", "Primal Hierophant",
+            "mystery", "divine-access", "revelation-spells", "signature-spells", "Oracle Spellcasting", "major-curse", "oracular-curse",
             //Обще-классовые
-            "Perception Expertise Druid", "Fortitude Expertise Druid", "Reflex Expertise Druid", "Expert Spellcaster Druid", "Weapon Expertise Druid",
-            "Medium Armor Expertise Druid", "Weapon Specialization Druid", "Master Spellcaster Druid", "Legendary Spellcaster Druid", "Anathema Druid"
+            "Expert Spellcaster Druid", "Mysterious Resolve", "Oracular Senses", 'Weapon Expertise Druid', 'Light Armor Expertise',
+            'Reflex Expertise Oracle', 'Weapon Specialization Bard', 'Master Spellcaster Bard', "Oracular Clarity", "Greater Mysterious Resolve",
+            "Extreme Curse",
+
+
         ],
         modification:
             [
@@ -2754,6 +2762,7 @@ const playerCore2 = [
             "Resolve",
             "EternalConfidence",
             "LightArmorMastery",
+            "Weapon Specialization", "Greater Weapon Specialization",
 
             "Panache", "Precise Strike", "Swashbuckler Style", "Confident Finisher",
             // Обще-классовые

@@ -45,13 +45,17 @@
           >
           </v-select>
         </v-col>
+
+        <v-col>
+          <v-checkbox v-model="selectedPrepared" label="Подготовлено?" />
+        </v-col>
       </v-row>
     </v-card-title>
 
     <v-divider />
     <v-card-text class="pa-6">
       <v-data-table
-        :headers="headers"
+        :headers="filteredHeaders"
         :items="filteredTalents"
         :search="searchQuery"
         :page.sync="pagination.page"
@@ -74,6 +78,12 @@
             </div>
           </v-row>
         </template> -->
+        <template v-slot:item.prepared="{ item }">
+          <span>
+            <img :src="iconKnown(item)" @click="togglePrepared(item)" />
+          </span>
+        </template>
+
         <template v-slot:item.name="{ item }">
           <td>
             <v-row dense no-gutters>
@@ -300,6 +310,7 @@ export default {
       searchQuery: '',
       selectedTagsFilters: [],
       selectedBookFilters: [],
+      selectedPrepared: false,
       filters: {
         tags: {
           model: [],
@@ -314,6 +325,12 @@ export default {
         rowsPerPage: 25,
       },
       headers: [
+        {
+          text: 'Подготовлено',
+          value: 'prepared',
+          align: 'left',
+          sortable: true,
+        },
         {
           text: 'Название',
           value: 'name',
@@ -368,6 +385,23 @@ export default {
 
   },
   methods: {
+  togglePrepared(item) {
+      item.prepared = !item.prepared;
+      if(item.prepared === true)
+        this.$store.commit('characters/addCharacterPreparedSpell', { id: this.characterId, spell: item });
+      else
+        this.$store.commit('characters/removeCharacterPreparedSpell', { id: this.characterId, key: item.key });
+    },
+    iconKnown(item) {
+      const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
+
+        return  prepare.find( t=> t.key === item.key)
+                  ? '/img/icon/icon_known.png'
+                  : '/img/icon/icon_known_off.png'
+
+
+    },
+
     iconAction(action) {
       if (action === '1') return `/img/icon/action_single.png`;
       if (action === '2') return `/img/icon/action_double.png`;
@@ -419,6 +453,11 @@ export default {
       }
       let searchResult = this.talents;
 
+        const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
+        if (this.selectedPrepared === true) {
+           searchResult = searchResult.filter((item) => prepare.find(s => s.key === item.key) === true)
+        }
+
       if (this.selectedTagsFilters.length > 0) {
         searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
         }
@@ -453,7 +492,7 @@ export default {
 
 
       let reduced = [];
-      filteredTalents.filter(talent => talent.level <= this.level ).forEach((item) => {
+      filteredTalents.filter(talent => talent.level <= this.level || talent.traits.includes("заговор")).forEach((item) => {
         if (item.source.book) {
           reduced.push(item.source.book);
         }
@@ -463,6 +502,12 @@ export default {
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((trait) => ({ name: trait }));
 
+      },
+     filteredHeaders() {
+      if (this.archetype.prepared === false) {
+        return this.headers.filter(h => h.value !== 'prepapared');
+      }
+      return this.headers;
     },
     tagFilters() {
        if (this.talents === undefined) {
@@ -483,7 +528,7 @@ export default {
 
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
       let reduced = [];
-      filteredTalents.filter(talent => talent.level <= this.level && !talent.traits.includes("заговор")).forEach((item) => {
+      filteredTalents.filter(talent => talent.level <= this.level || talent.traits.includes("заговор")).forEach((item) => {
         if (item.traits) {
           reduced.push(...item.traits);
         }
@@ -506,6 +551,12 @@ export default {
       const ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId);
 
       let filteredTalents = this.talents;
+
+        const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
+        if (this.selectedPrepared === true) {
+           filteredTalents = filteredTalents.filter((item) => prepare.find(s => s.key === item.key))
+        }
+
 
        if (filteredTalents.find(spell => spell.ritual))
         filteredTalents = filteredTalents.filter(t => !ritual.find(spell => spell.key === t.key))

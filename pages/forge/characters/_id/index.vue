@@ -6,91 +6,82 @@
       <v-row justify="center" align="stretch">
         <v-col cols="12" md="4">
           <v-card class="glass-card pa-3" height="100%">
-            <div class="card-content">
-              <!-- <v-col :cols="8">
-                <div align="center">{{ characterName }}</div>
-                <div
-                  v-if="archetypeLabel !== '' && speciesLabel !== ''"
-                  class="caption"
-                  align="center"
-                >
-                  {{ [archetypeLabel, speciesLabel].join(" • ") }}
-                </div>
-                <div class="caption" align="center">
-                  <span>{{ [`Уровень ${characterRank}`].join(" • ") }}</span>
-                </div>
-                <div class="caption" align="center">
-                  <v-progress-linear
-                    :value="campaignCustomXp"
-                    height="2"
-                    color="red"
-                  ></v-progress-linear> -->
+            <v-row no-gutters align="center" style="width: 100%">
+              <!-- Левая часть: аватар + имя + теги -->
+              <v-col cols="12" md="6" class="d-flex flex-column align-center">
+                <!-- Контейнер: аватар + теги + имя -->
+                <div class="d-flex flex-column align-center w-100">
+                  <!-- Первая строка: аватар + теги -->
+                  <div class="d-flex align-center w-100">
+                    <!-- Аватар -->
+                    <div class="d-flex flex-column align-center mr-4">
+                      <v-avatar size="75" color="#25262b">
+                        <v-icon size="40">mdi-account</v-icon>
+                      </v-avatar>
+                      <div class="name mt-2 text-left w-100">
+                        {{ characterName }}
+                      </div>
+                    </div>
 
-              <v-avatar size="75" color="#25262b">
-                <v-icon size="40">mdi-account</v-icon>
-              </v-avatar>
+                    <!-- Теги -->
+                    <div class="tags d-flex flex-wrap">
+                      <v-btn small depressed class="tag-btn">
+                        <v-icon left small>mdi-tree</v-icon>{{ speciesLabel }}
+                      </v-btn>
+                      <v-btn small depressed class="tag-btn">
+                        <v-icon left small>mdi-window-maximize</v-icon
+                        >{{ archetypeLabel }}
+                      </v-btn>
+                      <v-btn small depressed class="tag-btn">
+                        <v-icon left small>mdi-book</v-icon
+                        >{{ backgroundLabel }}
+                      </v-btn>
+                    </div>
+                  </div>
 
-              <!-- Имя + теги -->
-              <div class="side">
-                <div class="name">{{ characterName }}</div>
-                <div class="tags">
-                  <v-btn small depressed class="tag-btn">
-                    <v-icon left small>mdi-tree</v-icon>{{ speciesLabel }}
-                  </v-btn>
-                  <v-btn small depressed class="tag-btn">
-                    <v-icon left small>mdi-window-maximize</v-icon
-                    >{{ archetypeLabel }}
-                  </v-btn>
-                  <v-btn small depressed class="tag-btn">
-                    <v-icon left small>mdi-book</v-icon> {{ backgroundLabel }}
-                  </v-btn>
+                  <!-- Вторая строка: имя -->
+                  <!-- <div class="name mt-2">{{ characterName }}</div> -->
                 </div>
-              </div>
+              </v-col>
 
-              <!-- Кнопки + уровень -->
-              <div class="side">
-                <div class="actions">
+              <!-- Правая часть: действия + уровень/опыт -->
+              <v-col cols="12" md="6" class="d-flex flex-column align-center">
+                <div class="actions d-flex flex-wrap justify-center mb-2">
                   <v-btn
                     target="_blank"
-                    :to="`/forge/characters/${characterId}/builder/print`"
+                    @click="handlePrint"
                     small
                     depressed
                     class="action-btn"
-                    >Печать</v-btn
                   >
+                    Печать
+                  </v-btn>
                   <v-btn
                     :to="`/forge/characters/${characterId}/builder/setting`"
                     small
                     depressed
                     class="action-btn"
-                    >Изменить</v-btn
                   >
+                    Изменить
+                  </v-btn>
                 </div>
-                <div class="level-xp">
+
+                <div class="level-xp d-flex flex-column align-center">
                   <span class="level">Уровень {{ characterRank }}</span>
-                  <!-- <v-text-field
-                    dense
-                    hide-details
-                   
-                    solo
-                    flat
-                    placeholder="Опыт"
-                    class="xp-input"
-                  /> -->
                   <v-text-field
                     dense
                     hide-details
                     solo
                     flat
                     placeholder="Опыт"
-                    class="xp-input"
+                    class="xp-input mt-1"
                     :value="characterXp"
                     @input="handleXpInput"
                     ref="xpInput"
                   />
                 </div>
-              </div>
-            </div>
+              </v-col>
+            </v-row>
           </v-card>
         </v-col>
 
@@ -2421,6 +2412,8 @@ import DodDefaultBreadcrumbs from '~/components/DodDefaultBreadcrumbs';
 import GridSheet from '~/components/forge/sheetGrid';
 import {marked} from 'marked';
 import traitView from '~/components/TraitView';
+import { PDFDocument } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
 
 export default {
   name: 'in-app-view',
@@ -4148,6 +4141,82 @@ export default {
       if (action === 'reaction') return `/img/icon/action_reaction.png`;
       if (action === 'free') return `/img/icon/action_free.png`;
     },
+    async fillPdf(this1) {
+    // Твой код заполнения PDF через pdf-lib
+    const existingPdfBytes = await fetch('/vault/charsheetRu.pdf').then(res => res.arrayBuffer());
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+  // Регистрируем fontkit и готовим пдф
+    pdfDoc.registerFontkit(fontkit);
+    const form = pdfDoc.getForm();
+    const fontBytes = await fetch('/fonts/Roboto.ttf').then(res => res.arrayBuffer());
+    const customFont = await pdfDoc.embedFont(fontBytes);
+
+
+    //Поля
+    const nameField = form.getTextField('Character Name');
+    const level = form.getTextField('LEVEL');
+
+        const Class = form.getTextField('Class');
+    const Background = form.getTextField('Background');
+      const Heritage = form.getTextField('Heritage and Traits');
+
+      const str = form.getTextField('STRENGTH STAT');
+const dex = form.getTextField('DEXTERITY STAT');
+const con = form.getTextField('CONSTITUTION STAT');
+// const wis = form.getTextField('WISDOM STAT');
+// const int = form.getTextField('INTELLIGENCE STAT');
+//       const cha = form.getTextField('CHARISMA STAT');
+
+
+ const dexCheckbox = form.getCheckBox('DEXTERITY PARTIAL BOOST');
+      this1.characterAttributes['dexterity'] % 2 !== 0 ? dexCheckbox.check() : dexCheckbox.uncheck();
+
+  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
+ const dexText = ((this1.characterAttributes['dexterity'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['dexterity'] - 10) / 2) : ((this1.characterAttributes['dexterity'] - 10) / 2);
+ const conText = ((this1.characterAttributes['constitution'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['constitution'] - 10) / 2) : ((this1.characterAttributes['constitution'] - 10) / 2);
+//  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
+//  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
+//  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
+
+
+str.setText(String(strText));
+ str.updateAppearances(customFont);
+
+ dex.setText(String(dexText));
+  dex.updateAppearances(customFont);
+
+ con.setText(String(conText));
+ con.updateAppearances(customFont);
+
+
+
+  // Заполняем текст с кастомным шрифтом
+    nameField.setText(this1.characterName);
+    nameField.updateAppearances(customFont);
+
+        Class.setText(this1.archetypeLabel);
+    Class.updateAppearances(customFont);
+
+        Background.setText(this1.backgroundLabel);
+    Background.updateAppearances(customFont);
+
+        Heritage.setText(this1.speciesLabel + '( '+ this1.keywords.filter(s => s.name !== this1.archetypeLabel.toLowerCase()).map(s => s.name).join(', ')+ ')') ;
+      Heritage.updateAppearances(customFont);
+
+    level.setText(String(this1.characterRank));
+    const pdfBytes = await pdfDoc.save();
+
+    // Создаём Blob и URL
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    return url; // возвращаем URL для открытия
+  },
+
+  async handlePrint() {
+    const pdfUrl = await this.fillPdf(this);
+    window.open(pdfUrl, '_blank'); // открываем заполненный PDF в новой вкладке
+  },
     async loadSpecies(key) {
       if ( key ) {
         let finalData = {};

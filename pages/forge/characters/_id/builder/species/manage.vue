@@ -80,34 +80,6 @@
       </div>
 
          <p><v-divider /></p>
-
-      <!-- <div v-for="boost in species.attributeBoost" class="text-lg-justify">
-        <div v-if="boost.value > 0">
-          <strong>{{ boost.name }}</strong>
-        </div>
-      </div>
-
-      <div v-for="boost in species.abilityBoost" class="text-lg-justify">
-        <div>
-          <strong> Свободное повышение </strong>
-        </div>
-      </div>
-
-      <p></p>
-
-      <span
-        v-if="species.attributeFlaw.find((t) => t.value < 0)"
-        class="mt-2 grey--text"
-        >Понижение характеристик</span
-      >
-      <v-divider v-if="species.attributeFlaw.find((t) => t.value < 0)" />
-
-      <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
-        <div v-if="flaw.value < 0">
-          <strong>{{ flaw.name }}</strong>
-        </div>
-      </div> -->
-
         <p>
           <strong>Доступные языки:</strong> {{ species.language.join(", ") }} +
           {{ species.freeLanguage }} на выбор + количество языков, равнео вашему

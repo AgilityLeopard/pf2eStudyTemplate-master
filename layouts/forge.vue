@@ -755,7 +755,16 @@
     </v-app-bar>
 
     <v-main>
-      <v-toolbar dense style="overflow: auto">
+      <v-toolbar
+        dense
+        style="
+          position: sticky;
+          top: 48px;
+          z-index: 5;
+          background-color: #212121;
+          overflow: auto;
+        "
+      >
         <v-toolbar-items>
           <v-btn small text nuxt :to="`/forge/my-characters`" icon>
             <v-icon>supervisor_account</v-icon>

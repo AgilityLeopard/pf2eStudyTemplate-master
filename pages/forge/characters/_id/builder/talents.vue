@@ -52,16 +52,34 @@
             </v-chip>
           </h2></v-tab
         >
-        <v-tab class="caption" key="tab-additional" :href="`#tab-additional`"
+        <v-tab
+          class="caption"
+          key="tab-additional"
+          :href="`#tab-additional`"
+          v-if="FreeTalentsLength() !== 0"
           ><h2 class="subtitle-2">Черты дополнительные</h2></v-tab
         >
         <!-- Для воина -->
         <v-tab
-          v-if="archetype && characterLevel() > 8"
+          v-if="
+            archetype && characterLevel() >= 8 && archetype?.keywords === 'воин'
+          "
           class="caption"
           key="tab-adaptation"
           :href="`#tab-adaptation`"
           ><h2 class="subtitle-2">Боевая адаптация</h2></v-tab
+        >
+
+        <v-tab
+          v-if="
+            archetype &&
+            characterLevel() >= 3 &&
+            archetype?.keywords === 'сорвиголова'
+          "
+          class="caption"
+          key="tab-stylish"
+          :href="`#tab-stylish`"
+          ><h2 class="subtitle-2">Стильные приёмы</h2></v-tab
         >
 
         <!-- Черты родословной -->
@@ -839,7 +857,7 @@
           :value="`tab-adaptation`"
         >
           <v-expansion-panels multiple>
-            <v-expansion-panel key="adaptation" v-if="characterLevel() > 8">
+            <v-expansion-panel key="adaptation" v-if="characterLevel() >= 8">
               <v-expansion-panel-header
                 >{{ 8 }} уровень
                 <v-col :cols="4" :sm="2">
@@ -912,7 +930,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
 
-            <v-expansion-panel key="adaptation14" v-if="characterLevel() > 14">
+            <v-expansion-panel key="adaptation14" v-if="characterLevel() >= 14">
               <v-expansion-panel-header
                 >{{ 14 }} уровень
                 <v-col :cols="4" :sm="2">
@@ -986,6 +1004,101 @@
             </v-expansion-panel>
           </v-expansion-panels>
         </v-tab-item>
+
+        <!-- Сорвиголова -->
+        <v-tab-item
+          class="my-tab-item"
+          key="tab-stylish"
+          :value="`tab-stylish`"
+        >
+          <v-expansion-panels multiple>
+            <v-expansion-panel
+              v-for="level in [3, 7, 15].filter((l) => l <= characterLevel())"
+              key="adaptation"
+              v-if="characterLevel() >= 3"
+            >
+              <v-expansion-panel-header
+                >{{ level }} уровень
+                <v-col :cols="4" :sm="2">
+                  <v-btn
+                    color="error"
+                    align="right"
+                    x-small
+                    v-if="characterSkillStylishTalent(level)"
+                    @click.stop.prevent="
+                      removeTalent(characterSkillStylishTalent(level))
+                    "
+                    >Удалить</v-btn
+                  >
+                </v-col>
+              </v-expansion-panel-header>
+
+              <v-expansion-panel-content :key="'stylish-' + level">
+                <v-btn
+                  @click="updatePreview(level, 'stylish')"
+                  v-if="!characterSkillStylishTalent(level)"
+                >
+                  Выберите черту {{ level }}
+                </v-btn>
+
+                <div v-if="characterSkillStylishTalent(level)">
+                  <v-row class="rowFeat">
+                    <div class="head">
+                      <h1>
+                        {{ characterSkillStylishTalent(level).label }}
+                      </h1>
+                    </div>
+                    <div class="line"></div>
+                    <div class="tag">
+                      Черта {{ characterSkillStylishTalent(level).level }}
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div>
+                      <trait-view
+                        v-if="characterSkillStylishTalent(level).traits"
+                        :item="characterSkillStylishTalent(level)"
+                        class="mb-2"
+                      />
+                    </div>
+                  </v-row>
+                  <div v-if="characterSkillStylishTalent(level).requirements">
+                    <p class="main-holder">
+                      {{ characterSkillStylishTalent(level).requirements.key }}
+                    </p>
+                  </div>
+                  <p></p>
+                  <div
+                    class="pt-4 pb-2"
+                    v-html="characterSkillStylishTalent(level).description"
+                  ></div>
+                  <p></p>
+                  <div v-if="characterSkillStylishTalent(level).options">
+                    <v-select
+                      :value="characterSkillStylishTalent(level).selected"
+                      :items="characterSkillStylishTalent(level).options"
+                      item-text="name"
+                      item-value="key"
+                      :placeholder="
+                        characterSkillStylishTalent(level).optionsPlaceholder
+                      "
+                      filled
+                      dense
+                      @input="
+                        talentUpdateSelected(
+                          item,
+                          characterSkillStylishTalent(level),
+                          8
+                        )
+                      "
+                    />
+                  </div>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-tab-item>
+
         <!-- Открытие диалогов выбора черт -->
         <!-- Класс -->
         <v-dialog
@@ -1385,8 +1498,28 @@ export default {
 
       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
       const archetype = this.archetype;
+          //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
 
-      const list = this.talentList.filter(s => s.type === type || (type === 'adaptation' && s.type === 'class'));
+          /*Для Сорвиголоваы*/
+        const enc = this.$store.getters["characters/characterEnhancementsById"](
+        this.characterId
+          );
+        const selected =  enc.find((s) => s.key === "SwashbucklerStyle")
+              ? enc.find((s) => s.key === "SwashbucklerStyle").selected
+            : "";
+
+          const skill = [];
+
+          if (selected !== "")
+          {
+           skill.push(this.abilityList.find(s=> s.key === selected).skill);
+
+          }
+       skill.push("acrobatics")
+
+       const list = this.talentList.filter(s => s.type === type || (type === 'adaptation' && s.type === 'class') || (type === 'stylish' && s.type === 'skill' /*&& skill.includes(s.skill)*/));
+
+
       list.forEach(t => {
         const tal = t;
         tal.place = type + levelAncestry;
@@ -1485,6 +1618,10 @@ export default {
           this.talentsDialogSkill = true;
           this.selectedTalentsSkill  = list;
           break;
+        case "stylish":
+          this.talentsDialogSkill = true;
+          this.selectedTalentsSkill  = list;
+          break;
         case "general":
           this.talentsDialogGeneral = true;
           this.selectedTalentsGeneral  = list;
@@ -1519,6 +1656,10 @@ export default {
             ...talent
           }
         });
+
+
+
+
        if (this.traitList !== undefined) {
          talents.forEach((species) => {
 
@@ -1566,21 +1707,17 @@ export default {
       this.loading = false;
     },
     async getAbility(sources) {
-      this.loading = true;
-      const config = {
-        params: { source: this.sources.join(','), },
+     const config = {
+        params: {
+          source: sources.join(","),
+        },
       };
+      const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
 
-        const { data } = await this.$axios.get('/api/abilityAncestry/', config);
-        this.abilityList = data.map(talent => {
-
-          return {
-            ...talent
-          }
-        });
-
-
-      this.loading = false;
+      this.abilityList = data;
     },
       async getTraitList(sources) {
       const config = {
@@ -1778,6 +1915,123 @@ export default {
 
 
     },
+        characterSkillStylishTalent(level)
+    {
+    // { id, name, cost, selection}
+    if (this.talentList === undefined) {
+        return false;
+      }
+
+      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
+
+      const talents = characterTalents.filter((t) => t).map((talent) => {
+
+        // find the plain talent by key
+        const rawTalent = this.talentList.find((r) => r.key === talent.key);
+
+        // not found? return a custom talent without special properties and no cost
+        if (rawTalent === undefined) {
+          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
+          return {
+            id: talent.id,
+            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
+            name: talent.name,
+            key: talent.key,
+            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
+            cost: 0,
+          }
+        }
+
+        const aggregatedTalent = Object.assign({}, rawTalent);
+
+
+        aggregatedTalent.id = talent.id;
+        aggregatedTalent.trait = talent.traits;
+        aggregatedTalent.cost = talent.cost;
+        aggregatedTalent.label = aggregatedTalent.name;
+        aggregatedTalent.place = talent.place;
+        // for each special talent, check respectively
+        if (talent.options) {
+          aggregatedTalent.selected = talent.selected;
+          if (aggregatedTalent.choice === 'skill')
+            aggregatedTalent.options = this.finalSkillRepository;
+          // aggregatedTalent.extraCost = 0;
+          // if (talent.extraCost && typeof talent.extraCost === 'object') {
+          //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
+          //     aggregatedTalent.extraCost  += talent.extraCost[extraCostKey] ? talent.extraCost[extraCostKey] : 0;
+          //   });
+          // } else {
+          //   aggregatedTalent.extraCost += talent.extraCost && parseInt(talent.extraCost) ? talent.extraCost : 0;
+          // }
+          // if (aggregatedTalent.options) {
+          //   const replacementTargetString = aggregatedTalent.options.find((t) => t.key === talent.selected).name;
+          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${replacementTargetString})</em>`);
+          //   console.info(`[${talent.id}] Compute label ${aggregatedTalent.label} from ${talent.selected}/${replacementTargetString}`);
+          // } else {
+          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${talent.selected})</em>`);
+          // }
+        }
+
+        // Fetch gear for selected weapon trooper
+        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
+          const sourceKey = `talent.${aggregatedTalent.id}`;
+          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+          if (charGear && charGear.length > 0 && this.wargearList) {
+            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+            aggregatedTalent.selected = wargear.key;
+            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
+            /*
+            charGear.forEach( g => {
+              characterPackage
+              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
+              .selectList.find(s=> g.source.endsWith(s.key))
+                .itemChoice = g.name
+            });
+            */
+          }
+        }
+
+        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
+          const sourceKey = `talent.${aggregatedTalent.id}`;
+          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+          if (charGear && charGear.length > 0 && this.wargearList) {
+            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+            aggregatedTalent.selected = wargear.key;
+            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
+          }
+        }
+
+        // Fetch gear for selected augmetis
+        if (aggregatedTalent.key.startsWith('core-augmetic')) {
+
+          aggregatedTalent.wargear.forEach((g, i, warArray) => {
+            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
+
+            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
+            if (charGear && charGear.length > 0 && this.wargearList) {
+
+              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
+
+              g.selected = wargear.name;
+
+
+            }
+          });
+
+        }
+
+        return aggregatedTalent;
+      }).sort((a, b) => a.id.localeCompare(b.id));
+
+
+
+
+          return talents.find(s => s.place === 'stylish' + level)
+
+
+
+    },
+
     characterBackgroundTalent(level)
     {
     // { id, name, cost, selection}

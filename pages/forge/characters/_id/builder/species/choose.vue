@@ -238,6 +238,32 @@ export default {
           modifications = [...modifications, ...t.modifications];
         });
 
+      //Языки
+      this.$store.commit("characters/removeCharacterLanguagebySource", {
+        id: this.characterId,
+        source: "species",
+      });
+
+      const lang = this.$store.getters["characters/characterLanguagesById"](
+        this.characterId
+      );
+      species.language.forEach((s) => {
+        if (s !== "Всеобщий") {
+          if (lang.find((k) => k.name === s && k.source === "creation"))
+            this.$store.commit("characters/removeCharacterLanguage", {
+              id: this.characterId,
+              name: s,
+              source: "creation",
+            });
+          this.$store.commit("characters/addCharacterLanguage", {
+            id: this.characterId,
+            name: s,
+            cost: 0,
+            source: "species",
+          });
+        }
+      });
+
       this.$store.commit("characters/clearCharacterEnhancementsBySource", {
         id: this.characterId,
         source: "species",

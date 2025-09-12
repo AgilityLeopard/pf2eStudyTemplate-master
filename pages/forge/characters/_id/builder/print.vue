@@ -56,7 +56,7 @@
                 </v-simple-table>
               </v-card>
             </v-col>
-
+            <!-- 
             <v-col :cols="12" class="pa-1">
               <v-card>
                 <v-toolbar color="red" dark dense height="32">
@@ -179,7 +179,7 @@
                   </template>
                 </v-data-table>
               </v-card>
-            </v-col>
+            </v-col> -->
           </v-col>
 
           <!-- skills -->
@@ -364,12 +364,12 @@
                       >
                     </td>
 
-                    <td class="text-left pa-1 small">
+                    <!-- <td class="text-left pa-1 small">
                       <span v-if="meta.traits && meta.traits.length > 0">{{
                         meta.traits.join(", ")
                       }}</span>
                       <span v-else>-</span>
-                    </td>
+                    </td> -->
                   </tr>
                 </template>
               </v-data-table>
@@ -597,7 +597,7 @@
                           ['armour'].includes(gearItem.meta[0].type)
                         "
                       >
-                        <p
+                        <!-- <p
                           class="ml-1 pl-2 mb-1"
                           style="border-left: solid 3px lightgrey"
                           v-for="trait in gearItem.meta[0].traits"
@@ -606,7 +606,7 @@
                         >
                           <strong>{{ trait }}: </strong>
                           {{ traitByName(trait, true).crunch }}
-                        </p>
+                        </p> -->
                       </div>
                     </v-card-text>
                   </v-card>
@@ -626,6 +626,7 @@ import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import MutationsMixin from '~/mixins/MutationsMixin';
 import WargearTraitRepositoryMixin from '~/mixins/WargearTraitRepositoryMixin';
 import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
+import { PDFDocument } from 'pdf-lib';
 
 export default {
   name: 'Print',
@@ -661,6 +662,7 @@ export default {
       talentRepository: talentResponse.data,
     };
   },
+
   data() {
     return {
       attributeHeaders: [
@@ -706,11 +708,9 @@ export default {
   computed: {
     sources() {
       return [
-        'core',
-        'fspg',
-        'red1',
-        'cos',
-        // 'tnh',
+        'playerCore',
+        'playerCore2',
+
         ...this.settingHomebrews
       ];
     },
@@ -839,122 +839,123 @@ export default {
 
       return attributes;
     },
-    traits() {
-      const characterTraits = this.$store.getters['characters/characterTraitsById'](this.characterId);
-      const traitsEnhanced = this.$store.getters['characters/characterTraitsEnhancedById'](this.characterId);
-      const attributes = this.attributes;
 
-      let finalTraits = this.traitRepository.map((t) => {
+    // traits() {
+    //   const characterTraits = this.$store.getters['characters/characterTraitsById'](this.characterId);
+    //   const traitsEnhanced = this.$store.getters['characters/characterTraitsEnhancedById'](this.characterId);
+    //   const attributes = this.attributes;
 
-        let baseTraitValue = 0;
+    //   let finalTraits = this.traitRepository.map((t) => {
 
-        let relatedAttribute = attributes.find((attribute) => attribute.name === t.attribute);
-        if (t.key === 'influence' && this.speciesKey === 'core-ork') {
-          relatedAttribute = attributes.find((attribute) => attribute.name === 'Strength');
-        }
+    //     let baseTraitValue = 0;
 
-        if (relatedAttribute) {
-          baseTraitValue += Math.ceil(relatedAttribute.adjustedRating * t.compute.multi);
-        } else {
-          let relatedSkill = this.skills.find((skill) => skill.name === t.skill);
-          if (relatedSkill) {
-            // todo better find the correct value
-            baseTraitValue += Math.ceil(this.computeSkillPool(relatedSkill) * t.compute.multi);
-          }
-        }
+    //     let relatedAttribute = attributes.find((attribute) => attribute.name === t.attribute);
+    //     if (t.key === 'influence' && this.speciesKey === 'core-ork') {
+    //       relatedAttribute = attributes.find((attribute) => attribute.name === 'Strength');
+    //     }
 
-        if (t.key === 'speed') {
-          baseTraitValue = traitsEnhanced[t.key];
-        }
+    //     if (relatedAttribute) {
+    //       baseTraitValue += Math.ceil(relatedAttribute.adjustedRating * t.compute.multi);
+    //     } else {
+    //       let relatedSkill = this.skills.find((skill) => skill.name === t.skill);
+    //       if (relatedSkill) {
+    //         // todo better find the correct value
+    //         baseTraitValue += Math.ceil(this.computeSkillPool(relatedSkill) * t.compute.multi);
+    //       }
+    //     }
 
-        baseTraitValue += t.compute.static;
-        baseTraitValue += t.compute.tier * this.characterSettingTier ;
+    //     if (t.key === 'speed') {
+    //       baseTraitValue = traitsEnhanced[t.key];
+    //     }
 
-        const enhancedValue = baseTraitValue;
-        const aggregatedTrait = {
-          ...t,
-          value: enhancedValue,
-          enhancedValue: enhancedValue,
-          rating: enhancedValue,
-          adjustedRating: enhancedValue,
-          adjustment: 0,
-          modifiers: [`Base = ${baseTraitValue}`],
-        };
+    //     baseTraitValue += t.compute.static;
+    //     baseTraitValue += t.compute.tier * this.characterSettingTier ;
 
-        return aggregatedTrait;
-      });
+    //     const enhancedValue = baseTraitValue;
+    //     const aggregatedTrait = {
+    //       ...t,
+    //       value: enhancedValue,
+    //       enhancedValue: enhancedValue,
+    //       rating: enhancedValue,
+    //       adjustedRating: enhancedValue,
+    //       adjustment: 0,
+    //       modifiers: [`Base = ${baseTraitValue}`],
+    //     };
 
-      this.enhancements
-      .filter((enhancement) => enhancement.targetGroup==='traits')
-      .forEach((enhancement) => {
-        // {"targetGroup":"attributes","targetValue":"strength","modifier":1,"source":"species"}
-        let traity = finalTraits.find((a) => a.key === enhancement.targetValue);
-        let mody = enhancement.modifier;
-        if (enhancement.rank) {
-          mody += (enhancement.rank * this.characterRank );
-        }
-        if (enhancement.modifierPerAscendedTier) {
-          mody += (enhancement.modifierPerAscendedTier * enhancement.ascendedTiers);
-        }
-        if ( traity ) {
-          traity.adjustment += mody;
-          traity.adjustedRating += mody;
-          traity.modifiers.push(`${mody < 0 ? '-' : '+'}${mody} • ${enhancement.provider} (${enhancement.category})`);
-        } else {
-          console.warn(`Unexpected undefined trait for ${enhancement.targetValue}.`);
-        }
-      });
+    //     return aggregatedTrait;
+    //   });
 
-      if (this.armour && this.armour.length > 0) {
-        let resilience = finalTraits.find((a) => a.key === 'resilience');
-        let defence = finalTraits.find((a) => a.key === 'defence');
-        const wornArmour = this.armour
-        .filter((armour) => !armour.meta[0].traits.includes('Shield'))
-        .sort((a, b) => a.meta[0].armourRating < b.meta[0].armourRating ? 1 : -1)
-        .find((i) => true)
-        if (wornArmour) {
-          resilience.adjustment += wornArmour.meta[0].armourRating;
-          resilience.adjustedRating += wornArmour.meta[0].armourRating;
-          resilience.modifiers.push(`+${wornArmour.meta[0].armourRating} from ${wornArmour.name}`);
-        }
-        const wornShield = this.armour
-        .filter((armour) => armour.meta[0].traits.includes('Shield'))
-        .sort((a, b) => a.meta[0].armourRating < b.meta[0].armourRating ? 1 : -1)
-        .find((i) => true);
-        if (wornShield) {
-          resilience.adjustment += wornShield.meta[0].armourRating;
-          resilience.adjustedRating += wornShield.meta[0].armourRating;
-          resilience.modifiers.push(`+${wornShield.meta[0].armourRating} from ${wornShield.name}`);
-          defence.adjustment += wornShield.meta[0].armourRating;
-          defence.adjustedRating += wornShield.meta[0].armourRating;
-          defence.modifiers.push(`+${wornShield.meta[0].armourRating} from ${wornShield.name}`);
-        }
-      }
+    //   this.enhancements
+    //   .filter((enhancement) => enhancement.targetGroup==='traits')
+    //   .forEach((enhancement) => {
+    //     // {"targetGroup":"attributes","targetValue":"strength","modifier":1,"source":"species"}
+    //     let traity = finalTraits.find((a) => a.key === enhancement.targetValue);
+    //     let mody = enhancement.modifier;
+    //     if (enhancement.rank) {
+    //       mody += (enhancement.rank * this.characterRank );
+    //     }
+    //     if (enhancement.modifierPerAscendedTier) {
+    //       mody += (enhancement.modifierPerAscendedTier * enhancement.ascendedTiers);
+    //     }
+    //     if ( traity ) {
+    //       traity.adjustment += mody;
+    //       traity.adjustedRating += mody;
+    //       traity.modifiers.push(`${mody < 0 ? '-' : '+'}${mody} • ${enhancement.provider} (${enhancement.category})`);
+    //     } else {
+    //       console.warn(`Unexpected undefined trait for ${enhancement.targetValue}.`);
+    //     }
+    //   });
 
-      let influence = finalTraits.find((t) => t.key === 'influence');
-      if (influence && this.keywords.includes('Adeptus Mechanicus')) {
-        const intellect = attributes.find((attribute) => attribute.name === 'Intellect');
-        let baseIntellect = 0;
-        baseIntellect = influence.calculate(intellect.adjustedRating);
-        influence.baseHelp = `${influence.baseHelp} / ${baseIntellect} (with Adeptus Mechanicus)`;
-        influence.alternativeRating = baseIntellect + influence.adjustment;
-      }
+    //   if (this.armour && this.armour.length > 0) {
+    //     let resilience = finalTraits.find((a) => a.key === 'resilience');
+    //     let defence = finalTraits.find((a) => a.key === 'defence');
+    //     const wornArmour = this.armour
+    //     .filter((armour) => !armour.meta[0].traits.includes('Shield'))
+    //     .sort((a, b) => a.meta[0].armourRating < b.meta[0].armourRating ? 1 : -1)
+    //     .find((i) => true)
+    //     if (wornArmour) {
+    //       resilience.adjustment += wornArmour.meta[0].armourRating;
+    //       resilience.adjustedRating += wornArmour.meta[0].armourRating;
+    //       resilience.modifiers.push(`+${wornArmour.meta[0].armourRating} from ${wornArmour.name}`);
+    //     }
+    //     const wornShield = this.armour
+    //     .filter((armour) => armour.meta[0].traits.includes('Shield'))
+    //     .sort((a, b) => a.meta[0].armourRating < b.meta[0].armourRating ? 1 : -1)
+    //     .find((i) => true);
+    //     if (wornShield) {
+    //       resilience.adjustment += wornShield.meta[0].armourRating;
+    //       resilience.adjustedRating += wornShield.meta[0].armourRating;
+    //       resilience.modifiers.push(`+${wornShield.meta[0].armourRating} from ${wornShield.name}`);
+    //       defence.adjustment += wornShield.meta[0].armourRating;
+    //       defence.adjustedRating += wornShield.meta[0].armourRating;
+    //       defence.modifiers.push(`+${wornShield.meta[0].armourRating} from ${wornShield.name}`);
+    //     }
+    //   }
 
-      finalTraits
-      .filter((t)=>['maxWounds', 'maxShock', 'wealth'].includes(t.key))
-      .forEach((t)=>{
-        t.spend = this.$store.getters['characters/characterResourceSpendById'](this.characterId, t.key);
-      });
+    //   let influence = finalTraits.find((t) => t.key === 'influence');
+    //   if (influence && this.keywords.includes('Adeptus Mechanicus')) {
+    //     const intellect = attributes.find((attribute) => attribute.name === 'Intellect');
+    //     let baseIntellect = 0;
+    //     baseIntellect = influence.calculate(intellect.adjustedRating);
+    //     influence.baseHelp = `${influence.baseHelp} / ${baseIntellect} (with Adeptus Mechanicus)`;
+    //     influence.alternativeRating = baseIntellect + influence.adjustment;
+    //   }
 
-      return finalTraits;
-    },
-    groupedTraits() {
-      return [
-        ...this.traits.filter((i) => i.type === 'Combat'),
-        ...this.traits.filter((i) => i.type === 'Mental'),
-        ...this.traits.filter((i) => i.type === 'Social'),
-      ];
-    },
+    //   finalTraits
+    //   .filter((t)=>['maxWounds', 'maxShock', 'wealth'].includes(t.key))
+    //   .forEach((t)=>{
+    //     t.spend = this.$store.getters['characters/characterResourceSpendById'](this.characterId, t.key);
+    //   });
+
+    //   return finalTraits;
+    // },
+    // groupedTraits() {
+    //   return [
+    //     ...this.traits.filter((i) => i.type === 'Combat'),
+    //     ...this.traits.filter((i) => i.type === 'Mental'),
+    //     ...this.traits.filter((i) => i.type === 'Social'),
+    //   ];
+    // },
     skills() {
       const customSkills = this.$store.getters['characters/characterCustomSkillsById'](this.characterId);
       const adHocSkillRepository = [
@@ -1621,12 +1622,46 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.getWargearList(newVal);
+          this.fillPdf();
         }
       },
       immediate: true, // make this watch function is called when component created
     },
   },
   methods: {
+    async fillPdf() {
+      // Загружаем PDF-шаблон с формами
+      const existingPdfBytes = await fetch('/vault/charsheetRu.pdf').then(res => res.arrayBuffer());
+
+      // Загружаем документ
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+      // Получаем форму
+      const form = pdfDoc.getForm();
+
+      // Получаем поля по имени (имя поля задаётся в PDF)
+      const nameField = form.getTextField('Character Name');
+      const levelField = form.getTextField('LEVEL');
+
+      // Заполняем данные
+      nameField.setText('Гендальф');
+      levelField.setText('20');
+
+      // Если нужно, можно заполнить чекбоксы
+      // const aliveCheckbox = form.getCheckBox('Живой');
+      // aliveCheckbox.check(); // или .uncheck()
+
+      // Сохраняем PDF
+      const pdfBytes = await pdfDoc.save();
+
+      // Скачиваем PDF
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'filled-character-sheet.pdf';
+      a.click();
+    },
     async loadSpecies(key) {
       let finalData = {};
       if ( key.startsWith('custom-')) {
