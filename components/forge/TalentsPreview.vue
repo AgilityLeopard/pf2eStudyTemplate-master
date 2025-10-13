@@ -138,7 +138,7 @@
               </div>
             </v-row>
             <p></p>
-            <div v-if="item.prerequisites">
+            <div v-if="item.prerequisites?.value">
               <p class="main-holder">
                 <b>Требования:</b>
                 {{

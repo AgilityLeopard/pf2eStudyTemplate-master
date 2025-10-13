@@ -3,24 +3,7 @@
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row>
-      <v-col :cols="12" v-if="false">
-        <v-alert type="info" outlined text>
-          On Januar 2021, <a href="https://www.cubicle7games.com/">Cubicle7</a>
-          <a
-            href="https://www.cubicle7games.com/40k-forsaken-system-players-guide-pdf-out-now/"
-            >posted about their newest PDF</a
-          >
-          for Wrath and Glory. The can get the
-          <a
-            href="https://www.drivethrurpg.com/product/303930/Wrath--Glory--Forsaken-System-Players-Guide?affiliate_id=466959"
-            title="Wrath & Glory Forsaken System Player´s Guide (Affiliate Link)"
-            >Forsaken System Player´s Guide on e.g. drivethrurpg.com</a
-          >
-          (affiliate link). It contains Abhuman Species and new archetypes for
-          the Imperium, covering Sororitas, Inquisition, Mechanicus and
-          Astartes.
-        </v-alert>
-      </v-col>
+      <v-col :cols="12" v-if="false"> </v-col>
 
       <v-col :cols="12">
         <h2 class="headline">
@@ -37,10 +20,23 @@
           Создать персонажа
         </v-btn>
 
-        <v-btn large color="primary" outlined @click="importDialog = true">
+        <!-- <v-btn large color="primary" outlined @click="import">
           <v-icon left>cloud_upload</v-icon>
           Импортировать персонажа
+        </v-btn> -->
+
+        <v-btn large color="primary" outlined @click="triggerFileInput">
+          <v-icon left>cloud_upload</v-icon>Импортировать Персонажа
         </v-btn>
+
+        <!-- Невидимый input для выбора файла -->
+        <input
+          type="file"
+          ref="fileInput"
+          accept=".json"
+          style="display: none"
+          @change="importJson"
+        />
 
         <!-- <v-btn large color="primary" outlined nuxt to="/forge/species">
           Custom Species
@@ -80,7 +76,6 @@
         </v-dialog>
       </v-col>
 
-      <!-- No Chars yet info text -->
       <v-col
         v-if="characterSets.filter((i) => i !== undefined).length <= 0"
         :cols="12"
@@ -89,22 +84,6 @@
           Осталось только <strong>Создать персонажа</strong> и начать его
           билдить
         </v-alert>
-        <!-- <v-alert
-          v-if="false"
-          type="info"
-          prominent
-          text
-          border="left"
-          color="primary"
-        >
-          <p>
-            <strong>You have been here before and miss your character?</strong>
-            Sadly, to implement the handling of multiple characters, I had to make quite some changes.
-            Migrating existing characters was not achievable without significant effort.
-            So, after some considerations, I decided to skip the migration.
-            However, due to changes within the code, upcoming migrations are feasible.
-          </p>
-        </v-alert> -->
       </v-col>
 
       <v-col :cols="12">
@@ -147,6 +126,7 @@
                 <div class="card__image-container">
                   <div
                     class="card__image"
+                    style="border-radius: 50%"
                     :style="{
                       backgroundImage:
                         'url(' + characterAvatar(character.id) + ')',
@@ -257,6 +237,10 @@
                   <v-icon small left>cloud_download</v-icon>
                   Экспорт
                 </v-btn>
+
+                <!-- <div color="primary" text x-small>
+                  <input type="file" @change="importJson" accept=".json" />
+                </div> -->
 
                 <v-btn
                   color="error"
@@ -440,6 +424,9 @@ export default {
     },
   },
   methods: {
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
     migrateAllCharacters() {
       this.migrateCharacters( this.characterIds );
     },
@@ -506,7 +493,7 @@ export default {
         return `/img/avatars/species/${speciesKey}.png`;
       }
 
-      return '/img/avatars/species/core-human.png';
+      return '/img/avatars/species/playercore-human.png';
     },
     load(characterId) {
       this.$axios.get(`/api/characters/${characterId}`)
@@ -539,18 +526,50 @@ export default {
     },
     openExportDialog(id) {
       const characterJsonString = this.$store.getters['characters/characterStateJsonById'](id);
-      this.exportSnippet = btoa(unescape(encodeURIComponent(characterJsonString)));
-      this.exportDialog = true;
+// Создаём Blob из JSON строки
+  const blob = new Blob([characterJsonString], { type: 'application/json' });
+
+  // Создаём ссылку для скачивания
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `character_${id}.json`; // имя файла
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  // Освобождаем объект URL
+  URL.revokeObjectURL(url);
+      // this.exportSnippet = btoa(unescape(encodeURIComponent(characterJsonString)));
+      // this.exportDialog = true;
     },
     copyToClipboard() {
       document.getElementById('exportSnippetId').select();
       document.execCommand("copy");
     },
+    importJson(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const jsonData = JSON.parse(e.target.result);
+          // Здесь сохраняем данные в store или локальный state
+          this.importCharacter(e.target.result)
+          console.log('Импортировано успешно:', jsonData);
+        } catch (err) {
+          console.error('Ошибка при парсинге JSON:', err);
+          alert('Неверный формат JSON!');
+        }
+      };
+      reader.readAsText(file);
+    },
     importCharacter(stateString) {
       const newCharId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
       const payload = {
         id: newCharId,
-        stateString: decodeURIComponent(escape(atob(stateString))),
+        stateString: stateString,
       };
       this.$store.commit('characters/import', payload);
       this.importSnippet = '';

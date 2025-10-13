@@ -456,7 +456,7 @@ export default {
           factionLabel
         )}_avatar.png`;
       }
-      return "/img/avatars/species/core-human.png";
+      return "/img/avatars/species/playercore-human.png";
     },
     changeSort(column) {
       if (this.pagination.sortBy === column) {

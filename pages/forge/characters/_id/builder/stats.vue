@@ -421,14 +421,14 @@
 
         <v-divider />
         <v-card-actions>
-          <v-btn
+          <!-- <v-btn
             outlined
             color="red"
             left
             @click="dialogAttributeLevel1 = false"
           >
             Cancel
-          </v-btn>
+          </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -564,9 +564,9 @@
 
         <v-divider />
         <v-card-actions>
-          <v-btn outlined color="red" left @click="dialogSkillLevel1 = false">
+          <!-- <v-btn outlined color="red" left @click="dialogSkillLevel1 = false">
             Cancel
-          </v-btn>
+          </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -1030,8 +1030,8 @@
                   <v-btn
                     icon
                     :disabled="
-                      4 - characterBoost15 == 4 ||
-                      characterAttributesBoost15[attribute.key] < 1
+                      4 - characterBoost20 == 4 ||
+                      characterAttributesBoost20[attribute.key] < 1
                     "
                     @click="decrementAttribute(attribute.key, 20)"
                   >
@@ -1041,8 +1041,8 @@
                   <v-btn
                     icon
                     :disabled="
-                      4 - characterBoost15 == 0 ||
-                      characterAttributesBoost15[attribute.key] > 0
+                      4 - characterAttributesBoost20 == 0 ||
+                      characterAttributesBoost20[attribute.key] > 0
                     "
                     @click="incrementAttribute(attribute.key, 20)"
                   >
@@ -1063,6 +1063,12 @@
                     Math.floor(
                       (characterAttributesEnhanced[attribute.key] - 10) / 2
                     )
+                  }}
+
+                  {{
+                    (characterAttributes[attribute.key] - 10) % 2 !== 0
+                      ? "*"
+                      : ""
                   }}
                 </td>
               </tr>

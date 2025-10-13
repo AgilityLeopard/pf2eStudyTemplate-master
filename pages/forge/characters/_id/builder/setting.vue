@@ -22,7 +22,8 @@
                 :width="300"
                 :height="300"
                 :prevent-white-space="myCroppaConfig.preventWhiteSpace"
-              ></croppa>
+                class="croppa-circle"
+              />
             </client-only>
           </div>
           <span class="caption">
@@ -33,7 +34,7 @@
           <div>
             <v-switch
               v-model="myCroppaConfig.preventWhiteSpace"
-              label="Не допускайте наличия пробелов, изображение должно находиться в пределах границ."
+              label="Изображение в пределах границы без фона"
               dense
             ></v-switch>
           </div>
@@ -41,7 +42,7 @@
 
         <v-card-actions>
           <v-btn left outlined color="red" @click="selectAvatarDialog = false">
-            Cancel
+            Отмена
           </v-btn>
           <v-spacer />
           <v-btn right color="green" @click="setNewAvatar">
@@ -91,7 +92,11 @@
               >close</v-icon
             >
           </template>
-          <v-avatar size="86" tile @click="selectAvatarDialog = true">
+          <v-avatar
+            size="86"
+            style="border-radius: 50%"
+            @click="selectAvatarDialog = true"
+          >
             <v-img :src="characterAvatarUrl"></v-img>
           </v-avatar>
         </v-badge>
@@ -99,7 +104,6 @@
         <!-- placeholder -->
         <v-avatar
           size="86"
-          tile
           @click="selectAvatarDialog = true"
           v-show="!characterAvatarUrl"
         >
@@ -361,5 +365,12 @@ export default {
   font-weight: 600;
   font-family: serif;
   text-transform: uppercase;
+}
+
+.croppa-circle {
+  border-radius: 50%; /* делаем контейнер круглым */
+  overflow: hidden; /* обрезаем всё, что выходит за границы круга */
+  width: 300px;
+  height: 300px;
 }
 </style>

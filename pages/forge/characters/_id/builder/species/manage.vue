@@ -34,10 +34,10 @@
 
         <v-tabs centered grow color="red">
         <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`"
-          ><h2 class="subtitle-2">Наследие</h2></v-tab
+          ><h2 class="subtitle-2">Родословная</h2></v-tab
         >
         <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`"
-          ><h2 class="subtitle-2">Родословная</h2></v-tab
+          ><h2 class="subtitle-2">Наследие </h2></v-tab
         >
         <v-tab-item
           class="my-tab-item"
@@ -144,7 +144,7 @@
 
         <div class="mt-2 body-2 text-justify ">
 
-          <h3 class="headline" v-if="species.speciesFeatures.length != 0" >Особенности наследия</h3>
+          <h3 class="headline" v-if="species.speciesFeatures.length != 0" >Особенности родословной</h3>
           <div
         v-for="feature in species.speciesFeatures"
         class="text-lg-justify " v-bind:key="feature.key">
@@ -165,7 +165,7 @@
  <v-tab-item class="my-tab-item" key="tab-heritage" :value="`tab-heritage`">
 
                       <div v-if="heritageList" class="mt-2 pa-2">
-              <h3 class="headline" >Выберите Родословную</h3>
+              <h3 class="headline" >Выберите Наследие</h3>
           <v-select
             v-model="selectedHeritage"
             :items="heritage"

@@ -90,10 +90,10 @@
 
     <v-divider v-if="chooseMode" />
     <v-card-actions v-if="chooseMode">
-      <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
+      <v-btn outlined color="red" left @click="$emit('cancel')"> Отмена </v-btn>
       <v-spacer />
       <v-btn color="success" right @click="$emit('select', species)">
-        Select species
+        Выбор
       </v-btn>
     </v-card-actions>
   </v-card>

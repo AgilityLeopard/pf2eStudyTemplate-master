@@ -97,12 +97,24 @@
                 (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)
               "
             >
-              <v-expansion-panel-header
-                >{{ levelAncestry }} уровень
+              <v-expansion-panel-header>
+                {{ levelAncestry }} уровень
                 <span v-if="characterAncestryTalent(levelAncestry)">
-                  ({{ characterAncestryTalent(levelAncestry)?.label }})</span
+                  {{
+                    "&nbsp;(" +
+                    characterAncestryTalent(levelAncestry)?.label +
+                    ")"
+                  }}</span
                 >
+
                 <v-col :cols="4" :sm="2">
+                  <v-btn
+                    @click="updatePreview(levelAncestry, 'ancestry')"
+                    v-if="!characterAncestryTalent(levelAncestry)"
+                  >
+                    Выберите черту {{ levelAncestry }}
+                  </v-btn>
+
                   <v-btn
                     color="error"
                     align="right"
@@ -117,13 +129,6 @@
               </v-expansion-panel-header>
 
               <v-expansion-panel-content :key="levelAncestry">
-                <v-btn
-                  @click="updatePreview(levelAncestry, 'ancestry')"
-                  v-if="!characterAncestryTalent(levelAncestry)"
-                >
-                  Выберите черту {{ levelAncestry }}
-                </v-btn>
-
                 <div v-if="characterAncestryTalent(levelAncestry)">
                   <v-row class="rowFeat">
                     <div class="head">
@@ -293,9 +298,20 @@
                 <v-expansion-panel-header
                   >{{ levelAncestry }} уровень
                   <span v-if="characterClassTalent(levelAncestry)">
-                    ({{ characterClassTalent(levelAncestry)?.label }})</span
+                    {{
+                      "&nbsp;(" +
+                      characterClassTalent(levelAncestry)?.label +
+                      ")"
+                    }}</span
                   >
                   <v-col :cols="4" :sm="2">
+                    <v-btn
+                      @click="updatePreview(levelAncestry, 'class')"
+                      v-if="!characterClassTalent(levelAncestry)"
+                    >
+                      Выберите черту {{ levelAncestry }}
+                    </v-btn>
+
                     <v-btn
                       color="error"
                       align="right"
@@ -310,13 +326,6 @@
                 </v-expansion-panel-header>
 
                 <v-expansion-panel-content :key="levelAncestry">
-                  <v-btn
-                    @click="updatePreview(levelAncestry, 'class')"
-                    v-if="!characterClassTalent(levelAncestry)"
-                  >
-                    Выберите черту {{ levelAncestry }}
-                  </v-btn>
-
                   <div v-if="characterClassTalent(levelAncestry)">
                     <v-row class="rowFeat">
                       <div class="head">
@@ -472,9 +481,18 @@
               <v-expansion-panel-header
                 >{{ levelAncestry }} уровень
                 <span v-if="characterSkillTalent(levelAncestry)">
-                  ({{ characterSkillTalent(levelAncestry)?.label }})</span
+                  {{
+                    "&nbsp;(" + characterSkillTalent(levelAncestry)?.label + ")"
+                  }}</span
                 >
                 <v-col :cols="4" :sm="2">
+                  <v-btn
+                    @click="updatePreview(levelAncestry, 'skill')"
+                    v-if="!characterSkillTalent(levelAncestry)"
+                  >
+                    Выберите черту {{ levelAncestry }}
+                  </v-btn>
+
                   <v-btn
                     color="error"
                     align="right"
@@ -489,13 +507,6 @@
               </v-expansion-panel-header>
 
               <v-expansion-panel-content :key="levelAncestry">
-                <v-btn
-                  @click="updatePreview(levelAncestry, 'skill')"
-                  v-if="!characterSkillTalent(levelAncestry)"
-                >
-                  Выберите черту {{ levelAncestry }}
-                </v-btn>
-
                 <div v-if="characterSkillTalent(levelAncestry)">
                   <v-row class="rowFeat">
                     <div class="head">
@@ -649,10 +660,24 @@
               <v-expansion-panel-header
                 >{{ levelAncestry }} уровень
                 <span v-if="characterGeneralTalent(levelAncestry)">
-                  ({{ characterGeneralTalent(levelAncestry)?.label }})</span
+                  {{
+                    "&nbsp;(" +
+                    characterGeneralTalent(levelAncestry)?.label +
+                    ")"
+                  }}</span
                 >
               </v-expansion-panel-header>
               <v-expansion-panel-content :key="levelAncestry">
+                <v-btn
+                  color="error"
+                  x-small
+                  v-if="characterGeneralTalent(levelAncestry)"
+                  @click.stop.prevent="
+                    removeTalent(characterGeneralTalent(levelAncestry))
+                  "
+                  >Удалить</v-btn
+                >
+
                 <v-btn
                   @click="updatePreview(levelAncestry, 'general')"
                   v-if="!characterGeneralTalent(levelAncestry)"
@@ -678,18 +703,7 @@
                               "
                             />
                           </v-col>
-                          <v-col :cols="4" :sm="2">
-                            <v-btn
-                              color="error"
-                              x-small
-                              @click.stop.prevent="
-                                removeTalent(
-                                  characterGeneralTalent(levelAncestry)
-                                )
-                              "
-                              >Удалить</v-btn
-                            >
-                          </v-col>
+                          <v-col :cols="4" :sm="2"> </v-col>
                           <v-col
                             v-if="!open"
                             :cols="8"
@@ -1517,7 +1531,7 @@ export default {
           }
        skill.push("acrobatics")
 
-       const list = this.talentList.filter(s => s.type === type || (type === 'adaptation' && s.type === 'class') || (type === 'stylish' && s.type === 'skill' /*&& skill.includes(s.skill)*/));
+       const list = this.talentList.filter(s => s.type === type || (type === 'general' && s.type === 'skill') || (type === 'adaptation' && s.type === 'class') || (type === 'stylish' && s.type === 'skill' /*&& skill.includes(s.skill)*/));
 
 
       list.forEach(t => {

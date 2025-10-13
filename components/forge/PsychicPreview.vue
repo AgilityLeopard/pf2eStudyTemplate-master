@@ -248,9 +248,9 @@
     </v-card-text>
 
     <v-divider />
-    <v-card-actions>
+    <!-- <v-card-actions>
       <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
-    </v-card-actions>
+    </v-card-actions> -->
   </v-card>
 </template>
 

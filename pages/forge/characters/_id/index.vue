@@ -16,7 +16,7 @@
                     <!-- Аватар -->
                     <div class="d-flex flex-column align-center mr-4">
                       <v-avatar size="75" color="#25262b">
-                        <v-icon size="40">mdi-account</v-icon>
+                        <img :src="avatar" size="40" />
                       </v-avatar>
                       <div class="name mt-2 text-left w-100">
                         {{ characterName }}
@@ -2855,7 +2855,7 @@ export default {
         return `/img/avatars/species/${this.speciesKey}.png`;
       }
 
-      return '/img/avatars/species/core-human.png';
+      return '/img/avatars/species/playercore-human.png';
     },
 
     characterAttributesEnhanced() {

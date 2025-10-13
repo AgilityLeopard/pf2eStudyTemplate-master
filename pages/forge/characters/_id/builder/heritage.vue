@@ -11,11 +11,10 @@ export default {
   props: [],
   head() {
     return {
-      title: 'Выберите Родословную',
+      title: 'Выберите Наследие',
     };
   },
 };
 </script>
 
-<style scoped lang="css">
-</style>
+<style scoped lang="css"></style>
