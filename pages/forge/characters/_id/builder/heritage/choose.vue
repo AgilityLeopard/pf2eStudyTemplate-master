@@ -45,9 +45,7 @@
               <v-list-item-title>
                 {{ item.nameAncestry }}
                 <v-chip
-                  v-if="
-                    item.source && !['core', 'coreab'].includes(item.source.key)
-                  "
+                  v-if="item.source"
                   color="info"
                   outlined
                   tags

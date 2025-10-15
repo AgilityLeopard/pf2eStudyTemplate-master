@@ -168,7 +168,8 @@
               v-if="
                 feature.selected &&
                 feature.type !== 'Skill Choice' &&
-                feature.type !== 'Weapon Choice'
+                feature.type !== 'Weapon Choice' && 
+                feature.options.find((s) => s.key === feature.selected)
               "
             >
               <div>
@@ -181,7 +182,10 @@
                   style="font-size: 14px"
                 />
               </div>
-              <div>
+              <div  v-if="
+                    feature.options.find((s) => s.key === feature.selected)
+                      .snippet
+                  ">
                 <div
                   v-if="
                     feature.options.find((s) => s.key === feature.selected)
@@ -217,11 +221,11 @@
                 >
               
                <h3>Уровень {{ level }}</h3>
-      <ul>
-        <li v-for="spell in spells" :key="spell">
-          {{ SpellName(spell) }}
-        </li>
-      </ul>
+              <ul>
+                <li v-for="spell in spells" :key="spell">
+                  {{ SpellName(spell) }}
+                </li>
+              </ul>
               </span>
               </div>
               <div
@@ -257,7 +261,11 @@
                     .subFeature
                 "
               >
-                <div
+                              <div  v-if="feature.selected && feature.options
+                    .find((s) => s.key === feature.selected)">
+                  <div
+                 v-if="feature.options
+                    .find((s) => s.key === feature.selected).subFeature"
                   v-for="item in feature.options
                     .find((s) => s.key === feature.selected)
                     .subFeature.filter((t) => t.level <= characterLevel())"
@@ -268,13 +276,15 @@
                       ><span class="right-header">{{ item.level }}</span>
                     </h4>
                     <div
-                      v-if="item.description"
-                      v-html="item.description"
+                      v-if="item.snippet"
+                      v-html="item.snippet"
                     ></div>
-                    <div v-else>{{ item.snippet }}</div>
+                    <div v-else v-html="item.snippet"></div>
                   </div>
                 </div>
+            </div>
               </div>
+
             </div>
 
             <div v-if="feature.selected && feature.type === 'Weapon Choice'">

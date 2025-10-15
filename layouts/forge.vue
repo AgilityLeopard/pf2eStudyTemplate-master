@@ -53,8 +53,8 @@
             <v-list-item-action class="hidden-xs-only">
               <v-chip
                 pill
-                :color="getClassChipColor(characterPerseption)"
                 dark
+                :color="getClassChipColor(characterPerseption)"
                 class="ml-2"
               >
                 {{
@@ -2025,7 +2025,7 @@ export default {
 
 .skill-label {
   font-size: 14px;
-  color: #fff;
+  color: var(--v-theme-on-surface);
 }
 
 .skill-values {
@@ -2094,8 +2094,8 @@ export default {
   min-width: 0 !important;
   max-width: 100%;
   overflow: hidden;
-  background-color: rgba(233, 236, 239, 0.1) !important;
-  color: #dee2e6 !important;
+  background-color: rgba(233, 236, 239, 0.1);
+  color: var(--v-theme-on-surface);
   font-weight: 400;
   backdrop-filter: blur(6px);
   text-transform: none;
@@ -2106,8 +2106,8 @@ export default {
 
 .stat-mod-btn {
   flex: 0 0 35px;
-  background-color: rgba(144, 146, 150, 0.1) !important;
-  color: #fff !important;
+  background-color: rgba(144, 146, 150, 0.1);
+  color: var(--v-theme-on-surface);
   border-radius: 0 12px 12px 0 !important;
   height: 28px !important;
   padding: 0 !important;

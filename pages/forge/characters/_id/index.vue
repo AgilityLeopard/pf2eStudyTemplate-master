@@ -4142,6 +4142,7 @@ export default {
       if (action === 'free') return `/img/icon/action_free.png`;
     },
     async fillPdf(this1) {
+
     // Твой код заполнения PDF через pdf-lib
     const existingPdfBytes = await fetch('/vault/charsheetRu.pdf').then(res => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -4157,52 +4158,71 @@ export default {
     const nameField = form.getTextField('Character Name');
     const level = form.getTextField('LEVEL');
 
-        const Class = form.getTextField('Class');
+    const Class = form.getTextField('Class');
     const Background = form.getTextField('Background');
-      const Heritage = form.getTextField('Heritage and Traits');
+    const Heritage = form.getTextField('Heritage and Traits');
 
-      const str = form.getTextField('STRENGTH STAT');
-const dex = form.getTextField('DEXTERITY STAT');
-const con = form.getTextField('CONSTITUTION STAT');
-// const wis = form.getTextField('WISDOM STAT');
-// const int = form.getTextField('INTELLIGENCE STAT');
-//       const cha = form.getTextField('CHARISMA STAT');
-
-
- const dexCheckbox = form.getCheckBox('DEXTERITY PARTIAL BOOST');
-      this1.characterAttributes['dexterity'] % 2 !== 0 ? dexCheckbox.check() : dexCheckbox.uncheck();
-
-  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
- const dexText = ((this1.characterAttributes['dexterity'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['dexterity'] - 10) / 2) : ((this1.characterAttributes['dexterity'] - 10) / 2);
- const conText = ((this1.characterAttributes['constitution'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['constitution'] - 10) / 2) : ((this1.characterAttributes['constitution'] - 10) / 2);
-//  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
-//  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
-//  const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
+    const str = form.getTextField('STRENGTH STAT');
+    const dex = form.getTextField('DEXTERITY STAT');
+    const con = form.getTextField('CONSTITUTION STAT');
+    const wis = form.getTextField('WISDOM STAT');
+    const int = form.getTextField('INTELLIGENCE STAT');
+    const cha = form.getTextField('CHARISMA STAT');
 
 
-str.setText(String(strText));
- str.updateAppearances(customFont);
+    const dexCheckbox = form.getCheckBox('DEXTERITY PARTIAL BOOST');
+    this1.characterAttributes['dexterity'] % 2 !== 0 ? dexCheckbox.check() : dexCheckbox.uncheck();
+    const strCheckbox = form.getCheckBox('STRENGTH PARTIAL BOOST');
+    this1.characterAttributes['strength'] % 2 !== 0 ? strCheckbox.check() : strCheckbox.uncheck();
+    const conCheckbox = form.getCheckBox('CONSTITUTION PARTIAL BOODST');
+    this1.characterAttributes['constitution'] % 2 !== 0 ? conCheckbox.check() : conCheckbox.uncheck();
+    const wisCheckbox = form.getCheckBox('WISDOM PARTIAL BOOST');
+    this1.characterAttributes['wisdom'] % 2 !== 0 ? wisCheckbox.check() : wisCheckbox.uncheck();
+    const intCheckbox = form.getCheckBox('INTELLIGENCE PARTIAL BOODST');
+    this1.characterAttributes['intelligence'] % 2 !== 0 ? intCheckbox.check() : intCheckbox.uncheck();
+    const chaCheckbox = form.getCheckBox('CHARISMA PARTIAL BOOST');
+    this1.characterAttributes['charisma'] % 2 !== 0 ? chaCheckbox.check() : chaCheckbox.uncheck();
 
- dex.setText(String(dexText));
-  dex.updateAppearances(customFont);
+    const strText = ((this1.characterAttributes['strength'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['strength'] - 10) / 2) : ((this1.characterAttributes['strength'] - 10) / 2);
+    const dexText = ((this1.characterAttributes['dexterity'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['dexterity'] - 10) / 2) : ((this1.characterAttributes['dexterity'] - 10) / 2);
+    const conText = ((this1.characterAttributes['constitution'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['constitution'] - 10) / 2) : ((this1.characterAttributes['constitution'] - 10) / 2);
+    const wisText = ((this1.characterAttributes['wisdom'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['wisdom'] - 10) / 2) : ((this1.characterAttributes['wisdom'] - 10) / 2);
+    const intText = ((this1.characterAttributes['intelligence'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['intelligence'] - 10) / 2) : ((this1.characterAttributes['intelligence'] - 10) / 2);
+    const chaText = ((this1.characterAttributes['charisma'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['charisma'] - 10) / 2) : ((this1.characterAttributes['charisma'] - 10) / 2);
 
- con.setText(String(conText));
- con.updateAppearances(customFont);
 
+    str.setText(String(strText));
+    str.updateAppearances(customFont);
+    dex.setText(String(dexText));
+    dex.updateAppearances(customFont);
+    con.setText(String(conText));
+    con.updateAppearances(customFont);
+    wis.setText(String(wisText));
+    wis.updateAppearances(customFont);
+    int.setText(String(intText));
+    int.updateAppearances(customFont);
+    cha.setText(String(chaText));
+    cha.updateAppearances(customFont);
 
 
   // Заполняем текст с кастомным шрифтом
     nameField.setText(this1.characterName);
     nameField.updateAppearances(customFont);
 
-        Class.setText(this1.archetypeLabel);
+
+    Class.setText(this1.archetypeLabel);
     Class.updateAppearances(customFont);
 
-        Background.setText(this1.backgroundLabel);
+    Background.setText(this1.backgroundLabel);
     Background.updateAppearances(customFont);
 
-        Heritage.setText(this1.speciesLabel + '( '+ this1.keywords.filter(s => s.name !== this1.archetypeLabel.toLowerCase()).map(s => s.name).join(', ')+ ')') ;
+    if (this1.speciesLabel)
+    {
+      const keyword = this1.archetypeLabel ? this1.keywords.filter(s => s.name !== this1.archetypeLabel.toLowerCase()).map(s => s.name).join(', ') : this1.keywords.map(s => s.name).join(', ')
+      Heritage.setText(this1.speciesLabel + '( '+ keyword + ')') ;
       Heritage.updateAppearances(customFont);
+    }
+
 
     level.setText(String(this1.characterRank));
     const pdfBytes = await pdfDoc.save();

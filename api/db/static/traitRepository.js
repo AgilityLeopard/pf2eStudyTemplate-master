@@ -1631,15 +1631,15 @@ const traitRepository = [
         nameEng: "Giant",
         desc: "Гиганты — здоровенные гуманоидные существа."
     },
-    {
-        source: {
-            ...source.playerCore,
-            page: '174',
-        },
-        key: "Кхоло",
-        nameEng: "Gnoll",
-        desc: "Кхоло — гуманоиды, напоминающие гиен."
-    },
+    // {
+    //     source: {
+    //         ...source.playerCore,
+    //         page: '174',
+    //     },
+    //     key: "Кхоло",
+    //     nameEng: "Gnoll",
+    //     desc: "Кхоло — гуманоиды, напоминающие гиен."
+    // },
     {
         source: {
             ...source.playerCore,

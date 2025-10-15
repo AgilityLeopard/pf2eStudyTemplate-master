@@ -44,6 +44,16 @@
             <v-list-item-content>
               <v-list-item-title>
                 {{ item.nameAncestry }}
+                <v-chip
+                  v-if="item.source"
+                  color="info"
+                  outlined
+                  tags
+                  x-small
+                  label
+                >
+                  {{ item.source.key.toUpperCase() }}
+                </v-chip>
               </v-list-item-title>
               <v-list-item-subtitle
                 ><v-chip> {{ item.ancestryHitPoint }} HP </v-chip>

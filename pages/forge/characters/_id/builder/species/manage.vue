@@ -82,7 +82,7 @@
          <p><v-divider /></p>
         <p>
           <strong>Доступные языки:</strong> {{ species.language.join(", ") }} +
-          {{ species.freeLanguage }} на выбор + количество языков, равнео вашему
+          {{ species.freeLanguage }} на выбор + количество языков, равное вашему
           модификатору Интеллекта (если положительный)
         </p>
 

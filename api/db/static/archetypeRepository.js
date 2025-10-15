@@ -2127,10 +2127,12 @@ const playerCore2 = [
             // Общие
             "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
             // Классовые
-            "Alchemical Crafting", "Research Field", "Quick Alchemy", "Powerful Alchemy", "Perpetual Infusions", "Double Brew", "Alchemical Mastery",
+            "Alchemical Crafting", "Research Field", "Quick Alchemy", "Powerful Alchemy", "Research Open", "Experience Alchemy", "Double Reagent", "Eternal effiency",
+            "Greater Alchemist", "Medium Armor Expertise Alchemist", "Evansion Alchemist", "More Flask", "Alchemist Master", "Medium Armor Master Alchemist",
             // Обще-классовые
-            "Weapon Specialization", "Bombardier", "Efficient Alchemy", "Persistent Mutagens", "Greater Weapon Specialization", "Debilitating Bomb"
+            "Weapon Alchemist", "Alchemist Will Expert", "Weapon Specialization Bard", "Alchemist Senses", "Chemical Resistance", "Weapon Alchemist Master"
         ],
+
         modification: [
             {
                 key: "bombs",

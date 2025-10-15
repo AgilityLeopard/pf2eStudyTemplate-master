@@ -70,6 +70,7 @@
           ><h2 class="subtitle-2">Боевая адаптация</h2></v-tab
         >
 
+        <!-- Для сорвиголовы -->
         <v-tab
           v-if="
             archetype &&
@@ -88,105 +89,121 @@
           key="tab-ancestry"
           :value="`tab-ancestry`"
         >
-          <v-expansion-panels multiple>
-            <v-expansion-panel
-              v-for="levelAncestry in 20"
-              :key="levelAncestry"
-              v-if="
-                levelAncestry <= characterLevel() &&
-                (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)
-              "
+          <v-col v-if="!ancestry" :cols="12">
+            <v-alert
+              type="warning"
+              class="caption ml-4 mr-4"
+              dense
+              outlined
+              border="left"
             >
-              <v-expansion-panel-header>
-                {{ levelAncestry }} уровень
-                <span v-if="characterAncestryTalent(levelAncestry)">
-                  {{
-                    "&nbsp;(" +
-                    characterAncestryTalent(levelAncestry)?.label +
-                    ")"
-                  }}</span
-                >
+              Выберите Родословную
+            </v-alert>
+          </v-col>
 
-                <v-col :cols="4" :sm="2">
-                  <v-btn
-                    @click="updatePreview(levelAncestry, 'ancestry')"
-                    v-if="!characterAncestryTalent(levelAncestry)"
+          <v-col v-else="ancestry">
+            <v-expansion-panels multiple>
+              <v-expansion-panel
+                v-for="levelAncestry in 20"
+                :key="levelAncestry"
+                v-if="
+                  levelAncestry <= characterLevel() &&
+                  (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)
+                "
+              >
+                <v-expansion-panel-header>
+                  {{ levelAncestry }} уровень
+                  <span v-if="characterAncestryTalent(levelAncestry)">
+                    {{
+                      "&nbsp;(" +
+                      characterAncestryTalent(levelAncestry)?.label +
+                      ")"
+                    }}</span
                   >
-                    Выберите черту {{ levelAncestry }}
-                  </v-btn>
 
-                  <v-btn
-                    color="error"
-                    align="right"
-                    x-small
-                    v-if="characterAncestryTalent(levelAncestry)"
-                    @click.stop.prevent="
-                      removeTalent(characterAncestryTalent(levelAncestry))
-                    "
-                    >Удалить</v-btn
-                  >
-                </v-col>
-              </v-expansion-panel-header>
+                  <v-col :cols="4" :sm="2">
+                    <v-btn
+                      @click="updatePreview(levelAncestry, 'ancestry')"
+                      v-if="!characterAncestryTalent(levelAncestry)"
+                    >
+                      Выберите черту {{ levelAncestry }}
+                    </v-btn>
 
-              <v-expansion-panel-content :key="levelAncestry">
-                <div v-if="characterAncestryTalent(levelAncestry)">
-                  <v-row class="rowFeat">
-                    <div class="head">
-                      <h1>
-                        {{ characterAncestryTalent(levelAncestry).label }}
-                      </h1>
+                    <v-btn
+                      color="error"
+                      align="right"
+                      x-small
+                      v-if="characterAncestryTalent(levelAncestry)"
+                      @click.stop.prevent="
+                        removeTalent(characterAncestryTalent(levelAncestry))
+                      "
+                      >Удалить</v-btn
+                    >
+                  </v-col>
+                </v-expansion-panel-header>
+
+                <v-expansion-panel-content :key="levelAncestry">
+                  <div v-if="characterAncestryTalent(levelAncestry)">
+                    <v-row class="rowFeat">
+                      <div class="head">
+                        <h1>
+                          {{ characterAncestryTalent(levelAncestry).label }}
+                        </h1>
+                      </div>
+                      <div class="line"></div>
+                      <div class="tag">
+                        Черта {{ characterAncestryTalent(levelAncestry).level }}
+                      </div>
+                    </v-row>
+                    <v-row>
+                      <div>
+                        <trait-view
+                          v-if="characterAncestryTalent(levelAncestry).traits"
+                          :item="characterAncestryTalent(levelAncestry)"
+                          class="mb-2"
+                        />
+                      </div>
+                    </v-row>
+                    <div
+                      v-if="characterAncestryTalent(levelAncestry).requirements"
+                    >
+                      <p class="main-holder">
+                        {{
+                          characterAncestryTalent(levelAncestry).requirements
+                            .key
+                        }}
+                      </p>
                     </div>
-                    <div class="line"></div>
-                    <div class="tag">
-                      Черта {{ characterAncestryTalent(levelAncestry).level }}
-                    </div>
-                  </v-row>
-                  <v-row>
-                    <div>
-                      <trait-view
-                        v-if="characterAncestryTalent(levelAncestry).traits"
-                        :item="characterAncestryTalent(levelAncestry)"
-                        class="mb-2"
+                    <p></p>
+                    <div
+                      class="pt-4 pb-2"
+                      v-html="
+                        characterAncestryTalent(levelAncestry).description
+                      "
+                    ></div>
+                    <p></p>
+                    <div v-if="characterAncestryTalent(levelAncestry).options">
+                      <v-select
+                        :value="characterAncestryTalent(levelAncestry).selected"
+                        :items="characterAncestryTalent(levelAncestry).options"
+                        item-text="name"
+                        item-value="key"
+                        :placeholder="
+                          characterAncestryTalent(levelAncestry)
+                            .optionsPlaceholder
+                        "
+                        filled
+                        dense
+                        @input="
+                          talentUpdateSelected(
+                            item,
+                            characterAncestryTalent(levelAncestry),
+                            levelAncestry
+                          )
+                        "
                       />
                     </div>
-                  </v-row>
-                  <div
-                    v-if="characterAncestryTalent(levelAncestry).requirements"
-                  >
-                    <p class="main-holder">
-                      {{
-                        characterAncestryTalent(levelAncestry).requirements.key
-                      }}
-                    </p>
-                  </div>
-                  <p></p>
-                  <div
-                    class="pt-4 pb-2"
-                    v-html="characterAncestryTalent(levelAncestry).description"
-                  ></div>
-                  <p></p>
-                  <div v-if="characterAncestryTalent(levelAncestry).options">
-                    <v-select
-                      :value="characterAncestryTalent(levelAncestry).selected"
-                      :items="characterAncestryTalent(levelAncestry).options"
-                      item-text="name"
-                      item-value="key"
-                      :placeholder="
-                        characterAncestryTalent(levelAncestry)
-                          .optionsPlaceholder
-                      "
-                      filled
-                      dense
-                      @input="
-                        talentUpdateSelected(
-                          item,
-                          characterAncestryTalent(levelAncestry),
-                          levelAncestry
-                        )
-                      "
-                    />
-                  </div>
-                  <!-- <v-row no-gutters>
+                    <!-- <v-row no-gutters>
                     <v-col :cols="8" :sm="10" class="subtitle-1">
                       <span />
                     </v-col>
@@ -214,8 +231,8 @@
                       {{ characterAncestryTalent(levelAncestry).snippet }}
                     </v-col>
                   </v-row> -->
-                </div>
-                <!-- <v-expansion-panels
+                  </div>
+                  <!-- <v-expansion-panels
                   multiple
                   v-if="characterAncestryTalent(levelAncestry)"
                 >
@@ -263,9 +280,10 @@
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels> -->
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-col>
         </v-tab-item>
 
         <!-- Черты класса -->
