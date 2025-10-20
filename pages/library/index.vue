@@ -66,7 +66,7 @@ export default {
     };
 
     return {
-      title: "Rules Reference Overview - Wrath & Glory Reference | Library",
+      title: "Библиотека",
       meta: [
         {
           hid: "description",
@@ -96,7 +96,7 @@ export default {
           to: "/",
         },
         {
-          text: "Library",
+          text: "Библиотека",
           disabled: false,
           nuxt: true,
           exact: true,
@@ -106,32 +106,32 @@ export default {
       sections: [
         {
           key: "species",
-          title: "Species",
-          subtitle: "Browse Species, Abhumans and Variants",
+          title: "Родословная",
+          subtitle: "Всякие родословные",
           imageSrc: "/img/artwork_vault_bright.jpg",
           htmlText: "",
-          link: { text: "Browse Species", route: "/library/species" },
+          link: { text: "Поиск Родословной", route: "/library/species" },
           isActive: true,
           classes: [],
         },
         {
           key: "archetypes",
-          title: "Archetypes",
-          subtitle: "Browse Archetypes, filter by Species and Groups",
+          title: "Класс",
+          subtitle: "Классы, что можно найти",
           imageSrc: "/img/artwork_vault_bright.jpg",
           htmlText: "",
-          link: { text: "Browse Archetypes", route: "/library/archetypes" },
+          link: { text: "Поиск Классов", route: "/library/archetypes" },
           isActive: true,
           classes: [],
         },
         {
           key: "ascensionPackages",
-          title: "Ascension Packages",
-          subtitle: "Browse Ascension Options and Packages",
+          title: "Предыстории",
+          subtitle: "Поиск предыстории",
           imageSrc: "/img/artwork_vault_bright.jpg",
           htmlText: "",
           link: {
-            text: "Browse Ascensions",
+            text: "Поиск Предысторий",
             route: "/library/ascension-packages",
           },
           isActive: true,
@@ -139,31 +139,31 @@ export default {
         },
         {
           key: "talents",
-          title: "Talents",
-          subtitle: "Browse Options to flesh out your Character",
+          title: "Черты",
+          subtitle: "Черты Навыков, Общие и т.д.",
           imageSrc: "/img/artwork_vault_bright.jpg",
           htmlText: "",
-          link: { text: "Browse Talents", route: "/library/talents" },
+          link: { text: "Поиск Черт", route: "/library/talents" },
           isActive: true,
           classes: [],
         },
         {
           key: "psychicPowers",
-          title: "Psychic Powers",
-          subtitle: "Browse Psychic Powers of various Disciplines",
+          title: "Заклинания (в разработке!)",
+          subtitle: "Найди заклинания на свой вкус",
           imageSrc: "/img/artwork_vault_bright.jpg",
           htmlText: "",
-          link: { text: "Browse Powers", route: "/library/psychic-powers" },
+          link: { text: "Поиск Заклинаний", route: "/library/psychic-powers" },
           isActive: true,
           classes: [],
         },
         {
           key: "wargear",
-          title: "Wargear",
-          subtitle: "Browse Weapons, Armour, Equipment and more",
+          title: "Снаряжение",
+          subtitle: "Оружие, Доспехи, Зелья",
           imageSrc: "/img/artwork_vault_bright.jpg",
           htmlText: "",
-          link: { text: "Browse Wargear", route: "/library/wargear" },
+          link: { text: "Поиск Снаряжений", route: "/library/wargear" },
           isActive: true,
           classes: [],
         },
@@ -172,7 +172,7 @@ export default {
   },
   computed: {
     sortedSections() {
-      return this.sections.sort((a, b) => a.title.localeCompare(b.title));
+      return this.sections.sort((a, b) => a.title.localeCompare(b.key));
     },
   },
   methods: {},

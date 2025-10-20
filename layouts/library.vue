@@ -23,8 +23,26 @@
         <v-spacer />
 
         <v-toolbar-items>
-          <v-btn icon nuxt to="/about">
-            <v-icon>help</v-icon>
+          <v-icon v-if="$nuxt.isOffline" color="warning"> offline_bolt </v-icon>
+
+          <v-btn
+            class="d-none d-md-inline-flex"
+            icon
+            href="https://t.me/shadowtalesgm"
+          >
+            <v-icon>mdi-telegram</v-icon>
+          </v-btn>
+
+          <v-btn
+            class="d-none d-md-inline-flex"
+            icon
+            href="https://discord.gg/5rEDvSSXSZ"
+          >
+            <v-icon>mdi-discord</v-icon>
+          </v-btn>
+
+          <v-btn icon @click="toggleDarkTheme">
+            <v-icon>mdi-brightness-6</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-container>
@@ -100,6 +118,27 @@ export default {
         clippedLeft: true,
       },
     };
+  },
+  watch: {
+    theme: {
+      handler(newTheme, oldTheme) {
+        this.$vuetify.theme.dark = newTheme !== "light";
+      },
+      immediate: true, // make this watch function is called when component created
+    },
+  },
+  computed: {
+    theme() {
+      return this.$store.getters["theme"];
+    },
+  },
+  method: {
+    toggleDarkTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      let theme = this.$vuetify.theme.dark ? "dark" : "light";
+      this.$store.commit("setTheme", theme);
+      this.$ga.event("Settings", "Change Theme", theme, 1);
+    },
   },
 };
 </script>

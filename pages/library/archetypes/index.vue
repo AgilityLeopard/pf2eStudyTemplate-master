@@ -19,7 +19,7 @@
                 />
               </v-col>
 
-              <v-col :cols="12" :sm="6">
+              <!-- <v-col :cols="12" :sm="6">
                 <v-select
                   v-model="filters.settingTier.model"
                   :items="filterSettingTierOptions"
@@ -27,10 +27,10 @@
                   filled
                   dense
                 />
-              </v-col>
+              </v-col> -->
 
               <!-- filter species -->
-              <v-col :cols="12" :sm="4">
+              <!-- <v-col :cols="12" :sm="4">
                 <v-select
                   v-model="filters.species.model"
                   :items="filterSpeciesOptions"
@@ -42,7 +42,7 @@
                 />
               </v-col>
 
-              <!-- filter group -->
+
               <v-col :cols="12" :sm="4">
                 <v-select
                   v-model="filters.faction.model"
@@ -53,7 +53,7 @@
                   multiple
                   dense
                 />
-              </v-col>
+              </v-col> -->
 
               <!-- filter source -->
               <v-col :cols="12" :sm="4">
@@ -86,7 +86,7 @@
             hide-default-footer
             @page-count="pagination.pageCount = $event"
           >
-            <template v-slot:item.species="{ item }">
+            <!-- <template v-slot:item.species="{ item }">
               <span v-for="species in item.species">
                 {{ species.name }}
                 <v-chip
@@ -99,7 +99,7 @@
                   >{{ species.sourceKey.toUpperCase() }}</v-chip
                 >
               </span>
-            </template>
+            </template> -->
 
             <template v-slot:item.source.book="{ item }">
               <v-row no-gutters>
@@ -123,23 +123,92 @@
               </v-row>
             </template>
 
-            <!-- Detail Page link -->
-            <template v-slot:item.actions="{ item }">
-              <v-btn
-                v-if="item.key && (item.stub === undefined || !item.stub)"
-                small
-                icon
-                nuxt
-                :to="`/library/archetypes/${camelToKebab(item.key)}`"
+            <template v-slot:item.name="{ item }">
+              <router-link
+                v-if="!item.stub"
+                :to="`/library/archetypes/${textToKebab(item.key)}`"
+                class="clickable-name"
               >
-                <v-icon>chevron_right</v-icon>
-              </v-btn>
+                {{ item.name }}
+              </router-link>
+              <span v-else class="text-disabled">
+                {{ item.name }}
+              </span>
+            </template>
+
+            <template v-slot:item.keyAbility="{ item }">
+              <strong> {{ characterLabelAttribute(item.keyAbility) }}</strong>
             </template>
 
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">
                 <archetype-preview :item="item" class="pa-2 pt-4 pb-4" />
               </td>
+            </template>
+
+            <template v-slot:item.weapon="{ item }">
+              <span v-for="item1 in WeaponRepository" v-bind:key="item1.key">
+                <p>
+                  {{ characterlabel(item.skillAttack[item1.key]) }} в
+                  {{ item1.name }}
+                </p>
+              </span>
+            </template>
+
+            <template v-slot:item.defence="{ item }">
+              <span v-for="item1 in DefenceRepository" v-bind:key="item1.key">
+                <p>
+                  {{ characterlabel(item.skillDefence[item1.key]) }} в
+                  {{ item1.name }}
+                </p>
+              </span>
+            </template>
+
+            <template v-slot:item.perception="{ item }">
+              <span>
+                <p>{{ characterlabel(item.Perception) }} в Восприятии</p>
+              </span>
+            </template>
+
+            <template v-slot:item.will="{ item }">
+              <span>
+                <p>{{ characterlabel(item.saving["will"]) }} в Воле</p>
+              </span>
+            </template>
+
+            <template v-slot:item.fortitude="{ item }">
+              <span>
+                <p>
+                  {{ characterlabel(item.saving["fortitude"]) }} в Стойкость
+                </p>
+              </span>
+            </template>
+
+            <template v-slot:item.rarity="{ item }">
+              {{ rarity(item.rarity) }}
+            </template>
+
+            <template v-slot:item.reflex="{ item }">
+              <span>
+                <p>{{ characterlabel(item.saving["reflex"]) }} в Рефлекс</p>
+              </span>
+            </template>
+
+            <template v-slot:item.skill="{ item }">
+              <p v-if="item.skillTrainedChoice.length > 0">
+                Обучен в
+                {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}
+              </p>
+
+              <p v-if="item.skillTrained.length > 0">
+                Обучен в
+                {{ characterLabelSkillTrainedChoice(item.skillTrained) }}
+              </p>
+
+              <p>
+                Обучен дополнительным навыкам, в кол-ве равном:
+                {{ item.skillTrainedPoints }} + мод Интеллекта
+              </p>
             </template>
           </v-data-table>
 
@@ -160,12 +229,13 @@ import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
 import ArchetypePreview from "~/components/forge/ArchetypePreviewV2";
 import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
 import SluggerMixin from "~/mixins/SluggerMixin";
+import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
   components: { DodDefaultBreadcrumbs, ArchetypePreview },
-  mixins: [BreadcrumbSchemaMixin, SluggerMixin],
+  mixins: [BreadcrumbSchemaMixin, SluggerMixin, StatRepositoryMixin],
   head() {
-    const title = "Archetypes - Wrath & Glory Reference | Library";
+    const title = "Классы | Библиотека";
     const description =
       "Oh there are way to many archetypes written by fans. Filter a little and then pick the one you want." +
       " Check the linked homebrews for details.";
@@ -201,14 +271,14 @@ export default {
           to: "/",
         },
         {
-          text: "Library",
+          text: "Библиотека",
           disabled: false,
           nuxt: true,
           exact: true,
           to: "/library",
         },
         {
-          text: "Archetypes",
+          text: "Классы",
           disabled: false,
           nuxt: true,
           exact: true,
@@ -231,33 +301,69 @@ export default {
           class: "",
         },
         {
-          text: "Faction",
+          text: "Ключевая характеристика",
           align: "start",
-          value: "faction",
+          value: "keyAbility",
           class: "",
         },
         {
-          text: "Species",
+          text: "Хиты",
           align: "start",
-          value: "species",
+          value: "hitpoints",
           class: "",
         },
         {
-          text: "Tier",
+          text: "Традиции",
           align: "center",
-          value: "tier",
+          value: "spellTradition",
           class: "",
         },
         {
-          text: "Cost",
+          text: "Оружие",
           align: "center",
-          value: "cost",
+          value: "weapon",
           class: "",
         },
         {
-          text: "Source",
+          text: "Доспехи",
           align: "start",
-          value: "source.book",
+          value: "defence",
+          class: "",
+        },
+        {
+          text: "Воля",
+          align: "start",
+          value: "will",
+          class: "",
+        },
+        {
+          text: "Стойкость",
+          align: "start",
+          value: "fortitude",
+          class: "",
+        },
+        {
+          text: "Рефлекс",
+          align: "start",
+          value: "reflex",
+          class: "",
+        },
+        {
+          text: "Восприятие",
+          align: "start",
+          value: "perception",
+          class: "",
+        },
+        {
+          text: "Навыки",
+          align: "start",
+          value: "skill",
+          class: "",
+        },
+        {
+          text: "Редкость",
+          align: "start",
+          value: "rarity",
           class: "",
         },
         {
@@ -292,10 +398,10 @@ export default {
 
       let filter;
 
-      filter = this.filters.settingTier;
-      if (filter.model) {
-        filteredResults = filteredResults.filter((i) => i.tier <= filter.model);
-      }
+      // filter = this.filters.settingTier;
+      // if (filter.model) {
+      //   filteredResults = filteredResults.filter((i) => i.tier <= filter.model);
+      // }
 
       filter = this.filters.source;
       if (filter.model.length > 0) {
@@ -304,19 +410,19 @@ export default {
         );
       }
 
-      filter = this.filters.species;
-      if (filter.model.length > 0) {
-        filteredResults = filteredResults.filter((item) =>
-          filter.model.some((m) => item.species.map((s) => s.name).includes(m))
-        );
-      }
+      // filter = this.filters.species;
+      // if (filter.model.length > 0) {
+      //   filteredResults = filteredResults.filter((item) =>
+      //     filter.model.some((m) => item.species.map((s) => s.name).includes(m))
+      //   );
+      // }
 
-      filter = this.filters.faction;
-      if (filter.model.length > 0) {
-        filteredResults = filteredResults.filter((item) =>
-          filter.model.includes(item.faction)
-        );
-      }
+      // filter = this.filters.faction;
+      // if (filter.model.length > 0) {
+      //   filteredResults = filteredResults.filter((item) =>
+      //     filter.model.includes(item.faction)
+      //   );
+      // }
 
       return filteredResults;
     },
@@ -367,14 +473,48 @@ export default {
     return {
       items,
       filters: {
-        settingTier: { model: 6, label: "Filter by Archetype-Group" },
-        species: { model: [], label: "Filter by Species" },
-        faction: { model: factionGroupSelections, label: "Filter by Faction" },
+        // settingTier: { model: 6, label: "Filter by Archetype-Group" },
+        // species: { model: [], label: "Filter by Species" },
+        // faction: { model: factionGroupSelections, label: "Filter by Faction" },
         source: { model: filtersSourceModel, label: "Filter by Homebrew" },
       },
     };
   },
-  methods: {},
+  methods: {
+    characterLabelAttribute(keyAbility) {
+      return this.attributeRepository
+        .filter((a) => keyAbility.includes(a.key))
+        .map((s) => s.name)
+        .join(", ");
+    },
+    characterlabel(key) {
+      switch (key) {
+        case "U":
+          return "Нетренирован";
+        case "T":
+          return "Тренирован";
+        case "E":
+          return "Эксперт";
+        case "M":
+          return "Мастер";
+        case "L":
+          return "Легенда";
+        default:
+          break;
+      }
+    },
+    characterLabelSkillTrainedChoice(keyAbility) {
+      return this.skillRepository
+        .filter((a) => keyAbility.includes(a.key))
+        .map((s) => s.name)
+        .join(", ");
+    },
+    rarity(rarity) {
+      if (!rarity) return "";
+      const s = this.rarityRepository.find((s) => s.key === rarity);
+      return s ? s.name : "";
+    },
+  },
 };
 </script>
 

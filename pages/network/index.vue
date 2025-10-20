@@ -41,10 +41,10 @@
 
       <v-col :cols="12">
         <v-card>
-          <v-card-text>
+          <!-- <v-card-text>
             <h1 class="headline">Character Sheets for Wrath and Glory</h1>
             <p></p>
-          </v-card-text>
+          </v-card-text> -->
         </v-card>
       </v-col>
     </v-row>

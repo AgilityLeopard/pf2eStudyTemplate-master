@@ -17,7 +17,7 @@
         <tbody>
           <tr>
             <td class="text-left">
-              {{ stats.nameGear }}
+              {{ stats.name }}
             </td>
             <td class="text-center">
               <span>{{ groupName(stats.group) }}</span>
@@ -27,14 +27,18 @@
                 <span>*</span>
               </div>
               <div v-else-if="stats.damage">
-                <span>{{ stats.damage }} {{ stats.typeDamage }}</span>
+                <span
+                  >{{ stats.damage.dice }}{{ stats.damage.die }}
+                  {{ stats.damage.damageType }}</span
+                >
               </div>
             </td>
             <td class="text-center">
               <span>{{ category(stats.category) }}</span>
             </td>
             <td class="text-center">
-              <span>{{ stats.hands }}</span>
+              <span v-if="stats.usage.value === 'held-in-one-hand'"> 1 </span>
+              <span v-if="stats.usage.value === 'held-in-two-hand'"> 2 </span>
             </td>
             <td class="text-left">
               <span v-if="stats.traits && stats.traits.length > 0">{{

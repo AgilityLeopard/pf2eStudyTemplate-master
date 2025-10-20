@@ -52,6 +52,7 @@
             </v-chip>
           </h2></v-tab
         >
+
         <v-tab
           class="caption"
           key="tab-additional"
@@ -1821,7 +1822,8 @@ export default {
           aggregatedTalent.selected = talent.selected;
           if (aggregatedTalent.optionsKey === 'skill')
             aggregatedTalent.options = this.finalSkillRepository;
-
+          if (aggregatedTalent.optionsKey === 'domain')
+            aggregatedTalent.options = this.finalSkillRepository;
         }
 
         // Fetch gear for selected weapon trooper

@@ -17,7 +17,7 @@
         <tbody>
           <tr>
             <td class="text-left">
-              {{ stats.nameGear }}
+              {{ stats.name }}
             </td>
             <td class="text-center">
               {{ stats.group }}

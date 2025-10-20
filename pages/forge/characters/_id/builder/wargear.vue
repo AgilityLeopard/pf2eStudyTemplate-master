@@ -17,10 +17,6 @@
       </v-btn>
     </v-col>
 
-    <v-alert :value="alertMoney" type="error" text dense border="left">
-      У вас недостаточно денег на покупку
-    </v-alert>
-
     <v-tabs centered grow color="red">
       <v-tab class="caption" key="tab-weapon" :href="`#tab-weapon`"
         ><h2 class="subtitle-2">Оружие</h2></v-tab
@@ -63,17 +59,14 @@
             :headers="headers"
             :items="characterWeapon"
             :search="searchQuery"
-            :page.sync="pagination.page"
             show-expand
-            hide-default-footer
             item-key="id"
-            @page-count="pagination.pageCount = $event"
           >
             <template v-slot:no-data> Нет предметов </template>
 
-            <template v-slot:item.nameGear="{ item }">
+            <template v-slot:item.name="{ item }">
               <v-row
-                ><span>{{ item.nameGear }}</span></v-row
+                ><span>{{ item.name }}</span></v-row
               >
               <v-row>
                 <div>
@@ -102,12 +95,16 @@
 
             <template v-slot:item.damage="{ item }">
               <span>
-                {{ damageModifier(item) }}
-                {{
+                <!-- {{
                   DamageType
                     ? DamageType.find((s) => s.key === item.typeDamage).name
                     : ""
-                }}
+                }} -->
+                <!-- <span
+                  >{{ item.damage.dice }}{{ item.damage.die }}
+                  {{ item.damage.damageType }}</span 
+                >-->
+                {{ damageModifier(item) }} {{ item.damageOrig.damageType }}
               </span>
             </template>
 
@@ -122,7 +119,6 @@
                 </v-btn>
                 {{ item.qty }}
                 <v-btn icon @click="incrementQty(item)">
-                  <!--"-->
                   <v-icon color="orange"> add_circle </v-icon>
                 </v-btn>
               </span>
@@ -149,18 +145,14 @@
               <td :colspan="headers.length">
                 <v-row class="rowFeat">
                   <div class="head">
-                    <h1>{{ item.nameGear }}</h1>
+                    <h1>{{ item.name }}</h1>
                   </div>
                   <div class="line"></div>
-                  <div class="tag">Оружие {{ item.level }}</div>
+                  <div class="tag">Оружие {{ item.level.value }}</div>
                 </v-row>
-                <v-row>
-                  <!-- <div>
-                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
-                  </div> -->
-                </v-row>
+                <v-row> </v-row>
                 <p></p>
-                <!-- Описание закла -->
+
                 <div v-if="item.source.book">
                   <strong>Источник:</strong> {{ item.source.book }}
                 </div>
@@ -207,12 +199,12 @@
               >
             </template>
           </v-data-table>
-          <div class="text-center pt-2">
+          <!-- <div class="text-center pt-2">
             <v-pagination
               v-model="pagination.page"
               :length="pagination.pageCount"
             />
-          </div>
+          </div> -->
           <!-- Доспехи -->
 
           <v-dialog
@@ -229,13 +221,7 @@
                 // characterWeapon
               "
               @cancel="WeaponSearchDialog = false"
-              :repository="
-                wargearList.filter((item) =>
-                  weaponCategoryRepository
-                    .map((t) => t.category)
-                    .includes(item.category)
-                )
-              "
+              :repository="wargearList.filter((item) => item.type === 'weapon')"
               @select="add"
             />
           </v-dialog>
@@ -248,6 +234,15 @@
             :fullscreen="$vuetify.breakpoint.xsOnly"
           >
             <v-card>
+              <v-alert
+                :value="alertMoney"
+                type="error"
+                text
+                dense
+                border="left"
+              >
+                У вас недостаточно денег на покупку
+              </v-alert>
               <v-alert :value="alert" type="error" text dense border="left">
                 Количество рун больше мощи оружия
               </v-alert>
@@ -345,7 +340,7 @@
 
           <template v-slot:item.nameGear="{ item }">
             <v-row
-              ><span>{{ item.nameGear }}</span></v-row
+              ><span>{{ item.name }}</span></v-row
             >
             <v-row>
               <div>
@@ -424,7 +419,7 @@
                   <h1>{{ item.nameGear }}</h1>
                 </div>
                 <div class="line"></div>
-                <div class="tag">Доспех {{ item.level }}</div>
+                <div class="tag">Доспех {{ item.level.value }}</div>
               </v-row>
               <v-row>
                 <!-- <div>
@@ -607,9 +602,7 @@
                 @cancel="ArmorSearchDialog = false"
                 :repository="
                   wargearList.filter((item) =>
-                    armourCategoryRepository
-                      .map((t) => t.category)
-                      .includes(item.category)
+                    ['armor', 'shield'].includes(item.type)
                   )
                 "
                 @select="add"
@@ -688,7 +681,7 @@
                   <h1>{{ item.nameGear }}</h1>
                 </div>
                 <div class="line"></div>
-                <div class="tag">Предмет {{ item.level }}</div>
+                <div class="tag">Предмет {{ item.level.value }}</div>
               </v-row>
               <v-row>
                 <!-- <div>
@@ -769,9 +762,7 @@
             <wargear-search
               @cancel="ConsumableSearchDialog = false"
               :repository="
-                wargearList.filter((item) =>
-                  item.traits.includes('расходуемый')
-                )
+                wargearList.filter((item) => item.type.includes('consumable'))
               "
               @select="add"
             />
@@ -805,7 +796,7 @@
 
           <template v-slot:item.nameGear="{ item }">
             <v-row
-              ><span>{{ item.nameGear }}</span></v-row
+              ><span>{{ item.name }}</span></v-row
             >
             <v-row>
               <div>
@@ -844,7 +835,7 @@
                   <h1>{{ item.nameGear }}</h1>
                 </div>
                 <div class="line"></div>
-                <div class="tag">Предмет {{ item.level }}</div>
+                <div class="tag">Предмет {{ item.level.value }}</div>
               </v-row>
               <v-row>
                 <!-- <div>
@@ -925,8 +916,11 @@
             <wargear-search
               @cancel="GearSearchDialog = false"
               :repository="
-                wargearList.filter((item) =>
-                  ['other', 'misc'].includes(item.category)
+                wargearList.filter(
+                  (item) =>
+                    !['consumable', 'weapon', 'armor', 'shield'].includes(
+                      item.type
+                    )
                 )
               "
               @select="add"
@@ -1103,7 +1097,7 @@ export default {
       } ,
       headers: [
         {
-          text: 'Название', value: 'nameGear', class: 'text-center small pa-1', align: 'left',
+          text: 'Название', value: 'name', class: 'text-center small pa-1', align: 'left',
         },
         {
           text: 'Попадание', value: 'attack', class: 'text-center', align: 'center',
@@ -1286,11 +1280,13 @@ export default {
               id: chargear.id,
               name: gear.nameGear,
               damage: gear.damage,
+              damageOrig: gear.damage,
               group: this.groupLabel(gear.group),
               subtitle: this.wargearSubtitle(gear),
               type: gear.type,
               avatar: this.getAvatar(gear.type),
               source: chargear.source,
+              ...gear
             });
           } else {
             characterWargear.push({
@@ -1322,6 +1318,7 @@ export default {
               id: chargear.id,
               trait: gear.traits,
               qty: gear.qty,
+               damageOrig: gear.damage,
               // name: gear.nameGear,
               // source: chargear.source,
               ...chargear,
@@ -1383,7 +1380,7 @@ export default {
 
       if (this.wargearList){
         const Category = this.armourCategoryRepository.map(item => item.category);
-        this.characterWargearRaw.filter(item => item.traits.includes("расходуемый")).forEach((chargear) => {
+        this.characterWargearRaw.filter(item => item.type.includes("расходуемый")).forEach((chargear) => {
           // this.characterWargearRaw.forEach((chargear) => {
           let gear = {};
           gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);
@@ -1418,7 +1415,8 @@ export default {
 
       if (this.wargearList){
         const Category = this.armourCategoryRepository.map(item => item.category);
-        this.characterWargearRaw.filter(item =>  ["other", "misc"].includes(item.category)).forEach((chargear) => {
+        this.characterWargearRaw.filter(item => !['consumable', 'weapon', 'armor', 'shield'].includes(
+                      item.type)).forEach((chargear) => {
           // this.characterWargearRaw.forEach((chargear) => {
           let gear = {};
           gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);
@@ -1450,6 +1448,9 @@ export default {
     }
   },
   watch: {
+        "pagination.page"(newPage) {
+      this.fetchWargear(); // при смене страницы
+    },
     characterArchetypeKey: {
       handler(newVal) {
         if (newVal) {
@@ -1475,32 +1476,46 @@ export default {
       this.archetype = data;
     },
     async getWargearList(sources) {
+      const page =  1;
+      const perPage = 10000;
+
+      const params = { page, perPage, source: sources.join(',') };
+
+
       const config = {
         params: {
           source: sources.join(','),
         },
       };
-      const { data } = await this.$axios.get('/api/wargear/', config);
+      const { data, total } = await this.$axios.get('/api/wargear/', { params });
       const rune = this.runeWeapon;
       const rune1 = this.runeArmor;
 
       const wr = this.weaponCategoryRepository;
       const ar = this.armourCategoryRepository;
-      data.forEach(item => {
+      //       "runes": {
+      //   "potency": 0,
+      //   "striking": 0,
+      //   "property": []
+      // },
+      data.data.forEach(item => {
         if(!item.runeWeapon && wr.find(t => t.category === item.category))
           {
-            item.runeWeapon = rune;
+            item.runeWeapon = item.runes;
           }
 
           if(!item.runeArmor && ar.find(t => t.category === item.category))
           {
-            item.runeArmor = rune1;
+            item.runeArmor = item.runes;
         }
-
+        this.pagination = {
+          page,
+          pageCount: Math.ceil(total / perPage),
+        },
         item.qty = 1;
         item.trait = item.traits;
       });
-      this.wargearList = data;
+      this.wargearList = data.data;
     },
     wargearSubtitle(item) {
       // const item = this.wargearRepository.find(i => i.name === gear);
@@ -1590,7 +1605,7 @@ export default {
     },
     damageModifier(gear){
 
-    const modAbility = gear.type === 'melee' ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+    const modAbility = gear.range === null ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
       const mod = (modAbility - 10) / 2;
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
 
@@ -1601,7 +1616,10 @@ export default {
       const damGreaterSpec = specGreater !== "" ? specGreater.bonusDamage[this.skillAttack[gear.category]] : 0;
       const modSpec = damGreaterSpec !== 0 ? damGreaterSpec : damSpec;
 
-       return gear.damage.toString() + (mod + modSpec < 0 ? "" : "+") + (mod + modSpec).toString();
+      //const runePot = gear.runeWeapon.potency ? gear.runeWeapon.potency : 0;
+      const damage = gear.damage?.die ? gear.damage.dice + gear.damage.die : gear.damage;
+
+      return damage.toString() + (mod + modSpec  < 0 ? "" : "+") + (mod + modSpec).toString();
   },
     incrementQty(gear) {
      this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, qty: gear.qty+1, gear: gear, notEnc: true});
@@ -1609,7 +1627,6 @@ export default {
     },
       decrementQty(gear) {
      this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, qty: gear.qty-1, gear: gear, notEnc: true});
-
   },
     addWargearToCharacter(wargearOptions, source) {
       const finalWargear = [];
@@ -1652,27 +1669,27 @@ export default {
         if(gear.cp !== 0)
         {
           const Charmoney = this.getMoney["cp"];
-          const price = gear.cp;
+          const price = gear.price.value.cp ? gear.price.value.cp : 0;
           cp = Charmoney - price;
         }
         if(gear.sp !== 0)
         {
           const Charmoney = this.getMoney["sp"];
-          const price = gear.sp;
+            const price = gear.price.value.sp ? gear.price.value.sp : 0;
           sp = Charmoney - price;
         }
 
         if(gear.gp !== 0)
         {
           const Charmoney = this.getMoney["gp"];
-          const price = gear.gp;
+            const price = gear.price.value.gp ? gear.price.value.gp : 0;
           gp = Charmoney - price;
         }
 
         if(gear.pp !== 0)
         {
           const Charmoney = this.getMoney["pp"];
-          const price = gear.pp;
+            const price = gear.price.value.pp ? gear.price.value.pp : 0;
           pp = Charmoney - price;
         }
 
@@ -1725,8 +1742,18 @@ export default {
       //   gear.category = category ? category.value : gear.category;
       // if (trait)
       //   gear.category = gear.category === "advanced" ? "martial" : "simple";
+      //   if (gear.type === 'weapon')
+      //   {
 
-        this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear });
+      //     const weaponDamage = gear.damage.dice;
+      //     const die = gear.damage.die;
+      //     const dice = weaponDamage + runeStriking + die;
+      //     gear.damage = dice;
+
+      // }
+        const gear1 = { ...gear, damageOrig: gear.damage };
+
+        this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
         this.WeaponSearchDialog = false;
         this.ArmorSearchDialog = false;
 
@@ -1784,7 +1811,7 @@ export default {
     openArmourSettings(gear){
       this.armorEditorDialog = true;
       const armor = this.characterWargearRaw.find(t => t.id === gear.id);
-      this.Resilent = this.armourRuneResilent.find(item => armor.runeArmor.resilent === item.key).key;
+      this.Resilent = this.armourRuneResilent.find(item => armor.runeArmor.resilient === item.key).key;
       this.Potency = this.armourRunePotency.find(item => armor.runeArmor.potency === item.key).key;
       const PropertyMap = armor.runeArmor.property.map(item => item.key)
       this.Property = this.ArmorRuneProperty.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
@@ -1813,8 +1840,9 @@ export default {
       const runeStriking = this.weaponRuneStriking.find(item => weapon === item.key).addDice;
       const PropertyMap = this.Property.map(item => item.key);
       const Property =  this.WeaponRuneProperty.filter(item => PropertyMap.includes(item.key));
-      const weaponDamage = this.wargearList.find(t => t.key === this.Weapon.key).damage;
-      const dice = (parseInt(weaponDamage.slice(0, 1)) + runeStriking) + weaponDamage.slice(1, 4);
+      const weaponDamage = this.wargearList.find(t => t.key === this.Weapon.key).damage.dice;
+      const die = this.wargearList.find(t => t.key === this.Weapon.key).damage.die;
+      const dice = weaponDamage + runeStriking  + die;//(parseInt(weaponDamage.slice(0, 1)) + runeStriking) + weaponDamage.slice(1, 4);
       if ( this.PotencyCap(this.Potency) < this.Property.length) {
         this.alert = true;
         // console.warn(`Skill ${skill.name} already exists.`);
@@ -1827,19 +1855,19 @@ export default {
     },
       wargearPrice(item) {
       if (item) {
-        const pp = item.pp !== 0 ? item.pp + " пм" : "";
-        const gp = item.gp !== 0 ? item.gp + " зм" : "";
-        const sp = item.sp !== 0 ? item.sp + " см" : "";
-        const cp = item.cp !== 0 ? item.cp + " мм" : "";
+        const pp = item.price.value.pp ? item.price.value.pp + " пм" : "";
+        const gp = item.price.value.gp  ? item.price.value.gp + " зм" : "";
+        const sp = item.price.value.sp  ? item.price.value.sp + " см" : "";
+        const cp = item.price.value.cp ? item.price.value.cp + " мм" : "";
         return pp + gp + sp + cp;
       }
     },
     saveArmor() {
       this.alert = false;
-      const armor =  this.Resilent;
-      const runeStriking = this.armourRuneResilent.find(item => weapon === item.key).addDice;
-      const PropertyMap = this.Property.map(item => item.key);
-      const Property =  this.ArmorRuneProperty.filter(item => PropertyMap.includes(item.key));
+      // const armor =  this.Resilent;
+      // const runeStriking = this.armourRuneResilent.find(item => weapon === item.key).addDice;
+      // const PropertyMap = this.Property.map(item => item.key);
+      // const Property =  this.ArmorRuneProperty.filter(item => PropertyMap.includes(item.key));
 
       // if ( this.PotencyCap(this.Potency) < this.Property.length) {
       //   this.alert = true;
@@ -1871,6 +1899,35 @@ export default {
     computeWargearOptionsByFilter(filter) {
       return this.wargearList ? this.filterWargear(this.wargearList, filter, this.settingTier) : [];
     },
+     async fetchWargear() {
+      try {
+        const params = { page: this.pagination.page };
+        if (this.searchQuery) params.search = this.searchQuery;
+
+        const response = await this.$axios.get("/api/wargear", { params });
+        const { data, total, pageCount } = response.data;
+
+        const uniqueItems = [];
+        const seen = new Set();
+        data.forEach((item) => {
+          const key = item.key;
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueItems.push(item);
+          }
+        });
+        this.items = uniqueItems;
+
+        // this.items = Array.isArray(data) ? data : [];
+        this.total = total || 0;
+        this.pagination.pageCount = pageCount || 1;
+      } catch (err) {
+        this.items = [];
+        this.total = 0;
+        this.pagination.pageCount = 1;
+        console.error(err);
+      }
+    }
   },
 };
 </script>

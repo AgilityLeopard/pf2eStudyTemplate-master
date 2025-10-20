@@ -48,6 +48,7 @@
       <div class="mt-2 body-2 text-lg-justify">
         <p><strong>Скорость:</strong> {{ species.speed }}</p>
 
+        
         <p><strong>Хитов:</strong> {{ species.ancestryHitPoint }}</p>
 
          <span class="subtitle-1 mt-2">Повышение характеристик</span>

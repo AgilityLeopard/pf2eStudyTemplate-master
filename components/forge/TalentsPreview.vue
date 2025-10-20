@@ -466,6 +466,7 @@ export default {
           const isVal = Rest[skill.value] <= prof ? false : true;
           if(isVal === true )return isVal;
         }
+
         if (item.prerequisitesKey.ability)
         {
           const ability = item.prerequisitesKey.ability;

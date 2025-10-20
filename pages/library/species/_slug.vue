@@ -18,7 +18,7 @@ import DodSpeciesDetails from "~/components/DodSpeciesDetails";
 import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
 
 export default {
-  name: "Species",
+  name: "Родословная",
   components: {
     DodDefaultBreadcrumbs,
     DodSpeciesDetails,
@@ -74,19 +74,19 @@ export default {
           to: "/",
         },
         {
-          text: "Library",
+          text: "Библиотека",
           nuxt: true,
           exact: true,
           to: "/library",
         },
         {
-          text: "Species",
+          text: "Родословная",
           nuxt: true,
           exact: true,
           to: "/library/species",
         },
         {
-          text: item.name,
+          text: item.nameAncestry,
           disabled: true,
           nuxt: true,
           to: `/library/species/${slug}`,

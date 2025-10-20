@@ -72,11 +72,25 @@
               </v-row>
             </template>
 
+            <template v-slot:item.rarity="{ item }">
+              {{ rarity(item.rarity) }}
+            </template>
+
+            <template v-slot:item.boost1="{ item }">
+              <strong> {{ characterLabelAttribute(item.boost1) }}</strong>
+            </template>
+
+            <template v-slot:item.skill="{ item }">
+              <span v-if="item.skill"
+                >{{ characterLabelSkillTrainedChoice(item.skill) }}
+              </span>
+            </template>
+            <!-- 
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">
                 <archetype-preview :item="item" class="pa-2 pt-4 pb-4" />
               </td>
-            </template>
+            </template> -->
           </v-data-table>
 
           <div class="text-center pt-2">
@@ -93,14 +107,16 @@
 
 <script>
 import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
+import SluggerMixin from "~/mixins/SluggerMixin";
+import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
   components: {
     DodDefaultBreadcrumbs,
   },
-  mixins: [],
+  mixins: [SluggerMixin, StatRepositoryMixin],
   head() {
-    const title = "Ascension Packages - Wrath & Glory Reference | Library";
+    const title = "Предыстории | Библиотека";
     const description =
       "Tired of staying the course and wizzarding around? Search the Library for Ascension Packages. " +
       "Check out the respective linked Homebrews for detailed informations.";
@@ -127,14 +143,14 @@ export default {
           to: "/",
         },
         {
-          text: "Library",
+          text: "Библиотека",
           disabled: false,
           nuxt: true,
           exact: true,
           to: "/library",
         },
         {
-          text: "Ascension Packages",
+          text: "Предыстории",
           disabled: false,
           nuxt: true,
           exact: true,
@@ -151,19 +167,43 @@ export default {
       },
       headers: [
         {
-          text: "Name",
+          text: "Имя",
           align: "start",
-          value: "name",
+          value: "nameBackground",
           class: "",
         },
         {
-          text: "Hint",
+          text: "Характеристика",
+          align: "start",
+          value: "boost1",
+          class: "",
+        },
+        {
+          text: "Навык",
+          align: "start",
+          value: "skill",
+          class: "",
+        },
+        {
+          text: "Черта",
+          align: "start",
+          value: "feat",
+          class: "",
+        },
+        {
+          text: "Редкость",
+          align: "start",
+          value: "rarity",
+          class: "",
+        },
+        {
+          text: "Описание",
           align: "start",
           value: "hint",
           class: "",
         },
         {
-          text: "Source",
+          text: "Источник",
           align: "start",
           value: "source.book",
           class: "",
@@ -249,7 +289,41 @@ export default {
       },
     };
   },
-  methods: {},
+  methods: {
+    characterLabelAttribute(keyAbility) {
+      return this.attributeRepository
+        .filter((a) => keyAbility.includes(a.key))
+        .map((s) => s.name)
+        .join(", ");
+    },
+    characterlabel(key) {
+      switch (key) {
+        case "U":
+          return "Нетренирован";
+        case "T":
+          return "Тренирован";
+        case "E":
+          return "Эксперт";
+        case "M":
+          return "Мастер";
+        case "L":
+          return "Легенда";
+        default:
+          break;
+      }
+    },
+    characterLabelSkillTrainedChoice(keyAbility) {
+      return this.skillRepository
+        .filter((a) => keyAbility.includes(a.key))
+        .map((s) => s.name)
+        .join(", ");
+    },
+    rarity(rarity) {
+      if (!rarity) return "";
+      const s = this.rarityRepository.find((s) => s.key === rarity);
+      return s ? s.name : "";
+    },
+  },
 };
 </script>
 

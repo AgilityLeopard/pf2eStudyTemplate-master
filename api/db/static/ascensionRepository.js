@@ -33,7 +33,8 @@ const playerCore = [
         skill: 'religion',
         lore: 'Знание письменности',
         description: 'Вы провели свои ранние годы в религиозном монастыре или в уединении. Возможно, вы отправились в этот мир, чтобы распространять слово своей религии, или потому, что вы отвергли учения своей веры, но в глубине души, те уроки, которые вы извлекли, всегда будут с вами.',
-        feat: stringToKebab(`${'playerCore'} ${'Student of the Canon'}`),
+        // feat: stringToKebab(`${'playerCore'} ${'Student of the Canon'}`),
+        feat: 'Student of the Canon'
     },
     {
         ...simpleStub('playerCore', 150, 'Acrobat', 'Вы зарабатывали свои деньги, выступая в качестве акробата, в цирке или на улице. ', false),

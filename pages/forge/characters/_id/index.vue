@@ -1100,7 +1100,7 @@
                         <template v-slot:item="{ item }">
                           <tr v-if="item">
                             <td class="text-left pa-1 small">
-                              {{ item.nameGear }}
+                              {{ item.name }}
                             </td>
 
                             <td class="text-center pa-1 small">
@@ -1116,9 +1116,15 @@
                             <td class="text-center pa-1 small">
                               <div v-if="item.damage">
                                 <span
-                                  >{{ item.damage }}
-                                  {{ typeDamage(item.typeDamage) }}</span
-                                >
+                                  >{{
+                                    item.damage?.die
+                                      ? item.damage.dice + item.damage.die
+                                      : item.damage
+                                  }}
+                                  {{
+                                    typeDamage(item.damageOrig.damageType)
+                                  }}
+                                </span>
                               </div>
                             </td>
 
@@ -3770,7 +3776,7 @@ export default {
           const { name, id, variant } = gear;
           const foundGear = this.wargearRepository.find((w) => gear.name.localeCompare(w.name, 'en', {sensitivity: 'accent'}) === 0 );
           if (foundGear && !['ranged', 'melee'].includes(gear.type)) {
-            wargear.push({ ...foundGear, variant, id });
+            wargear.push({ ...foundGear, damageOrig: foundGear.damage, variant, id });
           }
         });
       }
@@ -3779,7 +3785,7 @@ export default {
     weapons() {
       return this.charGear.filter((wargear) => {
         let hasWeaponsProfile = false;
-        if (['ranged', 'melee'].includes(wargear.type)) {
+        if (['weapon'].includes(wargear.type)) {
           hasWeaponsProfile = true;
         } else {
           if (wargear.meta) {
@@ -3795,10 +3801,10 @@ export default {
       });
     },
     armour() {
-      return this.wargear.filter((w) => ['Armour'].includes(w.type));
+      return this.wargear.filter((w) => ['armor', 'shield'].includes(w.type));
     },
     gear() {
-      return this.wargear.filter((w) => !['Armour', 'Ranged Weapon', 'Melee Weapon'].includes(w.type));
+      return this.wargear.filter((w) => !['armor', 'weapon', 'shield'].includes(w.type));
     },
 
     objectives() {
@@ -4588,16 +4594,36 @@ export default {
       this.ascensionPackagesRepository = packages;
     },
     async getWargearList(sources) {
+      // const config = {
+      //   params: {
+      //     source: sources.join(','),
+      //   },
+      // };
+      // const { data } = await this.$axios.get('/api/wargear/', config);
+      // this.wargearRepository = data;
+        const page =  1;
+      const perPage = 10000;
+
+      const params = { page, perPage, source: sources.join(',') };
+
+
       const config = {
         params: {
           source: sources.join(','),
         },
       };
-      const { data } = await this.$axios.get('/api/wargear/', config);
-      //this.wargearRepository = data.filter((i) => i.stub === undefined || i.stub === false);
-      this.wargearRepository = data;
+      const { data, total } = await this.$axios.get('/api/wargear/', { params });
+
+      //       "runes": {
+      //   "potency": 0,
+      //   "striking": 0,
+      //   "property": []
+      // },
+
+      this.wargearList = data.data;
+
     },
-            SkillPerception() {
+    SkillPerception() {
       return this.$store.getters["characters/characterPerseptionById"](
         this.characterId
       );
@@ -4935,7 +4961,7 @@ export default {
     },
     typeDamage(type)
     {
-      return this.DamageType.find(t => t.key === type).name;
+      return this.DamageType.find(t => t.key === type) ? this.DamageType.find(t => t.key === type).name : type;
     },
     groupName(name){
       return this.weaponGroup.find(item => item.group === name).name;

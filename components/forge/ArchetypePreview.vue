@@ -100,14 +100,14 @@
           <div class="two-column-right">
             <h3 class="exclude_from_nav" id="attacks">Атаки</h3>
             <span v-for="item1 in WeaponRepository" v-bind:key="item1.key">
-              <p class="">
+              <p v-if="item.skillAttack[item1.key]">
                 {{ characterlabel(item.skillAttack[item1.key]) }} в
                 {{ item1.name }}
               </p>
             </span>
             <h3 class="exclude_from_nav" id="defenses">Защиты</h3>
             <span v-for="item1 in DefenceRepository" v-bind:key="item.key">
-              <p>
+              <p v-if="item.skillDefence[item1.key]">
                 {{ characterlabel(item.skillDefence[item1.key]) }} в
                 {{ item1.name }}
               </p>
@@ -120,38 +120,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <p class="text-lg-justify">
-        <strong>Keywords: </strong>
-        <span style="text-transform: uppercase; color: #F44336;">{{ item.keywords.split(',').map((i)=>i.trim()).join(', ') }}</span>
-      </p> -->
-      <!-- <p>Классовые особенности</p>
-
-      <div v-for="feature in item.archetypeFeatures" class="text-lg-justify">
-        <div>
-          <strong>{{ feature.name }}</strong>
-          <div v-if="feature.description" v-html="feature.description"></div>
-          <p v-else>{{ feature.snippet }}</p>
-          <v-alert v-if="feature.alert" :type="feature.alert.type" dense text>{{
-            feature.alert.text
-          }}</v-alert>
-        </div>
-      </div> -->
-
-      <!-- <p class="text-lg-justify"><strong>Wargear:</strong> {{ wargearText }}</p> -->
-
-      <div v-if="false">
-        <p><v-divider /></p>
-        <blockquote class="blockquote font-italic">
-          <p>"{{ item.description }}"</p>
-          <span class="float-right">- from the Wrath & Glory Corerules -</span>
-        </blockquote>
-      </div>
-
-      <p class="text-lg-justify" v-if="item.influence && item.influence != 0">
-        <strong>Influence Bonus: </strong>
-        {{ `${item.influence > 0 ? "+" : ""}${item.influence}` }}
-      </p>
     </v-card-text>
 
     <v-divider v-if="chooseMode" />

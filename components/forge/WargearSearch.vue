@@ -70,8 +70,8 @@
         show-expand
         @page-count="pagination.pageCount = $event"
       >
-        <template v-slot:item.nameGear="{ item }">
-          {{ item.nameGear }} <br />
+        <template v-slot:item.name="{ item }">
+          {{ item.name }} <br />
           <div>
             <trait-view v-if="item.traits" :item="item" />
           </div>
@@ -83,7 +83,7 @@
         </template>
 
         <template v-slot:item.level="{ item }">
-          {{ item.level }}
+          {{ item.level ? item.level.value : 0 }}
         </template>
 
         <template v-slot:item.rarity="{ item }">
@@ -175,7 +175,7 @@ export default {
         rowsPerPage: 25,
       },
       headers: [
-        { text: "Название", align: "left", value: "nameGear", class: "" },
+        { text: "Название", align: "left", value: "name", class: "" },
         { text: "Цена", align: "left", value: "price", class: "" },
         { text: "Уровень", align: "left", value: "level", class: "" },
         { text: "Редкость", align: "left", value: "rarity", class: "" },
@@ -251,10 +251,10 @@ export default {
     },
     wargearPrice(item) {
       if (item) {
-        const pp = item.pp !== 0 ? item.pp + " пм" : "";
-        const gp = item.gp !== 0 ? item.gp + " зм" : "";
-        const sp = item.sp !== 0 ? item.sp + " см" : "";
-        const cp = item.cp !== 0 ? item.cp + " мм" : "";
+        const pp = item.price.value.pp ? item.price.value.pp + " пм" : "";
+        const gp = item.price.value.gp ? item.price.value.gp + " зм" : "";
+        const sp = item.price.value.sp ? item.price.value.sp + " см" : "";
+        const cp = item.price.value.cp ? item.price.value.cp + " мм" : "";
         return pp + gp + sp + cp;
       }
     },

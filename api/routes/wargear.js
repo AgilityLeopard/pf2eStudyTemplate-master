@@ -12,93 +12,170 @@ const rangeP = (s, e) => range(s, e).map((i) => `$${i}`);
 const toP = (a, o) => rangeP(o + 1, o + a.length + 1);
 
 
-router.get('/', async (request, response) => {
-    let where = '';
-    const filter = {};
-    const params = [];
+// router.get('/', async (request, response) => {
+//     let where = '';
+//     const filter = {};
+//     const params = [];
 
-    let homebrewWargear = wargearRepository;
+//     let homebrewWargear = wargearRepository;
 
-    const filterTypeString = request.query.type;
-    if (filterTypeString) {
-        filter.type = filterTypeString.split(',');
-        if (filter.type) {
-            where += (where.length > 0) ? ' AND ' : ' WHERE ';
-            where += ` type in ( ${toP(filter.type, params.length).join(',')} )`;
-            params.push(...filter.type);
-            homebrewWargear.filter((w) => filter.type.includes(w.type));
-        }
+//     const filterTypeString = request.query.type;
+//     if (filterTypeString) {
+//         filter.type = filterTypeString.split(',');
+//         if (filter.type) {
+//             where += (where.length > 0) ? ' AND ' : ' WHERE ';
+//             where += ` type in ( ${toP(filter.type, params.length).join(',')} )`;
+//             params.push(...filter.type);
+//             homebrewWargear.filter((w) => filter.type.includes(w.type));
+//         }
+//     }
+
+//     const filterRarityString = request.query.rarity;
+//     if (filterRarityString) {
+//         filter.rarity = filterRarityString.split(',');
+//         if (filter.rarity) {
+//             where += (where.length > 0) ? ' AND ' : ' WHERE ';
+//             where += ` rarity in ( ${toP(filter.rarity, params.length).join(',')} )`;
+//             params.push(...filter.rarity);
+//             homebrewWargear.filter((w) => filter.rarity.includes(w.rarity));
+//         }
+//     }
+
+//     const filterValueLowerEqualString = request.query['value-leq'];
+//     if (filterValueLowerEqualString) {
+//         filter['value-leq'] = filterValueLowerEqualString;
+//         if (filter['value-leq']) {
+//             where += (where.length > 0) ? ' AND ' : ' WHERE ';
+//             where += ` value <= ${toP(filter['value-leq'], params.length)}  `;
+//             params.push(...filter['value-leq']);
+//             homebrewWargear.filter((w) => w.value <= filter['value-leq']);
+//         }
+//     }
+
+//     const filterNameString = request.query.name;
+//     if (filterNameString) {
+//         filter.name = filterNameString.split(',');
+//         if (filter.name) {
+//             where += (where.length > 0) ? ' AND ' : ' WHERE ';
+//             where += ` name in ( ${toP(filter.name, params.length).join(',')} )`;
+//             params.push(...filter.name);
+//             homebrewWargear.filter((w) => filter.name.includes(w.name));
+//         }
+//     }
+
+//     /*
+//     const { rows } = await db.queryAsyncAwait(
+//       `SELECT * FROM wrath_glory.wargear ${where}`,
+//       params,
+//     );
+
+//     sourcedRows = rows.map((r)=>{
+//       return {
+//         ...r,
+//         source: {
+//           book: 'Core Rules',
+//           key: 'core',
+//           version: '1',
+//           path: undefined,
+//           page: '-'
+//         },
+//       };
+//     });
+//     */
+
+//     let merged = [
+//         //...sourcedRows,
+//         ...homebrewWargear,
+//     ];
+
+//     const filterSourceString = request.query.source;
+//     if (filterSourceString) {
+//         filter.source = filterSourceString.split(',');
+//         if (filter.source) {
+//             merged = merged.filter((item) => filter.source.includes(item.source.key));
+//         }
+//     }
+
+//     response.set('Cache-Control', 'public, max-age=3600'); // one hour
+//     response.status(200).json(merged);
+// });
+
+router.get('/', async (req, res) => {
+    let items = wargearRepository; // все данные
+    console.log("Server received types:", req.query.type);
+    console.log("Items before filter:", items.length);
+    if (req.query.type) {
+        const types = req.query.type.split(',').map(t => t.toLowerCase());
+        if (types.length)
+            items = items.filter(i => types.includes(i.type.toLowerCase()));
+    }
+    console.log("Items after filter:", items.length);
+    // ===== Фильтры =====
+    // if (req.query.type) {
+    //     const types = req.query.type.split(',');
+    //     items = items.filter(i => types.includes(i.type));
+    // }
+    if (req.query.search) {
+        const search = req.query.search.toLowerCase();
+        if (search.length) items = items.filter(i => i.name.toLowerCase().includes(search));
     }
 
-    const filterRarityString = request.query.rarity;
-    if (filterRarityString) {
-        filter.rarity = filterRarityString.split(',');
-        if (filter.rarity) {
-            where += (where.length > 0) ? ' AND ' : ' WHERE ';
-            where += ` rarity in ( ${toP(filter.rarity, params.length).join(',')} )`;
-            params.push(...filter.rarity);
-            homebrewWargear.filter((w) => filter.rarity.includes(w.rarity));
-        }
+
+    if (req.query.rarity) {
+        const rarities = req.query.rarity.split(',');
+        items = items.filter(i => rarities.includes(i.rarity));
     }
 
-    const filterValueLowerEqualString = request.query['value-leq'];
-    if (filterValueLowerEqualString) {
-        filter['value-leq'] = filterValueLowerEqualString;
-        if (filter['value-leq']) {
-            where += (where.length > 0) ? ' AND ' : ' WHERE ';
-            where += ` value <= ${toP(filter['value-leq'], params.length)}  `;
-            params.push(...filter['value-leq']);
-            homebrewWargear.filter((w) => w.value <= filter['value-leq']);
-        }
+    if (req.query.source) {
+        const sources = req.query.source.split(',');
+        items = items.filter(i => sources.includes(i.source.key));
     }
 
-    const filterNameString = request.query.name;
-    if (filterNameString) {
-        filter.name = filterNameString.split(',');
-        if (filter.name) {
-            where += (where.length > 0) ? ' AND ' : ' WHERE ';
-            where += ` name in ( ${toP(filter.name, params.length).join(',')} )`;
-            params.push(...filter.name);
-            homebrewWargear.filter((w) => filter.name.includes(w.name));
-        }
+    if (req.query['value-leq']) {
+        const maxValue = parseInt(req.query['value-leq']);
+        items = items.filter(i => parseInt(i.value) <= maxValue);
     }
 
-    /*
-    const { rows } = await db.queryAsyncAwait(
-      `SELECT * FROM wrath_glory.wargear ${where}`,
-      params,
-    );
-  
-    sourcedRows = rows.map((r)=>{
-      return {
-        ...r,
-        source: {
-          book: 'Core Rules',
-          key: 'core',
-          version: '1',
-          path: undefined,
-          page: '-'
+    if (req.query.name) {
+        const names = req.query.name.split(',');
+        items = items.filter(i => names.includes(i.name));
+    }
+
+    console.log("Items after filter:", items.length);
+
+    // === Формируем уникальные значения для фильтров ===
+    const filterSources = [...new Set(items.map(i => i.source.book))];
+    const filterTypes = [...new Set(items.map(i => i.type))];
+    const filterRarities = [...new Set(items.map(i => i.rarity))];
+
+    // ===== Пагинация (фиксировано по 25) =====
+    const total = items.length;
+    const perPage = req.query.perPage ? parseInt(req.query.perPage) : total;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
+    const start = (page - 1) * perPage;
+    const end = start + perPage;
+
+    const pagedItems = items.slice(start, end);
+
+
+    console.log("Items after filter:", pagedItems.length);
+
+    res.json({
+        total: items.length,
+        page,
+        perPage,
+        pageCount: Math.ceil(total / perPage),
+        filters: {
+            sources: filterSources.sort(),
+            types: filterTypes.sort(),
+            rarities: filterRarities.sort(),
         },
-      };
+        data: pagedItems,
     });
-    */
-
-    let merged = [
-        //...sourcedRows,
-        ...homebrewWargear,
-    ];
-
-    const filterSourceString = request.query.source;
-    if (filterSourceString) {
-        filter.source = filterSourceString.split(',');
-        if (filter.source) {
-            merged = merged.filter((item) => filter.source.includes(item.source.key));
-        }
-    }
-
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
-    response.status(200).json(merged);
 });
+
+
 
 function toFoundry(item) {
     const bonus = {

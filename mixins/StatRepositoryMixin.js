@@ -78,6 +78,12 @@ export default {
           description: "A character’s overall physical prowess",
         },
         {
+          key: "bombs",
+          name: "Алхимическое оружие",
+          // attribute: "wisdom",
+          description: "A character’s overall physical prowess",
+        },
+        {
           key: "unarmed",
           name: "Безоружная атака",
           // attribute: "wisdom",
@@ -277,6 +283,37 @@ export default {
         {
           key: "unique",
           name: "Уникальный"
+        },
+      ],
+
+      typeRepository: [
+        {
+          key: "weapon",
+          name: "Оружие",
+        },
+        {
+          key: "armor",
+          name: "Доспех",
+        },
+        {
+          key: "equipment",
+          name: "Снаряжение",
+        },
+        {
+          key: "treasure",
+          name: "Сокровища"
+        },
+        {
+          key: "backpack",
+          name: "Рюкзак"
+        },
+        {
+          key: "consumable",
+          name: "Расходуемый"
+        },
+        {
+          key: "shield",
+          name: "Щит"
         },
       ],
       profiencyRepository: {
@@ -1162,7 +1199,8 @@ export default {
       },
       levelSkill: {
         class: [1, 3, 5, 7, 9, 10, 11, 13, 15, 17, 19, 20]
-      }
+      },
+
     };
 
   },

@@ -34,6 +34,7 @@
             <p class="" v-if="item.keyAbility.length > 0">
               <strong> {{ characterLabelAttribute(item.keyAbility) }}</strong>
             </p>
+
             <p
               class=""
               v-else="characterLabelAttributeBoost(item.attributeBoost)"
@@ -63,11 +64,11 @@
         <div class="two-column-holder dark-red-border">
           <div class="two-column-left">
             <h3 class="exclude_from_nav" id="Perception">Внимательность</h3>
-            <p>{{ characterlabel(characterPerseption) }}</p>
+            <p>{{ characterlabel(item.Perception) }}</p>
 
             <h3 class="exclude_from_nav" id="SavingThrows">Спасброски</h3>
             <span v-for="item1 in SavingRepository" v-bind:key="item1">
-              <p>
+              <p >
                 {{ characterlabel(item.saving[item1.key]) }} в {{ item1.name }}
               </p>
             </span>
@@ -91,14 +92,14 @@
           <div class="two-column-right">
             <h3 class="exclude_from_nav" id="attacks">Атаки</h3>
             <span v-for="item1 in WeaponRepository" v-bind:key="item1.key">
-              <p class="">
+              <p v-if="item.skillAttack[item1.key]">
                 {{ characterlabel(item.skillAttack[item1.key]) }} в
                 {{ item1.name }}
               </p>
             </span>
             <h3 class="exclude_from_nav" id="defenses">Защиты</h3>
             <span v-for="item1 in DefenceRepository" v-bind:key="item1.key">
-              <p>
+              <p v-if="item.skillDefence[item1.key]">
                 {{ characterlabel(item.skillDefence[item1.key]) }} в
                 {{ item1.name }}
               </p>
@@ -237,7 +238,20 @@
                 <strong>Фокусное заклинание:</strong>
                 <span
  
-                > {{SpellName(spell)}}</span>
+                > {{SpellName(feature.options.find((s) => s.key === feature.selected)
+                    .focusSpell)}}</span>
+              </div>
+                            <div
+                v-if="
+                  feature.options.find((s) => s.key === feature.selected)
+                    .spell
+                "
+              >
+                <strong>Заклинание:</strong>
+                <span
+ 
+                > {{SpellName(feature.options.find((s) => s.key === feature.selected)
+                    .spell)}}</span>
               </div>
               <div
                 v-if="
@@ -515,8 +529,9 @@ export default {
 
       this.wargearList = data;
     },
-        SpellName(spell) {
-      return this.psychicPowersList.find(s => s.key === spell)?.name || '';
+    SpellName(spell) {
+      const spell1 = this.textToKebab(spell);
+      return this.psychicPowersList.find(s => s.key === spell1)?.name || '';
     },
     characterlabel(key) {
       switch (key) {
@@ -899,10 +914,8 @@ export default {
         ? skill.push(
             feature.options.find((s) => s.key === feature.selected).key
           )
-        : skill.push(
-            feature.options.find((s) => s.key === feature.selected).skill
-          );
-      if (skill) {
+        : [];
+      if (skill.length !== 0) {
         //this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: level, type: 'class', optional: false  });
 
         const predSkill = this.$store.getters[
@@ -942,20 +955,21 @@ export default {
       if (trait) {
         const payload = {
           name: trait,
-          source: feature.key,
-          type: "keyword",
+          source: "archetype",
+          type: "sanctification",
           replacement: undefined,
         };
 
-        this.$store.commit("characters/clearCharacterKeywordsBySource", {
+        this.$store.commit("characters/clearCharacterKeywordsByType", {
           id: this.characterId,
-          source: feature.key,
+           type: "sanctification",
           cascade: true,
         });
         if (trait !== "Без")
           this.$store.commit("characters/addCharacterKeyword", {
             id: this.characterId,
             keyword: payload,
+            
           });
       }
 

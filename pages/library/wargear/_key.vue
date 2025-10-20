@@ -17,7 +17,7 @@
 
               <div class="grey--text">
                 <span class="subtitle-2"
-                  ><strong>Rarity:</strong> {{ item.rarity }}</span
+                  ><strong>Редкость:</strong> {{ item.rarity }}</span
                 >
                 <span><strong>Value:</strong> {{ item.value }}</span>
               </div>
@@ -66,7 +66,7 @@
 
           <v-row>
             <v-col>
-              <v-btn
+              <!-- <v-btn
                 v-if="
                   !['core', 'fspg', 'red1', 'cos'].includes(item.source.key)
                 "
@@ -75,7 +75,7 @@
                 small
                 color="info"
                 >foundry (.json)</v-btn
-              >
+              > -->
             </v-col>
           </v-row>
         </ColorfulEntry>
@@ -153,13 +153,13 @@ export default {
           to: "/",
         },
         {
-          text: "Library",
+          text: "Библиотека",
           nuxt: true,
           exact: true,
           to: "/library",
         },
         {
-          text: "Wargear",
+          text: "Снаряжение",
           nuxt: true,
           exact: true,
           to: "/library/wargear",

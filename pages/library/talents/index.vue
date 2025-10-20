@@ -28,7 +28,7 @@
                   dense
                 />
               </v-col>
-
+              <!-- 
               <v-col :cols="12">
                 <v-chip-group
                   v-model="selectedTagsFilters"
@@ -47,7 +47,7 @@
                     {{ filter.name }}
                   </v-chip>
                 </v-chip-group>
-              </v-col>
+              </v-col> -->
             </v-row>
           </v-card-text>
         </v-card>
@@ -65,9 +65,9 @@
             hide-default-footer
             @page-count="pagination.pageCount = $event"
           >
-            <template v-slot:item.tags="{ item }">
+            <!-- <template v-slot:item.tags="{ item }">
               {{ item.tags ? item.tags.join(", ") : "" }}
-            </template>
+            </template> -->
           </v-data-table>
 
           <div class="text-center pt-2">
@@ -79,7 +79,7 @@
         </v-card>
       </v-col>
 
-      <v-col :cols="12">
+      <!-- <v-col :cols="12">
         <v-card>
           <v-card-text>
             <h1>Search the Library for available wargear</h1>
@@ -89,7 +89,7 @@
             </p>
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
     </v-row>
   </div>
 </template>
@@ -217,20 +217,27 @@ export default {
       }
       let searchResult = this.repository;
 
-      if (this.selectedTagsFilters.length > 0) {
-        searchResult = searchResult.filter((item) =>
-          this.selectedTagsFilters.some((m) => item.tags.includes(m))
-        );
-      }
+      // if (this.selectedTagsFilters.length > 0) {
+      //   searchResult = searchResult.filter((item) =>
+      //     this.selectedTagsFilters.some((m) => item.tags.includes(m))
+      //   );
+      // }
+
+      // searchResult = this.repository.filter(
+      //   (i) =>
+      //     i.source &&
+      //     i.source?.key &&
+      //     (i?.source?.key === "playerCore" || i?.source?.key === "playerCore2")
+      // );
 
       let filter;
 
-      filter = this.filters.source;
-      if (filter.model.length > 0) {
-        searchResult = searchResult.filter((i) =>
-          filter.model.includes(i.source.key)
-        );
-      }
+      // filter = this.filters.source;
+      // if (filter.model.length > 0) {
+      //   searchResult = searchResult.filter((i) =>
+      //     filter.model.includes(i.source.key)
+      //   );
+      // }
 
       return searchResult;
     },
@@ -251,25 +258,28 @@ export default {
       // const distinct = [...new Set(reduced)];
       // return distinct.sort().map((tag) => ({ name: tag }));
 
-      //let filteredTalents = this.repository.filter((i) => i && i.traits);
-      let filteredTalents = this.repository
-        .filter((i) => i && i.traits)
-        .forEach((species) => {
-          const tr = Array.isArray(species.traits)
-            ? species.traits
-            : String(species.traits).split(","); // если не массив — превращаем в массив
-
-          const lowercaseKeywords = species.traits ? tr : "";
-
-          species.traits = species.traits ? tr.map((s) => s.trim()) : "";
-        });
-      const lowercaseKeywords = filteredTalents.map((s) =>
-        s.traits.toUpperCase()
+      let filteredTalents = this.repository.filter((i) =>
+        i.key.includes("playerCore")
       );
 
-      filteredTalents = filteredTalents.filter((talent) =>
-        lowercaseKeywords.includes(talent.traits.toString().toUpperCase())
-      );
+      // let filteredTalents = this.repository
+      //   .filter((i) => i && i.traits)
+      //   .forEach((species) => {
+      //     const tr = Array.isArray(species.traits)
+      //       ? species.traits
+      //       : String(species.traits).split(","); // если не массив — превращаем в массив
+
+      //     const lowercaseKeywords = species.traits ? tr : "";
+
+      //     species.traits = species.traits ? tr.map((s) => s.trim()) : "";
+      //   });
+      // const lowercaseKeywords = filteredTalents.map((s) =>
+      //   s.traits.toUpperCase()
+      // );
+
+      // filteredTalents = filteredTalents.filter((talent) =>
+      //   lowercaseKeywords.includes(talent.traits.toString().toUpperCase())
+      // );
       let reduced = [];
       filteredTalents.forEach((item) => {
         if (item.traits) {

@@ -15,7 +15,7 @@
                   filled
                   dense
                   clearable
-                  label="Search"
+                  label="Поиск"
                 />
               </v-col>
 
@@ -46,8 +46,7 @@
             :search="searchQuery"
             :items-per-page="15"
             item-key="key"
-            sort-by="name"
-            show-expand
+            sort-by="nameAncestry"
             hide-default-footer
             @page-count="pagination.pageCount = $event"
           >
@@ -64,18 +63,18 @@
                     <v-icon small> launch </v-icon>
                   </NuxtLink>
                 </v-col>
-                <v-col
+                <!-- <v-col
                   v-if="item.source.page"
                   :cols="12"
                   class="caption grey--text"
                 >
                   pg. {{ item.source.page }}
-                </v-col>
+                </v-col> -->
               </v-row>
             </template>
 
             <!-- Detail Page link -->
-            <template v-slot:item.actions="{ item }">
+            <!-- <template v-slot:item.actions="{ item }">
               <v-btn
                 v-if="item.stub === undefined || !item.stub"
                 small
@@ -85,10 +84,53 @@
               >
                 <v-icon>chevron_right</v-icon>
               </v-btn>
+            </template> -->
+
+            <template v-slot:item.nameAncestry="{ item }">
+              <router-link
+                v-if="!item.stub"
+                :to="`/library/species/${textToKebab(item.key)}`"
+                class="clickable-name"
+              >
+                {{ item.nameAncestry }}
+              </router-link>
+              <span v-else class="text-disabled">
+                {{ item.nameAncestry }}
+              </span>
+            </template>
+
+            <template v-slot:item.size="{ item }">
+              {{ size(item.size) }}
+            </template>
+
+            <template v-slot:item.rarity="{ item }">
+              {{ rarity(item.rarity) }}
+            </template>
+
+            <template v-slot:item.attributeBoost="{ item }">
+              <div v-for="boost in item.attributeBoost" class="text-lg-justify">
+                <div v-if="boost.value > 0">
+                  <strong>{{ boost.name }}</strong>
+                </div>
+              </div>
+
+              <div v-for="boost in item.abilityBoost" class="text-lg-justify">
+                <div>
+                  <strong> Свободное повышение </strong>
+                </div>
+              </div>
+            </template>
+
+            <template v-slot:item.attributeFlaw="{ item }">
+              <div v-for="boost in item.attributeFlaw" class="text-lg-justify">
+                <div v-if="boost.value < 0">
+                  <strong>{{ boost.name }}</strong>
+                </div>
+              </div>
             </template>
 
             <!-- Expand -->
-            <template v-slot:expanded-item="{ headers, item }">
+            <!-- <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">
                 <div class="pa-4">
                   <dod-species-details :item="item" class="pa-2 pb-4" />
@@ -99,11 +141,11 @@
                     :to="`/library/species/${textToKebab(item.key)}`"
                     color="success"
                   >
-                    Show Details Page
+                    Показать детали
                   </v-btn>
                 </div>
               </td>
-            </template>
+            </template> -->
           </v-data-table>
 
           <div class="text-center pt-2">
@@ -123,15 +165,16 @@ import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
 import DodSpeciesDetails from "~/components/DodSpeciesDetails";
 import SluggerMixin from "~/mixins/SluggerMixin";
 import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
+import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
   components: {
     DodDefaultBreadcrumbs,
     DodSpeciesDetails,
   },
-  mixins: [BreadcrumbSchemaMixin, SluggerMixin],
+  mixins: [BreadcrumbSchemaMixin, SluggerMixin, StatRepositoryMixin],
   head() {
-    const title = "Species - Wrath & Glory Reference | Library";
+    const title = "Родословная | Библиотека";
     const description =
       "There are some homebrew species and human variants in addition to some Xenos options. " +
       "Check out the respective linked Homebrews for detailed informations.";
@@ -177,7 +220,7 @@ export default {
     return {
       items: data,
       filters: {
-        source: { model: filtersSourceModel, label: "Filter by Homebrew" },
+        source: { model: filtersSourceModel, label: "Источники" },
       },
     };
   },
@@ -192,14 +235,14 @@ export default {
           to: "/",
         },
         {
-          text: "Library",
+          text: "Библиотека",
           disabled: false,
           nuxt: true,
           exact: true,
           to: "/library",
         },
         {
-          text: "Species",
+          text: "Родословная",
           disabled: false,
           nuxt: true,
           exact: true,
@@ -215,40 +258,64 @@ export default {
         rowsPerPage: 25,
       },
       headers: [
+        // Name
+
+        // HP
+
+        // Size
+        // Speed	Ability Boost	Ability Flaw	Language
+        // Vision
+
+        // Rarity
+
+        // PFS
         {
-          text: "Name",
+          text: "Имя",
           align: "start",
-          value: "name",
+          value: "nameAncestry",
           class: "",
         },
         {
-          text: "Group",
+          text: "Хиты",
           align: "start",
-          value: "group",
+          value: "ancestryHitPoint",
           class: "",
         },
         {
-          text: "Hint",
+          text: "Размер",
           align: "start",
-          value: "hint",
+          value: "size",
           class: "",
         },
         {
-          text: "Cost",
+          text: "Скорость",
           align: "center",
-          value: "cost",
+          value: "speed",
           class: "",
         },
         {
-          text: "Source",
+          text: "Повышение",
           align: "start",
-          value: "source.book",
+          value: "attributeBoost",
           class: "",
         },
         {
-          text: "",
-          align: "end",
-          value: "actions",
+          text: "Понижение",
+          align: "start",
+          value: "attributeFlaw",
+          class: "",
+        },
+        {
+          text: "Язык",
+          align: "start",
+          value: "language",
+          class: "",
+          sortable: false,
+        },
+        {
+          text: "Редкость",
+          align: "start",
+          value: "rarity",
           class: "",
           sortable: false,
         },
@@ -308,7 +375,18 @@ export default {
       return distinct.filter((d) => d !== null).sort();
     },
   },
-  methods: {},
+  methods: {
+    size(size) {
+      if (!size) return "";
+      const s = this.sizeRepository.find((s) => s.key === size);
+      return s ? s.name : "";
+    },
+    rarity(rarity) {
+      if (!rarity) return "";
+      const s = this.rarityRepository.find((s) => s.key === rarity);
+      return s ? s.name : "";
+    },
+  },
 };
 </script>
 
