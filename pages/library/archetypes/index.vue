@@ -15,7 +15,7 @@
                   filled
                   dense
                   clearable
-                  label="Search"
+                  label="Поиск"
                 />
               </v-col>
 
@@ -60,7 +60,7 @@
                 <v-select
                   v-model="filters.source.model"
                   :items="filterSourceOptions"
-                  :label="filters.source.label"
+                  label="Источники"
                   filled
                   clearable
                   multiple
@@ -236,9 +236,7 @@ export default {
   mixins: [BreadcrumbSchemaMixin, SluggerMixin, StatRepositoryMixin],
   head() {
     const title = "Классы | Библиотека";
-    const description =
-      "Oh there are way to many archetypes written by fans. Filter a little and then pick the one you want." +
-      " Check the linked homebrews for details.";
+    const description = "";
     const image = "http://www.shadow-of-tales.ru/img/artwork_library.jpg";
 
     return {

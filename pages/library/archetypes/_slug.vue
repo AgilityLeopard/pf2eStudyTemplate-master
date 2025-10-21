@@ -5,11 +5,45 @@
 
     <!-- Species Details -->
     <v-row justify="center" no-gutters>
-      <v-col :cols="12">
-        <ColorfulEntry :headline="item.name" flavour="forge">
-          <archetype-preview :item="item" :spells="spells" />
-        </ColorfulEntry>
-      </v-col>
+      <v-tabs centered grow color="red">
+        <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`"
+          ><h2 class="subtitle-2">Описание</h2></v-tab
+        >
+
+        <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`"
+          ><h2 class="subtitle-2">Черты</h2></v-tab
+        >
+
+        <v-tab-item
+          class="my-tab-item"
+          key="tab-ancestry"
+          :value="`tab-ancestry`"
+        >
+          <v-col :cols="12">
+            <ColorfulEntry :headline="item.name" flavour="forge">
+              <talents-preview
+                :talents="talents"
+                :level="20"
+                :list="talents"
+                :type="item.key"
+                choose-mode
+              />
+            </ColorfulEntry>
+          </v-col>
+        </v-tab-item>
+
+        <v-tab-item
+          class="my-tab-item"
+          key="tab-heritage"
+          :value="`tab-heritage`"
+        >
+          <v-col :cols="12">
+            <ColorfulEntry :headline="item.name" flavour="forge">
+              <archetype-preview :item="item" :spells="spells" />
+            </ColorfulEntry>
+          </v-col>
+        </v-tab-item>
+      </v-tabs>
     </v-row>
   </div>
 </template>
@@ -20,6 +54,7 @@ import DodDefaultBreadcrumbs from "~/components/DodDefaultBreadcrumbs";
 import ArchetypePreview from "~/components/forge/ArchetypePreviewV3";
 import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
 import WargearTraitRepository from "~/mixins/WargearTraitRepositoryMixin";
+import TalentsPreview from "~/components/forge/TalentsPreviewV2.vue";
 
 export default {
   name: "Archetype",
@@ -27,16 +62,15 @@ export default {
     ArchetypePreview,
     ColorfulEntry,
     DodDefaultBreadcrumbs,
+    TalentsPreview,
   },
   mixins: [BreadcrumbSchemaMixin, WargearTraitRepository],
   head() {
-    const title = `${this.item.name} - Archetypes`;
+    const title = `${this.item.name}`;
     let isOfficial = ["core", "fspg", "red1", "cos"].includes(
       this.item.source.key
     );
-    const description = isOfficial
-      ? `The ${this.item.name} from the ${this.item.faction} Faction is an official archetype described in the ${this.item.source.book}.`
-      : `The ${this.item.name} from the ${this.item.faction} Faction is a homebrew archetype provided by ${this.item.source.book}.`;
+    const description = ``;
     const image = `/img/avatars/archetype/${this.item.key}.png`;
 
     const robots = {
@@ -46,7 +80,7 @@ export default {
     };
 
     return {
-      titleTemplate: "%s | Wrath & Glory Library",
+      titleTemplate: "%s | Библиотека",
       title,
       meta: [
         { hid: "description", name: "description", content: description },
@@ -74,7 +108,15 @@ export default {
 
     const { data } = await $axios.get("/api/abilityAncestry/");
     const psychic = await $axios.get("/api/psychic-powers/");
+
+    const config = {
+      params: {
+        source: ["playerCore", "playerCore2"].join(","),
+      },
+    };
+    const feat = await $axios.get("/api/talents/", config);
     const spells = psychic.data;
+    const talents = feat.data.filter((s) => s);
 
     if (
       item === undefined ||
@@ -107,20 +149,20 @@ export default {
         }
 
         if (ab.options) {
-          if (ab.type.includes("Weapon Group")) {
-            const options = this.weaponGroup.filter((s) =>
-              ab.options.includes(s.group)
-            );
-            const listOption = [];
-            options.forEach((s) => {
-              const op = {
-                key: s.group,
-                ...s,
-              };
-              listOption.push(op);
-              ab.options = listOption;
-            });
-          }
+          // if (ab.type.includes("Weapon Group")) {
+          //   const options = this.weaponGroup.filter((s) =>
+          //     ab.options.includes(s.group)
+          //   );
+          //   const listOption = [];
+          //   options.forEach((s) => {
+          //     const op = {
+          //       key: s.group,
+          //       ...s,
+          //     };
+          //     listOption.push(op);
+          //     ab.options = listOption;
+          //   });
+          // }
 
           ab.options.forEach((s) => {
             if (s.subFeature) {
@@ -223,9 +265,52 @@ export default {
       item.archetypeFeatures = abilityList.sort((a, b) => a.level - b.level);
     }
 
+    const traits1 = await $axios.get("/api/traits/");
+    const traits = traits1.data;
+
+    if (traits !== undefined) {
+      talents
+        .filter((s) => s.traits.includes(item.keywords))
+        .forEach((species) => {
+          if (species) {
+            const tr = Array.isArray(species.traits)
+              ? species.traits
+              : String(species.traits).split(","); // если не массив — превращаем в массив
+
+            const lowercaseKeywords = species.traits ? tr : "";
+
+            species.traits = species.traits ? tr.map((s) => s.trim()) : "";
+            species.trait = species.traits;
+            const List1 = traits;
+            const trait = List1.filter((talent) =>
+              lowercaseKeywords.includes(talent.key.toString().toLowerCase())
+            );
+
+            if (trait.length > 0) {
+              const listAbilities = [];
+              species.traits.forEach((talent) => {
+                const t = trait.find((k) => k.key.toLowerCase() === talent);
+
+                if (t) {
+                  const ability1 = {
+                    name: t.key,
+                    description: t.desc,
+                  };
+
+                  listAbilities.push(ability1);
+                }
+              });
+              species.traitDesc = listAbilities;
+            }
+          }
+        });
+    }
+
     return {
       item,
       spells,
+      talents: talents.filter((s) => s.traits.includes(item.keywords)),
+      traits,
       slug,
       breadcrumbItems: [
         {

@@ -90,7 +90,7 @@
           key="tab-ancestry"
           :value="`tab-ancestry`"
         >
-          <v-col v-if="!ancestry" :cols="12">
+          <v-col v-if="!characterSpeciesKey" :cols="12">
             <v-alert
               type="warning"
               class="caption ml-4 mr-4"
@@ -102,7 +102,7 @@
             </v-alert>
           </v-col>
 
-          <v-col v-else="ancestry">
+          <v-col v-else="characterSpeciesKey">
             <v-expansion-panels multiple>
               <v-expansion-panel
                 v-for="levelAncestry in 20"
@@ -1365,7 +1365,9 @@ export default {
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
     },
-
+    characterSpeciesKey() {
+      return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
+    },
     sources() {
       return [
         'playerCore',
@@ -1524,6 +1526,20 @@ export default {
         const { data } = await this.$axios.get(`/api/archetypes/${key}`);
         this.archetype = data;
       }
+      this.loading = false;
+    },
+    async loadSpecies(key) {
+      this.loading = true;
+      const { data } = await this.$axios.get(`/api/species/${key}`);
+
+      this.species = data;
+      this.boost = this.species ? this.species.abilityBoost : 0;
+      this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
+       this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
+
+      this.selectedAncestryBoost = this.characterAncestryFreeBoost;
+      this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2;
+      this.selectedBoost = this.AncestryFreeBoost;
       this.loading = false;
     },
     //Вывод окна для выбора черт

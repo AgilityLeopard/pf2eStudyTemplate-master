@@ -15,7 +15,7 @@
                   filled
                   dense
                   clearable
-                  label="Search"
+                  label="Поиск"
                 />
               </v-col>
 
@@ -24,7 +24,7 @@
                 <v-select
                   v-model="filters.source.model"
                   :items="filterSourceOptions"
-                  :label="filters.source.label"
+                  label="Источники"
                   filled
                   clearable
                   multiple
@@ -117,9 +117,7 @@ export default {
   mixins: [SluggerMixin, StatRepositoryMixin],
   head() {
     const title = "Предыстории | Библиотека";
-    const description =
-      "Tired of staying the course and wizzarding around? Search the Library for Ascension Packages. " +
-      "Check out the respective linked Homebrews for detailed informations.";
+    const description = "";
     const image = "http://www.shadow-of-tales.ru/img/artwork_library.jpg";
 
     return {

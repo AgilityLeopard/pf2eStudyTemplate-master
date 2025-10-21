@@ -5,20 +5,20 @@
     <v-container fluid class="pa-0" style="max-width: 1200px">
       <v-row justify="center" align="stretch">
         <v-col cols="12" md="4">
-          <v-card class="glass-card pa-3" height="100%">
-            <v-row no-gutters align="center" style="width: 100%">
+          <v-card class="glass-card pa-3 stat-card" height="100%">
+            <v-row dense>
               <!-- Левая часть: аватар + имя + теги -->
-              <v-col cols="12" md="6" class="d-flex flex-column align-center">
+              <v-col cols="12" sm="6" md="6" class="d-flex flex-wrap">
                 <!-- Контейнер: аватар + теги + имя -->
-                <div class="d-flex flex-column align-center w-100">
+                <div class="d-flex flex-column align-center w-100 flex-wrap">
                   <!-- Первая строка: аватар + теги -->
-                  <div class="d-flex align-center w-100">
+                  <div class="d-flex align-center w-100 flex-wrap">
                     <!-- Аватар -->
-                    <div class="d-flex flex-column align-center mr-4">
+                    <div class="d-flex flex-wrap flex-column align-center mr-4">
                       <v-avatar size="75" color="#25262b">
                         <img :src="avatar" size="40" />
                       </v-avatar>
-                      <div class="name mt-2 text-left w-100">
+                      <div class="name mt-2 text-center w-100">
                         {{ characterName }}
                       </div>
                     </div>
@@ -45,7 +45,7 @@
               </v-col>
 
               <!-- Правая часть: действия + уровень/опыт -->
-              <v-col cols="12" md="6" class="d-flex flex-column align-center">
+              <v-col cols="12" sm="6" md="6" class="d-flex flex-wrap">
                 <div class="actions d-flex flex-wrap justify-center mb-2">
                   <v-btn
                     target="_blank"
@@ -1121,9 +1121,7 @@
                                       ? item.damage.dice + item.damage.die
                                       : item.damage
                                   }}
-                                  {{
-                                    typeDamage(item.damageOrig.damageType)
-                                  }}
+                                  {{ typeDamage(item.damageOrig.damageType) }}
                                 </span>
                               </div>
                             </td>
@@ -2458,7 +2456,7 @@ export default {
       factionRepository: factionResponse.data,
       psychicPowersRepository: psychicPowersResponse.data,
       psychicAbilitiesRepository: psychicAbilitiesResponse.data,
-      talentRepository: talentResponse.data,
+      talentRepository: talentResponse.data.filter(s => s !== null && s.key !== null ),
       abilityRepository: abilityAncestryResponse.data,
       breadcrumbItems: [
         { text: '', nuxt: true, exact: true, to: '/' },

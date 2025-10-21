@@ -175,9 +175,7 @@ export default {
   mixins: [BreadcrumbSchemaMixin, SluggerMixin, StatRepositoryMixin],
   head() {
     const title = "Родословная | Библиотека";
-    const description =
-      "There are some homebrew species and human variants in addition to some Xenos options. " +
-      "Check out the respective linked Homebrews for detailed informations.";
+    const description = "";
     const image = "http://www.shadow-of-tales.ru/img/artwork_library.jpg";
 
     return {

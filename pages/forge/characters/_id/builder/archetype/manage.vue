@@ -519,15 +519,31 @@ export default {
     // },
   },
   methods: {
-    async getWargearList(sources) {
-      const config = {
-        params: {
-          source: sources.join(","),
-        },
-      };
-      const { data } = await this.$axios.get("/api/wargear/", config);
+    // async getWargearList(sources) {
+    //   const config = {
+    //     params: {
+    //       source: sources.join(","),
+    //     },
+    //   };
+    //   const { data } = await this.$axios.get("/api/wargear/", config);
 
-      this.wargearList = data;
+    //   this.wargearList = data;
+    // },
+    async getWargearList(sources) {
+      const page =  1;
+      const perPage = 10000;
+
+      const params = { page, perPage, source: sources.join(',') };
+
+
+      // const config = {
+      //   params: {
+      //     source: sources.join(','),
+      //   },
+      // };
+      const { data, total } = await this.$axios.get('/api/wargear/', { params });
+
+      this.wargearList = data.data;
     },
     SpellName(spell) {
       const spell1 = this.textToKebab(spell);

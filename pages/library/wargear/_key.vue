@@ -105,7 +105,7 @@ export default {
   },
   mixins: [BreadcrumbSchemaMixin],
   head() {
-    const title = `${this.item.name} - Wargear`;
+    const title = `${this.item.name}`;
     const description = ""; /* this.item.source.key.indexOf('core') >= 0
       ? `The ${this.item.name} from ${this.item.group} is an official Species described in the ${this.item.source.book}.`
       : `The ${this.item.name} from ${this.item.group} is a homebrew Species provided by ${this.item.source.book}.`; */
@@ -114,7 +114,7 @@ export default {
       : `http://www.shadow-of-tales.ru/img/wargear/${this.item.type.toLowerCase()}_avatar.png`;
 
     return {
-      titleTemplate: "%s | Wrath & Glory Library",
+      titleTemplate: "%s | Библиотека",
       title,
       meta: [
         { hid: "description", name: "description", content: description },

@@ -6,7 +6,7 @@
     <!-- Species Details -->
     <v-row justify="center" no-gutters>
       <v-col :cols="12" :sm="10">
-        <div class="pa-2 pt-4 pb-4">
+        <!-- <div class="pa-2 pt-4 pb-4">
           <h3 class="title-1">
             {{ item.name }}
           </h3>
@@ -38,6 +38,31 @@
               {{ tag }}
             </v-chip>
           </div>
+        </div> -->
+
+        <div v-if="item">
+          <v-row class="rowFeat">
+            <div class="head">
+              <h1>
+                {{ item.name }}
+              </h1>
+            </div>
+            <div class="line"></div>
+            <div class="tag">Черта {{ item.level }}</div>
+          </v-row>
+          <v-row>
+            <div>
+              <trait-view v-if="item.traits" :item="item" class="mb-2" />
+            </div>
+          </v-row>
+          <div v-if="item.requirements">
+            <p class="main-holder">
+              {{ item.requirements.key }}
+            </p>
+          </div>
+          <p></p>
+          <div class="pt-4 pb-2" v-html="item.description"></div>
+          <p></p>
         </div>
       </v-col>
     </v-row>
@@ -55,7 +80,7 @@ export default {
   },
   mixins: [BreadcrumbSchemaMixin],
   head() {
-    const title = `${this.item.name} - Talent`;
+    const title = `${this.item.name}`;
     const description = ""; /* this.item.source.key.indexOf('core') >= 0
       ? `The ${this.item.name} from ${this.item.group} is an official Species described in the ${this.item.source.book}.`
       : `The ${this.item.name} from ${this.item.group} is a homebrew Species provided by ${this.item.source.book}.`; */
@@ -64,7 +89,7 @@ export default {
       : undefined;
 
     return {
-      titleTemplate: "%s | Wrath & Glory Library",
+      titleTemplate: "%s | Библиотека",
       title,
       meta: [
         { hid: "description", name: "description", content: description },
@@ -87,14 +112,7 @@ export default {
 
     const { idslug } = params;
 
-    let regExpExecArray = regex.exec(idslug);
-    if (regExpExecArray === null) {
-      error({ statusCode: 404, message: "Wargear not found" });
-      return;
-    }
-    const { id, slug } = regExpExecArray.groups;
-
-    const response = await $axios.get(`/api/talents/${id}`);
+    const response = await $axios.get(`/api/talents/${idslug}`);
     const item = response.data;
 
     if (item === undefined || item.length <= 0) {
@@ -104,7 +122,7 @@ export default {
 
     return {
       item,
-      slug,
+      idslug,
       breadcrumbItems: [
         {
           text: "",
@@ -113,13 +131,13 @@ export default {
           to: "/",
         },
         {
-          text: "Library",
+          text: "Библиотека",
           nuxt: true,
           exact: true,
           to: "/library",
         },
         {
-          text: "Talents",
+          text: "Черты",
           nuxt: true,
           exact: true,
           to: "/library/talents",
@@ -128,7 +146,7 @@ export default {
           text: item.name,
           disabled: true,
           nuxt: true,
-          to: `/library/talents/${id}-${slug}`,
+          to: `/library/talents/${idslug}`,
         },
       ],
     };
@@ -182,3 +200,74 @@ export default {
 </script>
 
 <style scoped></style>
+
+<style scoped lang="css">
+.traits {
+  background-color: #d9c484;
+  display: inline-block;
+  margin: 0.1em 0.15em !important;
+  padding: 0.1em 0.25em;
+  list-style-type: none !important;
+}
+.trait {
+  background-color: #5e0000;
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+}
+
+.simple {
+  display: inherit;
+  margin-bottom: 0;
+  padding-inline-start: 0.2em;
+}
+
+.head {
+  /* color: rgb(57, 54, 54); */
+  width: fit-content;
+  /* font-size: 24px; */
+  font-style: normal;
+  /* font-family: goodOTCondBold; */
+  font-weight: normal;
+  line-height: 24px;
+  /* text-transform: uppercase; */
+}
+
+.line {
+  height: 1px;
+  margin: 0 1rem;
+  flex-grow: 1;
+  background: #676767;
+}
+
+.tag {
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  font-family: goodOTCondBold;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.rowFeat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+</style>

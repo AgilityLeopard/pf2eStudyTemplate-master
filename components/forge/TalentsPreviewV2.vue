@@ -1,9 +1,9 @@
 <template lang="html">
   <v-card>
     <v-card-title style="background-color: #262e37; color: #fff">
-      <span>Подтвердите выбор Таланта</span>
+      <!-- <span>Подтвердите выбор Таланта</span>
       <v-spacer />
-      <v-icon dark @click="$emit('cancel')"> close </v-icon>
+      <v-icon dark @click="$emit('cancel')"> close </v-icon> -->
     </v-card-title>
 
     <v-divider />
@@ -170,9 +170,9 @@
     </v-card-text>
 
     <v-divider />
-    <v-card-actions>
+    <!-- <v-card-actions>
       <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
-    </v-card-actions>
+    </v-card-actions> -->
   </v-card>
 </template>
 
@@ -182,7 +182,7 @@ import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import traitView from '~/components/TraitView';
 
 export default {
-  name: 'talentsPreview',
+  name: 'talentsPreviewLibrary',
   mixins: [
     SluggerMixin,
     StatRepositoryMixin,
@@ -568,7 +568,7 @@ export default {
       // only show those whose prerequisites are met
 
       filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
-      // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
+      //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.traits.toString().toUpperCase()));
       let reduced = ["обычный", "необычный", "редкий", "уникальный"];
       // filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
       // // if (item.traits) {
@@ -586,14 +586,14 @@ export default {
       }
       let filteredTalents = this.talents;
       //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
-      let lowercaseKeywords = [];
-      if (this.type === 'skill' || this.type === 'general')
-        lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
-      else
-         lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      // let lowercaseKeywords = [];
+      // if (this.type === 'skill' || this.type === 'general')
+      //   lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
+      // else
+      //    lowercaseKeywords  = ["class"];
       // only show those whose prerequisites are met
 
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
+      // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.traits.toString().toUpperCase()));
       let reduced = [];
       filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
@@ -618,9 +618,9 @@ export default {
 
       let filteredTalents = this.talents;
 
-      if (this.selectedtraitsFilters.length > 0) {
-        filteredTalents = filteredTalents.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
-      }
+      // if (this.selectedtraitsFilters.length > 0) {
+      //   filteredTalents = filteredTalents.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
+      // }
 
 
       if (this.selectedSourceFilters.length > 0) {
@@ -642,16 +642,17 @@ export default {
       // });
 
       //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
-                 let lowercaseKeywords = [];
-      if (this.type === 'skill' || this.type === 'general')
-        lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
-      else
-         lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+      // let lowercaseKeywords = [];
+      // if (this.type === 'skill' || this.type === 'general')
+      //   lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
+      // else
+      //    lowercaseKeywords  = lowercaseKeywords.push(this.type);
       // only show those whose prerequisites are met
       // if () {
        // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
       // }
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
+
+      // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
 
       return filteredTalents.filter(talent => talent.level <= this.level);
     },

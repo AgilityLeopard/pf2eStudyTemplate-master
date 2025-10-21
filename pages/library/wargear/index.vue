@@ -13,7 +13,7 @@
                   filled
                   dense
                   clearable
-                  label="Search"
+                  label="поиск"
                 />
               </v-col>
               <!-- 
@@ -355,7 +355,9 @@ export default {
     typeFilters() {
       // const reduceToType = this.items.map((item) => item.type);
       // const distinctTypes = [...new Set(reduceToType)];
-      return this.filters.types.map((t) => ({ name: t }));
+      return this.filters.types
+        .filter((s) => s !== "kit")
+        .map((t) => ({ name: t }));
     },
     filterKeywordsOptions() {
       // const keywordArray = [];
