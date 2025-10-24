@@ -71,13 +71,13 @@
         <div class="two-column-holder dark-red-border">
           <div class="two-column-left">
             <h3 class="exclude_from_nav" id="Perception">Внимательность</h3>
-            <p>{{ characterlabel(characterPerseption) }}</p>
+            <p>{{ characterlabel(item.Perception) }}</p>
 
             <h3 class="exclude_from_nav" id="SavingThrows">Спасброски</h3>
-            <span v-for="item in SavingRepository" v-bind:key="item.key">
+            <span v-for="item1 in SavingRepository" v-bind:key="item1.key">
               <p>
-                {{ characterlabel(characterSaving[item.key]) }} в
-                {{ item.name }}
+                {{ characterlabel(item.saving[item1.key]) }} в
+                {{ item1.name }}
               </p>
             </span>
             <h3 class="exclude_from_nav" id="Skills">Навыки</h3>

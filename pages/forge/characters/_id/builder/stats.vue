@@ -23,11 +23,21 @@
       >
         <v-expansion-panel-header
           >{{ levelAncestry }} уровень
-          <v-chip
+          <v-skeleton-loader
             v-if="
+              !getDisplayProgress(levelAncestry).max &&
+              getDisplayProgress(levelAncestry).current
+            "
+            type="chip"
+            width="100"
+            height="32"
+            class="mx-2"
+          />
+
+          <v-chip
+            v-else-if="
               !(
-                getDisplayProgress(levelAncestry).max -
-                  getDisplayProgress(levelAncestry).current ===
+                getDisplayProgress(levelAncestry).current ===
                 getDisplayProgress(levelAncestry).max
               ) && archetype
             "
@@ -35,10 +45,7 @@
             right
             pill
           >
-            {{
-              getDisplayProgress(levelAncestry).max -
-              getDisplayProgress(levelAncestry).current
-            }}
+            {{ getDisplayProgress(levelAncestry).current }}
             /
             {{ getDisplayProgress(levelAncestry).max }}
           </v-chip>
@@ -52,6 +59,33 @@
 
             <v-container v-if="species" class="bg-surface-variant">
               <v-row>
+                <v-alert
+                  v-if="!species"
+                  type="warning"
+                  class="caption ml-4 mr-4"
+                  dense
+                  outlined
+                  border="left"
+                >
+                  Выберите наследие
+                </v-alert>
+
+                <v-col :cols="12" :md="12">
+                  <v-alert
+                    v-if="
+                      selectedAncestryBoost === selectedAncestryBoost2 &&
+                      selectedAncestryBoost !== '' &&
+                      boost == 2
+                    "
+                    type="error"
+                    class="caption ml-4 mr-4"
+                    dense
+                    outlined
+                    border="left"
+                  >
+                    Вы не можете выбрать одну и ту же характеристику
+                  </v-alert>
+                </v-col>
                 <v-col v-if="boost == 2" :cols="12" :md="6">
                   <v-select
                     label="Повышение от Наследия"
@@ -106,6 +140,22 @@
 
             <v-container v-if="ascension" class="bg-surface-variant">
               <v-row>
+                <v-col :cols="12" :md="12">
+                  <v-alert
+                    v-if="
+                      selectedBackgroundBoost === selectedBackgroundBoost2 &&
+                      selectedBackgroundBoost !== ''
+                    "
+                    type="error"
+                    class="caption ml-4 mr-4"
+                    dense
+                    outlined
+                    border="left"
+                  >
+                    Вы не можете выбрать одну и ту же характеристику
+                  </v-alert>
+                </v-col>
+
                 <v-col :cols="6" :md="6">
                   <v-select
                     label="Повышение от предыстории"
@@ -1476,7 +1526,7 @@ export default {
   },
     mounted() {
     // Сохраняем прогресс при загрузке компонента
-    this.saveProgress();
+    // this.saveProgress();
   },
   methods: {
     async loadArchetype(key) {
@@ -2050,9 +2100,6 @@ export default {
     updateSelectBackground(boost) {
         this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
-    updateSelectBackground2(boost) {
-        this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
-    },
     updateSelectClassAttribute(boost) {
         this.$store.commit('characters/setCharacterClassAttribute', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
@@ -2130,19 +2177,19 @@ export default {
       if (level % 5 === 0 ) {
         switch (level) {
           case 5:
-            boost = 4 - this.characterBoost5;
+            boost = this.characterBoost5;
             modInt = this.characterAttributesBoost5["intellect"];
             break;
           case 10:
-            boost = 4 - this.characterBoost10;
+            boost = this.characterBoost10;
             modInt = this.characterAttributesBoost10["intellect"];
             break;
           case 15:
-            boost = 4 - this.characterBoost15;
+            boost = this.characterBoost15;
             modInt = this.characterAttributesBoost15["intellect"];
             break;
           case 20:
-            boost = 4 - this.characterBoost20;
+            boost = this.characterBoost20;
             modInt = this.characterAttributesBoost20["intellect"];
             break;
         }
@@ -2155,30 +2202,44 @@ export default {
 
       if (level !== 1) {
         if(this.archetype?.keywords === 'плут')
-         skill = 1 + modInt - this.skillSheetAll("", level);
+         skill =  this.skillSheetAll("", level );
         else if (level % 2 !== 0)
-          skill = 1 + modInt - this.skillSheetAll("", level);
+          skill = this.skillSheetAll("", level) ;
         else
-          skill = modInt - this.skillSheetAll("", level);
+          skill = this.skillSheetAll("", level);
       }
 
       if (level === 1) {
-        let class1 = (this.archetype?.keyAbility?.length > 1 ? 1 : 0 ) - (this.characterClassBoost?.length > 0 ? 1 : 0);
-        let class2 = (this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0) - (this.characterClassSkill?.length > 0 ? 1 : 0);
-        let back = (this.BackgroundAttribute?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost?.length > 0 ? 1 : 0);
-        let back2 = (this.BackgroundAttribute2?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0 ? 1 : 0);
-        let spec = (this.AncestryAttribute?.length > 1 ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0 ? 1 : 0);
-        let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0 ? 1 : 0);
+        // let class1 = (this.archetype?.keyAbility?.length > 1 ? 1 : 0 ) - (this.characterClassBoost?.length > 0 ? 1 : 0);
+        // let class2 = (this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0) - (this.characterClassSkill?.length > 0 ? 1 : 0);
+        // let back = (this.BackgroundAttribute?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost?.length > 0 ? 1 : 0);
+        // let back2 = (this.BackgroundAttribute2?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0 ? 1 : 0);
+        // let spec = (this.AncestryAttribute?.length > 1 ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0 ? 1 : 0);
+        // let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0 ? 1 : 0);
+
+        let class1 = (this.characterClassBoost?.length > 0 ? 1 : 0)
+        let class2 = (this.characterClassSkill?.length > 0 ? 1 : 0);
+        let back = (this.characterBackgroundFreeBoost?.length > 0 ? 1 : 0);
+        let back2 = (this.characterBackgroundFreeBoost2?.length > 0 ? 1 : 0);
+        let spec = (this.characterAncestryFreeBoost?.length > 0 ? 1 : 0);
+        let spec2 = (this.characterAncestryFreeBoost2?.length > 0 ? 1 : 0);
 
         modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-        boost = 4 - this.characterBoost;
-        skill = this.characterSkillPointClass +
-               this.characterSkillPointBackground +
-               this.characterSkillPointClassUp + modInt - this.skillSheetPoints("", 1);
-
+        boost = this.characterBoost;
+        skill =  this.skillSheetPoints("", 1);
+        this.$store.commit('characters/characterProgress', {
+          id: this.characterId,
+          level,
+          value: boost + skill + class1 + class2 + back + back2 + spec + spec2
+        });
         return boost + skill + class1 + class2 + back + back2 + spec + spec2;
-      }
 
+      }
+        this.$store.commit('characters/characterProgress', {
+          id: this.characterId,
+          level,
+          value: boost + skill
+        });
       return boost + skill;
     },
 
@@ -2232,10 +2293,19 @@ export default {
         skill = this.characterSkillPointClass +
                this.characterSkillPointBackground +
                this.characterSkillPointClassUp + modInt;
-
+                this.$store.commit('characters/characterProgressMax', {
+          id: this.characterId,
+          level,
+          value: boost + skill + class1 + class2 + back + back2 + spec + spec2
+        });
         return boost + skill + class1 + class2 + back + back2 + spec + spec2;
-      }
 
+      }
+        this.$store.commit('characters/characterProgressMax', {
+          id: this.characterId,
+          level,
+          value: boost + skill
+        });
       return boost + skill;
     },
 

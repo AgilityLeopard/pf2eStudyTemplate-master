@@ -844,7 +844,15 @@
             :disabled="!settingSelected"
           >
             4. Навыки и характеристики
-            <v-chip small class="select-chip" v-if="progress !== 0"> ! </v-chip>
+            <v-chip
+              small
+              class="select-chip"
+              v-if="
+                progress !== progressMax && progress !== 0 && progressMax !== 0
+              "
+            >
+              !
+            </v-chip>
           </v-btn>
           <v-btn
             small
@@ -1208,11 +1216,13 @@ export default {
       );
 
       if (!progress) return 0;
-      let i = 0;
-      progress.forEach((t) => {
-        i = i + t.value;
-      });
-      return i;
+
+      const totalValue = progress.reduce(
+        (sum, item) => sum + (item.value || 0),
+        0
+      );
+
+      return totalValue;
     },
     progressFeats() {
       const characterTalents = this.$store.getters[
@@ -1241,12 +1251,12 @@ export default {
       ](this.$route.params.id);
 
       if (!progress) return 0;
-      let i = 0;
-      progress.forEach((t) => {
-        i = i + t.value;
-      });
+      const totalValue = progress.reduce(
+        (sum, item) => sum + (item.value || 0),
+        0
+      );
 
-      return i;
+      return totalValue;
     },
     skillAttack() {
       return this.$store.getters["characters/characterskillAttackById"](

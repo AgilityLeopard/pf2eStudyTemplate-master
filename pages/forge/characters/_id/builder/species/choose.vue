@@ -342,6 +342,12 @@ export default {
         });
       });
 
+      this.$store.commit("characters/characterProgress", {
+        id: this.characterId,
+        level: 1,
+        value: 1,
+      });
+
       this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
         id: this.characterId,
         source: "species",

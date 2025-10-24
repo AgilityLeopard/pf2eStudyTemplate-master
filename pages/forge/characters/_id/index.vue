@@ -1179,16 +1179,29 @@
                         <template v-slot:item="{ item }">
                           <tr v-if="item">
                             <td class="text-left">
-                              {{ item.nameGear }}
+                              {{ item.name }}
                             </td>
                             <td class="text-center">
-                              {{ item.group }}
+                              {{
+                                armorGroup.find((i) => item.group === i.group)
+                                  .name
+                              }}
                             </td>
                             <td class="text-center">
-                              {{ item.weight }} + {{ item.weightL }}
+                              <span v-if="item.bulk">
+                                {{
+                                  item.bulk.value === 0.1
+                                    ? "Л"
+                                    : item.bulk.value
+                                }}</span
+                              >
                             </td>
                             <td class="text-center">
-                              {{ item.category }}
+                              {{
+                                armourCategoryRepository.find(
+                                  (i) => item.category === i.category
+                                ).name
+                              }}
                             </td>
                             <td class="text-left">
                               <span
@@ -1226,8 +1239,50 @@
                         wargearSection.selection === 'все'
                       "
                     >
-                      <div
-                        v-for="gearItem in wargear"
+                      <v-data-table
+                        :headers="gearHeaders"
+                        :items="gear"
+                        hide-default-footer
+                        v-if="armour.length !== 0"
+                      >
+                        <template v-slot:item="{ item }">
+                          <tr v-if="item">
+                            <td class="text-left">
+                              {{ item.name }}
+                            </td>
+
+                            <td class="text-center">
+                              <span v-if="item.bulk">
+                                {{
+                                  item.bulk.value === 0.1
+                                    ? "Л"
+                                    : item.bulk.value
+                                }}</span
+                              >
+                            </td>
+
+                            <td class="text-left">
+                              <span
+                                v-if="item.traits && item.traits.length > 0"
+                                >{{ item.traits.join(", ") }}</span
+                              >
+                            </td>
+                            <td class="text-left">
+                              <v-btn
+                                outlined
+                                x-small
+                                color="info"
+                                @click="openDialogItem(item)"
+                              >
+                                <v-icon left>visibility</v-icon> Просмотр
+                              </v-btn>
+                            </td>
+                          </tr>
+                        </template>
+                      </v-data-table>
+
+                      <!-- <div
+                        v-for="gearItem in gear"
                         :key="gearItem.id"
                         class="caption mb-2"
                       >
@@ -1272,7 +1327,7 @@
                             {{ traitByName(trait, true).crunch }}
                           </p>
                         </div>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -2288,26 +2343,34 @@
             </v-card>
           </v-dialog>
 
-          <v-dialog v-model="dialogItem" max-width="800px">
+          <v-dialog v-model="dialogItem" max-width="1000px">
             <v-card v-if="selectedItem">
               <v-card-text>
                 <v-row class="rowFeat">
                   <div class="head">
-                    <h1>{{ selectedItem.nameGear }}</h1>
+                    <h1>{{ selectedItem.name }}</h1>
                   </div>
                   <div class="line"></div>
                   <div class="tag">
-                    <span
-                      v-if="['melee', 'ranged'].includes(selectedItem.type)"
-                    >
+                    <span v-if="['weapon'].includes(selectedItem.type)">
                       Оружие
                     </span>
-                    <span
-                      v-if="!['melee', 'ranged'].includes(selectedItem.type)"
-                    >
+                    <span v-if="['armor'].includes(selectedItem.type)">
                       Доспех
                     </span>
-                    {{ selectedItem.level }}
+                    <span v-if="['shield'].includes(selectedItem.type)">
+                      Щит
+                    </span>
+                    <span
+                      v-if="
+                        !['shield', 'armor', 'weapon'].includes(
+                          selectedItem.type
+                        )
+                      "
+                    >
+                      Предмет
+                    </span>
+                    {{ selectedItem.level ? selectedItem.level.value : 0 }}
                   </div>
                 </v-row>
                 <v-row>
@@ -2320,11 +2383,18 @@
                 <div v-if="selectedItem.source.book">
                   <strong>Источник:</strong> {{ selectedItem.source.book }}
                 </div>
+                <div v-if="selectedItem.usage">
+                  <p class="main-holder">
+                    <strong>Использование:</strong>
+                    {{ Worn(selectedItem.usage.value) }}
+                  </p>
+                </div>
                 <div v-if="selectedItem.hands">
                   <p class="main-holder">
                     <strong>Руки:</strong> {{ selectedItem.hands }}
                   </p>
                 </div>
+
                 <p></p>
                 <div>
                   <p class="main-holder">
@@ -2509,6 +2579,16 @@ export default {
         { text: 'Руки', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
                 {
+          text: '',
+          value: 'view',
+          sortable: false, class: 'small pa-1'
+        },
+      ],
+      gearHeaders: [
+        { text: 'Название', sortable: false, align: 'left', class: 'small pa-1' },
+        { text: 'Вес', sortable: false, align: 'center', class: 'small pa-1' },
+        { text: 'Трейты', sortable: false, align: 'center', class: 'small pa-1' },
+            {
           text: '',
           value: 'view',
           sortable: false, class: 'small pa-1'
@@ -3200,6 +3280,7 @@ export default {
         this.characterId
       );
     },
+
     /**
      * Enriched enhancements, gather all directly given and also drived from other sources
      * modifier (current) { targetGroup, targetValue, modifier, rank, condition, source }
@@ -3799,10 +3880,10 @@ export default {
       });
     },
     armour() {
-      return this.wargear.filter((w) => ['armor', 'shield'].includes(w.type));
+      return this.charGear.filter((w) => ['armor', 'shield'].includes(w.type));
     },
     gear() {
-      return this.wargear.filter((w) => !['armor', 'weapon', 'shield'].includes(w.type));
+      return this.charGear.filter((w) => !['armor', 'weapon', 'shield'].includes(w.type));
     },
 
     objectives() {
@@ -4125,6 +4206,9 @@ export default {
         //   this.crossedRows.push(item.id);
       }
 
+    },
+        Worn(item) {
+     return this.WornGear[item]
     },
     openDialog(item) {
           this.selectedItem = item
@@ -4889,41 +4973,12 @@ export default {
     getTalentOption(talent, choiceKey) {
       return talent.options.find((t) => t.key === choiceKey);
     },
-    computeFormatedText(text) {
-      if ( text === undefined ) {
-        return text;
-      }
-      const rank = this.characterRank;
-
-      let computed = text;
-
-      // computed = computed.replace(/(1d3\+Rank Shock)/g, `<strong>1d3+${rank} Shock</strong>`);
-      computed = computed.replace(/(\d+) Faith/g, '<em>$1 Faith</em>');
-      computed = computed.replace(/(\d+ meters)/g, '<strong>$1</strong>');
-      computed = computed.replace(/(\d+ metres)/g, '<strong>$1</strong>');
-      computed = computed.replace(/15 \+Rank metres/g, `<strong title="15 +Rank meters">${15 + rank} meters</strong>`);
-      computed = computed.replace(/15 \+Rank meters/g, `<strong title="15 +Rank meters">${15 + rank} meters</strong>`);
-      computed = computed.replace(/15\+Double Rank metres/g, `<strong>${15 + (2*rank)} metres</strong>`);
-      computed = computed.replace(/1\+Rank/g, `<strong>${(rank)+1}</strong>`);
-      computed = computed.replace(/1\+Double Rank/g, `<strong>+${(2*rank)+1}</strong>`);
-      computed = computed.replace(/2\+Double Rank/g, `<strong>${(2*rank)+2}</strong>`);
-      computed = computed.replace(/3\+Double Rank/g, `<strong>${(2*rank)+3}</strong>`);
-      computed = computed.replace(/15\+Double Rank/g, `<strong>${(2*rank)+15}</strong>`);
-      computed = computed.replace(/20\+Double Rank/g, `<strong>${(2*rank)+20}</strong>`);
-      computed = computed.replace(/\+Rank/g, `<strong>+${rank}</strong>`);
-      computed = computed.replace(/\+Double Rank/g, `<strong>+${2*rank}</strong>`);
-      computed = computed.replace(/10 ?x ?Rank/g, `<strong>${10*rank}</strong>`);
-      computed = computed.replace(/10 ?x ?Double Rank/g, `<strong>${10*2*rank}</strong>`);
-      computed = computed.replace(/ Double Rank/g, ` <strong>${2*rank}</strong>`);
-
-      return computed;
-    },
     wargearPrice(item) {
-      if (item) {
-        const pp = item.pp !== 0 ? item.pp + " пм" : "";
-        const gp = item.gp !== 0 ? item.gp + " зм" : "";
-        const sp = item.sp !== 0 ? item.sp + " см" : "";
-        const cp = item.cp !== 0 ? item.cp + " мм" : "";
+      if (item && item.price) {
+        const pp = item.price.value.pp ? item.price.value.pp + " пм" : "";
+        const gp = item.price.value.gp ? item.price.value.gp + " зм" : "";
+        const sp = item.price.value.sp ? item.price.value.sp + " см" : "";
+        const cp = item.price.value.cp ? item.price.value.cp + " мм" : "";
         return pp + gp + sp + cp;
       }
     },

@@ -516,6 +516,13 @@ export default {
       });
 
       //
+
+      this.$store.commit("characters/characterProgress", {
+        id: this.characterId,
+        level: 1,
+        value: 1,
+      });
+
       this.$store.commit("characters/setCharacterPerception", {
         id: this.characterId,
         payload: { key: 1, Perception: item.Perception },

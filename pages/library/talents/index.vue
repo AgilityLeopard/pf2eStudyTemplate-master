@@ -231,7 +231,6 @@ export default {
           label: "Filter by Tags",
         },
       },
-      levelRange: [0, 20],
       pagination: {
         page: 1,
         pageCount: 0,

@@ -10,8 +10,72 @@
         <v-row>
           <v-col cols="6" sm="6">
             <v-select
+              v-if="type === 'weapon'"
+              label="Категория"
+              v-model="selectedCategoryWeaponFilters"
+              :items="weaponCategoryRepository"
+              item-text="name"
+              item-value="category"
+              multiple
+            >
+            </v-select>
+          </v-col>
+
+          <v-col cols="6" sm="6">
+            <v-select
+              label="Тип оружия"
+              v-if="type === 'weapon'"
+              v-model="selectedTypeWeaponFilters"
+              :items="weaponGroup"
+              item-text="name"
+              item-value="group"
+              multiple
+            >
+            </v-select>
+          </v-col>
+
+          <v-col cols="6" sm="6">
+            <v-select
+              v-if="type === 'armor'"
+              label="Категория доспехов"
+              v-model="selectedCategoryArmorFilters"
+              :items="armourCategoryRepository"
+              item-text="name"
+              item-value="category"
+              multiple
+            >
+            </v-select>
+          </v-col>
+
+          <v-col cols="6" sm="6">
+            <v-select
+              label="Тип доспехов"
+              v-if="type === 'armor'"
+              v-model="selectedTypeArmorFilters"
+              :items="armorGroup"
+              item-text="name"
+              item-value="group"
+              multiple
+            >
+            </v-select>
+          </v-col>
+
+          <v-col cols="6" sm="6">
+            <v-select
+              label="Редкость"
+              v-model="selectedRarityFilters"
+              :items="rarityRepository"
+              item-text="name"
+              item-value="key"
+              multiple
+            >
+            </v-select>
+          </v-col>
+
+          <v-col cols="6" sm="6">
+            <v-select
               label="Трейты"
-              v-model="selectedTypeFilters"
+              v-model="selectedTraitFilters"
               :items="typeFilters"
               item-text="name"
               item-value="name"
@@ -21,19 +85,27 @@
           </v-col>
 
           <v-col cols="6" sm="6">
-            <v-select
-              label="Категория"
-              v-model="selectedCategoryFilters"
-              :items="weaponCategoryRepository"
-              item-text="name"
-              item-value="category"
-              multiple
-            >
-            </v-select>
+            <v-card flat>
+              <v-card-text>
+                <v-range-slider
+                  v-model="levelRange"
+                  :min="0"
+                  :max="20"
+                  :step="1"
+                  thumb-label="always"
+                  label="Уровень"
+                ></v-range-slider>
+
+                <div class="d-flex justify-space-between mt-2">
+                  <!-- <span>От: {{ filters.levelRange[0] }}</span>
+                      <span>До: {{ filters.levelRange[1] }}</span> -->
+                </div>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
 
-        <v-chip
+        <!-- <v-chip
           v-for="filter in typeFilters"
           v-if="
             typeFilters.length > 1 && selectedTypeFilters.includes(filter.name)
@@ -46,7 +118,7 @@
           @click="toggleTypeFilter(filter.name)"
         >
           {{ filter.name }}
-        </v-chip>
+        </v-chip> -->
 
         <v-text-field
           v-model="searchQuery"
@@ -86,6 +158,10 @@
           {{ item.level ? item.level.value : 0 }}
         </template>
 
+        <template v-slot:item.category="{ item }">
+          {{ item.category }}
+        </template>
+
         <template v-slot:item.rarity="{ item }">
           {{ rarity(item.rarity) }}
         </template>
@@ -108,23 +184,14 @@
               <div v-else-if="item.description" v-html="item.description"></div>
 
               <dod-simple-weapon-stats
-                v-if="
-                  item.category !== undefined &&
-                  weaponCategoryRepository
-                    .map((t) => t.category)
-                    .includes(item.category)
-                "
+                v-if="type === 'weapon'"
                 :name="item.nameGear"
                 :stats="item"
                 :show-traits="false"
                 class="mb-2"
               />
               <dod-simple-armour-stats
-                v-if="
-                  item.meta !== undefined &&
-                  item.meta.length > 0 &&
-                  ['armour'].includes(item.meta[0].type)
-                "
+                v-if="type === 'armor'"
                 :name="item.name"
                 :stats="item"
                 :show-traits="false"
@@ -161,13 +228,29 @@ export default {
   },
   mixins: [StatRepositoryMixin, WargearTraitRepositoryMixin],
   props: {
-    repository: Array,
+    repository: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+
+    type: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
       searchQuery: "",
       selectedTypeFilters: [],
       selectedCategoryFilters: [],
+      selectedCategoryWeaponFilters: [],
+      selectedCategoryArmorFilters: [],
+      selectedTypeWeaponFilters: [],
+      selectedTypeArmorFilters: [],
+      selectedTraitFilters: [],
+      selectedRarityFilters: [],
+      levelRange: [0, 20],
       pagination: {
         page: 1,
         pageCount: 0,
@@ -179,6 +262,7 @@ export default {
         { text: "Цена", align: "left", value: "price", class: "" },
         { text: "Уровень", align: "left", value: "level", class: "" },
         { text: "Редкость", align: "left", value: "rarity", class: "" },
+        // { text: "Категория", align: "left", value: "category", class: "" },
         { text: "", align: "right", value: "action-add", class: "" },
         { text: "", align: "right", value: "action-buy", class: "" },
       ],
@@ -215,9 +299,59 @@ export default {
         );
       }
 
-      if (this.selectedCategoryFilters.length > 0) {
+      const [minLevel, maxLevel] = this.levelRange;
+
+      if (maxLevel != 0) {
+        searchResult = searchResult.filter(
+          (item) => item.level.value >= minLevel && item.level.value <= maxLevel
+        );
+      }
+
+      if (this.selectedCategoryWeaponFilters.length > 0) {
         searchResult = searchResult.filter((item) =>
-          this.selectedCategoryFilters.some((r) => item.category.includes(r))
+          this.selectedCategoryWeaponFilters.some((r) =>
+            item.category.includes(r)
+          )
+        );
+      }
+
+      if (this.selectedCategoryArmorFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedCategoryArmorFilters.some(
+            (r) => item.category && item.category.includes(r)
+          )
+        );
+      }
+
+      if (this.selectedTypeWeaponFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedTypeWeaponFilters.some(
+            (r) => item.group && item.group.includes(r)
+          )
+        );
+      }
+
+      if (this.selectedTypeArmorFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedTypeArmorFilters.some(
+            (r) => item.group && item.group.includes(r)
+          )
+        );
+      }
+
+      if (this.selectedTraitFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedTraitFilters.some(
+            (m) => item.traits && item.traits.includes(m)
+          )
+        );
+      }
+
+      if (this.selectedRarityFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedRarityFilters.some(
+            (r) => item.rarity && item.rarity.includes(r)
+          )
         );
       }
 
@@ -250,7 +384,7 @@ export default {
       return "";
     },
     wargearPrice(item) {
-      if (item) {
+      if (item && item.price) {
         const pp = item.price.value.pp ? item.price.value.pp + " пм" : "";
         const gp = item.price.value.gp ? item.price.value.gp + " зм" : "";
         const sp = item.price.value.sp ? item.price.value.sp + " см" : "";

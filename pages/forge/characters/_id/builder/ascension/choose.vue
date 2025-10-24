@@ -406,6 +406,12 @@ export default {
         });
       }
 
+      this.$store.commit("characters/characterProgress", {
+        id: this.characterId,
+        level: 1,
+        value: 1,
+      });
+
       //добавляем лоры
       // this.$store.commit('characters/removeCharacterCustomSkill', { id, key });
 
@@ -454,6 +460,15 @@ export default {
         level: 1,
         type: "background",
         optional: true,
+      });
+
+      this.$store.commit("characters/setCharacterBackgroundFreeBoost", {
+        id: this.characterId,
+        payload: { key: "", value: 1 },
+      });
+      this.$store.commit("characters/setCharacterBackgroundFreeBoost2", {
+        id: this.characterId,
+        payload: { key: "", value: 1 },
       });
 
       const sheet1 = this.$store.getters["characters/characterSkillSheetById"](

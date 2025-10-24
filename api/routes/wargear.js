@@ -101,15 +101,16 @@ const toP = (a, o) => rangeP(o + 1, o + a.length + 1);
 // });
 
 router.get('/', async (req, res) => {
-    let items = wargearRepository; // все данные
-    console.log("Server received types:", req.query.type);
+    let items = wargearRepository.filter(v => v != null && v.key !== null).filter(v => v != undefined && v.key !== undefined); // все данные
+
+
     console.log("Items before filter:", items.length);
     if (req.query.type) {
         const types = req.query.type.split(',').map(t => t.toLowerCase());
         if (types.length)
             items = items.filter(i => types.includes(i.type.toLowerCase()));
     }
-    console.log("Items after filter:", items.length);
+
     // ===== Фильтры =====
     // if (req.query.type) {
     //     const types = req.query.type.split(',');
@@ -126,9 +127,21 @@ router.get('/', async (req, res) => {
         items = items.filter(i => rarities.includes(i.rarity));
     }
 
+    if (req.query.traits) {
+        const rarities = req.query.traits.split(',');
+        items = items.filter(i => {
+            // убедимся, что i.traits существует и это массив
+            if (!Array.isArray(i.traits)) return false;
+
+            // проверяем, есть ли пересечение с rarities
+            return i.traits.some(trait => rarities.includes(trait));
+        });
+        console.log(items);
+    }
+
     if (req.query.source) {
         const sources = req.query.source.split(',');
-        items = items.filter(i => sources.includes(i.source.key));
+        items = items.filter(i => i.source && i.source.key ? sources.includes(i.source.key) : false);
     }
 
     if (req.query['value-leq']) {
@@ -141,12 +154,67 @@ router.get('/', async (req, res) => {
         items = items.filter(i => names.includes(i.name));
     }
 
-    console.log("Items after filter:", items.length);
+    if (req.query.category) {
+        const category = req.query.category.split(',');
+        items = items.filter(i => category.includes(i.category));
+    }
+
+    if (req.query.categoryArmour) {
+        const category = req.query.categoryArmour.split(',');
+        items = items.filter(i => category.includes(i.category));
+    }
+
+    if (req.query.typeWeapon) {
+        const category = req.query.typeWeapon.split(',');
+        items = items.filter(i => category.includes(i.group));
+    }
+
+    if (req.query.typeArmor) {
+        const category = req.query.typeArmor.split(',');
+        items = items.filter(i => category.includes(i.group));
+    }
+
+
+    if (req.query.level) {
+        const [minLevel, maxLevel] = req.query.level;
+        items = items.filter(
+            (item) => item.level ? item.level.value >= minLevel && item.level.value <= maxLevel : false
+        );
+    }
+
+
 
     // === Формируем уникальные значения для фильтров ===
-    const filterSources = [...new Set(items.map(i => i.source.book))];
+    const filterSources = [...new Set(items.map(i => i.source ? i.source.book : false))];
     const filterTypes = [...new Set(items.map(i => i.type))];
     const filterRarities = [...new Set(items.map(i => i.rarity))];
+    const filterArmor = [...new Set(items.filter(i => i.type === "armor").map(i => i.group))];
+    const filterTraits = [
+        ...new Set(
+            items
+                .flatMap(i => {
+                    if (Array.isArray(i.traits)) {
+                        return i.traits.map(t => t.trim());
+                    }
+                    if (typeof i.traits === "string") {
+                        return i.traits.split(",").map(t => t.trim());
+                    }
+                    return [];
+                })
+                .filter(Boolean) // убираем пустые строки, null и undefined
+        ),
+    ];
+
+
+    const levelValues = items
+        .map(i => i.level?.value)       // достаем значение
+        .filter(v => v != null)         // отбрасываем null/undefined
+        .filter(v => !isNaN(v));        // на всякий случай, если строка
+
+    const filterLevel = levelValues.length
+        ? [Math.min(...levelValues), Math.max(...levelValues)]
+        : [0, 20]; // если ничего нет — дефолт
+
 
     // ===== Пагинация (фиксировано по 25) =====
     const total = items.length;
@@ -170,7 +238,11 @@ router.get('/', async (req, res) => {
             sources: filterSources.sort(),
             types: filterTypes.sort(),
             rarities: filterRarities.sort(),
+            level: filterLevel,
+            armor: filterArmor
+            // traits: filterTraits.sort()
         },
+        traits: filterTraits,
         data: pagedItems,
     });
 });

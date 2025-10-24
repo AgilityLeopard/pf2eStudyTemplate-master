@@ -45,6 +45,97 @@
                   single-line
                 />
               </v-col> -->
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Редкость"
+                  multiple
+                  v-model="filters.rarity"
+                  :items="rarityRepository"
+                  item-text="name"
+                  item-value="key"
+                >
+                </v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Трейты"
+                  v-model="filters.traits"
+                  :items="traits"
+                  item-text="name"
+                  item-value="name"
+                  multiple
+                >
+                </v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Категория оружия"
+                  v-model="filters.category"
+                  :items="weaponCategoryRepository"
+                  item-text="name"
+                  item-value="category"
+                  multiple
+                >
+                </v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Категория доспехов"
+                  v-model="filters.categoryArmour"
+                  :items="armourCategoryRepository"
+                  item-text="name"
+                  item-value="category"
+                  multiple
+                >
+                </v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Тип оружия"
+                  v-model="filters.typeWeapon"
+                  :items="weaponGroup"
+                  item-text="name"
+                  item-value="group"
+                  multiple
+                >
+                </v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-select
+                  label="Тип доспехов"
+                  v-model="filters.typeArmor"
+                  :items="armorGroup"
+                  item-text="name"
+                  item-value="group"
+                  multiple
+                >
+                </v-select>
+              </v-col>
+
+              <v-col cols="6" sm="6">
+                <v-card flat>
+                  <v-card-text>
+                    <v-range-slider
+                      v-model="filters.level"
+                      :min="0"
+                      :max="28"
+                      :step="1"
+                      thumb-label="always"
+                      label="Уровень"
+                    ></v-range-slider>
+
+                    <div class="d-flex justify-space-between mt-2">
+                      <!-- <span>От: {{ filters.levelRange[0] }}</span>
+                      <span>До: {{ filters.levelRange[1] }}</span> -->
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
 
               <v-col :cols="12">
                 <v-chip-group
@@ -239,6 +330,7 @@ import DodSimpleArmourStats from "~/components/DodSimpleArmourStats";
 import BreadcrumbSchemaMixin from "~/mixins/BreadcrumbSchemaMixin";
 import SluggerMixin from "~/mixins/SluggerMixin";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
+import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 
 export default {
   // layout: "library",
@@ -247,11 +339,16 @@ export default {
     DodSimpleArmourStats,
     DodSimpleWeaponStats,
   },
-  mixins: [BreadcrumbSchemaMixin, SluggerMixin, StatRepositoryMixin],
+  mixins: [
+    BreadcrumbSchemaMixin,
+    SluggerMixin,
+    StatRepositoryMixin,
+    WargearTraitRepositoryMixin,
+  ],
   head() {
     const title = "Снаряжение | Библиотека";
     const description = "А тут ваше снаряжение";
-    const image = "https://www.doctors-of-doom.com/img/artwork_library.jpg";
+    const image = "";
 
     return {
       title,
@@ -283,9 +380,15 @@ export default {
       if (query["filter-source"]) params.source = query["filter-source"];
       if (query["filter-type"]) params.type = query["filter-type"];
       if (query["filter-rarity"]) params.rarity = query["filter-rarity"];
+      // if (query["filter-traits"]) params.rarity = query["filter-traits"];
+      // if (query["filter-level"]) params.level = query["filter-level"];
+
+      if (query["filter-category"]) params.category = query["filter-category"];
+      if (query["filter-categoryArmour"])
+        params.categoryArmour = query["filter-categoryArmour"];
 
       const response = await $axios.get("/api/wargear", { params });
-      const { data, total, filters } = response.data;
+      const { data, total, filters, traits } = response.data;
 
       if (!data || data.length === 0) {
         return error({ statusCode: 404, message: "No Wargear found!" });
@@ -296,6 +399,7 @@ export default {
         total,
         perPage,
         filters: filters,
+        traits: traits,
         searchQuery: params.search || "",
         pagination: {
           page,
@@ -317,7 +421,17 @@ export default {
         type: [],
         source: [],
         rarity: [],
+        category: [],
+        traits: [],
+        level: [0, 20],
+        categoryArmour: [],
+        armor: [],
+        typeArmor: [],
       },
+      rarityFilters: ["обычный", "необычный", "редкий", "уникальный"],
+      selectedCategoryFilters: [],
+      levelRange: [0, 20],
+      traits: [],
       searchQuery: "",
       selectedTypeFilters: [],
       // pagination: {
@@ -350,15 +464,53 @@ export default {
     },
     searchResult() {
       if (!this.items) return [];
-      return this.items; // items уже приходят с сервера с учетом searchQuery
+
+      let searchResult = this.items;
+
+      if (this.selectedTypeFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedTypeFilters.some((r) => item.traits.includes(r))
+        );
+      }
+
+      const [minLevel, maxLevel] = this.levelRange;
+
+      if (maxLevel != 0) {
+        searchResult = searchResult.filter(
+          (item) => item.level.value >= minLevel && item.level.value <= maxLevel
+        );
+      }
+
+      if (this.selectedCategoryFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedCategoryFilters.some((r) => item.category.includes(r))
+        );
+      }
+
+      return searchResult;
     },
     typeFilters() {
       // const reduceToType = this.items.map((item) => item.type);
       // const distinctTypes = [...new Set(reduceToType)];
       return this.filters.types
         .filter((s) => s !== "kit")
+        .filter((s) => s !== "spell")
         .map((t) => ({ name: t }));
     },
+
+    filterTraits() {
+      if (!this.items.length) return [];
+
+      const allTraits = this.items.flatMap((item) => {
+        if (Array.isArray(item.traits)) return item.traits.map((t) => t.trim());
+        if (typeof item.traits === "string")
+          return item.traits.split(",").map((t) => t.trim());
+        return [];
+      });
+
+      return [...new Set(allTraits.filter(Boolean))].map((name) => ({ name }));
+    },
+
     filterKeywordsOptions() {
       // const keywordArray = [];
       // this.activeRepository.forEach((item) => {
@@ -443,14 +595,33 @@ export default {
           this.filters.rarity && this.filters.rarity.length
             ? this.filters.rarity.join(",")
             : undefined,
+        traits:
+          this.filters.traits && this.filters.traits.length
+            ? this.filters.traits.join(",")
+            : undefined,
+        category:
+          this.filters.category && this.filters.category.length
+            ? this.filters.category.join(",")
+            : undefined,
+        typeWeapon:
+          this.filters.typeWeapon && this.filters.typeWeapon.length
+            ? this.filters.typeWeapon.join(",")
+            : undefined,
+        typeArmor:
+          this.filters.typeArmor && this.filters.typeArmor.length
+            ? this.filters.typeArmor.join(",")
+            : undefined,
+        categoryArmour:
+          this.filters.categoryArmour && this.filters.categoryArmour.length
+            ? this.filters.categoryArmour.join(",")
+            : undefined,
+        level: this.filters.level ? this.filters.level : undefined,
         search: this.filters.search || undefined,
       };
 
       try {
         const response = await this.$axios.get("/api/wargear", { params });
         const { data, total, pageCount } = response.data;
-
-        console.log(this.items.filter((t) => t.type === "Kit"));
 
         this.items = data || [];
         this.pagination.pageCount = pageCount || 1;
@@ -469,7 +640,7 @@ export default {
       return this.rarityRepository.find((t) => t.key === item).name;
     },
     wargearPrice(item) {
-      if (item) {
+      if (item && item.price) {
         const pp = item.price.value.pp ? item.price.value.pp + " пм" : "";
         const gp = item.price.value.gp ? item.price.value.gp + " зм" : "";
         const sp = item.price.value.sp ? item.price.value.sp + " см" : "";

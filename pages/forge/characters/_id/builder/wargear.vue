@@ -222,6 +222,7 @@
               "
               @cancel="WeaponSearchDialog = false"
               :repository="wargearList.filter((item) => item.type === 'weapon')"
+              type="weapon"
               @select="add"
             />
           </v-dialog>
@@ -600,6 +601,7 @@
 
               <wargear-search
                 @cancel="ArmorSearchDialog = false"
+                type="armor"
                 :repository="
                   wargearList.filter((item) =>
                     ['armor', 'shield'].includes(item.type)
@@ -761,6 +763,7 @@
 
             <wargear-search
               @cancel="ConsumableSearchDialog = false"
+              type="consumable"
               :repository="
                 wargearList.filter((item) => item.type.includes('consumable'))
               "
@@ -915,6 +918,7 @@
 
             <wargear-search
               @cancel="GearSearchDialog = false"
+              type="other"
               :repository="
                 wargearList.filter(
                   (item) =>
@@ -1854,7 +1858,7 @@ export default {
       }
     },
       wargearPrice(item) {
-      if (item) {
+      if (item && item.price) {
         const pp = item.price.value.pp ? item.price.value.pp + " пм" : "";
         const gp = item.price.value.gp  ? item.price.value.gp + " зм" : "";
         const sp = item.price.value.sp  ? item.price.value.sp + " см" : "";
