@@ -8,7 +8,25 @@
       </v-card-title>
       <v-card-text>
         <v-row>
-          <v-col cols="6" sm="6">
+          <v-col cols="6" sm="4">
+            <v-text-field
+              v-model="searchQuery"
+              filled
+              dense
+              clearable
+              prepend-inner-icon="search"
+              label="Поиск"
+            />
+
+            <v-range-slider
+              v-model="levelRange"
+              :min="0"
+              :max="20"
+              :step="1"
+              thumb-label="always"
+              label="Уровень"
+            ></v-range-slider>
+
             <v-select
               v-if="type === 'weapon'"
               label="Категория"
@@ -19,9 +37,7 @@
               multiple
             >
             </v-select>
-          </v-col>
 
-          <v-col cols="6" sm="6">
             <v-select
               label="Тип оружия"
               v-if="type === 'weapon'"
@@ -32,9 +48,7 @@
               multiple
             >
             </v-select>
-          </v-col>
 
-          <v-col cols="6" sm="6">
             <v-select
               v-if="type === 'armor'"
               label="Категория доспехов"
@@ -45,9 +59,7 @@
               multiple
             >
             </v-select>
-          </v-col>
 
-          <v-col cols="6" sm="6">
             <v-select
               label="Тип доспехов"
               v-if="type === 'armor'"
@@ -58,9 +70,7 @@
               multiple
             >
             </v-select>
-          </v-col>
 
-          <v-col cols="6" sm="6">
             <v-select
               label="Редкость"
               v-model="selectedRarityFilters"
@@ -70,9 +80,7 @@
               multiple
             >
             </v-select>
-          </v-col>
 
-          <v-col cols="6" sm="6">
             <v-select
               label="Трейты"
               v-model="selectedTraitFilters"
@@ -83,131 +91,100 @@
             >
             </v-select>
           </v-col>
+          <v-col cols="6" sm="8">
+            <div class="table-wrapper">
+              <v-data-table
+                :headers="headers"
+                :items="searchResult"
+                item-key="key"
+                :search="searchQuery"
+                :page.sync="pagination.page"
+                hide-default-footer
+                class="fixed-columns-table"
+                show-expand
+                @page-count="pagination.pageCount = $event"
+              >
+                <template v-slot:item.name="{ item }">
+                  {{ item.name }}
+                  <!-- <div>
+                    <trait-view v-if="item.traits" :item="item" />
+                  </div> -->
+                  <!-- <span class="grey--text caption">{{ wargearSubtitle(item) }}</span> -->
+                </template>
 
-          <v-col cols="6" sm="6">
-            <v-card flat>
-              <v-card-text>
-                <v-range-slider
-                  v-model="levelRange"
-                  :min="0"
-                  :max="20"
-                  :step="1"
-                  thumb-label="always"
-                  label="Уровень"
-                ></v-range-slider>
+                <template v-slot:item.price="{ item }">
+                  {{ wargearPrice(item) }}
+                </template>
 
-                <div class="d-flex justify-space-between mt-2">
-                  <!-- <span>От: {{ filters.levelRange[0] }}</span>
-                      <span>До: {{ filters.levelRange[1] }}</span> -->
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
+                <template v-slot:item.level="{ item }">
+                  {{ item.level ? item.level.value : 0 }}
+                </template>
 
-        <!-- <v-chip
-          v-for="filter in typeFilters"
-          v-if="
-            typeFilters.length > 1 && selectedTypeFilters.includes(filter.name)
-          "
-          :key="filter.key"
-          :color="selectedTypeFilters.includes(filter.name) ? 'primary' : ''"
-          small
-          label
-          class="mr-2 mb-2"
-          @click="toggleTypeFilter(filter.name)"
-        >
-          {{ filter.name }}
-        </v-chip> -->
+                <template v-slot:item.category="{ item }">
+                  {{ item.category }}
+                </template>
 
-        <v-text-field
-          v-model="searchQuery"
-          filled
-          dense
-          clearable
-          prepend-inner-icon="search"
-          label="Поиск"
-        />
-      </v-card-text>
-    </v-card>
+                <template v-slot:item.rarity="{ item }">
+                  {{ rarity(item.rarity) }}
+                </template>
 
-    <v-card>
-      <v-data-table
-        :headers="headers"
-        :items="searchResult"
-        item-key="key"
-        :search="searchQuery"
-        :page.sync="pagination.page"
-        hide-default-footer
-        show-expand
-        @page-count="pagination.pageCount = $event"
-      >
-        <template v-slot:item.name="{ item }">
-          {{ item.name }} <br />
-          <div>
-            <trait-view v-if="item.traits" :item="item" />
-          </div>
-          <!-- <span class="grey--text caption">{{ wargearSubtitle(item) }}</span> -->
-        </template>
+                <template v-slot:item.action-add="{ item }">
+                  <v-btn color="success" x-small @click="$emit('select', item)">
+                    add
+                  </v-btn>
+                </template>
+                <template v-slot:item.action-buy="{ item }">
+                  <v-btn
+                    color="info"
+                    x-small
+                    @click="$emit('select', item, true)"
+                  >
+                    buy
+                  </v-btn>
+                </template>
+                <template v-slot:expanded-item="{ headers, item }">
+                  <td :colspan="headers.length">
+                    <CardItem :item="item" :wargearPrice="wargearPrice" />
+                  </td>
+                </template>
+                <!-- <template v-slot:expanded-item="{ headers, item }">
+                  <td :colspan="headers.length">
+                    <div class="pa-2 pt-4 pb-4">
+                      <span>{{ item.hint }}</span>
+                      <p v-if="item.snippet">{{ item.snippet }}</p>
+                      <div
+                        v-else-if="item.description"
+                        v-html="item.description"
+                      ></div>
 
-        <template v-slot:item.price="{ item }">
-          {{ wargearPrice(item) }}
-        </template>
-
-        <template v-slot:item.level="{ item }">
-          {{ item.level ? item.level.value : 0 }}
-        </template>
-
-        <template v-slot:item.category="{ item }">
-          {{ item.category }}
-        </template>
-
-        <template v-slot:item.rarity="{ item }">
-          {{ rarity(item.rarity) }}
-        </template>
-
-        <template v-slot:item.action-add="{ item }">
-          <v-btn color="success" x-small @click="$emit('select', item)">
-            add
-          </v-btn>
-        </template>
-        <template v-slot:item.action-buy="{ item }">
-          <v-btn color="info" x-small @click="$emit('select', item, true)">
-            buy
-          </v-btn>
-        </template>
-        <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">
-            <div class="pa-2 pt-4 pb-4">
-              <span>{{ item.hint }}</span>
-              <p v-if="item.snippet">{{ item.snippet }}</p>
-              <div v-else-if="item.description" v-html="item.description"></div>
-
-              <dod-simple-weapon-stats
-                v-if="type === 'weapon'"
-                :name="item.nameGear"
-                :stats="item"
-                :show-traits="false"
-                class="mb-2"
-              />
-              <dod-simple-armour-stats
-                v-if="type === 'armor'"
-                :name="item.name"
-                :stats="item"
-                :show-traits="false"
-                class="mb-2"
+                      <dod-simple-weapon-stats
+                        v-if="type === 'weapon'"
+                        :name="item.nameGear"
+                        :stats="item"
+                        :show-traits="false"
+                        class="mb-2"
+                      />
+                      <dod-simple-armour-stats
+                        v-if="type === 'armor'"
+                        :name="item.name"
+                        :stats="item"
+                        :show-traits="false"
+                        class="mb-2"
+                      />
+                    </div>
+                  </td>
+                </template> -->
+              </v-data-table>
+            </div>
+            <div class="text-center pt-2">
+              <v-pagination
+                v-model="pagination.page"
+                :length="pagination.pageCount"
               />
             </div>
-          </td>
-        </template>
-      </v-data-table>
-
-      <div class="text-center pt-2">
-        <v-pagination
-          v-model="pagination.page"
-          :length="pagination.pageCount"
-        />
-      </div>
+          </v-col>
+        </v-row>
+      </v-card-text>
     </v-card>
   </div>
 </template>
@@ -218,6 +195,7 @@ import DodSimpleArmourStats from "~/components/DodSimpleArmourStats";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 import traitView from "~/components/TraitView";
+import CardItem from "@/components/CardItem.vue";
 
 export default {
   name: "WargearSearch",
@@ -225,6 +203,7 @@ export default {
     DodSimpleArmourStats,
     DodSimpleWeaponStats,
     traitView,
+    CardItem,
   },
   mixins: [StatRepositoryMixin, WargearTraitRepositoryMixin],
   props: {
@@ -258,13 +237,81 @@ export default {
         rowsPerPage: 25,
       },
       headers: [
-        { text: "Название", align: "left", value: "name", class: "" },
-        { text: "Цена", align: "left", value: "price", class: "" },
-        { text: "Уровень", align: "left", value: "level", class: "" },
-        { text: "Редкость", align: "left", value: "rarity", class: "" },
+        {
+          text: "Название",
+          value: "name",
+          align: "left",
+          class: "text-left",
+          width: "250px",
+        },
+        {
+          text: "Цена",
+          align: "left",
+          value: "price",
+          width: "100px",
+          class: "text-left",
+        },
+        {
+          text: "Уровень",
+          align: "left",
+          value: "level",
+          class: "",
+          width: "100px",
+        },
+        {
+          text: "Редкость",
+          align: "left",
+          value: "rarity",
+          class: "",
+          width: "100px",
+        },
         // { text: "Категория", align: "left", value: "category", class: "" },
-        { text: "", align: "right", value: "action-add", class: "" },
-        { text: "", align: "right", value: "action-buy", class: "" },
+        {
+          text: "",
+          align: "right",
+          value: "action-add",
+          class: "",
+          width: "50px",
+        },
+        {
+          text: "",
+          align: "right",
+          value: "action-buy",
+          class: "",
+          width: "50px",
+        },
+        { text: "", value: "data-table-expand", width: "50px" },
+      ],
+      headersСonsumable: [
+        {
+          text: "Название",
+          value: "nameGear",
+          align: "left",
+          class: "text-left",
+          width: "250px",
+        },
+        {
+          text: "Количество",
+          value: "qty",
+          align: "center",
+          class: "text-center",
+          width: "150px",
+        },
+        {
+          text: "",
+          value: "edit",
+          align: "center",
+          class: "text-center",
+          width: "60px",
+        },
+        {
+          text: "",
+          value: "delete",
+          align: "center",
+          class: "text-center",
+          width: "60px",
+        },
+        { text: "", value: "data-table-expand", width: "50px" },
       ],
     };
   },
@@ -396,4 +443,143 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.fixed-columns-table .v-data-table__wrapper table {
+  table-layout: fixed !important; /* фиксированная сетка */
+  width: 100%;
+}
+
+.fixed-columns-table th,
+.fixed-columns-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fixed-columns-table th {
+  font-weight: 600;
+  background-color: rgba(var(--v-theme-surface-variant), 0.5);
+}
+
+/* Настраиваем ширину каждой колонки (по порядку) */
+.fixed-columns-table th:nth-child(1),
+.fixed-columns-table td:nth-child(1) {
+  width: 40%; /* Название предмета */
+}
+
+.fixed-columns-table th:nth-child(2),
+.fixed-columns-table td:nth-child(2) {
+  width: 20%; /* Тип */
+}
+
+.fixed-columns-table th:nth-child(3),
+.fixed-columns-table td:nth-child(3) {
+  width: 15%; /* Цена */
+}
+
+.fixed-columns-table th:nth-child(4),
+.fixed-columns-table td:nth-child(4) {
+  width: 25%; /* Прочее */
+}
+
+.table-wrapper {
+  max-height: 500px; /* или любая фиксированная высота */
+  overflow-y: auto; /* добавляет прокрутку */
+}
+
+.expanded-content {
+  max-height: 300px; /* ограничиваем раскрытие */
+  overflow-y: auto; /* прокрутка внутри строки */
+}
+
+/* Можно ограничить высоту ячеек */
+.v-data-table tbody td {
+  max-width: 250px; /* можно подбирать */
+}
+
+/* Убираем растягивание при раскрытии */
+.v-data-table__expanded__content td {
+  max-width: none !important;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: hidden; /* не даем появиться горизонтальному скроллу */
+}
+
+.expanded-cell {
+  padding: 0 !important;
+  background-color: rgba(var(--v-theme-surface-variant), 0.05);
+}
+
+.expanded-wrapper {
+  display: block;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  background-color: var(--v-theme-surface);
+  border-left: 3px solid var(--v-theme-primary);
+  border-radius: 0 0 8px 8px;
+}
+
+.expanded-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.expanded-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-word;
+}
+
+.expanded-tag {
+  background-color: rgba(var(--v-theme-primary), 0.15);
+  color: var(--v-theme-primary);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+}
+
+.expanded-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 4px 12px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  word-break: break-word;
+}
+
+.expanded-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(var(--v-border-color, 150, 150, 150), 0.2);
+  margin: 10px 0;
+}
+
+.expanded-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--v-theme-on-surface);
+  word-break: break-word;
+  white-space: normal;
+}
+
+.v-data-table {
+  table-layout: fixed !important;
+}
+
+.v-data-table thead th,
+.v-data-table tbody td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* чтобы переносились строки */
+  word-wrap: break-word;
+  vertical-align: top;
+}
+</style>

@@ -49,9 +49,15 @@
             </v-card-text>
           </v-card> -->
 
-          <h2 class="subtitle-1 text-center">Оружие</h2>
+          <!-- <h2 class="subtitle-1 text-center">Оружие</h2> -->
 
-          <v-btn outlined x-small color="success" @click="OpenWeaponSearch()">
+          <v-btn
+            outlined
+            block
+            class="mt-2"
+            color="success"
+            @click="OpenWeaponSearch()"
+          >
             Добавить оружие
           </v-btn>
 
@@ -59,20 +65,23 @@
             :headers="headers"
             :items="characterWeapon"
             :search="searchQuery"
+            :page.sync="paginationWeapon.page"
+            hide-default-footer
+            @page-count="paginationWeapon.pageCount = $event"
             show-expand
             item-key="id"
           >
             <template v-slot:no-data> Нет предметов </template>
 
             <template v-slot:item.name="{ item }">
-              <v-row
-                ><span>{{ item.name }}</span></v-row
-              >
-              <v-row>
-                <div>
+              <!-- <v-row> -->
+              <span>{{ item.name }}</span>
+              <!-- </v-row>
+              <v-row> -->
+              <!-- <div>
                   <trait-view v-if="item.traits" :item="item" class="mb-2" />
-                </div>
-              </v-row>
+                </div> -->
+              <!-- </v-row> -->
             </template>
 
             <template v-slot:item.attack="{ item }">
@@ -95,16 +104,8 @@
 
             <template v-slot:item.damage="{ item }">
               <span>
-                <!-- {{
-                  DamageType
-                    ? DamageType.find((s) => s.key === item.typeDamage).name
-                    : ""
-                }} -->
-                <!-- <span
-                  >{{ item.damage.dice }}{{ item.damage.die }}
-                  {{ item.damage.damageType }}</span 
-                >-->
-                {{ damageModifier(item) }} {{ item.damageOrig.damageType }}
+                {{ damageModifier(item) }}
+                {{ typeDamage(item.damageOrig.damageType) }}
               </span>
             </template>
 
@@ -143,53 +144,7 @@
 
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length">
-                <v-row class="rowFeat">
-                  <div class="head">
-                    <h1>{{ item.name }}</h1>
-                  </div>
-                  <div class="line"></div>
-                  <div class="tag">Оружие {{ item.level.value }}</div>
-                </v-row>
-                <v-row> </v-row>
-                <p></p>
-
-                <div v-if="item.source.book">
-                  <strong>Источник:</strong> {{ item.source.book }}
-                </div>
-                <div v-if="item.hands">
-                  <p class="main-holder">
-                    <strong>Руки:</strong> {{ item.hands }}
-                  </p>
-                </div>
-                <p></p>
-                <div>
-                  <p class="main-holder">
-                    <strong>Цена:</strong> {{ wargearPrice(item) }}
-                  </p>
-                </div>
-                <p></p>
-                <div v-if="item.distance">
-                  <p class="main-holder">
-                    <strong>Дистанция:</strong> {{ item.distance }}
-                  </p>
-                </div>
-                <p></p>
-                <div v-if="item.area">
-                  <p class="main-holder">
-                    <strong>Область:</strong> <span v-html="item.area"></span>
-                  </p>
-                </div>
-                <p></p>
-                <div v-if="item.target">
-                  <p class="main-holder">
-                    <strong>Дистанция:</strong> {{ item.target }}
-                  </p>
-                </div>
-                <p></p>
-                <div class="line"></div>
-                <div class="pt-4 pb-2" v-html="item.description"></div>
-                <div class="line"></div>
-                <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
+                <CardItem :item="item" :wargearPrice="wargearPrice" />
               </td>
             </template>
 
@@ -199,18 +154,18 @@
               >
             </template>
           </v-data-table>
-          <!-- <div class="text-center pt-2">
+          <div class="text-center pt-2">
             <v-pagination
-              v-model="pagination.page"
-              :length="pagination.pageCount"
+              v-model="paginationWeapon.page"
+              :length="paginationWeapon.pageCount"
             />
-          </div> -->
+          </div>
           <!-- Доспехи -->
 
           <v-dialog
             v-model="WeaponSearchDialog"
             :fullscreen="$vuetify.breakpoint.xsOnly"
-            width="1000px"
+            width="1400px"
             scrollable
           >
             <wargear-search
@@ -244,12 +199,15 @@
               >
                 У вас недостаточно денег на покупку
               </v-alert>
+
               <v-alert :value="alert" type="error" text dense border="left">
                 Количество рун больше мощи оружия
               </v-alert>
+
               <v-card-title style="background-color: #262e37; color: #fff">
                 Редактирование оружия
                 <v-spacer />
+
                 <v-icon dark @click="closeWeaponSettings">close</v-icon>
               </v-card-title>
 
@@ -258,46 +216,317 @@
                   <!-- <v-sheet class="ma-2 pa-2"> -->
 
                   <v-col cols="6" sm="6">
-                    <v-select
+                    <!-- <v-select
                       label="Разящая руна"
                       v-model="Striking"
                       :items="weaponRuneStriking"
                       item-text="name"
                       item-value="key"
-                    ></v-select>
+                    ></v-select> -->
+
+                    <!-- Кнопка, открывающая диалог -->
+                    <span
+                      >Руна Разящая:
+                      <v-btn
+                        outlined
+                        small
+                        color="primary"
+                        @click="dialogStriking = true"
+                      >
+                        {{ strikingLabel }}
+                      </v-btn>
+                    </span>
+                    <!-- Диалог выбора -->
+                    <v-dialog v-model="dialogStriking" max-width="1400px">
+                      <v-card>
+                        <v-card-title class="headline"
+                          >Выбор разящей руны</v-card-title
+                        >
+                        <v-card-text>
+                          <v-row>
+                            <v-col cols="6" sm="4">
+                              <!-- <v-select
+                                label="Разящая руна"
+                                v-model="localStriking"
+                                :items="weaponRuneStriking"
+                                item-text="name"
+                                item-value="key"
+                                outlined
+                              ></v-select> -->
+
+                              <v-list dense class="rune-list">
+                                <v-subheader>Выберите разящую руну</v-subheader>
+
+                                <v-list-item
+                                  v-for="rune in weaponRuneStriking"
+                                  :key="rune.key"
+                                  :value="rune.key"
+                                  @click="localStriking = rune.key"
+                                  :class="{
+                                    'selected-rune': localStriking === rune.key,
+                                  }"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{
+                                      rune.name
+                                    }}</v-list-item-title>
+                                  </v-list-item-content>
+
+                                  <v-list-item-icon
+                                    v-if="localStriking === rune.key"
+                                  >
+                                    <v-icon color="success">mdi-check</v-icon>
+                                  </v-list-item-icon>
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+
+                            <v-col cols="6" sm="8">
+                              <div v-if="localStriking === 0">
+                                Нет Руны (снять руну разящую с оружия)
+                              </div>
+                              <div
+                                v-else-if="
+                                  localStriking !== 0 &&
+                                  weaponRuneStriking.find(
+                                    (k) => k.key === localStriking
+                                  ) !== undefined
+                                "
+                              >
+                                <CardItem
+                                  :item="
+                                    StrikeItem(
+                                      weaponRuneStriking.find(
+                                        (k) => k.key === localStriking
+                                      )
+                                    )
+                                  "
+                                  :wargearPrice="wargearPrice"
+                                />
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            text
+                            color="error"
+                            @click="dialogStriking = false"
+                          >
+                            Отмена
+                          </v-btn>
+                          <v-btn color="success" @click="saveStrikingSelection">
+                            Сохранить
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-col>
 
                   <v-col cols="6" sm="6">
-                    <v-select
+                    <!-- <v-select
                       label="Руна мощи"
                       v-model="Potency"
                       :items="weaponRunePotency"
                       item-text="name"
                       item-value="key"
-                    ></v-select>
+                    ></v-select> -->
+
+                    <!-- Кнопка, открывающая диалог -->
+                    <span
+                      >Руна Мощи:
+                      <v-btn
+                        outlined
+                        small
+                        color="primary"
+                        @click="dialogPotency = true"
+                      >
+                        {{ potencyLabel }}
+                      </v-btn>
+                    </span>
+
+                    <!-- Диалог выбора -->
+                    <v-dialog v-model="dialogPotency" max-width="1400px">
+                      <v-card>
+                        <v-card-title class="headline"
+                          >Выбор руны Мощи</v-card-title
+                        >
+                        <v-card-text>
+                          <v-row>
+                            <v-col cols="6" sm="4">
+                              <!-- <v-select
+                                label="Руна Мощи"
+                                v-model="localPotency"
+                                :items="weaponRunePotency"
+                                item-text="name"
+                                item-value="key"
+                                outlined
+                              ></v-select> -->
+                              <v-list dense class="rune-list">
+                                <v-subheader>Выберите разящую руну</v-subheader>
+
+                                <v-list-item
+                                  v-for="rune in weaponRunePotency"
+                                  :key="rune.key"
+                                  :value="rune.key"
+                                  @click="localPotency = rune.key"
+                                  :class="{
+                                    'selected-rune': localPotency === rune.key,
+                                  }"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{
+                                      rune.name
+                                    }}</v-list-item-title>
+                                  </v-list-item-content>
+
+                                  <v-list-item-icon
+                                    v-if="localPotency === rune.key"
+                                  >
+                                    <v-icon color="success">mdi-check</v-icon>
+                                  </v-list-item-icon>
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+
+                            <v-col cols="6" sm="8">
+                              <div v-if="localPotency === 0">
+                                Нет Руны (снять руну мощи с оружия)
+                              </div>
+                              <div
+                                v-else-if="
+                                  localPotency !== 0 &&
+                                  weaponRunePotency.find(
+                                    (k) => k.key === localPotency
+                                  ) !== undefined
+                                "
+                              >
+                                <CardItem
+                                  :item="
+                                    StrikeItem(
+                                      weaponRunePotency.find(
+                                        (k) => k.key === localPotency
+                                      )
+                                    )
+                                  "
+                                  :wargearPrice="wargearPrice"
+                                />
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            text
+                            color="error"
+                            @click="dialogPotency = false"
+                          >
+                            Отмена
+                          </v-btn>
+                          <v-btn color="success" @click="savePotencySelection">
+                            Сохранить
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-col>
                 </v-row>
+
+                <!-- РУНЫ СВОЙСТВ -->
                 <v-row>
-                  <v-col cols="6" sm="12">
-                    <v-select
-                      label="Руны свойств"
-                      v-model="Property"
-                      :items="WeaponRuneProperty"
-                      item-text="name"
-                      item-value="key"
-                      multiple
-                      return-object
-                    >
-                      <template #selection="{ item }">
-                        <v-chip
-                          color="blue"
-                          :close="true"
-                          @click:close="Property.pop(item)"
+                  <v-col cols="6" sm="6">
+                    <span
+                      >Руна Свойств:
+                      <v-btn
+                        outlined
+                        small
+                        color="primary"
+                        @click="dialogProperty = true"
+                      >
+                        Выберите руны
+                      </v-btn>
+                    </span>
+                    <v-row>
+                      <v-chip class="mt-2" v-for="pr in Property" color="blue">
+                        {{ RuneWeaponProperty.find((t) => t.key === pr).name }}
+                      </v-chip>
+                    </v-row>
+                    <!-- Диалог выбора -->
+                    <v-dialog v-model="dialogProperty" max-width="1400px">
+                      <v-card>
+                        <v-card-title class="headline"
+                          >Выбор руны Свойств</v-card-title
                         >
-                          {{ item.name }}
-                        </v-chip>
-                      </template>
-                    </v-select>
+                        <v-card-text>
+                          <v-row>
+                            <v-col cols="6" sm="4">
+                              <!-- <v-select
+                                label="Руна Мощи"
+                                v-model="localPotency"
+                                :items="weaponRunePotency"
+                                item-text="name"
+                                item-value="key"
+                                outlined
+                              ></v-select> -->
+                              <v-list dense class="rune-list">
+                                <v-subheader>Выберите Руну Свойств</v-subheader>
+
+                                <v-list-item
+                                  v-for="rune in PropertyRune"
+                                  :key="rune.key"
+                                  @click="toggleProperty(rune.key)"
+                                  :class="{
+                                    'selected-rune': localProperty.includes(
+                                      rune.key
+                                    ),
+                                  }"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{
+                                      rune.name
+                                    }}</v-list-item-title>
+                                  </v-list-item-content>
+
+                                  <v-list-item-icon
+                                    v-if="localProperty.includes(rune.key)"
+                                  >
+                                    <v-icon color="success">mdi-check</v-icon>
+                                  </v-list-item-icon>
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+
+                            <v-col cols="6" sm="8">
+                              <div>
+                                <CardItem
+                                  v-if="selectedRune"
+                                  :item="PropertyItem(selectedRune)"
+                                  :wargearPrice="wargearPrice"
+                                />
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            text
+                            color="error"
+                            @click="dialogProperty = false"
+                          >
+                            Отмена
+                          </v-btn>
+                          <v-btn color="success" @click="savePropertySelection">
+                            Сохранить
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-col>
                   <!-- </v-sheet> -->
                 </v-row>
@@ -316,12 +545,13 @@
       </v-tab-item>
 
       <v-tab-item class="my-tab-item" key="tab-armor" :value="`tab-armor`">
-        <h2 class="subtitle-1 text-center">Доспехи</h2>
+        <!-- <h2 class="subtitle-1 text-center">Доспехи</h2> -->
 
         <v-btn
           outlined
-          x-small
+          block
           color="success"
+          class="mt-2"
           @click="ArmorSearchDialog = true"
         >
           Добавить доспех
@@ -331,11 +561,11 @@
           :headers="headersArmor"
           :items="characterArmour"
           :search="searchQuery"
-          :page.sync="pagination1.page"
+          :page.sync="paginationArmor.page"
           show-expand
           item-key="id"
           hide-default-footer
-          @page-count="pagination1.pageCount = $event"
+          @page-count="paginationArmor.pageCount = $event"
         >
           <template v-slot:no-data> Нет предметов </template>
 
@@ -415,57 +645,7 @@
 
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
-              <v-row class="rowFeat">
-                <div class="head">
-                  <h1>{{ item.nameGear }}</h1>
-                </div>
-                <div class="line"></div>
-                <div class="tag">Доспех {{ item.level.value }}</div>
-              </v-row>
-              <v-row>
-                <!-- <div>
-                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
-                  </div> -->
-              </v-row>
-              <p></p>
-              <!-- Описание закла -->
-              <div v-if="item.source.book">
-                <strong>Источник:</strong> {{ item.source.book }}
-              </div>
-              <div v-if="item.hands">
-                <p class="main-holder">
-                  <strong>Руки:</strong> {{ item.hands }}
-                </p>
-              </div>
-              <p></p>
-              <div>
-                <p class="main-holder">
-                  <strong>Цена:</strong> {{ wargearPrice(item) }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.distance">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ item.distance }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.area">
-                <p class="main-holder">
-                  <strong>Область:</strong> <span v-html="item.area"></span>
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.target">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ item.target }}
-                </p>
-              </div>
-              <p></p>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="item.description"></div>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
+              <CardItem :item="item" :wargearPrice="wargearPrice" />
             </td>
           </template>
 
@@ -478,8 +658,8 @@
 
         <div class="text-center pt-2">
           <v-pagination
-            v-model="pagination1.page"
-            :length="pagination1.pageCount"
+            v-model="paginationArmor.page"
+            :length="paginationArmor.pageCount"
           />
         </div>
 
@@ -487,7 +667,7 @@
           <v-dialog
             v-model="armorEditorDialog"
             :value="Armor"
-            width="600px"
+            width="1000px"
             scrollable
             :fullscreen="$vuetify.breakpoint.xsOnly"
           >
@@ -503,49 +683,315 @@
 
               <v-card-text v-if="Armor" class="pt-4">
                 <v-row>
-                  <!-- <v-sheet class="ma-2 pa-2"> -->
-
                   <v-col cols="6" sm="6">
-                    <v-select
-                      label="Стойкости руна"
-                      v-model="Resilent"
-                      :items="armourRuneResilent"
-                      item-text="name"
-                      item-value="key"
-                    ></v-select>
+                    <!-- Кнопка, открывающая диалог -->
+                    <span
+                      >Руна Стойкости:
+                      <v-btn
+                        outlined
+                        small
+                        color="primary"
+                        @click="dialogResilientArmor = true"
+                      >
+                        {{ ResilientArmorLabel }}
+                      </v-btn>
+                    </span>
+                    <!-- Диалог выбора -->
+                    <v-dialog v-model="dialogResilientArmor" max-width="1400px">
+                      <v-card>
+                        <v-card-title class="headline"
+                          >Выбор разящей руны</v-card-title
+                        >
+                        <v-card-text>
+                          <v-row>
+                            <v-col cols="6" sm="4">
+                              <!-- <v-select
+                                label="Разящая руна"
+                                v-model="localStriking"
+                                :items="weaponRuneStriking"
+                                item-text="name"
+                                item-value="key"
+                                outlined
+                              ></v-select> -->
+
+                              <v-list dense class="rune-list">
+                                <v-subheader>Выберите разящую руну</v-subheader>
+
+                                <v-list-item
+                                  v-for="rune in armourRuneResilent"
+                                  :key="rune.key"
+                                  :value="rune.key"
+                                  @click="localResilientArmor = rune.key"
+                                  :class="{
+                                    'selected-rune':
+                                      localResilientArmor === rune.key,
+                                  }"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{
+                                      rune.name
+                                    }}</v-list-item-title>
+                                  </v-list-item-content>
+
+                                  <v-list-item-icon
+                                    v-if="localResilientArmor === rune.key"
+                                  >
+                                    <v-icon color="success">mdi-check</v-icon>
+                                  </v-list-item-icon>
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+
+                            <v-col cols="6" sm="8">
+                              <div v-if="localResilientArmor === 0">
+                                Нет Руны (снять руну с доспеха)
+                              </div>
+                              <div
+                                v-else-if="
+                                  localResilientArmor !== 0 &&
+                                  armourRuneResilent.find(
+                                    (k) => k.key === localResilientArmor
+                                  ) !== undefined
+                                "
+                              >
+                                <CardItem
+                                  :item="
+                                    StrikeItem(
+                                      armourRuneResilent.find(
+                                        (k) => k.key === localResilientArmor
+                                      )
+                                    )
+                                  "
+                                  :wargearPrice="wargearPrice"
+                                />
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            text
+                            color="error"
+                            @click="dialogResilientArmor = false"
+                          >
+                            Отмена
+                          </v-btn>
+                          <v-btn
+                            color="success"
+                            @click="saveResilientArmorSelection"
+                          >
+                            Сохранить
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-col>
 
                   <v-col cols="6" sm="6">
-                    <v-select
-                      label="Руна мощи"
-                      v-model="Potency"
-                      :items="armourRunePotency"
-                      item-text="name"
-                      item-value="key"
-                    ></v-select>
+                    <!-- Кнопка, открывающая диалог -->
+                    <span
+                      >Руна Мощи:
+                      <v-btn
+                        outlined
+                        small
+                        color="primary"
+                        @click="dialogPotencyArmor = true"
+                      >
+                        {{ PotencyArmorLabel }}
+                      </v-btn>
+                    </span>
+                    <!-- Диалог выбора -->
+                    <v-dialog v-model="dialogPotencyArmor" max-width="1400px">
+                      <v-card>
+                        <v-card-title class="headline"
+                          >Выбор руны Мощи</v-card-title
+                        >
+                        <v-card-text>
+                          <v-row>
+                            <v-col cols="6" sm="4">
+                              <!-- <v-select
+                                label="Руна Мощи"
+                                v-model="localPotency"
+                                :items="weaponRunePotency"
+                                item-text="name"
+                                item-value="key"
+                                outlined
+                              ></v-select> -->
+                              <v-list dense class="rune-list">
+                                <v-subheader>Выберит руну vjob</v-subheader>
+
+                                <v-list-item
+                                  v-for="rune in armourRunePotency"
+                                  :key="rune.key"
+                                  :value="rune.key"
+                                  @click="localPotencyArmor = rune.key"
+                                  :class="{
+                                    'selected-rune':
+                                      localPotencyArmor === rune.key,
+                                  }"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{
+                                      rune.name
+                                    }}</v-list-item-title>
+                                  </v-list-item-content>
+
+                                  <v-list-item-icon
+                                    v-if="localPotencyArmor === rune.key"
+                                  >
+                                    <v-icon color="success">mdi-check</v-icon>
+                                  </v-list-item-icon>
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+
+                            <v-col cols="6" sm="8">
+                              <div v-if="localPotencyArmor === 0">
+                                Нет Руны (снять руну мощи с оружия)
+                              </div>
+                              <div
+                                v-else-if="
+                                  localPotencyArmor !== 0 &&
+                                  armourRunePotency.find(
+                                    (k) => k.key === localPotencyArmor
+                                  ) !== undefined
+                                "
+                              >
+                                <CardItem
+                                  :item="
+                                    StrikeItem(
+                                      armourRunePotency.find(
+                                        (k) => k.key === localPotencyArmor
+                                      )
+                                    )
+                                  "
+                                  :wargearPrice="wargearPrice"
+                                />
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            text
+                            color="error"
+                            @click="dialogPotencyArmor = false"
+                          >
+                            Отмена
+                          </v-btn>
+                          <v-btn
+                            color="success"
+                            @click="savePotencyArmorSelection"
+                          >
+                            Сохранить
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-col>
                 </v-row>
+
+                <!-- РУНЫ СВОЙСТВ -->
                 <v-row>
-                  <v-col cols="6" sm="12">
-                    <v-select
-                      label="Руны свойств"
-                      v-model="Property"
-                      :items="ArmorRuneProperty"
-                      item-text="name"
-                      item-value="key"
-                      multiple
-                      return-object
-                    >
-                      <template #selection="{ item }">
-                        <v-chip
-                          color="blue"
-                          :close="true"
-                          @click:close="Property.pop(item)"
+                  <v-col cols="6" sm="6">
+                    <span
+                      >Руна Свойств:
+                      <v-btn
+                        outlined
+                        small
+                        color="primary"
+                        @click="dialogPropertyArmor = true"
+                      >
+                        Выберите руны
+                      </v-btn>
+                    </span>
+                    <v-row>
+                      <v-chip
+                        class="mt-2"
+                        v-for="pr in PropertyArmor"
+                        color="blue"
+                      >
+                        {{ RuneArmorProperty.find((t) => t.key === pr).name }}
+                      </v-chip>
+                    </v-row>
+                    <!-- Диалог выбора -->
+                    <v-dialog v-model="dialogPropertyArmor" max-width="1400px">
+                      <v-card>
+                        <v-card-title class="headline"
+                          >Выбор руны Свойств</v-card-title
                         >
-                          {{ item.name }}
-                        </v-chip>
-                      </template>
-                    </v-select>
+                        <v-card-text>
+                          <v-row>
+                            <v-col cols="6" sm="4">
+                              <!-- <v-select
+                                label="Руна Мощи"
+                                v-model="localPotency"
+                                :items="weaponRunePotency"
+                                item-text="name"
+                                item-value="key"
+                                outlined
+                              ></v-select> -->
+                              <v-list dense class="rune-list">
+                                <v-subheader>Выберите Руну Свойств</v-subheader>
+
+                                <v-list-item
+                                  v-for="rune in PropertyArmorRune"
+                                  :key="rune.key"
+                                  @click="togglePropertyArmor(rune.key)"
+                                  :class="{
+                                    'selected-rune':
+                                      localPropertyArmor.includes(rune.key),
+                                  }"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{
+                                      rune.name
+                                    }}</v-list-item-title>
+                                  </v-list-item-content>
+
+                                  <v-list-item-icon
+                                    v-if="localPropertyArmor.includes(rune.key)"
+                                  >
+                                    <v-icon color="success">mdi-check</v-icon>
+                                  </v-list-item-icon>
+                                </v-list-item>
+                              </v-list>
+                            </v-col>
+
+                            <v-col cols="6" sm="8">
+                              <div>
+                                <CardItem
+                                  v-if="selectedRuneArmor"
+                                  :item="PropertyArmorItem(selectedRuneArmor)"
+                                  :wargearPrice="wargearPrice"
+                                />
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            text
+                            color="error"
+                            @click="dialogPropertyArmor = false"
+                          >
+                            Отмена
+                          </v-btn>
+                          <v-btn
+                            color="success"
+                            @click="savePropertyArmorSelection"
+                          >
+                            Сохранить
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-col>
                   <!-- </v-sheet> -->
                 </v-row>
@@ -561,44 +1007,13 @@
             </v-card>
           </v-dialog>
 
-          <!-- <v-card
-            class="mb-4"
-            dark
-            dense
-            outlined
-            :color="manageArmour ? 'info' : ''"
-            @click="manageArmour = !manageArmour"
-          >
-            <v-card-text class="pa-1">
-              <v-icon>{{
-                manageArmour ? "expand_less" : "expand_more"
-              }}</v-icon>
-              Управление Доспехами({{ characterArmour.length }})
-            </v-card-text>
-          </v-card> -->
-
           <v-dialog
             v-model="ArmorSearchDialog"
             :fullscreen="$vuetify.breakpoint.xsOnly"
-            width="1000px"
+            width="1400px"
             scrollable
           >
             <v-col :cols="12" v-if="wargearList">
-              <!-- <v-card
-              class="mb-4"
-              dark
-              outlined
-              :color="armourSearchActive ? 'info' : ''"
-              @click="armourSearchActive = !armourSearchActive"
-            >
-              <v-card-text class="pa-1">
-                <v-icon>{{
-                  armourSearchActive ? "expand_less" : "expand_more"
-                }}</v-icon>
-                Добавить доспех
-              </v-card-text>
-            </v-card> -->
-
               <wargear-search
                 @cancel="ArmorSearchDialog = false"
                 type="armor"
@@ -619,12 +1034,13 @@
         key="tab-consumable"
         :value="`tab-consumable`"
       >
-        <h2 class="subtitle-1 text-center">Расходники</h2>
+        <!-- <h2 class="subtitle-1 text-center">Расходники</h2> -->
 
         <v-btn
           outlined
-          x-small
+          block
           color="success"
+          class="mt-2"
           @click="ConsumableSearchDialog = true"
         >
           Добавить расходники
@@ -634,23 +1050,22 @@
           :headers="headersСonsumable"
           :items="characterConsumable"
           :search="searchQuery"
-          :page.sync="pagination1.page"
+          :page.sync="paginationCon.page"
           show-expand
           item-key="id"
           hide-default-footer
-          @page-count="pagination1.pageCount = $event"
+          @page-count="paginationCon.pageCount = $event"
         >
           <template v-slot:no-data> Нет предметов </template>
 
           <template v-slot:item.nameGear="{ item }">
-            <v-row
-              ><span>{{ item.nameGear }}</span></v-row
-            >
-            <v-row>
+            <span>{{ item.name }}</span>
+
+            <!-- <v-row>
               <div>
                 <trait-view v-if="item.traits" :item="item" class="mb-2" />
               </div>
-            </v-row>
+            </v-row> -->
           </template>
 
           <template v-slot:item.qty="{ item }">
@@ -678,57 +1093,7 @@
 
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
-              <v-row class="rowFeat">
-                <div class="head">
-                  <h1>{{ item.nameGear }}</h1>
-                </div>
-                <div class="line"></div>
-                <div class="tag">Предмет {{ item.level.value }}</div>
-              </v-row>
-              <v-row>
-                <!-- <div>
-                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
-                  </div> -->
-              </v-row>
-              <p></p>
-              <!-- Описание закла -->
-              <div v-if="item.source.book">
-                <strong>Источник:</strong> {{ item.source.book }}
-              </div>
-              <div v-if="item.hands">
-                <p class="main-holder">
-                  <strong>Руки:</strong> {{ item.hands }}
-                </p>
-              </div>
-              <p></p>
-              <div>
-                <p class="main-holder">
-                  <strong>Цена:</strong> {{ wargearPrice(item) }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.distance">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ item.distance }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.area">
-                <p class="main-holder">
-                  <strong>Область:</strong> <span v-html="item.area"></span>
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.target">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ item.target }}
-                </p>
-              </div>
-              <p></p>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="item.description"></div>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
+              <CardItem :item="item" :wargearPrice="wargearPrice" />
             </td>
           </template>
 
@@ -739,10 +1104,17 @@
           </template>
         </v-data-table>
 
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="paginationCon.page"
+            :length="paginationCon.pageCount"
+          />
+        </div>
+
         <v-dialog
           v-model="ConsumableSearchDialog"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="1000px"
+          width="1400px"
           scrollable
         >
           <v-col :cols="12" v-if="wargearList">
@@ -774,130 +1146,105 @@
       </v-tab-item>
 
       <v-tab-item class="my-tab-item" key="tab-gear" :value="`tab-gear`">
-        <h2 class="subtitle-1 text-center">Снаряжение</h2>
+        <!-- <h2 class="subtitle-1 text-center">Снаряжение</h2> -->
+
+        <!-- <v-btn
+          color="success"
+          small
+          rounded
+          elevation="0"
+          class="gear-btn"
+          @click="GearSearchDialog = true"
+        >
+          <v-icon left>mdi-plus-circle-outline</v-icon>
+          Добавить снаряжение
+        </v-btn> -->
 
         <v-btn
           outlined
-          x-small
+          block
+          class="mt-2"
           color="success"
           @click="GearSearchDialog = true"
         >
           Добавить снаряжение
         </v-btn>
 
-        <v-data-table
-          :headers="headersСonsumable"
-          :items="characterGear"
-          :search="searchQuery"
-          :page.sync="pagination1.page"
-          show-expand
-          item-key="id"
-          hide-default-footer
-          @page-count="pagination1.pageCount = $event"
+        <div
+          v-for="group in groupedGear"
+          :key="group.header"
+          class="gear-section"
         >
-          <template v-slot:no-data> Нет предметов </template>
+          <!-- <v-subheader>{{ Worn(group.header) }}</v-subheader> -->
 
-          <template v-slot:item.nameGear="{ item }">
-            <v-row
-              ><span>{{ item.name }}</span></v-row
+          <div class="gear-section-header">
+            <v-icon small class="mr-2">mdi-shield-outline</v-icon>
+            {{ Worn(group.header) }}
+          </div>
+          <div class="table-container">
+            <v-data-table
+              :headers="headersСonsumable"
+              :items="group.items"
+              :search="searchQuery"
+              class="gear-section-table fixed-columns-table"
+              show-expand
+              item-key="id"
             >
-            <v-row>
-              <div>
-                <trait-view v-if="item.traits" :item="item" class="mb-2" />
-              </div>
-            </v-row>
-          </template>
+              <template v-slot:no-data> Нет предметов </template>
 
-          <template v-slot:item.qty="{ item }">
-            <span>
-              <v-btn
-                icon
-                :disabled="item.qty === 1"
-                @click="decrementQty(item)"
-              >
-                <v-icon color="red"> remove_circle </v-icon>
-              </v-btn>
-              {{ item.qty }}
-              <v-btn icon @click="incrementQty(item)">
-                <!--"-->
-                <v-icon color="orange"> add_circle </v-icon>
-              </v-btn>
-            </span>
-          </template>
-
-          <template v-slot:item.edit="{ item }">
-            <v-btn outlined x-small color="error" @click="remove(item)">
-              <v-icon left> delete </v-icon>
-            </v-btn>
-          </template>
-
-          <template v-slot:expanded-item="{ headers, item }">
-            <td :colspan="headers.length">
-              <v-row class="rowFeat">
-                <div class="head">
-                  <h1>{{ item.nameGear }}</h1>
-                </div>
-                <div class="line"></div>
-                <div class="tag">Предмет {{ item.level.value }}</div>
-              </v-row>
-              <v-row>
-                <!-- <div>
+              <template v-slot:item.nameGear="{ item }">
+                <!-- <v-row> -->
+                <span>{{ item.name }}</span>
+                <!-- </v-row>
+                <v-row>
+                  <div>
                     <trait-view v-if="item.traits" :item="item" class="mb-2" />
-                  </div> -->
-              </v-row>
-              <p></p>
-              <!-- Описание закла -->
-              <div v-if="item.source.book">
-                <strong>Источник:</strong> {{ item.source.book }}
-              </div>
-              <div v-if="item.hands">
-                <p class="main-holder">
-                  <strong>Руки:</strong> {{ item.hands }}
-                </p>
-              </div>
-              <p></p>
-              <div>
-                <p class="main-holder">
-                  <strong>Цена:</strong> {{ wargearPrice(item) }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.distance">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ item.distance }}
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.area">
-                <p class="main-holder">
-                  <strong>Область:</strong> <span v-html="item.area"></span>
-                </p>
-              </div>
-              <p></p>
-              <div v-if="item.target">
-                <p class="main-holder">
-                  <strong>Дистанция:</strong> {{ item.target }}
-                </p>
-              </div>
-              <p></p>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="item.description"></div>
-              <div class="line"></div>
-              <div class="pt-4 pb-2" v-html="item.powerDescription"></div>
-            </td>
-          </template>
+                  </div>
+                </v-row> -->
+              </template>
 
-          <template v-slot:no-results>
-            <span class="text-center"
-              >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
-            >
-          </template>
-        </v-data-table>
+              <template v-slot:item.qty="{ item }">
+                <span>
+                  <v-btn
+                    icon
+                    :disabled="item.qty === 1"
+                    @click="decrementQty(item)"
+                  >
+                    <v-icon color="red"> remove_circle </v-icon>
+                  </v-btn>
+                  {{ item.qty }}
+                  <v-btn icon @click="incrementQty(item)">
+                    <!--"-->
+                    <v-icon color="orange"> add_circle </v-icon>
+                  </v-btn>
+                </span>
+              </template>
+
+              <template v-slot:item.edit="{ item }">
+                <v-btn outlined x-small color="error" @click="remove(item)">
+                  <v-icon left> delete </v-icon>
+                </v-btn>
+              </template>
+
+              <template v-slot:expanded-item="{ headers, item }">
+                <td :colspan="headers.length">
+                  <CardItem :item="item" :wargearPrice="wargearPrice" />
+                </td>
+              </template>
+
+              <template v-slot:no-results>
+                <span class="text-center"
+                  >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
+                >
+              </template>
+            </v-data-table>
+          </div>
+        </div>
 
         <v-dialog
           v-model="GearSearchDialog"
           :fullscreen="$vuetify.breakpoint.xsOnly"
-          width="1000px"
+          width="1400px"
           scrollable
         >
           <v-col :cols="12" v-if="wargearList">
@@ -1004,6 +1351,9 @@ import WargearMixin from '~/mixins/WargearMixin';
 import WargearTrait from '~/mixins/WargearTraitRepositoryMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import traitView from '~/components/TraitView';
+import CardItem from '@/components/CardItem.vue';
+import { rearg } from 'lodash';
+
 // import RulesMixin from '~/mixins/RulesCombatActionsMixin';
 
 
@@ -1014,6 +1364,7 @@ export default {
     WargearSelect,
     WargearSearch,
     traitView,
+    CardItem
   },
 
   mixins: [
@@ -1022,6 +1373,7 @@ export default {
     WargearMixin,
     WargearTrait,
     StatRepositoryMixin,
+
   ],
   props: [],
   head() {
@@ -1056,7 +1408,25 @@ export default {
         sortBy: 'name',
         rowsPerPage: 8,
       },
-              pagination1: {
+      paginationArmor: {
+        page: 1,
+        pageCount: 0,
+        sortBy: 'name',
+        rowsPerPage: 8,
+      },
+            paginationWeapon: {
+        page: 1,
+        pageCount: 0,
+        sortBy: 'name',
+        rowsPerPage: 8,
+      },
+            paginationCon: {
+        page: 1,
+        pageCount: 0,
+        sortBy: 'name',
+        rowsPerPage: 8,
+      },
+            paginationGear: {
         page: 1,
         pageCount: 0,
         sortBy: 'name',
@@ -1081,8 +1451,33 @@ export default {
       },
       Striking: "none",
       Resilent: "none",
-      Potency:  "none",
+      Potency: "none",
+
+      ResilientArmor: "none",
+      PotencyArmor: "none",
+
       Property: [],
+      PropertyArmor: [],
+
+      dialogStriking: false,
+      dialogPotency: false,
+      dialogProperty: false,
+            localProperty: [], // выбранные ключи
+    selectedRune: null, // последняя кликнутая руна
+      localStriking: undefined, // временное значение для диалога
+      localPotency: undefined,
+
+
+      dialogResilientArmor: false,
+      dialogPotencyArmor: false,
+      dialogPropertyArmor: false,
+            localPropertyArmor: [], // выбранные ключи
+    selectedRuneArmor: null, // последняя кликнутая руна
+      localResilientArmor: undefined, // временное значение для диалога
+      localPotencyArmor: undefined,
+
+
+
       gp: undefined,
       gpAd: undefined,
       labelMoney: undefined,
@@ -1096,72 +1491,112 @@ export default {
       },
       runeArmor:{
         potency: 'none',
-        resilent: 'none',
+        resilient: 'none',
         property: [],
       } ,
       headers: [
+  {
+    text: 'Название',
+    value: 'name',
+    align: 'left',
+    class: 'text-left',
+    width: '250px',
+  },
         {
-          text: 'Название', value: 'name', class: 'text-center small pa-1', align: 'left',
+          text: 'Попадание', value: 'attack', class: 'text-center', align: 'center', width: '120px',
         },
         {
-          text: 'Попадание', value: 'attack', class: 'text-center', align: 'center',
+          text: 'Урон', value: 'damage', class: 'text-center ', align: 'center', width: '150px',
         },
+          {
+    text: 'Количество',
+    value: 'qty',
+    align: 'center',
+    class: 'text-center',
+    width: '150px',
+  },
         {
-          text: 'Урон', value: 'damage', class: 'text-center ', align: 'center',
-        },
-        {
-          text: 'Кол.', value: 'qty', class: 'text-center small pa-1', align: 'center', width: "15%"
-        },
-        {
-          text: '', value: 'edit', class: 'text-center', align: 'center',
-        },
-        {
-          text: '', value: 'delete', class: 'text-center', align: 'center',
-        },
-        // {
-        //   text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
-        // },
+    text: '',
+    value: 'edit',
+    align: 'center',
+    class: 'text-center',
+    width: '60px',
+  },
+  {
+    text: '',
+    value: 'delete',
+    align: 'center',
+    class: 'text-center',
+    width: '60px',
+  },
+   { text: '', value: 'data-table-expand', width: '50px' }
       ],
         headersArmor: [
+  {
+    text: 'Название',
+    value: 'name',
+    align: 'left',
+    class: 'text-left',
+    width: '250px',
+  },
         {
-          text: 'Название', value: 'nameGear', class: 'text-left', align: 'left',
+          text: 'Надето', value: 'wear', class: 'text-center', align: 'center',  width: '100px',
         },
-        {
-          text: 'Надето', value: 'wear', class: 'text-center', align: 'center',
-        },
-        {
-          text: 'Количество', value: 'qty', class: 'text-center', align: 'center',
-        },
-        {
-          text: '', value: 'edit', class: 'text-center', align: 'center',
-        },
-        {
-          text: '', value: 'delete', class: 'text-center', align: 'center',
-        },
-        // {
-        //   text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
-        // },
+          {
+    text: 'Количество',
+    value: 'qty',
+    align: 'center',
+    class: 'text-center',
+    width: '150px',
+  },
+ {
+    text: '',
+    value: 'edit',
+    align: 'center',
+    class: 'text-center',
+    width: '60px',
+  },
+  {
+    text: '',
+    value: 'delete',
+    align: 'center',
+    class: 'text-center',
+    width: '60px',
+  },
+   { text: '', value: 'data-table-expand', width: '50px' }
       ],
-       headersСonsumable: [
-        {
-          text: 'Название', value: 'nameGear', class: 'text-left', align: 'left',
-        },
-        // {
-        //   text: 'Надето', value: 'wear', class: 'text-center', align: 'center',
-        // },
-        {
-          text: 'Количество', value: 'qty', class: 'text-center', align: 'center',
-        },
-        {
-          text: '', value: 'edit', class: 'text-center', align: 'center',
-        },
-        {
-          text: '', value: 'delete', class: 'text-center', align: 'center',
-        },
-        // {
-        //   text: 'Трейты', value: 'traits', class: 'text-left', align: 'left',
-        // },
-      ],
+headersСonsumable: [
+  {
+    text: 'Название',
+    value: 'nameGear',
+    align: 'left',
+    class: 'text-left',
+    width: '250px',
+  },
+  {
+    text: 'Количество',
+    value: 'qty',
+    align: 'center',
+    class: 'text-center',
+    width: '150px',
+  },
+  {
+    text: '',
+    value: 'edit',
+    align: 'center',
+    class: 'text-center',
+    width: '60px',
+  },
+  {
+    text: '',
+    value: 'delete',
+    align: 'center',
+    class: 'text-center',
+    width: '60px',
+  },
+   { text: '', value: 'data-table-expand', width: '50px' }
+],
+
     };
   },
   computed: {
@@ -1219,6 +1654,30 @@ export default {
       }
       return alerts;
     },
+
+    // Руны и их выбор
+     // -------------------
+ strikingLabel() {
+    const found = this.weaponRuneStriking.find(i => i.key === this.Striking);
+    return found && found.key !== 0 ? found.name : "Выбрать разящую руну";
+    },
+
+   potencyLabel() {
+    const found = this.weaponRunePotency.find(i => i.key === this.Potency);
+    return found && found.key !== 0 ? found.name : "Выбрать руну мощи";
+  },
+
+   ResilientArmorLabel() {
+    const found = this.armourRuneResilent.find(i => i.key === this.ResilientArmor);
+    return found  && found.key !== 0 ? found.name : "Выбрать руну стойкости";
+    },
+
+   PotencyArmorLabel() {
+    const found = this.armourRunePotency.find(i => i.key === this.PotencyArmor);
+    return found && found.key !== 0 ? found.name : "Выбрать руну мощи";
+  },
+    // -------------------
+
     sources() {
       return [
         'playerCore',
@@ -1226,6 +1685,30 @@ export default {
         // 'tnh',
         ...this.settingHomebrews
       ];
+    },
+    RuneWeaponProperty() {
+      return this.wargearList
+  .filter(
+    s =>
+      s.usage?.value === 'etched-onto-a-weapon' &&
+      s.name.toLowerCase().includes('руна')
+  )
+  .map(s => ({
+    name: s.name,
+    key: s.key
+  }));
+    },
+        RuneArmorProperty() {
+      return this.wargearList
+  .filter(
+    s =>
+      s.usage?.value === 'etched-onto-armor' &&
+      s.name.toLowerCase().includes('руна')
+  )
+  .map(s => ({
+    name: s.name,
+    key: s.key
+  }));
     },
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
@@ -1384,7 +1867,7 @@ export default {
 
       if (this.wargearList){
         const Category = this.armourCategoryRepository.map(item => item.category);
-        this.characterWargearRaw.filter(item => item.type.includes("расходуемый")).forEach((chargear) => {
+        this.characterWargearRaw.filter(item => item.type.includes("consumable")).forEach((chargear) => {
           // this.characterWargearRaw.forEach((chargear) => {
           let gear = {};
           gear = this.wargearList.find((wargear) => chargear.name.localeCompare(wargear.name, 'en' , {sensitivity: 'accent'}) === 0);
@@ -1449,7 +1932,38 @@ export default {
         });
       }
       return characterWargear;
-    }
+    },
+     groupedGear() {
+    const groups = {};
+    this.characterGear.forEach(item => {
+      const type = item.usage.value || "Прочее";
+      if (!groups[type]) groups[type] = [];
+      groups[type].push(item);
+    });
+    return Object.entries(groups).map(([type, items]) => ({
+      header: type ,
+      items
+    }));
+  },
+      PropertyRune() {
+      const result = this.wargearList.filter(s => s.usage?.value === 'etched-onto-a-weapon' && s.name.toLowerCase().includes('руна')).map(s => (
+        {
+        name: s.name,
+    key: s.key
+  }));
+      const property = result.filter(s => !s.key.includes("striking")).filter(s => !s.key.includes("potency"))
+    return property
+    },
+PropertyArmorRune() {
+      const result = this.wargearList.filter(s => s.usage?.value === 'etched-onto-armor' && s.name.toLowerCase().includes('руна')).map(s => (
+        {
+        name: s.name,
+    key: s.key
+  }));
+      const property = result.filter(s => !s.key.includes("resilient")).filter(s => !s.key.includes("potency"))
+    return property
+    },
+
   },
   watch: {
         "pagination.page"(newPage) {
@@ -1478,6 +1992,9 @@ export default {
       const { data } = await this.$axios.get(`/api/archetypes/${key}`);
       this.loading = false;
       this.archetype = data;
+    },
+          Worn(item) {
+     return this.WornGear[item] ? this.WornGear[item] : 'Прочее'
     },
     async getWargearList(sources) {
       const page =  1;
@@ -1520,7 +2037,38 @@ export default {
         item.trait = item.traits;
       });
       this.wargearList = data.data;
+
+
+
     },
+     toggleProperty(key) {
+    const index = this.localProperty.indexOf(key);
+
+    if (index === -1) {
+      // если руна не выбрана — добавляем
+      this.localProperty.push(key);
+    } else {
+      // если выбрана — убираем
+      this.localProperty.splice(index, 1);
+    }
+
+    // запоминаем последнюю кликнутую руну
+    this.selectedRune = this.RuneWeaponProperty.find(r => r.key === key);
+    },
+       togglePropertyArmor(key) {
+    const index = this.localPropertyArmor.indexOf(key);
+
+    if (index === -1) {
+      // если руна не выбрана — добавляем
+      this.localPropertyArmor.push(key);
+    } else {
+      // если выбрана — убираем
+      this.localPropertyArmor.splice(index, 1);
+    }
+
+    // запоминаем последнюю кликнутую руну
+    this.selectedRuneArmor = this.RuneArmorProperty.find(r => r.key === key);
+  },
     wargearSubtitle(item) {
       // const item = this.wargearRepository.find(i => i.name === gear);
       if (item) {
@@ -1535,6 +2083,7 @@ export default {
     getAvatar(type) {
       return `/img/icon/wargear/${this.textToKebab(type).toLowerCase()}.svg`;
     },
+
     groupLabel(group){
       return this.weaponGroup.find(a => a.group == group) ? this.weaponGroup.find(a => a.group == group).name : "";
     },
@@ -1607,6 +2156,27 @@ export default {
       const result = this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
         return (result < 0 ? "" : "+") + result.toString();
     },
+    StrikeItem(item) {
+      if(!item) return "None"
+      if (item.key === 0) return "None"
+      else
+      return this.wargearList.find((i) =>i.key === item.slug)
+
+    },
+       PropertyItem(item) {
+      if(!item) return "None"
+      if (item.key === 0) return "None"
+      else
+      return this.wargearList.find((i) =>i.key === item.key)
+
+    },
+           PropertyArmorItem(item) {
+      if(!item) return "None"
+      if (item.key === 0) return "None"
+      else
+      return this.wargearList.find((i) =>i.key === item.key)
+
+    },
     damageModifier(gear){
 
     const modAbility = gear.range === null ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
@@ -1623,13 +2193,13 @@ export default {
       //const runePot = gear.runeWeapon.potency ? gear.runeWeapon.potency : 0;
       const damage = gear.damage?.die ? gear.damage.dice + gear.damage.die : gear.damage;
 
-      return damage.toString() + (mod + modSpec  < 0 ? "" : "+") + (mod + modSpec).toString();
+      return damage.toString() + (mod + modSpec  < 0 ? " " : " + ") + (mod + modSpec).toString();
   },
     incrementQty(gear) {
      this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, qty: gear.qty+1, gear: gear, notEnc: true});
 
     },
-      decrementQty(gear) {
+  decrementQty(gear) {
      this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, qty: gear.qty-1, gear: gear, notEnc: true});
   },
     addWargearToCharacter(wargearOptions, source) {
@@ -1663,108 +2233,156 @@ export default {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     add(gear, buy) {
-      let cp = 0, sp= 0, gp= 0, pp = this.getMoney["pp"];
-      this.alertMoney = false;
-      if (buy === true)
-      {
-        // const Charmoney = this.getMoney['cp'] + this.getMoney['sp'] * 10 + this.getMoney['gp'] * 100 + this.getMoney['pp'] * 1000;
-        // const price = gear.cp + gear.sp * 10 + gear.gp * 100 + gear.pp * 1000;
+      // let cp = 0, sp= 0, gp= 0, pp = this.getMoney["pp"];
+      // this.alertMoney = false;
 
-        if(gear.cp !== 0)
-        {
-          const Charmoney = this.getMoney["cp"];
-          const price = gear.price.value.cp ? gear.price.value.cp : 0;
-          cp = Charmoney - price;
-        }
-        if(gear.sp !== 0)
-        {
-          const Charmoney = this.getMoney["sp"];
-            const price = gear.price.value.sp ? gear.price.value.sp : 0;
-          sp = Charmoney - price;
-        }
+      // gear.cp = gear.price.value.cp ? gear.price.value.cp : 0;
+      // gear.sp = gear.price.value.sp ? gear.price.value.sp : 0;
+      // gear.gp = gear.price.value.gp ? gear.price.value.gp : 0;
+      // gear.pp = gear.price.value.pp ? gear.price.value.pp : 0;
+      // if (buy === true)
+      // {
+      //   // const Charmoney = this.getMoney['cp'] + this.getMoney['sp'] * 10 + this.getMoney['gp'] * 100 + this.getMoney['pp'] * 1000;
+      //   // const price = gear.cp + gear.sp * 10 + gear.gp * 100 + gear.pp * 1000;
 
-        if(gear.gp !== 0)
-        {
-          const Charmoney = this.getMoney["gp"];
-            const price = gear.price.value.gp ? gear.price.value.gp : 0;
-          gp = Charmoney - price;
-        }
-
-        if(gear.pp !== 0)
-        {
-          const Charmoney = this.getMoney["pp"];
-            const price = gear.price.value.pp ? gear.price.value.pp : 0;
-          pp = Charmoney - price;
-        }
-
-        //как только все вычлось, смотрим и избавляемся от минусовых значений
-        if (cp < 0)
-        {
-          const diff = Math.abs(cp / 10) ;
-          cp = cp + Math.ceil(diff) * 10;
-          sp = sp  - Math.ceil(diff)
-        }
-
-        if (sp < 0)
-        {
-          const diff = Math.abs(sp / 10);
-          sp = sp + Math.ceil(diff) * 10;
-          gp = gp  - Math.ceil(diff)
-        }
-
-        if (gp < 0)
-        {
-          const diff = Math.abs(gp / 10);
-          gp = gp + Math.ceil(diff) * 10;
-          pp = pp  - Math.ceil(diff)
-        }
-
-        if (pp < 0) this.alertMoney= true;
-
-      }
-
-      if ((buy === true && pp >=0) || buy !== true)
-      {
-        if (buy === true)
-        {
-          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: pp, nominal: "pp" });
-          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: gp, nominal: "gp" });
-          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: sp, nominal: "sp" });
-          this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: cp, nominal: "cp" });
-      }
-
-
-      // const category = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
-      // const trait = this.enhancements().find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
-
-      // gear = {
-      //   ...gear,
-      //   categoryOld: gear.category
-
-      // };
-      // if (category)
-      //   gear.category = category ? category.value : gear.category;
-      // if (trait)
-      //   gear.category = gear.category === "advanced" ? "martial" : "simple";
-      //   if (gear.type === 'weapon')
+      //   if(gear.cp !== 0)
       //   {
+      //     const Charmoney = this.getMoney["cp"];
+      //     const price = gear.price.value.cp ? gear.price.value.cp : 0;
+      //     cp = Charmoney - price;
+      //   }
+      //   if(gear.sp !== 0)
+      //   {
+      //     const Charmoney = this.getMoney["sp"];
+      //       const price = gear.price.value.sp ? gear.price.value.sp : 0;
+      //     sp = Charmoney - price;
+      //   }
 
-      //     const weaponDamage = gear.damage.dice;
-      //     const die = gear.damage.die;
-      //     const dice = weaponDamage + runeStriking + die;
-      //     gear.damage = dice;
+      //   if(gear.gp !== 0)
+      //   {
+      //     const Charmoney = this.getMoney["gp"];
+      //       const price = gear.price.value.gp ? gear.price.value.gp : 0;
+      //     gp = Charmoney - price;
+      //   }
+
+      //   if(gear.pp !== 0)
+      //   {
+      //     const Charmoney = this.getMoney["pp"];
+      //       const price = gear.price.value.pp ? gear.price.value.pp : 0;
+      //     pp = Charmoney - price;
+      //   }
+
+      //   //как только все вычлось, смотрим и избавляемся от минусовых значений
+      //   if (cp < 0)
+      //   {
+      //     const diff = Math.abs(cp / 10) ;
+      //     cp = cp + Math.ceil(diff) * 10;
+      //     sp = sp  - Math.ceil(diff)
+      //   }
+
+      //   if (sp < 0)
+      //   {
+      //     const diff = Math.abs(sp / 10);
+      //     sp = sp + Math.ceil(diff) * 10;
+      //     gp = gp  - Math.ceil(diff)
+      //   }
+
+      //   if (gp < 0)
+      //   {
+      //     const diff = Math.abs(gp / 10);
+      //     gp = gp + Math.ceil(diff) * 10;
+      //     pp = pp  - Math.ceil(diff)
+      //   }
+
+      //   if (pp < 0) this.alertMoney= true;
 
       // }
-        const gear1 = { ...gear, damageOrig: gear.damage };
 
-        this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
-        this.WeaponSearchDialog = false;
-        this.ArmorSearchDialog = false;
+      // if ((buy === true && pp >=0) || buy !== true)
+      // {
+      //   if (buy === true)
+      //   {
+      //     this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: pp, nominal: "pp" });
+      //     this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: gp, nominal: "gp" });
+      //     this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: sp, nominal: "sp" });
+      //     this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: cp, nominal: "cp" });
+      // }
 
-      }
+      //   const gear1 = { ...gear, damageOrig: gear.damage };
 
+      //   this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
+      //   this.WeaponSearchDialog = false;
+      //   this.ArmorSearchDialog = false;
+
+      //   this.GearSearchDialog = false;
+      //   this.ConsumableSearchDialog = false;
+      // }
+      this.alertMoney = false;
+      if (buy === true) {
+        this.alertMoney = false;
+
+        const newWallet = this.payItem(this.getMoney, gear.price.value);
+
+        if (!newWallet) {
+          this.alertMoney = true; // не хватает
+          return;
+        }
+
+// обновляем кошелёк
+for (const [nominal, value] of Object.entries(newWallet)) {
+  this.$store.commit('characters/setCharacterMoney', {
+    id: this.characterId,
+    nominal,
+    value,
+  });
+
+          const gear1 = { ...gear, damageOrig: gear.damage };
+
+   this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
+}
+ }
+ else
+ {
+      const gear1 = { ...gear, damageOrig: gear.damage };
+
+   this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
+ }
+  // Закрываем окна
+  this.WeaponSearchDialog = false;
+  this.ArmorSearchDialog = false;
+  this.GearSearchDialog = false;
+  this.ConsumableSearchDialog = false;
 
     },
+
+payItem(wallet, price) {
+  const rates = { cp: 1, sp: 10, gp: 100, pp: 1000 };
+
+  // переводим всё в меди
+  let walletCp = wallet.cp * rates.cp + wallet.sp * rates.sp + wallet.gp * rates.gp + wallet.pp * rates.pp;
+  const priceCp = (price.cp || 0) * rates.cp + (price.sp || 0) * rates.sp + (price.gp || 0) * rates.gp + (price.pp || 0) * rates.pp;
+
+  if (walletCp < priceCp) return null; // не хватает денег
+
+  walletCp -= priceCp;
+
+  // пересчитываем в монеты с правильной сдачей
+  const newWallet = {};
+  newWallet.pp = Math.floor(walletCp / rates.pp);
+  walletCp -= newWallet.pp * rates.pp;
+
+  newWallet.gp = Math.floor(walletCp / rates.gp);
+  walletCp -= newWallet.gp * rates.gp;
+
+  newWallet.sp = Math.floor(walletCp / rates.sp);
+  walletCp -= newWallet.sp * rates.sp;
+
+  newWallet.cp = walletCp;
+
+  return newWallet;
+},
+
+
     remove(gear) {
       this.$store.commit('characters/unwearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
       this.$store.commit('characters/removeCharacterWargear', { id: this.characterId, gearId: gear.id });
@@ -1792,10 +2410,17 @@ export default {
     openWeaponSettings(gear){
       this.weaponEditorDialog = true;
       const weapon = this.characterWargearRaw.find(t => t.id === gear.id);
+
       this.Striking = this.weaponRuneStriking.find(item => weapon.runeWeapon.striking === item.key).key;
+      this.localStriking = this.weaponRuneStriking.find(item => weapon.runeWeapon.striking === item.key).key;
+
       this.Potency = this.weaponRunePotency.find(item => weapon.runeWeapon.potency === item.key).key;
-      const PropertyMap = weapon.runeWeapon.property.map(item => item.key)
-      this.Property = this.WeaponRuneProperty.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
+      this.localPotency = this.weaponRunePotency.find(item => weapon.runeWeapon.potency === item.key).key;
+
+      // this.Property = this.wargearList.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
+      this.Property = weapon.runes.property ? [...weapon.runes.property] : [];
+      this.localProperty = weapon.runes.property ? [...weapon.runes.property] : [];
+
       this.Weapon = gear;
     },
     openMoneySettings(value, nominal){
@@ -1815,10 +2440,21 @@ export default {
     openArmourSettings(gear){
       this.armorEditorDialog = true;
       const armor = this.characterWargearRaw.find(t => t.id === gear.id);
-      this.Resilent = this.armourRuneResilent.find(item => armor.runeArmor.resilient === item.key).key;
-      this.Potency = this.armourRunePotency.find(item => armor.runeArmor.potency === item.key).key;
-      const PropertyMap = armor.runeArmor.property.map(item => item.key)
-      this.Property = this.ArmorRuneProperty.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
+
+
+
+      ///////////////////////////
+      this.ResilientArmor = this.armourRuneResilent.find(item => armor.runeArmor.resilient === item.key).key;
+      this.localResilent = this.armourRuneResilent.find(item => armor.runeArmor.resilient === item.key).key;
+
+      this.PotencyArmor = this.armourRunePotency.find(item => armor.runeArmor.potency === item.key).key;
+      this.localPotencyArmor = this.armourRunePotency.find(item => armor.runeArmor.potency === item.key).key;
+
+// this.Property = this.wargearList.filter(item => PropertyMap.includes(item.key))//.map(item => item.key);
+      this.PropertyArmor = armor.runes.property ? [...armor.runes.property] : [];
+      this.localPropertyArmor = armor.runes.property ? [...armor.runes.property] : [];
+
+
       this.Armor = gear;
     },
     closeWeaponSettings() {
@@ -1833,18 +2469,49 @@ export default {
       this.moneyEditorDialog = false;
       // this.alert = false;
     },
+    saveStrikingSelection() {
+    this.Striking = this.localStriking;
+    this.dialogStriking = false;
+    },
+      savePotencySelection() {
+    this.Potency = this.localPotency;
+    this.dialogPotency= false;
+  },
+      savePropertySelection() {
+    this.Property = this.localProperty;
+    this.dialogProperty= false;
+  },
+
+      saveResilientArmorSelection() {
+    this.ResilientArmor= this.localResilientArmor;
+    this.dialogResilientArmor = false;
+    },
+      savePotencyArmorSelection() {
+    this.PotencyArmor = this.localPotencyArmor;
+    this.dialogPotencyArmor = false;
+  },
+      savePropertyArmorSelection() {
+    this.PropertyArmor = this.localPropertyArmor;
+    this.dialogPropertyArmor = false;
+  },
     PotencyCap(potency){
 
       const mod = this.weaponRunePotency.find(item => potency === item.key).addItemBonus;
+      return mod;
+    },
+    PotencyCapArmor(potency){
+
+      const mod = this.armourRunePotency.find(item => potency === item.key).addItemBonus;
       return mod;
     },
     saveWeapon() {
       this.alert = false;
       const weapon =  this.Striking;
       const runeStriking = this.weaponRuneStriking.find(item => weapon === item.key).addDice;
-      const PropertyMap = this.Property.map(item => item.key);
-      const Property =  this.WeaponRuneProperty.filter(item => PropertyMap.includes(item.key));
+      const PropertyMap = this.Property;
+      const Property =  this.wargearList.filter(item => PropertyMap.includes(item.key)).map(item => item.key);
       const weaponDamage = this.wargearList.find(t => t.key === this.Weapon.key).damage.dice;
+
       const die = this.wargearList.find(t => t.key === this.Weapon.key).damage.die;
       const dice = weaponDamage + runeStriking  + die;//(parseInt(weaponDamage.slice(0, 1)) + runeStriking) + weaponDamage.slice(1, 4);
       if ( this.PotencyCap(this.Potency) < this.Property.length) {
@@ -1852,7 +2519,7 @@ export default {
         // console.warn(`Skill ${skill.name} already exists.`);
       }
       else{
-        this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon, notEnc: false });
+        this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, damage: dice, property: Property, striking: this.Striking, potency: this.Potency, gear: this.Weapon, armor: true, notEnc: false });
         // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
         this.weaponEditorDialog = false;
       }
@@ -1866,8 +2533,28 @@ export default {
         return pp + gp + sp + cp;
       }
     },
+     typeDamage(type)
+    {
+      return this.DamageType.find(t => t.key === type) ? this.DamageType.find(t => t.key === type).name : type;
+    },
     saveArmor() {
       this.alert = false;
+
+      const armor =  this.ResilentArmor;
+
+      const PropertyMap = this.PropertyArmor;
+      const PropertyArmor =  this.wargearList.filter(item => PropertyMap.includes(item.key)).map(item => item.key);
+
+      if (this.PotencyCapArmor(this.PotencyArmor) < this.PropertyArmor.length) {
+        this.alert = true;
+        // console.warn(`Skill ${skill.name} already exists.`);
+      }
+      else{
+        this.$store.commit('characters/updateCharacterWargear', { id: this.characterId, property: PropertyArmor, resilient: this.ResilientArmor, potency: this.PotencyArmor, gear: this.Armor, armor: true, notEnc: false });
+        // this.characterWeapon.find(t => t.id === this.Weapon.id).damage = dice;
+        this.armorEditorDialog = false;
+      }
+
       // const armor =  this.Resilent;
       // const runeStriking = this.armourRuneResilent.find(item => weapon === item.key).addDice;
       // const PropertyMap = this.Property.map(item => item.key);
@@ -2020,5 +2707,193 @@ export default {
   box-sizing: border-box;
   /* display: flex;
   border-radius: 4px; */
+}
+
+/* Для заголовков */
+.gear-section {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(var(--v-theme-surface), 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.gear-section-header {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  color: rgba(var(--v-theme-on-surface), 0.87);
+  background-color: rgba(var(--v-theme-surface-variant, 0, 0, 0), 0.05);
+  border-bottom: 1px solid rgba(var(--v-border-color, 0, 0, 0), 0.1);
+}
+
+.gear-section-table {
+  border-radius: 0;
+  background-color: transparent !important;
+}
+
+.gear-section + .gear-section {
+  margin-top: 12px;
+}
+
+.fixed-columns-table .v-data-table__wrapper table {
+  table-layout: fixed !important; /* фиксированная сетка */
+  width: 100%;
+}
+
+.fixed-columns-table th,
+.fixed-columns-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fixed-columns-table th {
+  font-weight: 600;
+  background-color: rgba(var(--v-theme-surface-variant), 0.5);
+}
+
+/* Настраиваем ширину каждой колонки (по порядку) */
+.fixed-columns-table th:nth-child(1),
+.fixed-columns-table td:nth-child(1) {
+  width: 40%; /* Название предмета */
+}
+
+.fixed-columns-table th:nth-child(2),
+.fixed-columns-table td:nth-child(2) {
+  width: 20%; /* Тип */
+}
+
+.fixed-columns-table th:nth-child(3),
+.fixed-columns-table td:nth-child(3) {
+  width: 15%; /* Цена */
+}
+
+.fixed-columns-table th:nth-child(4),
+.fixed-columns-table td:nth-child(4) {
+  width: 25%; /* Прочее */
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: hidden; /* не даем появиться горизонтальному скроллу */
+}
+
+.expanded-cell {
+  padding: 0 !important;
+  background-color: rgba(var(--v-theme-surface-variant), 0.05);
+}
+
+.expanded-wrapper {
+  display: block;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  background-color: var(--v-theme-surface);
+  border-left: 3px solid var(--v-theme-primary);
+  border-radius: 0 0 8px 8px;
+}
+
+.expanded-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.expanded-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-word;
+}
+
+.expanded-tag {
+  background-color: rgba(var(--v-theme-primary), 0.15);
+  color: var(--v-theme-primary);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+}
+
+.expanded-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 4px 12px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  word-break: break-word;
+}
+
+.expanded-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(var(--v-border-color, 150, 150, 150), 0.2);
+  margin: 10px 0;
+}
+
+.expanded-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--v-theme-on-surface);
+  word-break: break-word;
+  white-space: normal;
+}
+
+.v-data-table {
+  table-layout: fixed !important;
+}
+
+.v-data-table thead th,
+.v-data-table tbody td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* чтобы переносились строки */
+  word-wrap: break-word;
+  vertical-align: top;
+}
+
+/* Можно ограничить высоту ячеек */
+.v-data-table tbody td {
+  max-width: 250px; /* можно подбирать */
+}
+
+/* Убираем растягивание при раскрытии */
+.v-data-table__expanded__content td {
+  max-width: none !important;
+}
+
+/* Кнопка */
+.gear-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.gear-btn:hover {
+  background-color: rgba(56, 142, 60, 0.1); /* светло-зеленый фон */
+  transform: translateY(-1px);
+}
+
+/* Список выбора рун */
+
+.rune-list {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.selected-rune {
+  background-color: rgba(76, 175, 80, 0.15); /* мягкий зелёный фон */
+  transition: background-color 0.2s;
+}
+
+.selected-rune:hover {
+  background-color: rgba(76, 175, 80, 0.25);
 }
 </style>

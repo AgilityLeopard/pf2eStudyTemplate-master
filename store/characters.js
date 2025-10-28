@@ -2280,14 +2280,31 @@ export const mutations = {
     const character = state.characters[payload.id];
     const gearId = payload.gear.id;
     const edit = payload.notEnc;
+    const armor = payload.armor;
     const Wargear =
       character.wargear.find((t) => t.id === gearId);
-    if (Wargear && edit === false) {
+    if (Wargear && edit === false && armor === false) {
       Wargear.runeWeapon.striking = payload.striking;
       Wargear.runeWeapon.potency = payload.potency;
       Wargear.damage = payload.damage;
       Wargear.runeWeapon.property = payload.property;
+
+      Wargear.runes.striking = payload.striking;
+      Wargear.runes.potency = payload.potency;
+      Wargear.damage = payload.damage;
+      Wargear.runes.property = payload.property;
     }
+    if (Wargear && edit === false && armor === true) {
+      Wargear.runeArmor.resilient = payload.resilient;
+      Wargear.runeArmor.potency = payload.potency;
+
+      Wargear.runeArmor.property = payload.property;
+
+      Wargear.runes.resilient = payload.resilient;
+      Wargear.runes.potency = payload.potency;
+      Wargear.runes.property = payload.property;
+    }
+
     if (Wargear && edit === true) {
       Wargear.qty = payload.qty;
     }

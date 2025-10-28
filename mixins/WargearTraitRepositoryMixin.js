@@ -506,88 +506,104 @@ export default {
         {
           key: 0,
           name: "Нет",
-          addDice: 0
+          addDice: 0,
+          slug: ""
         },
         {
           key: 1,
-          name: "Разящая",
-          addDice: 1
+          name: "Разящая руна",
+          addDice: 1,
+          slug: "striking"
         },
         {
           key: 2,
-          name: "Отличная разящая",
-          addDice: 2
+          name: "Разящая руна [Отличная]",
+          addDice: 2,
+          slug: "striking-greater"
         },
         {
           key: 3,
-          name: "Cтаршая разящая",
-          addDice: 3
+          name: "Разящая руна [Отличная]",
+          addDice: 3,
+          slug: "striking-major"
         }
       ],
       weaponRunePotency: [
         {
           key: 0,
           name: "Нет",
-          addItemBonus: 0
+          addItemBonus: 0,
+          slug: ""
         },
         {
           key: 1,
-          name: "Мощи оружия +1",
-          addItemBonus: 1
+          name: "Руна мощи оружия [+1]",
+          addItemBonus: 1,
+          slug: "weapon-potency-1"
         },
         {
           key: 2,
-          name: "Мощи оружия +2",
-          addItemBonus: 2
+          name: "Руна мощи оружия [+2]",
+          addItemBonus: 2,
+          slug: "weapon-potency-2"
         },
         {
           key: 3,
-          name: "Мощи оружия +3",
-          addItemBonus: 3
+          name: "Руна мощи оружия [+3]",
+          addItemBonus: 3,
+          slug: "weapon-potency-3"
         }
       ],
       armourRuneResilent: [
         {
           key: 0,
           name: "Нет",
-          addDice: 0
+          addDice: 0,
+          slug: ""
         },
         {
           key: 1,
-          name: "Стойкости",
-          addDice: 1
+          name: "Руна стойкости доспеха",
+          addDice: 1,
+          slug: "resilient"
         },
         {
           key: 2,
-          name: "Отличная стойкости",
-          addDice: 2
+          name: "Руна стойкости доспеха [Отличная]",
+          addDice: 2,
+          slug: "resilient-greater"
         },
         {
           key: 3,
-          name: "Cтаршая стойкости",
-          addDice: 3
+          name: "Руна стойкости доспеха [Превосходная]",
+          addDice: 3,
+          slug: "resilient-major"
         }
       ],
       armourRunePotency: [
         {
-          key: "none",
+          key: 0,
           name: "Нет",
-          addItemBonus: 0
+          addDice: 0,
+          slug: ""
         },
         {
-          key: "potency-1",
-          name: "Мощи оружия +1",
-          addItemBonus: 1
+          key: 1,
+          name: "Руна мощи доспеха [+1]",
+          addDice: 1,
+          slug: "armor-potency-1"
         },
         {
-          key: "potency-2",
-          name: "Мощи оружия +2",
-          addItemBonus: 2
+          key: 2,
+          name: "Руна мощи доспеха [+2]",
+          addDice: 2,
+          slug: "armor-potency-2"
         },
         {
-          key: "potency-3",
-          name: "Мощи оружия +3",
-          addItemBonus: 3
+          key: 3,
+          name: "Руна мощи доспеха [+3]",
+          addDice: 3,
+          slug: "armor-potency-3"
         }
       ],
       WeaponRuneProperty: [
@@ -611,6 +627,7 @@ export default {
           name: "Изменяющаяся",
           addItemBonus: 0
         },
+
       ],
       ArmorRuneProperty: [
         {
@@ -647,6 +664,63 @@ export default {
           key: "bludgeoning",
           name: "дробящий"
         },
+        {
+          key: "fire",
+          name: "огнем"
+        },
+        {
+          key: "acid",
+          name: "кислотой"
+        },
+        {
+          key: "electricity",
+          name: "электричеством"
+        },
+        {
+          key: "vitality",
+          name: "жизненностью"
+        },
+        {
+          key: "force",
+          name: "силой"
+        },
+        {
+          key: "void",
+          name: "пустотой"
+        },
+        {
+          key: "sonic",
+          name: "звуком"
+        },
+        {
+          key: "cold",
+          name: "холодом"
+        },
+        {
+          key: "spirit",
+          name: "духом"
+        },
+
+        {
+          key: "mental",
+          name: "ментальным"
+        },
+        {
+          key: "poison",
+          name: "ядом"
+        },
+        {
+          key: "bleed",
+          name: "кровотечением"
+        },
+        {
+          key: "precision",
+          name: "точным"
+        },
+
+
+
+
       ],
       WornGear: {
         "wornamulet": "Амулет",
@@ -684,7 +758,9 @@ export default {
         "wornsaddle": "Седло",
         "wornsandles": "Носимые сандалии",
         "wornshoes": "Обувь",
-        "wornunderarmor": "Носимый под легкими доспехами или одеждой"
+        "held-in-two-hands": "2",
+        "held-in-one-hand": "1",
+
       }
 
     };

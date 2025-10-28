@@ -24,8 +24,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-
-    "traits": ["быстрое", "скрываемое", "точное", "иллюзия", "магический"],
+    "traits": [
+      "быстрое",
+      "скрываемое",
+      "точное",
+      "иллюзия",
+      "магический"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -100,7 +105,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["длинное", "универсальное рубящий"],
+    "traits": [
+      "длинное",
+      "универсальное рубящий"
+    ],
     "group": "polearm",
     "bonusDamage": {
       "value": 0
@@ -214,7 +222,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический"],
+    "traits": [
+      "расходуемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -262,7 +273,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["магический", "телепортация"],
+    "traits": [
+      "магический",
+      "телепортация"
+    ],
     "group": "crossbow",
     "bonusDamage": {
       "value": 0
@@ -298,7 +312,9 @@
     "runes": {
       "potency": 1,
       "striking": 1,
-      "property": ["ghostTouch"]
+      "property": [
+        "ghostTouch"
+      ]
     },
     "specific": {
       "material": {
@@ -307,7 +323,9 @@
       },
       "runes": {
         "potency": 1,
-        "property": ["ghostTouch"],
+        "property": [
+          "ghostTouch"
+        ],
         "striking": 1
       }
     }
@@ -423,7 +441,9 @@
     "runes": {
       "reinforcing": 0
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 1,
+    "speedPenalty": 0
   },
   {
     "name": "Башенный щит / Tower Shield",
@@ -471,7 +491,9 @@
     "runes": {
       "reinforcing": 0
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 2,
+    "speedPenalty": -5
   },
   {
     "name": "Белладонна / Belladonna",
@@ -498,7 +520,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "глотаемый", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "глотаемый",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -546,7 +573,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "пустота"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "пустота"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -574,7 +605,10 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["action:feint", "self:shield:raised"],
+        "predicate": [
+          "action:feint",
+          "self:shield:raised"
+        ],
         "selector": "deception",
         "type": "item",
         "value": 1
@@ -600,7 +634,9 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -632,7 +668,9 @@
       "runes": {
         "reinforcing": 0
       }
-    }
+    },
+    "acBonus": 1,
+    "speedPenalty": 0
   },
   {
     "name": "Боевой топор / Battle Axe",
@@ -659,7 +697,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["размашистое"],
+    "traits": [
+      "размашистое"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -725,7 +765,11 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["несмертельное", "дальнобойное опрокидывающее", "метательное"],
+    "traits": [
+      "несмертельное",
+      "дальнобойное опрокидывающее",
+      "метательное"
+    ],
     "group": "sling",
     "bonusDamage": {
       "value": 0
@@ -790,7 +834,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "глотаемый", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "глотаемый",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -838,7 +887,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический"],
+    "traits": [
+      "расходуемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -935,7 +987,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["толчок"],
+    "traits": [
+      "толчок"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -1049,7 +1103,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1097,7 +1156,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "смертельное d8", "точное", "универсальное колющий"],
+    "traits": [
+      "быстрое",
+      "смертельное d8",
+      "точное",
+      "универсальное колющий"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -1211,7 +1275,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый"],
+    "traits": [
+      "алхимический",
+      "расходуемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1259,7 +1326,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый"],
+    "traits": [
+      "алхимический",
+      "расходуемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1314,7 +1384,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "звук", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "звук",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -1386,7 +1462,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "звук", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "звук",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -1458,7 +1540,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "звук", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "звук",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -1530,7 +1618,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "звук", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "звук",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -1671,7 +1765,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["тьма", "магический", "волшебная палочка"],
+    "traits": [
+      "тьма",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1722,7 +1820,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["тьма", "магический", "волшебная палочка"],
+    "traits": [
+      "тьма",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1774,7 +1876,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "яд", "волшебная палочка"],
+    "traits": [
+      "магический",
+      "яд",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1825,7 +1931,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "пустота", "волшебная палочка"],
+    "traits": [
+      "магический",
+      "пустота",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1876,7 +1986,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "пустота", "волшебная палочка"],
+    "traits": [
+      "магический",
+      "пустота",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1928,7 +2042,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "пустота", "волшебная палочка"],
+    "traits": [
+      "магический",
+      "пустота",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -1979,7 +2097,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["электричество", "магический", "волшебная палочка"],
+    "traits": [
+      "электричество",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2031,7 +2153,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["электричество", "магический", "волшебная палочка"],
+    "traits": [
+      "электричество",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2082,7 +2208,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["электричество", "магический", "волшебная палочка"],
+    "traits": [
+      "электричество",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2134,7 +2264,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["электричество", "магический", "волшебная палочка"],
+    "traits": [
+      "электричество",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2186,7 +2320,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["холод", "магический", "волшебная палочка"],
+    "traits": [
+      "холод",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2237,7 +2375,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["исцеление", "магический", "жизненность", "волшебная палочка"],
+    "traits": [
+      "исцеление",
+      "магический",
+      "жизненность",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2288,7 +2431,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["исцеление", "магический", "жизненность", "волшебная палочка"],
+    "traits": [
+      "исцеление",
+      "магический",
+      "жизненность",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2339,7 +2487,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["исцеление", "магический", "жизненность", "волшебная палочка"],
+    "traits": [
+      "исцеление",
+      "магический",
+      "жизненность",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2391,7 +2544,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["исцеление", "магический", "жизненность", "волшебная палочка"],
+    "traits": [
+      "исцеление",
+      "магический",
+      "жизненность",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2442,7 +2600,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["огонь", "магический", "волшебная палочка"],
+    "traits": [
+      "огонь",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2494,7 +2656,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["огонь", "магический", "волшебная палочка"],
+    "traits": [
+      "огонь",
+      "магический",
+      "волшебная палочка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -2542,7 +2708,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["длинное", "опрокидывание"],
+    "traits": [
+      "длинное",
+      "опрокидывание"
+    ],
     "group": "polearm",
     "bonusDamage": {
       "value": 0
@@ -2608,7 +2777,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "яд", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "яд",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -2678,7 +2853,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "яд", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "яд",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -2748,7 +2929,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "яд", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "яд",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -2887,7 +3074,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["гном", "длинное", "размашистое"],
+    "traits": [
+      "гном",
+      "длинное",
+      "размашистое"
+    ],
     "group": "flail",
     "bonusDamage": {
       "value": 0
@@ -3031,7 +3222,9 @@
       {
         "key": "FlatModifier",
         "label": "Гримерный набор [Перевоплотиться]",
-        "predicate": ["action:impersonate"],
+        "predicate": [
+          "action:impersonate"
+        ],
         "selector": "deception",
         "type": "item",
         "value": 1
@@ -3157,7 +3350,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "тяговое", "тэнгу"],
+    "traits": [
+      "быстрое",
+      "тяговое",
+      "тэнгу"
+    ],
     "group": "sling",
     "bonusDamage": {
       "value": 0
@@ -3222,7 +3419,10 @@
       "value": "held-in-one-plus-hands"
     },
     "grade": null,
-    "traits": ["силовое", "тяговое"],
+    "traits": [
+      "силовое",
+      "тяговое"
+    ],
     "group": "bow",
     "bonusDamage": {
       "value": 0
@@ -3287,7 +3487,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["дварф", "размашистое", "двуручное d12"],
+    "traits": [
+      "дварф",
+      "размашистое",
+      "двуручное d12"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -3352,7 +3556,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["обратный замах", "толчок"],
+    "traits": [
+      "обратный замах",
+      "толчок"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -3417,7 +3624,9 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["фатальное d12"],
+    "traits": [
+      "фатальное d12"
+    ],
     "group": "pick",
     "bonusDamage": {
       "value": 0
@@ -3482,7 +3691,9 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["универсальное колющий"],
+    "traits": [
+      "универсальное колющий"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -3547,7 +3758,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["Разоружение", "размашистое", "опрокидывание"],
+    "traits": [
+      "Разоружение",
+      "размашистое",
+      "опрокидывание"
+    ],
     "group": "flail",
     "bonusDamage": {
       "value": 0
@@ -3633,7 +3848,9 @@
     "runes": {
       "reinforcing": 0
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 2,
+    "speedPenalty": 0
   },
   {
     "name": "Длинное копье / Longspear",
@@ -3660,7 +3877,9 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["длинное"],
+    "traits": [
+      "длинное"
+    ],
     "group": "spear",
     "bonusDamage": {
       "value": 0
@@ -3725,7 +3944,10 @@
       "value": "held-in-one-plus-hands"
     },
     "grade": null,
-    "traits": ["смертельное d10", "залповое 30"],
+    "traits": [
+      "смертельное d10",
+      "залповое 30"
+    ],
     "group": "bow",
     "bonusDamage": {
       "value": 0
@@ -3791,7 +4013,9 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["универсальное колющий"],
+    "traits": [
+      "универсальное колющий"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -3854,7 +4078,11 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["защитный", "инвестируемый", "магический"],
+    "traits": [
+      "защитный",
+      "инвестируемый",
+      "магический"
+    ],
     "group": "plate",
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -3890,7 +4118,12 @@
         "property": [],
         "resilient": 2
       }
-    }
+    },
+    "acBonus": 6,
+    "strength": 4,
+    "dexCap": 0,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Дротик / Dart",
@@ -3918,7 +4151,10 @@
       "canBeAmmo": true
     },
     "grade": null,
-    "traits": ["быстрое", "метательное"],
+    "traits": [
+      "быстрое",
+      "метательное"
+    ],
     "group": "dart",
     "bonusDamage": {
       "value": 0
@@ -3982,7 +4218,9 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["метательное 10"],
+    "traits": [
+      "метательное 10"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -4047,7 +4285,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "несмертельное"],
+    "traits": [
+      "быстрое",
+      "несмертельное"
+    ],
     "group": "dart",
     "bonusDamage": {
       "value": 0
@@ -4161,7 +4402,11 @@
       "value": "affixed-to-melee-weapon"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "талисман"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "талисман"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4209,7 +4454,11 @@
       "value": "affixed-to-melee-weapon"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "талисман"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "талисман"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4257,7 +4506,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4305,7 +4560,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4353,7 +4614,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4401,7 +4668,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4701,7 +4974,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["холод", "расходуемый", "магический"],
+    "traits": [
+      "холод",
+      "расходуемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4749,7 +5026,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -4797,7 +5079,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "масло"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "масло"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4845,7 +5131,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4893,7 +5183,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4941,7 +5235,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -4989,7 +5287,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5037,7 +5339,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5085,7 +5391,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "полиморф", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "полиморф",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -5133,7 +5444,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "полиморф", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "полиморф",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -5181,7 +5497,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "полиморф", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "полиморф",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -5229,7 +5550,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5277,7 +5602,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5325,7 +5654,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5373,7 +5706,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5421,7 +5758,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5469,7 +5810,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5517,7 +5862,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5565,7 +5914,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5613,7 +5966,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5661,7 +6018,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5709,7 +6070,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -5852,7 +6217,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "глотаемый", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "глотаемый",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -6029,7 +6399,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:disable-a-device", "action:pick-a-lock"]
+            "or": [
+              "action:disable-a-device",
+              "action:pick-a-lock"
+            ]
           }
         ],
         "selector": "thievery",
@@ -6138,7 +6511,9 @@
       {
         "key": "FlatModifier",
         "label": "Инструменты ремесленника [Безупречные] [Создание предмета]",
-        "predicate": ["action:craft"],
+        "predicate": [
+          "action:craft"
+        ],
         "selector": "crafting",
         "type": "item",
         "value": 1
@@ -6215,7 +6590,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["смертельное d8", "Кавалерийское d6", "длинное"],
+    "traits": [
+      "смертельное d8",
+      "Кавалерийское d6",
+      "длинное"
+    ],
     "group": "spear",
     "bonusDamage": {
       "value": 0
@@ -6525,7 +6904,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["смертельное d8", "двуручное d10", "универсальное колющий"],
+    "traits": [
+      "смертельное d8",
+      "двуручное d10",
+      "универсальное колющий"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -6590,7 +6973,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "смертельное d6", "монах"],
+    "traits": [
+      "быстрое",
+      "смертельное d6",
+      "монах"
+    ],
     "group": "knife",
     "bonusDamage": {
       "value": 0
@@ -6655,7 +7042,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -6703,7 +7095,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -6751,7 +7148,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -6799,7 +7201,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -6847,7 +7254,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "дварф", "парирование", "универсальное дробящий"],
+    "traits": [
+      "быстрое",
+      "дварф",
+      "парирование",
+      "универсальное дробящий"
+    ],
     "group": "knife",
     "bonusDamage": {
       "value": 0
@@ -6912,7 +7324,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["фатальное d10"],
+    "traits": [
+      "фатальное d10"
+    ],
     "group": "pick",
     "bonusDamage": {
       "value": 0
@@ -7001,7 +7415,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 2,
+    "strength": 1,
+    "dexCap": 3,
+    "checkPenalty": -1,
+    "speedPenalty": 0
   },
   {
     "name": "Книга заклинаний [Пустая] / Spellbook (Blank)",
@@ -7222,7 +7641,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 1,
+    "strength": 0,
+    "dexCap": 4,
+    "checkPenalty": -1,
+    "speedPenalty": 0
   },
   {
     "name": "Кольцо маниакальных устройств [Отличное] / Ring of Maniacal Devices (Greater)",
@@ -7231,7 +7655,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:disable-a-device", "action:pick-a-lock"]
+            "or": [
+              "action:disable-a-device",
+              "action:pick-a-lock"
+            ]
           }
         ],
         "selector": "thievery",
@@ -7242,10 +7669,16 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:craft", "action:repair"]
+            "or": [
+              "action:craft",
+              "action:repair"
+            ]
           },
           {
-            "or": ["силок", "ловушка"]
+            "or": [
+              "силок",
+              "ловушка"
+            ]
           }
         ],
         "selector": "crafting",
@@ -7275,7 +7708,10 @@
       "value": "worn"
     },
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -7306,7 +7742,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:disable-a-device", "action:pick-a-lock"]
+            "or": [
+              "action:disable-a-device",
+              "action:pick-a-lock"
+            ]
           }
         ],
         "selector": "thievery",
@@ -7317,10 +7756,16 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:craft", "action:repair"]
+            "or": [
+              "action:craft",
+              "action:repair"
+            ]
           },
           {
-            "or": ["силок", "ловушка"]
+            "or": [
+              "силок",
+              "ловушка"
+            ]
           }
         ],
         "selector": "crafting",
@@ -7350,7 +7795,10 @@
       "value": "worn"
     },
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -7399,7 +7847,11 @@
       "value": "worn"
     },
     "grade": null,
-    "traits": ["огонь", "инвестируемый", "магический"],
+    "traits": [
+      "огонь",
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -7446,7 +7898,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["гибкий", "шумный"],
+    "traits": [
+      "гибкий",
+      "шумный"
+    ],
     "group": "chain",
     "bonusDamage": null,
     "rarity": "common",
@@ -7472,7 +7927,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 4,
+    "strength": 3,
+    "dexCap": 1,
+    "checkPenalty": -2,
+    "speedPenalty": -5
   },
   {
     "name": "Кольчужная рубаха / Chain Shirt",
@@ -7497,7 +7957,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["гибкий", "шумный"],
+    "traits": [
+      "гибкий",
+      "шумный"
+    ],
     "group": "chain",
     "bonusDamage": null,
     "rarity": "common",
@@ -7523,15 +7986,25 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 2,
+    "strength": 1,
+    "dexCap": 3,
+    "checkPenalty": -1,
+    "speedPenalty": 0
   },
   {
     "name": "Комплект детектива / Detective's Kit",
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["action:investigate"],
-        "selector": ["perception", "skill-check"],
+        "predicate": [
+          "action:investigate"
+        ],
+        "selector": [
+          "perception",
+          "skill-check"
+        ],
         "type": "item",
         "value": 1
       }
@@ -7607,7 +8080,11 @@
       "value": "held-in-one-plus-hands"
     },
     "grade": null,
-    "traits": ["смертельное d10", "тяговое", "залповое 30"],
+    "traits": [
+      "смертельное d10",
+      "тяговое",
+      "залповое 30"
+    ],
     "group": "bow",
     "bonusDamage": {
       "value": 0
@@ -7672,7 +8149,10 @@
       "value": "held-in-one-plus-hands"
     },
     "grade": null,
-    "traits": ["смертельное d10", "тяговое"],
+    "traits": [
+      "смертельное d10",
+      "тяговое"
+    ],
     "group": "bow",
     "bonusDamage": {
       "value": 0
@@ -7737,7 +8217,9 @@
       "value": "held-in-one-plus-hands"
     },
     "grade": null,
-    "traits": ["смертельное d10"],
+    "traits": [
+      "смертельное d10"
+    ],
     "group": "bow",
     "bonusDamage": {
       "value": 0
@@ -7802,7 +8284,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "точное", "универсальное рубящий"],
+    "traits": [
+      "быстрое",
+      "точное",
+      "универсальное рубящий"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -7916,7 +8402,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["смертельное d10", "опрокидывание"],
+    "traits": [
+      "смертельное d10",
+      "опрокидывание"
+    ],
     "group": "polearm",
     "bonusDamage": {
       "value": 0
@@ -8030,7 +8519,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "контакт", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "контакт",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -8125,7 +8619,9 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -8157,7 +8653,9 @@
       "runes": {
         "reinforcing": 0
       }
-    }
+    },
+    "acBonus": 2,
+    "speedPenalty": 0
   },
   {
     "name": "Крик медузы / Medusa's Scream",
@@ -8182,7 +8680,9 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -8214,7 +8714,9 @@
       "runes": {
         "reinforcing": 0
       }
-    }
+    },
+    "acBonus": 2,
+    "speedPenalty": 0
   },
   {
     "name": "Криминалистический краситель / Forensic Dye",
@@ -8241,7 +8743,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый"],
+    "traits": [
+      "алхимический",
+      "расходуемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -8296,7 +8801,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "земля", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "земля",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -8372,7 +8883,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "земля", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "земля",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -8448,7 +8965,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "земля", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "земля",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -8517,7 +9040,10 @@
       "value": "worn"
     },
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -8615,7 +9141,9 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["толчок"],
+    "traits": [
+      "толчок"
+    ],
     "group": "hammer",
     "bonusDamage": {
       "value": 0
@@ -8680,7 +9208,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "точное", "опрокидывание"],
+    "traits": [
+      "быстрое",
+      "точное",
+      "опрокидывание"
+    ],
     "group": "knife",
     "bonusDamage": {
       "value": 0
@@ -8745,7 +9277,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -8826,7 +9363,10 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "selector": ["athletics", "acrobatics"],
+        "selector": [
+          "athletics",
+          "acrobatics"
+        ],
         "type": "item",
         "value": 2
       }
@@ -8853,7 +9393,11 @@
       "value": "worn"
     },
     "grade": null,
-    "traits": ["фокусирующий", "инвестируемый", "магический"],
+    "traits": [
+      "фокусирующий",
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -8952,7 +9496,12 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "ранение", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "ранение",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -9000,7 +9549,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "свободная рука"],
+    "traits": [
+      "быстрое",
+      "свободная рука"
+    ],
     "group": "brawling",
     "bonusDamage": {
       "value": 0
@@ -9112,7 +9664,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["бардинг", "компаньон"],
+    "traits": [
+      "бардинг",
+      "компаньон"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -9138,7 +9693,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 1,
+    "strength": 3,
+    "dexCap": 5,
+    "checkPenalty": -1,
+    "speedPenalty": -5
   },
   {
     "name": "Лёгкий клевец / Light Pick",
@@ -9165,7 +9725,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "фатальное d8"],
+    "traits": [
+      "быстрое",
+      "фатальное d8"
+    ],
     "group": "pick",
     "bonusDamage": {
       "value": 0
@@ -9231,7 +9794,10 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["быстрое", "метательное 20"],
+    "traits": [
+      "быстрое",
+      "метательное 20"
+    ],
     "group": "hammer",
     "bonusDamage": {
       "value": 0
@@ -9352,7 +9918,12 @@
       "value": "wornmask"
     },
     "grade": null,
-    "traits": ["слуховой", "инвестируемый", "магический", "пустота"],
+    "traits": [
+      "слуховой",
+      "инвестируемый",
+      "магический",
+      "пустота"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -9382,7 +9953,9 @@
       {
         "key": "FlatModifier",
         "label": "Ломик [Рычажный] [Открыть силой]",
-        "predicate": ["action:force-open"],
+        "predicate": [
+          "action:force-open"
+        ],
         "selector": "athletics",
         "type": "item",
         "value": 1
@@ -9521,7 +10094,12 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["гоблин", "длинное", "опрокидывание", "универсальное колющий"],
+    "traits": [
+      "гоблин",
+      "длинное",
+      "опрокидывание",
+      "универсальное колющий"
+    ],
     "group": "polearm",
     "bonusDamage": {
       "value": 0
@@ -9586,7 +10164,9 @@
       "value": "worn"
     },
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -9635,7 +10215,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "масло"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "масло"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -9683,7 +10267,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -9779,7 +10367,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "масло"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "масло"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -9827,7 +10419,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "масло"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "масло"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -9875,7 +10471,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "масло"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "масло"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -9970,7 +10570,9 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["метательное"],
+    "traits": [
+      "метательное"
+    ],
     "group": "dart",
     "bonusDamage": {
       "value": 0
@@ -10035,7 +10637,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -10083,7 +10690,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["двуручное d12"],
+    "traits": [
+      "двуручное d12"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -10148,7 +10757,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "скрываемое", "точное"],
+    "traits": [
+      "быстрое",
+      "скрываемое",
+      "точное"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -10213,7 +10826,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -10470,7 +11088,11 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["смертельное d8", "Разоружение", "метательное 20"],
+    "traits": [
+      "смертельное d8",
+      "Разоружение",
+      "метательное 20"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -10535,7 +11157,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["гнолл", "размашистое", "универсальное рубящий"],
+    "traits": [
+      "гнолл",
+      "размашистое",
+      "универсальное рубящий"
+    ],
     "group": "flail",
     "bonusDamage": {
       "value": 0
@@ -10649,7 +11275,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["универсальное колющий"],
+    "traits": [
+      "универсальное колющий"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -10721,7 +11349,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "холод", "расходуемый", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "холод",
+      "расходуемый",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -10793,7 +11427,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "холод", "расходуемый", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "холод",
+      "расходуемый",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -10865,7 +11505,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "холод", "расходуемый", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "холод",
+      "расходуемый",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -10937,7 +11583,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "холод", "расходуемый", "брызги"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "холод",
+      "расходуемый",
+      "брызги"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -10989,7 +11641,9 @@
       },
       {
         "key": "FlatModifier",
-        "predicate": ["playing"],
+        "predicate": [
+          "playing"
+        ],
         "selector": "performance",
         "type": "item",
         "value": 1
@@ -11164,7 +11818,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11212,7 +11872,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11260,7 +11926,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11308,7 +11980,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11356,7 +12034,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11404,7 +12088,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11452,7 +12142,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11500,7 +12196,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11548,7 +12250,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11596,7 +12304,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11644,7 +12358,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11692,7 +12412,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -11860,7 +12586,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "несмертельное"],
+    "traits": [
+      "быстрое",
+      "несмертельное"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -11900,7 +12629,6 @@
     },
     "specific": null
   },
-
   {
     "name": "Набор алхимика / Alchemist's Toolkit",
     "rules": [],
@@ -11955,7 +12683,9 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["action:climb"],
+        "predicate": [
+          "action:climb"
+        ],
         "selector": "athletics",
         "type": "item",
         "value": 1
@@ -12062,7 +12792,9 @@
       {
         "key": "FlatModifier",
         "label": "Набор для ремонта [Отличный] [Ремонт]",
-        "predicate": ["action:repair"],
+        "predicate": [
+          "action:repair"
+        ],
         "selector": "crafting",
         "type": "item",
         "value": 1
@@ -12303,7 +13035,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "ранение", "яд", "пустота"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "ранение",
+      "яд",
+      "пустота"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -12351,7 +13089,12 @@
       "value": "affixed-to-melee-weapon"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "ментальный", "талисман"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "ментальный",
+      "талисман"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -12389,7 +13132,10 @@
         "key": "Strike",
         "label": "PF2E.BattleForm.Attack.Horns",
         "slug": "horns",
-        "traits": ["смертельное d12", "нечестивый"]
+        "traits": [
+          "смертельное d12",
+          "нечестивый"
+        ]
       },
       {
         "itemId": "{item|id}",
@@ -12400,7 +13146,9 @@
       },
       {
         "key": "Note",
-        "outcome": ["criticalSuccess"],
+        "outcome": [
+          "criticalSuccess"
+        ],
         "selector": "{item|id}-attack",
         "text": "PF2E.SpecificRule.Equipment.UnholyPlate.Note",
         "title": "{item|name}"
@@ -12426,7 +13174,12 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["защитный", "сакральный", "инвестируемый", "нечестивый"],
+    "traits": [
+      "защитный",
+      "сакральный",
+      "инвестируемый",
+      "нечестивый"
+    ],
     "group": "plate",
     "bonusDamage": null,
     "rarity": "common",
@@ -12462,7 +13215,12 @@
         "property": [],
         "resilient": 1
       }
-    }
+    },
+    "acBonus": 6,
+    "strength": 4,
+    "dexCap": 0,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Нож-звезда / Starknife",
@@ -12610,7 +13368,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["обратный замах", "Разоружение", "точное", "монах"],
+    "traits": [
+      "обратный замах",
+      "Разоружение",
+      "точное",
+      "монах"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -12656,7 +13419,9 @@
       {
         "key": "FlatModifier",
         "label": "Обзорная карта [Изображенная область]",
-        "predicate": ["mapped-area"],
+        "predicate": [
+          "mapped-area"
+        ],
         "selector": "survival",
         "type": "item",
         "value": 1
@@ -12664,7 +13429,10 @@
       {
         "key": "FlatModifier",
         "label": "Обзорная карта [Вспомнить информацию об изображенной области]",
-        "predicate": ["mapped-area", "action:recall-knowledge"],
+        "predicate": [
+          "mapped-area",
+          "action:recall-knowledge"
+        ],
         "selector": "skill-check",
         "type": "item",
         "value": 1
@@ -12722,7 +13490,9 @@
       {
         "key": "FlatModifier",
         "label": "Обзорная карта [Изображенная область]",
-        "predicate": ["mapped-area"],
+        "predicate": [
+          "mapped-area"
+        ],
         "selector": "survival",
         "type": "item",
         "value": 1
@@ -12730,7 +13500,10 @@
       {
         "key": "FlatModifier",
         "label": "Обзорная карта [Вспомнить информацию об изображенной области]",
-        "predicate": ["mapped-area", "action:recall-knowledge"],
+        "predicate": [
+          "mapped-area",
+          "action:recall-knowledge"
+        ],
         "selector": "skill-check",
         "type": "item",
         "value": 1
@@ -12807,7 +13580,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13053,7 +13831,9 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["удобный"],
+    "traits": [
+      "удобный"
+    ],
     "group": "cloth",
     "bonusDamage": null,
     "rarity": "common",
@@ -13079,7 +13859,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 0,
+    "strength": null,
+    "dexCap": 5,
+    "checkPenalty": 0,
+    "speedPenalty": 0
   },
   {
     "name": "Оплот военачальника [Отличный] / Warleader's Bulwark (Greater)",
@@ -13094,10 +13879,17 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:hide", "action:sneak", "action:impersonate"]
+            "or": [
+              "action:hide",
+              "action:sneak",
+              "action:impersonate"
+            ]
           }
         ],
-        "selector": ["deception", "stealth"],
+        "selector": [
+          "deception",
+          "stealth"
+        ],
         "type": "item",
         "value": -3
       }
@@ -13122,7 +13914,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": "plate",
     "bonusDamage": null,
     "rarity": "common",
@@ -13158,7 +13953,12 @@
         "property": [],
         "resilient": 2
       }
-    }
+    },
+    "acBonus": 4,
+    "strength": 3,
+    "dexCap": 1,
+    "checkPenalty": -3,
+    "speedPenalty": -5
   },
   {
     "name": "Оплот военачальника / Warleader's Bulwark",
@@ -13173,10 +13973,17 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:hide", "action:sneak", "action:impersonate"]
+            "or": [
+              "action:hide",
+              "action:sneak",
+              "action:impersonate"
+            ]
           }
         ],
-        "selector": ["deception", "stealth"],
+        "selector": [
+          "deception",
+          "stealth"
+        ],
         "type": "item",
         "value": -2
       }
@@ -13201,7 +14008,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": "plate",
     "bonusDamage": null,
     "rarity": "common",
@@ -13237,7 +14047,12 @@
         "property": [],
         "resilient": 1
       }
-    }
+    },
+    "acBonus": 4,
+    "strength": 3,
+    "dexCap": 1,
+    "checkPenalty": -2,
+    "speedPenalty": -5
   },
   {
     "name": "Опрокидывающий силок / Trip Snare",
@@ -13264,7 +14079,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13316,7 +14136,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["силовое", "орк", "размашистое"],
+    "traits": [
+      "силовое",
+      "орк",
+      "размашистое"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -13381,7 +14205,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "кобольд", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "кобольд",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -13429,7 +14259,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13477,7 +14311,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13525,7 +14363,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13553,14 +14395,19 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["item:trait:alchemical", "action:craft"],
+        "predicate": [
+          "item:trait:alchemical",
+          "action:craft"
+        ],
         "selector": "crafting",
         "type": "item",
         "value": 2
       },
       {
         "key": "EphemeralEffect",
-        "predicate": ["target:cover-level:lesser"],
+        "predicate": [
+          "target:cover-level:lesser"
+        ],
         "selectors": "alchemical-bomb-base-attack-roll",
         "uuid": "Compendium.pf2e.equipment-effects.Item.SZWxyXOTZtGvZbN7"
       },
@@ -13573,7 +14420,9 @@
       {
         "damageCategory": "брызги",
         "key": "FlatModifier",
-        "predicate": ["alchemist-goggles-failure"],
+        "predicate": [
+          "alchemist-goggles-failure"
+        ],
         "selector": "alchemical-bomb-base-damage",
         "type": "item",
         "value": 2
@@ -13601,7 +14450,10 @@
       "value": "worneyepiece"
     },
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13630,14 +14482,19 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["item:trait:alchemical", "action:craft"],
+        "predicate": [
+          "item:trait:alchemical",
+          "action:craft"
+        ],
         "selector": "crafting",
         "type": "item",
         "value": 3
       },
       {
         "key": "EphemeralEffect",
-        "predicate": ["target:cover-level:lesser"],
+        "predicate": [
+          "target:cover-level:lesser"
+        ],
         "selectors": "alchemical-bomb-base-attack-roll",
         "uuid": "Compendium.pf2e.equipment-effects.Item.SZWxyXOTZtGvZbN7"
       },
@@ -13650,7 +14507,9 @@
       {
         "damageCategory": "брызги",
         "key": "FlatModifier",
-        "predicate": ["alchemist-goggles-failure"],
+        "predicate": [
+          "alchemist-goggles-failure"
+        ],
         "selector": "alchemical-bomb-base-damage",
         "type": "item",
         "value": 3
@@ -13678,7 +14537,10 @@
       "value": "worneyepiece"
     },
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13707,14 +14569,19 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["item:trait:alchemical", "action:craft"],
+        "predicate": [
+          "item:trait:alchemical",
+          "action:craft"
+        ],
         "selector": "crafting",
         "type": "item",
         "value": 1
       },
       {
         "key": "EphemeralEffect",
-        "predicate": ["target:cover-level:lesser"],
+        "predicate": [
+          "target:cover-level:lesser"
+        ],
         "selectors": "alchemical-bomb-base-attack-roll",
         "uuid": "Compendium.pf2e.equipment-effects.Item.SZWxyXOTZtGvZbN7"
       },
@@ -13727,7 +14594,9 @@
       {
         "damageCategory": "брызги",
         "key": "FlatModifier",
-        "predicate": ["alchemist-goggles-failure"],
+        "predicate": [
+          "alchemist-goggles-failure"
+        ],
         "selector": "alchemical-bomb-base-damage",
         "type": "item",
         "value": 1
@@ -13755,7 +14624,10 @@
       "value": "worneyepiece"
     },
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -13804,7 +14676,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14003,7 +14880,12 @@
       "value": "affixed-to-weapon"
     },
     "grade": null,
-    "traits": ["расходуемый", "святой", "магический", "талисман"],
+    "traits": [
+      "расходуемый",
+      "святой",
+      "магический",
+      "талисман"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14051,7 +14933,12 @@
       "value": "affixed-to-weapon"
     },
     "grade": null,
-    "traits": ["расходуемый", "святой", "магический", "талисман"],
+    "traits": [
+      "расходуемый",
+      "святой",
+      "магический",
+      "талисман"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14097,7 +14984,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["природный"],
+    "traits": [
+      "природный"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "unique",
@@ -14293,7 +15182,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14341,7 +15234,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "зелье"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "зелье"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14389,7 +15286,11 @@
       "value": "affixed-to-armor"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "талисман"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "талисман"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14419,7 +15320,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:swim", "action:climb"]
+            "or": [
+              "action:swim",
+              "action:climb"
+            ]
           }
         ],
         "selector": "athletics",
@@ -14447,7 +15351,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": "composite",
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -14483,7 +15390,12 @@
         "property": [],
         "resilient": null
       }
-    }
+    },
+    "acBonus": 5,
+    "strength": 3,
+    "dexCap": 1,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Пластинчатый доспех / Splint Mail",
@@ -14534,7 +15446,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 5,
+    "strength": 3,
+    "dexCap": 1,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Платиновые монеты / Platinum Pieces",
@@ -14606,7 +15523,9 @@
           }
         ],
         "slug": "jaws",
-        "traits": ["безоружное"]
+        "traits": [
+          "безоружное"
+        ]
       },
       {
         "baseType": "claw",
@@ -14629,7 +15548,10 @@
           }
         ],
         "slug": "claw",
-        "traits": ["безоружное", "быстрое"]
+        "traits": [
+          "безоружное",
+          "быстрое"
+        ]
       },
       {
         "itemId": "{item|id}",
@@ -14690,7 +15612,10 @@
       "value": "worncloak"
     },
     "grade": null,
-    "traits": ["инвестируемый", "природный"],
+    "traits": [
+      "инвестируемый",
+      "природный"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14738,7 +15663,9 @@
           }
         ],
         "slug": "jaws",
-        "traits": ["безоружное"]
+        "traits": [
+          "безоружное"
+        ]
       },
       {
         "baseType": "claw",
@@ -14761,7 +15688,10 @@
           }
         ],
         "slug": "claw",
-        "traits": ["безоружное", "быстрое"]
+        "traits": [
+          "безоружное",
+          "быстрое"
+        ]
       },
       {
         "itemId": "{item|id}",
@@ -14822,7 +15752,10 @@
       "value": "worncloak"
     },
     "grade": null,
-    "traits": ["инвестируемый", "природный"],
+    "traits": [
+      "инвестируемый",
+      "природный"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -14918,7 +15851,9 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["защитный"],
+    "traits": [
+      "защитный"
+    ],
     "group": "plate",
     "bonusDamage": null,
     "rarity": "common",
@@ -14944,7 +15879,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 6,
+    "strength": 4,
+    "dexCap": 0,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Полулаты / Half Plate",
@@ -14995,7 +15935,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 5,
+    "strength": 3,
+    "dexCap": 1,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Посох Бо / Bo Staff",
@@ -15022,7 +15967,12 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["монах", "парирование", "длинное", "опрокидывание"],
+    "traits": [
+      "монах",
+      "парирование",
+      "длинное",
+      "опрокидывание"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15087,7 +16037,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15152,7 +16106,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15217,7 +16175,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15282,7 +16244,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15347,7 +16313,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15412,7 +16382,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15477,7 +16451,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15524,7 +16502,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:sense-direction", "action:subsist"]
+            "or": [
+              "action:sense-direction",
+              "action:subsist"
+            ]
           }
         ],
         "selector": "survival",
@@ -15533,7 +16514,9 @@
       },
       {
         "key": "FlatModifier",
-        "predicate": ["action:recall-knowledge"],
+        "predicate": [
+          "action:recall-knowledge"
+        ],
         "selector": "religion",
         "type": "item",
         "value": 1
@@ -15561,7 +16544,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15608,7 +16595,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:sense-direction", "action:subsist"]
+            "or": [
+              "action:sense-direction",
+              "action:subsist"
+            ]
           }
         ],
         "selector": "survival",
@@ -15617,7 +16607,9 @@
       },
       {
         "key": "FlatModifier",
-        "predicate": ["action:recall-knowledge"],
+        "predicate": [
+          "action:recall-knowledge"
+        ],
         "selector": "religion",
         "type": "item",
         "value": 1
@@ -15645,7 +16637,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15692,7 +16688,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:sense-direction", "action:subsist"]
+            "or": [
+              "action:sense-direction",
+              "action:subsist"
+            ]
           }
         ],
         "selector": "survival",
@@ -15701,7 +16700,9 @@
       },
       {
         "key": "FlatModifier",
-        "predicate": ["action:recall-knowledge"],
+        "predicate": [
+          "action:recall-knowledge"
+        ],
         "selector": "religion",
         "type": "item",
         "value": 1
@@ -15729,7 +16730,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15776,7 +16781,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "or": ["action:sense-direction", "action:subsist"]
+            "or": [
+              "action:sense-direction",
+              "action:subsist"
+            ]
           }
         ],
         "selector": "survival",
@@ -15785,7 +16793,9 @@
       },
       {
         "key": "FlatModifier",
-        "predicate": ["action:recall-knowledge"],
+        "predicate": [
+          "action:recall-knowledge"
+        ],
         "selector": "religion",
         "type": "item",
         "value": 1
@@ -15813,7 +16823,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "посох", "двуручное d8"],
+    "traits": [
+      "магический",
+      "посох",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15876,7 +16890,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["монах", "двуручное d8"],
+    "traits": [
+      "монах",
+      "двуручное d8"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -15941,7 +16958,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["полурослик", "тяговое"],
+    "traits": [
+      "полурослик",
+      "тяговое"
+    ],
     "group": "sling",
     "bonusDamage": {
       "value": 0
@@ -16004,7 +17024,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["тяговое"],
+    "traits": [
+      "тяговое"
+    ],
     "group": "sling",
     "bonusDamage": {
       "value": 0
@@ -16069,7 +17091,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -16125,7 +17149,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "брызги", "жизненность"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "брызги",
+      "жизненность"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -16197,7 +17227,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "брызги", "жизненность"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "брызги",
+      "жизненность"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -16269,7 +17305,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "брызги", "жизненность"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "брызги",
+      "жизненность"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -16341,7 +17383,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["алхимический", "бомба", "расходуемый", "брызги", "жизненность"],
+    "traits": [
+      "алхимический",
+      "бомба",
+      "расходуемый",
+      "брызги",
+      "жизненность"
+    ],
     "group": "bomb",
     "bonusDamage": {
       "value": 0
@@ -16460,7 +17508,10 @@
       "value": "wornmask"
     },
     "grade": null,
-    "traits": ["фокусирующий", "инвестируемый"],
+    "traits": [
+      "фокусирующий",
+      "инвестируемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -16516,7 +17567,10 @@
       "value": "wornmask"
     },
     "grade": null,
-    "traits": ["фокусирующий", "инвестируемый"],
+    "traits": [
+      "фокусирующий",
+      "инвестируемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -16565,7 +17619,12 @@
       "value": "affixed-to-armor"
     },
     "grade": null,
-    "traits": ["расходуемый", "обнаружение", "магический", "талисман"],
+    "traits": [
+      "расходуемый",
+      "обнаружение",
+      "магический",
+      "талисман"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -16662,7 +17721,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "эмоция", "страх", "магический", "ментальный"],
+    "traits": [
+      "расходуемый",
+      "эмоция",
+      "страх",
+      "магический",
+      "ментальный"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -16759,7 +17824,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический"],
+    "traits": [
+      "расходуемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -16807,7 +17875,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "кобольд", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "кобольд",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -16859,7 +17933,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический"],
+    "traits": [
+      "расходуемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -16991,21 +18068,27 @@
     "rules": [
       {
         "key": "Note",
-        "outcome": ["success"],
+        "outcome": [
+          "success"
+        ],
         "selector": "{item|_id}-damage",
         "text": "PF2E.AmmunitionNotes.AntlerArrow.Text",
         "title": "PF2E.AmmunitionNotes.AntlerArrow.Title"
       },
       {
         "key": "Note",
-        "outcome": ["success"],
+        "outcome": [
+          "success"
+        ],
         "selector": "{item|_id}-damage",
         "text": "PF2E.Item.Weapon.CriticalSpecialization.bow",
         "title": "PF2E.Actor.Creature.CriticalSpecialization"
       },
       {
         "key": "Note",
-        "outcome": ["criticalSuccess"],
+        "outcome": [
+          "criticalSuccess"
+        ],
         "predicate": [
           {
             "not": "critical-specialization"
@@ -17017,7 +18100,9 @@
       },
       {
         "key": "Note",
-        "outcome": ["criticalSuccess"],
+        "outcome": [
+          "criticalSuccess"
+        ],
         "predicate": [
           {
             "not": "critical-specialization"
@@ -17029,8 +18114,12 @@
       },
       {
         "key": "Note",
-        "outcome": ["criticalSuccess"],
-        "predicate": ["critical-specialization"],
+        "outcome": [
+          "criticalSuccess"
+        ],
+        "predicate": [
+          "critical-specialization"
+        ],
         "selector": "{item|_id}-damage",
         "text": "PF2E.AmmunitionNotes.AntlerArrow.CriticalText",
         "title": "PF2E.AmmunitionNotes.AntlerArrow.Title"
@@ -17058,7 +18147,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический"],
+    "traits": [
+      "расходуемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -17106,7 +18198,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -17154,7 +18252,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -17202,7 +18306,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -17250,7 +18360,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -17298,7 +18414,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["Разоружение", "длинное"],
+    "traits": [
+      "Разоружение",
+      "длинное"
+    ],
     "group": "polearm",
     "bonusDamage": {
       "value": 0
@@ -17364,7 +18483,13 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["быстрое", "точное", "трипки", "размашистое", "метательное 10"],
+    "traits": [
+      "быстрое",
+      "точное",
+      "трипки",
+      "размашистое",
+      "метательное 10"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -17644,7 +18769,9 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["предательское"],
+    "traits": [
+      "предательское"
+    ],
     "group": "crossbow",
     "bonusDamage": {
       "value": 0
@@ -17738,7 +18865,9 @@
     "rules": [
       {
         "key": "TokenLight",
-        "predicate": ["lit-candle"],
+        "predicate": [
+          "lit-candle"
+        ],
         "value": {
           "animation": {
             "intensity": 4,
@@ -17758,7 +18887,9 @@
       },
       {
         "key": "TokenEffectIcon",
-        "predicate": ["lit-candle"],
+        "predicate": [
+          "lit-candle"
+        ],
         "value": "icons/sundries/lights/candle-unlit-grey.webp"
       }
     ],
@@ -17862,8 +18993,13 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["origin:trait:fiend"],
-        "selector": ["ac", "saving-throw"],
+        "predicate": [
+          "origin:trait:fiend"
+        ],
+        "selector": [
+          "ac",
+          "saving-throw"
+        ],
         "type": "circumstance",
         "value": 1
       },
@@ -17899,7 +19035,12 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["сакральный", "святой", "инвестируемый", "шумный"],
+    "traits": [
+      "сакральный",
+      "святой",
+      "инвестируемый",
+      "шумный"
+    ],
     "group": "chain",
     "bonusDamage": null,
     "rarity": "common",
@@ -17935,7 +19076,12 @@
         "property": [],
         "resilient": 1
       }
-    }
+    },
+    "acBonus": 4,
+    "strength": 3,
+    "dexCap": 1,
+    "checkPenalty": 0,
+    "speedPenalty": 0
   },
   {
     "name": "Седельные сумки / Saddlebags",
@@ -18014,7 +19160,9 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["размашистое"],
+    "traits": [
+      "размашистое"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -18174,7 +19322,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18222,7 +19375,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18274,7 +19432,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "кобольд", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "кобольд",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -18322,7 +19486,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18374,7 +19543,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18426,7 +19600,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18474,7 +19653,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18522,7 +19706,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18570,7 +19759,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18622,7 +19816,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["слуховой", "расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "слуховой",
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18725,7 +19925,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["силовое", "размашистое"],
+    "traits": [
+      "силовое",
+      "размашистое"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -18790,7 +19993,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18839,7 +20044,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -18869,7 +20076,10 @@
       {
         "key": "FlatModifier",
         "label": "Скрытые ножны [Спрятать или скрыть содержимое]",
-        "predicate": ["action:conceal-an-object", "target:contents"],
+        "predicate": [
+          "action:conceal-an-object",
+          "target:contents"
+        ],
         "selector": "stealth",
         "type": "item",
         "value": 1
@@ -18995,7 +20205,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "предательское", "точное", "гоблин"],
+    "traits": [
+      "быстрое",
+      "предательское",
+      "точное",
+      "гоблин"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -19060,7 +20275,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "глотаемый", "яд", "вирулентный"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "глотаемый",
+      "яд",
+      "вирулентный"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -19178,7 +20399,9 @@
     "runes": {
       "reinforcing": 0
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 2,
+    "speedPenalty": 0
   },
   {
     "name": "Стрела-гадюка / Viper Arrow",
@@ -19205,7 +20428,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический"],
+    "traits": [
+      "расходуемый",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -19305,7 +20531,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -19354,7 +20585,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -19402,7 +20638,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -19433,14 +20674,18 @@
         "key": "RollOption",
         "label": "Внезапное нападение",
         "option": "action:sudden-charge",
-        "predicate": ["sudden-charge"],
+        "predicate": [
+          "sudden-charge"
+        ],
         "toggleable": true
       },
       {
         "diceNumber": 1,
         "dieSize": "d8",
         "key": "DamageDice",
-        "predicate": ["action:sudden-charge"],
+        "predicate": [
+          "action:sudden-charge"
+        ],
         "selector": "strike-damage"
       }
     ],
@@ -19464,7 +20709,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": "leather",
     "bonusDamage": null,
     "rarity": "common",
@@ -19500,7 +20748,12 @@
         "property": [],
         "resilient": 1
       }
-    }
+    },
+    "acBonus": 3,
+    "strength": 2,
+    "dexCap": 2,
+    "checkPenalty": -1,
+    "speedPenalty": 0
   },
   {
     "name": "Сыромятный доспех / Hide Armor",
@@ -19551,7 +20804,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 3,
+    "strength": 2,
+    "dexCap": 2,
+    "checkPenalty": -2,
+    "speedPenalty": -5
   },
   {
     "name": "Сюрикен / Shuriken",
@@ -19579,7 +20837,11 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["быстрое", "монах", "метательное"],
+    "traits": [
+      "быстрое",
+      "монах",
+      "метательное"
+    ],
     "group": "dart",
     "bonusDamage": {
       "value": 0
@@ -19644,7 +20906,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["силовое", "трипки", "размашистое"],
+    "traits": [
+      "силовое",
+      "трипки",
+      "размашистое"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -19709,7 +20975,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "rare",
@@ -19758,7 +21026,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "контакт", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "контакт",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -19807,7 +21080,11 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["быстрое", "размашистое", "метательное 10"],
+    "traits": [
+      "быстрое",
+      "размашистое",
+      "метательное 10"
+    ],
     "group": "axe",
     "bonusDamage": {
       "value": 0
@@ -19921,7 +21198,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "яд", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "яд",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -19970,7 +21253,9 @@
       "canBeAmmo": false
     },
     "grade": null,
-    "traits": ["метательное 20"],
+    "traits": [
+      "метательное 20"
+    ],
     "group": "spear",
     "bonusDamage": {
       "value": 0
@@ -20147,7 +21432,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["бардинг", "компаньон"],
+    "traits": [
+      "бардинг",
+      "компаньон"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20173,7 +21461,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 3,
+    "strength": 5,
+    "dexCap": 3,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Тяжёлый бард [Маленький или Средний] / Heavy Barding (Small or Medium)",
@@ -20198,7 +21491,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["бардинг", "компаньон"],
+    "traits": [
+      "бардинг",
+      "компаньон"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20224,7 +21520,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 3,
+    "strength": 5,
+    "dexCap": 3,
+    "checkPenalty": -3,
+    "speedPenalty": -10
   },
   {
     "name": "Увеличительное стекло / Magnifying Glass",
@@ -20232,7 +21533,9 @@
       {
         "key": "FlatModifier",
         "label": "Увеличительное стекло [Мелкие детали]",
-        "predicate": ["minute-details"],
+        "predicate": [
+          "minute-details"
+        ],
         "selector": "perception",
         "type": "item",
         "value": 1
@@ -20309,7 +21612,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["прикрепляемый к щиту"],
+    "traits": [
+      "прикрепляемый к щиту"
+    ],
     "group": "shield",
     "bonusDamage": {
       "value": 0
@@ -20374,7 +21679,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20422,7 +21733,13 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "мутаген", "полиморф"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "мутаген",
+      "полиморф"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20453,7 +21770,10 @@
         "key": "FlatModifier",
         "predicate": [
           {
-            "gte": ["parent:level", 4]
+            "gte": [
+              "parent:level",
+              4
+            ]
           }
         ],
         "selector": "{item|id}-attack",
@@ -20464,7 +21784,9 @@
         "key": "DamageAlteration",
         "mode": "upgrade",
         "property": "dice-number",
-        "selectors": ["{item|id}-damage"],
+        "selectors": [
+          "{item|id}-damage"
+        ],
         "slug": "base",
         "value": "ternary(gte(@item.level,18),4,ternary(gte(@item.level,12),3,ternary(gte(@item.level,4),2,1)))"
       },
@@ -20569,7 +21891,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый"],
+    "traits": [
+      "алхимический",
+      "расходуемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20617,7 +21942,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый"],
+    "traits": [
+      "алхимический",
+      "расходуемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20665,7 +21993,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый"],
+    "traits": [
+      "алхимический",
+      "расходуемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20713,7 +22044,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "пустота"],
+    "traits": [
+      "магический",
+      "пустота"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20762,7 +22096,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "магический", "ментальный", "сон"],
+    "traits": [
+      "расходуемый",
+      "магический",
+      "ментальный",
+      "сон"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20810,7 +22149,12 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "ранение", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "ранение",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -20838,7 +22182,9 @@
     "rules": [
       {
         "key": "TokenLight",
-        "predicate": ["lit-torch"],
+        "predicate": [
+          "lit-torch"
+        ],
         "value": {
           "alpha": 0.45,
           "animation": {
@@ -20863,7 +22209,9 @@
           }
         },
         "key": "Strike",
-        "otherTags": ["improvised"],
+        "otherTags": [
+          "improvised"
+        ],
         "predicate": [
           {
             "not": "lit-torch"
@@ -20881,13 +22229,19 @@
         },
         "img": "icons/sundries/lights/torch-brown-lit.webp",
         "key": "Strike",
-        "otherTags": ["improvised"],
-        "predicate": ["lit-torch"]
+        "otherTags": [
+          "improvised"
+        ],
+        "predicate": [
+          "lit-torch"
+        ]
       },
       {
         "damageType": "fire",
         "key": "FlatModifier",
-        "predicate": ["lit-torch"],
+        "predicate": [
+          "lit-torch"
+        ],
         "selector": "{item|_id}-damage",
         "value": 1
       },
@@ -20899,7 +22253,9 @@
       },
       {
         "key": "TokenEffectIcon",
-        "predicate": ["lit-torch"],
+        "predicate": [
+          "lit-torch"
+        ],
         "value": "icons/sundries/lights/torch-brown-lit.webp"
       }
     ],
@@ -20974,7 +22330,10 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["силовое", "размашистое"],
+    "traits": [
+      "силовое",
+      "размашистое"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -21037,7 +22396,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый"],
+    "traits": [
+      "алхимический",
+      "расходуемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -21065,7 +22427,9 @@
     "rules": [
       {
         "key": "TokenLight",
-        "predicate": ["active-lantern"],
+        "predicate": [
+          "active-lantern"
+        ],
         "value": {
           "animation": {
             "intensity": 4,
@@ -21080,7 +22444,9 @@
       },
       {
         "key": "TokenEffectIcon",
-        "predicate": ["active-lantern"],
+        "predicate": [
+          "active-lantern"
+        ],
         "value": "icons/sundries/lights/lantern-iron-yellow.webp"
       },
       {
@@ -21230,7 +22596,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["толчок", "двуручное d10", "универсальное колющий"],
+    "traits": [
+      "толчок",
+      "двуручное d10",
+      "универсальное колющий"
+    ],
     "group": "club",
     "bonusDamage": {
       "value": 0
@@ -21295,7 +22665,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["расходуемый", "механический", "силок", "ловушка"],
+    "traits": [
+      "расходуемый",
+      "механический",
+      "силок",
+      "ловушка"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -21414,7 +22789,12 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["коточеловек", "точное", "мешающее", "длинное"],
+    "traits": [
+      "коточеловек",
+      "точное",
+      "мешающее",
+      "длинное"
+    ],
     "group": "flail",
     "bonusDamage": {
       "value": 0
@@ -21479,7 +22859,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["опрокидывание"],
+    "traits": [
+      "опрокидывание"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -21544,7 +22926,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["монах", "опрокидывание"],
+    "traits": [
+      "монах",
+      "опрокидывание"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -21661,7 +23046,12 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["мешающее", "хобгоблин", "длинное", "опрокидывание"],
+    "traits": [
+      "мешающее",
+      "хобгоблин",
+      "длинное",
+      "опрокидывание"
+    ],
     "group": "polearm",
     "bonusDamage": {
       "value": 0
@@ -21775,7 +23165,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "ранение", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "ранение",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -21802,7 +23197,9 @@
     "name": "Чаша правосудия / Chalice of Justice",
     "rules": [
       {
-        "definition": ["item:id:{item|id}"],
+        "definition": [
+          "item:id:{item|id}"
+        ],
         "key": "AdjustStrike",
         "mode": "add",
         "property": "materials",
@@ -21818,7 +23215,9 @@
         ],
         "inMemoryOnly": true,
         "key": "GrantItem",
-        "predicate": ["self:trait:unholy"],
+        "predicate": [
+          "self:trait:unholy"
+        ],
         "uuid": "Compendium.pf2e.conditionitems.Item.4D2KBtexWXa6oUMR"
       }
     ],
@@ -21844,7 +23243,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["сакральный", "святой", "универсальное колющий"],
+    "traits": [
+      "сакральный",
+      "святой",
+      "универсальное колющий"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -21880,7 +23283,9 @@
     "runes": {
       "potency": 2,
       "striking": 2,
-      "property": ["святой"]
+      "property": [
+        "святой"
+      ]
     },
     "specific": {
       "material": {
@@ -21889,7 +23294,9 @@
       },
       "runes": {
         "potency": 2,
-        "property": ["святой"],
+        "property": [
+          "святой"
+        ],
         "striking": 2
       }
     }
@@ -21966,38 +23373,54 @@
         "toggleable": true
       },
       {
-        "definition": ["item:id:{item|id}"],
+        "definition": [
+          "item:id:{item|id}"
+        ],
         "key": "AdjustStrike",
         "mode": "add",
-        "predicate": ["gem-twist"],
+        "predicate": [
+          "gem-twist"
+        ],
         "property": "property-runes",
         "value": "{item|flags.pf2e.rulesSelections.gemTwist}"
       },
       {
         "key": "DamageAlteration",
         "mode": "override",
-        "predicate": ["gem-twist:flaming"],
+        "predicate": [
+          "gem-twist:flaming"
+        ],
         "property": "damage-type",
         "requiresEquipped": false,
-        "selectors": ["{item|id}-inline-damage"],
+        "selectors": [
+          "{item|id}-inline-damage"
+        ],
         "value": "огонь"
       },
       {
         "key": "DamageAlteration",
         "mode": "override",
-        "predicate": ["gem-twist:frost"],
+        "predicate": [
+          "gem-twist:frost"
+        ],
         "property": "damage-type",
         "requiresEquipped": false,
-        "selectors": ["{item|id}-inline-damage"],
+        "selectors": [
+          "{item|id}-inline-damage"
+        ],
         "value": "холод"
       },
       {
         "key": "DamageAlteration",
         "mode": "override",
-        "predicate": ["gem-twist:shock"],
+        "predicate": [
+          "gem-twist:shock"
+        ],
         "property": "damage-type",
         "requiresEquipped": false,
-        "selectors": ["{item|id}-inline-damage"],
+        "selectors": [
+          "{item|id}-inline-damage"
+        ],
         "value": "электричество"
       }
     ],
@@ -22131,7 +23554,12 @@
       "resilient": 0,
       "property": []
     },
-    "specific": null
+    "specific": null,
+    "acBonus": 3,
+    "strength": 2,
+    "dexCap": 2,
+    "checkPenalty": -2,
+    "speedPenalty": -5
   },
   {
     "name": "Шест [10 футов] / Ten-Foot Pole",
@@ -22205,7 +23633,9 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["магический"],
+    "traits": [
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -22237,7 +23667,9 @@
       "runes": {
         "reinforcing": 0
       }
-    }
+    },
+    "acBonus": 2,
+    "speedPenalty": 0
   },
   {
     "name": "Шипованная рукавица / Spiked Gauntlet",
@@ -22264,7 +23696,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "свободная рука"],
+    "traits": [
+      "быстрое",
+      "свободная рука"
+    ],
     "group": "brawling",
     "bonusDamage": {
       "value": 0
@@ -22329,7 +23764,9 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["прикрепляемый к щиту"],
+    "traits": [
+      "прикрепляемый к щиту"
+    ],
     "group": "shield",
     "bonusDamage": {
       "value": 0
@@ -22394,7 +23831,10 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["магический", "видение"],
+    "traits": [
+      "магический",
+      "видение"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -22423,7 +23863,9 @@
     "rules": [
       {
         "key": "FlatModifier",
-        "predicate": ["item:trait:curse"],
+        "predicate": [
+          "item:trait:curse"
+        ],
         "selector": "saving-throw",
         "type": "item",
         "value": 1
@@ -22431,7 +23873,9 @@
       {
         "key": "AdjustModifier",
         "mode": "add",
-        "predicate": ["item:trait:curse"],
+        "predicate": [
+          "item:trait:curse"
+        ],
         "selector": "saving-throw",
         "slug": "resilient",
         "value": 1
@@ -22457,7 +23901,10 @@
     },
     "usage": null,
     "grade": null,
-    "traits": ["инвестируемый", "магический"],
+    "traits": [
+      "инвестируемый",
+      "магический"
+    ],
     "group": "leather",
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -22493,7 +23940,12 @@
         "property": [],
         "resilient": 0
       }
-    }
+    },
+    "acBonus": 3,
+    "strength": 2,
+    "dexCap": 2,
+    "checkPenalty": -2,
+    "speedPenalty": 0
   },
   {
     "name": "Шлем рвения [Отличный] / Helm Of Zeal (Greater)",
@@ -22598,7 +24050,11 @@
       "value": "wornheadwear"
     },
     "grade": null,
-    "traits": ["сакральный", "фокусирующий", "инвестируемый"],
+    "traits": [
+      "сакральный",
+      "фокусирующий",
+      "инвестируемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -22725,7 +24181,11 @@
       "value": "wornheadwear"
     },
     "grade": null,
-    "traits": ["сакральный", "фокусирующий", "инвестируемый"],
+    "traits": [
+      "сакральный",
+      "фокусирующий",
+      "инвестируемый"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -22774,7 +24234,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["воздух", "расходуемый", "электричество", "магический"],
+    "traits": [
+      "воздух",
+      "расходуемый",
+      "электричество",
+      "магический"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -22826,7 +24291,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["быстрое", "Разоружение", "точное", "тэнгу"],
+    "traits": [
+      "быстрое",
+      "Разоружение",
+      "точное",
+      "тэнгу"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -22891,7 +24361,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -22939,7 +24413,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -22987,7 +24465,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -23033,7 +24515,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "исцеление"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "исцеление"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "uncommon",
@@ -23081,7 +24568,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "ментальный"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "ментальный"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -23129,7 +24621,12 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир", "ментальный"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир",
+      "ментальный"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -23178,7 +24675,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -23226,7 +24727,11 @@
       "value": "held-in-one-hand"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "эликсир"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "эликсир"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",
@@ -23274,7 +24779,11 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["эльф", "точное", "силовое"],
+    "traits": [
+      "эльф",
+      "точное",
+      "силовое"
+    ],
     "group": "sword",
     "bonusDamage": {
       "value": 0
@@ -23339,7 +24848,12 @@
       "value": "held-in-two-hands"
     },
     "grade": null,
-    "traits": ["алхимический", "расходуемый", "ранение", "яд"],
+    "traits": [
+      "алхимический",
+      "расходуемый",
+      "ранение",
+      "яд"
+    ],
     "group": null,
     "bonusDamage": null,
     "rarity": "common",

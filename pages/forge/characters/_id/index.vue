@@ -188,29 +188,6 @@
                 <v-icon small>mdi-plus</v-icon>
               </v-btn>
             </div>
-
-            <!-- Активные состояния -->
-            <!-- <div v-if="activeStatuses.length > 0" class="mb-3">
-              <v-chip
-                v-for="status in activeStatuses"
-                :key="status.key"
-                small
-                close
-                @click:close="removeStatus(status.key)"
-                class="ma-1"
-              >
-                <span > {{ status.name }}</span>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon small v-bind="attrs" v-on="on" class="ml-1"
-                      >mdi-information</v-icon
-                    >
-                  </template>
-                  <span>{{ status.description }}</span>
-                </v-tooltip>
-                <span >{{ status.value }}</span>
-              </v-chip>
-            </div> -->
             <div v-if="activeStatuses.length > 0" class="mb-3">
               <v-tooltip
                 bottom
@@ -268,53 +245,10 @@
                   }"
                 >
                   <v-icon small color="yellow darken-1">mdi-star</v-icon>
-                  <!-- 
-                          <p>
-                            Value:
-                            {{ characterSpont[levelAncestry - 1]?.value }}
-                          </p>
-                          <p>n: {{ n }}</p> -->
                 </span>
               </div>
             </div>
-            <!-- <div class="d-flex justify-center">
-              <v-icon small color="yellow darken-1">mdi-star</v-icon>
-              <v-icon small color="yellow darken-1">mdi-star-outline</v-icon>
-              <v-icon small color="yellow darken-1">mdi-star-outline</v-icon>
-            </div> -->
           </v-card>
-
-          <!-- Диалог выбора состояний -->
-          <!-- <v-dialog v-model="statusDialog" max-width="500">
-            <v-card>
-              <v-card-title>Select Conditions</v-card-title>
-              <v-card-text>
-                <v-list>
-                  <v-list-item
-                    v-for="status in availableStatuses"
-                    :key="status.key"
-                    @click="toggleStatus(status)"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>{{ status.name }}</v-list-item-title>
-                      <v-list-item-subtitle>{{
-                        status.description
-                      }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action>
-                      <v-icon v-if="isStatusActive(status.key)" color="green"
-                        >mdi-check</v-icon
-                      >
-                    </v-list-item-action>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn @click="statusDialog = false">Close</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog> -->
 
           <!-- Единое диалоговое окно для управления состояниями -->
           <v-dialog v-model="statusDialog" max-width="700">
@@ -1280,54 +1214,6 @@
                           </tr>
                         </template>
                       </v-data-table>
-
-                      <!-- <div
-                        v-for="gearItem in gear"
-                        :key="gearItem.id"
-                        class="caption mb-2"
-                      >
-                        <div v-if="gearItem.variant" style="display: inline">
-                          <strong>{{ gearItem.variant }}</strong>
-                          <span> ({{ gearItem.name }})</span>
-                        </div>
-                        <strong v-else>{{ gearItem.name }}</strong>
-                        <em v-if="gearItem.type"> • {{ gearItem.type }}</em>
-                        <span v-if="gearItem.source">
-                          <em v-if="gearItem.source.key">
-                            • {{ gearItem.source.key }}</em
-                          ><em v-if="!isNaN(gearItem.source.page)"
-                            >, pg. {{ gearItem.source.page }}</em
-                          >
-                        </span>
-
-                        <p class="mb-1" v-if="gearItem.snippet">
-                          {{ gearItem.snippet }}
-                        </p>
-                        <div
-                          class="mb-1"
-                          v-else
-                          v-html="gearItem.description"
-                        ></div>
-
-                        <div
-                          v-if="
-                            gearItem.meta !== undefined &&
-                            gearItem.meta.length > 0 &&
-                            ['armour'].includes(gearItem.meta[0].type)
-                          "
-                        >
-                          <p
-                            class="ml-1 pl-2 mb-1"
-                            style="border-left: solid 3px lightgrey"
-                            v-for="trait in gearItem.meta[0].traits"
-                            v-if="traitByName(trait, true)"
-                            :key="trait"
-                          >
-                            <strong>{{ trait }}: </strong>
-                            {{ traitByName(trait, true).crunch }}
-                          </p>
-                        </div>
-                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -1914,39 +1800,6 @@
                       </v-data-table>
                     </v-card>
                   </v-col>
-
-                  <!-- <v-data-table
-                  :headers="psychicPowersHeaders"
-                  :items="psychicPowers"
-                  hide-default-footer
-                  :items-per-page="-1"
-                >
-                  <template v-slot:item="{ item }">
-                    <tr>
-                      <td class="text-left pa-1 small">
-                        {{ item.name }}
-                      </td>
-                      <td class="text-center pa-1 small">
-                        {{ item.crunch_difficulty_number }}
-                      </td>
-                      <td class="text-center pa-1 small">
-                        {{ item.crunch_activation }}
-                      </td>
-                      <td class="text-center pa-1 small">
-                        {{ item.crunch_duration }}
-                      </td>
-                      <td class="text-center pa-1 small">
-                        {{ item.crunch_range }}
-                      </td>
-                      <td class="text-center pa-1 small">
-                        {{ item.crunch_multi_target }}
-                      </td>
-                      <td class="text-left pa-1 small">
-                        {{ item.effect }}
-                      </td>
-                    </tr>
-                  </template>
-                </v-data-table> -->
                 </div>
                 <div
                   v-if="!characterArchetype?.spellProgression"
@@ -1982,51 +1835,6 @@
                   </v-chip-group>
 
                   <div style="height: 505px; overflow-y: auto">
-                    <!-- objectives < description -->
-                    <!-- <div
-                    v-show="
-                      ['all', 'objectives'].some(
-                        (i) => i === descriptionSection.selection
-                      )
-                    "
-                  >
-                    <div
-                      class="mb-1"
-                      style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)"
-                    >
-                      <span class="body-2 red--text">Objectives</span>
-                      <v-icon small v-if="false" @click="objectiveEditorOpen"
-                        >редактировать</v-icon
-                      >
-                    </div>
-                    <div
-                      v-for="(objective, index) in objectives"
-                      :key="objective.name"
-                      class="pl-2 pr-2 pt-1 pb-1 caption"
-                    >
-                      <strong>{{ index + 1 }}:</strong> {{ objective.text }}
-                    </div>
-                    <div v-if="false">
-                      <span class="caption" @click="objectiveEditorOpen"
-                        >+ Add/edit objectives</span
-                      >
-                    </div>
-                    <div
-                      style="display: flex"
-                      justify="center"
-                      align
-                      v-if="objectiveEditorShow"
-                    >
-                      <v-textarea
-                        flat
-                        single-lined
-                        dense
-                        v-model="objectiveEditorValue"
-                      ></v-textarea>
-                    </div>
-                  </div> -->
-
-                    <!-- languages < description -->
                     <div
                       v-show="
                         ['все', 'языки'].some(
@@ -2065,28 +1873,11 @@
                         class="caption"
                       >
                         <strong>{{ keyword.name }}</strong>
-                        <!-- <em> • {{ keyword.type }}</em> -->
-                        <!-- <span v-if="keyword.custom">
-                        <v-hover>
-                          <v-icon
-                            small
-                            @click="removeCustomKeyword(keyword.name)"
-                            slot-scope="{ hover }"
-                            :color="`${hover ? 'error' : ''}`"
-                            >delete</v-icon
-                          >
-                        </v-hover>
-                      </span> -->
+
                         <p>
                           {{ keyword.description }}
                         </p>
                       </div>
-                      <!-- <div style="display: flex; justify-content: center">
-                      <v-btn x-small text @click="keywordsEditorDialog = true"
-                        >Additional Keywords
-                        <v-icon small>settings</v-icon></v-btn
-                      >
-                    </div> -->
                     </div>
 
                     <!-- objectives < description -->
@@ -2137,59 +1928,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!-- <v-row v-if="false" no-gutters>
-                <v-col :cols="6" class="pa-1">
-                  <v-card height="100%" class="flexcard">
-                    <v-card-text>
-                      <p class="caption">
-                        Spend one <strong>Wrath</strong> to:
-                      </p>
-                      <ul class="pl-3">
-                        <li class="caption">
-                          Re-roll failures once on a test
-                        </li>
-                        <li class="caption">
-                          Re-roll failures once on a soak attempt
-                        </li>
-                        <li class="caption">
-                          Add +1 to a Defiance check
-                        </li>
-                        <li class="caption">
-                          Make a narrative declaration
-                        </li>
-                        <li class="caption">
-                          As an Action: restore 1d3+1 Shock
-                        </li>
-                      </ul>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-
-                <v-col :cols="6" class="pa-1">
-                  <v-card height="100%" class="flexcard">
-                    <v-card-text>
-                      <p class="caption">
-                        Spend one <strong>Glory</strong> to:
-                      </p>
-                      <ul class="pl-3">
-                        <li class="caption">
-                          Add +1d to a test after any re-rolls
-                        </li>
-                        <li class="caption">
-                          Add +1 damage to a successful attack
-                        </li>
-                        <li class="caption">
-                          Increase the severity of a Critical Hit
-                        </li>
-                        <li class="caption">
-                          Seize the Initiative
-                        </li>
-                      </ul>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row> -->
               </v-tab-item>
             </v-tabs>
           </v-card>
@@ -2286,11 +2024,7 @@
                 <div v-if="selectedItem.defense">
                   <p class="main-holder" v-if="selectedItem.defense.save">
                     <strong>Защита:</strong>
-                    <!-- <strong>Защита:</strong>
-              <span v-if="selectedItem.defense.save.basic === true"
-                >Базовый
-              </span>
-              {{ selectedItem.defense.save.statistic }} -->
+
                     <span v-if="selectedItem?.defense?.save">
                       <span v-if="selectedItem?.defense?.save?.basic"
                         >Базовый
@@ -2373,11 +2107,7 @@
                     {{ selectedItem.level ? selectedItem.level.value : 0 }}
                   </div>
                 </v-row>
-                <v-row>
-                  <!-- <div>
-                    <trait-view v-if="selectedItem.traits" :selectedItem="selectedItem" class="mb-2" />
-                  </div> -->
-                </v-row>
+                <v-row> </v-row>
                 <p></p>
                 <!-- Описание закла -->
                 <div v-if="selectedItem.source.book">
@@ -2716,11 +2446,13 @@ export default {
     };
   },
   computed: {
+
+    //---------------------------
+    // Статусы
     availableStatuses() {
     return this.statusRepository;
   },
-
-    filteredStatuses() {
+  filteredStatuses() {
     if (!this.statusSearch) return this.statusRepository;
 
     const search = this.statusSearch.toLowerCase();
@@ -2750,10 +2482,13 @@ export default {
       return modifiedSkill;
     });
   },
+
+  //---------------------------
+  // Данные для  источников
     sources() {
       return [
         'playerCore',
- 'playerCore2',
+        'playerCore2',
         // 'tnh',
         ...this.settingHomebrews
       ];
@@ -2795,22 +2530,12 @@ export default {
     speciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
-    speciesAstartesChapter() {
-      let chapter = this.$store.getters['characters/characterSpeciesAstartesChapterById'](this.characterId);
-      if ( chapter && chapter.includes(' ') ) { // its an old chapter name, using CORE
-        chapter = `core ${chapter}`.toLowerCase().replace(/\W/gm, '-');
-      }
-      return chapter;
-    },
-
     characterTalents() {
       return this.$store.getters['characters/characterTalentsById'](this.characterId);
     },
-
     characterMutations() {
       return this.$store.getters['characters/characterMutationsById'](this.characterId);
     },
-
     archetypeKey() {
       return this.$store.getters['characters/characterArchetypeKeyById'](this.characterId);
     },
@@ -2826,7 +2551,6 @@ export default {
     characterFactionKey() {
       return this.$store.getters['characters/characterFactionKeyById'](this.characterId);
     },
-
     characterBackgroundKey() {
       return this.$store.getters['characters/characterBackgroundKeyById'](this.characterId);
     },
@@ -2846,16 +2570,12 @@ export default {
         this.characterId
       );
     },
-
-
     skillDefence() {
       return this.$store.getters["characters/characterskillDefenceById"](
         this.characterId
       );
     },
-
-
-      characterSpeed() {
+    characterSpeed() {
         let status = 0
           this.activeStatuses.forEach(effect => {
           if (effect && effect.rules) {
@@ -2887,7 +2607,7 @@ export default {
 
       return speed
     },
-        characterAttributes() {
+    characterAttributes() {
       return this.$store.getters["characters/characterAttributesById"](
         this.$route.params.id
       );
@@ -2917,7 +2637,7 @@ export default {
     },
     characterHeroPoints()
     {
-          return this.$store.getters['characters/characterHeroPointsById'](this.characterId);
+      return this.$store.getters['characters/characterHeroPointsById'](this.characterId);
     },
     avatar() {
       const customAvatarUrl = this.$store.getters['characters/characterAvatarUrlById'](this.characterId);
@@ -2927,9 +2647,6 @@ export default {
       }
 
       if (this.archetypeKey !== undefined) {
-        if (this.archetypeKey === 'advanced') {
-          return '/img/avatar_placeholder.png';
-        }
         if (!['core-ratling', 'core-ogryn'].includes(this.speciesKey)) {
           return `/img/avatars/archetype/${this.archetypeKey}.png`;
         }
@@ -2946,21 +2663,6 @@ export default {
       let enhancedAttributes = this.$store.getters['characters/characterAttributesEnhancedById'](this.characterId);
       return enhancedAttributes;
     },
-
-    /**
-     * {
-     *  name: 'Strength',
-     *  key: 'strength,
-     *  rating: 3, // aka bought value / rating
-     *  adjustedRating: 5, // adjuste rating,
-     *  adjustment: 2, // the adjusted amount
-     *  modifiers: [
-     *    // +1 from Attribute Modification * Space Marine Species
-     *    // +3 from Powered(3) * Astartes MK VII
-     *    { static: 1, rank: false, halfRank: false, }
-     *  ],
-     * }
-     */
     attributes() {
 
       const characterAttributes = this.$store.getters['characters/characterAttributesById'](this.characterId);
@@ -3310,7 +3012,8 @@ export default {
           if ( feature.options ) {
             const traitSelection = this.characterEnhancements.find( (e) => e.source.startsWith(`species.${feature.name}.`));
 
-            // TODO ?
+
+
           }
         })
       }
@@ -5603,7 +5306,6 @@ td.small {
 }
 
 .hp-input >>> input[type="number"] {
-  -moz-appearance: textfield; /* Firefox */
   text-align: center;
 }
 

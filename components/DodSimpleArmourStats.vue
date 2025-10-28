@@ -2,39 +2,43 @@
   <div>
     <v-simple-table dense>
       <template v-slot:default>
-        <thead>
-          <tr>
-            <th
-              v-for="header in headers"
-              :key="header.value"
-              :class="header.class"
-            >
-              {{ header.text }}
-            </th>
-          </tr>
-        </thead>
+        <div class="expanded-item-wrapper">
+          <div class="expanded-content">
+            <thead>
+              <tr>
+                <th
+                  v-for="header in headers"
+                  :key="header.value"
+                  :class="header.class"
+                >
+                  {{ header.text }}
+                </th>
+              </tr>
+            </thead>
 
-        <tbody>
-          <tr>
-            <td class="text-left">
-              {{ stats.name }}
-            </td>
-            <td class="text-center">
-              {{ stats.group }}
-            </td>
-            <td class="text-center">
-              {{ stats.weight }} + {{ stats.weightL }}
-            </td>
-            <td class="text-center">
-              {{ stats.category }}
-            </td>
-            <td class="text-left">
-              <span v-if="stats.traits && stats.traits.length > 0">{{
-                stats.traits.join(", ")
-              }}</span>
-            </td>
-          </tr>
-        </tbody>
+            <tbody>
+              <tr>
+                <td class="text-left">
+                  {{ stats.name }}
+                </td>
+                <td class="text-center">
+                  {{ stats.group }}
+                </td>
+                <td class="text-center">
+                  {{ stats.weight }} + {{ stats.weightL }}
+                </td>
+                <td class="text-center">
+                  {{ stats.category }}
+                </td>
+                <td class="text-left">
+                  <span v-if="stats.traits && stats.traits.length > 0">{{
+                    stats.traits.join(", ")
+                  }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </div>
+        </div>
       </template>
     </v-simple-table>
 
@@ -123,4 +127,26 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.expanded-item-wrapper {
+  max-height: 400px; /* ограничиваем по высоте */
+  overflow-y: auto; /* прокрутка, если текст большой */
+  overflow-x: hidden;
+  padding: 16px;
+  background-color: var(--v-surface-base); /* адаптируется под тему Vuetify */
+  border-radius: 8px;
+}
+
+.expanded-content {
+  word-break: break-word;
+}
+
+.expanded-item-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.expanded-item-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.3);
+  border-radius: 3px;
+}
+</style>
