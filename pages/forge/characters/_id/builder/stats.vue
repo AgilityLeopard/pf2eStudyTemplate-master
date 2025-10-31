@@ -1216,7 +1216,35 @@ export default {
       this.selectedBoost = this.AncestryFreeBoost;
       this.loading = false;
     },
+    async loadSkillTable(key) {
+      this.loading = true;
+      this.skillChoice = key;
 
+      this.skillChoice1 = this.skillChoice[this.label(1)];
+      this.skillChoice2 = this.skillChoice[this.label(2)];
+      this.skillChoice3 = this.skillChoice[this.label(3)];
+      this.skillChoice4 = this.skillChoice[this.label(4)];
+      this.skillChoice5 = this.skillChoice[this.label(5)];
+      this.skillChoice6 = this.skillChoice[this.label(6)];
+      this.skillChoice7 = this.skillChoice[this.label(7)];
+      this.modifications = this.enhancements;
+
+      this.skillChoice8 = this.skillChoice[this.label(8)];
+      this.skillChoice9 = this.skillChoice[this.label(9)];
+      this.skillChoice10 = this.skillChoice[this.label(10)];
+      this.skillChoice11 = this.skillChoice[this.label(11)];
+      this.skillChoice12 = this.skillChoice[this.label(12)];
+      this.skillChoice13 = this.skillChoice[this.label(13)];
+      this.skillChoice14 = this.skillChoice[this.label(14)];
+
+      this.skillChoice15 = this.skillChoice[this.label(15)];
+      this.skillChoice16 = this.skillChoice[this.label(16)];
+      this.skillChoice17 = this.skillChoice[this.label(17)];
+      this.skillChoice18 = this.skillChoice[this.label(18)];
+      this.skillChoice19 = this.skillChoice[this.label(19)];
+      this.skillChoice120 = this.skillChoice[this.label(20)];
+      this.loading = false;
+    },
     skillChoiceModel(level) {
       return this.skillChoice[this.label(level)];
     },
