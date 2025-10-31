@@ -1,19 +1,8 @@
 <template>
   <v-row justify="center">
-    <v-dialog
-      v-model="previewDialog"
-      width="600px"
-      scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
-      <archetype-preview
-        v-if="previewItem"
-        :character-id="characterId"
-        :item="previewItem"
-        choose-mode
-        @select="selectArchetypeForChar"
-        @cancel="previewDialog = false"
-      />
+    <v-dialog v-model="previewDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
+      <archetype-preview v-if="previewItem" :character-id="characterId" :item="previewItem" choose-mode
+        @select="selectArchetypeForChar" @cancel="previewDialog = false" />
     </v-dialog>
 
     <v-col>
@@ -21,25 +10,14 @@
     </v-col>
 
     <v-col :cols="12">
-      <v-text-field
-        v-model="searchQuery"
-        solo
-        placeholder="Поиск..."
-        prepend-inner-icon="search"
-        clearable
-      />
+      <v-text-field v-model="searchQuery" solo placeholder="Поиск..." prepend-inner-icon="search" clearable />
     </v-col>
 
     <v-col :cols="12">
       <v-card>
         <v-list v-if="archetypeFaction">
-          <v-list-item
-            v-for="item in archetypeFaction"
-            :key="item.key"
-            two-line
-            :disabled="item.tier > characterSettingTier"
-            @click.stop="updatePreview(item)"
-          >
+          <v-list-item v-for="item in archetypeFaction" :key="item.key" two-line
+            :disabled="item.tier > characterSettingTier" @click.stop="updatePreview(item)">
             <v-list-item-avatar tile>
               <img :src="getAvatar(item.key)" />
             </v-list-item-avatar>
@@ -47,16 +25,9 @@
             <v-list-item-content>
               <v-list-item-title>
                 {{ item.name }}
-                <v-chip
-                  v-if="
-                    item.source && !['core', 'coreab'].includes(item.source.key)
-                  "
-                  color="info"
-                  outlined
-                  tags
-                  x-small
-                  label
-                >
+                <v-chip v-if="
+                  item.source && !['core', 'coreab'].includes(item.source.key)
+                " color="info" outlined tags x-small label>
                   {{ item.source.key.toUpperCase() }}
                 </v-chip>
               </v-list-item-title>
@@ -494,17 +465,34 @@ export default {
       const sheet = this.$store.getters["characters/characterSkillSheetById"](
         this.characterId
       );
+
+
       this.$store.commit("characters/setCharacterSkillPointClassUp", {
         id: this.characterId,
+        write: true,
         payload: { key: 1, value: 0 },
       });
+
+
 
       item.skillTrained.forEach((s) => {
         if (sheet.find((i) => i.key === s && i.level === 1))
           this.$store.commit("characters/setCharacterSkillPointClassUp", {
             id: this.characterId,
+            write: false,
             payload: { key: 1, value: 1 },
           });
+
+
+
+
+        // this.$store.commit("characters/removeSkillSheet", {
+        //   id: this.characterId,
+        //   key: item.skill,
+        //   level: 1,
+        //   type: "feat",
+        //   optional: false,
+        // });
 
         this.$store.commit("characters/addSkillSheet", {
           id: id,
@@ -512,7 +500,10 @@ export default {
           level: 1,
           type: "class",
           optional: true,
+          combinded: sheet.find((i) => i.key === s && i.level === 1 && i.combinded === false)
         });
+
+
       });
 
       //

@@ -8,13 +8,7 @@
           <v-card-text>
             <v-row justify="center">
               <v-col :cols="12">
-                <v-text-field
-                  v-model="filters.search"
-                  filled
-                  dense
-                  clearable
-                  label="поиск"
-                />
+                <v-text-field v-model="filters.search" filled dense clearable label="поиск" />
               </v-col>
               <!-- 
               <v-col :cols="12" :sm="6">
@@ -46,88 +40,46 @@
                 />
               </v-col> -->
               <v-col cols="6" sm="6">
-                <v-select
-                  label="Редкость"
-                  multiple
-                  v-model="filters.rarity"
-                  :items="rarityRepository"
-                  item-text="name"
-                  item-value="key"
-                >
+                <v-select label="Редкость" multiple v-model="filters.rarity" :items="rarityRepository" item-text="name"
+                  item-value="key">
                 </v-select>
               </v-col>
 
               <v-col cols="6" sm="6">
-                <v-select
-                  label="Трейты"
-                  v-model="filters.traits"
-                  :items="traits"
-                  item-text="name"
-                  item-value="name"
-                  multiple
-                >
+                <v-select label="Трейты" v-model="filters.traits" :items="traits" item-text="name" item-value="name"
+                  multiple>
                 </v-select>
               </v-col>
 
               <v-col cols="6" sm="6">
-                <v-select
-                  label="Категория оружия"
-                  v-model="filters.category"
-                  :items="weaponCategoryRepository"
-                  item-text="name"
-                  item-value="category"
-                  multiple
-                >
+                <v-select label="Категория оружия" v-model="filters.category" :items="weaponCategoryRepository"
+                  item-text="name" item-value="category" multiple>
                 </v-select>
               </v-col>
 
               <v-col cols="6" sm="6">
-                <v-select
-                  label="Категория доспехов"
-                  v-model="filters.categoryArmour"
-                  :items="armourCategoryRepository"
-                  item-text="name"
-                  item-value="category"
-                  multiple
-                >
+                <v-select label="Категория доспехов" v-model="filters.categoryArmour" :items="armourCategoryRepository"
+                  item-text="name" item-value="category" multiple>
                 </v-select>
               </v-col>
 
               <v-col cols="6" sm="6">
-                <v-select
-                  label="Тип оружия"
-                  v-model="filters.typeWeapon"
-                  :items="weaponGroup"
-                  item-text="name"
-                  item-value="group"
-                  multiple
-                >
+                <v-select label="Тип оружия" v-model="filters.typeWeapon" :items="weaponGroup" item-text="name"
+                  item-value="group" multiple>
                 </v-select>
               </v-col>
 
               <v-col cols="6" sm="6">
-                <v-select
-                  label="Тип доспехов"
-                  v-model="filters.typeArmor"
-                  :items="armorGroup"
-                  item-text="name"
-                  item-value="group"
-                  multiple
-                >
+                <v-select label="Тип доспехов" v-model="filters.typeArmor" :items="armorGroup" item-text="name"
+                  item-value="group" multiple>
                 </v-select>
               </v-col>
 
               <v-col cols="6" sm="6">
                 <v-card flat>
                   <v-card-text>
-                    <v-range-slider
-                      v-model="filters.level"
-                      :min="0"
-                      :max="28"
-                      :step="1"
-                      thumb-label="always"
-                      label="Уровень"
-                    ></v-range-slider>
+                    <v-range-slider v-model="filters.level" :min="0" :max="28" :step="1" thumb-label="always"
+                      label="Уровень"></v-range-slider>
 
                     <div class="d-flex justify-space-between mt-2">
                       <!-- <span>От: {{ filters.levelRange[0] }}</span>
@@ -138,20 +90,8 @@
               </v-col>
 
               <v-col :cols="12">
-                <v-chip-group
-                  v-model="filters.type"
-                  active-class="primary--text"
-                  column
-                  multiple
-                >
-                  <v-chip
-                    v-for="filter in typeFilters"
-                    :key="filter.name"
-                    :value="filter.name"
-                    filter
-                    small
-                    label
-                  >
+                <v-chip-group v-model="filters.type" active-class="primary--text" column multiple>
+                  <v-chip v-for="filter in typeFilters" :key="filter.name" :value="filter.name" filter small label>
                     {{ toTypeString(filter.name) }}
                   </v-chip>
                 </v-chip-group>
@@ -163,16 +103,8 @@
 
       <v-col :cols="12">
         <v-card>
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            :page.sync="pagination.page"
-            item-key="key"
-            sort-by="name"
-            show-expand
-            hide-default-footer
-            :items-per-page="perPage"
-          >
+          <v-data-table :headers="headers" :items="items" :page.sync="pagination.page" item-key="key" sort-by="name"
+            show-expand hide-default-footer :items-per-page="perPage">
             <template v-slot:item.type="{ item }">
               {{ toTypeString(item.type) }}
             </template>
@@ -214,49 +146,29 @@
                     <hr class="mb-0" />
 
                     <div class="grey--text">
-                      <span class="subtitle-2"
-                        ><strong>Редкость:</strong>
-                        {{ rarity(item.rarity) }}</span
-                      >
-                      <span
-                        ><strong>Стоимость:</strong>
-                        {{ wargearPrice(item) }}</span
-                      >
+                      <span class="subtitle-2"><strong>Редкость:</strong>
+                        {{ rarity(item.rarity) }}</span>
+                      <span><strong>Стоимость:</strong>
+                        {{ wargearPrice(item) }}</span>
                     </div>
 
-                    <div
-                      v-if="item.description"
-                      class="mt-2"
-                      v-html="item.description"
-                    ></div>
+                    <div v-if="item.description" class="mt-2" v-html="item.description"></div>
                     <p v-else-if="item.snippet" class="mt-2">
                       {{ item.snippet }}
                     </p>
 
-                    <dod-simple-weapon-stats
-                      v-if="
-                        item.meta !== undefined &&
-                        item.meta.length > 0 &&
-                        ['ranged-weapon', 'melee-weapon'].includes(
-                          item.meta[0].type
-                        )
-                      "
-                      :name="item.name"
-                      :stats="item.meta[0]"
-                      show-traits
-                      class="mb-2"
-                    />
-                    <dod-simple-armour-stats
-                      v-if="
-                        item.meta !== undefined &&
-                        item.meta.length > 0 &&
-                        ['armour'].includes(item.meta[0].type)
-                      "
-                      :name="item.name"
-                      :stats="item.meta[0]"
-                      show-traits
-                      class="mb-2"
-                    />
+                    <dod-simple-weapon-stats v-if="
+                      item.meta !== undefined &&
+                      item.meta.length > 0 &&
+                      ['ranged-weapon', 'melee-weapon'].includes(
+                        item.meta[0].type
+                      )
+                    " :name="item.name" :stats="item.meta[0]" show-traits class="mb-2" />
+                    <dod-simple-armour-stats v-if="
+                      item.meta !== undefined &&
+                      item.meta.length > 0 &&
+                      ['armour'].includes(item.meta[0].type)
+                    " :name="item.name" :stats="item.meta[0]" show-traits class="mb-2" />
 
                     <div>
                       <!-- <span>Keywords:</span>
@@ -273,12 +185,7 @@
                   </div>
 
                   <div class="pt-4">
-                    <v-btn
-                      nuxt
-                      :to="`/library/wargear/${item.key}`"
-                      color="success"
-                      small
-                    >
+                    <v-btn nuxt :to="`/library/wargear/${item.key}`" color="success" small>
                       Детали
                     </v-btn>
                     <!-- <v-btn
@@ -300,10 +207,7 @@
           </v-data-table>
 
           <div class="text-center pt-2">
-            <v-pagination
-              v-model="pagination.page"
-              :length="pagination.pageCount"
-            />
+            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
           </div>
         </v-card>
       </v-col>

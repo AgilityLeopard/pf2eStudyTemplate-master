@@ -4,41 +4,17 @@
       <h1 class="headline">Выберите Предыстория</h1>
     </v-col>
 
-    <v-dialog
-      v-model="ascensionDialog"
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-      width="600px"
-      scrollable
-    >
-      <ascension-preview
-        v-if="selectedAscension"
-        :character-id="characterId"
-        :item="selectedAscension"
-        choose-mode
-        @select="selectAscensionForChar"
-        @cancel="ascensionDialog = false"
-      />
+    <v-dialog v-model="ascensionDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
+      <ascension-preview v-if="selectedAscension" :character-id="characterId" :item="selectedAscension" choose-mode
+        @select="selectAscensionForChar" @cancel="ascensionDialog = false" />
     </v-dialog>
 
     <v-col cols="12">
-      <v-progress-circular
-        v-if="!ascensionList"
-        indeterminate
-        color="success"
-        size="128"
-        width="12"
-      />
+      <v-progress-circular v-if="!ascensionList" indeterminate color="success" size="128" width="12" />
 
       <v-card v-if="ascensionList">
         <v-card-title>
-          <v-text-field
-            v-model="searchQuery"
-            filled
-            dense
-            prepend-inner-icon="search"
-            clearable
-            label="Поиск"
-          />
+          <v-text-field v-model="searchQuery" filled dense prepend-inner-icon="search" clearable label="Поиск" />
         </v-card-title>
         <v-divider />
 
@@ -46,38 +22,20 @@
           <v-container class="bg-surface-variant">
             <v-row>
               <v-col :cols="6">
-                <v-select
-                  label="Редкость"
-                  multiple
-                  v-model="selectedRarityFilters"
-                  :items="rarityFilters"
-                  item-text="name"
-                  item-value="name"
-                >
+                <v-select label="Редкость" multiple v-model="selectedRarityFilters" :items="rarityFilters"
+                  item-text="name" item-value="name">
                 </v-select>
               </v-col>
 
               <v-col :cols="6">
-                <v-select
-                  label="Источник"
-                  v-model="selectedSourceFilters"
-                  multiple
-                  :items="sourceFilters"
-                  item-text="name"
-                  item-value="name"
-                >
+                <v-select label="Источник" v-model="selectedSourceFilters" multiple :items="sourceFilters"
+                  item-text="name" item-value="name">
                 </v-select>
               </v-col>
 
               <v-col :cols="6">
-                <v-select
-                  label="Характеристика"
-                  v-model="selectedAbilityFilters"
-                  multiple
-                  :items="abilityFilters"
-                  item-text="name"
-                  item-value="key"
-                >
+                <v-select label="Характеристика" v-model="selectedAbilityFilters" multiple :items="abilityFilters"
+                  item-text="name" item-value="key">
                 </v-select>
               </v-col>
             </v-row>
@@ -99,11 +57,7 @@
         </v-card-title>
 
         <v-list>
-          <v-list-item
-            v-for="item in filteredTalents"
-            :key="item.key"
-            @click.stop="updatePreview(item)"
-          >
+          <v-list-item v-for="item in filteredTalents" :key="item.key" @click.stop="updatePreview(item)">
             <v-list-item-avatar tile>
               <img :src="getAvatar(item.key)" />
             </v-list-item-avatar>
@@ -111,14 +65,7 @@
             <v-list-item-content>
               <v-list-item-title>
                 {{ item.nameBackground }}
-                <v-chip
-                  v-if="item.source"
-                  color="info"
-                  outlined
-                  tags
-                  x-small
-                  label
-                >
+                <v-chip v-if="item.source" color="info" outlined tags x-small label>
                   {{ item.source.key.toUpperCase() }}
                 </v-chip>
               </v-list-item-title>
@@ -376,35 +323,35 @@ export default {
       };
       this.$store.commit("characters/addCharacterAscensionPackage", payload);
 
-      const talent = this.talentList.find(
-        (s) => s.key === ascensionPackage.feat && ascensionPackage.feat
-      );
+      // const talent = this.talentList.find(
+      //   (s) => s.key === ascensionPackage.feat && ascensionPackage.feat
+      // );
 
-      if (talent) {
-        const match = talent.name.match(/(<.*>)/);
-        const talentUniqueId = Math.random()
-          .toString(36)
-          .replace(/[^a-z]+/g, "")
-          .substr(0, 8);
+      // if (talent) {
+      //   const match = talent.name.match(/(<.*>)/);
+      //   const talentUniqueId = Math.random()
+      //     .toString(36)
+      //     .replace(/[^a-z]+/g, "")
+      //     .substr(0, 8);
 
-        const payloadSkill = {
-          id: talentUniqueId,
-          name: talent.name,
-          key: talent.key,
-          cost: talent.cost,
-          place: "background",
-          placeholder:
-            match !== null && match !== undefined ? match[1] : undefined,
-          selected: undefined,
-          choice: talent.optionsKey,
-          source: `talent.${talentUniqueId}`,
-        };
+      //   const payloadSkill = {
+      //     id: talentUniqueId,
+      //     name: talent.name,
+      //     key: talent.key,
+      //     cost: talent.cost,
+      //     place: "background",
+      //     placeholder:
+      //       match !== null && match !== undefined ? match[1] : undefined,
+      //     selected: undefined,
+      //     choice: talent.optionsKey,
+      //     source: `talent.${talentUniqueId}`,
+      //   };
 
-        this.$store.commit("characters/addCharacterTalent", {
-          id: this.characterId,
-          talent: payloadSkill,
-        });
-      }
+      //   this.$store.commit("characters/addCharacterTalent", {
+      //     id: this.characterId,
+      //     talent: payloadSkill,
+      //   });
+      // }
 
       this.$store.commit("characters/characterProgress", {
         id: this.characterId,

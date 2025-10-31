@@ -16,8 +16,8 @@ function loadAllJSONFromFolder(folder) {
         console.error(`Папка ${dirPath} не найдена`);
         return [];
     }
-
-    const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.json'));
+    const wantedFiles = ['wargearPlayerCore.json', 'wargearGMCore.json'];
+    const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.json')).filter(f => wantedFiles.includes(f));;
     let allItems = [];
 
     files.forEach(file => {

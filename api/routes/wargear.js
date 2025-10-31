@@ -103,8 +103,8 @@ const toP = (a, o) => rangeP(o + 1, o + a.length + 1);
 router.get('/', async (req, res) => {
     let items = wargearRepository.filter(v => v != null && v.key !== null).filter(v => v != undefined && v.key !== undefined); // все данные
 
+    console.log(items.length);
 
-    console.log("Items before filter:", items.length);
     if (req.query.type) {
         const types = req.query.type.split(',').map(t => t.toLowerCase());
         if (types.length)
@@ -136,7 +136,7 @@ router.get('/', async (req, res) => {
             // проверяем, есть ли пересечение с rarities
             return i.traits.some(trait => rarities.includes(trait));
         });
-        console.log(items);
+
     }
 
     if (req.query.source) {
@@ -226,8 +226,6 @@ router.get('/', async (req, res) => {
 
     const pagedItems = items.slice(start, end);
 
-
-    console.log("Items after filter:", pagedItems.length);
 
     res.json({
         total: items.length,

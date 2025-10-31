@@ -1053,6 +1053,7 @@ export const mutations = {
       type: type,
       key: key,
       optional: payload.optional,
+      combinded: payload.combined ? payload.combined : false,
       id: source,
       value: 1,
     }
@@ -1062,7 +1063,14 @@ export const mutations = {
   },
   removeSkillSheet(state, payload) {
     const character = state.characters[payload.id];
-    const skill = character.SkillSheet.find(s => s.key === payload.key && s.level === payload.level);
+
+
+    const sameSkills = character.SkillSheet.filter(
+      s => s.key === payload.key && s.level === payload.level && s.type === payload.type
+    );
+
+    const skill = sameSkills.find(s => s.combined === true) || sameSkills[0];
+
     character.SkillSheet = character.SkillSheet.filter(s => s !== skill);
 
   },
@@ -1603,9 +1611,30 @@ export const mutations = {
     state.characters[payload.id].SkillPointBackground =
       payload.payload.value;
   },
+  setCharacterSkillPointsFeat(state, payload) {
+    if (state.characters[payload.id].SkillPointsFeat === undefined)
+      state.characters[payload.id].SkillPointsFeat = 0;
+
+    if (payload.write === false && state.characters[payload.id].SkillPointsFeat + payload.payload.value > 0)
+      state.characters[payload.id].SkillPointsFeat = state.characters[payload.id].SkillPointsFeat +
+        payload.payload.value;
+
+    if (payload.write === true)
+      state.characters[payload.id].SkillPointsFeat =
+        payload.payload.value;
+
+  },
   setCharacterSkillPointClassUp(state, payload) {
-    state.characters[payload.id].SkillPointClassUp =
-      payload.payload.value;
+    if (state.characters[payload.id].SkillPointClassUp === undefined)
+      state.characters[payload.id].SkillPointClassUp = 0;
+
+    if (payload.write === false && state.characters[payload.id].SkillPointClassUp + payload.payload.value >= 0)
+      state.characters[payload.id].SkillPointClassUp = state.characters[payload.id].SkillPointClassUp +
+        payload.payload.value;
+
+    if (payload.write === true)
+      state.characters[payload.id].SkillPointClassUp =
+        payload.payload.value;
   },
   setCharacterMoney(state, payload) {
     state.characters[payload.id].money[payload.nominal] =
@@ -3079,6 +3108,7 @@ const getDefaultState = () => ({
   fluff: {
     notes: "",
   },
+  SkillPointsFeat: 0,
   HeroPoints: 0,
   focusPool: [],
   spellsFocus: [],

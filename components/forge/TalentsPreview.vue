@@ -8,166 +8,122 @@
 
     <v-divider />
 
-    <v-card-title>
-      <v-text-field
-        v-model="searchQuery"
-        filled
-        dense
-        prepend-inner-icon="search"
-        clearable
-        label="Поиск"
-      />
-    </v-card-title>
+    <!-- <v-card-title>
+      <v-text-field v-model="searchQuery" filled dense prepend-inner-icon="search" clearable label="Поиск" />
+    </v-card-title> -->
     <v-divider />
 
-    <v-card-title>
+    <!-- <v-card-title>
       <v-container class="bg-surface-variant">
         <v-row>
           <v-col :cols="6">
-            <v-select
-              label="Редкость"
-              multiple
-              v-model="selectedRarityFilters"
-              :items="rarityFilters"
-              item-text="name"
-              item-value="name"
-            >
+            <v-select label="Редкость" multiple v-model="selectedRarityFilters" :items="rarityFilters" item-text="name"
+              item-value="name">
             </v-select>
           </v-col>
 
           <v-col :cols="6">
-            <v-select
-              label="Источник"
-              v-model="selectedSourceFilters"
-              multiple
-              :items="sourceFilters"
-              item-text="name"
-              item-value="name"
-            >
+            <v-select label="Источник" v-model="selectedSourceFilters" multiple :items="sourceFilters" item-text="name"
+              item-value="name">
             </v-select>
           </v-col>
         </v-row>
 
         <v-row>
           <v-col :cols="6">
-            <v-select
-              label="Трейты"
-              v-model="selectedtraitsFilters"
-              multiple
-              :items="tagFilters"
-              item-text="name"
-              item-value="name"
-            >
+            <v-select label="Трейты" v-model="selectedtraitsFilters" multiple :items="tagFilters" item-text="name"
+              item-value="name">
             </v-select>
           </v-col>
         </v-row>
       </v-container>
-    </v-card-title>
+    </v-card-title> -->
 
     <v-divider />
-    <v-card-text class="pa-6">
-      <v-data-table
-        :headers="headers"
-        :items="filteredTalents"
-        :search="searchQuery"
-        :page.sync="pagination.page"
-        show-expand
-        item-key="name"
-        hide-default-footer
-        :loading="!talents"
-        loading-text="Загрузка черт, пожалуйста, подождите"
-        @page-count="pagination.pageCount = $event"
-      >
-        <template v-slot:no-data />
+    <v-card-text>
+      <v-row>
+        <v-col cols="6" sm="4">
+          <v-text-field v-model="searchQuery" filled dense clearable prepend-inner-icon="search" label="Поиск" />
 
-        <template v-slot:item.name="{ item }">
-          <span>{{ item.name }}</span>
+          <v-range-slider v-model="levelRange" :min="0" :max="this.level" :step="1" thumb-label="always"
+            label="Уровень"></v-range-slider>
 
-          <div>
-            <trait-view v-if="item.traits" :item="item" />
-          </div>
-        </template>
 
-        <template v-slot:item.level="{ item }">
-          <v-chip>
-            {{ item.level }}
-          </v-chip>
-        </template>
 
-        <template v-slot:item.prerequisitesKey="{ item }">
-          <!-- <v-chip> -->
-          <v-icon v-if="item.isVal === true" color="error">close</v-icon>
-          <v-icon v-if="item.isVal === false" color="success">check</v-icon>
-          <!-- {{ item.prerequisitesKey }} -->
-          <!-- </v-chip> -->
-        </template>
-        <!-- 
+
+
+          <v-select label="Редкость" v-model="selectedRarityFilters" :items="rarityRepository" item-text="name"
+            item-value="key" multiple>
+          </v-select>
+
+          <v-select label="Трейты" v-model="selectedTraitFilters" :items="typeFilters" item-text="name"
+            item-value="name" multiple>
+          </v-select>
+        </v-col>
+        <v-col cols="6" sm="8">
+          <div class="table-wrapper">
+            <v-data-table :headers="headers" :items="searchResult" :search="searchQuery" :page.sync="pagination.page"
+              show-expand item-key="name" hide-default-footer :loading="!talents" class="fixed-columns-table"
+              loading-text="Загрузка черт, пожалуйста, подождите" @page-count="pagination.pageCount = $event">
+              <template v-slot:no-data />
+
+              <template v-slot:item.name="{ item }">
+                <span>{{ item.name }}</span>
+
+                <div>
+                  <trait-view v-if="item.traits" :item="item" />
+                </div>
+              </template>
+
+              <template v-slot:item.system.level="{ item }">
+                <v-chip>
+                  {{ item.system.level.value }}
+                </v-chip>
+              </template>
+
+              <template v-slot:item.prerequisitesKey="{ item }">
+                <!-- <v-chip> -->
+                <v-icon v-if="item.isVal === true" color="error">close</v-icon>
+                <v-icon v-if="item.isVal === false" color="success">check</v-icon>
+                <!-- {{ item.prerequisitesKey }} -->
+                <!-- </v-chip> -->
+              </template>
+              <!-- 
         <template v-slot:item.prerequisitesHtml="{ item }">
           <span v-if="item.requirementsText" v-html="item.requirementsText" />
         </template> -->
 
-        <template v-slot:item.snippet="{ item }">
-          <span>{{ item.snippet }}</span>
-        </template>
+              <template v-slot:item.description="{ item }">
+                <span v-html="item.description.split('.').find(s => s.trim() !== '') + '.'"></span>
+              </template>
 
-        <template v-slot:item.buy="{ item }">
-          <v-btn
-            color="success"
-            x-small
-            :disabled="item.isVal === true"
-            v-if="!DiffrentTalent(item)"
-            @click="addTalent(item, type, item.level)"
-          >
-            add
-          </v-btn>
-        </template>
+              <template v-slot:item.buy="{ item }">
+                <v-btn color="success" x-small :disabled="item.isVal === true" v-if="!DiffrentTalent(item)"
+                  @click="addTalent(item, type, item.level)">
+                  add
+                </v-btn>
+              </template>
 
-        <!-- В тексте -->
-        <template v-slot:expanded-item="{ headers, item }">
-          <td :colspan="headers.length">
-            <v-row class="rowFeat">
-              <div class="head">
-                <h1>{{ item.name }}</h1>
-              </div>
-              <div class="line"></div>
-              <div class="tag">Черта {{ item.level }}</div>
-            </v-row>
-            <v-row>
-              <div>
-                <trait-view v-if="item.traits" :item="item" class="mb-2" />
-              </div>
-            </v-row>
-            <p></p>
-            <div v-if="item.prerequisites?.value">
-              <p class="main-holder">
-                <b>Требования:</b>
-                {{
-                  item.prerequisites.value.map((item) => item.value).join(", ")
-                }}
-              </p>
-            </div>
-            <div v-if="item.requirementsText">
-              <p class="main-holder">{{ item.requirementsText }}</p>
-            </div>
-            <p></p>
-            <div class="pt-4 pb-2" v-html="item.description"></div>
-          </td>
-        </template>
+              <!-- В тексте -->
+              <template v-slot:expanded-item="{ headers, item }">
+                <td :colspan="headers.length">
+                  <CardItem :item="item" />
+                </td>
+              </template>
 
-        <template v-slot:no-results>
-          <span class="text-center"
-            >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
-          >
-        </template>
-      </v-data-table>
-
-      <div class="text-center pt-2">
-        <v-pagination
-          v-model="pagination.page"
-          :length="pagination.pageCount"
-        />
-      </div>
+              <template v-slot:no-results>
+                <span class="text-center">Ваш поиск по "{{ searchQuery }}" не дал результатов.</span>
+              </template>
+            </v-data-table>
+          </div>
+          <div class="text-center pt-2">
+            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
+          </div>
+        </v-col>
+      </v-row>
     </v-card-text>
+
+
 
     <v-divider />
     <v-card-actions>
@@ -180,6 +136,7 @@
 import SluggerMixin from '~/mixins/SluggerMixin';
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import traitView from '~/components/TraitView';
+import CardItem from "@/components/CardItem.vue";
 
 export default {
   name: 'talentsPreview',
@@ -188,7 +145,7 @@ export default {
     StatRepositoryMixin,
   ],
   components: {
-    traitView,
+    traitView, CardItem
   },
   props: {
     characterId: {
@@ -197,7 +154,7 @@ export default {
     },
     talents: {},
     list: {},
-        // Number
+    // Number
     level: {
       type: Number,
       required: false,
@@ -219,9 +176,16 @@ export default {
       chapterList: undefined,
       selectedTalents: undefined,
 
-      selectedSourceFilters: [],
-      selectedtraitsFilters: [],
+      searchQuery: "",
+      selectedTypeFilters: [],
+      selectedCategoryFilters: [],
+      selectedCategoryWeaponFilters: [],
+      selectedCategoryArmorFilters: [],
+      selectedTypeWeaponFilters: [],
+      selectedTypeArmorFilters: [],
+      selectedTraitFilters: [],
       selectedRarityFilters: [],
+      levelRange: [0, 20],
 
       talentsDialog: false,
       searchQuery: '',
@@ -244,29 +208,32 @@ export default {
         ancestry2: "Черта родословной 2 Уровня",
       },
       headers: [
-                {
+        {
           text: 'Название',
           value: 'name',
           align: 'left',
           sortable: true,
+          width: "250px",
         },
         {
           text: 'Уровень',
-          value: 'level',
+          value: 'system.level',
           align: 'center',
+          width: "100px",
           sortable: true,
         },
-        {
-          text: 'Тр.',
-          value: 'prerequisitesKey',
-          align: 'center',
-          sortable: false,
-        },
+        // {
+        //   text: 'Тр.',
+        //   value: 'prerequisitesKey',
+        //   align: 'center',
+        //   sortable: false,
+        // },
 
         {
           text: 'Описание',
-          value: 'snippet',
+          value: 'description',
           sortable: false,
+          width: "250px",
         },
         /*{
           text: 'Effect',
@@ -278,7 +245,9 @@ export default {
           value: 'buy',
           align: 'center',
           sortable: false,
+          width: "50px",
         },
+        { text: "", value: "data-table-expand", width: "50px" },
       ],
 
       wargearList: undefined,
@@ -344,6 +313,7 @@ export default {
   },
   methods:
   {
+
     addTalent(talent, place, level1) {
       const match = talent.name.match(/(<.*>)/);
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
@@ -353,129 +323,177 @@ export default {
         id: talentUniqueId,
         name: talent.name,
         key: talent.key,
-        cost: talent.cost,
+        // cost: talent.cost,
         level: level,
         traits: talent.traits,
-        nameEng: talent.nameEng,
+        nameEng: talent.key,
         place: talent.place,
         modifications: talent.modifications,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
         options: talent.options,
         choice: talent.optionsKey,
-        source:  place,
+        source: place,
       };
 
-      //Смотрим, есть ли в черте модификация, дающая другую черты
-      const linkedFeat = talent.modifications ? talent.modifications.filter(item => item.type === 'Feat') : undefined;
+      const sheet = this.$store.getters["characters/characterSkillSheetById"](
+        this.characterId
+      );
 
-      if(linkedFeat)
-        linkedFeat.forEach(item =>
-        {
-          if(item.key === 'Additional Lore')
-          {
+      // Добавляем правила
+      // ---------------------
+      if (talent.system.rules.length > 0) {
 
-            const LoreUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-            const Lore = list.find(item => item.name === 'Дополнительные знание');
-
-            const loreTalent = {
-              id: talentUniqueId,
-              name: Lore.name,
-              key: Lore.key,
-              cost: Lore.cost,
-              place: 'free',
-
-              link: talentUniqueId,
-              selected: undefined,
-              choice: Lore.optionsKey,
-              source:  place,
-            };
+        talent.system.rules.forEach(item => {
+          if (item.skill) {
+            // Добавляем навык от черты
+            // this.$store.commit("characters/removeSkillSheetbyType", {
+            //   id: this.characterId,
+            //   key: item.skill,
+            //   level: level,
+            //   type: "feat",
+            //   optional: false,
+            // });
 
 
-            const LoreSkill = {
-                      key: this.textToCamel(item.value),
-                      name: item.value,
-                      attribute: 'intellect',
-                      description: "",
-                      optional: true,
-                      isValueModify : false,
+
+            if (
+              sheet.find((i) => i.key === item.skill && i.level === level && (i.type === 'skill'))
+              || !sheet.find((i) => i.key === item.skill && i.level === level)
+            ) {
+              this.$store.commit("characters/removeSkillSheet", {
+                id: this.characterId,
+                key: item.skill,
+                level: level,
+                type: "skill",
+                optional: true,
+              });
+
+              this.$store.commit("characters/addSkillSheet", {
+                id: this.characterId,
+                key: item.skill,
+                level: level,
+                type: "feat",
+                optional: true,
+              });
             }
 
-            const mod =   [{
-                      type: 'Skill',
-                      mode: 'Add',
-                      key: 'Lore',
-                      // name: item.value,
-                      // value: this.textToCamel(item.value),
-                      isValueModify : false,
-                      LoreSkill : LoreSkill,
-            }]
-            //Добавляем модификацию черты
-            this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
-            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: talentUniqueId, source: 'featfree' } });
+            if (
+              sheet.find((i) => i.key === item.skill && i.level === level && (i.type === 'class' || i.type === 'background'))
+            ) {
+
+              this.$store.commit("characters/setCharacterSkillPointClassUp", {
+                id: this.characterId,
+                write: false,
+                payload: { key: 1, value: 1 },
+              });
+
+              this.$store.commit("characters/addSkillSheet", {
+                id: this.characterId,
+                key: item.skill,
+                level: level,
+                type: "feat",
+                optional: true,
+                combinded: sheet.find((i) => i.key === item.skill && i.level === level && (i.type === 'class' || i.type === 'background') && i.combinded === false),
+              });
+            }
+
+
 
           }
-          else {
-            const Feat= list.find(s => s.key === item.key);
-            //Добавляем модификацию черты
 
-              const FeatTalent = {
-              id: talentUniqueId,
-              name: Feat.name,
-              key: Feat.key,
-              cost: Feat.cost,
+          if (item.feat) {
+            const LoreUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+            const Lore = list.find(i => i.key === item.feat)
+
+            const loreTalent = {
+              id: LoreUniqueId,
+              name: Lore.name,
+              key: Lore.key,
+
               place: 'free',
 
               link: talentUniqueId,
               selected: undefined,
-              choice: Feat.optionsKey,
-              source: `talent.${talentUniqueId}`,
+
+              source: place,
             };
-            this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: FeatTalent });
-            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: Feat.modifications, talentId: talentUniqueId, source: 'featfree' } });
+
+            const LoreSkill = {
+              key: this.textToCamel(talent.name) + "-" + this.textToCamel(item.feat),
+              name: talent.name,
+              attribute: 'intellect',
+              description: "",
+              optional: true,
+              isValueModify: false,
+            }
+
+            const mod = [{
+              type: 'Skill',
+              mode: 'Add',
+              key: 'Lore',
+              // name: item.value,
+              // value: this.textToCamel(item.value),
+              isValueModify: false,
+              LoreSkill: LoreSkill,
+            }]
+            //Добавляем модификацию черты
+            // this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
+            // this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: talentUniqueId, source: 'featfree' } });
+
+            this.$store.commit("characters/addSkillSheet", {
+              id: this.characterId,
+              key: this.textToCamel(talent.key) + "-" + this.textToCamel(item.feat),
+              level: level,
+              type: "feat",
+              optional: true,
+            });
+
+
 
           }
         }
-      )
 
-      this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: level, modifications: payload.modifications, talentId:talentUniqueId, source: 'feat'+place } });
+        )
+
+
+      }
+
+
+      this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: level, modifications: payload.modifications, talentId: talentUniqueId, source: 'feat' + place } });
       this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: payload });
       this.$store.commit('characters/clearModification', { id: this.characterId, level });
       this.$store.commit('characters/setModification', { id: this.characterId, level });
       this.$emit('cancel');
     },
-          requirementRestriction(item)
-      {
-        const Rest = {
-          "U": 0,
-          "T": 1,
-          "E": 2,
-          "M": 3,
-          "L": 4,
-        }
+    requirementRestriction(item) {
+      const Rest = {
+        "U": 0,
+        "T": 1,
+        "E": 2,
+        "M": 3,
+        "L": 4,
+      }
 
       if (item.prerequisitesKey) {
         const skillList = this.characterSkillSheet();
         const attList = this.characterAttributes();
         const level = this.characterLevel();
 
-        if (item.prerequisitesKey.skill)
-        {
+        if (item.prerequisitesKey.skill) {
           const skill = item.prerequisitesKey.skill;
           const prof = skillList.filter(s => s.key === skill.key && s.level <= level).length;
           const isVal = Rest[skill.value] <= prof ? false : true;
-          if(isVal === true )return isVal;
+          if (isVal === true) return isVal;
         }
 
-        if (item.prerequisitesKey.ability)
-        {
+        if (item.prerequisitesKey.ability) {
           const ability = item.prerequisitesKey.ability;
           const score = (attList[ability.key] - 10) / 2;
           const isVal = ability.value <= score ? false : true;
-          if(isVal === true )return isVal;
+          if (isVal === true) return isVal;
         }
-        if (item.prerequisitesKey.feat)
-        {
+        if (item.prerequisitesKey.feat) {
 
           const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
 
@@ -489,17 +507,17 @@ export default {
         }
         return false;
       }
-      },
+    },
     characterAttributes() {
       return this.$store.getters['characters/characterAttributesById'](this.characterId);
     },
-    characterSkillSheet(){
+    characterSkillSheet() {
       return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
-      },
-    characterLevel(){
+    },
+    characterLevel() {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
-    characterLevel(){
+    characterLevel() {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     DiffrentTalent(item) {
@@ -509,25 +527,24 @@ export default {
       return false;
     },
   },
-    computed:
-    {
+  computed:
+  {
     characterTalents() {
       return this.$store.getters['characters/characterTalentsById'](this.characterId);
     },
-      characterTalentLabels() {
+    characterTalentLabels() {
       return this.characterTalents.filter((talent) => talent).map((talent) => talent.name);
     },
-      searchResult() {
+    searchResult() {
       if (this.talents === undefined) {
         return [];
       }
       let searchResult = this.talents;
 
-      if (this.selectedtraitsFilters.length > 0) {
-        searchResult = searchResult.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
-      }
+      // if (this.selectedtraitsFilters.length > 0) {
+      //   searchResult = searchResult.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
+      // }
 
-      let filter;
 
       // filter = this.filters.source;
       // if (filter.model.length > 0) {
@@ -545,7 +562,7 @@ export default {
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
 
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.traits.toString().toUpperCase()));
       let reduced = [];
       filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
@@ -557,8 +574,9 @@ export default {
       reduced = reduced.filter(item => item.trim().length > 0);
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
-      },
-      rarityFilters() {
+    },
+
+    rarityFilters() {
       if (this.talents === undefined) {
         return [];
       }
@@ -567,7 +585,7 @@ export default {
       const lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
 
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
       // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
       let reduced = ["обычный", "необычный", "редкий", "уникальный"];
       // filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
@@ -576,10 +594,10 @@ export default {
       //   // }
       // });
 
-        reduced = reduced.filter(item => item.trim().length > 0);
+      reduced = reduced.filter(item => item.trim().length > 0);
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
-      },
+    },
     tagFilters() {
       if (this.talents === undefined) {
         return [];
@@ -590,10 +608,10 @@ export default {
       if (this.type === 'skill' || this.type === 'general')
         lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
       else
-         lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+        lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
       // only show those whose prerequisites are met
 
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some( lw => talent.traits.toString().toUpperCase().includes(lw)));
+      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.traits.toString().toUpperCase()));
       let reduced = [];
       filteredTalents.filter(talent => talent.level <= this.level).forEach((item) => {
@@ -606,34 +624,84 @@ export default {
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((tag) => ({ name: tag }));
     },
+
+    typeFilters() {
+      if (this.talents === undefined) {
+        return [];
+      }
+      const reduceToType = this.talents.flatMap((item) => item.traits);
+      const distinctTypes = [...new Set(reduceToType)];
+      const types = distinctTypes.map((t) => ({ name: t }));
+      return types;
+    },
+
+    searchResult() {
+      if (this.talents === undefined) {
+        return [];
+      }
+      let searchResult = this.talents;
+
+      if (this.selectedTypeFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedTypeFilters.some((r) => item.traits.includes(r))
+        );
+      }
+
+      const [minLevel, maxLevel] = this.levelRange;
+
+      if (maxLevel != 0) {
+        searchResult = searchResult.filter(
+          (item) => item.system.level.value >= minLevel && item.system.level.value <= maxLevel
+        );
+      }
+
+
+      if (this.selectedTraitFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedTraitFilters.some(
+            (m) => item.traits && item.traits.includes(m)
+          )
+        );
+      }
+
+      if (this.selectedRarityFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedRarityFilters.some(
+            (r) => item.rarity && item.rarity.includes(r)
+          )
+        );
+      }
+
+      return searchResult;
+    },
     finalKeywords() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
     },
 
     filteredTalents() {
-      if (this.talents === undefined ) {
+      if (this.talents === undefined) {
         return [];
       }
 
 
       let filteredTalents = this.talents;
 
-      if (this.selectedtraitsFilters.length > 0) {
-        filteredTalents = filteredTalents.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
-      }
+      // if (this.selectedtraitsFilters.length > 0) {
+      //   filteredTalents = filteredTalents.filter((item) => this.selectedtraitsFilters.some((m) => item.traits.includes(m)));
+      // }
 
 
-      if (this.selectedSourceFilters.length > 0) {
-        filteredTalents = filteredTalents.filter((item) => this.selectedSourceFilters.includes(item.source.book));
-      }
+      // if (this.selectedSourceFilters.length > 0) {
+      //   filteredTalents = filteredTalents.filter((item) => this.selectedSourceFilters.includes(item.source.book));
+      // }
 
-      if (this.selectedRarityFilters.length > 0) {
+      // if (this.selectedRarityFilters.length > 0) {
 
-        filteredTalents = filteredTalents.filter((item) => this.selectedRarityFilters.some((m) => item.traits.includes(m)
-          || (m === 'обычный' && !item.traits.includes('редкий')))).filter((item) => this.selectedRarityFilters.some((m) => item.traits.includes(m)
-            || (m === 'обычный' && !item.traits.includes('необычный'))));
-      }
-
+      //   filteredTalents = filteredTalents.filter((item) => this.selectedRarityFilters.some((m) => item.traits.includes(m)
+      //     || (m === 'обычный' && !item.traits.includes('редкий')))).filter((item) => this.selectedRarityFilters.some((m) => item.traits.includes(m)
+      //       || (m === 'обычный' && !item.traits.includes('необычный'))));
+      // }
+      // 
       // filteredTalents = filteredTalents.map((talent) => {
       //   let fulfilled = true;
 
@@ -642,18 +710,20 @@ export default {
       // });
 
       //const lowercaseKeywords = filteredTalents.map(s => s.traits.toString().toUpperCase());
-                 let lowercaseKeywords = [];
-      if (this.type === 'skill' || this.type === 'general')
-        lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
-      else
-         lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+
+      // let lowercaseKeywords = [];
+      // if (this.type === 'skill' || this.type === 'general')
+      //   lowercaseKeywords = this.type === 'skill' ? ['НАВЫК'] : ['ОБЩАЯ'];
+      // else
+      //   lowercaseKeywords = this.finalKeywords.map((k) => k.toUpperCase());
+
       // only show those whose prerequisites are met
       // if () {
-       // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
+      // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.includes(talent.traits.toString().toUpperCase()));
       // }
-      filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
+      // filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(lw => talent.traits.toString().toUpperCase().includes(lw)));
 
-      return filteredTalents.filter(talent => talent.level <= this.level);
+      return filteredTalents.filter(talent => talent.system.level.value <= this.level);
     },
   }
 };
@@ -667,6 +737,7 @@ export default {
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;
@@ -727,5 +798,158 @@ export default {
   margin-block-end: 1em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
+}
+</style>
+
+<style scoped>
+.fixed-columns-table .v-data-table__wrapper table {
+  table-layout: fixed !important;
+  /* фиксированная сетка */
+  width: 100%;
+}
+
+.fixed-columns-table th,
+.fixed-columns-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fixed-columns-table th {
+  font-weight: 600;
+  background-color: rgba(var(--v-theme-surface-variant), 0.5);
+}
+
+/* Настраиваем ширину каждой колонки (по порядку) */
+.fixed-columns-table th:nth-child(1),
+.fixed-columns-table td:nth-child(1) {
+  width: 40%;
+  /* Название предмета */
+}
+
+.fixed-columns-table th:nth-child(2),
+.fixed-columns-table td:nth-child(2) {
+  width: 20%;
+  /* Тип */
+}
+
+.fixed-columns-table th:nth-child(3),
+.fixed-columns-table td:nth-child(3) {
+  width: 15%;
+  /* Цена */
+}
+
+.fixed-columns-table th:nth-child(4),
+.fixed-columns-table td:nth-child(4) {
+  width: 25%;
+  /* Прочее */
+}
+
+.table-wrapper {
+  max-height: 500px;
+  /* или любая фиксированная высота */
+  overflow-y: auto;
+  /* добавляет прокрутку */
+}
+
+.expanded-content {
+  max-height: 300px;
+  /* ограничиваем раскрытие */
+  overflow-y: auto;
+  /* прокрутка внутри строки */
+}
+
+/* Можно ограничить высоту ячеек */
+.v-data-table tbody td {
+  max-width: 250px;
+  /* можно подбирать */
+}
+
+/* Убираем растягивание при раскрытии */
+.v-data-table__expanded__content td {
+  max-width: none !important;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: hidden;
+  /* не даем появиться горизонтальному скроллу */
+}
+
+.expanded-cell {
+  padding: 0 !important;
+  background-color: rgba(var(--v-theme-surface-variant), 0.05);
+}
+
+.expanded-wrapper {
+  display: block;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  background-color: var(--v-theme-surface);
+  border-left: 3px solid var(--v-theme-primary);
+  border-radius: 0 0 8px 8px;
+}
+
+.expanded-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.expanded-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-word;
+}
+
+.expanded-tag {
+  background-color: rgba(var(--v-theme-primary), 0.15);
+  color: var(--v-theme-primary);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+}
+
+.expanded-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 4px 12px;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  word-break: break-word;
+}
+
+.expanded-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(var(--v-border-color, 150, 150, 150), 0.2);
+  margin: 10px 0;
+}
+
+.expanded-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--v-theme-on-surface);
+  word-break: break-word;
+  white-space: normal;
+}
+
+.v-data-table {
+  table-layout: fixed !important;
+}
+
+.v-data-table thead th,
+.v-data-table tbody td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  /* чтобы переносились строки */
+  word-wrap: break-word;
+  vertical-align: top;
 }
 </style>

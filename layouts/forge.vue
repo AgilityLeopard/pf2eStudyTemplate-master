@@ -1,14 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-model="drawer.open"
-      app
-      :clipped="drawer.clipped"
-      :fixed="drawer.fixed"
-      :permanent="drawer.permanent"
-      :mini-variant="drawer.mini"
-      width="320"
-    >
+    <v-navigation-drawer v-model="drawer.open" app :clipped="drawer.clipped" :fixed="drawer.fixed"
+      :permanent="drawer.permanent" :mini-variant="drawer.mini" width="320">
       <div class="compact-list">
         <v-list>
           <v-list-item>
@@ -51,24 +44,14 @@
             </v-list-item-content>
 
             <v-list-item-action class="hidden-xs-only">
-              <v-chip
-                pill
-                dark
-                :color="getClassChipColor(characterPerseption)"
-                class="ml-2"
-              >
+              <v-chip pill dark :color="getClassChipColor(characterPerseption)" class="ml-2">
                 {{
                   ModAttributePerception(Perception.attribute, Perception.key)
                 }}
               </v-chip>
             </v-list-item-action>
             <v-list-item-action class="hidden-xs-only">
-              <v-chip
-                pill
-                :color="getClassChipColor(characterPerseption)"
-                dark
-                class="ml-2"
-              >
+              <v-chip pill :color="getClassChipColor(characterPerseption)" dark class="ml-2">
                 {{ characterlabel(characterPerseption) }}
               </v-chip>
             </v-list-item-action>
@@ -80,22 +63,12 @@
             </v-list-item-content>
 
             <v-list-item-action class="hidden-xs-only">
-              <v-chip
-                pill
-                :color="getClassChipColor(characterSkillClass)"
-                dark
-                class="ml-2"
-              >
+              <v-chip pill :color="getClassChipColor(characterSkillClass)" dark class="ml-2">
                 {{ ModAttributeClass() }}
               </v-chip>
             </v-list-item-action>
             <v-list-item-action class="hidden-xs-only">
-              <v-chip
-                pill
-                :color="getClassChipColor(characterSkillClass)"
-                dark
-                class="ml-2"
-              >
+              <v-chip pill :color="getClassChipColor(characterSkillClass)" dark class="ml-2">
                 {{ characterlabel(characterSkillClass) }}
               </v-chip>
             </v-list-item-action>
@@ -170,11 +143,7 @@
         <div class="px-4 py-2">
           <!-- Характеристики -->
           <h3 class="mb-2">Характеристики</h3>
-          <div
-            class="stat-row"
-            v-for="attribute in attributeRepository"
-            :key="attribute.key"
-          >
+          <div class="stat-row" v-for="attribute in attributeRepository" :key="attribute.key">
             <div class="stat-group d-flex mb-1">
               <v-btn block small class="stat-name-btn" depressed>
                 <span class="truncate">{{ attribute.name }}</span>
@@ -190,14 +159,8 @@
           <!-- Навыки -->
           <h3 class="mb-2 mt-4">Навыки</h3>
           <v-list>
-            <v-list-item
-              v-for="skill in finalSkillRepository"
-              :key="skill.key"
-              two-line
-              @click="openSkills(skill)"
-              :style="{ backgroundColor: getSkillRankColor(skill.key) }"
-              class="skill-item"
-            >
+            <v-list-item v-for="skill in finalSkillRepository" :key="skill.key" two-line @click="openSkills(skill)"
+              :style="{ backgroundColor: getSkillRankColor(skill.key) }" class="skill-item">
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">
                   {{ skill.name }}
@@ -205,22 +168,12 @@
               </v-list-item-content>
 
               <v-list-item-action class="hidden-xs-only">
-                <v-chip
-                  pill
-                  :color="getRankChipColor(skill.key)"
-                  dark
-                  class="ml-2"
-                >
+                <v-chip pill :color="getRankChipColor(skill.key)" dark class="ml-2">
                   {{ ModAttribute(skill.attribute, skill.key) }}
                 </v-chip>
               </v-list-item-action>
               <v-list-item-action class="hidden-xs-only">
-                <v-chip
-                  small
-                  :color="getRankChipColor(skill.key)"
-                  dark
-                  class="ml-2"
-                >
+                <v-chip small :color="getRankChipColor(skill.key)" dark class="ml-2">
                   {{ SkillLabel(skill.key) }}
                 </v-chip>
               </v-list-item-action>
@@ -230,12 +183,7 @@
           <!-- Спасброски -->
           <h3 class="mb-2 mt-4">Спасброски</h3>
           <v-list>
-            <v-list-item
-              v-for="saving in SavingRepository"
-              :key="saving.key"
-              two-line
-              @click="openSaves(saving)"
-            >
+            <v-list-item v-for="saving in SavingRepository" :key="saving.key" two-line @click="openSaves(saving)">
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   saving.name
@@ -243,22 +191,12 @@
               </v-list-item-content>
 
               <v-list-item-action class="hidden-xs-only">
-                <v-chip
-                  pill
-                  :color="getClassChipColor(characterSaving[saving.key])"
-                  dark
-                  class="ml-2"
-                >
+                <v-chip pill :color="getClassChipColor(characterSaving[saving.key])" dark class="ml-2">
                   {{ ModAttributeSaving(saving.attribute, saving.key) }}
                 </v-chip>
               </v-list-item-action>
               <v-list-item-action class="hidden-xs-only">
-                <v-chip
-                  pill
-                  :color="getClassChipColor(characterSaving[saving.key])"
-                  dark
-                  class="ml-2"
-                >
+                <v-chip pill :color="getClassChipColor(characterSaving[saving.key])" dark class="ml-2">
                   {{ characterlabel(characterSaving[saving.key]) }}
                 </v-chip>
               </v-list-item-action>
@@ -268,11 +206,7 @@
           <!-- Владение оружием -->
           <h3 class="mb-2 mt-4">Владение оружием</h3>
           <v-list>
-            <v-list-item
-              v-for="attack in WeaponRepository"
-              :key="attack.key"
-              two-line
-            >
+            <v-list-item v-for="attack in WeaponRepository" :key="attack.key" two-line>
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   attack.name
@@ -280,12 +214,7 @@
               </v-list-item-content>
 
               <v-list-item-action class="hidden-xs-only">
-                <v-chip
-                  pill
-                  :color="getClassChipColor(skillAttack[attack.key])"
-                  dark
-                  class="ml-2"
-                >
+                <v-chip pill :color="getClassChipColor(skillAttack[attack.key])" dark class="ml-2">
                   {{ characterlabel(skillAttack[attack.key]) }}
                 </v-chip>
               </v-list-item-action>
@@ -295,11 +224,7 @@
           <!-- Владение доспехами -->
           <h3 class="mb-2 mt-4">Владение доспехами</h3>
           <v-list>
-            <v-list-item
-              v-for="defence in DefenceRepository"
-              :key="defence.key"
-              two-line
-            >
+            <v-list-item v-for="defence in DefenceRepository" :key="defence.key" two-line>
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   defence.name
@@ -307,12 +232,7 @@
               </v-list-item-content>
 
               <v-list-item-action class="hidden-xs-only">
-                <v-chip
-                  pill
-                  :color="getClassChipColor(skillDefence[defence.key])"
-                  dark
-                  class="ml-2"
-                >
+                <v-chip pill :color="getClassChipColor(skillDefence[defence.key])" dark class="ml-2">
                   {{ characterlabel(skillDefence[defence.key]) }}
                 </v-chip>
               </v-list-item-action>
@@ -322,11 +242,7 @@
           <!-- Языки -->
           <h3 class="mb-2 mt-4">Языки</h3>
           <v-list>
-            <v-list-item
-              v-for="lang in characterLanguages"
-              :key="lang.name"
-              two-line
-            >
+            <v-list-item v-for="lang in characterLanguages" :key="lang.name" two-line>
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   lang.name
@@ -403,12 +319,7 @@
         </v-card>
       </v-dialog> -->
 
-      <v-dialog
-        v-model="skillsDialog"
-        width="1000px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
+      <v-dialog v-model="skillsDialog" width="1000px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
         <v-card>
           <!-- Заголовок -->
           <v-card-title style="background-color: #262e37; color: #fff">
@@ -466,28 +377,20 @@
             <!-- Аккордеон -->
             <v-expansion-panels multiple>
               <v-expansion-panel>
-                <v-expansion-panel-header
-                  >Описание навыка</v-expansion-panel-header
-                >
+                <v-expansion-panel-header>Описание навыка</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <div class="pt-4 pb-2" v-html="skill.description"></div>
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <!-- Actions -->
               <v-expansion-panel>
-                <v-expansion-panel-header
-                  >Действия навыка</v-expansion-panel-header
-                >
+                <v-expansion-panel-header>Действия навыка</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list dense>
-                    <v-list-item
-                      v-for="(action, i) in skill.actions || []"
-                      :key="i"
-                    >
+                    <v-list-item v-for="(action, i) in skill.actions || []" :key="i">
                       <v-expansion-panel>
                         <v-expansion-panel-header>
-                          {{ action?.name }}</v-expansion-panel-header
-                        >
+                          {{ action?.name }}</v-expansion-panel-header>
                         <v-expansion-panel-content>
                           <v-card class="glass-card pa-4">
                             <v-card-title class="headline">
@@ -496,17 +399,10 @@
                             <v-card-text>
                               <v-row>
                                 <div>
-                                  <trait-view
-                                    v-if="action"
-                                    :item="action"
-                                    class="mb-2"
-                                  />
+                                  <trait-view v-if="action" :item="action" class="mb-2" />
                                 </div>
                               </v-row>
-                              <div
-                                class="pt-4 pb-2"
-                                v-html="action?.description"
-                              ></div>
+                              <div class="pt-4 pb-2" v-html="action?.description"></div>
                               <p>
                                 <strong>Category:</strong>
                                 {{ action?.category }}
@@ -558,10 +454,8 @@
                         {{ profiencyRepository[SkillProf(skill.key)] }}
                       </kbd>
                     </template>
-                    <span
-                      >Вы {{ SkillLabelName(skill.key) }}, что дает вам бонус
-                      {{ profiencyRepository[SkillProf(skill.key)] }}</span
-                    >
+                    <span>Вы {{ SkillLabelName(skill.key) }}, что дает вам бонус
+                      {{ profiencyRepository[SkillProf(skill.key)] }}</span>
                   </v-tooltip>
 
                   +
@@ -596,52 +490,37 @@
                         }}
                       </kbd>
                     </template>
-                    <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0"
-                      >Поскольку вы обучены этому навыку, вы добавляете свой
-                      уровень.</span
-                    >
-                    <span v-if="profiencyRepository[SkillProf(skill.key)] === 0"
-                      >Поскольку вы не обучены этому навыку, вы не добавляете
-                      свой уровень.</span
-                    >
+                    <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0">Поскольку вы обучены этому навыку, вы
+                      добавляете свой
+                      уровень.</span>
+                    <span v-if="profiencyRepository[SkillProf(skill.key)] === 0">Поскольку вы не обучены этому навыку,
+                      вы не добавляете
+                      свой уровень.</span>
                   </v-tooltip>
                 </v-expansion-panel-content>
               </v-expansion-panel>
 
               <!-- Timeline -->
               <v-expansion-panel>
-                <v-expansion-panel-header
-                  >Таймлайн навыка</v-expansion-panel-header
-                >
+                <v-expansion-panel-header>Таймлайн навыка</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list dense>
-                    <v-list-item
-                      v-for="(event, index) in skill.event"
-                      :key="index"
-                    >
+                    <v-list-item v-for="(event, index) in skill.event" :key="index">
                       <v-list-item-content>
-                        <v-list-item-title
-                          style="
+                        <v-list-item-title style="
                             display: flex;
                             justify-content: space-between;
                             align-items: center;
-                          "
-                        >
+                          ">
                           <span>{{ event.source }}</span>
-                          <span style="font-size: 0.8rem; font-weight: normal"
-                            >Уровень. {{ event.level }}</span
-                          >
+                          <span style="font-size: 0.8rem; font-weight: normal">Уровень {{ event.level }}</span>
                         </v-list-item-title>
-                        <v-list-item-subtitle
-                          style="font-style: italic; font-size: 0.75rem"
-                        >
+                        <v-list-item-subtitle style="font-style: italic; font-size: 0.75rem">
                           {{ event.details }}
                         </v-list-item-subtitle>
                       </v-list-item-content>
                       <v-list-item-icon>
-                        <v-icon :color="event.active ? 'green' : 'grey'"
-                          >mdi-badge-account</v-icon
-                        >
+                        <v-icon :color="event.active ? 'green' : 'grey'">mdi-badge-account</v-icon>
                       </v-list-item-icon>
                     </v-list-item>
                   </v-list>
@@ -658,12 +537,7 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog
-        v-model="savesDialog"
-        width="600px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
+      <v-dialog v-model="savesDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
         <v-card>
           <v-card-title style="background-color: #262e37; color: #fff">
             Спасброски
@@ -700,10 +574,7 @@
                 </v-col>
                 <v-col>
                   <v-sheet class="text-center small pa-1"> Уровень </v-sheet>
-                  <v-sheet
-                    v-if="profiencyRepository[characterSaving[save.key]] !== 0"
-                    class="text-center pa-2 ma-2"
-                  >
+                  <v-sheet v-if="profiencyRepository[characterSaving[save.key]] !== 0" class="text-center pa-2 ma-2">
                     {{ characterLevel() }}
                   </v-sheet>
                   <v-sheet v-else class="text-center pa-2 ma-2"> 0 </v-sheet>
@@ -720,14 +591,8 @@
       </v-dialog>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      dark
-      dense
-      style="background-color: #212121"
-      :fixed="toolbar.fixed"
-      :clipped-left="toolbar.clippedLeft"
-    >
+    <v-app-bar app dark dense style="background-color: #212121" :fixed="toolbar.fixed"
+      :clipped-left="toolbar.clippedLeft">
       <v-app-bar-nav-icon @click.stop="toggleDrawer" />
 
       <v-toolbar-title>
@@ -741,19 +606,11 @@
       <v-toolbar-items>
         <v-icon v-if="$nuxt.isOffline" color="warning"> offline_bolt </v-icon>
 
-        <v-btn
-          class="d-none d-md-inline-flex"
-          icon
-          href="https://t.me/shadowtalesgm"
-        >
+        <v-btn class="d-none d-md-inline-flex" icon href="https://t.me/shadowtalesgm">
           <v-icon>mdi-telegram</v-icon>
         </v-btn>
 
-        <v-btn
-          class="d-none d-md-inline-flex"
-          icon
-          href="https://discord.gg/5rEDvSSXSZ"
-        >
+        <v-btn class="d-none d-md-inline-flex" icon href="https://discord.gg/5rEDvSSXSZ">
           <v-icon>mdi-discord</v-icon>
         </v-btn>
 
@@ -764,41 +621,23 @@
     </v-app-bar>
 
     <v-main>
-      <v-toolbar
-        dense
-        style="
+      <v-toolbar dense style="
           position: sticky;
           top: 48px;
           z-index: 5;
           /* background-color: #212121; */
           overflow: auto;
-        "
-      >
+        ">
         <v-toolbar-items>
           <v-btn small text nuxt :to="`/forge/my-characters`" icon>
             <v-icon>supervisor_account</v-icon>
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="`/forge/characters/${$route.params.id}/builder/setting`"
-          >
+          <v-btn small text nuxt :to="`/forge/characters/${$route.params.id}/builder/setting`">
             Главная
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.species"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.species" :disabled="!settingSelected">
             1. Наследие
-            <v-chip
-              small
-              class="select-chip"
-              v-if="!characterSpeciesLabel || !characterHeritageLabel"
-            >
+            <v-chip small class="select-chip" v-if="!characterSpeciesLabel || !characterHeritageLabel">
               !
             </v-chip>
           </v-btn>
@@ -811,108 +650,51 @@
           >
             2. Родословная
           </v-btn> -->
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.archetype"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.archetype" :disabled="!settingSelected">
             2. Класс
             <v-chip small class="select-chip" v-if="!characterArchetype">
               !
             </v-chip>
             <!-- <v-alert small type="info" color="primary"> </v-alert> -->
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.ascension"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.ascension" :disabled="!settingSelected">
             3. Предыстория
             <v-chip small class="select-chip" v-if="!characterAscension">
               !
             </v-chip>
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.stats"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.stats" :disabled="!settingSelected">
             4. Навыки и характеристики
-            <v-chip
-              small
-              class="select-chip"
-              v-if="
-                progress !== progressMax && progress !== 0 && progressMax !== 0
-              "
-            >
+            <v-chip small class="select-chip" v-if="
+              progress !== progressMax && progress !== 0 && progressMax !== 0
+            ">
               !
             </v-chip>
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.talents"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.talents" :disabled="!settingSelected">
             5. Черты
             <v-chip small class="select-chip" v-if="progressFeats !== 0">
               !
             </v-chip>
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.wargear"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.wargear" :disabled="!settingSelected">
             6. Снаряжение
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.psychic"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.psychic" :disabled="!settingSelected">
             7. Заклинания
           </v-btn>
-          <v-btn
-            small
-            text
-            nuxt
-            :to="routes.background"
-            :disabled="!settingSelected"
-          >
+          <v-btn small text nuxt :to="routes.background" :disabled="!settingSelected">
             8. Детали Персонажа
           </v-btn>
-          <v-btn
-            small
-            nuxt
-            icon
-            exact
-            :to="`/forge/characters/${$route.params.id}`"
-            :disabled="!settingSelected"
-          >
+          <v-btn small nuxt icon exact :to="`/forge/characters/${$route.params.id}`" :disabled="!settingSelected">
             <v-icon>description</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
 
       <v-container>
-        <v-btn
-          v-if="false"
-          small
-          color="green lighten-2"
-          style="position: fixed; top: 174px; right: 350px; margin-right: 50%"
-        >
+        <v-btn v-if="false" small color="green lighten-2"
+          style="position: fixed; top: 174px; right: 350px; margin-right: 50%">
           <v-icon>chevron_left</v-icon>
         </v-btn>
 
@@ -932,12 +714,8 @@
                 to ensure that influence is computed correctly.
               </v-alert>
             </p>
-            <v-btn small color="success" @click="migrateCharacter"
-              >Update Character</v-btn
-            >
-            <v-btn small color="success" nuxt exact :to="`/forge/my-characters`"
-              >To the Character Overview</v-btn
-            >
+            <v-btn small color="success" @click="migrateCharacter">Update Character</v-btn>
+            <v-btn small color="success" nuxt exact :to="`/forge/my-characters`">To the Character Overview</v-btn>
           </v-col>
         </v-row>
 
@@ -947,50 +725,28 @@
           </v-col>
         </v-row>
 
-        <v-btn
-          v-if="false"
-          small
-          color="green lighten-2"
-          style="position: fixed; top: 174px; left: 350px; margin-left: 50%"
-        >
+        <v-btn v-if="false" small color="green lighten-2"
+          style="position: fixed; top: 174px; left: 350px; margin-left: 50%">
           <v-icon>chevron_right</v-icon>
         </v-btn>
       </v-container>
     </v-main>
 
-    <v-footer
-      app
-      dark
-      :color="spendBuildingPoints > totalBuildPoints ? 'error' : ''"
-      class="caption"
-    >
+    <v-footer app dark :color="spendBuildingPoints > totalBuildPoints ? 'error' : ''" class="caption">
       <v-spacer />
       <div class="caption d-none d-sm-block">
         {{ finalKeywords.join(" • ") }}
       </div>
       <div class="d-block d-sm-none">
-        <v-btn
-          tile
-          small
-          nuxt
-          :to="linkPrev"
-          :disabled="linkCurrentIndex === 0"
-        >
+        <v-btn tile small nuxt :to="linkPrev" :disabled="linkCurrentIndex === 0">
           <v-icon left small> chevron_left </v-icon>prev
         </v-btn>
-        <v-btn
-          tile
-          small
-          nuxt
-          :to="linkNext"
-          :disabled="linkCurrentIndex === 8"
-        >
+        <v-btn tile small nuxt :to="linkNext" :disabled="linkCurrentIndex === 8">
           next<v-icon right small> chevron_right </v-icon>
         </v-btn>
       </div>
       <v-spacer />
-      <span>&copy; {{ new Date().getFullYear() }}</span
-      ><span class="d-none d-md-block">&nbsp;Shadow Tales</span>
+      <span>&copy; {{ new Date().getFullYear() }}</span><span class="d-none d-md-block">&nbsp;Shadow Tales</span>
     </v-footer>
   </v-app>
 </template>
@@ -1793,7 +1549,7 @@ export default {
         .filter((s) => s.skills.join(", ").includes(skill.key));
 
       const prof = this.characterSkillSheet
-        .filter((s) => s.key === skill.key)
+        .filter((s) => s.key === skill.key && s.combinded === false)
         .sort((a, b) => a.level - b.level);
 
       const event = [];
@@ -1981,9 +1737,7 @@ export default {
     --badge-fz: var(--badge-fz-md);
     --badge-padding-x: var(--badge-padding-x-md);
     --badge-radius: calc(62.5rem * var(--mantine-scale));
-    --badge-lh: calc(
-      var(--badge-height) - calc(0.125rem * var(--mantine-scale))
-    );
+    --badge-lh: calc(var(--badge-height) - calc(0.125rem * var(--mantine-scale)));
     --badge-color: var(--mantine-color-white);
     --badge-bg: var(--mantine-primary-color-filled);
     --badge-border-width: calc(0.0625rem * var(--mantine-scale));
@@ -2054,15 +1808,19 @@ export default {
 .skill-item.rank-0 {
   background-color: #f5f5f5;
 }
+
 .skill-item.rank-1 {
   background-color: #e3f2fd;
 }
+
 .skill-item.rank-2 {
   background-color: #e8f5e9;
 }
+
 .skill-item.rank-3 {
   background-color: #fff3e0;
 }
+
 .skill-item.rank-4 {
   background-color: #f3e5f5;
 }
@@ -2070,15 +1828,19 @@ export default {
 .rank-chip-0 {
   background-color: #9e9e9e !important;
 }
+
 .rank-chip-1 {
   background-color: #171f69 !important;
 }
+
 .rank-chip-2 {
   background-color: #3c005e !important;
 }
+
 .rank-chip-3 {
   background-color: #664400 !important;
 }
+
 .rank-chip-4 {
   background-color: #5e0000 !important;
 }
@@ -2130,10 +1892,14 @@ export default {
 }
 
 .compact-text {
-  font-size: 0.875rem; /* немного меньше стандартного (примерно 14px) */
-  line-height: 1.1; /* плотнее строки */
-  margin: 0; /* убирает внешние отступы */
-  padding: 0; /* убирает внутренние */
+  font-size: 0.875rem;
+  /* немного меньше стандартного (примерно 14px) */
+  line-height: 1.1;
+  /* плотнее строки */
+  margin: 0;
+  /* убирает внешние отступы */
+  padding: 0;
+  /* убирает внутренние */
 }
 </style>
 
@@ -2144,30 +1910,39 @@ export default {
 }
 
 .compact-list .v-list-item {
-  min-height: 0 !important; /* убираем минимальную высоту по умолчанию */
-  height: 24px !important; /* задаём фиксированную минимальную высоту */
+  min-height: 0 !important;
+  /* убираем минимальную высоту по умолчанию */
+  height: 24px !important;
+  /* задаём фиксированную минимальную высоту */
 
-  padding-top: 0px !important; /* минимальный верхний отступ */
-  padding-bottom: 0px !important; /* минимальный нижний отступ */
+  padding-top: 0px !important;
+  /* минимальный верхний отступ */
+  padding-bottom: 0px !important;
+  /* минимальный нижний отступ */
 }
 
 .compact-list .v-list-item-content {
   font-size: 0.75rem !important;
-  margin: 0 !important; /* убираем любые внешние отступы */
-  padding: 0 !important; /* убираем внутренние отступы */
+  margin: 0 !important;
+  /* убираем любые внешние отступы */
+  padding: 0 !important;
+  /* убираем внутренние отступы */
 }
 
 .compact-list .v-list-item-title {
   font-size: 0.75rem !important;
-  line-height: 1 !important; /* плотная строка */
+  line-height: 1 !important;
+  /* плотная строка */
   margin: 0 !important;
 }
 
 .compact-list .v-chip {
   font-size: 0.65rem !important;
-  height: 18px !important; /* минимальная высота */
+  height: 18px !important;
+  /* минимальная высота */
   line-height: 1 !important;
-  padding: 2 4px !important; /* сжатая внутренняя область */
+  padding: 2 4px !important;
+  /* сжатая внутренняя область */
 }
 
 /*

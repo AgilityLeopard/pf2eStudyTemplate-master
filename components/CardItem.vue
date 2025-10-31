@@ -16,6 +16,9 @@
           <span class="gear-name">{{ item.name }}</span>
           <span class="gear-line"></span>
           <span class="gear-tag">
+            <span v-if="['feat'].includes(item.type)">
+              {{ `Черта ${item.level || "-"}` }}
+            </span>
             <span v-if="['weapon'].includes(item.type)">
               {{ `Оружие ${item.level?.value || "-"}` }}
             </span>
@@ -25,7 +28,7 @@
             <span v-if="['shield'].includes(item.type)">
               {{ `Щит ${item.level?.value || "-"}` }}
             </span>
-            <span v-if="!['shield', 'armor', 'weapon'].includes(item.type)">
+            <span v-if="!['shield', 'armor', 'weapon', 'feat'].includes(item.type)">
               {{ `Предмет ${item.level?.value || "-"}` }}
             </span>
           </span>
@@ -39,103 +42,112 @@
       <div class="gear-divider"></div>
 
       <div class="line"></div>
-
-      <div v-if="item.bulk" class="info-line">
-        <!--Общее для предметов  -->
-        <span v-if="item.bulk">
-          <strong>Нагрузка:</strong>
-          {{ item.bulk.value === 0.1 ? "Л" : item.bulk.value }}</span
-        >
-      </div>
-
-      <div class="info-line">
-        <strong>Цена:</strong> {{ wargearPrice(item) }}
-      </div>
-
-      <div class="line"></div>
-
-      <!-- Если оружие/доспехи -->
-      <div v-if="item.type === 'weapon'">
-        <div v-if="item.damage" class="info-line">
-          <strong>Урон:</strong> {{ item.damageOrig.die }}
-          {{ typeDamage(item.damageOrig.damageType).slice(0, 1).toUpperCase() }}
+      <div v-if="item.type !== 'feat'">
+        <div v-if="item.bulk" class="info-line">
+          <!--Общее для предметов  -->
+          <span v-if="item.bulk">
+            <strong>Нагрузка:</strong>
+            {{ item.bulk.value === 0.1 ? "Л" : item.bulk.value }}</span>
         </div>
 
-        <div v-if="item.usage" class="info-line">
-          <strong>Руки:</strong> {{ Worn(item.usage.value) }}
+        <div v-if="item.price" class="info-line">
+          <strong>Цена:</strong> {{ wargearPrice(item) }}
         </div>
 
-        <div v-if="item.group" class="info-line">
-          <strong>Группа:</strong> {{ groupName(item.group) }}
+        <div class="line"></div>
+
+        <!-- Если оружие/доспехи -->
+        <div v-if="item.type === 'weapon'">
+          <div v-if="item.damageOrig" class="info-line">
+            <strong>Урон:</strong> {{ item.damageOrig.die }}
+            {{
+              typeDamage(item.damageOrig.damageType).slice(0, 1).toUpperCase()
+            }}
+          </div>
+
+          <div v-else-if="item.damage" class="info-line">
+            <strong>Урон:</strong> {{ item.damage.die }}
+            {{
+              typeDamage(item.damage.damageType).slice(0, 1).toUpperCase()
+            }}
+          </div>
+
+          <div v-if="item.usage" class="info-line">
+            <strong>Руки:</strong> {{ Worn(item.usage.value) }}
+          </div>
+
+          <div v-if="item.group" class="info-line">
+            <strong>Группа:</strong> {{ groupName(item.group) }}
+          </div>
+
+          <div v-if="item.category" class="info-line">
+            <strong>Категория:</strong> {{ category(item.category) }}
+          </div>
         </div>
 
-        <div v-if="item.category" class="info-line">
-          <strong>Категория:</strong> {{ category(item.category) }}
-        </div>
-      </div>
+        <!-- Для доспехов -->
+        <div v-if="item.type === 'armor'">
+          <div v-if="item.acBonus" class="info-line">
+            <strong> Бонус КД:</strong> {{ item.acBonus }}
+          </div>
 
-      <!-- Для доспехов -->
-      <div v-if="item.type === 'armor'">
-        <div v-if="item.acBonus" class="info-line">
-          <strong> Бонус КД:</strong> {{ item.acBonus }}
+          <div v-if="item.dexCap" class="info-line">
+            <strong> Макс. Лвк:</strong> {{ item.dexCap }}
+          </div>
+
+          <div v-if="item.checkPenalty" class="info-line">
+            <strong> Штраф к навыкам:</strong> {{ item.checkPenalty }}
+          </div>
+
+          <div v-if="item.speedPenalty" class="info-line">
+            <strong> Штраф к скорости:</strong> {{ item.speedPenalty }}
+          </div>
+
+          <div v-if="item.strength" class="info-line">
+            <strong>Сила:</strong> {{ item.strength }}
+          </div>
+
+          <div v-if="item.group" class="info-line">
+            <strong>Группа:</strong> {{ groupArmorName(item.group) }}
+          </div>
+
+          <div v-if="item.category" class="info-line">
+            <strong>Категория:</strong> {{ categoryArmor(item.category) }}
+          </div>
         </div>
 
-        <div v-if="item.dexCap" class="info-line">
-          <strong> Макс. Лвк:</strong> {{ item.dexCap }}
-        </div>
-
-        <div v-if="item.checkPenalty" class="info-line">
-          <strong> Штраф к навыкам:</strong> {{ item.checkPenalty }}
-        </div>
-
-        <div v-if="item.speedPenalty" class="info-line">
-          <strong> Штраф к скорости:</strong> {{ item.speedPenalty }}
-        </div>
-
-        <div v-if="item.strength" class="info-line">
-          <strong>Сила:</strong> {{ item.strength }}
-        </div>
-
-        <div v-if="item.group" class="info-line">
-          <strong>Группа:</strong> {{ groupArmorName(item.group) }}
-        </div>
-
-        <div v-if="item.category" class="info-line">
-          <strong>Категория:</strong> {{ categoryArmor(item.category) }}
-        </div>
-      </div>
-
-      <!-- <div v-if="item.hands" class="info-line">
+        <!-- <div v-if="item.hands" class="info-line">
         <strong>Руки:</strong> {{ item.hands }}
       </div> -->
 
-      <div v-if="item.distance" class="info-line">
-        <strong>Дистанция:</strong> {{ item.distance }}
+        <div v-if="item.distance" class="info-line">
+          <strong>Дистанция:</strong> {{ item.distance }}
+        </div>
+
+        <div v-if="item.area" class="info-line">
+          <strong>Область:</strong> <span v-html="item.area"></span>
+        </div>
+
+        <div v-if="item.target" class="info-line">
+          <strong>Цель:</strong> {{ item.target }}
+        </div>
+
+        <div class="line"></div>
+        <!-- Обычное описание предмета -->
+        <div class="pt-4 pb-2 description" v-if="item.description" v-html="item.description"></div>
       </div>
-
-      <div v-if="item.area" class="info-line">
-        <strong>Область:</strong> <span v-html="item.area"></span>
-      </div>
-
-      <div v-if="item.target" class="info-line">
-        <strong>Цель:</strong> {{ item.target }}
-      </div>
-
-      <div class="line"></div>
-      <!-- Обычное описание предмета -->
-      <div
-        class="pt-4 pb-2 description"
-        v-if="item.description"
-        v-html="item.description"
-      ></div>
-
       <!-- <div class="line"></div> -->
+      <div v-if="item.type === 'feat'">
+        <div v-if="item.prerequisites" class="info-line">
+          <strong>Требования:</strong>
+          {{Object.values(item.prerequisites).map(p => p.value).join(', ')}}
+        </div>
+        <div class="pt-4 pb-2 description" v-if="item.description" v-html="item.description"></div>
 
-      <div
-        class="pt-4 pb-2 power-description"
-        v-if="item.powerDescription"
-        v-html="item.powerDescription"
-      ></div>
+      </div>
+
+
+      <div class="pt-4 pb-2 power-description" v-if="item.powerDescription" v-html="item.powerDescription"></div>
 
       <div v-if="item.source" class="gear-footer">
         <div class="gear-source">{{ item.source.book }}</div>
@@ -145,6 +157,7 @@
 </template>
 
 <script>
+
 import traitView from "~/components/TraitView";
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 
@@ -161,7 +174,7 @@ export default {
     },
     wargearPrice: {
       type: Function,
-      required: true,
+      required: false,
     },
   },
   methods: {
@@ -175,7 +188,7 @@ export default {
     category(category) {
       return this.weaponCategoryRepository.find((t) => t.category === category)
         ? this.weaponCategoryRepository.find((t) => t.category === category)
-            .name
+          .name
         : category;
     },
     groupName(name) {
@@ -186,7 +199,7 @@ export default {
     categoryArmor(category) {
       return this.armourCategoryRepository.find((t) => t.category === category)
         ? this.armourCategoryRepository.find((t) => t.category === category)
-            .name
+          .name
         : category;
     },
     groupArmorName(name) {
@@ -208,11 +221,14 @@ export default {
 
 <style scoped>
 .expanded-item-wrapper {
-  max-height: 400px; /* ограничиваем по высоте */
-  overflow-y: auto; /* прокрутка, если текст большой */
+  max-height: 400px;
+  /* ограничиваем по высоте */
+  overflow-y: auto;
+  /* прокрутка, если текст большой */
   overflow-x: hidden;
   padding: 16px;
-  background-color: var(--v-surface-base); /* адаптируется под тему Vuetify */
+  background-color: var(--v-surface-base);
+  /* адаптируется под тему Vuetify */
   border-radius: 8px;
 }
 
@@ -265,6 +281,7 @@ export default {
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;
@@ -389,7 +406,8 @@ export default {
   font-weight: 500;
   font-size: 0.85rem;
   color: white;
-  background-color: rgb(13, 92, 188); /* зелёный фон */
+  background-color: rgb(13, 92, 188);
+  /* зелёный фон */
   padding: 2px 8px;
   border-radius: 4px;
   white-space: nowrap;
@@ -397,9 +415,12 @@ export default {
 
 .gear-footer {
   display: flex;
-  justify-content: flex-end; /* по горизонтали вправо */
-  align-items: flex-end; /* по вертикали вниз */
-  height: 100%; /* занимает весь контейнер */
+  justify-content: flex-end;
+  /* по горизонтали вправо */
+  align-items: flex-end;
+  /* по вертикали вниз */
+  height: 100%;
+  /* занимает весь контейнер */
   padding: 4px;
 }
 
