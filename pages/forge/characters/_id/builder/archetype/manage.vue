@@ -1,12 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-progress-circular
-      v-if="!item"
-      indeterminate
-      color="success"
-      size="128"
-      width="12"
-    />
+    <v-progress-circular v-if="!item" indeterminate color="success" size="128" width="12" />
 
     <v-col v-if="item" :xs="12">
       <div class="d-flex flex-no-wrap justify-space-between mb-2">
@@ -35,13 +29,9 @@
               <strong> {{ characterLabelAttribute(item.keyAbility) }}</strong>
             </p>
 
-            <p
-              class=""
-              v-else="characterLabelAttributeBoost(item.attributeBoost)"
-            >
+            <p class="" v-else="characterLabelAttributeBoost(item.attributeBoost)">
               <strong>
-                {{ characterLabelAttributeBoost(item.attributeBoost) }}</strong
-              >
+                {{ characterLabelAttributeBoost(item.attributeBoost) }}</strong>
             </p>
             <p class="">
               На 1-м уровне ваш класс дает вам усиление по вашему выбору
@@ -68,7 +58,7 @@
 
             <h3 class="exclude_from_nav" id="SavingThrows">Спасброски</h3>
             <span v-for="item1 in SavingRepository" v-bind:key="item1">
-              <p >
+              <p>
                 {{ characterlabel(item.saving[item1.key]) }} в {{ item1.name }}
               </p>
             </span>
@@ -117,202 +107,134 @@
         <h3 class="headline">Классовые особенности</h3>
         <div v-for="feature in item.archetypeFeatures" class="text-lg-justify">
           <h3 class="main-holder split-header">
-            <span class="left-header">{{ feature.name }}</span
-            ><span class="right-header">{{ feature.level }}</span>
+            <span class="left-header">{{ feature.name }}</span><span class="right-header">{{ feature.level }}</span>
           </h3>
 
-           
+
           <!-- <div >
           <h3 ><span style="display: inline-block; width: 50%;">{{ feature.name }}</span><span style="display: inline-block; text-align: right; width: 50%;">Уровень {{ feature.level }}</span></h3>
           </div> -->
 
           <p class="main-holder">
-            <div v-if="feature.description" v-html="feature.description"></div>
-            <div v-if="feature.snippet" v-html="feature.snippet"></div>
+          <div v-if="feature.description" v-html="feature.description"></div>
+          <div v-if="feature.snippet" v-html="feature.snippet"></div>
 
-            <div
-              v-if="feature.action"
-              v-html="feature.action.description"
-            ></div>
+          <div v-if="feature.action" v-html="feature.action.description"></div>
           </p>
 
           <div v-if="feature.options" class="mt-2">
-            <v-select
-              v-if="feature.type !== 'Weapon Choice'"
-              v-model="feature.selected"
-              :items="feature.options"
-              item-value="key"
-              item-text="name"
-              label=""
-              dense
-              outlined
-              persistent-hint
-              @input="changeSelectedOption(feature, item)"
-            >
+            <v-select v-if="feature.type !== 'Weapon Choice'" v-model="feature.selected" :items="feature.options"
+              item-value="key" item-text="name" label="" dense outlined persistent-hint
+              @input="changeSelectedOption(feature, item)">
             </v-select>
 
-            <v-select
-              v-if="feature.type === 'Weapon Choice'"
-              v-model="feature.selected"
-              :items="feature.options"
-              item-value="key"
-              item-text="nameGear"
-              label=""
-              dense
-              outlined
-              persistent-hint
-              @input="changeSelectedOption(feature, item)"
-            >
+            <v-select v-if="feature.type === 'Weapon Choice'" v-model="feature.selected" :items="feature.options"
+              item-value="key" item-text="nameGear" label="" dense outlined persistent-hint
+              @input="changeSelectedOption(feature, item)">
             </v-select>
 
-            <div
-              v-if="
-                feature.selected &&
-                feature.type !== 'Skill Choice' &&
-                feature.type !== 'Weapon Choice' && 
-                feature.options.find((s) => s.key === feature.selected)
-              "
-            >
+            <div v-if="
+              feature.selected &&
+              feature.type !== 'Skill Choice' &&
+              feature.type !== 'Weapon Choice' &&
+              feature.options.find((s) => s.key === feature.selected)
+            ">
               <div>
-                <trait-view
-                  v-if="feature.options.find((s) => s.key === feature.selected)"
-                  :item="
-                    feature.options.find((s) => s.key === feature.selected)
-                  "
-                  class="mb-2"
-                  style="font-size: 14px"
-                />
+                <trait-view v-if="feature.options.find((s) => s.key === feature.selected)" :item="feature.options.find((s) => s.key === feature.selected)
+                  " class="mb-2" style="font-size: 14px" />
               </div>
-              <div  v-if="
-                    feature.options.find((s) => s.key === feature.selected)
+              <div v-if="
+                feature.options.find((s) => s.key === feature.selected)
+                  .snippet
+              ">
+                <div v-if="
+                  feature.options.find((s) => s.key === feature.selected)
+                    .snippet
+                " v-html="feature.options.find((s) => s.key === feature.selected)
                       .snippet
-                  ">
-                <div
-                  v-if="
-                    feature.options.find((s) => s.key === feature.selected)
-                      .snippet
-                  "
-                  v-html="
-                    feature.options.find((s) => s.key === feature.selected)
-                      .snippet
-                  "
-                ></div>
+                    "></div>
               </div>
-              <div
-                v-if="
-                  feature.options.find((s) => s.key === feature.selected).feat
-                "
-              >
+              <div v-if="
+                feature.options.find((s) => s.key === feature.selected).feat
+              ">
                 <strong>Черта:</strong>
-                <span
-                  v-html="
-                    feature.options.find((s) => s.key === feature.selected).feat
-                  "
-                ></span>
+                <span v-html="feature.options.find((s) => s.key === feature.selected).feat
+                  "></span>
               </div>
-              <div
-                v-if="
-                  feature.options.find((s) => s.key === feature.selected).spells
-                "
-              >
+              <div v-if="
+                feature.options.find((s) => s.key === feature.selected).spells
+              ">
                 <strong>Заклинание:</strong>
-                <span
-                v-for="(spells, level) in feature.options.find((s) => s.key === feature.selected)
-                      .spells"
-                >
-              
-               <h3>Уровень {{ level }}</h3>
-              <ul>
-                <li v-for="spell in spells" :key="spell">
-                  {{ SpellName(spell) }}
-                </li>
-              </ul>
-              </span>
+                <span v-for="(spells, level) in feature.options.find((s) => s.key === feature.selected)
+                  .spells">
+
+                  <h3>Уровень {{ level }}</h3>
+                  <ul>
+                    <li v-for="spell in spells" :key="spell">
+                      {{ SpellName(spell) }}
+                    </li>
+                  </ul>
+                </span>
               </div>
-              <div
-                v-if="
-                  feature.options.find((s) => s.key === feature.selected)
-                    .focusSpell
-                "
-              >
+              <div v-if="
+                feature.options.find((s) => s.key === feature.selected)
+                  .focusSpell
+              ">
                 <strong>Фокусное заклинание:</strong>
-                <span
- 
-                > {{SpellName(feature.options.find((s) => s.key === feature.selected)
-                    .focusSpell)}}</span>
+                <span> {{SpellName(feature.options.find((s) => s.key === feature.selected)
+                  .focusSpell)}}</span>
               </div>
-                            <div
-                v-if="
-                  feature.options.find((s) => s.key === feature.selected)
-                    .spell
-                "
-              >
+              <div v-if="
+                feature.options.find((s) => s.key === feature.selected)
+                  .spell
+              ">
                 <strong>Заклинание:</strong>
-                <span
- 
-                > {{SpellName(feature.options.find((s) => s.key === feature.selected)
-                    .spell)}}</span>
+                <span> {{SpellName(feature.options.find((s) => s.key === feature.selected)
+                  .spell)}}</span>
               </div>
-              <div
-                v-if="
-                  feature.options.find((s) => s.key === feature.selected).skill
-                "
-              >
+              <div v-if="
+                feature.options.find((s) => s.key === feature.selected).skill
+              ">
                 <strong>Навык:</strong>
-                <span
-                  v-html="
-                    feature.options.find((s) => s.key === feature.selected)
-                      .skill
-                  "
-                ></span>
+                <span v-html="feature.options.find((s) => s.key === feature.selected)
+                    .skill
+                  "></span>
               </div>
 
               <div></div>
 
-              <div
-                v-if="
-                  feature.options.find((s) => s.key === feature.selected)
-                    .subFeature
-                "
-              >
-                              <div  v-if="feature.selected && feature.options
-                    .find((s) => s.key === feature.selected)">
-                  <div
-                 v-if="feature.options
-                    .find((s) => s.key === feature.selected).subFeature"
-                  v-for="item in feature.options
-                    .find((s) => s.key === feature.selected)
-                    .subFeature.filter((t) => t.level <= characterLevel())"
-                >
-                  <div>
-                    <h4 class="main-holder split-header1">
-                      <span class="left-header">{{ item.name }}</span
-                      ><span class="right-header">{{ item.level }}</span>
-                    </h4>
-                    <div
-                      v-if="item.snippet"
-                      v-html="item.snippet"
-                    ></div>
-                    <div v-else v-html="item.snippet"></div>
+              <div v-if="
+                feature.options.find((s) => s.key === feature.selected)
+                  .subFeature
+              ">
+                <div v-if="feature.selected && feature.options
+                  .find((s) => s.key === feature.selected)">
+                  <div v-if="feature.options
+                    .find((s) => s.key === feature.selected).subFeature" v-for="item in feature.options
+                      .find((s) => s.key === feature.selected)
+                      .subFeature.filter((t) => t.level <= characterLevel())">
+                    <div>
+                      <h4 class="main-holder split-header1">
+                        <span class="left-header">{{ item.name }}</span><span class="right-header">{{ item.level
+                          }}</span>
+                      </h4>
+                      <div v-if="item.snippet" v-html="item.snippet"></div>
+                      <div v-else v-html="item.snippet"></div>
+                    </div>
                   </div>
                 </div>
-            </div>
               </div>
 
             </div>
 
             <div v-if="feature.selected && feature.type === 'Weapon Choice'">
               <div>
-                <div
-                  v-if="
-                    feature.options.find((s) => s.key === feature.selected)
+                <div v-if="
+                  feature.options.find((s) => s.key === feature.selected)
+                    .description
+                " v-html="feature.options.find((s) => s.key === feature.selected)
                       .description
-                  "
-                  v-html="
-                    feature.options.find((s) => s.key === feature.selected)
-                      .description
-                  "
-                ></div>
+                    "></div>
               </div>
             </div>
             <div></div>
@@ -530,7 +452,7 @@ export default {
     //   this.wargearList = data;
     // },
     async getWargearList(sources) {
-      const page =  1;
+      const page = 1;
       const perPage = 10000;
 
       const params = { page, perPage, source: sources.join(',') };
@@ -703,10 +625,6 @@ export default {
               }
             });
 
-            // if (ab.options.includes("deity"))
-            // {
-            //   ab.options = this.deityList;
-            // }
           }
         });
 
@@ -774,9 +692,7 @@ export default {
           });
         });
 
-        // abilityList = [
-        //     ...abilityList, ...SubFeature
-        //   ]
+
 
         if (ability.length > 0) {
           //Если нашли все особенности, то кладем их в каждый класс
@@ -884,14 +800,14 @@ export default {
       const level = this.characterLevel;
       this.$store.commit("characters/clearCharacterPreparedSpell", {
         id: this.characterId,
-      
+
       });
 
-        this.$store.commit("characters/clearCharacterClassModFeature", {
+      this.$store.commit("characters/clearCharacterClassModFeature", {
         id: this.characterId,
         content: mod,
-            });
-      
+      });
+
       this.$store.commit("characters/addCharacterClassModFeature", {
         id: this.characterId,
         content: mod,
@@ -928,8 +844,8 @@ export default {
       const skill = [];
       feature.type === "Skill Choice"
         ? skill.push(
-            feature.options.find((s) => s.key === feature.selected).key
-          )
+          feature.options.find((s) => s.key === feature.selected).key
+        )
         : [];
       if (skill.length !== 0) {
         //this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: level, type: 'class', optional: false  });
@@ -978,14 +894,14 @@ export default {
 
         this.$store.commit("characters/clearCharacterKeywordsByType", {
           id: this.characterId,
-           type: "sanctification",
+          type: "sanctification",
           cascade: true,
         });
         if (trait !== "Без")
           this.$store.commit("characters/addCharacterKeyword", {
             id: this.characterId,
             keyword: payload,
-            
+
           });
       }
 

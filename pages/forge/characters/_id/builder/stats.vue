@@ -114,6 +114,7 @@
               </h3>
             </v-col>
 
+
             <v-col v-if="archetype && archetype.keyAbility.length > 1" :cols="6" :md="6">
               <v-select label="Повышение Характеристики от класса" v-model="selectedClassBoost" :items="ClassAttribute"
                 item-text="name" item-value="key" @change="updateSelectClassAttribute(selectedClassBoost)"></v-select>
@@ -333,7 +334,10 @@
                   <tbody>
                     <tr v-for="skill in finalSkillRepository" :key="skill.key">
                       <td>{{ skill.name }}</td>
-
+                      <td>{{attributeRepository.find(
+                        (i) => i.key === skill.attribute
+                      )?.short
+                      }}</td>
                       <td class="text-right small pa-1">
                         <v-btn icon :disabled="skillSheetValue(skill.key, 1) === 0 ||
                           (skill.custom &&
@@ -357,7 +361,9 @@
                           characterSkillPointBackground +
                           modInt(1) -
                           skillSheetPoints('', 1) <=
-                          0
+                          0 ||
+                          skillSheetTrained(skill.key, 1) === 'Тренирован'
+                          || skillSheetOptional(skill.key, 1) === true
                           " @click="incrementSkill(skill.key, 1)">
                           <v-icon :color="affordableSkillColor(characterSkills[skill.key])
                             ">
@@ -508,8 +514,9 @@
                         <v-btn icon :disabled="skillSheetValue(skill.key, skillLevel) > 0 ||
                           skillSheetAll(skill.key, skillLevel) >=
                           1 + modInt(skillLevel) ||
-                          levelRestrict(skill.key, skillLevel) === true ||
-                          skillSheetTrained(skill.key, skillLevel) ===
+                          levelRestrict(skill.key, skillLevel) === true
+                          || skillSheetOptional(skill.key, skillLevel) === true
+                          || skillSheetTrained(skill.key, skillLevel) ===
                           'Легенда'
                           " @click="incrementSkill(skill.key, skillLevel)">
                           <v-icon :color="affordableSkillColor(characterSkills[skill.key])
@@ -531,6 +538,7 @@
                 </template>
               </v-simple-table>
               <v-spacer></v-spacer>
+
 
               <v-card-actions style="justify-content: center">
                 <v-btn x-small text @click="openSkillsSettings(skillLevel)">Дополнительное Знание <v-icon
@@ -1300,42 +1308,6 @@ export default {
       this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints + 1 } });
       this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
     },
-    incrementSkillLevel(skill, level, choice) {
-      //level+число
-      const lab = this.label(level);
-      const triggerMatch = this.characterSkillPointsLevel[lab] === skill ? true : false;
-
-
-
-      //Для нового значения
-      const val = this.characterSkillPointsLevel[lab] ? -1 : 1;
-      var keys = Object.keys(this.SkillsTrained);
-      var loc = keys.indexOf(this.characterSkills[skill]);
-      const newValue = keys[loc + 1];
-
-      //Убрать старое
-      if (this.characterSkillPointsLevel[lab] !== '') {
-        var loc1 = keys.indexOf(this.characterSkills[this.characterSkillPointsLevel[lab]]);
-        const newValue1 = keys[loc1 - 1] <= 0 ? 0 : keys[loc1 - 1];
-        const skillName = this.characterSkillPointsLevel[lab].replace(/[0-9]/g, '');
-        this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skillName, value: newValue1 } });
-        this.$store.commit('characters/setCharacterSkillPointsLevel', { id: this.characterId, payload: { level: lab, value: "" } });
-      }
-
-      if (!triggerMatch) {
-        this.$store.commit('characters/setCharacterSkillPointsLevel', { id: this.characterId, payload: { level: lab, value: skill } });
-        this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
-      }
-
-    },
-    decrementSkillLevel(skill, level) {
-      var keys = Object.keys(this.SkillsTrained);
-      var loc = keys.indexOf(this.characterSkills[skill]);
-      const newValue = keys[loc - 1];
-      const lab = this.label(level);
-      // this.$store.commit('characters/setCharacterSkillPointsLevel', { id: this.characterId, payload: { level: lab, value: 1} });
-      this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
-    },
     incrementAttribute(attribute, level) {
       const newValue = this.characterAttributes[attribute] >= 18 ? this.characterAttributes[attribute] + 1 : this.characterAttributes[attribute] + 2;
 
@@ -1447,22 +1419,22 @@ export default {
     },
     skillSheetTrained(key, level) {
       const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level <= level && s.combinded === false) : undefined;
+      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level <= level && (s.combinded === false || !s.combinded)) : undefined;
       return skill ? this.characterTrained(skill.length) : this.characterTrained(0);
     },
     skillSheetAll(key, level) {
       const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.level === level && s.combinded === false && s.optional !== true) : undefined;
+      const skill = skillSheet ? skillSheet.filter(s => s.level === level && (s.combinded === false || !s.combinded) && s.optional !== true) : undefined;
       return skill ? skill.length : 0;
     },
     skillSheetPoints(key, level) {
       const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.level === level && s.type === 'skill' && s.combinded === false) : undefined;
+      const skill = skillSheet ? skillSheet.filter(s => s.level === level && s.type === 'skill' && (s.combinded === false || !s.combinded)) : undefined;
       return skill ? skill.length : 0;
     },
     skillSheetSkillLevel(key, level) {
       const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level && s.combinded === false) : undefined;
+      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level && (s.combinded === false || !s.combinded)) : undefined;
       return skill ? skill.length : 0;
     },
     skillSheetValue(key, level) {
@@ -1485,6 +1457,8 @@ export default {
       const skillSheet = this.characterSkillSheet();
       const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level && s.combinded === false) : undefined;
       const ProfLen = skill ? skill.length : 0;
+
+
 
       if (skill.length === 2 && level < 7)
         return true;
@@ -1685,8 +1659,32 @@ export default {
       this.$store.commit('characters/setCharacterClassAttribute', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
     updateSelectClassSkill(boost) {
-      this.$store.commit('characters/removeSkillSheetbyType', { id: this.characterId, key: boost, type: 'class', optional: false });
-      this.$store.commit('characters/setCharacterClassSkill', { id: this.characterId, payload: { key: boost, level: 1, optional: true, value: 1 } });
+      // Классовые повышения
+
+      const sheet = this.$store.getters["characters/characterSkillSheetById"](
+        this.characterId
+      );
+
+      this.ClassSkill.forEach(item => {
+        if (sheet.find((i) => i.key === item.key && i.level === 1 && i.type === 'skill'))
+          this.$store.commit("characters/setCharacterSkillPointClassUp", {
+            id: this.characterId,
+            write: false,
+            payload: { key: 1, value: 1 },
+          });
+
+        this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: item.key, level: 1, type: 'skill', optional: true });
+        this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: item.key, level: 1, type: 'class', optional: true });
+
+
+      })
+
+
+      this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: boost, level: 1, type: 'class', optional: true });
+
+
+      // this.$store.commit('characters/removeSkillSheetbyType', { id: this.characterId, key: boost, type: 'class', optional: false });
+      // this.$store.commit('characters/setCharacterClassSkill', { id: this.characterId, payload: { key: boost, level: 1, optional: true, value: 1 } });
     },
     updateSelectBackground2(boost) {
       this.$store.commit('characters/setCharacterBackgroundFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });

@@ -1580,7 +1580,7 @@ export default {
     const factionResponse = await $axios.get('/api/factions/');
     const chaptersResponse = await $axios.get('/api/species/chapters/');
     const talentResponse = await $axios.get('/api/talents/');
-    console.log(talentResponse);
+
     const psychicPowersResponse = await $axios.get('/api/psychic-powers/');
     const psychicAbilitiesResponse = await $axios.get('/api/psychic-powers/universal-abilities');
     const abilityAncestryResponse = await $axios.get('/api/abilityAncestry/');
@@ -3127,12 +3127,14 @@ export default {
       const Background = form.getTextField('Background');
       const Heritage = form.getTextField('Heritage and Traits');
 
+      /*Характеристики */
       const str = form.getTextField('STRENGTH STAT');
       const dex = form.getTextField('DEXTERITY STAT');
       const con = form.getTextField('CONSTITUTION STAT');
       const wis = form.getTextField('WISDOM STAT');
       const int = form.getTextField('INTELLIGENCE STAT');
       const cha = form.getTextField('CHARISMA STAT');
+
 
 
       const dexCheckbox = form.getCheckBox('DEXTERITY PARTIAL BOOST');
@@ -3144,7 +3146,7 @@ export default {
       const wisCheckbox = form.getCheckBox('WISDOM PARTIAL BOOST');
       this1.characterAttributes['wisdom'] % 2 !== 0 ? wisCheckbox.check() : wisCheckbox.uncheck();
       const intCheckbox = form.getCheckBox('INTELLIGENCE PARTIAL BOODST');
-      this1.characterAttributes['intelligence'] % 2 !== 0 ? intCheckbox.check() : intCheckbox.uncheck();
+      this1.characterAttributes['intellect'] % 2 !== 0 ? intCheckbox.check() : intCheckbox.uncheck();
       const chaCheckbox = form.getCheckBox('CHARISMA PARTIAL BOOST');
       this1.characterAttributes['charisma'] % 2 !== 0 ? chaCheckbox.check() : chaCheckbox.uncheck();
 
@@ -3152,8 +3154,9 @@ export default {
       const dexText = ((this1.characterAttributes['dexterity'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['dexterity'] - 10) / 2) : ((this1.characterAttributes['dexterity'] - 10) / 2);
       const conText = ((this1.characterAttributes['constitution'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['constitution'] - 10) / 2) : ((this1.characterAttributes['constitution'] - 10) / 2);
       const wisText = ((this1.characterAttributes['wisdom'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['wisdom'] - 10) / 2) : ((this1.characterAttributes['wisdom'] - 10) / 2);
-      const intText = ((this1.characterAttributes['intelligence'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['intelligence'] - 10) / 2) : ((this1.characterAttributes['intelligence'] - 10) / 2);
+      const intText = ((this1.characterAttributes['intellect'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['intellect'] - 10) / 2) : ((this1.characterAttributes['intellect'] - 10) / 2);
       const chaText = ((this1.characterAttributes['charisma'] - 10) / 2 > 0) ? "+" + ((this1.characterAttributes['charisma'] - 10) / 2) : ((this1.characterAttributes['charisma'] - 10) / 2);
+
 
 
       str.setText(String(strText));
@@ -3168,8 +3171,35 @@ export default {
       int.updateAppearances(customFont);
       cha.setText(String(chaText));
       cha.updateAppearances(customFont);
+      /* */
+
+      /* Черты */
+      this1.talents.forEach(item => {
+        if (item.category === 'ancestry') {
+          const skillPlace = item.level === '1' ? 'ANCESTRY FEAT' : 'SKILL FEAT ' + item.level + '-1';
+          const skill = form.getTextField(skillPlace);
+          skill.setText(String(item.name));
+          skill.updateAppearances(customFont);
+        }
+
+        if (item.category === 'class') {
+          const skillPlace = 'CLASS FEAT ' + item.level + '-1';
+          const skill = form.getTextField(skillPlace);
+          skill.setText(String(item.name));
+          skill.updateAppearances(customFont);
+        }
+
+        if (item.category === 'skill' && item.level !== '1') {
+          const skillPlace = 'SKILL FEAT ' + item.level + '-2';
+          const skill = form.getTextField(skillPlace);
+          skill.setText(String(item.name));
+          skill.updateAppearances(customFont);
+        }
 
 
+      })
+
+      /* */
       // Заполняем текст с кастомным шрифтом
       nameField.setText(this1.characterName);
       nameField.updateAppearances(customFont);
@@ -3295,14 +3325,14 @@ export default {
       };
       const { data } = await this.$axios.get(
         "/api/abilityAncestry/",
-        config.source
+        //config.source
       );
       this.abilityList = data;
     },
     async getActionList(sources) {
       const config = {
         params: {
-          source: sources.join(","),
+          //source: sources.join(","),
         },
       };
       const { data } = await this.$axios.get(
@@ -3328,7 +3358,7 @@ export default {
     },
     async getSpellList(sources) {
       const config = {
-        params: { source: sources.join(','), },
+        params: { /*source: sources.join(','),*/ },
       };
       this.loading = true;
       const { data } = await this.$axios.get('/api/psychic-powers/', config);
@@ -3543,7 +3573,7 @@ export default {
       const page = 1;
       const perPage = 10000;
 
-      const params = { page, perPage, source: sources.join(',') };
+      const params = { page, perPage, /*source: sources.join(',')*/ };
 
 
       const config = {

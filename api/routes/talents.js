@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
     ? req.query.traits.split(',').map(t => t.toLowerCase())
     : [];
 
-  console.log('До фильтрации:', items.length, requiredTraits, optionalTraits)
+
   // фильтрация по обязательным трейтам (AND)
   if (req.query.requiredTraits) {
     const required = req.query.requiredTraits.split(',').map(t => t.toLowerCase());
@@ -43,7 +43,7 @@ router.get('/', async (req, res) => {
       return required.some(tr => itemTraits.includes(tr));
     });
   }
-  console.log('После фильтрации:', items.length)
+
   // фильтрация по опциональным трейтам (OR)
   if (req.query.traits) {
     const optional = req.query.traits.split(',').map(t => t.toLowerCase());
@@ -55,7 +55,7 @@ router.get('/', async (req, res) => {
     });
   }
 
-  console.log('После фильтрации:', items.length)
+
 
   if (req.query.source) {
     const sources = req.query.source.split(',');

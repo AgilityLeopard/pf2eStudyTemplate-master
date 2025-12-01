@@ -9,40 +9,21 @@
     <v-divider />
 
     <v-card-title>
-      <v-text-field
-        v-model="searchQuery"
-        filled
-        dense
-        prepend-inner-icon="search"
-        clearable
-        label="Поиск"
-      />
+      <v-text-field v-model="searchQuery" filled dense prepend-inner-icon="search" clearable label="Поиск" />
     </v-card-title>
     <v-divider />
 
     <v-card-title>
       <v-row>
         <v-col>
-          <v-select
-            label="Трейты"
-            v-model="selectedTagsFilters"
-            multiple
-            :items="tagFilters"
-            item-text="name"
-            item-value="name"
-          >
+          <v-select label="Трейты" v-model="selectedTagsFilters" multiple :items="tagFilters" item-text="name"
+            item-value="name">
           </v-select>
         </v-col>
 
         <v-col>
-          <v-select
-            label="Источник"
-            v-model="selectedBookFilters"
-            multiple
-            :items="bookFilters"
-            item-text="name"
-            item-value="name"
-          >
+          <v-select label="Источник" v-model="selectedBookFilters" multiple :items="bookFilters" item-text="name"
+            item-value="name">
           </v-select>
         </v-col>
 
@@ -54,18 +35,9 @@
 
     <v-divider />
     <v-card-text class="pa-6">
-      <v-data-table
-        :headers="filteredHeaders"
-        :items="filteredTalents"
-        :search="searchQuery"
-        :page.sync="pagination.page"
-        show-expand
-        item-key="name"
-        hide-default-footer
-        :loading="!talents"
-        loading-text="Загрузка заклинаний, пожалуйста подождите"
-        @page-count="pagination.pageCount = $event"
-      >
+      <v-data-table :headers="filteredHeaders" :items="filteredTalents" :search="searchQuery"
+        :page.sync="pagination.page" show-expand item-key="name" hide-default-footer :loading="!talents"
+        loading-text="Загрузка заклинаний, пожалуйста подождите" @page-count="pagination.pageCount = $event">
         <template v-slot:no-data />
 
         <!-- <template v-slot:item.name="{ item }">
@@ -162,10 +134,7 @@
             <div v-if="item.time">
               <p class="main-holder" v-if="!item.ritual">
                 <strong>Сотворение:</strong>
-                <img
-                  :src="iconAction(item?.time?.value)"
-                  :class="{ 'invert-icon': !$vuetify.theme.dark }"
-                />
+                <img :src="iconAction(item?.time?.value)" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
               </p>
               <p class="main-holder" v-if="item.ritual">
                 <strong>Сотворение:</strong> {{ item?.time?.value }}
@@ -208,11 +177,11 @@
                 </span>
               </p>
             </div>
+
             <div v-if="item.duration">
               <p class="main-holder" v-if="item.duration.value">
                 <strong>Длительность:</strong>
-                <span v-if="item.duration.sustained === true"
-                  >Поддерживаемое до
+                <span v-if="item.duration.sustained === true">Поддерживаемое до
                 </span>
                 {{ item.duration.value }}
               </p>
@@ -233,17 +202,12 @@
         </template>
 
         <template v-slot:no-results>
-          <span class="text-center"
-            >Ваш поиск по "{{ searchQuery }}" не дал результатов.</span
-          >
+          <span class="text-center">Ваш поиск по "{{ searchQuery }}" не дал результатов.</span>
         </template>
       </v-data-table>
 
       <div class="text-center pt-2">
-        <v-pagination
-          v-model="pagination.page"
-          :length="pagination.pageCount"
-        />
+        <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
       </div>
     </v-card-text>
 
@@ -278,7 +242,7 @@ export default {
     talents: {},
     archetype: {},
     list: {},
-        // Number
+    // Number
     level: {
       type: Number,
       required: false,
@@ -287,7 +251,7 @@ export default {
       type: Number,
       required: false,
     },
-        cell: {
+    cell: {
       type: Number,
       required: false,
     },
@@ -385,9 +349,9 @@ export default {
 
   },
   methods: {
-  togglePrepared(item) {
+    togglePrepared(item) {
       item.prepared = !item.prepared;
-      if(item.prepared === true)
+      if (item.prepared === true)
         this.$store.commit('characters/addCharacterPreparedSpell', { id: this.characterId, spell: item });
       else
         this.$store.commit('characters/removeCharacterPreparedSpell', { id: this.characterId, key: item.key });
@@ -395,9 +359,9 @@ export default {
     iconKnown(item) {
       const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
 
-        return  prepare.find( t=> t.key === item.key)
-                  ? '/img/icon/icon_known.png'
-                  : '/img/icon/icon_known_off.png'
+      return prepare.find(t => t.key === item.key)
+        ? '/img/icon/icon_known.png'
+        : '/img/icon/icon_known_off.png'
 
 
     },
@@ -427,7 +391,7 @@ export default {
         source: `talent.${talentUniqueId}`,
       };
 
-      if(!talent.ritual)
+      if (!talent.ritual)
         this.$store.commit('characters/addCharacterSpell', { id: this.characterId, talent: payload });
       else
 
@@ -435,32 +399,32 @@ export default {
 
       this.$emit('cancel');
     },
-    characterLevel(){
+    characterLevel() {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
   },
-    computed:
-    {
+  computed:
+  {
     characterTalents() {
       return this.$store.getters['characters/characterTalentsById'](this.characterId);
     },
-      characterTalentLabels() {
+    characterTalentLabels() {
       return this.characterTalents.filter((talent) => talent).map((talent) => talent.name);
     },
-      searchResult() {
+    searchResult() {
       if (this.talents === undefined) {
         return [];
       }
       let searchResult = this.talents;
 
-        const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
-        if (this.selectedPrepared === true) {
-           searchResult = searchResult.filter((item) => prepare.find(s => s.key === item.key) === true)
-        }
+      const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
+      if (this.selectedPrepared === true) {
+        searchResult = searchResult.filter((item) => prepare.find(s => s.key === item.key) === true)
+      }
 
       if (this.selectedTagsFilters.length > 0) {
         searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
-        }
+      }
 
       if (this.selectedBookFilters.length > 0) {
         searchResult = searchResult.filter((item) => this.selectedBookFilters.some((m) => item.source.book.includes(m)));
@@ -473,21 +437,20 @@ export default {
       }
 
       return searchResult;
-      },
+    },
 
-     /*Фильтры по разным категориям */
+    /*Фильтры по разным категориям */
     bookFilters() {
-       if (this.talents === undefined) {
+      if (this.talents === undefined) {
         return [];
       }
       let filteredTalents = this.talents;
       //Берем обычаи из листа
-      if (!filteredTalents.find(spell => spell.ritual))
-      {
-    const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
-      // Берем тот список, что соответствует заклинательскому
+      if (!filteredTalents.find(spell => spell.ritual)) {
+        const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+        // Берем тот список, что соответствует заклинательскому
 
-      filteredTalents = filteredTalents.filter((talent) =>talent.traditions &&  talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
+        filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
       }
 
 
@@ -502,15 +465,15 @@ export default {
       const distinct = [...new Set(reduced)];
       return distinct.sort().map((trait) => ({ name: trait }));
 
-      },
-     filteredHeaders() {
+    },
+    filteredHeaders() {
       if (this.archetype.prepared === false) {
         return this.headers.filter(h => h.value !== 'prepapared');
       }
       return this.headers;
     },
     tagFilters() {
-       if (this.talents === undefined) {
+      if (this.talents === undefined) {
         return [];
       }
       let filteredTalents = this.talents;
@@ -518,12 +481,11 @@ export default {
 
       // Берем тот список, что соответствует заклинательскому
 
-      if (!filteredTalents.find(spell => spell.ritual))
-      {
-    const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
-      // Берем тот список, что соответствует заклинательскому
+      if (!filteredTalents.find(spell => spell.ritual)) {
+        const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+        // Берем тот список, что соответствует заклинательскому
 
-      filteredTalents = filteredTalents.filter((talent) =>talent.traditions &&  talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
+        filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
       }
 
       //filteredTalents = filteredTalents.filter((talent) => lowercaseKeywords.some(talent.tags.toString().toUpperCase()));
@@ -552,13 +514,13 @@ export default {
 
       let filteredTalents = this.talents;
 
-        const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
-        if (this.selectedPrepared === true) {
-           filteredTalents = filteredTalents.filter((item) => prepare.find(s => s.key === item.key))
-        }
+      const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
+      if (this.selectedPrepared === true) {
+        filteredTalents = filteredTalents.filter((item) => prepare.find(s => s.key === item.key))
+      }
 
 
-       if (filteredTalents.find(spell => spell.ritual))
+      if (filteredTalents.find(spell => spell.ritual))
         filteredTalents = filteredTalents.filter(t => !ritual.find(spell => spell.key === t.key))
 
       if (this.selectedTagsFilters.length > 0) {
@@ -577,14 +539,14 @@ export default {
       });
 
 
-     // const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
+      // const lowercaseKeywords = this.archetype.spellTradition.toUpperCase();
       // Берем тот список, что соответствует заклинательскому
 
       // filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
 
       //const rank = this.rank;
-const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
-                      (t) => t == 0
+      const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
+        (t) => t == 0
       ) - 1;
 
       filteredTalents.forEach(spell => {
@@ -607,107 +569,10 @@ const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
           spell.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
         }
       }
-    );
-      filteredTalents.forEach(spell =>
-      {
-        if (spell.heightening)
-        {
-          if (spell.heightening.type == "interval") {
-            /*
-
-
-            const interval = spell.heightening.interval;
-            if (spell.heightening.area)
-              for (var key of Object.keys(spell.heightening.area)) {
-                // console.log(key + " -> " + spell.heightening.area[key]);
-                const source = spell.heightening.area;
-                const mtp = Math.floor((spell.rank - spell.level) / interval);
-                const value = parseInt(spell.value[key]) + mtp * parseInt(source[key]);
-                spell.area = spell.area.replace("{{powerValue"+parseInt(key)+"}}", "<span style='color: green'>" + value +  "</span>")
-              }
-              if (spell.heightening.target)
-              for (var key of Object.keys(spell.heightening.target)) {
-                // console.log(key + " -> " + spell.heightening.area[key]);
-                const source = spell.heightening.target;
-                const mtp = Math.floor((spell.rank - spell.level) / interval);
-                const value = parseInt(spell.value[key]) + mtp * parseInt(source[key]);
-                spell.target = spell.target.replace("{{powerValue"+parseInt(key)+"}}", "<span style='color: green'>" + value +  "</span>")
-              }
-              if (spell.heightening.damage)
-              for (var key of Object.keys(spell.heightening.damage)) {
-                // console.log(key + " -> " + spell.heightening.area[key]);
-                const source = spell.heightening.damage;
-                const mtp = Math.floor((spell.rank - spell.level) / interval);
-                const index = source[key].indexOf("d", 0);
-                const dice = source[key].slice(index - 1, index);
-                const diceValue = spell.damage.formula.slice(index - 1, index);
-                const diceSize = source[key].slice(index+1);
-                const value = parseInt(diceValue) + mtp * parseInt(dice);
-                spell.description = spell.description.replace("{{powerValue}}" + level, "<span style='color: green'>" + value + "d" + diceSize + "</span>");
-              }
-            */
-              // const heightened = Math.floor((rank - 1) / spell.power);
-              // const index = spell.powerValue1.indexOf("d", 0);
-              // const dice = spell.powerValue1.slice(index-1, index);
-              // const diceSize = spell.powerValue1.slice(index+1);
-              // const powerLevel = parseInt(spell.powerStart1) + parseInt(dice) * heightened;
-              // spell.description = spell.description.replace("{{powerValue}}"+level, "<span style='color: green'>" + powerLevel1 + "d" + diceSize + "</span>")
-
-            }
-        }
-
-        }
-      )
-      //Усиление -- закоменчено пока что
-      // filteredTalents.forEach(spell =>
-      // {
-      //   if (spell.powerValue1)
-      //   {
-      //     if (spell.powerValue1.indexOf("d", 0) == -1)
-      //     {
-      //       const heightened = Math.floor((rank - 1) / spell.power);
-      //       const powerLevel1 = parseInt(spell.powerStart1) +parseInt(spell.powerValue1) * heightened;
-      //       spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "</span>")
-      //     }
-      //     else
-      //     {
-      //       const heightened = Math.floor((rank - 1) / spell.power);
-      //       const index = spell.powerValue1.indexOf("d", 0);
-      //       const dice = spell.powerValue1.slice(index-1, index);
-      //       const diceSize = spell.powerValue1.slice(index+1);
-      //       const powerLevel1 = parseInt(spell.powerStart1) + parseInt(dice) * heightened;
-      //       spell.description = spell.description.replace("{{powerValue1}}", "<span style='color: green'>" + powerLevel1 + "d" + diceSize + "</span>")
-      //     }
-
-      //   }
-
-      //   if (spell.powerValue2)
-      //   {
-      //     if (spell.powerValue2.indexOf("d", 0) == -1)
-      //     {
-      //       const heightened = Math.floor((rank - 1) / spell.power);
-      //       const powerLevel2 = parseInt(spell.powerStart2) +parseInt(spell.powerValue2) * heightened;
-      //       spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "</span>")
-      //     }
-      //     else
-      //     {
-      //       const heightened = Math.floor((rank - 1) / spell.power);
-      //       const index = spell.powerValue2.indexOf("d", 0);
-      //       const dice = spell.powerValue2.slice(index-1, index);
-      //       const diceSize = spell.powerValue2.slice(index+1);
-      //       const powerLevel2 = parseInt(spell.powerStart2) + parseInt(dice) * heightened;
-      //       spell.description = spell.description.replace("{{powerValue2}}", "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>")
-      //     }
-
-      //   }
-      // }
-
-
-      // )
-
+      );
 
       if (!filteredTalents.find(spell => spell.ritual))
-          return filteredTalents.filter(talent => talent.level <= this.level || this.level === 0 && talent.traits.join(',').includes('заговор'));
+        return filteredTalents.filter(talent => talent.level <= this.level || this.level === 0 && talent.traits.join(',').includes('заговор'));
       else
         return filteredTalents
     },
@@ -723,6 +588,7 @@ const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;
@@ -794,19 +660,23 @@ const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
   border-bottom: 1.5px solid black;
 }
 
-.spaced-table >>> tbody {
+.spaced-table>>>tbody {
   display: table-caption;
-  border-spacing: 0 8px; /* 8px вертикальный отступ между строками */
+  border-spacing: 0 8px;
+  /* 8px вертикальный отступ между строками */
 }
-.spaced-table >>> tr {
+
+.spaced-table>>>tr {
   /* border-radius: 6px; */
   border-spacing: 0 8px;
   overflow: hidden;
 }
 
-.auto-height-table >>> tr {
-  white-space: normal; /* Позволяет перенос строк и авто-высоту */
-  vertical-align: top; /* По желанию — выравнивание по верхнему краю */
+.auto-height-table>>>tr {
+  white-space: normal;
+  /* Позволяет перенос строк и авто-высоту */
+  vertical-align: top;
+  /* По желанию — выравнивание по верхнему краю */
   padding-top: 8px;
   padding-bottom: 8px;
 }

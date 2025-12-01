@@ -122,7 +122,13 @@ module.exports = {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: colors.green.base },
+  loading: {
+    color: colors.green.base,
+    height: '4px',    // толщина
+    continuous: true, // плавное движение
+    duration: 3000    // максимальное время (мс)
+
+  },
   /*
    ** Global CSS
    */

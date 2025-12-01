@@ -76,8 +76,9 @@ export default {
   computed: {
     sources() {
       return [
-        // "playerCore",
-        ...this.settingOfficial,
+        "playerCore",
+        "playerCore2",
+        // ...this.settingOfficial,
         // 'tnh',
         ...this.settingHomebrews,
       ];

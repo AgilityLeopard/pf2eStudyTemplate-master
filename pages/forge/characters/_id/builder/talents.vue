@@ -134,7 +134,7 @@
                 levelAncestry <= characterLevel() &&
                 (levelAncestry === 2 ||
                   levelAncestry % 2 === 0 ||
-                    /*archetype.isFeatLevelOne &&*/ levelAncestry === 1)
+                  (archetype.isFeatLevelOne && levelAncestry === 1))
               ">
                 <v-expansion-panel-header>{{ levelAncestry }} уровень
                   <span v-if="characterClassTalent(levelAncestry)">
@@ -593,6 +593,9 @@ export default {
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
     },
+    settingOfficialOptions() {
+      return this.$store.getters['characters/characterSettingOfficialOptionsById'](this.characterId);
+    },
     characterSpeciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
@@ -640,9 +643,10 @@ export default {
     },
     sources() {
       return [
-        'playerCore',
-        'playerCore2',
-        ...this.settingHomebrews,
+        // ...this.settingOfficialOptions,
+        "playerCore"
+        , "playerCore2"
+        , ...this.settingHomebrews,
       ];
     },
     enhancements() {
@@ -850,7 +854,8 @@ export default {
       skill.push("acrobatics");
       // const list = [];
       let list = this.talentList.filter(s => s.system.category === type || (type === 'general' && s.system.category === 'skill') || (type === 'adaptation' && s.system.category === 'class') || (type === 'stylish' && s.system.category === 'skill' /*&& skill.includes(s.skill)*/));
-
+      const sou = this.sources;
+      list = this.talentList.filter(s => sou.includes(s.source.key))
       const lowercaseKeywords = this.finalKeywords.map(k => k.toLowerCase());
       if (type === 'class' || type === 'ancestry')
         list = list.filter(item =>
@@ -961,7 +966,7 @@ export default {
       const page = 1;
       const perPage = 10000;
 
-      const params = { page, perPage, source: sources.join(',') };
+      const params = { page, perPage/*, source: sources.join(',')*/ };
 
 
 
@@ -1020,7 +1025,13 @@ export default {
         });
 
       }
+
+      console.log(params);
       this.talentList = talents;
+      const rules = talents.flatMap(t => t.system.rules).filter(Boolean).filter(t => !['FlatModifier', 'RollOption', 'AdjustModifier', 'ItemAlteration'].includes(t.key));
+      // console.table(rules);
+
+      // console.log([...new Set(rules.flatMap(t => t.selector))]);
       this.modifications = this.enhancements;
       this.loading = false;
     },
@@ -1778,16 +1789,41 @@ export default {
 
 
           if (item.feat) {
-            const lore = this.textToCamel(talent.name) + "-" + this.textToCamel(item.feat);
+            const lore = this.textToCamel(talent.key) + "-" + this.textToCamel(item.feat);
             const skill = sheet.find((i) => i.key === lore && i.level === level1 && i.type === 'feat')
 
             this.$store.commit("characters/removeSkillSheet", {
               id: this.characterId,
-              key: skill,
-              level: level1,
+              key: lore,
+              level: 1,
               type: "feat",
               optional: false,
             });
+
+            this.$store.commit("characters/removeSkillSheet", {
+              id: this.characterId,
+              key: lore,
+              level: 3,
+              type: "feat",
+              optional: false,
+            });
+
+            this.$store.commit("characters/removeSkillSheet", {
+              id: this.characterId,
+              key: lore,
+              level: 7,
+              type: "feat",
+              optional: false,
+            });
+
+            this.$store.commit("characters/removeSkillSheet", {
+              id: this.characterId,
+              key: lore,
+              level: 15,
+              type: "feat",
+              optional: false,
+            });
+
 
 
           }

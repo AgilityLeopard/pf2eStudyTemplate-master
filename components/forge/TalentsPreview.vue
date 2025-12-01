@@ -319,6 +319,11 @@ export default {
       const talentUniqueId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
       const list = this.list;
       const level = talent.placeLevel;
+
+      const mod1 = talent.system.rules.map(t => ({
+        ...t,
+        description: talent.description
+      }));
       const payload = {
         id: talentUniqueId,
         name: talent.name,
@@ -328,7 +333,7 @@ export default {
         traits: talent.traits,
         nameEng: talent.key,
         place: talent.place,
-        modifications: talent.modifications,
+        modifications: mod1,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
         options: talent.options,
@@ -359,7 +364,7 @@ export default {
 
             if (
               sheet.find((i) => i.key === item.skill && i.level === level && (i.type === 'skill'))
-              || !sheet.find((i) => i.key === item.skill && i.level === level)
+
             ) {
               this.$store.commit("characters/removeSkillSheet", {
                 id: this.characterId,
@@ -394,10 +399,31 @@ export default {
                 level: level,
                 type: "feat",
                 optional: true,
-                combinded: sheet.find((i) => i.key === item.skill && i.level === level && (i.type === 'class' || i.type === 'background') && i.combinded === false),
+                combinded: true,
               });
             }
 
+
+            if (
+              !sheet.find((i) => i.key === item.skill && i.level === level)
+
+            ) {
+              this.$store.commit("characters/removeSkillSheet", {
+                id: this.characterId,
+                key: item.skill,
+                level: level,
+                type: "skill",
+                optional: true,
+              });
+
+              this.$store.commit("characters/addSkillSheet", {
+                id: this.characterId,
+                key: item.skill,
+                level: level,
+                type: "feat",
+                optional: true,
+              });
+            }
 
 
           }
@@ -420,7 +446,7 @@ export default {
             };
 
             const LoreSkill = {
-              key: this.textToCamel(talent.name) + "-" + this.textToCamel(item.feat),
+              key: this.textToCamel(talent.key) + "-" + this.textToCamel(item.feat),
               name: talent.name,
               attribute: 'intellect',
               description: "",
@@ -438,18 +464,40 @@ export default {
               LoreSkill: LoreSkill,
             }]
             //Добавляем модификацию черты
-            // this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
-            // this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: talentUniqueId, source: 'featfree' } });
+            this.$store.commit('characters/addCharacterTalent', { id: this.characterId, talent: loreTalent });
+            this.$store.commit('characters/setCharacterModifications', { id: this.characterId, content: { item: payload, level: this.level, modifications: mod, talentId: talentUniqueId, source: 'featfree' } });
 
             this.$store.commit("characters/addSkillSheet", {
               id: this.characterId,
               key: this.textToCamel(talent.key) + "-" + this.textToCamel(item.feat),
-              level: level,
+              level: 1,
               type: "feat",
               optional: true,
             });
 
+            this.$store.commit("characters/addSkillSheet", {
+              id: this.characterId,
+              key: this.textToCamel(talent.key) + "-" + this.textToCamel(item.feat),
+              level: 3,
+              type: "feat",
+              optional: true,
+            });
 
+            this.$store.commit("characters/addSkillSheet", {
+              id: this.characterId,
+              key: this.textToCamel(talent.key) + "-" + this.textToCamel(item.feat),
+              level: 7,
+              type: "feat",
+              optional: true,
+            });
+
+            this.$store.commit("characters/addSkillSheet", {
+              id: this.characterId,
+              key: this.textToCamel(talent.key) + "-" + this.textToCamel(item.feat),
+              level: 15,
+              type: "feat",
+              optional: true,
+            });
 
           }
         }

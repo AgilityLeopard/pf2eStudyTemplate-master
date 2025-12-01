@@ -17,7 +17,7 @@
           <span class="gear-line"></span>
           <span class="gear-tag">
             <span v-if="['feat'].includes(item.type)">
-              {{ `Черта ${item.level || "-"}` }}
+              {{ `Черта ${item.system.level?.value || "-"}` }}
             </span>
             <span v-if="['weapon'].includes(item.type)">
               {{ `Оружие ${item.level?.value || "-"}` }}
@@ -28,7 +28,13 @@
             <span v-if="['shield'].includes(item.type)">
               {{ `Щит ${item.level?.value || "-"}` }}
             </span>
-            <span v-if="!['shield', 'armor', 'weapon', 'feat'].includes(item.type)">
+            <span v-if="['spell'].includes(item.type)">
+              {{ `Заклинание ${item.levelRank || "-"}` }}
+            </span>
+            <span v-if="['ritual'].includes(item.type)">
+              {{ `Ритуал ${item.levelRank || "-"}` }}
+            </span>
+            <span v-if="!['ritual', 'spell', 'shield', 'armor', 'weapon', 'feat'].includes(item.type)">
               {{ `Предмет ${item.level?.value || "-"}` }}
             </span>
           </span>
@@ -116,25 +122,77 @@
           </div>
         </div>
 
-        <!-- <div v-if="item.hands" class="info-line">
-        <strong>Руки:</strong> {{ item.hands }}
-      </div> -->
+        <div v-if="item.type === 'spell'">
+          <div v-if="item.range">
+            <p class="info-line">
+              <strong>Дистанция:</strong> {{ item.range }}
+            </p>
+          </div>
 
-        <div v-if="item.distance" class="info-line">
-          <strong>Дистанция:</strong> {{ item.distance }}
+          <div v-if="item.area">
+            <p class="info-line">
+              <strong>Область:</strong> {{ item?.area?.value }}-фут.
+              {{ areaRepository[item?.area?.type] }}
+            </p>
+          </div>
+
+
+          <div v-if="item.target">
+            <p class="info-line" v-if="item.target">
+              <strong>Цель:</strong> {{ item.target }}
+            </p>
+          </div>
+
+          <div v-if="item.cost">
+            <p class="info-line" v-if="item.cost.value">
+              <strong>Стоимость:</strong>
+              {{ item.cost.value }}
+            </p>
+          </div>
+
+          <div v-if="item.duration">
+            <p class="info-line" v-if="item.duration.value">
+              <strong>Длительность:</strong>
+              <span v-if="seleitemctedItem.duration.sustained === true">Поддерживаемое до
+              </span>
+              {{ item.duration.value }}
+            </p>
+          </div>
+
+          <div v-if="item?.time">
+            <strong>Действия:</strong>
+            <span v-if="item?.time?.value === '1 to 3'" class="info-line">
+              От <img :src="iconAction('1')" :class="{ 'invert-icon': !$vuetify.theme.dark }" /> до <img
+                :src="iconAction('3')" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
+            </span>
+            <span v-else class="info-line">
+              <img :src="iconAction(item?.time?.value)" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
+            </span>
+          </div>
+
+          <div v-if="item.defense">
+            <p class="info-line" v-if="item.defense.save">
+              <strong>Защита:</strong>
+
+              <span v-if="item?.defense?.save">
+                <span v-if="item?.defense?.save?.basic">Базовый </span>
+                {{
+                  SavingRepository.find(
+                    (t) => t.key === item?.defense?.save?.statistic
+                  ).name
+                }}
+              </span>
+
+              <span v-if="item?.traits?.includes('атака')">
+                <span>КБ </span>
+              </span>
+            </p>
+          </div>
+
+          <div class="line"></div>
+          <!-- Обычное описание предмета -->
+          <div class="pt-4 pb-2 description" v-if="item.description" v-html="item.description"></div>
         </div>
-
-        <div v-if="item.area" class="info-line">
-          <strong>Область:</strong> <span v-html="item.area"></span>
-        </div>
-
-        <div v-if="item.target" class="info-line">
-          <strong>Цель:</strong> {{ item.target }}
-        </div>
-
-        <div class="line"></div>
-        <!-- Обычное описание предмета -->
-        <div class="pt-4 pb-2 description" v-if="item.description" v-html="item.description"></div>
       </div>
       <!-- <div class="line"></div> -->
       <div v-if="item.type === 'feat'">
@@ -160,13 +218,14 @@
 
 import traitView from "~/components/TraitView";
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
+import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 
 export default {
   name: "CardItem",
   components: {
     traitView,
   },
-  mixins: [WargearTraitRepositoryMixin],
+  mixins: [WargearTraitRepositoryMixin, StatRepositoryMixin],
   props: {
     item: {
       type: Object,

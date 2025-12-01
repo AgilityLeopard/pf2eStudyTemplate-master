@@ -121,19 +121,19 @@ export default {
           key: "reflex",
           name: "Рефлекс",
           attribute: "dexterity",
-          description: "A character’s overall physical prowess",
+          description: "Спасброски на рефлексы измеряют, насколько быстро вы можете реагировать на ситуацию и насколько изящно вы можете избегать эффектов, которые на вас воздействуют.",
         },
         {
           key: "fortitude",
           name: "Стойкость",
           attribute: "constitution",
-          description: "A character’s overall physical prowess",
+          description: "Спасброски на стойкость позволяют вам снизить воздействие способностей и недугов, которые могут ослабить тело.",
         },
         {
           key: "will",
           name: "Воля",
           attribute: "wisdom",
-          description: "A character’s overall physical prowess",
+          description: "Спасброски будут измерять, насколько хорошо вы можете противостоять атакам на свой разум и дух",
         },
       ],
       // https://api.sheety.co/669365df-fa15-4003-ad7d-21d86e11b69a

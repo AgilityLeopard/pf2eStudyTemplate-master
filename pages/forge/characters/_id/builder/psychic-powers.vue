@@ -7,35 +7,28 @@
       </h1>
     </v-col> -->
     <v-tabs centered grow color="red">
-      <v-tab class="caption" key="tab-spell" :href="`#tab-spell`"
-        ><h2 class="subtitle-2">Заклинания</h2></v-tab
-      >
-      <v-tab class="caption" key="tab-ritual" :href="`#tab-ritual`"
-        ><h2 class="subtitle-2">Ритуал</h2></v-tab
-      >
-      <v-tab class="caption" key="tab-focus" :href="`#tab-focus`"
-        ><h2 class="subtitle-2">Фокусы</h2></v-tab
-      >
-      <v-tab class="caption" key="tab-innate" :href="`#tab-innate`"
-        ><h2 class="subtitle-2">Врожденные</h2></v-tab
-      >
+      <v-tab class="caption" key="tab-spell" :href="`#tab-spell`">
+        <h2 class="subtitle-2">Заклинания</h2>
+      </v-tab>
+      <v-tab class="caption" key="tab-ritual" :href="`#tab-ritual`">
+        <h2 class="subtitle-2">Ритуал</h2>
+      </v-tab>
+      <v-tab class="caption" key="tab-focus" :href="`#tab-focus`">
+        <h2 class="subtitle-2">Фокусы</h2>
+      </v-tab>
+      <v-tab class="caption" key="tab-innate" :href="`#tab-innate`">
+        <h2 class="subtitle-2">Врожденные</h2>
+      </v-tab>
 
       <v-tab-item class="my-tab-item" key="tab-spell" :value="`tab-spell`">
         <v-col v-if="!archetype || !archetype.spellTradition" :cols="12">
-          <v-alert
-            type="warning"
-            class="caption ml-4 mr-4"
-            dense
-            outlined
-            border="left"
-          >
+          <v-alert type="warning" class="caption ml-4 mr-4" dense outlined border="left">
             У класса нет способности к заклинаниям
           </v-alert>
         </v-col>
         <!-- Характеристики заклинателя -->
         <v-col :cols="12" v-if="archetype && archetype.spellTradition">
-          <span
-            ><br />
+          <span><br />
             <b>Обычай:</b> {{ archetype.spellTradition }}
           </span>
 
@@ -51,52 +44,13 @@
         </v-col>
 
         <v-col :cols="12" v-if="archetype && archetype.spellTradition">
-          <v-card
-            class="mb-4"
-            dense
-            outlined
-            v-for="levelAncestry in 10"
-            :key="levelAncestry"
-            v-if="
-              levelAncestry - 1 <=
-                archetype.spellProgression[characterLevel()].findIndex(
-                  (t) => t == 0
-                ) -
-                  1 || characterLevel() == 20
-            "
-          >
-            <!-- <v-data-table
-              :headers="headers"
-              :items="
-                tableRows(
-                  levelAncestry - 1,
-                  archetype.spellProgression[characterLevel()][
-                    levelAncestry - 1
-                  ]
-                )
-              "
-              item-key="key"
-              hide-default-footer
-            >
-              <template v-slot:item.name="{ item }">
-                <v-row
-                  ><span>{{ item.name }}</span></v-row
-                >
-                <v-row>
-                  <div>
-                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
-                  </div>
-                </v-row>
-              </template>
-            </v-data-table> -->
-            <!-- 
-            <h2 class="subtitle-1 text-center" v-if="levelAncestry - 1 == 0">
-              Чары
-            </h2>
-            <h2 class="subtitle-1 text-center" v v-if="levelAncestry - 1 !== 0">
-              {{ levelAncestry - 1 }} уровень
-            </h2> -->
-
+          <v-card class="mb-4" dense outlined v-for="levelAncestry in 10" :key="levelAncestry" v-if="
+            levelAncestry - 1 <=
+            archetype.spellProgression[characterLevel()].findIndex(
+              (t) => t == 0
+            ) -
+            1 || characterLevel() == 20
+          ">
             <h2 class="subtitle-1 text-center">
               {{
                 levelAncestry - 1 === 0
@@ -105,31 +59,27 @@
               }}
             </h2>
 
-            <v-data-table
-              :headers="headers"
-              :items="generateTableRows(levelAncestry - 1)"
-              item-key="cellIndex"
-              hide-default-footer
-              dense
-            >
+            <v-data-table :headers="headers" :items="generateTableRows(levelAncestry - 1)" item-key="cellIndex"
+              hide-default-footer dense>
               <template v-slot:item.name="{ item }">
                 <span v-if="!item.name"> Пустой слот </span>
                 {{ item.name }}
               </template>
 
               <template v-slot:item.action="{ item }">
-                <!-- {{ item?.time }} -->
                 <div v-if="item?.time">
-                  <img
-                    :src="iconAction(item?.time?.value)"
-                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
-                  />
+                  <div v-if="item?.time?.value === '1 to 3'">
+                    От <img :src="iconAction('1')" :class="{ 'invert-icon': !$vuetify.theme.dark }" /> до <img
+                      :src="iconAction('3')" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
+                  </div>
+                  <div v-else>
+                    <img :src="iconAction(item?.time?.value)" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
+                  </div>
                 </div>
               </template>
 
               <template v-slot:item.duration="{ item }">
-                <span v-if="item?.duration?.sustained === true"
-                  >Поддерживаемое до
+                <span v-if="item?.duration?.sustained === true">Поддерживаемое до
                 </span>
                 {{ item?.duration?.value }}
               </template>
@@ -165,343 +115,22 @@
               </template>
 
               <template v-slot:item.view="{ item }">
-                <v-btn
-                  v-if="item.name"
-                  outlined
-                  x-small
-                  color="info"
-                  @click="openDialog(item)"
-                >
+                <v-btn v-if="item.name" outlined x-small color="info" @click="openDialog(item)">
                   <v-icon left>visibility</v-icon> Просмотр
                 </v-btn>
               </template>
 
               <template v-slot:item.button="{ item }">
-                <v-btn
-                  v-if="item.name"
-                  outlined
-                  x-small
-                  color="error"
-                  @click.stop.prevent="removeTalent(item)"
-                >
+                <v-btn v-if="item.name" outlined x-small color="error" @click.stop.prevent="removeTalent(item)">
                   <v-icon left>delete</v-icon> Удалить
                 </v-btn>
 
-                <v-btn
-                  v-if="!item.name"
-                  outlined
-                  x-small
-                  color="success"
-                  @click="updatePreview(item.rank, item.cell)"
-                >
+                <v-btn v-if="!item.name" outlined x-small color="success" @click="updatePreview(item.rank, item.cell)">
                   <v-icon left>add</v-icon> Добавить
                 </v-btn>
               </template>
             </v-data-table>
 
-            <!-- <v-simple-table dense>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th v-for="header in headers" :class="header.class">
-                      {{ header.text }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="cell in archetype.spellProgression[characterLevel()][
-                      levelAncestry - 1
-                    ]"
-                  >
-                    <td>
-                      {{
-                        characterSpell(levelAncestry - 1, cell)
-                          ? characterSpell(levelAncestry - 1, cell).name
-                          : "-"
-                      }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{
-                        characterSpell(levelAncestry - 1, cell)
-                          ? characterSpell(levelAncestry - 1, cell).action
-                          : "-"
-                      }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{
-                        characterSpell(levelAncestry - 1, cell)
-                          ? characterSpell(levelAncestry - 1, cell).duration
-                              .value.value
-                          : "-"
-                      }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{
-                        characterSpell(levelAncestry - 1, cell)
-                          ? characterSpell(levelAncestry - 1, cell).distance
-                          : "-"
-                      }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{
-                        characterSpell(levelAncestry - 1, cell)
-                          ? characterSpell(levelAncestry - 1, cell).defence
-                          : "-"
-                      }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      {{
-                        characterSpell(levelAncestry - 1, cell)
-                          ? characterSpell(levelAncestry - 1, cell).area
-                          : "-"
-                      }}
-                    </td>
-                    <td class="text-center pa-1 small">
-                      <v-btn
-                        v-if="characterSpell(levelAncestry - 1, cell)"
-                        outlined
-                        x-small
-                        color="info"
-                        @click="
-                          openDialog(characterSpell(levelAncestry - 1, cell))
-                        "
-                      >
-                        <v-icon left> visibility </v-icon> Просмотр
-                      </v-btn>
-                    </td>
-                    <td>
-                      <v-btn
-                        v-if="characterSpell(levelAncestry - 1, cell)"
-                        outlined
-                        x-small
-                        color="error"
-                        @click.stop.prevent="
-                          removeTalent(characterSpell(levelAncestry - 1, cell))
-                        "
-                      >
-                        <v-icon left> delete </v-icon>Удалить
-                      </v-btn>
-                      <v-btn
-                        v-if="!characterSpell(levelAncestry - 1, cell)"
-                        outlined
-                        x-small
-                        color="success"
-                        @click="updatePreview(levelAncestry - 1, cell)"
-                      >
-                        <v-icon left> add </v-icon>Добавить
-                      </v-btn>
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table> -->
-
-            <!-- <v-expansion-panels
-          multiple
-          v-if="archetype && archetype.spellTradition"
-        >
-          <v-expansion-panel
-            v-for="levelAncestry in 10"
-            :key="levelAncestry"
-            v-if="
-              levelAncestry - 1 <=
-                archetype.spellProgression[characterLevel()].findIndex(
-                  (t) => t == 0
-                ) -
-                  1 || characterLevel() == 20
-            "
-          >
-            <v-expansion-panel-header>
-              <p v-if="levelAncestry - 1 == 0">Чары</p>
-              <p v-if="levelAncestry - 1 !== 0">
-                {{ levelAncestry - 1 }} уровень
-              </p>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content :key="levelAncestry">
-              <v-row
-                v-for="cell in archetype.spellProgression[characterLevel()][
-                  levelAncestry - 1
-                ]"
-              >
-                <v-btn
-                  @click="updatePreview(levelAncestry - 1, cell)"
-                  v-if="!characterSpell(levelAncestry - 1, cell)"
-                >
-                  Выберите заклинание в ячейку {{ cell }}
-                </v-btn>
-
-                <v-expansion-panels
-                  multiple
-                  v-if="characterSpell(levelAncestry - 1, cell)"
-                >
-                  <v-expansion-panel>
-                    <v-expansion-panel-header>
-                      <template v-slot:default="{ open }">
-                        <v-row no-gutters>
-                          <v-col :cols="8" :sm="10" class="subtitle-1">
-                            <span />
-                          </v-col>
-                          <v-col :cols="8" :sm="10" class="subtitle-2">
-                            <span
-                              v-html="
-                                characterSpell(levelAncestry - 1, cell).label
-                              "
-                            />
-                          </v-col>
-                          <v-col :cols="4" :sm="2">
-                            <v-btn
-                              color="error"
-                              x-small
-                              @click.stop.prevent="
-                                removeTalent(
-                                  characterSpell(levelAncestry - 1, cell)
-                                )
-                              "
-                              >Удалить</v-btn
-                            >
-                          </v-col>
-                          <v-col
-                            v-if="!open"
-                            :cols="8"
-                            :sm="10"
-                            class="caption grey--text"
-                          >
-                            {{
-                              characterSpell(levelAncestry - 1, cell).snippet
-                            }}
-                          </v-col>
-                        </v-row>
-                      </template>
-                    </v-expansion-panel-header>
-
-                    <v-expansion-panel-content>
-
-
-                      <div
-                        class="body-2 mb-2"
-                        v-html="
-                          characterSpell(levelAncestry - 1, cell).description
-                        "
-                      ></div>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-              </v-row>
-
-
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels> -->
-
-            <!-- 
-     
-
-      <v-btn
-        @click="updatePreview(levelAncestry, 'ancestry')"
-        v-if="!characterSpell(levelAncestry - 1, cell)"
-      >
-        Выберите черту {{ levelAncestry }}
-      </v-btn>
-
-      <v-expansion-panels
-        multiple
-        v-if="characterSpell(levelAncestry - 1, cell)"
-      >
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <template v-slot:default="{ open }">
-              <v-row no-gutters>
-                <v-col :cols="8" :sm="10" class="subtitle-1">
-                  <span />
-                </v-col>
-                <v-col :cols="8" :sm="10" class="subtitle-2">
-                  <span
-                    v-html="characterSpell(levelAncestry - 1, cell).label"
-                  />
-                </v-col>
-                <v-col :cols="4" :sm="2">
-                  <v-btn
-                    color="error"
-                    x-small
-                    @click.stop.prevent="
-                      removeTalent(characterSpell(levelAncestry - 1, cell))
-                    "
-                    >Удалить</v-btn
-                  >
-                </v-col>
-                <v-col
-                  v-if="!open"
-                  :cols="8"
-                  :sm="10"
-                  class="caption grey--text"
-                >
-                  {{ characterSpell(levelAncestry - 1, cell).snippet }}
-                </v-col>
-              </v-row>
-            </template>
-          </v-expansion-panel-header>
-
-          <v-expansion-panel-content>
-            <div
-              class="body-2 mb-2"
-              v-html="characterSpell(levelAncestry - 1, cell).description"
-            ></div>
-
-            <div v-if="characterSpell(levelAncestry - 1, cell).options">
-              <v-select
-                v-if="
-                  characterSpell(levelAncestry - 1, cell).optionsKey ===
-                  'skill'
-                "
-                :value="characterSpell(levelAncestry - 1, cell).selected"
-                :items="skillRepository"
-                item-text="name"
-                item-value="key"
-                placeholder="Выберите навык"
-                filled
-                dense
-                @input="
-                  talentUpdateSelected(
-                    item,
-                    characterSpell(levelAncestry - 1, cell),
-                    levelAncestry
-                  )
-                "
-              />
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>-->
-
-            <!-- <v-data-table
-          :headers="headers"
-          :items="filteredPowers"
-          :search="searchQuery"
-          :items-per-page="-1"
-          sort-by="name"
-          item-key="key"
-          hide-default-footer
-        >
-          <template v-slot:item.source.key="{ item }">
-            <v-chip
-                :color="item.source && ['fspg'].includes(item.source.key) ? 'success' : 'info'"
-                outlined
-                tags
-                x-small
-                label
-            >
-              {{item.source.key.toUpperCase()}}
-            </v-chip>
-          </template>
-
-          <template v-slot:no-results>
-            <div class="text-lg-center">
-              Your search for "{{ searchQuery }}" found no results.
-            </div>
-          </template>
-        </v-data-table> -->
           </v-card>
         </v-col>
       </v-tab-item>
@@ -516,13 +145,8 @@
             {{ "Чары" }}
           </h2>
 
-          <v-data-table
-            :headers="headers"
-            :items="generateTableRitualRows()"
-            item-key="cellIndex"
-            hide-default-footer
-            dense
-          >
+          <v-data-table :headers="headers" :items="generateTableRitualRows()" item-key="cellIndex" hide-default-footer
+            dense>
             <template v-slot:item.name="{ item }">
               <span v-if="!item.name"> Пустой слот </span>
               {{ item.name }}
@@ -531,16 +155,12 @@
             <template v-slot:item.action="{ item }">
               <!-- {{ item?.time }} -->
               <div v-if="item?.time">
-                <img
-                  :src="iconAction(item?.time?.value)"
-                  :class="{ 'invert-icon': !$vuetify.theme.dark }"
-                />
+                <img :src="iconAction(item?.time?.value)" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
               </div>
             </template>
 
             <template v-slot:item.duration="{ item }">
-              <span v-if="item?.duration?.sustained === true"
-                >Поддерживаемое до
+              <span v-if="item?.duration?.sustained === true">Поддерживаемое до
               </span>
               {{ item?.duration?.value }}
             </template>
@@ -576,25 +196,13 @@
             </template>
 
             <template v-slot:item.view="{ item }">
-              <v-btn
-                v-if="item.name"
-                outlined
-                x-small
-                color="info"
-                @click="openDialog(item)"
-              >
+              <v-btn v-if="item.name" outlined x-small color="info" @click="openDialog(item)">
                 <v-icon left>visibility</v-icon> Просмотр
               </v-btn>
             </template>
 
             <template v-slot:item.button="{ item }">
-              <v-btn
-                v-if="item.name"
-                outlined
-                x-small
-                color="error"
-                @click.stop.prevent="removeTalent(item)"
-              >
+              <v-btn v-if="item.name" outlined x-small color="error" @click.stop.prevent="removeTalent(item)">
                 <v-icon left>delete</v-icon> Удалить
               </v-btn>
             </template>
@@ -604,13 +212,7 @@
 
       <v-tab-item class="my-tab-item" key="tab-focus" :value="`tab-focus`">
         <v-col v-if="!archetype || !archetype.spellFocusPool" :cols="12">
-          <v-alert
-            type="warning"
-            class="caption ml-4 mr-4"
-            dense
-            outlined
-            border="left"
-          >
+          <v-alert type="warning" class="caption ml-4 mr-4" dense outlined border="left">
             У класса нет способности к фокусным заклинаниям
           </v-alert>
         </v-col>
@@ -638,13 +240,8 @@
               {{ "Чары" }}
             </h2>
 
-            <v-data-table
-              :headers="headers"
-              :items="generateTableFocusRows(0).filter((r) => r.rank === 0)"
-              item-key="cellIndex"
-              hide-default-footer
-              dense
-            >
+            <v-data-table :headers="headers" :items="generateTableFocusRows(0).filter((r) => r.rank === 0)"
+              item-key="cellIndex" hide-default-footer dense>
               <template v-slot:item.name="{ item }">
                 <span v-if="!item.name"> Пустой слот </span>
                 {{ item.name }}
@@ -653,16 +250,12 @@
               <template v-slot:item.action="{ item }">
                 <!-- {{ item?.time }} -->
                 <div v-if="item?.time">
-                  <img
-                    :src="iconAction(item?.time?.value)"
-                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
-                  />
+                  <img :src="iconAction(item?.time?.value)" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
                 </div>
               </template>
 
               <template v-slot:item.duration="{ item }">
-                <span v-if="item?.duration?.sustained === true"
-                  >Поддерживаемое до
+                <span v-if="item?.duration?.sustained === true">Поддерживаемое до
                 </span>
                 {{ item?.duration?.value }}
               </template>
@@ -698,13 +291,7 @@
               </template>
 
               <template v-slot:item.view="{ item }">
-                <v-btn
-                  v-if="item.name"
-                  outlined
-                  x-small
-                  color="info"
-                  @click="openDialog(item)"
-                >
+                <v-btn v-if="item.name" outlined x-small color="info" @click="openDialog(item)">
                   <v-icon left>visibility</v-icon> Просмотр
                 </v-btn>
               </template>
@@ -735,13 +322,8 @@
             <h2 class="subtitle-1 text-center">
               {{ `Заклинания` }}
             </h2>
-            <v-data-table
-              :headers="headers"
-              :items="generateTableFocusRows(1).filter((r) => r.rank === 1)"
-              item-key="cellIndex"
-              hide-default-footer
-              dense
-            >
+            <v-data-table :headers="headers" :items="generateTableFocusRows(1).filter((r) => r.rank === 1)"
+              item-key="cellIndex" hide-default-footer dense>
               <template v-slot:item.name="{ item }">
                 <span v-if="!item.name"> Пустой слот </span>
                 {{ item.name }}
@@ -750,16 +332,12 @@
               <template v-slot:item.action="{ item }">
                 <!-- {{ item?.time }} -->
                 <div v-if="item?.time">
-                  <img
-                    :src="iconAction(item?.time?.value)"
-                    :class="{ 'invert-icon': !$vuetify.theme.dark }"
-                  />
+                  <img :src="iconAction(item?.time?.value)" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
                 </div>
               </template>
 
               <template v-slot:item.duration="{ item }">
-                <span v-if="item?.duration?.sustained === true"
-                  >Поддерживаемое до
+                <span v-if="item?.duration?.sustained === true">Поддерживаемое до
                 </span>
                 {{ item?.duration?.value }}
               </template>
@@ -795,13 +373,7 @@
               </template>
 
               <template v-slot:item.view="{ item }">
-                <v-btn
-                  v-if="item.name"
-                  outlined
-                  x-small
-                  color="info"
-                  @click="openDialog(item)"
-                >
+                <v-btn v-if="item.name" outlined x-small color="info" @click="openDialog(item)">
                   <v-icon left>visibility</v-icon> Просмотр
                 </v-btn>
               </template>
@@ -834,13 +406,7 @@
 
       <v-tab-item class="my-tab-item" key="tab-innate" :value="`tab-innate`">
         <v-col v-if="!isInnate()" :cols="12">
-          <v-alert
-            type="warning"
-            class="caption ml-4 mr-4"
-            dense
-            outlined
-            border="left"
-          >
+          <v-alert type="warning" class="caption ml-4 mr-4" dense outlined border="left">
             У персонажа нет врожденных заклинаний
           </v-alert>
         </v-col>
@@ -973,10 +539,7 @@
     </v-tabs>
 
     <v-dialog v-model="dialog" max-width="800px">
-      <v-card v-if="selectedItem">
-        <!-- <v-card-title>
-          <h2>{{ selectedItem.name }}</h2>
-        </v-card-title> -->
+      <!-- <v-card v-if="selectedItem">
         <v-card-text>
           <v-row class="rowFeat">
             <div class="head">
@@ -984,23 +547,19 @@
             </div>
             <div class="line"></div>
             <div class="tag" v-if="selectedItem.ritual">
-              Ритуал {{ selectedItem.level }}
+              Ритуал {{ selectedItem.levelRank }}
             </div>
             <div class="tag" v-if="!selectedItem.ritual">
-              Заклинание {{ selectedItem.level }}
+              Заклинание {{ selectedItem.levelRank }}
             </div>
           </v-row>
           <v-row>
             <div>
-              <trait-view
-                v-if="selectedItem.traits"
-                :item="selectedItem"
-                class="mb-2"
-              />
+              <trait-view v-if="selectedItem.traits" :item="selectedItem" class="mb-2" />
             </div>
           </v-row>
           <p></p>
-          <!-- Описание закла -->
+
           <div v-if="selectedItem.traditions">
             <p class="main-holder" v-if="selectedItem.traditions.length > 0">
               <strong>Традиция:</strong>
@@ -1023,10 +582,7 @@
           <div v-if="selectedItem.time">
             <p class="main-holder" v-if="!selectedItem.ritual">
               <strong>Сотворение:</strong>
-              <img
-                :src="iconAction(selectedItem?.time?.value)"
-                :class="{ 'invert-icon': !$vuetify.theme.dark }"
-              />
+              <img :src="iconAction(selectedItem?.time?.value)" :class="{ 'invert-icon': !$vuetify.theme.dark }" />
             </p>
             <p class="main-holder" v-if="selectedItem.ritual">
               <strong>Сотворение:</strong> {{ selectedItem?.time?.value }}
@@ -1060,11 +616,6 @@
           <div v-if="selectedItem.defense">
             <p class="main-holder" v-if="selectedItem.defense.save">
               <strong>Защита:</strong>
-              <!-- <strong>Защита:</strong>
-              <span v-if="selectedItem.defense.save.basic === true"
-                >Базовый
-              </span>
-              {{ selectedItem.defense.save.statistic }} -->
               <span v-if="selectedItem?.defense?.save">
                 <span v-if="selectedItem?.defense?.save?.basic">Базовый </span>
                 {{
@@ -1082,8 +633,7 @@
           <div v-if="selectedItem.duration">
             <p class="main-holder" v-if="selectedItem.duration.value">
               <strong>Длительность:</strong>
-              <span v-if="selectedItem.duration.sustained === true"
-                >Поддерживаемое до
+              <span v-if="selectedItem.duration.sustained === true">Поддерживаемое до
               </span>
               {{ selectedItem.duration.value }}
             </p>
@@ -1106,26 +656,18 @@
           <v-spacer />
           <v-btn color="primary" text @click="dialog = false">Закрыть</v-btn>
         </v-card-actions>
+      </v-card> -->
+      <v-card v-if="selectedItem">
+        <v-card-text>
+          <CardItem v-if="selectedItem" :item="selectedItem" />
+        </v-card-text>
       </v-card>
+
     </v-dialog>
 
-    <v-dialog
-      v-model="psychicDialog"
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-      width="1200px"
-      scrollable
-    >
-      <psychic-preview
-        :character-id="characterId"
-        :talents="selectedPsychic"
-        :archetype="archetype"
-        :rank="rankSpell"
-        :level="levelSpell"
-        :list="psychicPowersList"
-        type="spell"
-        choose-mode
-        @cancel="psychicDialog = false"
-      />
+    <v-dialog v-model="psychicDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1200px" scrollable>
+      <psychic-preview :character-id="characterId" :talents="selectedPsychic" :archetype="archetype" :rank="rankSpell"
+        :level="levelSpell" :list="psychicPowersList" type="spell" choose-mode @cancel="psychicDialog = false" />
     </v-dialog>
   </v-row>
 </template>
@@ -1135,16 +677,19 @@ import PsychicDisciplineMixin from '~/mixins/PsychicDisciplineMixin';
 import PsychicPreview from "~/components/forge/PsychicPreview.vue";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 import traitView from '~/components/TraitView';
+import CardItem from '@/components/CardItem.vue';
+import SluggerMixin from '~/mixins/SluggerMixin';
 
 export default {
   name: 'PsychicPowers',
   layout: 'forge',
   mixins: [
-    PsychicDisciplineMixin, StatRepositoryMixin
+    PsychicDisciplineMixin, StatRepositoryMixin, SluggerMixin
   ],
   components: {
     PsychicPreview,
-    traitView
+    traitView,
+    CardItem
   },
   props: [],
 
@@ -1216,7 +761,7 @@ export default {
       selectedPsychic: undefined,
       archetype: undefined,
       psychicPowersList: undefined,
-        traitList: undefined,
+      traitList: undefined,
       loading: false,
       showAlerts: false,
       psychicDialog: false,
@@ -1312,11 +857,11 @@ export default {
     },
   },
   methods: {
-        openDialog(item) {
+    openDialog(item) {
       this.selectedItem = item
       this.dialog = true
     },
-        iconAction(action) {
+    iconAction(action) {
       if (action === '1') return `/img/icon/action_single.png`;
       if (action === '2') return `/img/icon/action_double.png`;
       if (action === '3') return `/img/icon/action_triple.png`;
@@ -1324,19 +869,17 @@ export default {
       if (action === 'free') return `/img/icon/action_free.png`;
     },
     generateTableRows(levelIndex) {
-    const progression =
-      this.archetype.spellProgression[this.characterLevel()]?.[levelIndex] || 0;
+      const progression =
+        this.archetype.spellProgression[this.characterLevel()]?.[levelIndex] || 0;
 
-      if (progression !== 0)
-      {
+      if (progression !== 0) {
         let spells = [];
-        for (let i = 1; i <= progression; i++)
-        {
+        for (let i = 1; i <= progression; i++) {
           const spell = {
             ...this.characterSpell(levelIndex, i),
             //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
-             rank: levelIndex,
-             cell: i,
+            rank: levelIndex,
+            cell: i,
           }
           spells.push(spell);
         }
@@ -1344,125 +887,126 @@ export default {
       }
 
       return [];
-  },
-  generateTableRitualRows() {
+    },
+    generateTableRitualRows() {
 
-    const  ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId);
+      const ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId);
 
-
-     if (ritual)
-     {
-              let spells = [];
-          let i = 0;
-          ritual.forEach(spell => {
-            const spell1 = {
+      if (ritual) {
+        let spells = [];
+        let i = 0;
+        ritual.forEach(spell => {
+          const spell1 = {
             ...this.characterSpellRitual(i, spell.key),
             //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
             // rank: this.characterSpellFocus(levelIndex, i, spell.key)?.traits?.includes('фокус') ? 1 : 0,
-             cell: i,
-            }
-           if(this.characterSpellRitual(i, spell.key))
+            cell: i,
+          }
+          if (this.characterSpellRitual(i, spell.key))
             spells.push(spell1);
 
-            i++;
-            }
-          )
-         return spells || [];
+          i++;
+        }
+        )
+        return spells || [];
       }
 
-  },
+    },
 
-characterSpellRitual(cell, spell)
-{
-  // { id, name, cost, selection}
-  if (this.psychicPowersList === undefined) {
-    return false;
-  }
-
-  const rawTalent = this.psychicPowersList.find(t => t.key === spell);
-
-  const ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId).find(t => t.key === spell);
+    characterSpellRitual(cell, spell) {
+      // { id, name, cost, selection}
 
 
-  if (rawTalent === undefined) {
+      if (this.psychicPowersList === undefined) {
+        return false;
+      }
 
-    return []
-  }
+      const rawTalent = this.psychicPowersList.find(t => t.key === spell);
 
-  const aggregatedTalent = Object.assign({}, rawTalent);
-  //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
-
-  aggregatedTalent.description = rawTalent.description;
-
-  aggregatedTalent.id = ritual.id;
-
-  // aggregatedTalent.cost = talent.cost;
-
-  aggregatedTalent.label = aggregatedTalent.name;
-  aggregatedTalent.rank = rawTalent.rank;
-  aggregatedTalent.cell = rawTalent.cell;
-
-  if (rawTalent.selected) {
-    aggregatedTalent.selected = rawTalent.selected;
-
-  }
+      const ritual = this.$store.getters['characters/characterRitualSpellsById'](this.characterId).find(t => t.key === spell);
 
 
+      if (rawTalent === undefined) {
 
+        return []
+      }
 
-  return aggregatedTalent;
+      const aggregatedTalent = Object.assign({}, rawTalent);
+      //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
+      aggregatedTalent.description = rawTalent.description;
+
+      aggregatedTalent.id = ritual.id;
+
+      // aggregatedTalent.cost = talent.cost;
+
+      aggregatedTalent.label = aggregatedTalent.name;
+      aggregatedTalent.rank = rawTalent.rank;
+      aggregatedTalent.cell = rawTalent.cell;
+
+      if (rawTalent.selected) {
+        aggregatedTalent.selected = rawTalent.selected;
+
+      }
 
 
 
-}, updatePreviewRitual() {
-  let list = this.psychicPowersList.filter(spell => spell.ritual)
 
-
-  this.selectedPsychic = list
-  this.psychicDialog = true;
-
-},
-  generateTableFocusRows(levelIndex) {
-    const progression =
-      this.$store.getters['characters/characterFocusPoolById'](this.characterId);
-    const spellFocus = this.$store.getters['characters/characterFocusSpellById'](this.characterId);
+      return aggregatedTalent;
 
 
 
-          let spells = [];
-          let i = 0;
-          spellFocus.forEach(spell => {
-            const spell1 = {
-            ...this.characterSpellFocus(levelIndex, i, spell.key),
-            //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
-             rank: this.characterSpellFocus(levelIndex, i, spell.key)?.traits?.includes('фокус') ? 1 : 0,
-             cell: i,
-            }
-           if(this.characterSpellFocus(levelIndex, i, spell1.key))
-            spells.push(spell1);
-
-            i++;
-            }
-          )
-         return spells || [];
+    }, updatePreviewRitual() {
+      let list = this.psychicPowersList.filter(spell => spell.ritual)
 
 
-  },
-    characterSpell(rank, cell)
-    {
-    // { id, name, cost, selection}
-    if (this.psychicPowersList === undefined) {
+      this.selectedPsychic = list
+      this.psychicDialog = true;
+
+    },
+    generateTableFocusRows(levelIndex) {
+      const progression =
+        this.$store.getters['characters/characterFocusPoolById'](this.characterId);
+      const spellFocus = this.$store.getters['characters/characterFocusSpellById'](this.characterId);
+
+
+
+      let spells = [];
+      let i = 0;
+      spellFocus.forEach(spell => {
+        const spell1 = {
+          ...this.characterSpellFocus(levelIndex, i, spell.key),
+          //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
+          rank: this.characterSpellFocus(levelIndex, i, spell.key)?.traits?.includes('фокус') ? 1 : 0,
+          cell: i,
+        }
+        if (this.characterSpellFocus(levelIndex, i, spell1.key))
+          spells.push(spell1);
+
+        i++;
+      }
+      )
+      return spells || [];
+
+
+    },
+    characterSpell(rank, cell) {
+      // { id, name, cost, selection}
+      if (this.psychicPowersList === undefined) {
         return false;
       }
 
       const characterTalents = this.$store.getters['characters/characterSpellsById'](this.characterId);
 
       const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
-                      (t) => t == 0
-                    ) - 1;
+        (t) => t == 0
+      ) - 1 < 0
+        ? 10 : this.archetype.spellProgression[this.characterLevel()].findIndex(
+          (t) => t == 0
+        ) - 1;
       const talents = characterTalents.filter((t) => t).map((talent) => {
 
-      const rawTalent = this.psychicPowersList.find((r) => r.key === talent.key);
+        const rawTalent = this.psychicPowersList.find((r) => r.key === talent.key);
 
         if (rawTalent === undefined) {
           console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
@@ -1497,13 +1041,14 @@ characterSpellRitual(cell, spell)
           const interval = aggregatedTalent.heightening?.interval;
           const rank = aggregatedTalent.traits.join(',').includes('заговор') ? cant : talent.rank;
 
-          const powerLevel2 = parseInt(dice) + (rank - interval) * (parseInt(diceInterval));
+          const powerLevel2 = parseInt(dice) + (rank - aggregatedTalent.level) * (parseInt(diceInterval));
           aggregatedTalent.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
         }
         // aggregatedTalent.cost = talent.cost;
 
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.rank = talent.rank;
+        aggregatedTalent.levelRank = aggregatedTalent.traits.join(',').includes('заговор') ? cant : talent.rank;
         aggregatedTalent.cell = talent.cell;
 
         if (talent.selected) {
@@ -1517,85 +1062,83 @@ characterSpellRitual(cell, spell)
 
       return talents.find(s => s.rank === rank && s.cell === cell) || {};
     },
-        characterSpellFocus(rank, cell, spell)
-    {
-    // { id, name, cost, selection}
-    if (this.psychicPowersList === undefined) {
+    characterSpellFocus(rank, cell, spell) {
+      // { id, name, cost, selection}
+      if (this.psychicPowersList === undefined) {
         return false;
       }
 
       const rawTalent = this.psychicPowersList.find(t => t.key === spell);
 
+      if (rawTalent === undefined) {
 
+        return []
+      }
 
+      const aggregatedTalent = Object.assign({}, rawTalent);
+      //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
 
-        if (rawTalent === undefined) {
+      aggregatedTalent.description = rawTalent.description;
 
-          return []
-        }
+      aggregatedTalent.id = rawTalent.id;
 
-        const aggregatedTalent = Object.assign({}, rawTalent);
-        //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+      // aggregatedTalent.cost = talent.cost;
 
-        aggregatedTalent.description = rawTalent.description;
+      aggregatedTalent.label = aggregatedTalent.name;
+      aggregatedTalent.rank = rawTalent.rank;
+      aggregatedTalent.cell = rawTalent.cell;
 
-        aggregatedTalent.id = rawTalent.id;
+      if (rawTalent.selected) {
+        aggregatedTalent.selected = rawTalent.selected;
 
-        // aggregatedTalent.cost = talent.cost;
-
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.rank = rawTalent.rank;
-        aggregatedTalent.cell = rawTalent.cell;
-
-        if (rawTalent.selected) {
-          aggregatedTalent.selected = rawTalent.selected;
-
-        }
-
-
-
-
-            return aggregatedTalent;
-
-
+      }
+      return aggregatedTalent;
 
     },
-     updatePreview(levelAncestry, cell) {
+    updatePreview(levelAncestry, cell) {
       let list = this.psychicPowersList.filter(spell => !spell.ritual).filter(spell => !spell.ritual).filter(spell => !['фокус', 'композиция'].some(trait => spell.traits.includes(trait)))//.filter(spell => spell != 'композиция')
 
-       if (levelAncestry === 0)
-         list = list.filter(spell => spell.traits.join(',').includes('заговор'))
-       else
-         list = list.filter(spell => !spell.traits.join(',').includes('заговор'))
+      if (levelAncestry === 0)
+        list = list.filter(spell => spell.traits.join(',').includes('заговор'))
+      else
+        list = list.filter(spell => !spell.traits.join(',').includes('заговор'))
 
 
-         const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
+      const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
+
+      this.levelSpell = levelAncestry;
+      this.rankSpell = this.archetype.spellProgression[this.characterLevel()].findIndex(
+        (t) => t == 0
+      ) - 1 < 0
+        ? 10 : this.archetype.spellProgression[this.characterLevel()].findIndex(
+          (t) => t == 0
+        ) - 1;
+      const rankSpell = this.archetype.spellProgression[this.characterLevel()].findIndex(
+        (t) => t == 0
+      ) - 1 < 0
+        ? 10 : this.archetype.spellProgression[this.characterLevel()].findIndex(
+          (t) => t == 0
+        ) - 1;
+
       list.forEach(t => {
         const tal = t;
-        tal.rank = levelAncestry ;
+        tal.rank = levelAncestry;
         tal.cell = cell;
+        tal.levelRank = rankSpell
         tal.prepared = prepare.find(s => s.key === t.key) === true;
       })
-       this.levelSpell = levelAncestry;
-       this.rankSpell = this.archetype.spellProgression[this.characterLevel()].findIndex(
-                      (t) => t == 0
-                    ) - 1;
 
-       if (this.archetype.spellTradition)
-         list = list.filter(spell => spell.traditions.join(',').includes(this.archetype.spellTradition))
+      if (this.archetype.spellTradition)
+        list = list.filter(spell => spell.traditions.join(',').includes(this.archetype.spellTradition))
 
       this.selectedPsychic = list
       this.psychicDialog = true;
 
     },
-    characterLevel(){
+    characterLevel() {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
-    affordableColor(cost) {
-      return (cost <= this.remainingBuildPoints) ? 'green' : 'grey';
-    },
-    InnateSpell()
-    {
+    InnateSpell() {
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
       const MagicInnate = enc.filter(s => s.targetGroup === 'Spell' && s.targetValue === 'Innate');
 
@@ -1652,19 +1195,20 @@ characterSpellRitual(cell, spell)
         this.archetype.spellTradition = this.$store.getters['characters/characterSpellTraditionsById'](this.characterId);
     },
 
+
     async getPsychicPowers(sources) {
       const config = {
-        params: { source: this.sources.join(','), },
+        params: { /*source: this.sources.join(','),*/ },
       };
       this.loading = true;
       const { data } = await this.$axios.get('/api/psychic-powers/', config);
       this.loading = false;
-       if (this.traitList !== undefined) {
+      if (this.traitList !== undefined) {
         data.forEach((species) => {
           const lowercaseKeywords = species.traits.map((s) =>
             s.toUpperCase()
           );
-           species.trait = species.traits;
+          species.trait = species.traits;
           const List1 = this.traitList;
           const trait = List1.filter((talent) =>
             lowercaseKeywords.includes(talent.key.toString().toUpperCase())
@@ -1674,10 +1218,9 @@ characterSpellRitual(cell, spell)
             const listAbilities = [];
             species.traits.forEach((talent) => {
 
-                const t = trait.find(k => k.key === talent)
+              const t = trait.find(k => k.key === talent)
 
-                if (t)
-                {
+              if (t) {
                 const ability1 = {
                   name: t.key,
                   description: t.desc,
@@ -1693,13 +1236,13 @@ characterSpellRitual(cell, spell)
           }
         });
 
-}
+      }
       this.psychicPowersList = data;
     },
     removeTalent(talent) {
       const id = this.characterId;
       const source = `talent.${talent.id}`;
-      if(!talent.ritual)
+      if (!talent.ritual)
         this.$store.commit('characters/removeCharacterSpell', { id, talentId: talent.id });
       else
         this.$store.commit('characters/removeCharacterRitualSpell', { id, talentId: talent.id });
@@ -1725,6 +1268,7 @@ characterSpellRitual(cell, spell)
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;
@@ -1795,7 +1339,9 @@ characterSpellRitual(cell, spell)
   margin-inline-end: 0px;
   border-bottom: 1.5px solid black;
 }
+
 .invert-icon {
-  filter: brightness(1) invert(1); /* черный цвет из светлого */
+  filter: brightness(1) invert(1);
+  /* черный цвет из светлого */
 }
 </style>

@@ -63,7 +63,7 @@ export const actions = {
     if (characterId <= 0) {
       axios.post(`${baseApiUrl}/api/characters`, body)
         .then((response) => {
-          console.log(response);
+
           characterId = response.data.id;
         })
         .catch((error) => {

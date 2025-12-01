@@ -37,7 +37,7 @@ function loadAllJSONFromFolder(folder) {
         allItems = allItems.concat(modified);
     });
 
-    console.log(`✅ Загружено ${allItems.length} Черт из ${files.length} файлов`);
+
     return allItems;
 }
 

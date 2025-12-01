@@ -103,7 +103,6 @@ const toP = (a, o) => rangeP(o + 1, o + a.length + 1);
 router.get('/', async (req, res) => {
     let items = wargearRepository.filter(v => v != null && v.key !== null).filter(v => v != undefined && v.key !== undefined); // все данные
 
-    console.log(items.length);
 
     if (req.query.type) {
         const types = req.query.type.split(',').map(t => t.toLowerCase());

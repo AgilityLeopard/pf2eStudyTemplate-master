@@ -1,13 +1,7 @@
 <template>
   <v-row justify="center">
-    <v-progress-circular
-      v-if="!species"
-      indeterminate
-      color="success"
-      size="128"
-      width="12"
-    />
-    
+    <v-progress-circular v-if="!species" indeterminate color="success" size="128" width="12" />
+
 
     <v-col v-if="species" :xs="12">
       <div class="d-flex flex-no-wrap justify-space-between mb-2">
@@ -23,191 +17,166 @@
       </div>
 
       <div>
-        <trait-view
-          v-if="species.trait"
-          :item="species"
-          class="mb-2"
-          style="font-size: 14px"
-        />
+        <trait-view v-if="species.trait" :item="species" class="mb-2" style="font-size: 14px" />
       </div>
       <v-divider />
 
-        <v-tabs centered grow color="red">
-        <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`"
-          ><h2 class="subtitle-2">Родословная</h2></v-tab
-        >
-        <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`"
-          ><h2 class="subtitle-2">Наследие </h2></v-tab
-        >
-        <v-tab-item
-          class="my-tab-item"
-          key="tab-ancestry"
-          :value="`tab-ancestry`"
-        >
+      <v-tabs centered grow color="red">
+        <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`">
+          <h2 class="subtitle-2">Родословная</h2>
+        </v-tab>
+        <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`">
+          <h2 class="subtitle-2">Наследие </h2>
+        </v-tab>
+        <v-tab-item class="my-tab-item" key="tab-ancestry" :value="`tab-ancestry`">
           <div class="pa-2">
-      <div class="mt-2 body-2 text-lg-justify">
-        <p><strong>Скорость:</strong> {{ species.speed }}</p>
-
-        
-        <p><strong>Хитов:</strong> {{ species.ancestryHitPoint }}</p>
-
-         <span class="subtitle-1 mt-2">Повышение характеристик</span>
-      <v-divider />
-      
-      <div v-for="boost in species.attributeBoost" class="text-lg-justify">
-        <div v-if="boost.value > 0">
-          <strong>{{ boost.name }}</strong>
-        </div>
-      </div>
-
-      <div v-for="boost in species.abilityBoost" class="text-lg-justify">
-        <div>
-          <strong> Свободное повышение </strong>
-        </div>
-      </div>
-
-      <p></p>
-       <span
-        v-if="species.attributeFlaw.find((t) => t.value < 0)"
-        class="subtitle-1 mt-2"
-        >Понижение характеристик</span
-      >
-      <v-divider v-if="species.attributeFlaw.find((t) => t.value < 0)" />
-
-      <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
-        <div v-if="flaw.value < 0">
-          <strong>{{ flaw.name }}</strong>
-        </div>
-      </div>
-
-         <p><v-divider /></p>
-        <p>
-          <strong>Доступные языки:</strong> {{ species.language.join(", ") }} +
-          {{ species.freeLanguage }} на выбор + количество языков, равное вашему
-          модификатору Интеллекта (если положительный)
-        </p>
-
-        <p><strong>Размер:</strong> {{ size(species.size) }}</p>
-      </div>
-
-      <div v-if="species.Description" class="body-2">
-        <p><v-divider /></p>
+            <div class="mt-2 body-2 text-lg-justify">
+              <p><strong>Скорость:</strong> {{ species.speed }}</p>
 
 
-        <div v-for="description in species.Description" class="text-lg-justify">
-          <div v-if="description.name == 'Faith'">
-            <span class="subtitle-1 mt-2">Верование</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-            <strong> Популярные эдикты</strong>
-            <div v-if="description.edicts" v-html="description.edicts"></div>
+              <p><strong>Хитов:</strong> {{ species.ancestryHitPoint }}</p>
 
-            <p></p>
+              <span class="subtitle-1 mt-2">Повышение характеристик</span>
+              <v-divider />
 
-            <strong> Популярные анафемы</strong>
-            <div
-              v-if="description.anathema"
-              v-html="description.anathema"
-            ></div>
+              <div v-for="boost in species.attributeBoost" class="text-lg-justify">
+                <div v-if="boost.value > 0">
+                  <strong>{{ boost.name }}</strong>
+                </div>
+              </div>
+
+              <div v-for="boost in species.abilityBoost" class="text-lg-justify">
+                <div>
+                  <strong> Свободное повышение </strong>
+                </div>
+              </div>
+
+              <p></p>
+              <span v-if="species.attributeFlaw.find((t) => t.value < 0)" class="subtitle-1 mt-2">Понижение
+                характеристик</span>
+              <v-divider v-if="species.attributeFlaw.find((t) => t.value < 0)" />
+
+              <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
+                <div v-if="flaw.value < 0">
+                  <strong>{{ flaw.name }}</strong>
+                </div>
+              </div>
+
+              <p><v-divider /></p>
+              <p>
+                <strong>Доступные языки:</strong> {{ species.language.join(", ") }} +
+                {{ species.freeLanguage }} на выбор + количество языков, равное вашему
+                модификатору Интеллекта (если положительный)
+              </p>
+
+              <p><strong>Размер:</strong> {{ size(species.size) }}</p>
+            </div>
+
+            <div v-if="species.Description" class="body-2">
+              <p><v-divider /></p>
+
+
+              <div v-for="description in species.Description" class="text-lg-justify">
+                <div v-if="description.name == 'Faith'">
+                  <span class="subtitle-1 mt-2">Верование</span>
+                  <p><v-divider /></p>
+                  <div v-if="description.about" v-html="description.about"></div>
+                  <strong> Популярные эдикты</strong>
+                  <div v-if="description.edicts" v-html="description.edicts"></div>
+
+                  <p></p>
+
+                  <strong> Популярные анафемы</strong>
+                  <div v-if="description.anathema" v-html="description.anathema"></div>
+                </div>
+
+                <p></p>
+
+                <div v-if="description.name == 'avanturist'">
+                  <span class="subtitle-1 mt-2">Авантюристы</span>
+                  <p><v-divider /></p>
+                  <div v-if="description.about" v-html="description.about"></div>
+                </div>
+
+                <p></p>
+                <div v-if="description.name === 'physical'">
+                  <span class="subtitle-1 mt-2">Физическое описание</span>
+                  <p><v-divider /></p>
+                  <div v-if="description.about" v-html="description.about"></div>
+
+                </div>
+                <p></p>
+                <div v-if="description.name === 'society'">
+                  <span class="subtitle-1 mt-2">Общество</span>
+                  <p><v-divider /></p>
+                  <div v-if="description.about" v-html="description.about"></div>
+                </div>
+              </div>
+              <p></p>
+              <div v-if="species.exampleName">
+                <span class="subtitle-1 mt-2">Имена</span>
+                <p><v-divider /></p>
+                <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
+                <div v-if="species.exampleName" v-html="species.exampleName"></div>
+              </div>
+
+            </div>
+
+            <div class="mt-2 body-2 text-justify ">
+
+              <h3 class="headline" v-if="species.speciesFeatures.length != 0">Особенности родословной</h3>
+              <div v-for="feature in species.speciesFeatures" class="text-lg-justify " v-bind:key="feature.key">
+                <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
+                <p class="main-holder">
+
+
+                <div v-if="feature.description" v-html="feature.description"></div>
+                <div v-else>{{ feature.snippet }}</div>
+
+                <div v-if="feature.action" v-html="feature.action.description"></div>
+                </p>
+              </div>
+            </div>
           </div>
+        </v-tab-item>
 
-          <p></p>
+        <v-tab-item class="my-tab-item" key="tab-heritage" :value="`tab-heritage`">
 
-          <div v-if="description.name == 'avanturist'">
-            <span class="subtitle-1 mt-2">Авантюристы</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-          </div>
+          <div v-if="heritageList" class="mt-2 pa-2">
+            <h3 class="headline">Выберите Наследие</h3>
+            <v-select v-model="selectedHeritage" :items="heritage" item-value="key" item-text="nameAncestry" label=""
+              dense outlined persistent-hint return-object @input="selectHeritageForChar">
+            </v-select>
 
-          <p></p>
-          <div v-if="description.name === 'physical'">
-            <span class="subtitle-1 mt-2">Физическое описание</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-           
-          </div>
- <p></p>
-          <div v-if="description.name === 'society'">
-            <span class="subtitle-1 mt-2">Общество</span>
-            <p><v-divider /></p>
-            <div v-if="description.about" v-html="description.about"></div>
-          </div>
-        </div>
-<p></p>
-          <div v-if="species.exampleName">
-            <span class="subtitle-1 mt-2">Имена</span>
-            <p><v-divider /></p>
-            <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
-            <div v-if="species.exampleName" v-html="species.exampleName"></div>
-          </div>
+            <div v-if="selectedHeritage" class="mt-2 body-2 text-lg-justify">
 
-      </div>
+              <p>
+              <div v-if="selectedHeritage.previewText" v-html="selectedHeritage.previewText"></div>
+              </p>
+              <p>
+              <div v-if="selectedHeritage.description" v-html="selectedHeritage.description"></div>
+              </p>
 
-        <div class="mt-2 body-2 text-justify ">
+              <div v-if="selectedHeritage.speciesFeatures"></div>
+              <div v-for="feature in selectedHeritage.speciesFeatures" class="text-lg-justify "
+                v-bind:key="feature.key">
+                <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
+                <p class="main-holder">
 
-          <h3 class="headline" v-if="species.speciesFeatures.length != 0" >Особенности родословной</h3>
-          <div
-        v-for="feature in species.speciesFeatures"
-        class="text-lg-justify " v-bind:key="feature.key">
-              <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
-                      <p class="main-holder">
-          
 
-          <div v-if="feature.description" v-html="feature.description"></div>
-          <div  v-else>{{ feature.snippet }}</div>
+                <div v-if="feature.description" v-html="feature.description"></div>
+                <div v-else>{{ feature.snippet }}</div>
 
-               <div v-if="feature.action" v-html="feature.action.description"></div>
-        </p>
-      </div>
-        </div>
-        </div>
-            </v-tab-item>
+                <div v-if="feature.action" v-html="feature.action.description"></div>
+                </p>
+              </div>
 
- <v-tab-item class="my-tab-item" key="tab-heritage" :value="`tab-heritage`">
-
-                      <div v-if="heritageList" class="mt-2 pa-2">
-              <h3 class="headline" >Выберите Наследие</h3>
-          <v-select
-            v-model="selectedHeritage"
-            :items="heritage"
-            item-value="key"
-            item-text="nameAncestry"
-            label=""
-            dense outlined 
-            persistent-hint
-             return-object
-             @input="selectHeritageForChar"
-         
-       
-          >
-          </v-select>
-
-          <div v-if="selectedHeritage" class="mt-2 body-2 text-lg-justify">
-     
-        <p> <div v-if="selectedHeritage.previewText" v-html="selectedHeritage.previewText"></div></p>
-        <p> <div v-if="selectedHeritage.description" v-html="selectedHeritage.description"></div></p>
-        
-        <div v-if="selectedHeritage.speciesFeatures"></div>
-          <div
-        v-for="feature in selectedHeritage.speciesFeatures"
-        class="text-lg-justify " v-bind:key="feature.key">
-              <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
-                      <p class="main-holder">
-          
-
-          <div v-if="feature.description" v-html="feature.description"></div>
-          <div  v-else>{{ feature.snippet }}</div>
-
-               <div v-if="feature.action" v-html="feature.action.description"></div>
-        </p>
-      </div>
-   
-      <v-divider />
-      </div>
+              <v-divider />
+            </div>
 
           </div>
-          </v-tab-item>
-     </v-tabs>
+        </v-tab-item>
+      </v-tabs>
     </v-col>
 
   </v-row>
@@ -244,7 +213,7 @@ export default {
       );
     },
     heritage() {
-       const speciesLabel = this.species?.nameAncestry.toUpperCase();
+      const speciesLabel = this.species?.nameAncestry.toUpperCase();
 
       if (speciesLabel)
         return this.heritageList.filter(
@@ -252,7 +221,7 @@ export default {
         );
       else return this.heritageList.filter((s) => s.isUniversal === true);
 
- },
+    },
     characterSpeciesAstartesChapter() {
       return this.$store.getters[
         "characters/characterSpeciesAstartesChapterById"
@@ -283,33 +252,26 @@ export default {
   },
   watch: {
     sources: {
-     handler: async function (newVal) {
+      handler: async function (newVal) {
         if (newVal) {
-           await this.getAbilityList(newVal);
-           await this.getTraitList(newVal);
-           await this.getChapterList(newVal);
-           await this.getHeritageList(newVal);
-       
+          await this.getAbilityList(newVal);
+          await this.getTraitList(newVal);
+          await this.getChapterList(newVal);
+          await this.getHeritageList(newVal);
+
         }
-         if (
+        if (
           this.characterSpeciesKey &&
           this.characterSpeciesKey !== "unknown"
         ) {
           this.getSpecies(this.characterSpeciesKey);
         }
-    
+
       },
-      
+
       immediate: true, // make this watch function is called when component created
     },
-    // characterSpeciesKey: {
-    //   handler(newVal) {
-    //     if (newVal) {
-    //       this.getSpecies(newVal);
-    //     }
-    //   },
-    //   immediate: true, // make this watch function is called when component created
-    // },
+
   },
   asyncData({ params }) {
     return {
@@ -335,32 +297,32 @@ export default {
       const { data } = await this.$axios.get("/api/heritage/", config);
       const speciesLabel = this.characterSpeciesKey;
 
-      
+
       if (this.abilityList !== undefined) {
         data.forEach((species) => {
           const lowercaseKeywords = species.ancestryAbility?.map((s) =>
             s.toUpperCase()
           );
           if (lowercaseKeywords) {
-                      const List = this.abilityList;
-          const ability = List.filter((talent) =>
-            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
-          );
+            const List = this.abilityList;
+            const ability = List.filter((talent) =>
+              lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+            );
 
-          if (ability.length > 0) {
-            const listAbilities = [];
-            ability.forEach((talent) => {
-              const ability1 = {
-                name: talent.name,
-                key: talent.key,
-                description: talent.description,
-                modification: talent.modification,
-              };
+            if (ability.length > 0) {
+              const listAbilities = [];
+              ability.forEach((talent) => {
+                const ability1 = {
+                  name: talent.name,
+                  key: talent.key,
+                  description: talent.description,
+                  modification: talent.modification,
+                };
 
-              listAbilities.push(talent);
-            });
-            species.speciesFeatures = listAbilities;
-          }
+                listAbilities.push(talent);
+              });
+              species.speciesFeatures = listAbilities;
+            }
           }
 
         });
@@ -381,7 +343,7 @@ export default {
           source: sources.join(","),
         },
       };
-            const { data } = await this.$axios.get(
+      const { data } = await this.$axios.get(
         "/api/abilityAncestry/",
         config.source
       );
@@ -398,7 +360,7 @@ export default {
       data.forEach((t) => (t.key = t.key.toLowerCase()));
       this.traitList = data;
     },
-    async getSpecies (key) {
+    async getSpecies(key) {
       this.loading = true;
       let finalData = {};
 
@@ -436,53 +398,10 @@ export default {
         }
       }
 
-      // finalData.speciesFeatures
-      //   .filter((feature) => feature.options)
-      //   .forEach((feature) => {
-      //     const enhancements = this.enhancements.filter((modifier) =>
-      //       modifier.source.startsWith(`species.${feature.name}`)
-      //     );
-      //     if (enhancements) {
-      //       enhancements.forEach((e) => {
-      //         let foundInd = /\.(\d)\./.exec(e.source);
-      //         if (foundInd) {
-      //           feature.selected[foundInd[1]] = e.source.split(".").pop();
-      //         }
-      //       });
-      //     } else {
-      //       const enhancement = this.enhancements.find((modifier) =>
-      //         modifier.source.startsWith(`species.${feature.name}`)
-      //       );
-      //       if (enhancement) {
-      //         feature.selected = enhancement.source.split(".").pop();
-      //       }
-      //     }
-      //   });
-
       const chapter = this.characterSpeciesAstartesChapter;
       if (chapter) {
         finalData.chapter = chapter;
       }
-
-      // const featuresWithPowers = finalData.speciesFeatures.filter(
-      //   (f) => f.psychicPowers !== undefined
-      // );
-      // if (featuresWithPowers) {
-      //   featuresWithPowers.forEach((feature) => {
-      //     feature.psychicPowers.forEach((powerSelections) => {
-      //       this.getPsychicPowerOptions(powerSelections);
-      //       const found = this.psychicPowers.find(
-      //         (p) => p.source && p.source === `species.${powerSelections.name}`
-      //       );
-      //       if (found) {
-      //         console.info(
-      //           `Power ${found.name} found for the species feature ${feature.name} / power ${powerSelections.name}.`
-      //         );
-      //         powerSelections.selected = found.name;
-      //       }
-      //     });
-      //   });
-      // }
 
       if (this.traitList !== undefined) {
         const lowercaseKeywords = finalData.trait.map((s) => s.toUpperCase());
@@ -513,26 +432,43 @@ export default {
       this.loading = false;
       this.species = finalData;
     },
-        selectHeritageForChar(species) {
-      // TODO ensure attributes and skills
+    selectHeritageForChar(species) {
+
       if (species.prerequisites)
         this.ensurePrerequisites(species.prerequisites);
 
+      const vision = this.$store.getters["characters/characterVisionById"](
+        this.characterId
+      );
+
+
       let modifications = [];
       species.speciesFeatures
-        .filter((t) => t.modifications !== undefined)
+        .filter((t) => t.modification !== undefined)
         .forEach((t) => {
-          modifications = [...modifications, ...t.modifications];
+
+          //Сменить Сумеречное зрение на темное, если оно уже есть у персонажа и такое позволяет особенность
+
+          if (t.key === "low-light vision up" && vision === "Сумеречное")
+            t.modification.find(t => t.group === "sense").key = "darkvision"
+
+          modifications = [...modifications, ...t.modification];
         });
+
+
 
       this.$store.commit("characters/clearCharacterEnhancementsBySource", {
         id: this.characterId,
         source: "heritage",
       });
+
       this.$store.commit("characters/setCharacterHeritage", {
         id: this.characterId,
         heritage: { key: species.key, label: species.nameAncestry },
       });
+
+
+
       this.$store.commit("characters/setCharacterModifications", {
         id: this.characterId,
         content: { modifications: modifications, source: "heritage" },
@@ -609,7 +545,7 @@ export default {
       //   params: { id: this.characterId },
       // });
     },
-   
+
     size(size) {
       if (!size) return "";
       const s = this.sizeRepository.find((s) => s.key === size);
@@ -644,120 +580,8 @@ export default {
         content: sourceKey,
       });
     },
-    /**
-     * clear previous option
-     *
-     * @param speciesTrait
-     */
-    setSpeciesFeatureOptionSelection(speciesTrait, index) {
-      const id = this.characterId;
-      let selectedValue = speciesTrait.selected[index]; // the NAME property of the option
-      const selectedOption = speciesTrait.options.find(
-        (o) => o.name === selectedValue
-      );
 
-      if (!selectedOption) {
-        console.warn(
-          `No option found for index ${index} for ${selectedValue}`,
-          speciesTrait.options
-        );
-        return;
-      }
 
-      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
-        id,
-        source: `species.${speciesTrait.name}.${index}`,
-      });
-      // the option has a snippet, that is thus added as a custom ability
-      if (selectedOption.snippet) {
-        const content = {
-          modifications: [
-            {
-              name: selectedOption.name,
-              targetGroup: "abilities",
-              targetValue: "",
-              effect: selectedOption.snippet,
-            },
-          ],
-          source: `species.${speciesTrait.name}.${index}.${selectedOption.name}`,
-        };
-        this.$store.commit("characters/addCharacterModifications", {
-          id,
-          content,
-        });
-      }
-
-      this.$store.commit("characters/clearCharacterKeywordsBySource", {
-        id: this.characterId,
-        source: `species.${speciesTrait.name}`,
-        cascade: true,
-      });
-
-      // the selected option has modifications that are saved as such
-      if (selectedOption.modifications) {
-        selectedOption.modifications
-          .filter((m) => m.targetGroup === "keywords")
-          .forEach((k) => {
-            const payload = {
-              name: k.targetValue,
-              source: `species.${speciesTrait.name}.${index}`,
-              type: "keyword",
-              replacement: undefined,
-            };
-            this.$store.commit("characters/addCharacterKeyword", {
-              id: this.characterId,
-              keyword: payload,
-            });
-          });
-
-        const content = {
-          modifications: selectedOption.modifications,
-          source: `species.${speciesTrait.name}.${index}.${selectedOption.name}`,
-        };
-        this.$store.commit("characters/addCharacterModifications", {
-          id,
-          content,
-        });
-      }
-    },
-    updateAstartesChapter(key) {
-      const id = this.characterId;
-      const chapter = this.chapterList.find((chapter) => chapter.key === key);
-
-      const content = {
-        speciesAstartesChapter: chapter.key,
-      };
-      this.$store.commit("characters/setCharacterSpeciesAstartesChapter", {
-        id,
-        ...content,
-      });
-
-      this.$store.commit("characters/clearCharacterTalentsBySource", {
-        id,
-        source: `species.chapter.`,
-        cascade: true,
-      });
-      chapter.beliefsAndTraditions.forEach((bf) => {
-        if (bf.modifications) {
-          bf.modifications
-            .filter((m) => m.targetGroup === "talents")
-            .forEach((t) => {
-              const talent = {
-                name: t.meta.name,
-                key: t.targetValue,
-                cost: 0,
-                placeholder: undefined,
-                selected: undefined,
-                source: `species.chapter.${chapter.key}`,
-              };
-              this.$store.commit("characters/addCharacterTalent", {
-                id,
-                talent,
-              });
-            });
-        }
-      });
-    },
   },
 };
 </script>
@@ -770,6 +594,7 @@ export default {
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;
@@ -785,12 +610,12 @@ export default {
   padding-inline-start: 0.2em;
 }
 
-.right-header{
-    float:right;
+.right-header {
+  float: right;
 }
 
-.left-header{
-    float:left;
+.left-header {
+  float: left;
 }
 
 .h3 {
@@ -800,11 +625,11 @@ export default {
 }
 
 .h4 {
-color: #a76652;
-    font-weight: normal;
-    font-size: 20px;
-    margin-top: 50px;
-    margin-bottom: 10px;
+  color: #a76652;
+  font-weight: normal;
+  font-size: 20px;
+  margin-top: 50px;
+  margin-bottom: 10px;
 }
 
 .split-header {

@@ -1,11 +1,6 @@
 <template lang="html">
   <v-row>
-    <v-dialog
-      v-model="selectAvatarDialog"
-      width="600px"
-      scrollable
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-    >
+    <v-dialog v-model="selectAvatarDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
       <v-card class="pa-0">
         <v-card-title style="background-color: #262e37; color: #fff">
           <span>Подтвердите аватар</span>
@@ -16,14 +11,8 @@
         <v-card-text class="pt-4">
           <div>
             <client-only>
-              <croppa
-                v-model="myCroppa"
-                :file-size-limit="31457280"
-                :width="300"
-                :height="300"
-                :prevent-white-space="myCroppaConfig.preventWhiteSpace"
-                class="croppa-circle"
-              />
+              <croppa v-model="myCroppa" :file-size-limit="31457280" :width="300" :height="300"
+                :prevent-white-space="myCroppaConfig.preventWhiteSpace" class="croppa-circle" />
             </client-only>
           </div>
           <span class="caption">
@@ -32,11 +21,8 @@
           </span>
 
           <div>
-            <v-switch
-              v-model="myCroppaConfig.preventWhiteSpace"
-              label="Изображение в пределах границы без фона"
-              dense
-            ></v-switch>
+            <v-switch v-model="myCroppaConfig.preventWhiteSpace" label="Изображение в пределах границы без фона"
+              dense></v-switch>
           </div>
         </v-card-text>
 
@@ -57,30 +43,11 @@
         <strong>Персонаж</strong>
       </h2>
 
-      <v-text-field
-        label="Имя персонажа"
-        :value="characterName"
-        dense
-        outlined
-        @input="setCharacterName"
-      />
+      <v-text-field label="Имя персонажа" :value="characterName" dense outlined @input="setCharacterName" />
 
-      <v-slider
-        :value="characterCustomLevel"
-        :min="1"
-        :max="20"
-        class="pb-2"
-        label="Уровень"
-        hint="Установите уровень персонажа"
-        step="1"
-        ticks
-        thumb-label="always"
-        dense
-        outlined
-        persistent-hint
-        type="number"
-        @input="setLevel"
-      />
+      <v-slider :value="characterCustomLevel" :min="1" :max="20" class="pb-2" label="Уровень"
+        hint="Установите уровень персонажа" step="1" ticks thumb-label="always" dense outlined persistent-hint
+        type="number" @input="setLevel" />
     </v-col>
 
     <v-col :cols="12" :sm="5">
@@ -88,25 +55,15 @@
         <!-- custom avatar -->
         <v-badge bordered overlap color="error" v-show="characterAvatarUrl">
           <template v-slot:badge>
-            <v-icon color="white" @click.stop="setCharacterAvatar(undefined)"
-              >close</v-icon
-            >
+            <v-icon color="white" @click.stop="setCharacterAvatar(undefined)">close</v-icon>
           </template>
-          <v-avatar
-            size="86"
-            style="border-radius: 50%"
-            @click="selectAvatarDialog = true"
-          >
+          <v-avatar size="86" style="border-radius: 50%" @click="selectAvatarDialog = true">
             <v-img :src="characterAvatarUrl"></v-img>
           </v-avatar>
         </v-badge>
 
         <!-- placeholder -->
-        <v-avatar
-          size="86"
-          @click="selectAvatarDialog = true"
-          v-show="!characterAvatarUrl"
-        >
+        <v-avatar size="86" @click="selectAvatarDialog = true" v-show="!characterAvatarUrl">
           <v-img src="/img/avatar_placeholder_grey.png"></v-img>
         </v-avatar>
 
@@ -123,41 +80,16 @@
 
         <p class="body-2">Включить контент из других источников</p>
 
-        <div
-          v-for="homebrew in settingOfficialOptions.filter(
-            (i) => i.show === true
-          )"
-          :key="homebrew.key"
-        >
-          <v-switch
-            v-if="homebrew.optional"
-            v-model="enabledHomebrews"
-            :value="homebrew.key"
-            :hint="homebrew.hint"
-            persistent-hint
-            color="primary"
-            dense
-            :disabled="homebrew.disabled"
-            @change="updateHomebrew(homebrew)"
-          >
-            <template v-slot:label
-              ><span class="body-2">{{ homebrew.name }}</span></template
-            >
+        <div v-for="homebrew in settingOfficialOptions.filter(
+          (i) => i.show === true
+        )" :key="homebrew.key">
+          <v-switch v-if="homebrew.optional" v-model="enabledHomebrews" :value="homebrew.key" :hint="homebrew.hint"
+            persistent-hint color="primary" dense :disabled="homebrew.disabled" @change="updateHomebrew(homebrew)">
+            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
           </v-switch>
-          <v-switch
-            v-else
-            value
-            input-value="true"
-            :hint="homebrew.hint"
-            persistent-hint
-            color="primary"
-            dense
-            disabled
-            @change="updateHomebrew(homebrew)"
-          >
-            <template v-slot:label
-              ><span class="body-2">{{ homebrew.name }}</span></template
-            >
+          <v-switch v-else value input-value="true" :hint="homebrew.hint" persistent-hint color="primary" dense disabled
+            @change="updateHomebrew(homebrew)">
+            <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
           </v-switch>
         </div>
       </div>
@@ -214,14 +146,14 @@ export default {
           name: 'Основная книга игрока 2 (Ремастер)',
           hint: 'Основные правила',
         },
-        // {
-        //   show: true,
-        //   disabled: false,
-        //   optional: true,
-        //   key: 'secretOfMagic',
-        //   name: 'Секреты магии',
-        //   hint: 'Дополнение, включающее класс Магус и Призывателя',
-        // },
+        {
+          show: true,
+          disabled: false,
+          optional: true,
+          key: 'secretOfMagic',
+          name: 'Секреты магии',
+          hint: 'Дополнение, включающее класс Магус и Призывателя',
+        },
 
 
       ],
@@ -311,7 +243,7 @@ export default {
     },
   },
   methods: {
-    setNewAvatar: function() {
+    setNewAvatar: function () {
       const url = this.myCroppa.generateDataUrl('jpg', 0.8);
       if (!url) {
         console.warn('no image');
@@ -332,7 +264,7 @@ export default {
       this.$store.commit('characters/setCustomXp', { id: this.characterId, xp });
     },
     setLevel(rank) {
-      const level =  parseInt(rank);
+      const level = parseInt(rank);
 
       this.$store.commit('characters/setLevel', { id: this.characterId, level });
       this.$store.commit('characters/resetCharacterStats', { id: this.characterId, optional: 'level' });
@@ -348,8 +280,11 @@ export default {
     updateHomebrew(event) {
       this.$store.commit('characters/setSettingHomebrews', { id: this.characterId, content: this.enabledHomebrews });
     },
+    updateOfficial(event) {
+      this.$store.commit('characters/setSettingOfficial', { id: this.characterId, content: this.enabledHomebrews });
+    },
     updateHouserules(value, key) {
-      this.$store.commit('characters/setSettingHouserules', { id: this.characterId, houserule: { key, value} });
+      this.$store.commit('characters/setSettingHouserules', { id: this.characterId, houserule: { key, value } });
     },
   },
 };
@@ -368,8 +303,10 @@ export default {
 }
 
 .croppa-circle {
-  border-radius: 50%; /* делаем контейнер круглым */
-  overflow: hidden; /* обрезаем всё, что выходит за границы круга */
+  border-radius: 50%;
+  /* делаем контейнер круглым */
+  overflow: hidden;
+  /* обрезаем всё, что выходит за границы круга */
   width: 300px;
   height: 300px;
 }

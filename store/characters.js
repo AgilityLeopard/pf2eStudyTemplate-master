@@ -325,6 +325,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].ClassBoost : {},
   characterClassSkillById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ClassSkill : {},
+  charactermodificatorsBonusById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].modificatorsBonus : [],
   characterSpellTraditionsById: (state) => (id) =>
     state.characters[id] ? state.characters[id].spellTraditions : '',
   characterTrainedSkillClassById: (state) => (id) =>
@@ -375,7 +377,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].Perception : "U",
   characterWearById: (state) => (id) =>
     state.characters[id] ? state.characters[id].wearArmor : undefined,
-
+  characterVisionById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].vision : "Обычное",
   characterTraitsById: (state, getters) => (id) => {
     const character = state.characters[id];
     const enhancedAttributes = getters.characterAttributesEnhancedById(id);
@@ -633,6 +636,9 @@ export const mutations = {
   setSettingHomebrews(state, payload) {
     state.characters[payload.id].settingHomebrewContent = payload.content;
   },
+  setSettingOfficial(state, payload) {
+    state.characters[payload.id].settingOfficialOptions = payload.content;
+  },
   setSettingHouserules(state, payload) {
     let character = state.characters[payload.id];
     const { key, value } = payload.houserule;
@@ -655,6 +661,67 @@ export const mutations = {
 
     if (modification) {
       modification.forEach(item => {
+
+        ///Новые правила
+        switch (item.key) {
+          case ("FlatModifier"):
+            {
+              if (item.selector === "hp") {
+                if (!item.predicate) {
+                  const value = item.value.includes("@actor.level") ? eval(item.value.replace("@actor.level", character.level)) : 0;
+                  character.MaxHitPoints[payload.talentId] = value
+                }
+
+              }
+
+              if (item.selector === "saving-throw" || ["will", "reflex", "fortitude"].includes(item.selector)) {
+                if (["circumstance", "status", ""].includes(item.type))
+                  character.modificatorsBonus.push(
+                    {
+                      value: item.value,
+                      type: item.type,
+                      talentId: item.talentId,
+                      selector: item.selector,
+                      description: item.description
+                    }
+                  )
+
+              }
+
+              const skill =
+                [
+                  "acrobatics",
+                  "diplomacy",
+                  "intimidation",
+                  "religion",
+                  "nature",
+                  "occultism",
+                  "medicine",
+                  "crafting",
+                  "survival",
+                  "thievery",
+                  "athletics",
+                  "deception",
+                  "arcana",
+                  "society"
+                ]
+
+              if (skill.includes(item.selector) || item.selector === "skill-check") {
+                if (["circumstance", "status", ""].includes(item.type))
+                  character.modificatorsBonus.push(
+                    {
+                      value: item.value,
+                      type: item.type,
+                      talentId: item.talentId,
+                      selector: item.selector,
+                      description: item.description
+                    }
+                  )
+
+              }
+            }
+        }
+        /////
 
         switch (item.type) {
           case ("Perception"):
@@ -776,6 +843,11 @@ export const mutations = {
               break;
 
             }
+          case ("Bonus"):
+            {
+              if (item.group === 'skill')
+                character.Bonus.push(item)
+            }
           // case ("Weapon"): {
           //   // gear.traits.includes(item.key)
           //   const war = character.wargear.filter(w => w.name === item.key)
@@ -811,6 +883,54 @@ export const mutations = {
     if (modification) {
       //для класса
       modification.forEach(item => {
+
+
+        ///Новые правила
+        switch (item.key) {
+          case ("FlatModifier"):
+            {
+              if (item.selector === "hp") {
+                if (!item.predicate) {
+                  delete character.MaxHitPoints[payload.talentId];
+                }
+
+              }
+
+              if (item.selector === "saving-throw") {
+                if (["circumstance", "status", ""].includes(item.type))
+                  character.modificatorsBonus = character.modificatorsBonus.filter(t => t.talentId !== item.talentId)
+
+              }
+
+              const skill =
+                [
+                  "acrobatics",
+                  "diplomacy",
+                  "intimidation",
+                  "religion",
+                  "nature",
+                  "occultism",
+                  "medicine",
+                  "crafting",
+                  "survival",
+                  "thievery",
+                  "athletics",
+                  "deception",
+                  "arcana",
+                  "society"
+                ]
+
+              if (skill.includes(item.selector) || item.selector === "skill-check") {
+                if (["circumstance", "status", ""].includes(item.type))
+                  character.modificatorsBonus = character.modificatorsBonus.filter(t => t.talentId !== item.talentId)
+
+              }
+
+
+            }
+
+
+        }
 
         switch (item.type) {
           case ("Perception"):
@@ -1053,7 +1173,7 @@ export const mutations = {
       type: type,
       key: key,
       optional: payload.optional,
-      combinded: payload.combined ? payload.combined : false,
+      combinded: payload.combinded ? payload.combinded : false,
       id: source,
       value: 1,
     }
@@ -1069,7 +1189,7 @@ export const mutations = {
       s => s.key === payload.key && s.level === payload.level && s.type === payload.type
     );
 
-    const skill = sameSkills.find(s => s.combined === true) || sameSkills[0];
+    const skill = sameSkills.find(s => s.combinded === true) || sameSkills[0];
 
     character.SkillSheet = character.SkillSheet.filter(s => s !== skill);
 
@@ -2829,6 +2949,9 @@ const getDefaultState = () => ({
     cost: 0,
   },
 
+  //Зрение
+  vision: "Обычное",
+
 
   //Бусты и Понижения
   //1-й уровень, стандартный
@@ -2943,6 +3066,7 @@ const getDefaultState = () => ({
   {
     species: 0,
     class: 0,
+    heritage: 0,
   },
   attributes: {
     strength: 10,
@@ -2995,6 +3119,7 @@ const getDefaultState = () => ({
   Bonus: [],
   TrainedSkillClass: [],
   TrainedAdditionalSkillClass: undefined,
+
   //Окончательный вид
   skills: {
     acrobatics: "U",

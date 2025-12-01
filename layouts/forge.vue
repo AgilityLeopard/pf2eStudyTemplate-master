@@ -441,62 +441,83 @@
               <v-expansion-panel>
                 <v-expansion-panel-header>Расшифровка</v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <span class="font-weight-bold">
-                    <span v-if="skillTotal(skill) < 0"></span>
-                    <span v-else>+</span>
-                    {{ skillTotal(skill) }}
-                  </span>
-                  =
-                  <!-- Бонус владения -->
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <kbd v-bind="attrs" v-on="on">
-                        {{ profiencyRepository[SkillProf(skill.key)] }}
-                      </kbd>
-                    </template>
-                    <span>Вы {{ SkillLabelName(skill.key) }}, что дает вам бонус
-                      {{ profiencyRepository[SkillProf(skill.key)] }}</span>
-                  </v-tooltip>
+                  <v-container class="pa-0 pb-4">
+                    <v-row align="center" dense>
+                      <span class="font-weight-bold">
+                        <span v-if="skillTotal(skill) < 0"></span>
+                        <span v-else>+</span>
+                        {{ skillTotal(skill) }}
+                      </span>
+                      =
+                      <!-- Бонус владения -->
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <kbd v-bind="attrs" v-on="on">
+                            {{ profiencyRepository[SkillProf(skill.key)] }}
+                          </kbd>
+                        </template>
+                        <span>Вы {{ SkillLabelName(skill.key) }}, что дает вам бонус
+                          {{ profiencyRepository[SkillProf(skill.key)] }}</span>
+                      </v-tooltip>
 
-                  +
+                      +
 
-                  <!-- Модификатор атрибута -->
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <kbd v-bind="attrs" v-on="on">
-                        {{ (characterAttributes[skill.attribute] - 10) / 2 }}
-                      </kbd>
-                    </template>
-                    <span>
-                      Модификатор атрибута
-                      {{
-                        attributeRepository.find(
-                          (i) => i.key === skill.attribute
-                        )?.short
-                      }}
-                    </span>
-                  </v-tooltip>
+                      <!-- Модификатор атрибута -->
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <kbd v-bind="attrs" v-on="on">
+                            {{ (characterAttributes[skill.attribute] - 10) / 2 }}
+                          </kbd>
+                        </template>
+                        <span>
+                          Модификатор атрибута
+                          {{
+                            attributeRepository.find(
+                              (i) => i.key === skill.attribute
+                            )?.short
+                          }}
+                        </span>
+                      </v-tooltip>
 
-                  +
+                      +
 
-                  <!-- Бонус уровня (только если есть владение) -->
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <kbd v-bind="attrs" v-on="on">
-                        {{
-                          profiencyRepository[SkillProf(skill.key)] !== 0
-                            ? characterLevel()
-                            : 0
-                        }}
-                      </kbd>
-                    </template>
-                    <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0">Поскольку вы обучены этому навыку, вы
-                      добавляете свой
-                      уровень.</span>
-                    <span v-if="profiencyRepository[SkillProf(skill.key)] === 0">Поскольку вы не обучены этому навыку,
-                      вы не добавляете
-                      свой уровень.</span>
-                  </v-tooltip>
+                      <!-- Бонус уровня (только если есть владение) -->
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <kbd v-bind="attrs" v-on="on">
+                            {{
+                              profiencyRepository[SkillProf(skill.key)] !== 0
+                                ? characterLevel()
+                                : 0
+                            }}
+                          </kbd>
+                        </template>
+                        <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0">Поскольку вы обучены этому навыку,
+                          вы
+                          добавляете свой
+                          уровень.</span>
+                        <span v-if="profiencyRepository[SkillProf(skill.key)] === 0">Поскольку вы не обучены этому
+                          навыку,
+                          вы не добавляете
+                          свой уровень.</span>
+                      </v-tooltip>
+                    </v-row>
+                  </v-container>
+
+                  <v-divider></v-divider>
+
+                  <!-- Блок с модификаторами -->
+                  <v-container class="pa-0 mt-4">
+                    <v-row dense>
+                      <v-col
+                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'skill-check' || finalSkillRepository.flatMap(k => k.key).includes(t.selector))"
+                        :key="char.id || char.selector">
+                        <div v-if="char.selector === skill.key || char.selector === 'skill-check'"
+                          v-html="char.description"></div>
+                        <v-divider></v-divider>
+                      </v-col>
+                    </v-row>
+                  </v-container>
                 </v-expansion-panel-content>
               </v-expansion-panel>
 
@@ -546,41 +567,123 @@
           </v-card-title>
 
           <v-card-text class="pt-4">
-            <v-container class="bg-primary mb-6">
-              <v-row align="start" style="height: 150px">
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Спасбросок </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ save.name }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1">
-                    {{
-                      attributeRepository.find(
-                        (item) => item.key === save.attribute
-                      ).short
-                    }}
-                  </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ (characterAttributes[save.attribute] - 10) / 2 }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Владение </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ profiencyRepository[characterSaving[save.key]] }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Уровень </v-sheet>
-                  <v-sheet v-if="profiencyRepository[characterSaving[save.key]] !== 0" class="text-center pa-2 ma-2">
-                    {{ characterLevel() }}
-                  </v-sheet>
-                  <v-sheet v-else class="text-center pa-2 ma-2"> 0 </v-sheet>
-                </v-col>
-              </v-row>
-            </v-container>
+            <v-expansion-panels multiple>
+              <!-- Описание спасброска -->
+              <v-expansion-panel>
+                <v-expansion-panel-header>Описание спасброска</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <div class="pt-4 pb-2" v-html="save.description"></div>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+
+              <!-- Расшифровка бонусов -->
+              <v-expansion-panel>
+                <v-expansion-panel-header>Расшифровка бонусов</v-expansion-panel-header>
+                <v-expansion-panel-content>
+
+                  <!-- Блок с бонусами -->
+                  <v-container class="pa-0 pb-4">
+                    <v-row align="center" dense>
+                      <span class="font-weight-bold">
+                        <span v-if="saveTotal(save) < 0"></span>
+                        <span v-else>+</span>
+                        {{ saveTotal(save) }}
+                      </span>
+                      =
+                      <!-- Бонус владения -->
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <kbd v-bind="attrs" v-on="on">
+                            {{ profiencyRepository[characterSaving[save.key]] }}
+                          </kbd>
+                        </template>
+                        <span>
+                          Вы {{ SaveLabelName(characterSaving[save.key]) }}, этим спасброском, что дает вам бонус
+                          {{ profiencyRepository[characterSaving[save.key]] }}
+                        </span>
+                      </v-tooltip>
+
+                      +
+
+                      <!-- Модификатор атрибута -->
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <kbd v-bind="attrs" v-on="on">
+                            {{ (characterAttributes[save.attribute] - 10) / 2 }}
+                          </kbd>
+                        </template>
+                        <span>
+                          Модификатор атрибута
+                          {{attributeRepository.find((i) => i.key === save.attribute)?.short}}
+                        </span>
+                      </v-tooltip>
+
+                      +
+
+                      <!-- Бонус уровня -->
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <kbd v-bind="attrs" v-on="on">
+                            {{ profiencyRepository[characterSaving[save.key]] !== 0 ? characterLevel() : 0 }}
+                          </kbd>
+                        </template>
+                        <span v-if="profiencyRepository[characterSaving[save.key]] !== 0">
+                          Поскольку вы владеете этим спасброском, добавляется уровень.
+                        </span>
+                        <span v-else>
+                          Поскольку вы не владеете этим спасброском, уровень не добавляется.
+                        </span>
+                      </v-tooltip>
+                    </v-row>
+                  </v-container>
+
+                  <v-divider></v-divider>
+
+                  <!-- Блок с модификаторами -->
+                  <v-container class="pa-0 mt-4">
+                    <v-row dense>
+                      <v-col
+                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'saving-throw' || SavingRepository.flatMap(t => t.key).includes(t.selector))"
+                        :key="char.id || char.selector">
+                        <div v-if="char.selector === save.key || char.selector === 'saving-throw'"
+                          v-html="char.description">
+                        </div>
+                        <v-divider></v-divider>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+
+              <!-- Timeline -->
+              <v-expansion-panel>
+                <v-expansion-panel-header>Таймлайн спасброска</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-list dense>
+                    <v-list-item v-for="(event, index) in save.event" :key="index">
+                      <v-list-item-content>
+                        <v-list-item-title style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                          ">
+                          <span>{{ event.source }}</span>
+                          <span style="font-size: 0.8rem; font-weight: normal">Уровень {{ event.level }}</span>
+                        </v-list-item-title>
+                        <v-list-item-subtitle style="font-style: italic; font-size: 0.75rem">
+                          {{ event.details }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-icon>
+                        <v-icon :color="event.active ? 'green' : 'grey'">mdi-badge-account</v-icon>
+                      </v-list-item-icon>
+                    </v-list-item>
+                  </v-list>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+
           </v-card-text>
           <v-divider></v-divider>
 
@@ -1134,6 +1237,13 @@ export default {
         this.$route.params.id
       );
     },
+    charactermodificatorsBonus() {
+      return (
+        this.$store.getters["characters/charactermodificatorsBonusById"](
+          this.$route.params.id
+        )
+      );
+    },
     characterSkills() {
       return this.$store.getters["characters/characterSkillsById"](
         this.$route.params.id
@@ -1253,6 +1363,24 @@ export default {
       const lvl = prof !== 0 ? this.characterLevel() : 0;
       return prof + attr + lvl;
     },
+    enhancements() {
+      return this.$store.getters["characters/characterEnhancementsById"](
+        this.$route.params.id
+      );
+    },
+    saveTotal(skill) {
+      const prof = this.profiencyRepository[this.characterSaving[skill.key]];
+      const attr = (this.characterAttributes[skill.attribute] - 10) / 2;
+      const lvl = prof !== 0 ? this.characterLevel() : 0;
+      return prof + attr + lvl;
+    },
+    characterBonus(skill) {
+      const bonus = this.$store.getters["characters/characterBonusById"](
+        this.$route.params.id
+      );
+      return bonus ? bonus.filter(s => s.key === skill) : []
+    },
+
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
         this.$route.params.id
@@ -1278,9 +1406,9 @@ export default {
     },
     ModAttribute(attribute, skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
-
+      const level = this.characterLevel();;
       const prof = this.characterSkillSheet.filter(
-        (s) => s.key === skill
+        (s) => s.key === skill && s.level <= level && s.combinded !== true
       ).length;
 
       const char1 = this.profiencyRepository[this.charSkill[prof]];
@@ -1289,8 +1417,9 @@ export default {
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     SkillProf(skill) {
+      const level = this.characterLevel()
       const prof = this.characterSkillSheet.filter(
-        (s) => s.key === skill
+        (s) => s.key === skill && s.level <= level && s.combinded !== true
       ).length;
 
       switch (prof) {
@@ -1311,8 +1440,9 @@ export default {
     SkillLabelName(skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
 
+      const level = this.characterLevel()
       const prof = this.characterSkillSheet.filter(
-        (s) => s.key === skill
+        (s) => s.key === skill && s.level <= level && s.combinded !== true
       ).length;
 
       switch (prof) {
@@ -1330,11 +1460,31 @@ export default {
           return "нетренированыН";
       }
     },
-    SkillLabel(skill) {
+    SaveLabelName(skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
 
+
+
+      switch (skill) {
+        case "U":
+          return "нетренированы";
+        case "T":
+          return "тренированы";
+        case "E":
+          return "эксперт";
+        case "M":
+          return "мастер";
+        case "L":
+          return "легенда";
+        default:
+          return "нетренированыН";
+      }
+    },
+    SkillLabel(skill) {
+      //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
+      const level = this.characterLevel()
       const prof = this.characterSkillSheet.filter(
-        (s) => s.key === skill
+        (s) => s.key === skill && s.level <= level && s.combinded !== true
       ).length;
 
       switch (prof) {
@@ -1421,6 +1571,8 @@ export default {
         ) === true
       );
     },
+
+
     characterArmor() {
       const wear = this.$store.getters["characters/characterWearById"](
         this.$route.params.id
@@ -1452,11 +1604,22 @@ export default {
         ? this.characterHitPoints["class"]
         : 0;
 
+
+
       const levelClass =
         (classh + (this.characterAttributes["constitution"] - 10) / 2) *
         this.characterLevel();
-      if (levelClass <= 0) return species;
-      else return species + levelClass;
+
+      // сумма кастомных хитов
+      let customHP = 0;
+      for (const key in this.characterHitPoints) {
+        if (!["species", "class", "heritage"].includes(key)) {
+          customHP += this.characterHitPoints[key];
+        }
+      }
+
+      if (levelClass <= 0) return species + customHP;
+      else return species + levelClass + customHP;
     },
     // toggles the drawer variant (mini/full)
     toggleMiniDrawer() {
@@ -1565,9 +1728,23 @@ export default {
         let i = 0;
 
         prof.forEach((s) => {
+          let type = '';
+          switch (s.type) {
+            case 'archetype':
+              type = 'Класс'
+              break;
+            case 'skill':
+              type = 'Навык'
+              break;
+            case 'background':
+              type = 'Предыстория'
+              break;
+
+          }
+
           event.push({
             level: s.level,
-            source: s.type,
+            source: type,
             details: train[i] + "->" + train[i + 1],
           });
           i++;
@@ -1589,6 +1766,54 @@ export default {
     },
     openSaves(save) {
       this.save = save;
+      const event = [];
+      const train = {
+        "U": "Нетреннированый",
+        "T": "Тренированный",
+        "E": "Эксперт",
+        "M": "Мастер",
+        "L": "Легенда",
+      };
+
+
+      const level = this.characterLevel();
+      const prof = this.enhancements()
+        .filter((s) => s.key === save.key).filter(s => s.level <= level).sort((a, b) => b.level - a.level);
+
+      if (prof) {
+        let i = 0;
+
+        prof.forEach((s) => {
+          let type = '';
+          switch (s.source) {
+            case 'archetype':
+              type = 'Класс'
+              break;
+            case 'skill':
+              type = 'Навык'
+              break;
+            case 'background':
+              type = 'Предыстория'
+              break;
+
+          }
+          event.push({
+            level: s.level,
+            source: type,
+            details: train[s.upgrade],
+          });
+          i++;
+        });
+      }
+
+      const save1 = {
+        ...save,
+        // actions: actions,
+        event: event,
+      };
+
+      this.save = save1;
+
       this.savesDialog = true;
     },
     closeSaves() {
@@ -1614,7 +1839,9 @@ export default {
 
     getSkillRank(skillKey) {
       const skillSheet = this.characterSkillSheet || [];
-      return skillSheet.filter((s) => s.key === skillKey).length;
+      const level = this.characterLevel()
+
+      return skillSheet.filter((s) => s.key === skillKey && s.level <= level && s.combinded !== true).length;
     },
 
     getSkillRankName(skillKey) {
@@ -1944,6 +2171,8 @@ export default {
   padding: 2 4px !important;
   /* сжатая внутренняя область */
 }
+
+
 
 /*
       <v-expansion-panels multiple>
