@@ -200,12 +200,13 @@
           <strong>Требования:</strong>
           {{Object.values(item.prerequisites).map(p => p.value).join(', ')}}
         </div>
-        <div class="pt-4 pb-2 description" v-if="item.description" v-html="item.description"></div>
+
 
       </div>
 
 
-      <div class="pt-4 pb-2 power-description" v-if="item.powerDescription" v-html="item.powerDescription"></div>
+      <!-- <div class="pt-4 pb-2 power-description" v-if="item.powerDescription" v-html="item.powerDescription"></div> -->
+      <div class="pt-4 pb-2 description" v-if="item.description" v-html="item.description"></div>
 
       <div v-if="item.source" class="gear-footer">
         <div class="gear-source">{{ item.source.book }}</div>

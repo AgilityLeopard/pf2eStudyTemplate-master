@@ -69,7 +69,7 @@
             <template v-slot:item.damage="{ item }">
               <span>
                 {{ damageModifier(item) }}
-                {{ typeDamage(item.damageOrig.damageType) }}
+
               </span>
             </template>
 
@@ -113,20 +113,23 @@
           <!-- Доспехи -->
 
           <v-dialog v-model="WeaponSearchDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
-            <wargear-search v-if="
+            <div>
+              <v-alert v-if="alertMoney" type="error" dense text border="left">
+                У вас недостаточно денег на покупку
+              </v-alert>
 
-              wargearList
+              <wargear-search v-if="wargearList" @cancel="WeaponSearchDialog = false"
+                :repository="wargearList.filter((item) => item.type === 'weapon')" type="weapon" @select="add" />
 
-            " @cancel="WeaponSearchDialog = false" :repository="wargearList.filter((item) => item.type === 'weapon')"
-              type="weapon" @select="add" />
+            </div>
           </v-dialog>
+
+
 
           <v-dialog v-model="weaponEditorDialog" :value="Weapon" width="600px" scrollable
             :fullscreen="$vuetify.breakpoint.xsOnly">
             <v-card>
-              <v-alert :value="alertMoney" type="error" text dense border="left">
-                У вас недостаточно денег на покупку
-              </v-alert>
+
 
               <v-alert :value="alert" type="error" text dense border="left">
                 Количество рун больше мощи оружия
@@ -708,6 +711,12 @@
 
           <v-dialog v-model="ArmorSearchDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
             <v-col :cols="12" v-if="wargearList">
+
+              <v-alert v-if="alertMoney" type="error" dense text border="left">
+                У вас недостаточно денег на покупку
+              </v-alert>
+
+
               <wargear-search @cancel="ArmorSearchDialog = false" type="armor" :repository="wargearList.filter((item) =>
                 ['armor', 'shield'].includes(item.type)
               )
@@ -770,6 +779,10 @@
 
         <v-dialog v-model="ConsumableSearchDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
           <v-col :cols="12" v-if="wargearList">
+
+            <v-alert v-if="alertMoney" type="error" dense text border="left">
+              У вас недостаточно денег на покупку
+            </v-alert>
 
 
             <wargear-search @cancel="ConsumableSearchDialog = false" type="consumable" :repository="wargearList.filter((item) => item.type.includes('consumable'))
@@ -842,6 +855,9 @@
 
         <v-dialog v-model="GearSearchDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
           <v-col :cols="12" v-if="wargearList">
+            <v-alert v-if="alertMoney" type="error" dense text border="left">
+              У вас недостаточно денег на покупку
+            </v-alert>
 
 
             <wargear-search @cancel="GearSearchDialog = false" type="other" :repository="wargearList.filter(
@@ -1902,6 +1918,7 @@ export default {
       //   this.ConsumableSearchDialog = false;
       // }
       this.alertMoney = false;
+      let gear1;
       if (buy === true) {
         this.alertMoney = false;
 
@@ -1920,16 +1937,18 @@ export default {
             value,
           });
 
-          const gear1 = { ...gear, damageOrig: gear.damage };
+          gear1 = { ...gear, damageOrig: gear.damage };
 
-          this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
+
         }
       }
       else {
-        const gear1 = { ...gear, damageOrig: gear.damage };
+        gear1 = { ...gear, damageOrig: gear.damage };
 
-        this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
+
       }
+
+      this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
       // Закрываем окна
       this.WeaponSearchDialog = false;
       this.ArmorSearchDialog = false;
@@ -2046,6 +2065,7 @@ export default {
       const mod = (modAbility - 10) / 2;
       const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
 
+      //Для вычисления специализаций
       const spec = enc.find(s => s.type === "Weapon Specialization") ? enc.find(s => s.type === "Weapon Specialization") : "";
       const specGreater = enc.find(s => s.type === "greater-weapon-specialization") ? enc.find(s => s.type === "greater-weapon-specialization") : "";
 
@@ -2053,10 +2073,22 @@ export default {
       const damGreaterSpec = specGreater !== "" ? specGreater.bonusDamage[this.skillAttack[gear.category]] : 0;
       const modSpec = damGreaterSpec !== 0 ? damGreaterSpec : damSpec;
 
-      //const runePot = gear.runeWeapon.potency ? gear.runeWeapon.potency : 0;
-      const damage = gear.damage?.die ? gear.damage.dice + gear.damage.die : gear.damage;
+      //Для руны мощи
+      const runeStriking = gear.runeWeapon.striking ? gear.runeWeapon.striking : 0;
+      const damage = gear.damage?.die ? (gear.damage.dice + runeStriking) + gear.damage.die : gear.damage;
+      const type = this.DamageType.find(t => t.key === gear.damageOrig.damageType) ? this.DamageType.find(t => t.key === gear.damageOrig.damageType).name : gear.damageOrig.damageType;
 
-      return damage.toString() + (mod + modSpec < 0 ? " " : " + ") + (mod + modSpec).toString();
+      ///Руны свойств
+      let damageProperty = " ";
+      const runeList = this.WeaponRuneProperty;
+      gear.runeWeapon.property.forEach(rune => {
+        const damageRune = runeList.find(t => t.key === rune.toLowerCase());
+        if (damageRune) {
+          damageProperty = damageProperty + " + " + damageRune.damage + " " + damageRune.type + " ";
+        }
+      })
+
+      return damage.toString() + (mod + modSpec < 0 ? " " : " + ") + (mod + modSpec).toString() + " " + type + damageProperty;
     },
 
     enhancements() {

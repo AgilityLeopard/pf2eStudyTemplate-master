@@ -760,12 +760,15 @@
 
                             <td class="text-center pa-1 small">
                               <div v-if="item.damage">
-                                <span>{{
+                                <span>
+                                  {{ damageModifier(item) }}
+
+                                  <!-- {{
                                   item.damage?.die
-                                    ? item.damage.dice + item.damage.die
-                                    : item.damage
-                                }}
-                                  {{ typeDamage(item.damageOrig.damageType) }}
+                                  ? item.damage.dice + item.damage.die
+                                  : item.damage
+                                  }}
+                                  {{ typeDamage(item.damageOrig.damageType) }} -->
                                 </span>
                               </div>
                             </td>
@@ -3818,6 +3821,37 @@ export default {
     },
     typeDamage(type) {
       return this.DamageType.find(t => t.key === type) ? this.DamageType.find(t => t.key === type).name : type;
+    },
+    damageModifier(gear) {
+
+      const modAbility = gear.range === null ? this.characterAttributes["strength"] : this.characterAttributes["dexterity"];
+      const mod = (modAbility - 10) / 2;
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
+
+      //Для вычисления специализаций
+      const spec = enc.find(s => s.type === "Weapon Specialization") ? enc.find(s => s.type === "Weapon Specialization") : "";
+      const specGreater = enc.find(s => s.type === "greater-weapon-specialization") ? enc.find(s => s.type === "greater-weapon-specialization") : "";
+
+      const damSpec = spec !== "" ? spec.bonusDamage[this.skillAttack[gear.category]] : 0;
+      const damGreaterSpec = specGreater !== "" ? specGreater.bonusDamage[this.skillAttack[gear.category]] : 0;
+      const modSpec = damGreaterSpec !== 0 ? damGreaterSpec : damSpec;
+
+      //Для руны мощи
+      const runeStriking = gear.runeWeapon.striking ? gear.runeWeapon.striking : 0;
+      const damage = gear.damage?.die ? (gear.damage.dice + runeStriking) + gear.damage.die : gear.damage;
+      const type = this.DamageType.find(t => t.key === gear.damageOrig.damageType) ? this.DamageType.find(t => t.key === gear.damageOrig.damageType).name : gear.damageOrig.damageType;
+
+      ///Руны свойств
+      let damageProperty = " ";
+      const runeList = this.WeaponRuneProperty;
+      gear.runeWeapon.property.forEach(rune => {
+        const damageRune = runeList.find(t => t.key === rune.toLowerCase());
+        if (damageRune) {
+          damageProperty = damageProperty + " + " + damageRune.damage + " " + damageRune.type + " ";
+        }
+      })
+
+      return damage.toString() + (mod + modSpec < 0 ? " " : " + ") + (mod + modSpec).toString() + " " + type + damageProperty;
     },
     groupName(name) {
       return this.weaponGroup.find(item => item.group === name).name;

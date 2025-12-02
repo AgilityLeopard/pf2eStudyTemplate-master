@@ -1190,7 +1190,8 @@ export default {
         this.archetype = data;
       }
       this.selectedClassBoost = this.characterClassBoost;
-      this.selectedClassSkill = this.characterClassSkill;
+
+      this.selectedClassSkill = this.characterSkillSheet().find(s => s.level === 1 && s.type === 'class');
       this.ClassAttribute = this.attributeRepository.filter(boost => this.archetype.keyAbility.some((m) => boost.key.includes(m)));
       this.ClassSkill = this.skillRepository.filter(boost => this.archetype.skillTrainedChoice.some((m) => boost.key.includes(m)));
 

@@ -574,6 +574,7 @@ export default {
       loading: false,
       talentGroupFilterHelp: false,
       selectedTalentGroups: ['Talents'],
+
       talentGroupList: [
         {
           source: {
@@ -855,7 +856,7 @@ export default {
       // const list = [];
       let list = this.talentList.filter(s => s.system.category === type || (type === 'general' && s.system.category === 'skill') || (type === 'adaptation' && s.system.category === 'class') || (type === 'stylish' && s.system.category === 'skill' /*&& skill.includes(s.skill)*/));
       const sou = this.sources;
-      list = this.talentList.filter(s => sou.includes(s.source.key))
+      list = list.filter(s => sou.includes(s.source.key))
       const lowercaseKeywords = this.finalKeywords.map(k => k.toLowerCase());
       if (type === 'class' || type === 'ancestry')
         list = list.filter(item =>
