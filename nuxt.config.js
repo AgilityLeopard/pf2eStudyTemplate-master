@@ -142,9 +142,10 @@ module.exports = {
     { src: "~/plugins/vuex-persist", ssr: false },
     { src: "~/plugins/vue-croppa.js", ssr: false },
     { src: '~/plugins/vue-quill-editor.js', ssr: false },
+    { src: '~/plugins/router-loader.js', ssr: false },
     "~/plugins/filters.js",
     "~/plugins/hint-box-component.js",
-    '~/plugins/router-loader.js'
+
   ],
   /*
    ** Nuxt.js dev-modules
