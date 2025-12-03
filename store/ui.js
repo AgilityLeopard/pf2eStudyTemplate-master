@@ -5,6 +5,10 @@ export const state = () => ({
 
 export const mutations = {
     SET_LOADING(state, value) {
-        state.loading = value
+        state.loading = !!value
     }
+}
+
+export const getters = {
+    loading: (s) => s.loading
 }

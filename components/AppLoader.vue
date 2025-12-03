@@ -1,11 +1,9 @@
 <template>
     <transition name="fade">
-        <div v-if="visible" class="loader-overlay">
+        <div v-show="visible" class="loader-overlay" aria-hidden="!visible">
             <div class="loader-box">
-                <div class="loader-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div class="dots">
+                    <span v-for="n in 3" :key="n" :style="{ animationDelay: (n * 120) + 'ms' }"></span>
                 </div>
                 <div class="loader-text">Загрузка</div>
             </div>
