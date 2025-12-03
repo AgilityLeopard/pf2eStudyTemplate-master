@@ -235,6 +235,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$store.commit('ui/SET_LOADING', false)
+  },
 };
 </script>
 
