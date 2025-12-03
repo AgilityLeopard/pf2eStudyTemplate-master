@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <AppLoader :visible="$store.state.ui.loading" />
     <v-navigation-drawer v-model="drawer.open" app :clipped="drawer.clipped" :fixed="drawer.fixed"
       :permanent="drawer.permanent" :mini-variant="drawer.mini" width="320">
       <div class="compact-list">
@@ -824,6 +825,7 @@
 
         <v-row justify="center" v-if="!isOutdated">
           <v-col :cols="12" :sm="10" :md="10" :lg="7">
+
             <nuxt />
           </v-col>
         </v-row>
@@ -859,12 +861,14 @@ import DefaultFooter from "~/components/DefaultFooter.vue";
 import ToolbarAccountActions from "~/components/user/ToolbarAccountActions.vue";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 import SluggerMixin from "~/mixins/SluggerMixin";
+import AppLoader from '~/components/AppLoader.vue';
 
 export default {
   name: "Forge",
   components: {
     DefaultFooter,
     ToolbarAccountActions,
+    AppLoader
   },
   mixins: [StatRepositoryMixin, SluggerMixin],
   data() {

@@ -1,15 +1,8 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-app>
-    <v-navigation-drawer
-      v-model="drawer.open"
-      :clipped="drawer.clipped"
-      :fixed="drawer.fixed"
-      :permanent="drawer.permanent"
-      :mini-variant="drawer.mini"
-      app
-      right
-      disable-resize-watcher
-    >
+    <AppLoader :visible="$store.state.ui.loading" />
+    <v-navigation-drawer v-model="drawer.open" :clipped="drawer.clipped" :fixed="drawer.fixed"
+      :permanent="drawer.permanent" :mini-variant="drawer.mini" app right disable-resize-watcher>
       <v-list>
         <v-list-item>
           <v-btn icon href="">
@@ -24,13 +17,7 @@
                 <v-list-item-subtitle>{{ item.subtitle }}</v-list-item-subtitle>
               </v-list-item-content>
             </template>
-            <v-list-item
-              class="ml-4"
-              v-for="child in item.children"
-              :key="child.to"
-              :to="child.to"
-              nuxt
-            >
+            <v-list-item class="ml-4" v-for="child in item.children" :key="child.to" :to="child.to" nuxt>
               <v-list-item-title>{{ child.title }}</v-list-item-title>
             </v-list-item>
           </v-list-group>
@@ -49,18 +36,9 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      dark
-      dense
-      style="background-color: #212121"
-      :fixed="toolbar.fixed"
-      :clipped-left="toolbar.clippedLeft"
-    >
-      <v-container
-        class="pa-0 fill-height"
-        :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }"
-      >
+    <v-app-bar app dark dense style="background-color: #212121" :fixed="toolbar.fixed"
+      :clipped-left="toolbar.clippedLeft">
+      <v-container class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
         <v-toolbar-title>
           <nuxt-link to="/" class="title brand-logo brand-logo__text">
             Shadow Tales (Альфа версия)
@@ -70,18 +48,10 @@
         <v-spacer />
 
         <v-toolbar-items>
-          <v-btn
-            class="d-none d-md-inline-flex"
-            icon
-            href="https://discord.gg/5rEDvSSXSZ"
-          >
+          <v-btn class="d-none d-md-inline-flex" icon href="https://discord.gg/5rEDvSSXSZ">
             <v-icon>mdi-telegram</v-icon>
           </v-btn>
-          <v-btn
-            class="d-none d-md-inline-flex"
-            icon
-            href="https://discord.gg/5rEDvSSXSZ"
-          >
+          <v-btn class="d-none d-md-inline-flex" icon href="https://discord.gg/5rEDvSSXSZ">
             <v-icon>mdi-discord</v-icon>
           </v-btn>
           <v-btn icon @click="toggleDarkTheme">
@@ -95,19 +65,9 @@
 
     <v-main>
       <v-toolbar dense class="d-none d-md-block">
-        <v-container
-          class="pa-0 fill-height"
-          :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }"
-        >
+        <v-container class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
           <v-toolbar-items>
-            <v-btn
-              v-for="item in navigation"
-              :key="item.to"
-              smallt
-              text
-              nuxt
-              :to="item.to"
-            >
+            <v-btn v-for="item in navigation" :key="item.to" smallt text nuxt :to="item.to">
               {{ item.title }}
             </v-btn>
           </v-toolbar-items>
@@ -115,6 +75,7 @@
       </v-toolbar>
 
       <v-container>
+
         <nuxt />
       </v-container>
     </v-main>
@@ -126,11 +87,13 @@
 <script>
 import DefaultFooter from "~/components/DefaultFooter.vue";
 import ToolbarAccountActions from "~/components/user/ToolbarAccountActions.vue";
+import AppLoader from '~/components/AppLoader.vue';
 
 export default {
   components: {
     DefaultFooter,
     ToolbarAccountActions,
+    AppLoader
   },
   head() {
     return {
@@ -145,6 +108,7 @@ export default {
   data() {
     return {
       darkTheme: false,
+      loading: false,
       navigation: [
         // { to: '/vault', title: 'Vault', subtitle: 'Browse Homebrews', icon: '' },
         {
@@ -234,6 +198,11 @@ export default {
       },
     };
   },
+  // mounted() {
+  //   // показываем лоадер при переходе
+  //   this.$nuxt.$on('route:start', () => { this.loading = true })
+  //   this.$nuxt.$on('route:end', () => { this.loading = false })
+  // },
   computed: {
     theme() {
       return this.$store.getters["theme"];

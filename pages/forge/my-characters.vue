@@ -1,5 +1,6 @@
 <template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
+    <AppLoader :visible="$store.state.ui.loading" />
     <dod-default-breadcrumbs :items="breadcrumbItems" />
 
     <v-row>
@@ -8,12 +9,10 @@
       <v-col :cols="12">
         <h2 class="headline">
           Мои персонажи:
-          <span style="color: #1976d2"
-            >{{
-              characterSets.filter((i) => i !== undefined).length
-            }}
-            Персонаж</span
-          >
+          <span style="color: #1976d2">{{
+            characterSets.filter((i) => i !== undefined).length
+          }}
+            Персонаж</span>
         </h2>
 
         <v-btn large color="primary" @click="newCharacter">
@@ -30,24 +29,13 @@
         </v-btn>
 
         <!-- Невидимый input для выбора файла -->
-        <input
-          type="file"
-          ref="fileInput"
-          accept=".json"
-          style="display: none"
-          @change="importJson"
-        />
+        <input type="file" ref="fileInput" accept=".json" style="display: none" @change="importJson" />
 
         <!-- <v-btn large color="primary" outlined nuxt to="/forge/species">
           Custom Species
         </v-btn> -->
 
-        <v-dialog
-          v-model="importDialog"
-          width="600px"
-          scrollable
-          :fullscreen="$vuetify.breakpoint.xsOnly"
-        >
+        <v-dialog v-model="importDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
           <v-card class="pa-0">
             <v-card-title style="background-color: #262e37; color: #fff">
               <span>Импорт персонажа</span>
@@ -55,31 +43,18 @@
               <v-icon dark @click="importDialog = false">close</v-icon>
             </v-card-title>
             <v-card-text>
-              <v-textarea
-                class="mt-4"
-                v-model="importSnippet"
-                persistent-hint
-                dense
-                hint="Вставьте строчку экспоритруемого персонажа сюда"
-              ></v-textarea>
+              <v-textarea class="mt-4" v-model="importSnippet" persistent-hint dense
+                hint="Вставьте строчку экспоритруемого персонажа сюда"></v-textarea>
             </v-card-text>
             <v-card-actions>
-              <v-btn
-                block
-                color="success"
-                @click="importCharacter(importSnippet)"
-                :disabled="!importSnippet"
-                >import</v-btn
-              >
+              <v-btn block color="success" @click="importCharacter(importSnippet)"
+                :disabled="!importSnippet">import</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-col>
 
-      <v-col
-        v-if="characterSets.filter((i) => i !== undefined).length <= 0"
-        :cols="12"
-      >
+      <v-col v-if="characterSets.filter((i) => i !== undefined).length <= 0" :cols="12">
         <v-alert type="info" prominent text border="left" color="primary">
           Осталось только <strong>Создать персонажа</strong> и начать его
           билдить
@@ -112,27 +87,15 @@
         </v-row>
 
         <v-row>
-          <v-col
-            v-for="character in characterSets.filter((i) => i !== undefined)"
-            v-if="characterSets"
-            :key="character.id"
-            :cols="12"
-            :sm="6"
-            :md="6"
-            :lg="4"
-          >
+          <v-col v-for="character in characterSets.filter((i) => i !== undefined)" v-if="characterSets"
+            :key="character.id" :cols="12" :sm="6" :md="6" :lg="4">
             <v-card v-if="character">
               <div class="card">
                 <div class="card__image-container">
-                  <div
-                    class="card__image"
-                    style="border-radius: 50%"
-                    :style="{
-                      backgroundImage:
-                        'url(' + characterAvatar(character.id) + ')',
-                    }"
-                    loading
-                  />
+                  <div class="card__image" style="border-radius: 50%" :style="{
+                    backgroundImage:
+                      'url(' + characterAvatar(character.id) + ')',
+                  }" loading />
                 </div>
 
                 <v-card-text class="pa-0">
@@ -140,40 +103,26 @@
                     <h3>{{ characterName(character.id) }}</h3>
 
                     <div v-if="isLegacyVersion(character.id)">
-                      <v-btn
-                        @click="openExportDialog(character.id)"
-                        color="warning"
-                        small
-                      >
+                      <v-btn @click="openExportDialog(character.id)" color="warning" small>
                         <v-icon left small>cloud_download</v-icon>
                         Экспортировать Легаси
                       </v-btn>
                     </div>
-                    <div
-                      v-else-if="
-                        characterVersion(character.id) < builderVersion
-                      "
-                    >
-                      <v-btn
-                        @click="migrateCharacter(character.id)"
-                        color="warning"
-                        x-small
-                      >
+                    <div v-else-if="
+                      characterVersion(character.id) < builderVersion
+                    ">
+                      <v-btn @click="migrateCharacter(character.id)" color="warning" x-small>
                         <v-icon left small> cloud_upload </v-icon>
                         Импорт (v{{ characterVersion(character.id) }})
                       </v-btn>
                     </div>
 
-                    <div
-                      v-if="
-                        characterSpeciesLabel(character.id) &&
-                        characterArchetypeLabel(character.id)
-                      "
-                    >
-                      <span
-                        >{{ characterSpeciesLabel(character.id) }} •
-                        {{ characterArchetypeLabel(character.id) }}</span
-                      >
+                    <div v-if="
+                      characterSpeciesLabel(character.id) &&
+                      characterArchetypeLabel(character.id)
+                    ">
+                      <span>{{ characterSpeciesLabel(character.id) }} •
+                        {{ characterArchetypeLabel(character.id) }}</span>
                     </div>
 
                     <div>
@@ -192,48 +141,23 @@
               <v-divider />
 
               <v-card-actions>
-                <v-btn
-                  nuxt
-                  :to="`/forge/characters/${character.id}/builder/setting`"
-                  color="primary"
-                  x-small
-                  text
-                  :disabled="characterVersion(character.id) < builderVersion"
-                >
+                <v-btn nuxt :to="`/forge/characters/${character.id}/builder/setting`" color="primary" x-small text
+                  :disabled="characterVersion(character.id) < builderVersion">
                   <v-icon left small> edit </v-icon>
                   Изменить
                 </v-btn>
-                <v-btn
-                  nuxt
-                  :to="`/forge/characters/${character.id}`"
-                  color="primary"
-                  text
-                  x-small
-                  :disabled="characterVersion(character.id) < builderVersion"
-                >
+                <v-btn nuxt :to="`/forge/characters/${character.id}`" color="primary" text x-small
+                  :disabled="characterVersion(character.id) < builderVersion">
                   <v-icon small left> description </v-icon>
                   Просмотр
                 </v-btn>
-                <v-btn
-                  nuxt
-                  :to="`/forge/characters/${character.id}/builder/print`"
-                  target="_blank"
-                  color="primary"
-                  class="d-none d-md-flex"
-                  text
-                  x-small
-                  v-if="false"
-                  :disabled="characterVersion(character.id) < builderVersion"
-                >
+                <v-btn nuxt :to="`/forge/characters/${character.id}/builder/print`" target="_blank" color="primary"
+                  class="d-none d-md-flex" text x-small v-if="false"
+                  :disabled="characterVersion(character.id) < builderVersion">
                   <v-icon small left>print</v-icon>Print
                 </v-btn>
 
-                <v-btn
-                  color="primary"
-                  text
-                  x-small
-                  @click="openExportDialog(character.id)"
-                >
+                <v-btn color="primary" text x-small @click="openExportDialog(character.id)">
                   <v-icon small left>cloud_download</v-icon>
                   Экспорт
                 </v-btn>
@@ -242,24 +166,14 @@
                   <input type="file" @change="importJson" accept=".json" />
                 </div> -->
 
-                <v-btn
-                  color="error"
-                  text
-                  small
-                  @click="openDeleteDialog(character.id)"
-                >
+                <v-btn color="error" text small @click="openDeleteDialog(character.id)">
                   <v-icon small>delete</v-icon>Удалить
                 </v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
 
-          <v-dialog
-            v-model="exportDialog"
-            width="600px"
-            scrollable
-            :fullscreen="$vuetify.breakpoint.xsOnly"
-          >
+          <v-dialog v-model="exportDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
             <v-card class="pa-0">
               <v-card-title style="background-color: #262e37; color: #fff">
                 <span>Экспортировать персонажа</span>
@@ -267,22 +181,13 @@
                 <v-icon dark @click="exportDialog = false"> close </v-icon>
               </v-card-title>
               <v-card-text>
-                <v-textarea
-                  id="exportSnippetId"
-                  rows="10"
-                  readonly
-                  class="mt-4"
-                  persistent-hint
-                  dense
-                  hint="Персонаж импортируется без аватара"
-                  v-model="exportSnippet"
-                ></v-textarea>
+                <v-textarea id="exportSnippetId" rows="10" readonly class="mt-4" persistent-hint dense
+                  hint="Персонаж импортируется без аватара" v-model="exportSnippet"></v-textarea>
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn outlined block color="primary" @click="copyToClipboard"
-                  ><v-icon>file_copy</v-icon>Скопируйте и сохраните</v-btn
-                >
+                <v-btn outlined block color="primary" @click="copyToClipboard"><v-icon>file_copy</v-icon>Скопируйте и
+                  сохраните</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -301,9 +206,7 @@
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
-                <v-btn block color="primary" @click="deleteCharacter"
-                  >Удалить</v-btn
-                >
+                <v-btn block color="primary" @click="deleteCharacter">Удалить</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -314,13 +217,15 @@
 </template>
 
 <script lang="js">
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import SluggerMixin from '~/mixins/SluggerMixin';
 import DodDefaultBreadcrumbs from '../../components/DodDefaultBreadcrumbs';
+import AppLoader from '~/components/AppLoader.vue';
+
 
 export default {
   name: 'MyCharacters',
-  components: { DodDefaultBreadcrumbs },
+  components: { DodDefaultBreadcrumbs, AppLoader },
   mixins: [
     SluggerMixin,
   ],
@@ -411,16 +316,16 @@ export default {
       characterSets: 'characters/characterSets',
     }),
     hasLegacyCharacters() {
-      if ( this.characterIds === undefined ) {
+      if (this.characterIds === undefined) {
         return false;
       }
-      return this.characterIds.map( (id) => this.characterVersion(id) ).some( (version) => version <= 6 );
+      return this.characterIds.map((id) => this.characterVersion(id)).some((version) => version <= 6);
     },
     hasUnmigratedCharacters() {
-      if ( this.characterIds === undefined ) {
+      if (this.characterIds === undefined) {
         return false;
       }
-      return this.characterIds.map( (id) => this.characterVersion(id) ).some( (version) => (version < this.builderVersion) && (version > 6) );
+      return this.characterIds.map((id) => this.characterVersion(id)).some((version) => (version < this.builderVersion) && (version > 6));
     },
   },
   methods: {
@@ -428,13 +333,13 @@ export default {
       this.$refs.fileInput.click();
     },
     migrateAllCharacters() {
-      this.migrateCharacters( this.characterIds );
+      this.migrateCharacters(this.characterIds);
     },
-    migrateCharacters(ids){
-      ids.forEach( (id) => this.migrateCharacter(id));
+    migrateCharacters(ids) {
+      ids.forEach((id) => this.migrateCharacter(id));
     },
     migrateCharacter(id) {
-      this.$store.dispatch('characters/migrate', {characterId:id});
+      this.$store.dispatch('characters/migrate', { characterId: id });
     },
     characterVersion(id) {
       return this.$store.getters['characters/characterVersionById'](id);
@@ -474,7 +379,7 @@ export default {
     },
     characterAvatar(id) {
       const customAvatarUrl = this.$store.getters['characters/characterAvatarUrlById'](id);
-      if ( customAvatarUrl ) {
+      if (customAvatarUrl) {
         return customAvatarUrl;
       }
 
@@ -514,7 +419,7 @@ export default {
       this.$store.commit('characters/create', newCharId);
       this.$ga.event('New Character', 'click', newCharId, 10);
     },
-    openDeleteDialog(id){
+    openDeleteDialog(id) {
       this.deleteId = id;
       this.deleteDialog = true;
     },
@@ -526,20 +431,20 @@ export default {
     },
     openExportDialog(id) {
       const characterJsonString = this.$store.getters['characters/characterStateJsonById'](id);
-// Создаём Blob из JSON строки
-  const blob = new Blob([characterJsonString], { type: 'application/json' });
+      // Создаём Blob из JSON строки
+      const blob = new Blob([characterJsonString], { type: 'application/json' });
 
-  // Создаём ссылку для скачивания
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `character_${id}.json`; // имя файла
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+      // Создаём ссылку для скачивания
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `character_${id}.json`; // имя файла
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
 
-  // Освобождаем объект URL
-  URL.revokeObjectURL(url);
+      // Освобождаем объект URL
+      URL.revokeObjectURL(url);
       // this.exportSnippet = btoa(unescape(encodeURIComponent(characterJsonString)));
       // this.exportDialog = true;
     },
@@ -610,8 +515,7 @@ export default {
     //background-color: #424242;
   }
 
-  &__content-subtitle {
-  }
+  &__content-subtitle {}
 
   &__content-footer {
     position: absolute;

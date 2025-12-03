@@ -1277,7 +1277,11 @@
                       (i) => i === descriptionSection.selection
                     )
                       ">
-                      <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)">
+                      <!-- Встроенный компонент для отображения редактора -->
+                      <quill-editor v-model="characterNotesEditorModel" />
+                      <!-- <v-btn small color="success" @click="saveNote">Save</v-btn> -->
+
+                      <!-- <div class="mb-1" style="border-bottom: 1px solid rgba(0, 0, 0, 0.12)">
                         <span class="body-2 red--text">
                           Notes
                           <v-icon v-if="!characterNotesShowEditor" small @click="characterNotesOpenEditor">edit</v-icon>
@@ -1290,7 +1294,11 @@
                         <v-btn @click="characterNotesSave" small color="success">Save</v-btn>
                       </div>
                       <div v-else-if="characterNotes" class="caption" v-html="characterNotes"></div>
-                      <span v-else class="caption" @click="characterNotesOpenEditor">Добавить заметики</span>
+                      <span v-else class="caption" @click="characterNotesOpenEditor">Добавить заметики</span> -->
+
+                      <!-- <div>
+                        <NotesApp v-model="characterNotes" />
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -1554,6 +1562,8 @@ import { marked } from 'marked';
 import traitView from '~/components/TraitView';
 import { PDFDocument } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
+import NotesApp from '~/components/NotesApp.vue';
+
 
 export default {
   name: 'in-app-view',
@@ -1570,7 +1580,8 @@ export default {
     DodDefaultBreadcrumbs,
     DodCorruptionManager,
     GridSheet,
-    traitView
+    traitView,
+    NotesApp
   },
   props: [],
   head() {
@@ -1604,6 +1615,7 @@ export default {
   },
   data() {
     return {
+
       maxBullets: 10,      // размер обоймы
       currentBullets: 5,    // текущее количество патронов
       attributeHeaders: [
@@ -3177,6 +3189,7 @@ export default {
       /* */
 
       /* Черты */
+      const skillFeat = ''
       this1.talents.forEach(item => {
         if (item.category === 'ancestry') {
           const skillPlace = item.level === '1' ? 'ANCESTRY FEAT' : 'SKILL FEAT ' + item.level + '-1';
@@ -3186,10 +3199,14 @@ export default {
         }
 
         if (item.category === 'class') {
-          const skillPlace = 'CLASS FEAT ' + item.level + '-1';
-          const skill = form.getTextField(skillPlace);
-          skill.setText(String(item.name));
-          skill.updateAppearances(customFont);
+          const skillPlace = item.level === '1' ? 'CLASS FEATS & FEATURES' : 'CLASS FEAT ' + item.level + '-1';
+          if (skillPlace === 'CLASS FEATS & FEATURES')
+            skillFeat = item.name;
+          else {
+            const skill = form.getTextField(skillPlace);
+            skill.setText(String(item.name));
+            skill.updateAppearances(customFont);
+          }
         }
 
         if (item.category === 'skill' && item.level !== '1') {
@@ -3201,6 +3218,80 @@ export default {
 
 
       })
+
+      const excludeFeature = [];
+      const classFeature = [];
+      classFeature.push({
+        place: 'CLASS FEATS & FEATURES',
+        name: skillFeat
+      })
+
+      /* Классовая особенность */
+      this1.characterArchetype.archetypeFeatures.forEach(item => {
+
+        if (item.level === '1') {
+          // skillFeat = '; ' + item.name;
+          excludeFeature.push(item.name);
+          classFeature.push({
+            place: 'CLASS FEATS & FEATURES',
+            name: item.name
+          })
+        }
+        else {
+          // if (!excludeFeature.includes(item.name)) {
+          excludeFeature.push(item.name);
+          const skillPlace = 'CLASS FEAT ' + item.level + '-2';
+          classFeature.push({
+            place: skillPlace,
+            name: item.name
+          })
+
+          // const skill = form.getTextField(skillPlace);
+          // skill.setText(String(item.name));
+          // skill.updateAppearances(customFont);
+          // }
+        }
+
+      })
+
+      let t = classFeature.reduce((acc, { place, name }) => {
+        acc[place] = acc[place] ? `${acc[place]}; ${name}` : name;
+        return acc;
+      }, {});
+
+      const grouped = Object.entries(t).map(
+        ([place, name]) => ({ place, name })
+      );
+
+      grouped.forEach(item => {
+        const skill = form.getTextField(item.place);
+        skill.setText(String(item.name));
+        skill.updateAppearances(customFont);
+      })
+
+
+
+      /* */
+      // Скиллы
+
+      this1.skills.forEach(skill => {
+        const char1 = this1.SkillsTrained[this1.characterSkills[skill.key]];
+        const char2 = (this1.characterAttributesEnhanced[skill.attribute.toLowerCase()] - 10) / 2;
+        const char3 = char1 === 0 ? 0 : this.characterLevel();
+
+        // Общее количество
+        const total = parseInt(char1) + parseInt(char2) + parseInt(char3) - skill.conditionalAdjustment;
+        const name = skill.key.toUpperCase() === 'PERFOMANCE' ? 'PERFORMANCE' : skill.key;
+        const fieldText = form.getTextField(name.toUpperCase());
+        fieldText.setText(String(total));
+        fieldText.updateAppearances(customFont);
+
+        // Изученное
+      })
+
+
+
+
 
       /* */
       // Заполняем текст с кастомным шрифтом
@@ -3231,6 +3322,7 @@ export default {
     },
 
     async handlePrint() {
+      console.log(this.characterArchetype)
       const pdfUrl = await this.fillPdf(this);
       window.open(pdfUrl, '_blank'); // открываем заполненный PDF в новой вкладке
     },
@@ -3370,7 +3462,7 @@ export default {
       this.psychicPowersList = data;
     },
     async loadArchetype(key) {
-      this.loading = true;
+
       if (key) {
 
         let finalData = {};
@@ -3508,7 +3600,7 @@ export default {
       if (this.characterArchetype)
         this.characterArchetype.spellTradition = this.$store.getters['characters/characterSpellTraditionsById'](this.characterId);
 
-      this.loading = false;
+
     },
     handleClick(e, level, value) {
       if (e.button === 0) { // ЛКМ

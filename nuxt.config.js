@@ -139,8 +139,10 @@ module.exports = {
   plugins: [
     { src: "~/plugins/vuex-persist", ssr: false },
     { src: "~/plugins/vue-croppa.js", ssr: false },
+    { src: '~/plugins/vue-quill-editor.js', ssr: false },
     "~/plugins/filters.js",
     "~/plugins/hint-box-component.js",
+    '~/plugins/router-loader.js'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -306,7 +308,7 @@ module.exports = {
       },
     },
   },
-
+  middleware: ['loading'],
   serverMiddleware: [
     //'redirect-ssl',
     //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
