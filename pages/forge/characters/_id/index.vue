@@ -833,6 +833,28 @@
                             <td class="text-left">
                               <span v-if="item.traits && item.traits.length > 0">{{ item.traits.join(", ") }}</span>
                             </td>
+
+                            <td class="text-left">
+                              <span>
+                                <v-btn outlined x-small :color="characterWearWargear && characterWearWargear.id === item.id
+                                  ? 'info'
+                                  : 'warning'
+                                  " @click="
+                                    characterWearWargear && characterWearWargear.id === item.id
+                                      ? unwear(item)
+                                      : wear(item)
+                                    ">
+                                  <v-icon left> lock </v-icon>
+
+                                  <span v-if="
+                                    characterWearWargear && characterWearWargear.id === item.id
+                                  ">Снять
+                                  </span>
+                                  <span v-else>Надеть </span>
+                                </v-btn>
+                              </span>
+                            </td>
+
                             <td class="text-left">
                               <v-btn outlined x-small color="info" @click="openDialogItem(item)">
                                 <v-icon left>visibility</v-icon> Просмотр
@@ -1642,6 +1664,11 @@ export default {
         // { text: 'Руки', sortable: false, align: 'center', class: 'small pa-1' },
         { text: 'Трейты', sortable: false, align: 'left', class: 'small pa-1' },
         {
+          text: 'Надетое',
+          value: 'view',
+          sortable: false, class: 'small pa-1'
+        },
+        {
           text: '',
           value: 'view',
           sortable: false, class: 'small pa-1'
@@ -1895,6 +1922,9 @@ export default {
     },
     characterAscensionPackages() {
       return this.$store.getters['characters/characterAscensionPackagesById'](this.characterId);
+    },
+    characterWearWargear() {
+      return this.$store.getters['characters/characterWearById'](this.characterId);
     },
     keywordStrings() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
@@ -3677,9 +3707,6 @@ export default {
         },
       };
       const { data, total } = await this.$axios.get('/api/wargear/', { params });
-
-
-
       this.wargearList = data.data;
 
     },
@@ -3691,11 +3718,11 @@ export default {
 
 
     ModAttributeClass() {
-      const char1 = this.profiencyRepository[this.SkillClass()];
+      const char1 = this.profiencyRepository[this.SkillClass()] ? this.profiencyRepository[this.SkillClass()] : 0;
       const char3 = this.characterLevel();
-      if (this.characterArchetype)
-        return 10 + parseInt(char1) + parseInt(char3);
-      else 0;
+
+      return 10 + parseInt(char1) + parseInt(char3);
+
     },
 
     characterNotesOpenEditor() {
@@ -3756,7 +3783,7 @@ export default {
         const wearModDex = wear.modDex ? wear.modDex : 0;
         const dex = modDex > wearModDex ? wearModDex : modDex;
         const Def = wear.category ? this.profiencyRepository[this.skillDefence[wear.category]] : 0;
-        const bonusAC = wear.bonusAC ? wear.bonusAC : 0;
+        const bonusAC = wear.acBonus ? wear.acBonus : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();
         return 10 + dex + Def + arm + bonusAC - status;
       }
@@ -3947,6 +3974,13 @@ export default {
     },
     groupName(name) {
       return this.weaponGroup.find(item => item.group === name).name;
+    },
+    wear(gear) {
+      this.$store.commit('characters/wearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
+    },
+
+    unwear(gear) {
+      this.$store.commit('characters/unwearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
     },
     characterHitPointsMax() {
       const species = this.characterHitPoints["species"]

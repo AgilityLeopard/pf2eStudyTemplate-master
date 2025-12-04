@@ -900,6 +900,13 @@ export default {
         M: 3,
         L: 4,
       }
+      , charSkill: {
+        0: "U",
+        1: "T",
+        2: "E",
+        3: "M",
+        4: "L",
+      },
     };
   },
   head() {
@@ -940,6 +947,7 @@ export default {
     skillMaximum() {
       return 8;
     },
+
     remainingBuildPoints() {
       return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
     },
@@ -1211,6 +1219,11 @@ export default {
       this.loading = false;
 
     },
+    characterSkillSheet() {
+      return this.$store.getters["characters/characterSkillSheetById"](
+        this.$route.params.id
+      );
+    },
     async loadSpecies(key) {
       this.loading = true;
       const { data } = await this.$axios.get(`/api/species/${key}`);
@@ -1474,7 +1487,17 @@ export default {
     },
 
     ModAttribute(attribute, skill) {
-      const char1 = this.SkillsTrained[this.characterSkills[skill]];
+      const level = this.characterLevel();
+
+      const sheet = this.$store.getters["characters/characterSkillSheetById"](
+        this.characterId
+      );
+      const prof = sheet.filter(
+        (s) => s.key === skill && s.level <= level && s.combinded !== true
+      ).length;
+
+      const char1 = this.SkillsTrained[this.charSkill[prof]];
+      // const char1 = this.SkillsTrained[this.characterSkills[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
       const char3 = char1 === 0 ? 0 : this.characterLevel();
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
@@ -1681,7 +1704,7 @@ export default {
       })
 
 
-      this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: boost, level: 1, type: 'class', optional: true });
+      this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: boost, level: 1, type: 'class', optional: true, combinded: false });
 
 
       // this.$store.commit('characters/removeSkillSheetbyType', { id: this.characterId, key: boost, type: 'class', optional: false });

@@ -1413,7 +1413,7 @@ export default {
     },
     ModAttribute(attribute, skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
-      const level = this.characterLevel();;
+      const level = this.characterLevel();
       const prof = this.characterSkillSheet.filter(
         (s) => s.key === skill && s.level <= level && s.combinded !== true
       ).length;
