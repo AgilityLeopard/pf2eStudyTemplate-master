@@ -1305,7 +1305,7 @@ export const mutations = {
     }
 
     character.AncestryFreeBoost = payload.payload.key;
-    if (payload.payload.key != "" & payload.payload.key != character.AncestryFreeBoost2) {
+    if (payload.payload.key != "" && payload.payload.key != character.AncestryFreeBoost2) {
       character.attributesAncestryBoost[payload.payload.key] = payload.payload.value;
       character.attributes[character.AncestryFreeBoost] += 2;
     }
@@ -1330,22 +1330,41 @@ export const mutations = {
   },
   setCharacterBackgroundFreeBoost(state, payload) {
     const character = state.characters[payload.id];
+    const oldKey = character.BackgroundFreeBoost; // сохраняем старое значение
+    const newKey = payload.payload.key;
 
-    if (character.attributesBackground2Boost[payload.payload.key] != "" && character.BackgroundFreeBoost2 != character.BackgroundFreeBoost) {
-      character.attributesBackgroundBoost[character.BackgroundFreeBoost] -= 1;
-      character.attributes[character.BackgroundFreeBoost] -= 2;
+    // уменьшаем старые значения, если нужно
+    if (oldKey && oldKey !== character.BackgroundFreeBoost2) {
+      character.attributesBackgroundBoost[oldKey] -= 1;
+      character.attributes[oldKey] -= 2;
+    }
+
+    // сохраняем новый выбор
+    character.BackgroundFreeBoost = newKey;
+
+    // увеличиваем значения для нового выбора
+    if (newKey && newKey !== character.BackgroundFreeBoost2) {
+      character.attributesBackgroundBoost[newKey] = payload.payload.value;
+      character.attributes[newKey] += 2;
+    }
+  },
+
+  setCharacterBackgroundFreeBoost2(state, payload) {
+    const character = state.characters[payload.id];
+    if (character.BackgroundFreeBoost2 != "" && character.BackgroundFreeBoost2 != character.BackgroundFreeBoost) {
+      character.attributesBackgroundBoost[character.BackgroundFreeBoost2] -= 1;
+      character.attributes[character.BackgroundFreeBoost2] -= 2;
 
     }
 
-    character.BackgroundFreeBoost = payload.payload.key;
-    if (payload.payload.key != "" & payload.payload.key != character.BackgroundFreeBoost2) {
+    character.BackgroundFreeBoost2 = payload.payload.key;
+    if (payload.payload.key != "" && payload.payload.key != character.BackgroundFreeBoost) {
       character.attributesBackgroundBoost[payload.payload.key] = payload.payload.value;
-      character.attributes[character.BackgroundFreeBoost] += 2;
+      character.attributes[character.BackgroundFreeBoost2] += 2;
     }
 
 
   },
-
   setCharacterClassAttribute(state, payload) {
     const character = state.characters[payload.id];
     const key = payload.payload.key;
@@ -1429,22 +1448,7 @@ export const mutations = {
 
 
   },
-  setCharacterBackgroundFreeBoost2(state, payload) {
-    const character = state.characters[payload.id];
-    if (character.BackgroundFreeBoost2 != "" && character.BackgroundFreeBoost2 != character.BackgroundFreeBoost) {
-      character.attributesBackgroundBoost[character.BackgroundFreeBoost2] -= 1;
-      character.attributes[character.BackgroundFreeBoost2] -= 2;
 
-    }
-
-    character.BackgroundFreeBoost2 = payload.payload.key;
-    if (payload.payload.key != "" && payload.payload.key != character.BackgroundFreeBoost) {
-      character.attributesBackgroundBoost[payload.payload.key] = payload.payload.value;
-      character.attributes[character.BackgroundFreeBoost2] += 2;
-    }
-
-
-  },
   resetCharacterStats(state, payload) {
     const character = state.characters[payload.id];
 

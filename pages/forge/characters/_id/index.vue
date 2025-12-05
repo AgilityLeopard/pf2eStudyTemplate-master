@@ -303,11 +303,7 @@
                     <span class="truncate"> {{ attribute.name }}</span>
                   </v-btn>
                   <v-btn small class="stat-mod-btn" depressed>
-                    {{
-                      (characterAttributes[attribute.key] - 10) / 2 >= 0
-                        ? "+"
-                        : ""
-                    }}{{ (characterAttributes[attribute.key] - 10) / 2 }}
+                    {{ ModAttributeReal(attribute.key) }}
                   </v-btn>
                 </div>
               </v-col>
@@ -3150,6 +3146,20 @@ export default {
       if (action == '3') return `/img/icon/action_triple.png`;
       if (action === 'reaction') return `/img/icon/action_reaction.png`;
       if (action === 'free') return `/img/icon/action_free.png`;
+    },
+    ModAttributeReal(attribute) {
+
+
+      const result = this.characterAttributes[attribute]
+      const modRaw = (result - 10) / 2;       // настоящее дробное значение
+      const mod = Math.floor(modRaw);         // отображаемое целое значение
+
+
+      const arrow = Number.isInteger(modRaw) ? "" : " ⯅";  // стрелка только если дробное
+
+      return (mod > 0 ? "+ " : " ") + mod + arrow;
+
+
     },
     async fillPdf(this1) {
 

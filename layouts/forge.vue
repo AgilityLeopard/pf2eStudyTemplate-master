@@ -144,15 +144,14 @@
         <div class="px-4 py-2">
           <!-- Характеристики -->
           <h3 class="mb-2">Характеристики</h3>
-          <div class="stat-row" v-for="attribute in attributeRepository" :key="attribute.key">
+          <div class="stat-row" v-for="attribute in attributeRepository" :key="attribute.key" @click="openAtt()">
             <div class="stat-group d-flex mb-1">
               <v-btn block small class="stat-name-btn" depressed>
                 <span class="truncate">{{ attribute.name }}</span>
               </v-btn>
               <v-btn small class="stat-mod-btn ml-2" depressed>
-                {{
-                  (characterAttributes[attribute.key] - 10) / 2 >= 0 ? "+" : ""
-                }}{{ (characterAttributes[attribute.key] - 10) / 2 }}
+
+                {{ ModAttributeReal(attribute.key) }}
               </v-btn>
             </div>
           </div>
@@ -319,6 +318,46 @@
           </v-card-actions>
         </v-card>
       </v-dialog> -->
+      <v-dialog v-model="attDialog" width="1000px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
+        <v-card>
+          <!-- Заголовок -->
+          <v-card-title style="background-color: #262e37; color: #fff">
+
+            <v-spacer />
+            <v-icon dark @click="closeAtt">close</v-icon>
+          </v-card-title>
+          <v-card-text class="pt-4">
+
+            <table class="boost-table">
+              <thead>
+                <tr>
+                  <th v-for="attr in attributeRepository" :key="attr">{{ attr.name }}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(row, index) in tableRows" :key="index">
+                  <td v-for="attr in attributes" :key="attr + '2'" class="boost-cell">
+                    {{ formatCell(row[attr]) }}
+                  </td>
+                </tr>
+              </tbody>
+
+              <tfoot>
+                <tr>
+                  <th v-for="attr in attributes" :key="attr + '1'" class="boost-footer">
+                    = {{ formatTotal(attr) }}
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+
+
+
+          </v-card-text>
+
+        </v-card>
+      </v-dialog>
 
       <v-dialog v-model="skillsDialog" width="1000px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
         <v-card>
@@ -493,7 +532,8 @@
                             }}
                           </kbd>
                         </template>
-                        <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0">Поскольку вы обучены этому навыку,
+                        <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0">Поскольку вы обучены этому
+                          навыку,
                           вы
                           добавляете свой
                           уровень.</span>
@@ -875,6 +915,7 @@ export default {
     return {
       skillsDialog: false,
       savesDialog: false,
+      attDialog: false,
       actionList: undefined,
       skill: {
         key: "acrobatics",
@@ -936,6 +977,23 @@ export default {
       ];
     },
 
+    attributes() {
+      return ["strength", "dexterity", "constitution", "intellect", "wisdom", "charisma"];
+    },
+
+
+
+
+    tableRows() {
+      return [
+        this.characterBackgroundBoost,
+        // this.characterBackground2Boost(),
+        this.characterAncestryFreeBoost,
+        this.characterAncestryFreeBoost2,
+        // this.attributesClassBoost,
+        // this.attributesFreeBoost
+      ].filter(Boolean); // пропуск undefined
+    },
     routes() {
       return {
         species: this.routeBuilder(
@@ -1315,6 +1373,18 @@ export default {
         this.$route.params.id
       );
     },
+    characterBackgroundBoost() {
+      return this.$store.getters['characters/characterBackgroundBoostId'](this.$route.params.id);
+    },
+    // characterBackground2Boost() {
+    //   return this.$store.getters['characters/characterBackgroundBoost2IdById'](this.characterId);
+    // },
+    characterAncestryFreeBoost() {
+      return this.$store.getters['characters/characterAncestryFreeBoostById'](this.$route.params.id);
+    },
+    characterAncestryFreeBoost2() {
+      return this.$store.getters['characters/characterAncestryFreeBoost2ById'](this.$route.params.id);
+    },
   },
   asyncData({ params }) {
     return {};
@@ -1364,6 +1434,7 @@ export default {
     },
   },
   methods: {
+
     skillTotal(skill) {
       const prof = this.profiencyRepository[this.SkillProf(skill.key)];
       const attr = (this.characterAttributes[skill.attribute] - 10) / 2;
@@ -1411,6 +1482,21 @@ export default {
       });
       this.actionList = data;
     },
+
+    ModAttributeReal(attribute) {
+
+
+      const result = this.characterAttributes[attribute]
+      const modRaw = (result - 10) / 2;       // настоящее дробное значение
+      const mod = Math.floor(modRaw);         // отображаемое целое значение
+
+
+      const arrow = Number.isInteger(modRaw) ? "" : " ⯅";  // стрелка только если дробное
+
+      return (mod > 0 ? "+ " : " ") + mod + arrow;
+
+
+    },
     ModAttribute(attribute, skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
       const level = this.characterLevel();
@@ -1421,6 +1507,7 @@ export default {
       const char1 = this.profiencyRepository[this.charSkill[prof]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
       const char3 = char1 === 0 ? 0 : this.characterLevel();
+
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
     },
     SkillProf(skill) {
@@ -1466,6 +1553,18 @@ export default {
         default:
           return "нетренированыН";
       }
+    },
+    formatCell(value) {
+      if (value === 0 || value === undefined || value === null) return "";
+      return value > 0 ? "+" + value : value;
+    },
+
+    formatTotal(attr) {
+      let sum = 0;
+      for (const row of this.tableRows) {
+        if (row[attr]) sum += row[attr];
+      }
+      return sum > 0 ? "+" + sum : sum;
     },
     SaveLabelName(skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
@@ -1770,6 +1869,12 @@ export default {
     },
     closeSkills() {
       this.skillsDialog = false;
+    },
+    closeAtt() {
+      this.attDialog = false;
+    },
+    openAtt() {
+      this.attDialog = true;
     },
     openSaves(save) {
       this.save = save;
@@ -2180,6 +2285,21 @@ export default {
 }
 
 
+.boost-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.boost-table th,
+.boost-table td {
+  border: 1px solid #25262b;
+  padding: 6px;
+}
+
+.boost-footer {
+  border-top: 2px solid #25262b;
+}
 
 /*
       <v-expansion-panels multiple>

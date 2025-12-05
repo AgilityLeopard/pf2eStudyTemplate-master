@@ -3,11 +3,6 @@
     <v-col :cols="12">
       <h1 class="headline">
         Выберите характеристики и навыки
-        <!-- <span>
-          <v-btn color="primary" @click="resetStats" outlined small
-            >Сброс статов</v-btn
-          >
-        </span> -->
       </h1>
     </v-col>
 
@@ -238,45 +233,31 @@
                 </h2>
               </v-card-title>
 
-              <v-simple-table dense>
+
+              <v-simple-table class="skill-table dense">
                 <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th v-for="header in attributeHeaders" :class="header.class">
-                        {{ header.text }}
-                      </th>
-                    </tr>
-                  </thead>
+                  <!-- <thead>
+                <tr>
+                  <th v-for="header in attributeHeaders" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead> -->
                   <tbody>
-                    <tr v-for="attribute in attributeRepository" :key="attribute.key">
-                      <td>{{ attribute.name }}</td>
-                      <td class="text-center pa-1 small">
-                        <v-btn icon :disabled="4 - characterBoost == 4 ||
-                          characterAttributesBoost[attribute.key] < 1
-                          " @click="decrementAttribute(attribute.key, 1)">
-                          <v-icon color="red"> remove_circle </v-icon>
-                        </v-btn>
-                        {{ characterAttributes[attribute.key] }}
-                        <v-btn icon :disabled="4 - characterBoost == 0 ||
-                          characterAttributesBoost[attribute.key] > 0
-                          " @click="incrementAttribute(attribute.key, 1)">
-                          <!--"-->
-                          <v-icon :color="affordableAttributeColor(
-                            characterAttributes[attribute.key]
-                          )
-                            ">
-                            add_circle
-                          </v-icon>
-                        </v-btn>
+                    <tr v-for="attribute in attributeRepository" class="skill-row"
+                      :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 1), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 1) }"
+                      @click="handleAttributeClickLevel(attribute.key, 1)">
+                      <!-- <td>{{ attribute.name }}</td> -->
+                      <td class="skill-name">
+                        <div class="skill-row-inner">{{ attribute.name }}</div>
                       </td>
-                      <td class="text-center pa-1 small">
-                        {{
-                          Math.floor(
-                            (characterAttributesEnhanced[attribute.key] - 10) /
-                            2
-                          )
-                        }}
+
+                      <td class="skill-mod">
+                        {{ ModProfAttr(attribute.key, 1) }}
                       </td>
+
+
+
                     </tr>
                   </tbody>
                 </template>
@@ -320,77 +301,65 @@
                   Количество свободных повышений навыков:
                   {{
                     characterSkillPointClass +
-                    characterSkillPointBackground +
-                    characterSkillPointClassUp +
+
                     modInt(1) -
                     // characterOptional(1) -
                     skillSheetPoints("", 1)
+
                   }}
                 </h2>
               </v-card-title>
+              <v-simple-table class="skill-table dense">
+                <tbody>
+                  <tr v-for="skill in finalSkillRepository" :key="skill.key" class="skill-row"
+                    :class="{ 'skill-row--disabled': isSkillDisabled(skill), 'skill-row--trained-up': isSkillUpgraded(skill) }"
+                    @click="handleSkillClick(skill)">
+                    <td class="skill-name">
+                      <div class="skill-row-inner">{{ skill.name }}</div>
+                    </td>
 
-              <v-simple-table dense>
-                <template v-slot:default>
-                  <tbody>
-                    <tr v-for="skill in finalSkillRepository" :key="skill.key">
-                      <td>{{ skill.name }}</td>
-                      <td>{{attributeRepository.find(
-                        (i) => i.key === skill.attribute
-                      )?.short
-                      }}</td>
-                      <td class="text-right small pa-1">
-                        <v-btn icon :disabled="skillSheetValue(skill.key, 1) === 0 ||
-                          (skill.custom &&
-                            skillSheetTrained(skill.key, 1) ===
-                            'Тренирован') ||
-                          skillSheetOptional(skill.key, 1) === true
-                          " @click="decrementSkill(skill.key, 1)">
-                          <v-icon color="red"> remove_circle </v-icon>
-                        </v-btn>
-                      </td>
+                    <td class="skill-mod">
+                      {{ (ModAttribute(skill.attribute, skill.key, 1) >= 0 ? '+' : '') + ModAttribute(skill.attribute,
+                        skill.key, 1) }}
+                    </td>
 
-                      <td class="text-center small pa-1">
-                        {{
-                          (ModAttribute(skill.attribute, skill.key) < 0 ? "" : "+") + ModAttribute(skill.attribute,
-                            skill.key) }} </td>
-                      <td class="text-left small pa-1">
-                        <v-btn icon :disabled="skillSheetValue(skill.key, 1) > 0 ||
-                          // skillSheetAll(skill.key, 1) >= characterSkillPointClass ||
-                          characterSkillPointClass +
-                          characterSkillPointClassUp +
-                          characterSkillPointBackground +
-                          modInt(1) -
-                          skillSheetPoints('', 1) <=
-                          0 ||
-                          skillSheetTrained(skill.key, 1) === 'Тренирован'
-                          || skillSheetOptional(skill.key, 1) === true
-                          " @click="incrementSkill(skill.key, 1)">
-                          <v-icon :color="affordableSkillColor(characterSkills[skill.key])
-                            ">
-                            add_circle
-                          </v-icon>
-                        </v-btn>
-                      </td>
-                      <td class="text-center small pa-1">
-                        {{
-                          // characterSkills[skill.key] === "U"
-                          // ? characterlabel(characterSkills[skill.key])
-                          // : "Тренирован"
-                          skillSheetTrained(skill.key, 1)
-                        }}
-                      </td>
+                    <!-- Атрибут и модификатор -->
+                    <td class="skill-train">
+                      <v-col class="justify-center text-center">
+                        <v-row class="justify-center text-center">
+                          {{attributeRepository.find(i => i.key === skill.attribute)?.short}}
+                        </v-row>
 
-                      <span v-if="skill.custom">
-                        <v-hover>
-                          <v-icon v-if="skill.optional !== true" small @click="removeCustomSkill(skill.key, 1)"
-                            slot-scope="{ hover }" :disabled="skill.optional"
-                            :color="`${hover ? 'error' : ''}`">delete</v-icon>
-                        </v-hover>
-                      </span>
-                    </tr>
-                  </tbody>
-                </template>
+                        <v-row class="justify-center text-center">
+                          {{ (characterAttributes[skill.attribute] - 10) / 2 }}
+                        </v-row>
+                      </v-col>
+                    </td>
+
+                    <!-- Владение -->
+                    <td class="skill-train">
+                      <v-col class="justify-center text-center">
+                        <v-row class="justify-center text-center">Владение</v-row>
+                        <v-row class="justify-center text-center">
+                          {{ ModProf(skill.attribute, skill.key, 1) }}
+                        </v-row>
+                      </v-col>
+                    </td>
+
+                    <td class="skill-train">
+                      {{ skillSheetTrained(skill.key, 1) }}
+                    </td>
+
+                    <td class="skill-delete" v-if="skill.custom">
+                      <v-icon small color="red" @click.stop="removeCustomSkill(skill.key, 1)">
+                        mdi-delete
+                      </v-icon>
+                    </td>
+                  </tr>
+                </tbody>
               </v-simple-table>
+
+
 
               <v-spacer></v-spacer>
 
@@ -476,66 +445,57 @@
                   {{ 1 + modInt(skillLevel) - skillSheetAll("", skillLevel) }}
                 </h2>
               </v-card-title>
-              <v-simple-table dense>
-                <template v-slot:default>
-                  <tbody>
-                    <tr v-for="skill in finalSkillRepository" :key="skill.key">
-                      <td>{{ skill.name }}</td>
-                      <td>
-                        <!-- :disabled="
-                      skill.key == characterClassSkill ||
-                      characterSkills[skill.key] == 'U' ||
-                      skill.optional === true ||
-                      characterSkillPoints === MaxSkillPoints() ||
-                      skill.custom ||
-                      skillChoiceInitial.find((item) => item === skill.key) !==
-                        skill.key ||
-                      CharacterskillFromModification[skill.key] > 0
-                    " -->
 
-                        <v-btn icon :disabled="skillSheetValue(skill.key, skillLevel) === 0 ||
-                          (skill.custom &&
-                            skillSheetTrained(skill.key, skillLevel) ===
-                            'Тренирован')
-                          " @click="decrementSkill(skill.key, skillLevel)">
-                          <v-icon color="red"> remove_circle </v-icon>
-                        </v-btn>
-                      </td>
-                      <td class="text-center small pa-1">
-                        <!-- {{ ModAttribute(skill.attribute, skill.key) }} -->
-                        {{
-                          // characterSkills[skill.key] === "U"
-                          // ? characterlabel(characterSkills[skill.key])
-                          // : "Тренирован"
-                          skillSheetTrained(skill.key, skillLevel)
-                        }}
-                      </td>
-                      <td>
-                        <v-btn icon :disabled="skillSheetValue(skill.key, skillLevel) > 0 ||
-                          skillSheetAll(skill.key, skillLevel) >=
-                          1 + modInt(skillLevel) ||
-                          levelRestrict(skill.key, skillLevel) === true
-                          || skillSheetOptional(skill.key, skillLevel) === true
-                          || skillSheetTrained(skill.key, skillLevel) ===
-                          'Легенда'
-                          " @click="incrementSkill(skill.key, skillLevel)">
-                          <v-icon :color="affordableSkillColor(characterSkills[skill.key])
-                            ">
-                            add_circle
-                          </v-icon>
-                        </v-btn>
-                      </td>
-                      <!-- <td>{{ characterSkills[skill.key] === "U" ? characterlabel(characterSkills[skill.key]) : "Тренирован" }}</td> -->
-                      <span v-if="skill.custom">
-                        <v-hover>
-                          <v-icon v-if="skill.optional !== true" small @click="removeCustomSkill(skill.key)"
-                            slot-scope="{ hover }" :disabled="skill.optional"
-                            :color="`${hover ? 'error' : ''}`">delete</v-icon>
-                        </v-hover>
-                      </span>
-                    </tr>
-                  </tbody>
-                </template>
+              <v-simple-table class="skill-table dense">
+                <tbody>
+                  <tr v-for="skill in finalSkillRepository" :key="skill.key" class="skill-row"
+                    :class="{ 'skill-row--disabled': isSkillDisabledLevel(skill, skillLevel), 'skill-row--trained-up': isSkillUpgradedLevel(skill, skillLevel) }"
+                    @click="handleSkillClickLevel(skill, skillLevel)">
+                    <td class="skill-name">
+                      <div class="skill-row-inner">{{ skill.name }}</div>
+                    </td>
+
+                    <td class="skill-mod">
+                      {{ (ModAttribute(skill.attribute, skill.key, skillLevel) >= 0 ? '+' : '') +
+                        ModAttribute(skill.attribute,
+                          skill.key, skillLevel) }}
+                    </td>
+
+                    <!-- Атрибут и модификатор -->
+                    <td class="skill-train">
+                      <v-col class="justify-center text-center">
+                        <v-row class="justify-center text-center">
+                          {{attributeRepository.find(i => i.key === skill.attribute)?.short}}
+                        </v-row>
+
+                        <v-row class="justify-center text-center">
+                          {{ (characterAttributes[skill.attribute] - 10) / 2 }}
+                        </v-row>
+                      </v-col>
+                    </td>
+
+                    <!-- Владение -->
+                    <td class="skill-train">
+                      <v-col class="justify-center text-center">
+                        <v-row class="justify-center text-center">Владение</v-row>
+                        <v-row class="justify-center text-center">
+                          {{ ModProf(skill.attribute, skill.key, skillLevel) }}
+                        </v-row>
+                      </v-col>
+                    </td>
+
+                    <td class="skill-train">
+                      {{ skillSheetTrained(skill.key, skillLevel) }}
+                    </td>
+
+                    <td class="skill-delete" v-if="skill.custom">
+                      <v-icon v-if="skill.optional !== true" small color="red"
+                        @click.stop="removeCustomSkill(skill.key, skillLevel)">
+                        mdi-delete
+                      </v-icon>
+                    </td>
+                  </tr>
+                </tbody>
               </v-simple-table>
               <v-spacer></v-spacer>
 
@@ -570,44 +530,30 @@
             </h2>
           </v-card-title>
 
-          <v-simple-table dense>
+          <v-simple-table class="skill-table dense">
             <template v-slot:default>
-              <thead>
+              <!-- <thead>
                 <tr>
                   <th v-for="header in attributeHeaders" :class="header.class">
                     {{ header.text }}
                   </th>
                 </tr>
-              </thead>
+              </thead> -->
               <tbody>
-                <tr v-for="attribute in attributeRepository">
-                  <td>{{ attribute.name }}</td>
-                  <td class="text-center pa-1 small">
-                    <v-btn icon :disabled="4 - characterBoost5 == 4 ||
-                      characterAttributesBoost5[attribute.key] < 1
-                      " @click="decrementAttribute(attribute.key, 5)">
-                      <v-icon color="red"> remove_circle </v-icon>
-                    </v-btn>
-                    {{ characterAttributes[attribute.key] }}
-                    <v-btn icon :disabled="4 - characterBoost5 == 0 ||
-                      characterAttributesBoost5[attribute.key] > 0
-                      " @click="incrementAttribute(attribute.key, 5)">
-                      <!--"-->
-                      <v-icon :color="affordableAttributeColor(
-                        characterAttributes[attribute.key]
-                      )
-                        ">
-                        add_circle
-                      </v-icon>
-                    </v-btn>
+                <tr v-for="attribute in attributeRepository" class="skill-row"
+                  :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 5), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 5) }"
+                  @click="handleAttributeClickLevel(attribute.key, 5)">
+                  <!-- <td>{{ attribute.name }}</td> -->
+                  <td class="skill-name">
+                    <div class="skill-row-inner">{{ attribute.name }}</div>
                   </td>
-                  <td class="text-center pa-1 small">
-                    {{
-                      Math.floor(
-                        (characterAttributesEnhanced[attribute.key] - 10) / 2
-                      )
-                    }}
+
+                  <td class="skill-mod">
+                    {{ ModProfAttr(attribute.key, 5) }}
                   </td>
+
+
+
                 </tr>
               </tbody>
             </template>
@@ -623,48 +569,36 @@
             Количество свободных повышений: {{ 4 - characterBoost10 }}
           </h2>
         </v-card-title>
-        <v-simple-table dense>
+
+        <v-simple-table class="skill-table dense">
           <template v-slot:default>
-            <thead>
-              <tr>
-                <th v-for="header in attributeHeaders" :class="header.class">
-                  {{ header.text }}
-                </th>
-              </tr>
-            </thead>
+            <!-- <thead>
+                <tr>
+                  <th v-for="header in attributeHeaders" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead> -->
             <tbody>
-              <tr v-for="attribute in attributeRepository">
-                <td>{{ attribute.name }}</td>
-                <td class="text-center pa-1 small">
-                  <v-btn icon :disabled="4 - characterBoost10 == 4 ||
-                    characterAttributesBoost10[attribute.key] < 1
-                    " @click="decrementAttribute(attribute.key, 10)">
-                    <v-icon color="red"> remove_circle </v-icon>
-                  </v-btn>
-                  {{ characterAttributes[attribute.key] }}
-                  <v-btn icon :disabled="4 - characterBoost10 == 0 ||
-                    characterAttributesBoost10[attribute.key] > 0
-                    " @click="incrementAttribute(attribute.key, 10)">
-                    <!--"-->
-                    <v-icon :color="affordableAttributeColor(
-                      characterAttributes[attribute.key]
-                    )
-                      ">
-                      add_circle
-                    </v-icon>
-                  </v-btn>
+              <tr v-for="attribute in attributeRepository" class="skill-row"
+                :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 10), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 10) }"
+                @click="handleAttributeClickLevel(attribute.key, 10)">
+                <!-- <td>{{ attribute.name }}</td> -->
+                <td class="skill-name">
+                  <div class="skill-row-inner">{{ attribute.name }}</div>
                 </td>
-                <td class="text-center pa-1 small">
-                  {{
-                    Math.floor(
-                      (characterAttributesEnhanced[attribute.key] - 10) / 2
-                    )
-                  }}
+
+                <td class="skill-mod">
+                  {{ ModProfAttr(attribute.key, 10) }}
                 </td>
+
+
+
               </tr>
             </tbody>
           </template>
         </v-simple-table>
+
       </v-card>
     </v-dialog>
 
@@ -676,48 +610,35 @@
           </h2>
         </v-card-title>
 
-        <v-simple-table dense>
+        <v-simple-table class="skill-table dense">
           <template v-slot:default>
-            <thead>
-              <tr>
-                <th v-for="header in attributeHeaders" :class="header.class">
-                  {{ header.text }}
-                </th>
-              </tr>
-            </thead>
+            <!-- <thead>
+                <tr>
+                  <th v-for="header in attributeHeaders" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead> -->
             <tbody>
-              <tr v-for="attribute in attributeRepository">
-                <td>{{ attribute.name }}</td>
-                <td class="text-center pa-1 small">
-                  <v-btn icon :disabled="4 - characterBoost15 == 4 ||
-                    characterAttributesBoost15[attribute.key] < 1
-                    " @click="decrementAttribute(attribute.key, 15)">
-                    <v-icon color="red"> remove_circle </v-icon>
-                  </v-btn>
-                  {{ characterAttributes[attribute.key] }}
-                  <v-btn icon :disabled="4 - characterBoost15 == 0 ||
-                    characterAttributesBoost15[attribute.key] > 0
-                    " @click="incrementAttribute(attribute.key, 15)">
-                    <!--"-->
-                    <v-icon :color="affordableAttributeColor(
-                      characterAttributes[attribute.key]
-                    )
-                      ">
-                      add_circle
-                    </v-icon>
-                  </v-btn>
+              <tr v-for="attribute in attributeRepository" class="skill-row"
+                :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 15), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 15) }"
+                @click="handleAttributeClickLevel(attribute.key, 15)">
+                <!-- <td>{{ attribute.name }}</td> -->
+                <td class="skill-name">
+                  <div class="skill-row-inner">{{ attribute.name }}</div>
                 </td>
-                <td class="text-center pa-1 small">
-                  {{
-                    Math.floor(
-                      (characterAttributesEnhanced[attribute.key] - 10) / 2
-                    )
-                  }}
+
+                <td class="skill-mod">
+                  {{ ModProfAttr(attribute.key, 15) }}
                 </td>
+
+
+
               </tr>
             </tbody>
           </template>
         </v-simple-table>
+
       </v-card>
     </v-dialog>
 
@@ -729,54 +650,35 @@
           </h2>
         </v-card-title>
 
-        <v-simple-table dense>
+        <v-simple-table class="skill-table dense">
           <template v-slot:default>
-            <thead>
-              <tr>
-                <th v-for="header in attributeHeaders" :class="header.class">
-                  {{ header.text }}
-                </th>
-              </tr>
-            </thead>
+            <!-- <thead>
+                <tr>
+                  <th v-for="header in attributeHeaders" :class="header.class">
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </thead> -->
             <tbody>
-              <tr v-for="attribute in attributeRepository">
-                <td>{{ attribute.name }}</td>
-                <td class="text-center pa-1 small">
-                  <v-btn icon :disabled="4 - characterBoost20 == 4 ||
-                    characterAttributesBoost20[attribute.key] < 1
-                    " @click="decrementAttribute(attribute.key, 20)">
-                    <v-icon color="red"> remove_circle </v-icon>
-                  </v-btn>
-                  {{ characterAttributes[attribute.key] }}
-                  <v-btn icon :disabled="4 - characterAttributesBoost20 == 0 ||
-                    characterAttributesBoost20[attribute.key] > 0
-                    " @click="incrementAttribute(attribute.key, 20)">
-                    <!--"-->
-                    <v-icon :color="affordableAttributeColor(
-                      characterAttributes[attribute.key]
-                    )
-                      ">
-                      add_circle
-                    </v-icon>
-                  </v-btn>
+              <tr v-for="attribute in attributeRepository" class="skill-row"
+                :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 20), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 20) }"
+                @click="handleAttributeClickLevel(attribute.key, 20)">
+                <!-- <td>{{ attribute.name }}</td> -->
+                <td class="skill-name">
+                  <div class="skill-row-inner">{{ attribute.name }}</div>
                 </td>
-                <td class="text-center pa-1 small">
-                  {{
-                    Math.floor(
-                      (characterAttributesEnhanced[attribute.key] - 10) / 2
-                    )
-                  }}
 
-                  {{
-                    (characterAttributes[attribute.key] - 10) % 2 !== 0
-                      ? "*"
-                      : ""
-                  }}
+                <td class="skill-mod">
+                  {{ ModProfAttr(attribute.key, 20) }}
                 </td>
+
+
+
               </tr>
             </tbody>
           </template>
         </v-simple-table>
+
       </v-card>
     </v-dialog>
   </v-row>
@@ -842,43 +744,21 @@ export default {
       selectedBackgroundBoost: undefined,
       selectedBackgroundBoost2: undefined,
       selectedBoost: {},
+
       customSkill: {
         key: undefined,
         name: 'Знание',
         attribute: 'intellect',
         description: '',
       },
+
       selectedId: undefined,
       showAlerts: false,
       archetype: undefined,
       species: undefined,
       ascension: undefined,
       loading: false,
-      // skillChoiceInitial : [],
-      //Выбор навыков
-      skillChoice1: "",
-      skillChoice2: "",
-      skillChoice3: "",
-      skillChoice4: "",
-      skillChoice5: "",
-      skillChoice6: "",
-      skillChoice7: "",
 
-      skillChoice8: "",
-      skillChoice9: "",
-      skillChoice10: "",
-      skillChoice11: "",
-      skillChoice12: "",
-      skillChoice13: "",
-      skillChoice14: "",
-
-      skillChoice15: "",
-      skillChoice16: "",
-      skillChoice17: "",
-      skillChoice18: "",
-      skillChoice19: "",
-      skillChoice20: "",
-      ///
       select: {},
       AncestryAttribute: [],
       AncestryAttribute2: [],
@@ -944,10 +824,14 @@ export default {
 
       return fulfilled;
     },
-    skillMaximum() {
-      return 8;
-    },
+    freeSkillPointsLvl1() {
+      return (
+        this.characterSkillPointClass +
 
+        this.modInt(1) -
+        this.skillSheetPoints("", 1)
+      )
+    },
     remainingBuildPoints() {
       return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
     },
@@ -974,9 +858,6 @@ export default {
     },
     characterAttributes() {
       return this.$store.getters['characters/characterAttributesById'](this.characterId);
-    },
-    characterSkillPointsLevel() {
-      return this.$store.getters['characters/characterSkillPointsLevelById'](this.characterId);
     },
     characterSkillTableLevel() {
       return this.$store.getters['characters/characterSkillTableLevelById'](this.characterId);
@@ -1146,14 +1027,7 @@ export default {
       },
       immediate: true,
     },
-    characterSkillPointsLevel: {
-      handler(newVal) {
-        if (newVal && newVal !== 'unknown') {
-          this.loadSkillTable(newVal);
-        }
-      },
-      immediate: true,
-    },
+
     characterAttributes: {
       handler() {
         this.needsProgressUpdate = true;
@@ -1238,53 +1112,9 @@ export default {
       this.selectedBoost = this.AncestryFreeBoost;
       this.loading = false;
     },
-    async loadSkillTable(key) {
-      this.loading = true;
-      this.skillChoice = key;
 
-      this.skillChoice1 = this.skillChoice[this.label(1)];
-      this.skillChoice2 = this.skillChoice[this.label(2)];
-      this.skillChoice3 = this.skillChoice[this.label(3)];
-      this.skillChoice4 = this.skillChoice[this.label(4)];
-      this.skillChoice5 = this.skillChoice[this.label(5)];
-      this.skillChoice6 = this.skillChoice[this.label(6)];
-      this.skillChoice7 = this.skillChoice[this.label(7)];
-      this.modifications = this.enhancements;
-
-      this.skillChoice8 = this.skillChoice[this.label(8)];
-      this.skillChoice9 = this.skillChoice[this.label(9)];
-      this.skillChoice10 = this.skillChoice[this.label(10)];
-      this.skillChoice11 = this.skillChoice[this.label(11)];
-      this.skillChoice12 = this.skillChoice[this.label(12)];
-      this.skillChoice13 = this.skillChoice[this.label(13)];
-      this.skillChoice14 = this.skillChoice[this.label(14)];
-
-      this.skillChoice15 = this.skillChoice[this.label(15)];
-      this.skillChoice16 = this.skillChoice[this.label(16)];
-      this.skillChoice17 = this.skillChoice[this.label(17)];
-      this.skillChoice18 = this.skillChoice[this.label(18)];
-      this.skillChoice19 = this.skillChoice[this.label(19)];
-      this.skillChoice120 = this.skillChoice[this.label(20)];
-      this.loading = false;
-    },
     skillChoiceModel(level) {
       return this.skillChoice[this.label(level)];
-    },
-    resetStats() {
-      const key = this.selectedAncestryBoost ? this.selectedAncestryBoost.key : "";
-      const key2 = this.selectedAncestryBoost2 ? this.selectedAncestryBoost2.key : "";
-      const key3 = this.selectedBackgroundBoost ? this.selectedBackgroundBoost.key : "";
-      const key4 = this.selectedBackgroundBoost2 ? this.selectedBackgroundBoost2.key : "";
-      this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: key, value: 0 } });
-      this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: key2, value: 0 } });
-      this.selectedAncestryBoost = "";
-      this.selectedAncestryBoost2 = "";
-      this.selectedBackgroundBoost = "";
-      this.selectedBackgroundBoost2 = "";
-      const level = this.$store.getters['characters/characterLevelById'](this.characterId);
-      this.$store.commit('characters/resetCharacterStats', { id: this.characterId, optional: 'all' });
-      this.$store.commit('characters/clearModification', { id: this.characterId, level });
-      this.$store.commit('characters/setModification', { id: this.characterId, level });
     },
     incrementSkill(skill, level) {
       //Тест
@@ -1461,6 +1291,11 @@ export default {
       const skill = skillSheet ? skillSheet.find(s => s.key === key && s.level === level && s.combinded === false) : undefined;
       return skill ? skill.optional : false;
     },
+    skillSheetBack() {
+      const skillSheet = this.characterSkillSheet();
+      const skill = skillSheet ? skillSheet.find(s => s.type === 'back') : undefined;
+      return skill ? 1 : 0;
+    },
     characterOptional(level) {
       const skillSheet = this.characterSkillSheet();
       const skill = skillSheet ? skillSheet.filter(s => s.level === level && s.optional === true && s.combinded === false) : undefined;
@@ -1471,23 +1306,16 @@ export default {
       const skillSheet = this.characterSkillSheet();
       const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level && s.combinded === false) : undefined;
       const ProfLen = skill ? skill.length : 0;
-
-
-
       if (skill.length === 2 && level < 7)
         return true;
-
       if (skill.length === 3 && level < 15)
         return true;
-
       if (skill.length === 4)
         return true;
-
       return false;
     },
-
-    ModAttribute(attribute, skill) {
-      const level = this.characterLevel();
+    ModAttribute(attribute, skill, level) {
+      // const level = this.characterLevel();
 
       const sheet = this.$store.getters["characters/characterSkillSheetById"](
         this.characterId
@@ -1499,8 +1327,57 @@ export default {
       const char1 = this.SkillsTrained[this.charSkill[prof]];
       // const char1 = this.SkillsTrained[this.characterSkills[skill]];
       const char2 = (this.characterAttributes[attribute] - 10) / 2;
-      const char3 = char1 === 0 ? 0 : this.characterLevel();
+      const char3 = char1 === 0 ? 0 : level;
       return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    ModProf(attribute, skill, level) {
+      // const level = this.characterLevel();
+
+      const sheet = this.$store.getters["characters/characterSkillSheetById"](
+        this.characterId
+      );
+      const prof = sheet.filter(
+        (s) => s.key === skill && s.level <= level && s.combinded !== true
+      ).length;
+
+      const char1 = this.SkillsTrained[this.charSkill[prof]];
+      // const char1 = this.SkillsTrained[this.characterSkills[skill]];
+      // const char2 = (this.characterAttributes[attribute] - 10) / 2;
+      const char3 = char1 === 0 ? 0 : level;
+      return parseInt(char1) + parseInt(char3);
+    },
+    ModProfAttr(attr, level) {
+      let result = this.characterAttributesEnhanced[attr];
+      let boost = this.characterAttributesEnhanced[attr] > 18 ? 1 : 2;
+      if (level !== 20 && this.characterAttributesBoost20[attr] > 0) {
+        result = result - boost;
+        boost = result > 18 ? 1 : 2;
+      }
+
+      if (level < 15 && this.characterAttributesBoost15[attr] > 0) {
+        result = result - boost;
+        boost = result > 18 ? 1 : 2;
+      }
+
+      if (level < 10 && this.characterAttributesBoost10[attr] > 0) {
+        result = result - boost;
+        boost = result > 18 ? 1 : 2;
+      }
+
+      if (level < 5 && this.characterAttributesBoost5[attr] > 0) {
+        result = result - boost;
+        boost = result > 18 ? 1 : 2;
+      }
+
+      const modRaw = (result - 10) / 2;       // настоящее дробное значение
+      const mod = Math.floor(modRaw);         // отображаемое целое значение
+
+
+      const arrow = Number.isInteger(modRaw) ? "" : " ⯅";  // стрелка только если дробное
+
+      return (mod > 0 ? "+ " : " ") + mod + arrow;
+
+
     },
     ModAttributeSaving(attribute, skill) {
       const char1 = this.SkillsTrained[this.characterSaving[skill]];
@@ -1633,43 +1510,42 @@ export default {
 
       return boost + skill;
     },
-    characterProgressionSkill(level) {
-      let boost = 0;
-      let modInt = 0;
-      if (level % 5 === 0) {
-        switch (level) {
-          case 5:
-            boost = 4 - this.characterBoost5;
-            modInt = this.characterAttributesBoost5["intellect"];
-            break;
-          case 10:
-            boost = 4 - this.characterBoost10;
-            modInt = this.characterAttributesBoost10["intellect"];
-            break;
-          case 15:
-            boost = 4 - this.characterBoost15;
-            modInt = this.characterAttributesBoost15["intellect"];
-            break;
-          case 20:
-            boost = 4 - this.characterBoost20;
-            modInt = this.characterAttributesBoost20["intellect"];
-            break;
-        }
-      }
+    // characterProgressionSkill(level) {
+    //   let boost = 0;
+    //   let modInt = 0;
+    //   if (level % 5 === 0) {
+    //     switch (level) {
+    //       case 5:
+    //         boost = 4 - this.characterBoost5;
+    //         modInt = this.characterAttributesBoost5["intellect"];
+    //         break;
+    //       case 10:
+    //         boost = 4 - this.characterBoost10;
+    //         modInt = this.characterAttributesBoost10["intellect"];
+    //         break;
+    //       case 15:
+    //         boost = 4 - this.characterBoost15;
+    //         modInt = this.characterAttributesBoost15["intellect"];
+    //         break;
+    //       case 20:
+    //         boost = 4 - this.characterBoost20;
+    //         modInt = this.characterAttributesBoost20["intellect"];
+    //         break;
+    //     }
+    //   }
 
-      let skill = 0
-      if (level !== 1) {
-        skill = 1 + modInt - this.skillSheetAll("", level)
-      }
+    //   let skill = 0
+    //   if (level !== 1) {
+    //     skill = 1 + modInt - this.skillSheetAll("", level)
+    //   }
 
-      if (level === 1) {
-        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-        skill = this.characterSkillPointClass +
-          this.characterSkillPointBackground +
-          this.characterSkillPointClassUp + modInt - this.skillSheetPoints("", 1);
-      }
-      return skill;
-    },
+    //   if (level === 1) {
+    //     modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
+    //     skill = this.characterSkillPointClass +
+    //       modInt - this.skillSheetPoints("", 1);
+    //   }
+    //   return skill;
+    // },
     updateSelect(boost) {
       this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
     },
@@ -1703,6 +1579,9 @@ export default {
 
       })
 
+      let comb = true;
+      if (sheet.find((i) => i.key === boost && i.level === 1))
+        comb = false;
 
       this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: boost, level: 1, type: 'class', optional: true, combinded: false });
 
@@ -1821,7 +1700,7 @@ export default {
         // let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0 ? 1 : 0);
 
         let class1 = (this.characterClassBoost?.length > 0 ? 1 : 0)
-        let class2 = (this.characterClassSkill?.length > 0 ? 1 : 0);
+        let class2 = (this.selectedClassSkill ? 1 : 0);
         let back = (this.characterBackgroundFreeBoost?.length > 0 ? 1 : 0);
         let back2 = (this.characterBackgroundFreeBoost2?.length > 0 ? 1 : 0);
         let spec = (this.characterAncestryFreeBoost?.length > 0 ? 1 : 0);
@@ -1829,7 +1708,7 @@ export default {
 
         modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
         boost = this.characterBoost;
-        skill = this.skillSheetPoints("", 1);
+        skill = this.skillSheetPoints("", 1)
         this.$store.commit('characters/characterProgress', {
           id: this.characterId,
           level,
@@ -1894,8 +1773,8 @@ export default {
         modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
         boost = 4;
         skill = this.characterSkillPointClass +
-          this.characterSkillPointBackground +
-          this.characterSkillPointClassUp + modInt;
+          modInt //+ this.skillSheetBack();
+
         this.$store.commit('characters/characterProgressMax', {
           id: this.characterId,
           level,
@@ -1982,8 +1861,8 @@ export default {
       if (level === 1) {
         modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
         skill = this.characterSkillPointClass +
-          this.characterSkillPointBackground +
-          this.characterSkillPointClassUp + modInt - this.skillSheetPoints("", 1);
+
+          modInt - this.skillSheetPoints("", 1);
       }
 
       return skill;
@@ -2011,6 +1890,140 @@ export default {
     },
     /////
 
+    isSkillUpgraded(skill) {
+      return this.skillSheetValue(skill.key, 1) > 0;
+    },
+
+    handleSkillClick(skill) {
+      if (this.isSkillDisabled(skill)) return;
+
+      const value = this.skillSheetValue(skill.key, 1);
+
+      if (value > 0) {
+        this.decrementSkill(skill.key, 1);
+      } else {
+        this.incrementSkill(skill.key, 1);
+      }
+    },
+
+    isSkillDisabled(skill) {
+      return (
+        (skill.custom && this.skillSheetTrained(skill.key, 1) === "Тренирован") ||
+        this.skillSheetOptional(skill.key, 1) === true ||
+        (this.skillSheetValue(skill.key, 1) === 0 &&
+          this.freeSkillPointsLvl1 <= 0)
+      );
+    },
+    ////по уровням
+    isSkillUpgradedLevel(skill, level) {
+      return this.skillSheetValue(skill.key, level) > 0;
+    },
+    handleSkillClickLevel(skill, level) {
+      if (this.isSkillDisabledLevel(skill, level)) return;
+
+      const value = this.skillSheetValue(skill.key, level);
+
+      if (value > 0) {
+        this.decrementSkill(skill.key, level);
+      } else {
+        this.incrementSkill(skill.key, level);
+      }
+    },
+
+    isSkillDisabledLevel(skill, skillLevel) {
+      const value = this.skillSheetValue(skill.key, skillLevel);
+      return (
+        (
+          ((1 + this.modInt(skillLevel) - this.skillSheetAll("", skillLevel)) <= 0
+            && value === 0)
+          || (this.skillSheetTrained(skill.key, skillLevel) === "Легенда" && value === 0)
+        )
+        // this.skillSheetOptional(skill.key, skillLevel) === true ||
+        // (this.skillSheetValue(skill.key, 1) === 0 &&
+        //   (1 + this.modInt(skillLevel) - this.skillSheetAll("", skillLevel)) <= 0)
+        // || this.skillSheetTrained(skill.key, 1) === "Легенда"
+
+
+
+      );
+    },
+
+
+    ///Аттрибуты
+    ////по уровням
+    isAttributeUpgradedLevel(att, level) {
+      if (level === 1)
+        return (
+          this.characterAttributesBoost[att] > 0)
+
+      if (level === 5)
+        return (
+          this.characterAttributesBoost5[att] > 0)
+
+      if (level === 10)
+        return (
+          this.characterAttributesBoost10[att] > 0)
+
+      if (level === 15)
+        return (
+          this.characterAttributesBoost15[att] > 0)
+
+
+      if (level === 20)
+        return (
+          this.characterAttributesBoost20[att] > 0)
+    },
+    handleAttributeClickLevel(att, level) {
+      if (this.isAttributeDisabledLevel(att, level)) return;
+
+      let value = 0;
+
+      if (level === 1)
+        value = this.characterAttributesBoost[att]
+
+      if (level === 5)
+        value = this.characterAttributesBoost5[att]
+
+      if (level === 10)
+        value = this.characterAttributesBoost10[att]
+
+      if (level === 15)
+        value = this.characterAttributesBoost15[att]
+
+
+      if (level === 20)
+        value = this.characterAttributesBoost20[att]
+
+      if (value === 0) {
+        this.incrementAttribute(att, level);
+      } else {
+        this.decrementAttribute(att, level);
+      }
+    },
+
+    isAttributeDisabledLevel(att, level) {
+      if (level === 1)
+        return (4 - this.characterBoost == 0 &&
+          this.characterAttributesBoost[att] === 0)
+
+      if (level === 5)
+        return (4 - this.characterBoost5 == 0 &&
+          this.characterAttributesBoost5[att] === 0)
+
+      if (level === 10)
+        return (4 - this.characterBoost10 == 0 &&
+          this.characterAttributesBoost10[att] === 0)
+
+      if (level === 15)
+        return (4 - this.characterBoost15 == 0 &&
+          this.characterAttributesBoost15[att] === 0)
+
+
+      if (level === 20)
+        return (4 - this.characterBoost20 == 0 &&
+          this.characterAttributesBoost20[att] === 0)
+
+    },
 
     // Добавляем вызов сохранения при важных событиях
     beforeDestroy() {
@@ -2211,5 +2224,92 @@ tr.v-data-table__selected {
 .compact-btn {
   min-width: 28px !important;
   height: 28px !important;
+}
+
+/* Стили для таблицы */
+.skill-table {
+  font-size: 13px;
+  border-collapse: collapse;
+  /* убираем визуальные пробелы между ячейками */
+
+  .skill-row {
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+    height: 34px;
+    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
+    /* чтобы ::before позиционировался внутри строки */
+    /* важно для inset box-shadow */
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+      /* подсветка при hover */
+      box-shadow: inset 0 0 0 1px rgba(255, 200, 80, 0.4);
+      /* золотая рамка PF2e */
+    }
+  }
+
+  /* выключенные навыки */
+  .skill-row--disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+    /* рамка не нужна */
+  }
+
+  .skill-row--disabled:hover {
+    background: none;
+    box-shadow: none;
+  }
+
+  /* Прокачанный навык */
+  .skill-row--trained-up td:first-child {
+    position: relative;
+    //  background: rgba(255, 215, 100, 0.08);
+    /* золотой, мягкий */
+  }
+
+  .skill-row--trained-up {
+    background: rgba(255, 215, 100, 0.08);
+    /* золотой, мягкий */
+    position: relative;
+  }
+
+  .skill-row--trained-up td:first-child::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, #f7d26a, #d99a2b);
+    pointer-events: none;
+  }
+
+  td {
+    padding: 4px 6px !important;
+    box-sizing: border-box;
+    /* предотвращает сдвиг контента при hover */
+  }
+
+  .skill-name {
+    width: 35%;
+    font-weight: 500;
+  }
+
+  .skill-mod {
+    text-align: center;
+    width: 40px;
+  }
+
+  .skill-train {
+    text-align: center;
+    width: 70px;
+  }
+
+  .skill-delete {
+    width: 32px;
+    text-align: center;
+  }
 }
 </style>
