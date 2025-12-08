@@ -16,24 +16,28 @@
         <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
       </div>
 
+      <!-- Трейты -->
       <div>
         <trait-view v-if="species.trait" :item="species" class="mb-2" style="font-size: 14px" />
       </div>
+
       <v-divider />
 
       <v-tabs centered grow color="red">
+        <!-- Заголовки вверху -->
         <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`">
           <h2 class="subtitle-2">Родословная</h2>
         </v-tab>
         <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`">
           <h2 class="subtitle-2">Наследие </h2>
         </v-tab>
+
+        <!-- Вкладка с родословными -->
         <v-tab-item class="my-tab-item" key="tab-ancestry" :value="`tab-ancestry`">
           <div class="pa-2">
             <div class="mt-2 body-2 text-lg-justify">
+
               <p><strong>Скорость:</strong> {{ species.speed }}</p>
-
-
               <p><strong>Хитов:</strong> {{ species.ancestryHitPoint }}</p>
 
               <span class="subtitle-1 mt-2">Повышение характеристик</span>
@@ -52,8 +56,11 @@
               </div>
 
               <p></p>
-              <span v-if="species.attributeFlaw.find((t) => t.value < 0)" class="subtitle-1 mt-2">Понижение
-                характеристик</span>
+
+              <span v-if="species.attributeFlaw.find((t) => t.value < 0)" class="subtitle-1 mt-2">
+                Понижение характеристик
+              </span>
+
               <v-divider v-if="species.attributeFlaw.find((t) => t.value < 0)" />
 
               <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
@@ -63,6 +70,7 @@
               </div>
 
               <p><v-divider /></p>
+
               <p>
                 <strong>Доступные языки:</strong> {{ species.language.join(", ") }} +
                 {{ species.freeLanguage }} на выбор + количество языков, равное вашему
@@ -79,7 +87,9 @@
               <div v-for="description in species.Description" class="text-lg-justify">
                 <div v-if="description.name == 'Faith'">
                   <span class="subtitle-1 mt-2">Верование</span>
+
                   <p><v-divider /></p>
+
                   <div v-if="description.about" v-html="description.about"></div>
                   <strong> Популярные эдикты</strong>
                   <div v-if="description.edicts" v-html="description.edicts"></div>
@@ -105,6 +115,7 @@
                   <div v-if="description.about" v-html="description.about"></div>
 
                 </div>
+
                 <p></p>
                 <div v-if="description.name === 'society'">
                   <span class="subtitle-1 mt-2">Общество</span>
@@ -112,6 +123,7 @@
                   <div v-if="description.about" v-html="description.about"></div>
                 </div>
               </div>
+
               <p></p>
               <div v-if="species.exampleName">
                 <span class="subtitle-1 mt-2">Имена</span>
@@ -140,6 +152,7 @@
           </div>
         </v-tab-item>
 
+        <!-- Вкладка Наследия -->
         <v-tab-item class="my-tab-item" key="tab-heritage" :value="`tab-heritage`">
 
           <div v-if="heritageList" class="mt-2 pa-2">
@@ -153,11 +166,13 @@
               <p>
               <div v-if="selectedHeritage.previewText" v-html="selectedHeritage.previewText"></div>
               </p>
+
               <p>
               <div v-if="selectedHeritage.description" v-html="selectedHeritage.description"></div>
               </p>
 
               <div v-if="selectedHeritage.speciesFeatures"></div>
+
               <div v-for="feature in selectedHeritage.speciesFeatures" class="text-lg-justify "
                 v-bind:key="feature.key">
                 <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
@@ -170,6 +185,20 @@
                 <div v-if="feature.action" v-html="feature.action.description"></div>
                 </p>
               </div>
+
+              <div v-if="modification(selectedHeritage).length !== 0" class="text-lg-justify ">
+                <h3 class="main-holder split-header"><span class="left-header">Выберите навык</span></h3>
+
+                <p class="main-holder">
+                  <v-select v-model="selectedHeritage.selected" :items="modification(selectedHeritage)" item-value="key"
+                    item-text="name" label="" dense outlined persistent-hint
+                    @input="changeSelectedOption(selectedHeritage)">
+                  </v-select>
+
+                </p>
+              </div>
+
+
 
               <v-divider />
             </div>
@@ -222,21 +251,21 @@ export default {
       else return this.heritageList.filter((s) => s.isUniversal === true);
 
     },
-    characterSpeciesAstartesChapter() {
-      return this.$store.getters[
-        "characters/characterSpeciesAstartesChapterById"
-      ](this.characterId);
-    },
-    enhancements() {
-      return this.$store.getters["characters/characterEnhancementsById"](
-        this.characterId
-      );
-    },
-    psychicPowers() {
-      return this.$store.getters["characters/characterPsychicPowersById"](
-        this.characterId
-      );
-    },
+    // characterSpeciesAstartesChapter() {
+    //   return this.$store.getters[
+    //     "characters/characterSpeciesAstartesChapterById"
+    //   ](this.characterId);
+    // },
+    // enhancements() {
+    //   return this.$store.getters["characters/characterEnhancementsById"](
+    //     this.characterId
+    //   );
+    // },
+    // psychicPowers() {
+    //   return this.$store.getters["characters/characterPsychicPowersById"](
+    //     this.characterId
+    //   );
+    // },
     sources() {
       return ["playerCore", "playerCore2", ...this.settingHomebrews];
     },
@@ -256,7 +285,7 @@ export default {
         if (newVal) {
           await this.getAbilityList(newVal);
           await this.getTraitList(newVal);
-          await this.getChapterList(newVal);
+          // await this.getChapterList(newVal);
           await this.getHeritageList(newVal);
 
         }
@@ -279,15 +308,19 @@ export default {
     };
   },
   methods: {
-    async getChapterList(sources) {
-      const config = {
-        params: {
-          source: sources.join(","),
-        },
-      };
-      const { data } = await this.$axios.get("/api/species/chapters/", config);
-      this.chapterList = data;
-    },
+    // --------------------------------------
+    // АПИ запросы
+    // --------------------------------------
+
+    // async getChapterList(sources) {
+    //   const config = {
+    //     params: {
+    //       source: sources.join(","),
+    //     },
+    //   };
+    //   const { data } = await this.$axios.get("/api/species/chapters/", config);
+    //   this.chapterList = data;
+    // },
     async getHeritageList(sources) {
       const config = {
         params: {
@@ -303,6 +336,20 @@ export default {
           const lowercaseKeywords = species.ancestryAbility?.map((s) =>
             s.toUpperCase()
           );
+
+          const enc = this.$store.getters["characters/characterEnhancementsById"](
+            this.characterId
+          );
+
+          if (species.modification) {
+            if (species.modification.find(t => t.type === "select")) {
+              species.options = this.skillRepository;
+              species.selected = enc.find((s) => s.key === species.key)
+                ? enc.find((s) => s.key === species.key).selected
+                : "";
+            }
+          }
+
           if (lowercaseKeywords) {
             const List = this.abilityList;
             const ability = List.filter((talent) =>
@@ -328,6 +375,8 @@ export default {
         });
 
       }
+
+
       this.heritageList = data;
 
 
@@ -432,16 +481,36 @@ export default {
       this.loading = false;
       this.species = finalData;
     },
+
     selectHeritageForChar(species) {
 
-      if (species.prerequisites)
-        this.ensurePrerequisites(species.prerequisites);
+      // if (species.prerequisites)
+      //   this.ensurePrerequisites(species.prerequisites);
+
+      // Очистить перед началом модификации и слова
+      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
+        id: this.characterId,
+        source: "heritage",
+      });
+
+      this.$store.commit("characters/clearCharacterKeywordsBySource", {
+        id: this.characterId,
+        source: "heritage",
+      });
+
+      this.$store.commit("characters/clearCharactermodificatorsBonusbySource", {
+        id: this.characterId,
+        source: "heritage",
+      });
+
+      // Бонус
+
 
       const vision = this.$store.getters["characters/characterVisionById"](
         this.characterId
       );
 
-
+      // Установить модификации
       let modifications = [];
       species.speciesFeatures
         .filter((t) => t.modification !== undefined)
@@ -452,54 +521,59 @@ export default {
           if (t.key === "low-light vision up" && vision === "Сумеречное")
             t.modification.find(t => t.group === "sense").key = "darkvision"
 
-          modifications = [...modifications, ...t.modification];
+
+        });
+
+      if (species.modification)
+        species.modification.forEach((t) => {
+
+          modifications.push(t)
+
         });
 
 
 
-      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
+      const Bonus = []
+      modifications.forEach(item => {
+        if (item.type === 'Bonus') {
+
+        }
+        Bonus.push({
+          value: item.bonus,
+          type: item.bonusType,
+          source: "heritage",
+          // talentId: item.talentId,
+          selector: item.key,
+          description: item.snippet
+        })
+
+
+      })
+
+
+      this.$store.commit("characters/setCharactermodificatorsBonus", {
         id: this.characterId,
-        source: "heritage",
+        Bonus: Bonus,
       });
 
+      // Установить наследие
       this.$store.commit("characters/setCharacterHeritage", {
         id: this.characterId,
         heritage: { key: species.key, label: species.nameAncestry },
       });
 
-
-
+      // Установить модификации
       this.$store.commit("characters/setCharacterModifications", {
         id: this.characterId,
         content: { modifications: modifications, source: "heritage" },
       });
 
-      // species.attributeBoost.forEach((t) => {
+      const level = this.characterLevel();
+      this.$store.commit('characters/clearModification', { id: this.characterId, level });
+      this.$store.commit('characters/setModification', { id: this.characterId, level });
 
-      //     this.$store.commit("characters/setCharacterAncestryBoostForAll", {
-      //       id: this.characterId,
-      //       payload: { key: t.key, value: t.value },
-      //     });
-      // });
 
-      // species.attributeFlaw.forEach((t) => {
-
-      //     this.$store.commit("characters/setCharacterAncestryFlawForAll", {
-      //       id: this.characterId,
-      //       payload: { key: t.key, value: t.value },
-      //     });
-      // });
-
-      // this.$store.commit("characters/resetCharacterStats", {
-      //   id: this.characterId,
-      // });
-
-      this.$store.commit("characters/clearCharacterKeywordsBySource", {
-        id: this.characterId,
-        source: "heritage",
-      });
-      // modifications
-      //   .filter((m) => m.targetGroup === "keywords")
+      // Добавить трейты и ключевые слова
       species.trait.forEach((k) => {
         const payload = {
           name: k,
@@ -507,43 +581,78 @@ export default {
           type: "keyword",
           replacement: undefined,
         };
+
         this.$store.commit("characters/addCharacterKeyword", {
           id: this.characterId,
           keyword: payload,
         });
       });
 
-      this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
-        id: this.characterId,
-        source: "heritage",
-      });
-      const featuresWithPowers = species.speciesFeatures.filter(
-        (f) => f.psychicPowers !== undefined
-      );
-      if (featuresWithPowers) {
-        featuresWithPowers.forEach((feature) => {
-          feature.psychicPowers.forEach((powerSelections) => {
-            if (powerSelections.selected) {
-              const payload = {
-                id: this.characterId,
-                name: powerSelections.selected,
-                cost: 0,
-                source: `heritage.${powerSelections.selected.name}`,
-              };
-              this.$store.commit(
-                "characters/addCharacterPsychicPower",
-                payload
-              );
-            }
-          });
-        });
-      }
+    },
 
-      // this.speciesDialog = false;
-      // this.$router.push({
-      //   name: "forge-characters-id-builder-heritage-manage",
-      //   params: { id: this.characterId },
-      // });
+    changeSelectedOption(feature, inx) {
+      const level = this.characterLevel;
+
+      const mod = {
+        key: feature.key,
+        type: feature.type,
+        selected: feature.selected,
+        value: feature.value,
+        level: feature.level,
+        source: "heritage",
+      };
+
+
+
+      this.$store.commit("characters/removeSkillSheetbyType", {
+        id: this.characterId,
+        key: mod,
+        level: feature.level,
+        type: "heritage",
+        optional: true,
+      });
+
+      this.$store.commit("characters/clearCharacterClassModFeature", {
+        id: this.characterId,
+        content: mod,
+      });
+
+      this.$store.commit("characters/addCharacterClassModFeature", {
+        id: this.characterId,
+        content: mod,
+      });
+
+      this.$store.commit("characters/addSkillSheet", {
+        id: this.characterId,
+        key: feature.selected,
+        level: 1,
+        type: "heritage",
+        optional: true,
+        combinded: true,
+      });
+
+      this.$store.commit("characters/addSkillSheet", {
+        id: this.characterId,
+        key: feature.selected,
+        level: 5,
+        type: "heritage",
+        optional: true,
+      });
+
+    },
+    modification(selectedHeritage) {
+      if (!selectedHeritage)
+        return []
+
+      const skill = this.skillRepository;
+
+
+      if (selectedHeritage.modification)
+        if (selectedHeritage.modification.find(t => t.type === "select" && t.key === "skill"))
+          return skill;
+
+      return []
+
     },
 
     size(size) {
@@ -551,34 +660,22 @@ export default {
       const s = this.sizeRepository.find((s) => s.key === size);
       return s ? s.name : "";
     },
-    resetSpecies() {
-      this.selectedSpecies = undefined;
-      this.$store.commit("characters/setCharacterSpecies", {
-        id: this.characterId,
-        species: { value: undefined, cost: 0 },
-      });
-    },
+
     doChangeSpeciesMode() {
       this.$router.push({
         name: "forge-characters-id-builder-species-choose",
         params: { id: this.characterId },
       });
     },
-    getChapterTraditions(chapterKey) {
-      if (this.chapterList) {
-        const chapter =
-          this.chapterList.find((a) => a.key === chapterKey) || [];
-        if (chapter) {
-          return chapter.beliefsAndTraditions;
-        }
-      }
-      return [];
-    },
+
     enableHomebrew(sourceKey) {
       this.$store.commit("characters/enableSettingHomebrews", {
         id: this.characterId,
         content: sourceKey,
       });
+    },
+    characterLevel() {
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
 
 

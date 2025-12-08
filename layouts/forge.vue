@@ -144,7 +144,7 @@
         <div class="px-4 py-2">
           <!-- Характеристики -->
           <h3 class="mb-2">Характеристики</h3>
-          <div class="stat-row" v-for="attribute in attributeRepository" :key="attribute.key" @click="openAtt()">
+          <div class="stat-row" v-for="attribute in attributeRepository" @click="openAtt()">
             <div class="stat-group d-flex mb-1">
               <v-btn block small class="stat-name-btn" depressed>
                 <span class="truncate">{{ attribute.name }}</span>
@@ -159,7 +159,7 @@
           <!-- Навыки -->
           <h3 class="mb-2 mt-4">Навыки</h3>
           <v-list>
-            <v-list-item v-for="skill in finalSkillRepository" :key="skill.key" two-line @click="openSkills(skill)"
+            <v-list-item v-for="skill in finalSkillRepository" two-line @click="openSkills(skill)"
               :style="{ backgroundColor: getSkillRankColor(skill.key) }" class="skill-item">
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">
@@ -183,7 +183,7 @@
           <!-- Спасброски -->
           <h3 class="mb-2 mt-4">Спасброски</h3>
           <v-list>
-            <v-list-item v-for="saving in SavingRepository" :key="saving.key" two-line @click="openSaves(saving)">
+            <v-list-item v-for="saving in SavingRepository" two-line @click=" openSaves(saving)">
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   saving.name
@@ -206,7 +206,7 @@
           <!-- Владение оружием -->
           <h3 class="mb-2 mt-4">Владение оружием</h3>
           <v-list>
-            <v-list-item v-for="attack in WeaponRepository" :key="attack.key" two-line>
+            <v-list-item v-for="attack in WeaponRepository" two-line>
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   attack.name
@@ -224,7 +224,7 @@
           <!-- Владение доспехами -->
           <h3 class="mb-2 mt-4">Владение доспехами</h3>
           <v-list>
-            <v-list-item v-for="defence in DefenceRepository" :key="defence.key" two-line>
+            <v-list-item v-for="defence in DefenceRepository" two-line>
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   defence.name
@@ -239,10 +239,35 @@
             </v-list-item>
           </v-list>
 
+          <h3 class="mb-2 mt-4">Сопротивление</h3>
+          <v-list>
+            <v-list-item v-for="resistance in characterResistance()" two-line>
+              <v-list-item-content class="skill-row">
+                <v-list-item-title class="skill-label">
+
+                  {{
+                    DamageType.find(
+                      (t) => t.key === resistance.key
+                    ).name
+                  }}
+
+
+
+                  {{ resistance.value }}</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-action class="hidden-xs-only">
+                <!-- <v-chip pill :color="getClassChipColor(skillDefence[defence.key])" dark class="ml-2">
+                  {{ characterlabel(skillDefence[defence.key]) }}
+                </v-chip> -->
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+
           <!-- Языки -->
           <h3 class="mb-2 mt-4">Языки</h3>
           <v-list>
-            <v-list-item v-for="lang in characterLanguages" :key="lang.name" two-line>
+            <v-list-item v-for="lang in characterLanguages" two-line>
               <v-list-item-content class="skill-row">
                 <v-list-item-title class="skill-label">{{
                   lang.name
@@ -331,13 +356,13 @@
             <table class="boost-table">
               <thead>
                 <tr>
-                  <th v-for="attr in attributeRepository" :key="attr">{{ attr.name }}</th>
+                  <th v-for="attr in attributeRepository">{{ attr.name }}</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr v-for="(row, index) in tableRows" :key="index">
-                  <td v-for="attr in attributes" :key="attr + '2'" class="boost-cell">
+                <tr v-for="(row, index) in tableRows">
+                  <td v-for="attr in attributes" class="boost-cell">
                     {{ formatCell(row[attr]) }}
                   </td>
                 </tr>
@@ -345,7 +370,7 @@
 
               <tfoot>
                 <tr>
-                  <th v-for="attr in attributes" :key="attr + '1'" class="boost-footer">
+                  <th v-for="attr in attributes" class="boost-footer">
                     = {{ formatTotal(attr) }}
                   </th>
                 </tr>
@@ -427,7 +452,7 @@
                 <v-expansion-panel-header>Действия навыка</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list dense>
-                    <v-list-item v-for="(action, i) in skill.actions || []" :key="i">
+                    <v-list-item v-for="(action, i) in skill.actions || []">
                       <v-expansion-panel>
                         <v-expansion-panel-header>
                           {{ action?.name }}</v-expansion-panel-header>
@@ -551,8 +576,7 @@
                   <v-container class="pa-0 mt-4">
                     <v-row dense>
                       <v-col
-                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'skill-check' || finalSkillRepository.flatMap(k => k.key).includes(t.selector))"
-                        :key="char.id || char.selector">
+                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'skill-check' || finalSkillRepository.flatMap(k => k.key).includes(t.selector))">
                         <div v-if="char.selector === skill.key || char.selector === 'skill-check'"
                           v-html="char.description"></div>
                         <v-divider></v-divider>
@@ -567,7 +591,7 @@
                 <v-expansion-panel-header>Таймлайн навыка</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list dense>
-                    <v-list-item v-for="(event, index) in skill.event" :key="index">
+                    <v-list-item v-for="(event, index) in skill.event">
                       <v-list-item-content>
                         <v-list-item-title style="
                             display: flex;
@@ -684,8 +708,7 @@
                   <v-container class="pa-0 mt-4">
                     <v-row dense>
                       <v-col
-                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'saving-throw' || SavingRepository.flatMap(t => t.key).includes(t.selector))"
-                        :key="char.id || char.selector">
+                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'saving-throw' || SavingRepository.flatMap(t => t.key).includes(t.selector))">
                         <div v-if="char.selector === save.key || char.selector === 'saving-throw'"
                           v-html="char.description">
                         </div>
@@ -702,7 +725,7 @@
                 <v-expansion-panel-header>Таймлайн спасброска</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list dense>
-                    <v-list-item v-for="(event, index) in save.event" :key="index">
+                    <v-list-item v-for="(event, index) in save.event">
                       <v-list-item-content>
                         <v-list-item-title style="
                             display: flex;
@@ -902,6 +925,7 @@ import ToolbarAccountActions from "~/components/user/ToolbarAccountActions.vue";
 import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 import SluggerMixin from "~/mixins/SluggerMixin";
 import AppLoader from '~/components/AppLoader.vue';
+import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 
 export default {
   name: "Forge",
@@ -909,8 +933,9 @@ export default {
     DefaultFooter,
     ToolbarAccountActions,
     AppLoader
+
   },
-  mixins: [StatRepositoryMixin, SluggerMixin],
+  mixins: [StatRepositoryMixin, SluggerMixin, WargearTraitRepositoryMixin],
   data() {
     return {
       skillsDialog: false,
@@ -1202,6 +1227,7 @@ export default {
         this.$route.params.id
       );
     },
+
     bonus() {
       return this.$store.getters["characters/characterBonusById"](
         this.$route.params.id
@@ -1678,7 +1704,11 @@ export default {
       );
     },
 
-
+    characterResistance() {
+      return this.$store.getters["characters/characterResistanceById"](
+        this.$route.params.id
+      )
+    },
     characterArmor() {
       const wear = this.$store.getters["characters/characterWearById"](
         this.$route.params.id

@@ -179,8 +179,8 @@ const gnome = [
                     group: "skill",
                     bonus: 2,
                     bonusType: "circumstance",
-                    type: "Bonus"
-                    // snippet: "Вы получаете бонус обстоятельства +2 когда используете действие Поиск (Seek) для поиска спрятанных или необнаруженных существ в пределах 30 футов от вас." 
+                    type: "Bonus",
+                    snippet: "Вы получаете бонус обстоятельства +2 когда используете действие Поиск (Seek) для поиска спрятанных или необнаруженных существ в пределах 30 футов от вас."
                 }
             ],
         ancestryAbility: ["gnome-chameleon"],
@@ -764,10 +764,81 @@ const elf = [
         ...statFlaw(0, 0, 0, 0, 0, 0),
         rarity: "Сommon",
         description: "<p>Вы живете глубоко на замерзшем севере и приобрели невероятную устойчивость к холодным средам, получив сопротивляемость холоду, равную половине вашего уровня (минимум 1). Вы считаете эффекты холодной окружающей среды так, как если бы они были на одну ступень ниже (невероятный холод становится экстремальным, экстремальный холод становится суровым и так далее).</p>",
-
+        modification:
+            [
+                {
+                    key: "cold",
+                    mode: "Add",
+                    type: "Resistance",
+                    value: "level/2",
+                    set: "level/2",
+                    // group: "feat",
+                    level: 1,
+                },
+            ],
     },
 
 
 ];
 
-module.exports = [...gnome, ...UniversalHeritage, ...leshy, ...halfling, ...dwarf, ...goblin, ...orc];
+//Человек
+const human = [
+
+
+
+    {
+        ...species("playerCore", 29, "Гуманоид", "Versatile Human", 25),
+        isUniversal: false,
+        type: "Человек",
+        trait: [],
+        nameAncestry: "Разносторонний человек",
+        ...statBoost(0, 0, 0, 0, 0, 0),
+        ...statFlaw(0, 0, 0, 0, 0, 0),
+        rarity: "Сommon",
+        description: "<p>Многогранность и амбиции человечества способствовали тому, что они стали самой распространенной родословной в большинстве наций мира. Выберите общую способность для которой вы подходите по предварительным условиям (как и в случае со способностью родословной, вы можете выбрать эту способность на любом этапе создания персонажа).</p>",
+        modification:
+            [
+                {
+                    key: "all",
+                    mode: "Add",
+                    type: "general",
+                    group: "feat",
+                    level: 1,
+                },
+            ],
+    },
+
+
+    {
+        ...species("playerCore", 29, "Гуманоид", "Skilled Human", 25),
+        isUniversal: false,
+        type: "Человек",
+        trait: [],
+        nameAncestry: "Умелый человек",
+        ...statBoost(0, 0, 0, 0, 0, 0),
+        ...statFlaw(0, 0, 0, 0, 0, 0),
+        rarity: "Сommon",
+        description: "<p>Ваша изобретательность позволяет вам обучаться самым разным навыкам. Вы становитесь обучены одному навыку на свой выбор. На 5-м уровне вы становитесь экспертом выбранного навыка.</p>",
+        modification:
+            [
+                {
+                    key: "skill",
+                    mode: "Add",
+                    type: "select",
+                    value: "T",
+                    level: 1,
+                },
+                {
+                    key: "skill",
+                    mode: "Add",
+                    type: "select",
+                    value: "E",
+                    level: 5,
+                },
+            ],
+    },
+
+
+];
+
+module.exports = [...gnome, ...UniversalHeritage, ...leshy, ...halfling, ...dwarf, ...goblin, ...orc, ...human, ...elf];

@@ -6,7 +6,7 @@
       </v-col>
 
       <!-- Динамическое изменение столбцов -->
-      <v-tabs centered grow color="red">
+      <v-tabs class="tabs-small" centered grow color="red">
         <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`">
           <h2 class="subtitle-2">
             Черты родословной
@@ -48,7 +48,7 @@
             Черты общие
             <v-chip v-if="archetype" style="flex: none" right pill>
               {{ characterMaxType("general") }} /
-              {{ Math.trunc((characterLevel() + 1) / 4) }}
+              {{ Math.trunc((characterLevel() + 1) / 4) + isGeneral("general") }}
             </v-chip>
           </h2>
         </v-tab>
@@ -111,8 +111,8 @@
                 <v-expansion-panel-content :key="levelAncestry">
                   <CardItem v-if="characterAncestryTalent(levelAncestry)" :item="characterTalentsKey(
                     characterAncestryTalent(levelAncestry)
-                  )
-                    " />
+                  )" />
+
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -206,9 +206,8 @@
           <!-- <v-col :cols="8" :sm="10" class="subtitle-1"> Черты Общие </v-col> -->
 
           <v-expansion-panels multiple>
-            <v-expansion-panel v-for="levelAncestry in 20" :key="levelAncestry" v-if="
-              levelAncestry <= characterLevel() &&
-              (levelAncestry == 3 || (levelAncestry + 1) % 4 == 0)
+            <v-expansion-panel v-for="levelAncestry in 20" :key="levelAncestry" v-if="generalFeatsNumber(levelAncestry)
+
             ">
               <v-expansion-panel-header>{{ levelAncestry }} уровень
                 <span v-if="characterGeneralTalent(levelAncestry)">
@@ -600,9 +599,11 @@ export default {
     characterSpeciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
-    characterArchetypeKey() {
-      return this.$store.getters['characters/characterArchetypeKeyById'](this.characterId);
-    },
+    // characterArchetypeKey() {
+    //   return this.$store.getters['characters/characterArchetypeKeyById'](this.characterId);
+    // },
+
+
     searchResult() {
       if (this.talentList === undefined) {
         return [];
@@ -791,46 +792,23 @@ export default {
       },
       immediate: true,
     },
-    searchQuery(newVal) {
-      this.pagination.page = 1; // сброс на первую страницу при поиске
-      this.fetchWargear();
-    },
-    filters: {
-      deep: true,
-      handler() {
-        this.pagination.page = 1; // сбрасываем на первую страницу
-        this.fetchWargear();
-      },
-    },
-    "pagination.page"(newPage) {
-      this.fetchWargear();
-    },
+    // searchQuery(newVal) {
+    //   this.pagination.page = 1; // сброс на первую страницу при поиске
+    //   this.fetchWargear();
+    // },
+    // filters: {
+    //   deep: true,
+    //   handler() {
+    //     this.pagination.page = 1; // сбрасываем на первую страницу
+    //     this.fetchWargear();
+    //   },
+    // },
+    // "pagination.page"(newPage) {
+    //   this.fetchWargear();
+    // },
   },
   methods: {
-    async loadArchetype(key) {
-      this.loading = true;
-      if (key === 'advanced') {
-        this.archetype = { prerequisites: [] };
-      } else {
-        const { data } = await this.$axios.get(`/api/archetypes/${key}`);
-        this.archetype = data;
-      }
-      this.loading = false;
-    },
-    async loadSpecies(key) {
-      this.loading = true;
-      const { data } = await this.$axios.get(`/api/species/${key}`);
 
-      this.species = data;
-      this.boost = this.species ? this.species.abilityBoost : 0;
-      this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
-      this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
-
-      this.selectedAncestryBoost = this.characterAncestryFreeBoost;
-      this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2;
-      this.selectedBoost = this.AncestryFreeBoost;
-      this.loading = false;
-    },
     //Вывод окна для выбора черт
     updatePreview(levelAncestry, type) {
 
@@ -910,50 +888,65 @@ export default {
       }
 
     },
-    characterAttributes() {
-      return this.$store.getters['characters/characterAttributesById'](this.characterId);
-    },
-    characterSkillSheet() {
-      return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
-    },
+    // characterAttributes() {
+    //   return this.$store.getters['characters/characterAttributesById'](this.characterId);
+    // },
+    // characterSkillSheet() {
+    //   return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
+    // },
     characterLevel() {
       return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     //АПИ по чертам
-    async fetchWargear() {
-      const params = {
-        page: this.pagination.page || 1,
-        perPage: this.pagination.perPage || 25,
-        type:
-          this.filters.type && this.filters.type.length
-            ? this.filters.type.join(",")
-            : undefined,
-        source:
-          this.filters.source && this.filters.source.length
-            ? this.filters.source.join(",")
-            : undefined,
-        rarity:
-          this.filters.rarity && this.filters.rarity.length
-            ? this.filters.rarity.join(",")
-            : undefined,
-        traits:
-          this.filters.traits && this.filters.traits.length
-            ? this.filters.traits.join(",")
-            : undefined,
-        level: this.filters.level ? this.filters.level : undefined,
-        search: this.filters.search || undefined,
-      };
-
-      try {
-        const response = await this.$axios.get("/api/talents", { params });
-        const { data, total, pageCount } = response.data;
-
-        this.items = data || [];
-        this.pagination.pageCount = pageCount || 1;
-        this.total = total || 0;
-      } catch (err) {
-        console.error("Ошибка загрузки wargear:", err);
+    async loadArchetype(key) {
+      this.loading = true;
+      if (key === 'advanced') {
+        this.archetype = { prerequisites: [] };
+      } else {
+        const { data } = await this.$axios.get(`/api/archetypes/${key}`);
+        this.archetype = data;
       }
+      this.loading = false;
+    },
+    async loadSpecies(key) {
+      this.loading = true;
+      const { data } = await this.$axios.get(`/api/species/${key}`);
+
+      this.species = data;
+      this.boost = this.species ? this.species.abilityBoost : 0;
+      this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
+      this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
+
+      this.selectedAncestryBoost = this.characterAncestryFreeBoost;
+      this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2;
+      this.selectedBoost = this.AncestryFreeBoost;
+      this.loading = false;
+    },
+    async getAbility(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/abilityAncestry/",
+        config.source
+      );
+
+      this.abilityList = data;
+    },
+    async getTraitList(sources) {
+      const config = {
+        params: {
+          source: sources.join(","),
+        },
+      };
+      const { data } = await this.$axios.get(
+        "/api/traits/",
+        config.source
+      );
+      data.forEach(t => t.key = t.key.toLowerCase());
+      this.traitList = data;
     },
 
     async getTalents(sources) {
@@ -968,30 +961,18 @@ export default {
       const perPage = 10000;
 
       const params = { page, perPage/*, source: sources.join(',')*/ };
-
-
-
-
       const { data, total } = await this.$axios.get('/api/talents/', { params });
-
       const talents = data.data.map(talent => {
-
-
         return {
           ...talent
         }
       });
 
-
-
-
       if (this.traitList !== undefined) {
         talents.forEach((species) => {
-
           const tr = Array.isArray(species.traits)
             ? species.traits
             : String(species.traits).split(','); // если не массив — превращаем в массив
-
 
           const lowercaseKeywords = species.traits ? tr : '';
 
@@ -1035,50 +1016,6 @@ export default {
       // console.log([...new Set(rules.flatMap(t => t.selector))]);
       this.modifications = this.enhancements;
       this.loading = false;
-    },
-
-    async getAbility(sources) {
-      const config = {
-        params: {
-          source: sources.join(","),
-        },
-      };
-      const { data } = await this.$axios.get(
-        "/api/abilityAncestry/",
-        config.source
-      );
-
-      this.abilityList = data;
-    },
-    async getTraitList(sources) {
-      const config = {
-        params: {
-          source: sources.join(","),
-        },
-      };
-      const { data } = await this.$axios.get(
-        "/api/traits/",
-        config.source
-      );
-      data.forEach(t => t.key = t.key.toLowerCase());
-      this.traitList = data;
-    },
-    dynamicSort(property) {
-      let sortOrder = 1;
-      if (property[0] === '-') {
-        sortOrder = -1;
-        property = property.substr(1);
-      }
-      return function (a, b) {
-        /* next line works with strings and numbers,
-         * and you may want to customize it to your needs
-         */
-        const result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-        return result * sortOrder;
-      };
-    },
-    isAffordable(cost) {
-      return cost <= this.remainingBuildPoints;
     },
     characterAncestryTalent(level) {
       // { id, name, cost, selection}
@@ -1225,7 +1162,6 @@ export default {
 
         const aggregatedTalent = Object.assign({}, rawTalent);
 
-
         aggregatedTalent.id = talent.id;
         aggregatedTalent.trait = talent.traits;
         aggregatedTalent.cost = talent.cost;
@@ -1242,12 +1178,7 @@ export default {
         return aggregatedTalent;
       }).sort((a, b) => a.id.localeCompare(b.id));
 
-
-
-
       return talents.find(s => s.place === 'stylish' + level)
-
-
 
     },
 
@@ -1288,21 +1219,6 @@ export default {
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
 
-          // aggregatedTalent.extraCost = 0;
-          // if (talent.extraCost && typeof talent.extraCost === 'object') {
-          //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
-          //     aggregatedTalent.extraCost  += talent.extraCost[extraCostKey] ? talent.extraCost[extraCostKey] : 0;
-          //   });
-          // } else {
-          //   aggregatedTalent.extraCost += talent.extraCost && parseInt(talent.extraCost) ? talent.extraCost : 0;
-          // }
-          // if (aggregatedTalent.options) {
-          //   const replacementTargetString = aggregatedTalent.options.find((t) => t.key === talent.selected).name;
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${replacementTargetString})</em>`);
-          //   console.info(`[${talent.id}] Compute label ${aggregatedTalent.label} from ${talent.selected}/${replacementTargetString}`);
-          // } else {
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${talent.selected})</em>`);
-          // }
         }
 
 
@@ -1349,72 +1265,10 @@ export default {
         aggregatedTalent.place = talent.place;
         aggregatedTalent.level = talent.level;
         aggregatedTalent.trait = talent.traits;
+
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
-          // aggregatedTalent.extraCost = 0;
-          // if (talent.extraCost && typeof talent.extraCost === 'object') {
-          //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
-          //     aggregatedTalent.extraCost  += talent.extraCost[extraCostKey] ? talent.extraCost[extraCostKey] : 0;
-          //   });
-          // } else {
-          //   aggregatedTalent.extraCost += talent.extraCost && parseInt(talent.extraCost) ? talent.extraCost : 0;
-          // }
-          // if (aggregatedTalent.options) {
-          //   const replacementTargetString = aggregatedTalent.options.find((t) => t.key === talent.selected).name;
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${replacementTargetString})</em>`);
-          //   console.info(`[${talent.id}] Compute label ${aggregatedTalent.label} from ${talent.selected}/${replacementTargetString}`);
-          // } else {
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${talent.selected})</em>`);
-          // }
-        }
-
-        // Fetch gear for selected weapon trooper
-        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-            /*
-            charGear.forEach( g => {
-              characterPackage
-              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
-              .selectList.find(s=> g.source.endsWith(s.key))
-                .itemChoice = g.name
-            });
-            */
-          }
-        }
-
-        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-          }
-        }
-
-        // Fetch gear for selected augmetis
-        if (aggregatedTalent.key.startsWith('core-augmetic')) {
-
-          aggregatedTalent.wargear.forEach((g, i, warArray) => {
-            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-
-            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-            if (charGear && charGear.length > 0 && this.wargearList) {
-
-              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-
-              g.selected = wargear.name;
-
-
-            }
-          });
-
         }
 
         return aggregatedTalent;
@@ -1467,54 +1321,6 @@ export default {
           aggregatedTalent.selected = talent.selected;
         }
 
-        // Fetch gear for selected weapon trooper
-        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-            /*
-            charGear.forEach( g => {
-              characterPackage
-              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
-              .selectList.find(s=> g.source.endsWith(s.key))
-                .itemChoice = g.name
-            });
-            */
-          }
-        }
-
-        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-          }
-        }
-
-        // Fetch gear for selected augmetis
-        if (aggregatedTalent.key.startsWith('core-augmetic')) {
-
-          aggregatedTalent.wargear.forEach((g, i, warArray) => {
-            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-
-            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-            if (charGear && charGear.length > 0 && this.wargearList) {
-
-              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-
-              g.selected = wargear.name;
-
-
-            }
-          });
-
-        }
-
         return aggregatedTalent;
       }).sort((a, b) => a.id.localeCompare(b.id));
 
@@ -1561,70 +1367,8 @@ export default {
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
-          // aggregatedTalent.extraCost = 0;
-          // if (talent.extraCost && typeof talent.extraCost === 'object') {
-          //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
-          //     aggregatedTalent.extraCost  += talent.extraCost[extraCostKey] ? talent.extraCost[extraCostKey] : 0;
-          //   });
-          // } else {
-          //   aggregatedTalent.extraCost += talent.extraCost && parseInt(talent.extraCost) ? talent.extraCost : 0;
-          // }
-          // if (aggregatedTalent.options) {
-          //   const replacementTargetString = aggregatedTalent.options.find((t) => t.key === talent.selected).name;
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${replacementTargetString})</em>`);
-          //   console.info(`[${talent.id}] Compute label ${aggregatedTalent.label} from ${talent.selected}/${replacementTargetString}`);
-          // } else {
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${talent.selected})</em>`);
-          // }
         }
 
-        // Fetch gear for selected weapon trooper
-        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-            /*
-            charGear.forEach( g => {
-              characterPackage
-              .wargearOptions.find(o=>o.key === characterPackage.wargearChoice)
-              .selectList.find(s=> g.source.endsWith(s.key))
-                .itemChoice = g.name
-            });
-            */
-          }
-        }
-
-        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-          }
-        }
-
-        // Fetch gear for selected augmetis
-        if (aggregatedTalent.key.startsWith('core-augmetic')) {
-
-          aggregatedTalent.wargear.forEach((g, i, warArray) => {
-            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-
-            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-            if (charGear && charGear.length > 0 && this.wargearList) {
-
-              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-
-              g.selected = wargear.name;
-
-
-            }
-          });
-
-        }
 
         return aggregatedTalent;
       }).sort((a, b) => a.id.localeCompare(b.id));
@@ -1669,64 +1413,10 @@ export default {
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
+
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
-          // aggregatedTalent.extraCost = 0;
-          // if (talent.extraCost && typeof talent.extraCost === 'object') {
-          //   Object.keys(talent.extraCost).forEach((extraCostKey) => {
-          //     aggregatedTalent.extraCost  += talent.extraCost[extraCostKey] ? talent.extraCost[extraCostKey] : 0;
-          //   });
-          // } else {
-          //   aggregatedTalent.extraCost += talent.extraCost && parseInt(talent.extraCost) ? talent.extraCost : 0;
-          // }
-          // if (aggregatedTalent.options) {
-          //   const replacementTargetString = aggregatedTalent.options.find((t) => t.key === talent.selected).name;
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${replacementTargetString})</em>`);
-          //   console.info(`[${talent.id}] Compute label ${aggregatedTalent.label} from ${talent.selected}/${replacementTargetString}`);
-          // } else {
-          //   aggregatedTalent.label = aggregatedTalent.name.replace(/(\[.*\])/, `<em>(${talent.selected})</em>`);
-          // }
-        }
-
-        // Fetch gear for selected weapon trooper
-        if (['core-special-weapons-trooper'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-          }
-        }
-
-        if (['red1-devastator-doctrine'].includes(aggregatedTalent.key)) {
-          const sourceKey = `talent.${aggregatedTalent.id}`;
-          const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-          if (charGear && charGear.length > 0 && this.wargearList) {
-            const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-            aggregatedTalent.selected = wargear.key;
-            aggregatedTalent.label = `${aggregatedTalent.name} <em>(${wargear.name})</em>`;
-          }
-        }
-
-        // Fetch gear for selected augmetis
-        if (aggregatedTalent.key.startsWith('core-augmetic')) {
-
-          aggregatedTalent.wargear.forEach((g, i, warArray) => {
-            const sourceKey = `talent.${aggregatedTalent.id}.${g.key}`;
-
-            const charGear = this.characterWargear.filter((gear) => gear.source && gear.source.startsWith(sourceKey));
-            if (charGear && charGear.length > 0 && this.wargearList) {
-
-              const wargear = this.wargearList.find((g) => g.name === charGear[0].name);
-
-              g.selected = wargear.name;
-
-
-            }
-          });
-
         }
 
         return aggregatedTalent;
@@ -1737,9 +1427,26 @@ export default {
     characterMaxType(item) {
       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
       const level = this.characterLevel();
+
       const max = characterTalents ? characterTalents.filter(s => s.place.includes(item)).filter(s => level >= s.level).length : 0;
 
       return max;
+    },
+    isGeneral(item) {
+      const enc = this.$store.getters["characters/characterEnhancementsById"](
+        this.characterId
+      );
+      const isGeneral = item === "general" && enc.find(t => t.group === "feat" && t.mode === "Add" && t.type === "general") ? 1 : 0;
+      return isGeneral
+    },
+    generalFeatsNumber(levelAncestry) {
+      const enc = this.$store.getters["characters/characterEnhancementsById"](
+        this.characterId
+      );
+      const isGeneral = enc.find(t => t.group === "feat" && t.mode === "Add" && t.type === "general") ? true : false;
+      return (levelAncestry <= this.characterLevel() &&
+        (levelAncestry == 3 || (levelAncestry + 1) % 4 == 0)) || (isGeneral === true && levelAncestry === 1)
+
     },
     FreeTalentsLength() {
       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
@@ -1946,5 +1653,23 @@ export default {
   margin-block-end: 1em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
+}
+
+.tabs-small .v-tab {
+  padding: 0 8px !important;
+  min-width: auto !important;
+  white-space: normal !important;
+  /* ← разрешает перенос */
+  line-height: 1.1 !important;
+}
+
+.tabs-small h2 {
+  font-size: 12px !important;
+  line-height: 1.2;
+}
+
+.tabs-small .v-chip {
+  transform: scale(0.75);
+  /* уменьшаем */
 }
 </style>

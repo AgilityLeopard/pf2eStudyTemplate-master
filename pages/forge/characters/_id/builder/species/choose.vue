@@ -4,39 +4,17 @@
       <h1 class="headline">Выберите наследие</h1>
     </v-col>
 
-    <v-dialog
-      v-model="speciesDialog"
-      :fullscreen="$vuetify.breakpoint.xsOnly"
-      width="600px"
-      scrollable
-    >
-      <species-preview
-        v-if="selectedSpecies"
-        :character-id="characterId"
-        :species="selectedSpecies"
-        choose-mode
-        @select="selectSpeciesForChar"
-        @cancel="speciesDialog = false"
-      />
+    <v-dialog v-model="speciesDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
+      <species-preview v-if="selectedSpecies" :character-id="characterId" :species="selectedSpecies" choose-mode
+        @select="selectSpeciesForChar" @cancel="speciesDialog = false" />
     </v-dialog>
 
     <v-col cols="12">
-      <v-progress-circular
-        v-if="!speciesList"
-        indeterminate
-        color="success"
-        size="128"
-        width="12"
-      />
+      <v-progress-circular v-if="!speciesList" indeterminate color="success" size="128" width="12" />
 
       <v-card v-if="speciesList">
         <v-list>
-          <v-list-item
-            v-for="item in speciesList"
-            :key="item.key"
-            :disabled="item.baseTier > characterSettingTier"
-            @click.stop="updatePreview(item)"
-          >
+          <v-list-item v-for="item in speciesList" :key="item.key" @click.stop="updatePreview(item)">
             <v-list-item-avatar tile>
               <img :src="getAvatar(item.key)" />
             </v-list-item-avatar>
@@ -44,19 +22,11 @@
             <v-list-item-content>
               <v-list-item-title>
                 {{ item.nameAncestry }}
-                <v-chip
-                  v-if="item.source"
-                  color="info"
-                  outlined
-                  tags
-                  x-small
-                  label
-                >
+                <v-chip v-if="item.source" color="info" outlined tags x-small label>
                   {{ item.source.key.toUpperCase() }}
                 </v-chip>
               </v-list-item-title>
-              <v-list-item-subtitle
-                ><v-chip> {{ item.ancestryHitPoint }} HP </v-chip>
+              <v-list-item-subtitle><v-chip> {{ item.ancestryHitPoint }} HP </v-chip>
                 <!-- <v-chip> +ЛОВ, МДР, СВОБ </v-chip><v-chip> -ТЕЛ </v-chip> -->
               </v-list-item-subtitle>
               <!-- <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle> -->
@@ -97,21 +67,7 @@ export default {
         this.characterId
       );
     },
-    characterSettingTier() {
-      return this.$store.getters["characters/characterSettingTierById"](
-        this.characterId
-      );
-    },
-    characterAttributes() {
-      return this.$store.getters["characters/characterAttributesById"](
-        this.characterId
-      );
-    },
-    characterSkills() {
-      return this.$store.getters["characters/characterSkillsById"](
-        this.characterId
-      );
-    },
+
   },
   watch: {
     sources: {
@@ -132,6 +88,9 @@ export default {
     };
   },
   methods: {
+    // --------------------------------------
+    // АПИ запросы
+    // --------------------------------------
     async getSpeciesList(sources) {
       const config = {
         params: {
@@ -219,40 +178,40 @@ export default {
       data.forEach((t) => (t.key = t.key.toLowerCase()));
       this.traitList = data;
     },
-
-    getAvatar(key) {
-      return `/img/avatars/species/${key.toLowerCase()}.png`;
-    },
-    async updatePreview(item) {
-      const slug = this.camelToKebab(item.key);
-      if (item.key.startsWith("custom-")) {
-        const speciesDetails = this.$store.getters["species/getSpecies"](
-          item.key
-        );
-        this.selectedSpecies = speciesDetails;
-      } else {
-        const speciesDetails = await this.$axios.get(`/api/species/${slug}`);
-        this.selectedSpecies = speciesDetails.data;
-      }
-      this.selectedSpecies = item;
-      this.speciesDialog = true;
-    },
+    // --------------------------------------
+    // Выбор родословной
+    // --------------------------------------
     selectSpeciesForChar(species) {
-      if (species.prerequisites)
-        this.ensurePrerequisites(species.prerequisites);
+      // if (species.prerequisites)
+      //   this.ensurePrerequisites(species.prerequisites);
 
-      let modifications = [];
-      species.speciesFeatures
-        .filter((t) => t.modifications !== undefined)
-        .forEach((t) => {
-          modifications = [...modifications, ...t.modifications];
-        });
+      // Очистка языков и модификации
+      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
+        id: this.characterId,
+        source: "species",
+      });
 
-      //Языки
       this.$store.commit("characters/removeCharacterLanguagebySource", {
         id: this.characterId,
         source: "species",
       });
+
+      this.$store.commit("characters/clearCharacterKeywordsBySource", {
+        id: this.characterId,
+        source: "species",
+      });
+
+      this.$store.commit("characters/removeCharacterTalentbySource", {
+        id: this.characterId,
+        source: "ancestry",
+      });
+
+      this.$store.commit("characters/resetCharacterStats", {
+        id: this.characterId,
+        optional: "ancestry",
+      });
+
+      //Языки
 
       const lang = this.$store.getters["characters/characterLanguagesById"](
         this.characterId
@@ -274,25 +233,37 @@ export default {
         }
       });
 
-      this.$store.commit("characters/clearCharacterEnhancementsBySource", {
-        id: this.characterId,
-        source: "species",
-      });
+      // Модификации от родословной
+
+      let modifications = [];
+      species.speciesFeatures
+        .filter((t) => t.modifications !== undefined)
+        .forEach((t) => {
+          modifications = [...modifications, ...t.modifications];
+        });
+
+
+      //Скорость
       this.$store.commit("characters/setCharacterSpeed", {
         id: this.characterId,
         type: "land",
         speed: species.speed,
       });
 
+
+      //Ключ родословной
       this.$store.commit("characters/setCharacterSpecies", {
         id: this.characterId,
         species: { key: species.key, label: species.nameAncestry },
       });
+
+      //Установка модификаций от родословной
       this.$store.commit("characters/setCharacterModifications", {
         id: this.characterId,
         content: { modifications: modifications, source: "species" },
       });
 
+      // Бусты и Недостатки от Родословной
       species.attributeBoost.forEach((t) => {
         this.$store.commit("characters/setCharacterAncestryBoostForAll", {
           id: this.characterId,
@@ -307,28 +278,13 @@ export default {
         });
       });
 
-      this.$store.commit("characters/resetCharacterStats", {
-        id: this.characterId,
-        optional: "ancestry",
-      });
-
+      // Установка Хитов
       this.$store.commit("characters/setCharacterHitPoints", {
         id: this.characterId,
         payload: { value: species.ancestryHitPoint, type: "ancestry" },
       });
 
-      this.$store.commit("characters/clearCharacterKeywordsBySource", {
-        id: this.characterId,
-        source: "species",
-      });
-
-      this.$store.commit("characters/removeCharacterTalentbySource", {
-        id: this.characterId,
-        source: "ancestry",
-      });
-      // modifications
-      //   .filter((m) => m.targetGroup === "keywords")
-
+      // ключевые слова
       species.trait.forEach((k) => {
         const payload = {
           name: k,
@@ -348,74 +304,97 @@ export default {
         value: 1,
       });
 
-      this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
-        id: this.characterId,
-        source: "species",
-      });
-      const featuresWithPowers = species.speciesFeatures.filter(
-        (f) => f.psychicPowers !== undefined
-      );
-      if (featuresWithPowers) {
-        featuresWithPowers.forEach((feature) => {
-          feature.psychicPowers.forEach((powerSelections) => {
-            if (powerSelections.selected) {
-              const payload = {
-                id: this.characterId,
-                name: powerSelections.selected,
-                cost: 0,
-                source: `species.${powerSelections.selected.name}`,
-              };
-              this.$store.commit(
-                "characters/addCharacterPsychicPower",
-                payload
-              );
-            }
-          });
-        });
-      }
+      // this.$store.commit("characters/clearCharacterPsychicPowersBySource", {
+      //   id: this.characterId,
+      //   source: "species",
+      // });
+
+      // const featuresWithPowers = species.speciesFeatures.filter(
+      //   (f) => f.psychicPowers !== undefined
+      // );
+      // if (featuresWithPowers) {
+      //   featuresWithPowers.forEach((feature) => {
+      //     feature.psychicPowers.forEach((powerSelections) => {
+      //       if (powerSelections.selected) {
+      //         const payload = {
+      //           id: this.characterId,
+      //           name: powerSelections.selected,
+      //           cost: 0,
+      //           source: `species.${powerSelections.selected.name}`,
+      //         };
+      //         this.$store.commit(
+      //           "characters/addCharacterPsychicPower",
+      //           payload
+      //         );
+      //       }
+      //     });
+      //   });
+      // }
+
 
       this.speciesDialog = false;
+      // Переход к Экрану управления
       this.$router.push({
         name: "forge-characters-id-builder-species-manage",
         params: { id: this.characterId },
       });
     },
-    ensurePrerequisites(prerequisites) {
-      const id = this.characterId;
 
-      if (prerequisites && prerequisites.length > 0) {
-        prerequisites.forEach((prerequisite) => {
-          // { group: 'attributes', value: 'willpower', threshold: 3, }
-          switch (prerequisite.group) {
-            case "attributes":
-              const attributeValue =
-                this.characterAttributes[prerequisite.value];
-              if (attributeValue < prerequisite.threshold) {
-                this.$store.commit("characters/setCharacterAttribute", {
-                  id,
-                  payload: {
-                    key: prerequisite.value,
-                    value: prerequisite.threshold,
-                  },
-                });
-              }
-              break;
-            case "skills":
-              const skillValue = this.characterSkills[prerequisite.value];
-              if (skillValue < prerequisite.threshold) {
-                this.$store.commit("characters/setCharacterSkill", {
-                  id,
-                  payload: {
-                    key: prerequisite.value,
-                    value: prerequisite.threshold,
-                  },
-                });
-              }
-              break;
-          }
-        });
-      }
+    //Аватарка для Наследия
+    getAvatar(key) {
+      return `/img/avatars/species/${key.toLowerCase()}.png`;
     },
+    async updatePreview(item) {
+      const slug = this.camelToKebab(item.key);
+      if (item.key.startsWith("custom-")) {
+        const speciesDetails = this.$store.getters["species/getSpecies"](
+          item.key
+        );
+        this.selectedSpecies = speciesDetails;
+      } else {
+        const speciesDetails = await this.$axios.get(`/api/species/${slug}`);
+        this.selectedSpecies = speciesDetails.data;
+      }
+      this.selectedSpecies = item;
+      this.speciesDialog = true;
+    },
+
+    // ensurePrerequisites(prerequisites) {
+    //   const id = this.characterId;
+
+    //   if (prerequisites && prerequisites.length > 0) {
+    //     prerequisites.forEach((prerequisite) => {
+    //       // { group: 'attributes', value: 'willpower', threshold: 3, }
+    //       switch (prerequisite.group) {
+    //         case "attributes":
+    //           const attributeValue =
+    //             this.characterAttributes[prerequisite.value];
+    //           if (attributeValue < prerequisite.threshold) {
+    //             this.$store.commit("characters/setCharacterAttribute", {
+    //               id,
+    //               payload: {
+    //                 key: prerequisite.value,
+    //                 value: prerequisite.threshold,
+    //               },
+    //             });
+    //           }
+    //           break;
+    //         case "skills":
+    //           const skillValue = this.characterSkills[prerequisite.value];
+    //           if (skillValue < prerequisite.threshold) {
+    //             this.$store.commit("characters/setCharacterSkill", {
+    //               id,
+    //               payload: {
+    //                 key: prerequisite.value,
+    //                 value: prerequisite.threshold,
+    //               },
+    //             });
+    //           }
+    //           break;
+    //       }
+    //     });
+    //   }
+    // },
   },
 };
 </script>

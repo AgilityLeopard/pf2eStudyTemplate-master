@@ -377,6 +377,9 @@ export const getters = {
     state.characters[id] ? state.characters[id].Perception : "U",
   characterWearById: (state) => (id) =>
     state.characters[id] ? state.characters[id].wearArmor : undefined,
+  characterResistanceById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].Resistance : [],
+
   characterVisionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].vision : "Обычное",
   characterTraitsById: (state, getters) => (id) => {
@@ -730,6 +733,32 @@ export const mutations = {
                 character.Perception = item.upgrade;
               break;
             }
+          case ("Resistance"):
+            {
+              if (character.Resistance.find(i => i.source === 'heritage' && item.source === 'heritage' && i.key === item.key)) {
+                const res = character.Resistance.find(i => i.source === 'heritage' && item.source === 'heritage' && i.key === item.key);
+                res.value = 1
+                switch (res.set) {
+                  case ("level/2"):
+                    {
+
+                      const modRaw = (character.level) / 2;       // настоящее дробное значение
+                      const mod = Math.floor(modRaw);
+                      res.value = mod;
+                    }
+                }
+
+              }
+
+              else
+                character.Resistance.push(item);
+              // if (item.mode !== "Upgrade")
+              //   character.Bonus.push(item);
+
+
+              break;
+
+            }
           case ("Saving"):
             {
               if (item.mode === "Upgrade")
@@ -838,6 +867,7 @@ export const mutations = {
                   character.customSkills.push(item.LoreSkill);
 
                 }
+
 
               }
               break;
@@ -997,6 +1027,17 @@ export const mutations = {
 
               break;
             }
+          // case ("Resistance"):
+          //   {
+          //     if (item.mode === "Add")
+          //       character.Resistance.push(item);
+          //     // if (item.mode !== "Upgrade")
+          //     //   character.Bonus.push(item);
+
+
+          //     break;
+
+          //   }
           case ("Skill"):
             {
               // if (item.mode === "Upgrade") {
@@ -1950,6 +1991,18 @@ export const mutations = {
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesAncestryFlaw[payload.payload.key] =
       payload.payload.value;
+  },
+  setCharactermodificatorsBonus(state, payload) {
+    const char = state.characters[payload.id];
+    payload.Bonus.forEach(item => {
+      char.modificatorsBonus.push(item);
+    })
+
+  },
+  clearCharactermodificatorsBonusbySource(state, payload) {
+    const char = state.characters[payload.id];
+
+    char.modificatorsBonus = char.modificatorsBonus.filter(t => t.source !== payload.source);
   },
   addCharacterCustomSkill(state, payload) {
     let { id, skill } = payload;
@@ -3201,6 +3254,9 @@ const getDefaultState = () => ({
     }
   ],
   progress: [],
+  Resistance: [],
+  Weakness: [],
+  Immunitet: [],
   progressMax: [],
   keywords: [],
   talents: [],

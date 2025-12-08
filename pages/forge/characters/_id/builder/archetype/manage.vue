@@ -151,8 +151,8 @@
                   feature.options.find((s) => s.key === feature.selected)
                     .snippet
                 " v-html="feature.options.find((s) => s.key === feature.selected)
-                      .snippet
-                    "></div>
+                  .snippet
+                  "></div>
               </div>
               <div v-if="
                 feature.options.find((s) => s.key === feature.selected).feat
@@ -197,7 +197,7 @@
               ">
                 <strong>Навык:</strong>
                 <span v-html="feature.options.find((s) => s.key === feature.selected)
-                    .skill
+                  .skill
                   "></span>
               </div>
 
@@ -216,7 +216,7 @@
                     <div>
                       <h4 class="main-holder split-header1">
                         <span class="left-header">{{ item.name }}</span><span class="right-header">{{ item.level
-                          }}</span>
+                        }}</span>
                       </h4>
                       <div v-if="item.snippet" v-html="item.snippet"></div>
                       <div v-else v-html="item.snippet"></div>
@@ -233,8 +233,8 @@
                   feature.options.find((s) => s.key === feature.selected)
                     .description
                 " v-html="feature.options.find((s) => s.key === feature.selected)
-                      .description
-                    "></div>
+                  .description
+                  "></div>
               </div>
             </div>
             <div></div>
@@ -950,41 +950,6 @@ export default {
           level,
         });
       }
-
-      // if ( selectedOption.snippet ) {
-      //   const content = {
-      //     modifications: [{
-      //       name: selectedOption.name,
-      //       targetGroup: 'abilities',
-      //       targetValue: '',
-      //       effect: selectedOption.snippet,
-      //     }],
-      //     source: `archetype.${feature.name}.${inx}.${selectedOption.name}`,
-      //   };
-      //   this.$store.commit('characters/addCharacterModifications', { id: this.characterId, content });
-      // }
-
-      // if ( selectedOption.modifications ) {
-      //   const content = {
-      //     modifications: selectedOption.modifications,
-      //     source: `archetype.${feature.name}.${inx}.${selectedOption.name}`,
-      //   };
-      //   this.$store.commit('characters/addCharacterModifications', { id: this.characterId, content });
-      // }
-
-      // if ( selectedOption.keywords ) {
-      //   const payload = { id: this.characterId, source: `archetype.${feature.name}`, cascade: true };
-      //   this.$store.commit('characters/clearCharacterKeywordsBySource', payload);
-      //   selectedOption.keywords.forEach( (keyword) => {
-      //     const payload = {
-      //       name: keyword,
-      //       source: `archetype.${feature.name}`,
-      //       type: 'keyword',
-      //       replacement: undefined,
-      //     };
-      //     this.$store.commit('characters/addCharacterKeyword', { id: this.characterId, keyword: payload });
-      //   });
-      // }
     },
     characterLevel() {
       return this.$store.getters["characters/characterLevelById"](

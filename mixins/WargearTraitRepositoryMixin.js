@@ -832,56 +832,56 @@ export default {
         },
         {
           key: "fire",
-          name: "огнем"
+          name: "огонь"
         },
         {
           key: "acid",
-          name: "кислотой"
+          name: "кислота"
         },
         {
           key: "electricity",
-          name: "электричеством"
+          name: "электричество"
         },
         {
           key: "vitality",
-          name: "жизненностью"
+          name: "жизненность"
         },
         {
           key: "force",
-          name: "силой"
+          name: "сила"
         },
         {
           key: "void",
-          name: "пустотой"
+          name: "пустота"
         },
         {
           key: "sonic",
-          name: "звуком"
+          name: "звук"
         },
         {
           key: "cold",
-          name: "холодом"
+          name: "холод"
         },
         {
           key: "spirit",
-          name: "духом"
+          name: "дух"
         },
 
         {
           key: "mental",
-          name: "ментальным"
+          name: "ментальный"
         },
         {
           key: "poison",
-          name: "ядом"
+          name: "яд"
         },
         {
           key: "bleed",
-          name: "кровотечением"
+          name: "кровотечение"
         },
         {
           key: "precision",
-          name: "точным"
+          name: "точный"
         },
 
 
