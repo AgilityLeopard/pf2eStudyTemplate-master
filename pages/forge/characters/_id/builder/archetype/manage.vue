@@ -167,8 +167,9 @@
                 <strong>Заклинание:</strong>
                 <span v-for="(spells, level) in feature.options.find((s) => s.key === feature.selected)
                   .spells">
+                  <h3 v-if="level === 0">Чары </h3>
+                  <h3 v-else>Уровень {{ level }}</h3>
 
-                  <h3>Уровень {{ level }}</h3>
                   <ul>
                     <li v-for="spell in spells" :key="spell">
                       {{ SpellName(spell) }}

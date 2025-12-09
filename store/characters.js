@@ -731,6 +731,9 @@ export const mutations = {
             {
               if (item.mode === "Upgrade")
                 character.Perception = item.upgrade;
+              if (item.type === "Bonus") {
+                character.Bonus.push(item);
+              }
               break;
             }
           case ("Resistance"):
@@ -744,14 +747,27 @@ export const mutations = {
 
                       const modRaw = (character.level) / 2;       // настоящее дробное значение
                       const mod = Math.floor(modRaw);
-                      res.value = mod;
+                      res.value = mod === 0 ? 1 : mod;
                     }
                 }
 
               }
 
-              else
-                character.Resistance.push(item);
+              else {
+                const res = item;
+                res.value = 1;
+                switch (res.set) {
+                  case ("level/2"):
+                    {
+
+                      const modRaw = (character.level) / 2;       // настоящее дробное значение
+                      const mod = Math.floor(modRaw);
+                      res.value = mod === 0 ? 1 : mod;
+                    }
+                }
+                character.Resistance.push(res);
+              }
+
               // if (item.mode !== "Upgrade")
               //   character.Bonus.push(item);
 
@@ -2150,12 +2166,15 @@ export const mutations = {
   clearCharacterEnhancementsBySource(state, payload) {
     const { id, source, exact } = payload;
     const character = state.characters[id];
-    let { enhancements } = character;
+
 
     character.enhancements = character.enhancements.filter(
       (e) => e.source !== payload.source
     );
 
+    character.Resistance = character.Resistance.filter(
+      (e) => e.source !== payload.source
+    );
 
   },
   removeCharacterModificationByFeature(state, payload) {
@@ -3270,7 +3289,7 @@ const getDefaultState = () => ({
     cost: 0,
   },
   prepareSpells: [],
-
+  innateSpells: [],
   modificatorsBonus: [],
   speed: {
     land: 25,

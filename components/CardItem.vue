@@ -153,7 +153,7 @@
           <div v-if="item.duration">
             <p class="info-line" v-if="item.duration.value">
               <strong>Длительность:</strong>
-              <span v-if="seleitemctedItem.duration.sustained === true">Поддерживаемое до
+              <span v-if="item.duration.sustained === true">Поддерживаемое до
               </span>
               {{ item.duration.value }}
             </p>

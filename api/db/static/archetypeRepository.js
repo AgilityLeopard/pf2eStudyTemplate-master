@@ -15,6 +15,7 @@ const cost = function (cost, archetype = 0, stats = 0, species = 0, other = 0) {
 }
 
 // ...archetype(source.playerCore.key, 99,'Adepta Sororitas','Sister of Battle',2,'Human',94),
+
 const archetype = function (sourceKey, sourcePage, name) {
     // let speciesSourceKey = 'playerCore';
     // let speciesName = 'Human';
@@ -1289,7 +1290,10 @@ const playerCore = [
             // Общие
             "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
             // Классовые
-            "Bloodline Spell", "Bloodline Perk", "Blood Magic", "Signature Spells", "Bloodline Resistance",
+            "Sorcerer Spellcasting", "signature-spells", "spell-repertoire", "Bloodline",
+
+
+            "Bloodline Spell", "Bloodline Perk", "Bloodline Resistance",
             // Обще-классовые
             "Spell Penetration", "Greater Bloodline", "Bloodline Focus", "Legendary Bloodline"
         ],
