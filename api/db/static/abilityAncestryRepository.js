@@ -6315,7 +6315,7 @@ const sorcerer = [
         type: "Class Feature",
         require: "bloodline-draconic",
         key: 'arcane-dragon',
-
+        isSelected: true,
         "spellTraditions": "арканный",
         "skill": ["arcana"],
         "spells": {
