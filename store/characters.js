@@ -36,6 +36,8 @@ export const getters = {
   characterVersionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].version : undefined,
 
+  CharacterClassModFeature: (state) => (id) =>
+    state.characters[id] ? state.characters[id].version : undefined,
   // Character setting
   characterSettingTierById: (state) => (id) =>
     state.characters[id] ? state.characters[id].settingTier : 1,
@@ -659,7 +661,23 @@ export const mutations = {
   },
   setModification(state, payload) {
     // console.info(`Set Rank manually to ${payload.rank}.`);
-    const modification = state.characters[payload.id].enhancements.sort((a, b) => b.level - a.level).reverse().filter(s => s.level <= state.characters[payload.id].level);
+    // const modification = state.characters[payload.id].enhancements.sort((a, b) => b.level - a.level).reverse().filter(s => s.level <= state.characters[payload.id].level);
+    const order = { U: 0, T: 1, E: 2, M: 3, L: 4 };
+
+    const modification = state.characters[payload.id].enhancements
+      .filter(s => s.level <= state.characters[payload.id].level)
+      .sort((a, b) => {
+        // 1. Сортировка по уровню
+        if (a.level !== b.level) {
+          return a.level - b.level;
+        }
+
+        // 2. Сортировка по value, если значения есть в таблице
+        const aVal = order.hasOwnProperty(a.value) ? order[a.value] : Infinity;
+        const bVal = order.hasOwnProperty(b.value) ? order[b.value] : Infinity;
+
+        return aVal - bVal;
+      });
     const character = state.characters[payload.id];
 
     if (modification) {
@@ -781,7 +799,7 @@ export const mutations = {
                 character.saving[item.key] = item.upgrade;
               if (item.mode !== "Upgrade")
                 character.Bonus.push(item);
-
+              console.log(item)
 
               break;
 
@@ -1231,11 +1249,20 @@ export const mutations = {
       key: key,
       optional: payload.optional,
       combinded: payload.combinded ? payload.combinded : false,
+      selected: payload.selected || undefined,
       id: source,
       value: 1,
     }
 
     character.SkillSheet.push(skill);
+
+  },
+  removeSkillSheetSelected(state, payload) {
+    const character = state.characters[payload.id];
+
+
+
+    character.SkillSheet = character.SkillSheet.filter(s => !s.selected || s.selected !== payload.selected);
 
   },
   removeSkillSheet(state, payload) {
@@ -2145,6 +2172,8 @@ export const mutations = {
 
 
     });
+
+    console.log("моды:", character.enhancements)
   },
   removeModification(state, payload) {
     const character = state.characters[payload.id];

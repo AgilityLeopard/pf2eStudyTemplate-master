@@ -108,57 +108,10 @@ export default {
         this.characterId
       );
     },
-    allArchetypeFactions() {
-      if (this.itemList !== undefined) {
-        let archetypes = this.itemList;
-
-        if (this.characterSpecies) {
-          archetypes = archetypes.filter((a) => {
-            if (
-              a.species.some((s) => s.key.includes(this.characterSpecies.key))
-            )
-              return true;
-            if (
-              a.species.some((s) =>
-                s.key.includes(this.characterSpecies.variant)
-              )
-            )
-              return true;
-            return false;
-          });
-
-          if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-            archetypes = archetypes.filter(
-              (a) =>
-                a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier
-            );
-          }
-        }
-
-        return ["Unaligned", ...new Set(archetypes)];
-      }
-
-      return [];
-    },
     archetypeFaction() {
       if (this.itemList !== undefined) {
         let archetypes = this.itemList;
 
-        // if (this.characterSpecies) {
-        //   archetypes = archetypes.filter((a) => {
-        //     if ( a.species.some((s) => s.key.includes(this.characterSpecies.key) ) ) return true;
-        //     if ( a.species.some((s) => s.key.includes(this.characterSpecies.variant) ) ) return true;
-        //     return false;
-        //   });
-
-        //   if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-        //     archetypes = archetypes.filter((a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier);
-        //   }
-        // }
-
-        // if (this.characterSettingTier !== undefined) {
-        //   archetypes = archetypes.filter((a) => a.tier <= this.characterSettingTier);
-        // }
         if (this.searchQuery) {
           const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
           archetypes = archetypes.filter((a) => {
@@ -295,68 +248,11 @@ export default {
         this.characterSpecies = data;
       }
     },
-    // async loadFactions(sources) {
-    //   const config = {
-    //     params: {
-    //       source: sources.join(","),
-    //     },
-    //   };
-    //   const { data } = await this.$axios.get(`/api/factions/`, config);
-    //   this.characterFactions = data;
-    // },
     getAvatar(key) {
       if (key === undefined) return "/img/avatar_placeholder.png";
       return `/img/avatars/archetype/${key.toLowerCase()}.png`;
     },
-    //   let archetypes = this.itemList;
 
-    //   if (archetypes === undefined) return [];
-    //   /* filter by archetype group */
-    //   archetypes = archetypes.filter((a) => a.faction === groupName);
-
-    //   if (this.characterSpecies) {
-    //     archetypes = archetypes.filter((a) => {
-    //       if (a.species.some((s) => s.key.includes(this.characterSpecies.key)))
-    //         return true;
-    //       if (
-    //         a.species.some((s) => s.key.includes(this.characterSpecies.variant))
-    //       )
-    //         return true;
-    //       return false;
-    //     });
-
-    //     if (this.characterSpecies.archetypeRestrictionsMaxTier) {
-    //       archetypes = archetypes.filter(
-    //         (a) => a.tier <= this.characterSpecies.archetypeRestrictionsMaxTier
-    //       );
-    //     }
-    //   }
-
-    //   if (this.characterSettingTier !== undefined) {
-    //     archetypes = archetypes.filter(
-    //       (a) => a.tier <= this.characterSettingTier
-    //     );
-    //   }
-
-    //   /* filter by search query */
-    //   if (this.searchQuery) {
-    //     const lowerCaseSearchQuery = this.searchQuery.toLowerCase();
-    //     archetypes = archetypes.filter((a) => {
-    //       const lowerCaseArchetype = a.name.toLowerCase();
-    //       return lowerCaseArchetype.startsWith(lowerCaseSearchQuery);
-    //     });
-    //   }
-
-    //   return archetypes.sort((a, b) => {
-    //     if (a.tier > b.tier) {
-    //       return 1;
-    //     }
-    //     if (b.tier > a.tier) {
-    //       return -1;
-    //     }
-    //     return 0;
-    //   });
-    // },
     updatePreview(item) {
       this.previewItem = item;
       this.previewDialog = true;
