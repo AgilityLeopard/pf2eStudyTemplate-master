@@ -881,9 +881,10 @@ export default {
         source: "archetype",
       };
 
-      // Always refresh class-mod feature
-      this.$store.commit("characters/clearCharacterPreparedSpell", { id });
-      this.changeSelectedSubFeature(feature, undefined)
+      const oldFeature =
+        // Always refresh class-mod feature
+        this.$store.commit("characters/clearCharacterPreparedSpell", { id });
+      this.changeSelectedSubFeature(oldOptionFeat, undefined)
       this.$store.commit("characters/clearCharacterClassModFeature", { id, content: mod });
       this.$store.commit("characters/addCharacterClassModFeature", { id, content: mod });
 
