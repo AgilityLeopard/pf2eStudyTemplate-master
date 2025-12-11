@@ -986,7 +986,7 @@ export default {
           }
 
           // 2) Skills array
-          if (newOption?.skill) {
+          if (newOption?.skill && !newOption.isSelected) {
             const list = Array.isArray(newOption.skill) ? newOption.skill : [newOption.skill];
             list.forEach(s => {
               this.$store.commit("characters/addSkillSheet", {
@@ -1016,7 +1016,7 @@ export default {
           }
 
           // 4) Spell traditions
-          if (newOption?.spellTraditions) {
+          if (newOption?.spellTraditions && !newOption.isSelected) {
             this.$store.commit("characters/setCharacterSpellTraditions", {
               id,
               value: newOption.spellTraditions
@@ -1024,7 +1024,7 @@ export default {
           }
 
           // 5) Trait
-          if (newOption?.trait && newOption.trait !== "Без") {
+          if (newOption?.trait && newOption.trait !== "Без" && !newOption.isSelected) {
             this.$store.commit("characters/addCharacterKeyword", {
               id,
               keyword: {
@@ -1036,7 +1036,7 @@ export default {
           }
 
           // 6) Modifications
-          if (newOption?.modification) {
+          if (newOption?.modification && !newOption.isSelected) {
             const mod1 = []
             const key = feature.key;
 
