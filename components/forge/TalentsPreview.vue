@@ -51,6 +51,9 @@
 
 
 
+          <v-select v-model="selectedSourceFilters" :items="filterSourceOptions" label="Источник" item-text="name"
+            item-value="key" multiple />
+
 
           <v-select label="Редкость" v-model="selectedRarityFilters" :items="rarityRepository" item-text="name"
             item-value="key" multiple>
@@ -184,6 +187,7 @@ export default {
       selectedTypeWeaponFilters: [],
       selectedTypeArmorFilters: [],
       selectedTraitFilters: [],
+      selectedSourceFilters: [],
       selectedRarityFilters: [],
       levelRange: [0, 20],
 
@@ -683,6 +687,25 @@ export default {
       return types;
     },
 
+    filterSourceOptions() {
+      if (this.talents === undefined) {
+        return [];
+      }
+      let filteredTalents = this.talents;
+
+
+      let reduced = [];
+      filteredTalents.forEach((item) => {
+        if (item.source.book) {
+          reduced.push(item.source.book);
+        }
+      });
+
+      reduced = reduced.filter(item => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((trait) => ({ name: trait }));
+
+    },
     searchResult() {
       if (this.talents === undefined) {
         return [];
@@ -718,6 +741,10 @@ export default {
             (r) => item.rarity && item.rarity.includes(r)
           )
         );
+      }
+
+      if (this.selectedSourceFilters.length > 0) {
+        searchResult = searchResult.filter((item) => this.selectedSourceFilters.includes(item.source.book));
       }
 
       return searchResult;

@@ -599,9 +599,9 @@ export default {
     characterSpeciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
-    // characterArchetypeKey() {
-    //   return this.$store.getters['characters/characterArchetypeKeyById'](this.characterId);
-    // },
+    characterArchetypeKey() {
+      return this.$store.getters['characters/characterArchetypeKeyById'](this.characterId);
+    },
 
 
     searchResult() {
@@ -609,6 +609,9 @@ export default {
         return [];
       }
       let searchResult = this.talentList;
+
+
+
 
       if (this.selectedTagsFilters.length > 0) {
         searchResult = searchResult.filter((item) => this.selectedTagsFilters.some((m) => item.traits.includes(m)));
@@ -786,7 +789,9 @@ export default {
     },
     characterArchetypeKey: {
       handler(newVal) {
-        if (newVal && newVal !== 'unknown') {
+
+        if (newVal) {
+
           this.loadArchetype(newVal);
         }
       },
@@ -900,12 +905,17 @@ export default {
     //АПИ по чертам
     async loadArchetype(key) {
       this.loading = true;
+
       if (key === 'advanced') {
         this.archetype = { prerequisites: [] };
+
       } else {
         const { data } = await this.$axios.get(`/api/archetypes/${key}`);
         this.archetype = data;
+
       }
+
+
       this.loading = false;
     },
     async loadSpecies(key) {
@@ -1008,7 +1018,9 @@ export default {
 
       }
 
-      console.log(params);
+      let items = talents; // все данные
+
+
       this.talentList = talents;
       const rules = talents.flatMap(t => t.system.rules).filter(Boolean).filter(t => !['FlatModifier', 'RollOption', 'AdjustModifier', 'ItemAlteration'].includes(t.key));
       // console.table(rules);

@@ -236,6 +236,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].faction.label : "unknown",
   characterFocusSpellById: (state) => (id) =>
     state.characters[id] ? state.characters[id].spellsFocus : [],
+  characterSpellListById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].spellsList : [],
   characterPreparedById: (state) => (id) =>
     state.characters[id] ? state.characters[id].prepared : [],
   characterFocusPoolById: (state) => (id) =>
@@ -1998,6 +2000,11 @@ export const mutations = {
 
     char.spellTraditions = payload.value;
   },
+  setCharacterSpell(state, payload) {
+    const char = state.characters[payload.id];
+
+    char.spellsList = payload.value;
+  },
   setCharacterLevelOne(state, payload) {
     const char = state.characters[payload.id];
     char.isFeatLevelOne = payload.value === true;
@@ -3224,7 +3231,7 @@ const getDefaultState = () => ({
   Bonus: [],
   TrainedSkillClass: [],
   TrainedAdditionalSkillClass: undefined,
-
+  spellsList: [],
   //Окончательный вид
   skills: {
     acrobatics: "U",

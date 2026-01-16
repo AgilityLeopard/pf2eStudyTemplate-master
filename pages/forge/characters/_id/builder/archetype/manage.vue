@@ -945,6 +945,11 @@ export default {
             this.$store.commit("characters/clearCharacterSpellTraditions", { id });
           }
 
+          // 4) Spell traditions
+          if (oldOption.spells) {
+            this.$store.commit("characters/clearCharacterSpellTraditions", { id });
+          }
+
           // 5) Trait
           if (oldOption.trait) {
             this.$store.commit("characters/clearCharacterKeywordsByType", {
@@ -1014,6 +1019,14 @@ export default {
 
             this.$store.commit("characters/addSkillSheet", {
               id, key, level: feature.level, type: "class", optional: true
+            });
+          }
+
+          // 3) Spell traditions
+          if (newOption.spells) {
+            this.$store.commit("characters/setCharacterSpell", {
+              id,
+              value: newOption.spells
             });
           }
 
@@ -1161,6 +1174,11 @@ export default {
           this.$store.commit("characters/clearCharacterSpellTraditions", { id });
         }
 
+        // 3.1) Spells
+        if (oldSubItem.spellTraditions) {
+          this.$store.commit("characters/clearCharacterSpell", { id });
+        }
+
         // 4) Trait
         if (oldSubItem.trait) {
           this.$store.commit("characters/clearCharacterKeywordsByType", {
@@ -1216,6 +1234,14 @@ export default {
         this.$store.commit("characters/setCharacterSpellTraditions", {
           id,
           value: newSubItem.spellTraditions
+        });
+      }
+
+      // 3) Spell traditions
+      if (newSubItem.spells) {
+        this.$store.commit("characters/setCharacterSpell", {
+          id,
+          value: newSubItem.spells
         });
       }
 

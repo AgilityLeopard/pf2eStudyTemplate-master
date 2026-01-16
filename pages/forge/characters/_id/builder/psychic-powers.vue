@@ -772,7 +772,7 @@ export default {
       return [
         'playerCore',
         'playerCore2',
-        'coreRulebook', 'secretOfMagic',
+        // 'coreRulebook', 'secretOfMagic',
         ...this.settingHomebrews
       ];
     },
@@ -956,7 +956,8 @@ export default {
 
 
 
-    }, updatePreviewRitual() {
+    },
+    updatePreviewRitual() {
       let list = this.psychicPowersList.filter(spell => spell.ritual)
 
 
@@ -1097,13 +1098,24 @@ export default {
     },
     updatePreview(levelAncestry, cell) {
       let list = this.psychicPowersList.filter(spell => !spell.ritual).filter(spell => !spell.ritual).filter(spell => !['фокус', 'композиция'].some(trait => spell.traits.includes(trait)))//.filter(spell => spell != 'композиция')
-
+      const sources = this.sources;
+      list = this.psychicPowersList.filter(i => i.source && i.source.key ? sources.includes(i.source.key) : false)
       if (levelAncestry === 0)
         list = list.filter(spell => spell.traits.join(',').includes('заговор'))
       else
         list = list.filter(spell => !spell.traits.join(',').includes('заговор'))
 
+      if (this.archetype.spellTradition)
+        list = list.filter(spell => spell.traditions.join(',').includes(this.archetype.spellTradition))
 
+
+      const l = this.$store.getters['characters/characterSpellListById'](this.characterId);
+      const camelSpells = Object.values(l).flat().map(s => this.textToKebab(s));
+      // добавить к list все объекты, название которых есть в l
+      const extraFromSpellList = this.psychicPowersList.filter(spell => camelSpells.includes(this.textToKebab(spell.key)));
+
+      // объединить в один список
+      list = [...list, ...extraFromSpellList];
       const prepare = this.$store.getters['characters/characterPreparedById'](this.characterId);
 
       this.levelSpell = levelAncestry;
@@ -1128,8 +1140,7 @@ export default {
         tal.prepared = prepare.find(s => s.key === t.key) === true;
       })
 
-      if (this.archetype.spellTradition)
-        list = list.filter(spell => spell.traditions.join(',').includes(this.archetype.spellTradition))
+
 
       this.selectedPsychic = list
       this.psychicDialog = true;
@@ -1190,6 +1201,8 @@ export default {
       this.loading = true;
       const { data } = await this.$axios.get(`/api/archetypes/${key}`);
       this.loading = false;
+
+
       this.archetype = data;
       if (this.archetype)
         this.archetype.spellTradition = this.$store.getters['characters/characterSpellTraditionsById'](this.characterId);
@@ -1198,11 +1211,13 @@ export default {
 
     async getPsychicPowers(sources) {
       const config = {
-        params: { /*source: this.sources.join(','),*/ },
+        params: { /*source: this.sources.join(',')*/ },
       };
+      console.log(sources, this.sources)
       this.loading = true;
       const { data } = await this.$axios.get('/api/psychic-powers/', config);
       this.loading = false;
+
       if (this.traitList !== undefined) {
         data.forEach((species) => {
           const lowercaseKeywords = species.traits.map((s) =>

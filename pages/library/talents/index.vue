@@ -8,53 +8,25 @@
           <v-card-text>
             <v-row justify="center">
               <v-col :cols="12" :sm="6">
-                <v-text-field
-                  v-model="searchQuery"
-                  filled
-                  dense
-                  clearable
-                  label="Поиск по имени"
-                />
+                <v-text-field v-model="searchQuery" filled dense clearable label="Поиск по имени" />
               </v-col>
 
               <v-col :cols="12" :sm="6">
-                <v-select
-                  v-model="filters.source.model"
-                  :items="filterSourceOptions"
-                  label="Источник"
-                  filled
-                  clearable
-                  multiple
-                  dense
-                />
+                <v-select v-model="filters.source.model" :items="filterSourceOptions" label="Источник" filled clearable
+                  multiple dense />
               </v-col>
 
               <v-col :cols="6">
-                <v-autocomplete
-                  v-model="selectedtraitsFilters"
-                  :items="tagFilters"
-                  item-text="name"
-                  item-value="name"
-                  label="Трейты"
-                  multiple
-                  clearable
-                  chips
-                  dense
-                >
+                <v-autocomplete v-model="selectedtraitsFilters" :items="tagFilters" item-text="name" item-value="name"
+                  label="Трейты" multiple clearable chips dense>
                 </v-autocomplete>
               </v-col>
 
               <v-col cols="12" sm="6">
                 <v-card flat>
                   <v-card-text>
-                    <v-range-slider
-                      v-model="levelRange"
-                      :min="0"
-                      :max="20"
-                      :step="1"
-                      thumb-label="always"
-                      label="Уровень"
-                    ></v-range-slider>
+                    <v-range-slider v-model="levelRange" :min="0" :max="20" :step="1" thumb-label="always"
+                      label="Уровень"></v-range-slider>
 
                     <div class="d-flex justify-space-between mt-2">
                       <!-- <span>От: {{ filters.levelRange[0] }}</span>
@@ -70,22 +42,10 @@
 
       <v-col :cols="12">
         <v-card>
-          <v-data-table
-            :headers="headers"
-            :items="searchResult"
-            :page.sync="pagination.page"
-            :search="searchQuery"
-            item-key="id"
-            sort-by="name"
-            hide-default-footer
-            @page-count="pagination.pageCount = $event"
-          >
+          <v-data-table :headers="headers" :items="searchResult" :page.sync="pagination.page" :search="searchQuery"
+            item-key="id" sort-by="name" hide-default-footer @page-count="pagination.pageCount = $event">
             <template v-slot:item.name="{ item }">
-              <router-link
-                v-if="!item.stub"
-                :to="`/library/talents/${textToKebab(item.key)}`"
-                class="clickable-name"
-              >
+              <router-link v-if="!item.stub" :to="`/library/talents/${textToKebab(item.key)}`" class="clickable-name">
                 {{ item.name }}
               </router-link>
 
@@ -116,10 +76,7 @@
           </v-data-table>
 
           <div class="text-center pt-2">
-            <v-pagination
-              v-model="pagination.page"
-              :length="pagination.pageCount"
-            />
+            <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
           </div>
         </v-card>
       </v-col>
