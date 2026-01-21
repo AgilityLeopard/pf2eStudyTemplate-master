@@ -300,11 +300,14 @@ export const getters = {
   characterBoost20ById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Boost20 : 0,
 
+  characterAttributesAncestryFlaw: (state) => (id) =>
+    state.characters[id] ? state.characters[id].attributesAncestryFlaw : {},
   characterAttributesClassBoost: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesClassBoost : {},
   characterAttributeBoost: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesBoost : {},
   characterAttributeBoost5: (state) => (id) =>
+
     state.characters[id] ? state.characters[id].attributesBoost5 : {},
   characterAttributeBoost10: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesBoost10 : {},
@@ -1385,6 +1388,7 @@ export const mutations = {
   setCharacterAncestryFreeBoost(state, payload) {
     const character = state.characters[payload.id];
     if (character.AncestryFreeBoost != "" && character.AncestryFreeBoost2 != character.AncestryFreeBoost) {
+      const newValue = character.attributes[character.AncestryFreeBoost] > 18 ? 1 : 2;
       character.attributesAncestryBoost[character.AncestryFreeBoost] -= 1;
       character.attributes[character.AncestryFreeBoost] -= 2;
 
@@ -1392,6 +1396,7 @@ export const mutations = {
 
     character.AncestryFreeBoost = payload.payload.key;
     if (payload.payload.key != "" && payload.payload.key != character.AncestryFreeBoost2) {
+      const newValue = character.attributes[character.AncestryFreeBoost] >= 18 ? 1 : 2;
       character.attributesAncestryBoost[payload.payload.key] = payload.payload.value;
       character.attributes[character.AncestryFreeBoost] += 2;
     }
@@ -1400,16 +1405,20 @@ export const mutations = {
   },
   setCharacterAncestryFreeBoost2(state, payload) {
     const character = state.characters[payload.id];
+
+
     if (character.AncestryFreeBoost2 != "" && character.AncestryFreeBoost2 != character.AncestryFreeBoost) {
+      const newValue = character.attributes[character.AncestryFreeBoost2] > 18 ? 1 : 2;
       character.attributesAncestryBoost[character.AncestryFreeBoost2] -= 1;
-      character.attributes[character.AncestryFreeBoost2] -= 2;
+      character.attributes[character.AncestryFreeBoost2] -= newValue;
 
     }
 
     character.AncestryFreeBoost2 = payload.payload.key;
     if (payload.payload.key != "" && payload.payload.key != character.AncestryFreeBoost) {
+      const newValue = character.attributes[character.AncestryFreeBoost2] >= 18 ? 1 : 2;
       character.attributesAncestryBoost[payload.payload.key] = payload.payload.value;
-      character.attributes[character.AncestryFreeBoost2] += 2;
+      character.attributes[character.AncestryFreeBoost2] += newValue;
     }
 
 
@@ -1421,8 +1430,9 @@ export const mutations = {
 
     // уменьшаем старые значения, если нужно
     if (oldKey && oldKey !== character.BackgroundFreeBoost2) {
+      const newValue = character.attributes[oldKey] > 18 ? 1 : 2;
       character.attributesBackgroundBoost[oldKey] -= 1;
-      character.attributes[oldKey] -= 2;
+      character.attributes[oldKey] -= newValue;
     }
 
     // сохраняем новый выбор
@@ -1430,23 +1440,27 @@ export const mutations = {
 
     // увеличиваем значения для нового выбора
     if (newKey && newKey !== character.BackgroundFreeBoost2) {
+      const newValue = character.attributes[newKey] >= 18 ? 1 : 2;
       character.attributesBackgroundBoost[newKey] = payload.payload.value;
-      character.attributes[newKey] += 2;
+      character.attributes[newKey] += newValue;
     }
   },
 
   setCharacterBackgroundFreeBoost2(state, payload) {
     const character = state.characters[payload.id];
+    const key = payload.payload.key;
     if (character.BackgroundFreeBoost2 != "" && character.BackgroundFreeBoost2 != character.BackgroundFreeBoost) {
+      const newValue = character.attributes[haracter.BackgroundFreeBoost2] > 18 ? 1 : 2;
       character.attributesBackgroundBoost[character.BackgroundFreeBoost2] -= 1;
-      character.attributes[character.BackgroundFreeBoost2] -= 2;
+      character.attributes[character.BackgroundFreeBoost2] -= newValue;
 
     }
 
     character.BackgroundFreeBoost2 = payload.payload.key;
     if (payload.payload.key != "" && payload.payload.key != character.BackgroundFreeBoost) {
+      const newValue = character.attributes[character.BackgroundFreeBoost2] >= 18 ? 1 : 2;
       character.attributesBackgroundBoost[payload.payload.key] = payload.payload.value;
-      character.attributes[character.BackgroundFreeBoost2] += 2;
+      character.attributes[character.BackgroundFreeBoost2] += newValue;
     }
 
 
@@ -1455,14 +1469,16 @@ export const mutations = {
     const character = state.characters[payload.id];
     const key = payload.payload.key;
     if (character.ClassBoost != "") {
-
-      character.attributes[character.ClassBoost] -= 2;
+      const newValue = character.attributes[key] > 18 ? 1 : 2;
+      character.attributesClassBoost[haracter.ClassBoost] = payload.payload.value;
+      character.attributes[character.ClassBoost] -= newValue;
 
     }
     character.ClassBoost = payload.payload.key;
     if (key != "") {
-
-      character.attributes[key] += 2;
+      const newValue = character.attributes[key] > 18 ? 1 : 2;
+      character.attributesClassBoost[character.ClassBoost] = payload.payload.value;
+      character.attributes[key] += newValue;
     }
 
 

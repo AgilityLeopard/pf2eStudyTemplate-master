@@ -25,7 +25,7 @@ const simpleStub = function (sourceKey, sourcePage, name, hint, stub = true) {
 
 const playerCore = [
     {
-        ...simpleStub('playerCore', 150, 'Acolyte', 'Вы провели свои ранние годы в религиозном монастыре или в уединении. ', false),
+        ...simpleStub('playerCore', 150, 'Acolyte', 'Вы провели свои ранние годы в религиозном монастыре или в уединении.', false),
         nameBackground: 'Послушник',
         boost1: ['intellect', 'wisdom'],
         boost2: true,
@@ -37,7 +37,7 @@ const playerCore = [
         feat: 'Student of the Canon'
     },
     {
-        ...simpleStub('playerCore', 150, 'Acrobat', 'Вы зарабатывали свои деньги, выступая в качестве акробата, в цирке или на улице. ', false),
+        ...simpleStub('playerCore', 150, 'Acrobat', 'Вы зарабатывали свои деньги, выступая в качестве акробата, в цирке или на улице.', false),
         nameBackground: 'Акробат',
         boost1: ['strength', 'dexterity'],
         boost2: true,
@@ -48,7 +48,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Steady Balance'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Animal Whisperer', 'Вы всегда чувствовали связь с животными, и нужно было лишь немного усилий, чтобы научиться дрессировать их. ', false),
+        ...simpleStub('playerCore', 150, 'Animal Whisperer', 'Вы всегда чувствовали связь с животными, и нужно было лишь немного усилий, чтобы научиться дрессировать их.', false),
         nameBackground: 'Заклинатель животных',
         boost1: ['wisdom', 'charisma'],
         boost2: true,
@@ -59,7 +59,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Train Animal'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Artisan', 'Будучи учеником, вы практиковали определенный вид строительства или ремесла, развивая специализированные навыки. ', false),
+        ...simpleStub('playerCore', 150, 'Artisan', 'Будучи учеником, вы практиковали определенный вид строительства или ремесла, развивая специализированные навыки.', false),
         nameBackground: 'Ремесленник',
         boost1: ['strength', 'intellect'],
         boost2: true,
@@ -70,7 +70,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Specialty Crafting'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Artist', 'Ваше искусство - величайшая страсть, какую бы форму оно ни принимало. ', false),
+        ...simpleStub('playerCore', 150, 'Artist', 'Ваше искусство - величайшая страсть, какую бы форму оно ни принимало.', false),
         nameBackground: 'Художник',
         boost1: ['dexterity', 'charisma'],
         boost2: true,
@@ -81,7 +81,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Specialty Crafting'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Bandit', 'В вашем прошлом немало сельского бандитизма, ограблений путешественников на дороге и сведения концов с концами. ', false),
+        ...simpleStub('playerCore', 150, 'Bandit', 'В вашем прошлом немало сельского бандитизма, ограблений путешественников на дороге и сведения концов с концами.', false),
         nameBackground: 'Бандит',
         boost1: ['dexterity', 'charisma'],
         boost2: true,
@@ -92,7 +92,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Group Coercion'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Barkeep', 'У вас есть пять специальностей: поднимать бочки, выпивать, протирать кружки, выпивать и ... выпивать. ', false),
+        ...simpleStub('playerCore', 150, 'Barkeep', 'У вас есть пять специальностей: поднимать бочки, выпивать, протирать кружки, выпивать и ... выпивать.', false),
         nameBackground: 'Бармен',
         boost1: ['constitution', 'charisma'],
         boost2: true,
@@ -103,7 +103,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Hobnobber'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Barrister', 'Груды юридических пособий, строгие учителя и опыт работы в зале суда научили вас юридическим делам. ', false),
+        ...simpleStub('playerCore', 150, 'Barrister', 'Груды юридических пособий, строгие учителя и опыт работы в зале суда научили вас юридическим делам.', false),
         nameBackground: 'Адвокат',
         boost1: ['intellect', 'charisma'],
         boost2: true,
@@ -115,7 +115,7 @@ const playerCore = [
     },
     {
 
-        ...simpleStub('playerCore', 150, 'Bounty Hunter', 'Вы набивали свои карманы, ловя нарушителей закона. ', false),
+        ...simpleStub('playerCore', 150, 'Bounty Hunter', 'Вы набивали свои карманы, ловя нарушителей закона.', false),
         nameBackground: 'Охотник за головами',
         boost1: ['strength', 'wisdom'],
         boost2: true,
@@ -126,7 +126,7 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Experienced Tracker'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Charlatan', 'Вы путешествовали с места на место, в одном городе приторговывая липовыми магическими безделушками и змеиным маслом, а в следующем притворяясь королевской семьей в изгнании, чтобы соблазнить богатого наследника. ', false),
+        ...simpleStub('playerCore', 150, 'Charlatan', 'Вы путешествовали с места на место, в одном городе приторговывая липовыми магическими безделушками и змеиным маслом, а в следующем притворяясь королевской семьей в изгнании, чтобы соблазнить богатого наследника.', false),
         nameBackground: 'Шарлатан',
         boost1: ['intellect', 'charisma'],
         boost2: true,
@@ -137,18 +137,18 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Charming Liar'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Cook', 'Вы выросли на кухнях таверн или других заведений, где подают блюда, и преуспели там, став исключительным поваром. ', false),
+        ...simpleStub('playerCore', 150, 'Cook', 'Вы выросли на кухнях таверн или других заведений, где подают блюда, и преуспели там, став исключительным поваром.', false),
         nameBackground: 'Повар',
         boost1: ['intellect', 'constitution'],
         boost2: true,
         rarity: "common",
         skill: 'survival',
-        lore: 'Знания кулинарии ',
+        lore: 'Знания кулинарии',
         description: 'Вы выросли на кухнях таверн или других заведений, где подают блюда, и преуспели там, став исключительным поваром. Выпечка, готовка, немного пивоварения на стороне - вы провели много времени вне поля зрения. Пришло время отправиться в мир, чтобы увидеть что-нибудь своими глазами.',
         // feat: stringToKebab(`${'playerCore'} ${'Seasoned'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Criminal', 'Вы жили преступной жизнью, будучи недобросовестным независимым человеком или членом преступной организации. ', false),
+        ...simpleStub('playerCore', 150, 'Criminal', 'Вы жили преступной жизнью, будучи недобросовестным независимым человеком или членом преступной организации.', false),
         nameBackground: 'Преступник',
         boost1: ['intellect', 'dexterity'],
         boost2: true,
@@ -164,7 +164,7 @@ const playerCore = [
         boost1: ['intellect', 'charisma'],
         boost2: true,
         rarity: "common",
-        skill: 'occultism ',
+        skill: 'occultism',
         lore: 'Знания Культа',
         description: 'Вы были (или остаетесь) членом культа, чьи обряды могут включать священные танцы для обеспечения хорошего урожая или ужасные ритуалы, призывающие темные силы. Вы могли бы отправиться на поиски приключений для достижения целей вашего культа, чтобы посвятить себя в величайшие тайны мира или убежать от сомнительных практик или ограничений.',
         // feat: stringToKebab(`${'playerCore'} ${'Schooled in Secrets'}`),
@@ -175,7 +175,7 @@ const playerCore = [
         boost1: ['intellect', 'wisdom'],
         boost2: true,
         rarity: "common",
-        skill: 'society ',
+        skill: 'society',
         lore: 'Знания преступного мира',
         description: 'Вы раскрывали преступления в качестве инспектора полиции или устраивались на работу к богатым клиентам в качестве частного сыщика. Вы могли стать авантюристом в рамках своей следующей большой загадки, но, скорее всего, это произошло как следствие предыдущего дела.',
         // feat: stringToKebab(`${'playerCore'} ${'Streetwise '}`),
@@ -186,7 +186,7 @@ const playerCore = [
         boost1: ['intellect', 'charisma'],
         boost2: true,
         rarity: "common",
-        skill: 'society ',
+        skill: 'society',
         lore: 'Знания Города',
         description: 'Вы путешествовали по странам вдоль и поперек в качестве дипломата или посланника. Вашим делом было общение с новыми людьми и создание союзов.',
         // feat: stringToKebab(`${'playerCore'} ${'Multilingual'}`),
@@ -197,7 +197,7 @@ const playerCore = [
         boost1: ['dexterity', 'charisma'],
         boost2: true,
         rarity: "common",
-        skill: 'perfomance ',
+        skill: 'perfomance',
         lore: 'Знания театра',
         description: 'Благодаря образованию в области искусства или просто упорной практике, вы научились развлекать толпу. Вы могли бы быть актером, танцором, музыкантом, уличным фокусником или любым другим исполнителем.',
         // feat: stringToKebab(`${'playerCore'} ${'Fascinating Performance'}`),
@@ -225,14 +225,14 @@ const playerCore = [
         // feat: stringToKebab(`${'playerCore'} ${'Battle Medicine'}`),
     },
     {
-        ...simpleStub('playerCore', 150, 'Fortune Teller', 'Вам понятны нити судьбы, поскольку вы изучили многие традиционные формы, с помощью которых обыватели могут предсказывать будущее. ', false),
+        ...simpleStub('playerCore', 150, 'Fortune Teller', 'Вам понятны нити судьбы, поскольку вы изучили многие традиционные формы, с помощью которых обыватели могут предсказывать будущее.', false),
         nameBackground: 'Гадалка',
         boost1: ['intellect', 'charisma'],
         boost2: true,
         rarity: "common",
         skill: 'occultism',
         lore: 'Знания Предсказания будущего',
-        description: 'Вам понятны нити судьбы, поскольку вы изучили многие традиционные формы, с помощью которых обыватели могут предсказывать будущее. Возможно, вы использовали эти навыки для руководства своим сообществом или просто для заработка. ',
+        description: 'Вам понятны нити судьбы, поскольку вы изучили многие традиционные формы, с помощью которых обыватели могут предсказывать будущее. Возможно, вы использовали эти навыки для руководства своим сообществом или просто для заработка.',
         // feat: stringToKebab(`${'playerCore'} ${'Oddity Identification'}`),
     },
     {

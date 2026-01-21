@@ -356,22 +356,36 @@
             <table class="boost-table">
               <thead>
                 <tr>
-                  <th v-for="attr in attributeRepository">{{ attr.name }}</th>
+                  <th v-for="attr in finalRepository">{{ attr }}</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr v-for="(row, index) in tableRows">
-                  <td v-for="attr in attributes" class="boost-cell">
-                    {{ formatCell(row[attr]) }}
+                <!-- <tr v-for="(row, index) in tableRows">
+                  <td v-for="attr in finalRepository">
+                    {{ formatCell(row[attr], row, attr) }}
                   </td>
+                </tr> -->
+                <tr v-for="(row, rowIndex) in tableRows" :key="row.source">
+                  <td class="boost-cell">{{ row.source }}</td>
+                  <td class="boost-cell">{{ formatBoost('strength', rowIndex) }}</td>
+                  <td class="boost-cell">{{ formatBoost('dexterity', rowIndex) }}</td>
+                  <td class="boost-cell">{{ formatBoost('constitution', rowIndex) }}</td>
+                  <td class="boost-cell">{{ formatBoost('intellect', rowIndex) }}</td>
+                  <td class="boost-cell">{{ formatBoost('wisdom', rowIndex) }}</td>
+                  <td class="boost-cell">{{ formatBoost('charisma', rowIndex) }}</td>
+
                 </tr>
               </tbody>
 
               <tfoot>
                 <tr>
-                  <th v-for="attr in attributes" class="boost-footer">
-                    = {{ formatTotal(attr) }}
+                  <th>
+
+                  </th>
+                  <th v-for="attr in attributeRepository" class="boost-footer">
+                    <!-- = {{ formatTotal(attr) }} -->
+                    = {{ ModAttributeReal(attr.key) }}
                   </th>
                 </tr>
               </tfoot>
@@ -1005,20 +1019,51 @@ export default {
     attributes() {
       return ["strength", "dexterity", "constitution", "intellect", "wisdom", "charisma"];
     },
-
-
-
+    finalRepository() {
+      return ["Источник", ...this.attributeRepository.map(s => s.name)];
+    },
 
     tableRows() {
       return [
-        this.characterBackgroundBoost,
-        // this.characterBackground2Boost(),
-        this.characterAncestryFreeBoost,
-        this.characterAncestryFreeBoost2,
-        // this.attributesClassBoost,
-        // this.attributesFreeBoost
-      ].filter(Boolean); // пропуск undefined
+        {
+          source: 'Предыстория',
+          stats:
+            this.characterBackgroundBoost,
+        },
+        {
+          source: 'Наследие',
+          stats: this.mergeStats(
+            this.characterAncestryBoost,
+            this.characterAttributesAncestryFlaw
+          )
+        },
+        {
+          source: 'Класс',
+          stats: this.characterClassBoost
+        },
+        {
+          source: '1 уровень',
+          stats: this.characterAttributeBoost
+        },
+        {
+          source: '5 уровень',
+          stats: this.characterAttributeBoost5
+        },
+        {
+          source: '10 уровень',
+          stats: this.characterAttributeBoost10
+        },
+        {
+          source: '15 уровень',
+          stats: this.characterAttributeBoost15
+        },
+        {
+          source: '20 уровень',
+          stats: this.characterAttributeBoost20
+        },
+      ].filter(row => row.stats);
     },
+
     routes() {
       return {
         species: this.routeBuilder(
@@ -1399,6 +1444,14 @@ export default {
         this.$route.params.id
       );
     },
+
+
+    characterBackgroundBoost() {
+      return this.$store.getters['characters/characterBackgroundBoost'](this.$route.params.id);
+    },
+    characterBackground2() {
+      return this.$store.getters['characters/characterBackgroundFreeBoost2ById'](this.$route.params.id);
+    },
     characterBackgroundBoost() {
       return this.$store.getters['characters/characterBackgroundBoostId'](this.$route.params.id);
     },
@@ -1408,9 +1461,36 @@ export default {
     characterAncestryFreeBoost() {
       return this.$store.getters['characters/characterAncestryFreeBoostById'](this.$route.params.id);
     },
+    characterAttributesAncestryFlaw() {
+      return this.$store.getters['characters/characterAttributesAncestryFlaw'](this.$route.params.id);
+    },
+
     characterAncestryFreeBoost2() {
       return this.$store.getters['characters/characterAncestryFreeBoost2ById'](this.$route.params.id);
     },
+    characterClassBoost() {
+      return this.$store.getters['characters/characterAttributesClassBoost'](this.$route.params.id);
+    },
+
+    characterAttributeBoost() {
+      return this.$store.getters['characters/characterAttributeBoost'](this.$route.params.id);
+    },
+    characterAttributeBoost5() {
+      return this.$store.getters['characters/characterAttributeBoost5'](this.$route.params.id);
+    },
+    characterAttributeBoost10() {
+      return this.$store.getters['characters/characterAttributeBoost10'](this.$route.params.id);
+    },
+    characterAttributeBoost15() {
+      return this.$store.getters['characters/characterAttributeBoost15'](this.$route.params.id);
+    },
+    characterAttributeBoost20() {
+      return this.$store.getters['characters/characterAttributeBoost20'](this.$route.params.id);
+    },
+    characterAncestryBoost() {
+      return this.$store.getters['characters/characterAncestryBoostById'](this.$route.params.id);
+    },
+
   },
   asyncData({ params }) {
     return {};
@@ -1580,7 +1660,8 @@ export default {
           return "нетренированыН";
       }
     },
-    formatCell(value) {
+    formatCell(value, row, name) {
+
       if (value === 0 || value === undefined || value === null) return "";
       return value > 0 ? "+" + value : value;
     },
@@ -1594,9 +1675,6 @@ export default {
     },
     SaveLabelName(skill) {
       //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
-
-
-
       switch (skill) {
         case "U":
           return "нетренированы";
@@ -1709,6 +1787,21 @@ export default {
         this.$route.params.id
       )
     },
+    formatBoost(stat, rowIndex) {
+      let count = 0;
+
+      for (let i = 0; i <= rowIndex; i++) {
+        count += this.tableRows[i].stats?.[stat] || 0;
+      }
+
+      if (count <= 4) return this.tableRows[rowIndex].stats?.[stat] || 0;
+
+      // после 4
+      if (this.tableRows[rowIndex].stats?.[stat] === 0) return 0;
+
+      return (count - 4) % 2 === 1 ? 0.5 : 1;
+    },
+
     characterArmor() {
       const wear = this.$store.getters["characters/characterWearById"](
         this.$route.params.id
@@ -1797,6 +1890,32 @@ export default {
         params: { id: this.$route.params.id },
       };
     },
+    mergeStats(...inputs) {
+      const result = {
+        strength: 0,
+        dexterity: 0,
+        constitution: 0,
+        intellect: 0,
+        wisdom: 0,
+        charisma: 0
+      };
+
+      inputs.forEach(input => {
+        if (!input) return;
+
+        // 2️⃣ Если это объект со значениями
+        if (typeof input === 'object') {
+          Object.keys(result).forEach(stat => {
+            result[stat] += Number(input[stat] || 0);
+          });
+        }
+      });
+
+
+
+      return result;
+    },
+
     characterlabel(key) {
       switch (key) {
         case "U":

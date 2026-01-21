@@ -517,7 +517,12 @@
         <!-- actions, gear, feats, spells, ... -->
         <v-col cols="12" md="12">
           <v-card>
+
+
+
+
             <v-tabs centered grow color="red">
+
               <!-- <v-tab class="caption" key="actions" :href="`#tab-actions`"
               ><h2 class="subtitle-2">Оружие</h2></v-tab
             > -->
@@ -715,190 +720,256 @@
                 </v-col>
               </v-tab-item>
 
+
               <!-- wargear (All, Weapons, Armour, Gear, Other Possessions) -->
               <v-tab-item class="my-tab-item" key="wargear" :value="`tab-wargear`">
-                <div class="pa-2">
-                  <v-chip-group mandatory active-class="red--text" v-model="wargearSection.selection">
-                    <v-chip label small v-for="item in [
-                      `Оружие`,
-                      `Доспехи`,
-                      `Расходники`,
-                      `Сокровища`,
-                      `Снаряжение`,
-                      `Все`,
-                    ]" :key="item.toLowerCase()" :value="item.toLowerCase()">
-                      {{ item }}
-                    </v-chip>
-                  </v-chip-group>
+                <v-col :cols="12" class="pa-1">
+                  <v-card style="display: flex; flex-flow: column">
+                    <v-row no-gutters style="height: 100%">
+                      <v-col cols="12" md="12" class="pa-2 left-col">
+                        <v-row class="mb-2 align-center">
+                          <v-col cols="12" md="12" class="pa-2 left-col">
+                            <!-- Search -->
+                            <v-row class="mb-2 align-center">
+                              <!-- <v-col cols="3" md="4" class="pa-2 left-col">
+                                <div class="search">
 
-                  <div style="height: 505px; overflow-y: auto">
-                    <!-- species < abilities -->
-                    <div v-show="wargearSection.selection === 'оружие' ||
-                      wargearSection.selection === 'все'
-                      ">
-                      <v-data-table :headers="weaponHeaders" :items="weapons" hide-default-footer
-                        v-if="weapons.length !== 0">
-                        <template v-slot:item="{ item }">
-                          <tr v-if="item">
-                            <td class="text-left pa-1 small">
-                              {{ item.name }}
-                            </td>
+                                  <input v-model="search" placeholder="Поиск Предметов" />
+                                </div>
+                              </v-col> -->
 
-                            <td class="text-center pa-1 small">
-                              <span>{{ groupName(item.group) }}</span>
-                            </td>
+                              <!-- Bulk badge -->
+                              <v-col cols="3" md="4" class="pa-2 left-col">
 
-                            <td class="text-center pa-1 small">
-                              + {{ attackModifier(item) }} /
-                              {{ attackModifier(item) - 5 }} /
-                              {{ attackModifier(item) - 10 }}
-                            </td>
+                                <div class="badge">
+                                  Вес: {{ bulkCount }} / (Нагружен: {{ 5 + Math.floor((characterAttributes["strength"] -
+                                    10) /
+                                    2) }}, Максимальный: {{ 10 + Math.floor((characterAttributes["strength"] - 10) / 2)
+                                  }})
+                                </div>
+                              </v-col>
 
-                            <td class="text-center pa-1 small">
-                              <div v-if="item.damage">
-                                <span>
-                                  {{ damageModifier(item) }}
+                              <v-col cols="3" md="4" class="pa-2 left-col">
+                                <!-- Currencies -->
+                                <div class="currencies">
+                                  <div class="currency" v-for="c in currencies">
+                                    <span class="value">{{ getMoney[c.value] }}</span>
+                                    <img :src="`/img/icon/${c.icon}`" :alt="c.name" />
+                                  </div>
 
-                                  <!-- {{
+                                </div>
+                              </v-col>
+                            </v-row>
+
+
+
+                          </v-col>
+                        </v-row>
+
+                        <v-row>
+                          <v-col :cols="12" class="pa-1">
+
+                            <v-chip-group mandatory active-class="red--text" v-model="wargearSection.selection">
+                              <v-chip label small v-for="item in [
+                                `Оружие`,
+                                `Доспехи`,
+                                `Расходники`,
+                                `Сокровища`,
+                                `Снаряжение`,
+                                `Все`,
+                              ]" :key="item.toLowerCase()" :value="item.toLowerCase()">
+                                {{ item }}
+                              </v-chip>
+                            </v-chip-group>
+
+                            <div style="height: 505px; overflow-y: auto">
+                              <!-- species < abilities -->
+                              <div v-show="wargearSection.selection === 'оружие' ||
+                                wargearSection.selection === 'все'
+                                ">
+                                <v-data-table :headers="weaponHeaders" :items="weapons" hide-default-footer
+                                  v-if="weapons.length !== 0">
+                                  <template v-slot:item="{ item }">
+                                    <tr v-if="item">
+                                      <td class="text-left pa-1 small">
+                                        {{ item.name }}
+                                      </td>
+
+                                      <td class="text-center pa-1 small">
+                                        <span>{{ groupName(item.group) }}</span>
+                                      </td>
+
+                                      <td class="text-center pa-1 small">
+                                        + {{ attackModifier(item) }} /
+                                        {{ attackModifier(item) - 5 }} /
+                                        {{ attackModifier(item) - 10 }}
+                                      </td>
+
+                                      <td class="text-center pa-1 small">
+                                        <div v-if="item.damage">
+                                          <span>
+                                            {{ damageModifier(item) }}
+
+                                            <!-- {{
                                   item.damage?.die
                                   ? item.damage.dice + item.damage.die
                                   : item.damage
                                   }}
                                   {{ typeDamage(item.damageOrig.damageType) }} -->
-                                </span>
+                                          </span>
+                                        </div>
+                                      </td>
+
+                                      <td class="text-center pa-1 small">
+                                        <span>{{ category(item.category) }}</span>
+                                      </td>
+
+                                      <td class="text-center pa-1 small">
+                                        <span>{{ item.hands }}</span>
+                                      </td>
+
+                                      <td class="text-left pa-1 small">
+                                        <span v-if="item.traits && item.traits.length > 0">{{ item.traits.join(", ")
+                                        }}</span>
+                                      </td>
+                                      <td class="text-left">
+                                        <v-btn outlined x-small color="info" @click="openDialogItem(item)">
+                                          <v-icon left>visibility</v-icon> Просмотр
+                                        </v-btn>
+                                      </td>
+                                    </tr>
+                                  </template>
+                                </v-data-table>
+
+                                <div v-if="weapons.length === 0" align="center" class="mt-2 mb-2">
+                                  <em>Нет оружия? Возьми на вкладке Снаряжения!</em>
+                                </div>
                               </div>
-                            </td>
 
-                            <td class="text-center pa-1 small">
-                              <span>{{ category(item.category) }}</span>
-                            </td>
+                              <!-- species < abilities -->
+                              <div v-show="wargearSection.selection === 'доспехи' ||
+                                wargearSection.selection === 'все'
+                                ">
+                                <v-data-table :headers="armorHeaders" :items="armour" hide-default-footer
+                                  v-if="armour.length !== 0">
+                                  <template v-slot:item="{ item }">
+                                    <tr v-if="item">
+                                      <td class="text-left">
+                                        {{ item.name }}
+                                      </td>
+                                      <td class="text-center">
+                                        {{
+                                          armorGroup.find((i) => item.group === i.group)
+                                            .name
+                                        }}
+                                      </td>
+                                      <td class="text-center">
+                                        <span v-if="item.bulk">
+                                          {{
+                                            item.bulk.value === 0.1
+                                              ? "Л"
+                                              : item.bulk.value
+                                          }}</span>
+                                      </td>
+                                      <td class="text-center">
+                                        {{
+                                          armourCategoryRepository.find(
+                                            (i) => item.category === i.category
+                                          ).name
+                                        }}
+                                      </td>
+                                      <td class="text-left">
+                                        <span v-if="item.traits && item.traits.length > 0">{{ item.traits.join(", ")
+                                        }}</span>
+                                      </td>
 
-                            <td class="text-center pa-1 small">
-                              <span>{{ item.hands }}</span>
-                            </td>
+                                      <td class="text-left">
+                                        <span>
+                                          <v-btn outlined x-small :color="characterWearWargear && characterWearWargear.id === item.id
+                                            ? 'info'
+                                            : 'warning'
+                                            " @click="
+                                              characterWearWargear && characterWearWargear.id === item.id
+                                                ? unwear(item)
+                                                : wear(item)
+                                              ">
+                                            <v-icon left> lock </v-icon>
 
-                            <td class="text-left pa-1 small">
-                              <span v-if="item.traits && item.traits.length > 0">{{ item.traits.join(", ") }}</span>
-                            </td>
-                            <td class="text-left">
-                              <v-btn outlined x-small color="info" @click="openDialogItem(item)">
-                                <v-icon left>visibility</v-icon> Просмотр
-                              </v-btn>
-                            </td>
-                          </tr>
-                        </template>
-                      </v-data-table>
+                                            <span v-if="
+                                              characterWearWargear && characterWearWargear.id === item.id
+                                            ">Снять
+                                            </span>
+                                            <span v-else>Надеть </span>
+                                          </v-btn>
+                                        </span>
+                                      </td>
 
-                      <div v-if="weapons.length === 0" align="center" class="mt-2 mb-2">
-                        <em>Нет оружия? Возьми на вкладке Снаряжения!</em>
-                      </div>
-                    </div>
+                                      <td class="text-left">
+                                        <v-btn outlined x-small color="info" @click="openDialogItem(item)">
+                                          <v-icon left>visibility</v-icon> Просмотр
+                                        </v-btn>
+                                      </td>
+                                    </tr>
+                                  </template>
+                                </v-data-table>
 
-                    <!-- species < abilities -->
-                    <div v-show="wargearSection.selection === 'доспехи' ||
-                      wargearSection.selection === 'все'
-                      ">
-                      <v-data-table :headers="armorHeaders" :items="armour" hide-default-footer
-                        v-if="armour.length !== 0">
-                        <template v-slot:item="{ item }">
-                          <tr v-if="item">
-                            <td class="text-left">
-                              {{ item.name }}
-                            </td>
-                            <td class="text-center">
-                              {{
-                                armorGroup.find((i) => item.group === i.group)
-                                  .name
-                              }}
-                            </td>
-                            <td class="text-center">
-                              <span v-if="item.bulk">
-                                {{
-                                  item.bulk.value === 0.1
-                                    ? "Л"
-                                    : item.bulk.value
-                                }}</span>
-                            </td>
-                            <td class="text-center">
-                              {{
-                                armourCategoryRepository.find(
-                                  (i) => item.category === i.category
-                                ).name
-                              }}
-                            </td>
-                            <td class="text-left">
-                              <span v-if="item.traits && item.traits.length > 0">{{ item.traits.join(", ") }}</span>
-                            </td>
+                                <div v-if="armour.length === 0" align="center" class="mt-2 mb-2">
+                                  <em>Нет доспехов? Возьми на вкладке Снаряжения!</em>
+                                </div>
+                              </div>
 
-                            <td class="text-left">
-                              <span>
-                                <v-btn outlined x-small :color="characterWearWargear && characterWearWargear.id === item.id
-                                  ? 'info'
-                                  : 'warning'
-                                  " @click="
-                                    characterWearWargear && characterWearWargear.id === item.id
-                                      ? unwear(item)
-                                      : wear(item)
-                                    ">
-                                  <v-icon left> lock </v-icon>
+                              <!-- species < abilities -->
+                              <div v-show="wargearSection.selection === 'снаряжение' ||
+                                wargearSection.selection === 'все'
+                                ">
 
-                                  <span v-if="
-                                    characterWearWargear && characterWearWargear.id === item.id
-                                  ">Снять
-                                  </span>
-                                  <span v-else>Надеть </span>
-                                </v-btn>
-                              </span>
-                            </td>
+                                <!-- <div v-for="group in groupedGear" :key="group.header" class="gear-section">
+                                  <div class="gear-section-header">
+                                    <v-icon small class="mr-2">mdi-shield-outline</v-icon>
+                                    {{ Worn(group.header) }}
+                                  </div> -->
 
-                            <td class="text-left">
-                              <v-btn outlined x-small color="info" @click="openDialogItem(item)">
-                                <v-icon left>visibility</v-icon> Просмотр
-                              </v-btn>
-                            </td>
-                          </tr>
-                        </template>
-                      </v-data-table>
 
-                      <div v-if="armour.length === 0" align="center" class="mt-2 mb-2">
-                        <em>Нет доспехов? Возьми на вкладке Снаряжения!</em>
-                      </div>
-                    </div>
+                                <v-data-table :headers="gearHeaders" :items="gear" hide-default-footer
+                                  v-if="armour.length !== 0">
+                                  <template v-slot:item="{ item }">
+                                    <tr v-if="item">
+                                      <td class="text-left">
+                                        {{ item.name }}
+                                      </td>
 
-                    <!-- species < abilities -->
-                    <div v-show="wargearSection.selection === 'снаряжение' ||
-                      wargearSection.selection === 'все'
-                      ">
-                      <v-data-table :headers="gearHeaders" :items="gear" hide-default-footer v-if="armour.length !== 0">
-                        <template v-slot:item="{ item }">
-                          <tr v-if="item">
-                            <td class="text-left">
-                              {{ item.name }}
-                            </td>
+                                      <td class="text-center">
+                                        <span v-if="item.bulk">
+                                          {{
+                                            item.bulk.value === 0.1
+                                              ? "Л"
+                                              : item.bulk.value
+                                          }}</span>
+                                      </td>
 
-                            <td class="text-center">
-                              <span v-if="item.bulk">
-                                {{
-                                  item.bulk.value === 0.1
-                                    ? "Л"
-                                    : item.bulk.value
-                                }}</span>
-                            </td>
+                                      <td class="text-left">
+                                        <span v-if="item.traits && item.traits.length > 0">{{ item.traits.join(", ")
+                                        }}</span>
+                                      </td>
+                                      <td class="text-left">
+                                        <v-btn outlined x-small color="info" @click="openDialogItem(item)">
+                                          <v-icon left>visibility</v-icon> Просмотр
+                                        </v-btn>
+                                      </td>
+                                    </tr>
+                                  </template>
+                                </v-data-table>
+                                <!-- </div> -->
+                              </div>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                </v-col>
 
-                            <td class="text-left">
-                              <span v-if="item.traits && item.traits.length > 0">{{ item.traits.join(", ") }}</span>
-                            </td>
-                            <td class="text-left">
-                              <v-btn outlined x-small color="info" @click="openDialogItem(item)">
-                                <v-icon left>visibility</v-icon> Просмотр
-                              </v-btn>
-                            </td>
-                          </tr>
-                        </template>
-                      </v-data-table>
-                    </div>
-                  </div>
-                </div>
+
               </v-tab-item>
 
               <!-- abilities (All, Race, Archetype, Talents, Faith?, Other) -->
@@ -1633,6 +1704,14 @@ export default {
   },
   data() {
     return {
+      search: '',
+
+      currencies: [
+        { name: 'Platinum', value: "pp", icon: 'platinum.png' },
+        { name: 'Gold', value: "gp", icon: 'gold.png' },
+        { name: 'Silver', value: "sp", icon: 'silver.png' },
+        { name: 'Copper', value: "cp", icon: 'copper.png' }
+      ],
 
       maxBullets: 10,      // размер обоймы
       currentBullets: 5,    // текущее количество патронов
@@ -2027,6 +2106,9 @@ export default {
       let enhancedAttributes = this.$store.getters['characters/characterAttributesEnhancedById'](this.characterId);
       return enhancedAttributes;
     },
+    getMoney() {
+      return this.$store.getters['characters/characterMoneyById'](this.characterId);
+    },
     attributes() {
 
       const characterAttributes = this.$store.getters['characters/characterAttributesById'](this.characterId);
@@ -2104,6 +2186,13 @@ export default {
         // ...this.traits.filter((i) => i.type === 'Mental'),
         // ...this.traits.filter((i) => i.type === 'Social'),
       ];
+    },
+    bulkCount() {
+      let Sum = 0;
+      this.charGear.forEach(item => {
+        Sum = Sum + (item.bulk ? item.bulk.value : 0);
+      })
+      return Sum;
     },
     characterReloads() {
       const spend = this.$store.getters['characters/characterReloadsSpendById'](this.characterId);
@@ -2528,41 +2617,55 @@ export default {
       const ascensionPackages = this.characterAscensionPackages;
       const ascensionRepository = this.ascensionPackagesRepository;
 
+      if (ascensionPackages && ascensionRepository) {
+        const feature = ascensionRepository;
+        const ability = {
+          name: feature.name,
+          effect: feature.snippet ? feature.snippet : feature.description, // todo deprecated
+          snippet: feature.snippet,
+          description: feature.description,
+          source: feature.name,
+          hint: feature.name,
+        };
+        abilities.push(ability)
+
+      }
+
       // if (ascensionRepository && ascensionRepository.length > 0) {
 
       //   ascensionRepository.forEach((ascension) => {
 
       //     ascension.ascensionFeatures
-      //     .filter((feature) => feature.hideInSheet === undefined || feature.hideInSheet === false)
-      //     .forEach((feature) => {
-      //       const ability = {
-      //         name: feature.name,
-      //         effect: feature.snippet ? feature.snippet : feature.description, // todo deprecated
-      //         snippet: feature.snippet,
-      //         description: feature.description,
-      //         source: ascension.name,
-      //         hint: ascension.name,
-      //       };
+      //       .filter((feature) => feature.hideInSheet === undefined || feature.hideInSheet === false)
+      //       .forEach((feature) => {
+      //         const ability = {
+      //           name: feature.name,
+      //           effect: feature.snippet ? feature.snippet : feature.description, // todo deprecated
+      //           snippet: feature.snippet,
+      //           description: feature.description,
+      //           source: ascension.name,
+      //           hint: ascension.name,
+      //         };
 
-      //       if ( feature.options ) {
-      //         const featureOption = this.characterEnhancements.find( (e) => e.source.startsWith(`ascension.${ascension.key}.${feature.key}.`));
-      //         if ( featureOption ) {
-      //           if ( featureOption.targetValue ) {
-      //             ability['selectedOption'] = {
-      //               effect: featureOption.targetValue, // todo e.g. corruption
-      //               snippet: featureOption.targetValue,
-      //             };
-      //           } else { // e.g. memorabie injury
-      //             ability['selectedOption'] = {
-      //               name: featureOption.name,
-      //               effect: featureOption.effect,
-      //               snippet: featureOption.effect,
-      //             };
+      //         if (feature.options) {
+      //           const featureOption = this.characterEnhancements.find((e) => e.source.startsWith(`ascension.${ascension.key}.${feature.key}.`));
+      //           if (featureOption) {
+      //             if (featureOption.targetValue) {
+      //               ability['selectedOption'] = {
+      //                 effect: featureOption.targetValue, // todo e.g. corruption
+      //                 snippet: featureOption.targetValue,
+      //               };
+      //             } else { // e.g. memorabie injury
+      //               ability['selectedOption'] = {
+      //                 name: featureOption.name,
+      //                 effect: featureOption.effect,
+      //                 snippet: featureOption.effect,
+      //               };
+      //             }
       //           }
       //         }
-      //       }
-      //       abilities.push(ability);
-      //     });
+      //         abilities.push(ability);
+      //       });
       //   });
       // }
 
@@ -2653,6 +2756,7 @@ export default {
     customAbilities() {
       return this.characterEnhancements ? this.characterEnhancements.filter((i) => i.targetGroup === 'abilities') : [];
     },
+
     enrichedTalents() {
       if (this.characterTalents && this.characterTalents.length > 0) {
         const talent = this.talentRepository;
@@ -3098,8 +3202,6 @@ export default {
             spell.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
           }
 
-          // if (spell?.cast === true)
-          //   this.crossedRows.push(spell.id);
           spells.push(spell);
         }
         return spells;
@@ -3107,6 +3209,20 @@ export default {
 
       return [];
 
+    },
+    groupedGear() {
+      const groups = {};
+
+      this.charGear.filter((w) => !['armor', 'weapon', 'shield'].includes(w.type)).forEach(item => {
+        const type = item.usage.value || "Прочее";
+        console.log(item);
+        if (!groups[type]) groups[type] = [];
+        groups[type].push(item);
+      });
+      return Object.entries(groups).map(([type, items]) => ({
+        header: type,
+        items
+      }));
     },
     getItemClass(item) {
       return item.cast ? 'crossed-row' : ''
@@ -3118,15 +3234,11 @@ export default {
       if (spell.find(s => s.id === item.id)) {
         item.cast = item.rank !== 0 ? !item.cast : item.cast;
         this.$store.commit('characters/editCharacterSpell', { id: this.characterId, talentId: item.id, cast: item.cast });
-        // if (this.crossedRows?.includes(item.id))
-        //   this.crossedRows = this.crossedRows.filter(rowId => rowId !== item.id)
-        // else
-        //   this.crossedRows.push(item.id);
       }
 
     },
     Worn(item) {
-      return this.WornGear[item]
+      return this.WornGear[item] ? this.WornGear[item] : 'Прочее'
     },
     openDialog(item) {
       this.selectedItem = item
@@ -3688,21 +3800,20 @@ export default {
         this.$store.commit('characters/setCharacterHeroPoints', { id: this.characterId, value: value })
     },
 
-    async getAscensionPackageList(ascensionList) {
+    async getAscensionPackageList(key) {
+      this.loading = true;
+      let finalData = {};
 
-      let packages = [];
+      // if (key.startsWith("custom-")) {
+      //   const speciesDetails = this.$store.getters["species/getSpecies"](key);
+      //   finalData = speciesDetails;
+      // } else {
+      const { data } = await this.$axios.get(`/api/ascension-packages/${key}`);
+      finalData = data;
+      // }
 
-      if (ascensionList.length > 0) {
-        for (const ascension of ascensionList) {
-          const { data } = await this.$axios.get(`/api/ascension-packages/${ascension.key}`);
-          const enrichedAscension = {
-            ...data,
-            ...ascension,
-          };
-          packages.push(enrichedAscension);
-        }
-      }
-      this.ascensionPackagesRepository = packages;
+      this.loading = false;
+      this.ascensionPackagesRepository = finalData;
     },
     async getWargearList(sources) {
       const page = 1;
@@ -4663,5 +4774,67 @@ td.small {
 
 .v-list-item:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+</style>
+
+<style scoped>
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, .3);
+  border-radius: 6px;
+  padding: 6px 10px;
+  flex: 1;
+}
+
+.search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  margin-left: 8px;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.currencies {
+  display: flex;
+  gap: 12px;
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #adb5bd;
+}
+
+.currency img {
+  width: 20px;
+  height: 20px;
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #343a40;
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 14px;
+  cursor: pointer;
+  border: none;
 }
 </style>

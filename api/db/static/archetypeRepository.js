@@ -1184,223 +1184,7 @@ const playerCore = [
             ]
     },
 
-    //Чародей
-    {
-        ...archetype(source.playerCore2.key, 93, 'Sorcerer'),
-        ...cost(6, 0, 0, 0, 0),
-        ...statBoost(0, 0, 0, 0, 0, 1),
-        hint: 'Вы не выбирали стать заклинателем — вы были рождены им. В вашей крови есть магия, независимо от того, коснулось ли божество одного из ваших предков, '
-            + 'прародитель причищался с первородным существом или могущественный оккультный ритуал повлиял на ваш род. Самоанализ и учёба позволяют вам совершенствовать '
-            + 'свои врожденные магические навыки и открывать новые, более мощные умения.',
-        name: 'Чародей',
-        keywords: 'чародей',
-        hitpoints: 6,
-        prepared: false,
-        keyAbility: ["charisma"],
-        trait: ["чародей"],
-        rarity: "common",
-        skillTrainedChoice: [],
-        skillTrained: [], // Навыки определяются наследием крови
-        skillTrainedPoints: 2,
-        spellTradition: '', // Определяется наследием крови (арканный/оккультный/сакральный/природный)
-        spellProgression: {
-            1: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            2: [5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            3: [5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0],
-            4: [5, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
-            5: [5, 4, 4, 3, 0, 0, 0, 0, 0, 0, 0],
-            6: [5, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0],
-            7: [5, 4, 4, 4, 3, 0, 0, 0, 0, 0, 0],
-            8: [5, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
-            9: [5, 4, 4, 4, 4, 3, 0, 0, 0, 0, 0],
-            10: [5, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0],
-            11: [5, 4, 4, 4, 4, 4, 3, 0, 0, 0, 0],
-            12: [5, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0],
-            13: [5, 4, 4, 4, 4, 4, 4, 3, 0, 0, 0],
-            14: [5, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0],
-            15: [5, 4, 4, 4, 4, 4, 4, 4, 3, 0, 0],
-            16: [5, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0],
-            17: [5, 4, 4, 4, 4, 4, 4, 4, 4, 3, 0],
-            18: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0],
-            19: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
-            20: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
-        },
-        spellFocusPool: 1,
-        // spellFocusBase: ["Заклинание наследия крови"],
-        spellsClass: {
-            attack: "T",
-            class: "T"
-        },
-        Perception: "T",
-        skillAttack: {
-            simple: "T",
-            martial: "U",
-            advanced: "U",
-            unarmed: "T"
-        },
-        skillDefence: {
-            light: "U",
-            medium: "U",
-            heavy: "U",
-            unarmored: "T"
-        },
-        skillClass: "T",
-        saving: {
-            reflex: "T",
-            fortitude: "T",
-            will: "E",
-        },
-        isFeatLevelOne: false,
-        description: [
-            {
-                name: 'encounter',
-                text: '<p>Вы используете заклинания, чтобы ранить врагов, влиять на их умы и препятствовать их движениям. Вы можете быть слишком уязвимы, чтобы идти в ближний бой, '
-                    + 'или же ваше наследие крови может дать умения, которые помогают вам держаться в драке. Хоть ваша магия и сильна, чтобы приберечь ваши лучшие заклинания, '
-                    + 'либо когда вы использовали их все, вы также полагаетесь на чары.</p>'
-            },
-            {
-                name: 'social',
-                text: '<p>Ваше естественное обаяние позволяет вам хорошо взаимодействовать с людьми.</p>'
-            },
-            {
-                name: 'exporation',
-                text: '<p>Вы обнаруживаете магию вокруг себя, находя сокровища и предупреждая свою группу о магических ловушках. Когда группа сталкивается с тайнами или проблемами, '
-                    + 'связанными с вашим наследием крови, то вы пытаетесь решить их.</p>'
-            },
-            {
-                name: 'downtime',
-                text: '<p>Вы создаете магические предметы или пишите свитки. Ваше наследие крови может побудить вас исследовать свою родословную или общаться с относящимися к ней '
-                    + 'людьми или существами.</p>'
-            },
-            {
-                name: 'you',
-                text: '<li><p>Иметь сильную независимую черту, и неважно, принимаете ли вы или отвергаете своё магическое наследие</p></li>'
-                    + '<li><p>Смотреть на свою родословную с восхищением, страхом или чем-то по середине</p></li>'
-                    + '<li><p>Полагаться на магические предметы, такие как свитки и палочки, чтобы дополнить свой ограниченный выбор заклинаний</p></li>'
-            },
-            {
-                name: 'other',
-                text: '<li><p>Восхищаются вашим умением создавать магию из воздуха и смотрят на ваши способности одновременно с восхищением и недоверием</p></li>'
-                    + '<li><p>Считают вас менее посвящённым заклинателем, чем прилежные волшебники</p></li>'
-                    + '<li><p>Полагают, что вы столь же непредсказуемы, как и магия, порождаемая вами</p></li>'
-            }
-        ],
 
-        archetypeFeatures: [
-            // Общие
-            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
-            // Классовые
-            "Sorcerer Spellcasting", "signature-spells", "spell-repertoire", "Bloodline",
-
-
-            "Bloodline Spell", "Bloodline Perk", "Bloodline Resistance",
-            // Обще-классовые
-            "Spell Penetration", "Greater Bloodline", "Bloodline Focus", "Legendary Bloodline"
-        ],
-        modification: [
-            {
-                key: "spells",
-                upgrade: "E",
-                mode: "Upgrade",
-                type: "Attack",
-                level: 7,
-            },
-            {
-                key: "class",
-                upgrade: "E",
-                mode: "Upgrade",
-                type: "DC Class",
-                level: 7,
-            },
-            {
-                key: "fortitude",
-                upgrade: "E",
-                type: "Saving",
-                mode: "Upgrade",
-                level: 5,
-            },
-            {
-                key: "reflex",
-                upgrade: "E",
-                type: "Saving",
-                mode: "Upgrade",
-                level: 9,
-            },
-            {
-                key: "perception",
-                upgrade: "E",
-                type: "Perception",
-                mode: "Upgrade",
-                level: 11,
-            },
-            {
-                key: "simple",
-                upgrade: "E",
-                mode: "Upgrade",
-                type: "Attack",
-                level: 11,
-            },
-            {
-                key: "unarmed",
-                upgrade: "E",
-                mode: "Upgrade",
-                type: "Attack",
-                level: 11,
-            },
-            {
-                key: "unarmored",
-                upgrade: "E",
-                mode: "Upgrade",
-                type: "Defence",
-                level: 13,
-            },
-            {
-                key: "Weapon Specialization",
-                type: "Weapon Specialization",
-                level: 13,
-                bonusDamage: {
-                    E: 2,
-                    M: 3,
-                    L: 4,
-                }
-            },
-            {
-                key: "spells",
-                upgrade: "M",
-                mode: "Upgrade",
-                type: "Attack",
-                level: 15,
-            },
-            {
-                key: "class",
-                upgrade: "M",
-                mode: "Upgrade",
-                type: "DC Class",
-                level: 15,
-            },
-            {
-                key: "will",
-                upgrade: "M",
-                type: "Saving",
-                mode: "Upgrade",
-                level: 17,
-            },
-            {
-                key: "spells",
-                upgrade: "L",
-                mode: "Upgrade",
-                type: "Attack",
-                level: 19,
-            },
-            {
-                key: "class",
-                upgrade: "L",
-                mode: "Upgrade",
-                type: "DC Class",
-                level: 19,
-            }
-        ]
-    },
 
     //Волшебник
     {
@@ -1811,6 +1595,224 @@ const playerCore2 = [
                 },
 
             ]
+    },
+
+    //Чародей
+    {
+        ...archetype(source.playerCore2.key, 93, 'Sorcerer'),
+        ...cost(6, 0, 0, 0, 0),
+        ...statBoost(0, 0, 0, 0, 0, 1),
+        hint: 'Вы не выбирали стать заклинателем — вы были рождены им. В вашей крови есть магия, независимо от того, коснулось ли божество одного из ваших предков, '
+            + 'прародитель причищался с первородным существом или могущественный оккультный ритуал повлиял на ваш род. Самоанализ и учёба позволяют вам совершенствовать '
+            + 'свои врожденные магические навыки и открывать новые, более мощные умения.',
+        name: 'Чародей',
+        keywords: 'чародей',
+        hitpoints: 6,
+        prepared: false,
+        keyAbility: ["charisma"],
+        trait: ["чародей"],
+        rarity: "common",
+        skillTrainedChoice: [],
+        skillTrained: [], // Навыки определяются наследием крови
+        skillTrainedPoints: 2,
+        spellTradition: '', // Определяется наследием крови (арканный/оккультный/сакральный/природный)
+        spellProgression: {
+            1: [5, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            2: [5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            3: [5, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+            4: [5, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+            5: [5, 4, 4, 3, 0, 0, 0, 0, 0, 0, 0],
+            6: [5, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0],
+            7: [5, 4, 4, 4, 3, 0, 0, 0, 0, 0, 0],
+            8: [5, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+            9: [5, 4, 4, 4, 4, 3, 0, 0, 0, 0, 0],
+            10: [5, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0],
+            11: [5, 4, 4, 4, 4, 4, 3, 0, 0, 0, 0],
+            12: [5, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0],
+            13: [5, 4, 4, 4, 4, 4, 4, 3, 0, 0, 0],
+            14: [5, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0],
+            15: [5, 4, 4, 4, 4, 4, 4, 4, 3, 0, 0],
+            16: [5, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0],
+            17: [5, 4, 4, 4, 4, 4, 4, 4, 4, 3, 0],
+            18: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0],
+            19: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
+            20: [5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
+        },
+        spellFocusPool: 1,
+        // spellFocusBase: ["Заклинание наследия крови"],
+        spellsClass: {
+            attack: "T",
+            class: "T"
+        },
+        Perception: "T",
+        skillAttack: {
+            simple: "T",
+            martial: "U",
+            advanced: "U",
+            unarmed: "T"
+        },
+        skillDefence: {
+            light: "U",
+            medium: "U",
+            heavy: "U",
+            unarmored: "T"
+        },
+        skillClass: "T",
+        saving: {
+            reflex: "T",
+            fortitude: "T",
+            will: "E",
+        },
+        isFeatLevelOne: false,
+        description: [
+            {
+                name: 'encounter',
+                text: '<p>Вы используете заклинания, чтобы ранить врагов, влиять на их умы и препятствовать их движениям. Вы можете быть слишком уязвимы, чтобы идти в ближний бой, '
+                    + 'или же ваше наследие крови может дать умения, которые помогают вам держаться в драке. Хоть ваша магия и сильна, чтобы приберечь ваши лучшие заклинания, '
+                    + 'либо когда вы использовали их все, вы также полагаетесь на чары.</p>'
+            },
+            {
+                name: 'social',
+                text: '<p>Ваше естественное обаяние позволяет вам хорошо взаимодействовать с людьми.</p>'
+            },
+            {
+                name: 'exporation',
+                text: '<p>Вы обнаруживаете магию вокруг себя, находя сокровища и предупреждая свою группу о магических ловушках. Когда группа сталкивается с тайнами или проблемами, '
+                    + 'связанными с вашим наследием крови, то вы пытаетесь решить их.</p>'
+            },
+            {
+                name: 'downtime',
+                text: '<p>Вы создаете магические предметы или пишите свитки. Ваше наследие крови может побудить вас исследовать свою родословную или общаться с относящимися к ней '
+                    + 'людьми или существами.</p>'
+            },
+            {
+                name: 'you',
+                text: '<li><p>Иметь сильную независимую черту, и неважно, принимаете ли вы или отвергаете своё магическое наследие</p></li>'
+                    + '<li><p>Смотреть на свою родословную с восхищением, страхом или чем-то по середине</p></li>'
+                    + '<li><p>Полагаться на магические предметы, такие как свитки и палочки, чтобы дополнить свой ограниченный выбор заклинаний</p></li>'
+            },
+            {
+                name: 'other',
+                text: '<li><p>Восхищаются вашим умением создавать магию из воздуха и смотрят на ваши способности одновременно с восхищением и недоверием</p></li>'
+                    + '<li><p>Считают вас менее посвящённым заклинателем, чем прилежные волшебники</p></li>'
+                    + '<li><p>Полагают, что вы столь же непредсказуемы, как и магия, порождаемая вами</p></li>'
+            }
+        ],
+
+        archetypeFeatures: [
+            // Общие
+            "Initial proficiencies", "Class feat Caster", "Ancestry and background", "Skill feat", "General feat", "Skill increase", "Ancestry feat", "Stat boost",
+            // Классовые
+            "Sorcerer Spellcasting", "signature-spells", "spell-repertoire-sorcerer", "Bloodline",
+
+
+            "Bloodline Spell", "Bloodline Perk", "Bloodline Resistance",
+            // Обще-классовые
+            "Spell Penetration", "Greater Bloodline", "Bloodline Focus", "Legendary Bloodline"
+        ],
+        modification: [
+            {
+                key: "spells",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 7,
+            },
+            {
+                key: "class",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 7,
+            },
+            {
+                key: "fortitude",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 5,
+            },
+            {
+                key: "reflex",
+                upgrade: "E",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 9,
+            },
+            {
+                key: "perception",
+                upgrade: "E",
+                type: "Perception",
+                mode: "Upgrade",
+                level: 11,
+            },
+            {
+                key: "simple",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11,
+            },
+            {
+                key: "unarmed",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 11,
+            },
+            {
+                key: "unarmored",
+                upgrade: "E",
+                mode: "Upgrade",
+                type: "Defence",
+                level: 13,
+            },
+            {
+                key: "Weapon Specialization",
+                type: "Weapon Specialization",
+                level: 13,
+                bonusDamage: {
+                    E: 2,
+                    M: 3,
+                    L: 4,
+                }
+            },
+            {
+                key: "spells",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 15,
+            },
+            {
+                key: "class",
+                upgrade: "M",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 15,
+            },
+            {
+                key: "will",
+                upgrade: "M",
+                type: "Saving",
+                mode: "Upgrade",
+                level: 17,
+            },
+            {
+                key: "spells",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "Attack",
+                level: 19,
+            },
+            {
+                key: "class",
+                upgrade: "L",
+                mode: "Upgrade",
+                type: "DC Class",
+                level: 19,
+            }
+        ]
     },
 
     //Варвар

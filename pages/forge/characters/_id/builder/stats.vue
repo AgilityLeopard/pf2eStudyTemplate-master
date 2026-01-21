@@ -1539,6 +1539,7 @@ export default {
     //     skill = 1 + modInt - this.skillSheetAll("", level)
     //   }
 
+
     //   if (level === 1) {
     //     modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
     //     skill = this.characterSkillPointClass +
