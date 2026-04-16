@@ -274,7 +274,7 @@ module.exports = {
    */
   axios: {
     axios: {
-      baseURL: 'http://shadow-of-tales.ru' || 'http://localhost:3000',
+      baseURL: process.env.BASE_URL,
       browserBaseURL: '/'
     }
   },
