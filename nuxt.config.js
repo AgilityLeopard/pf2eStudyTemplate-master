@@ -273,9 +273,7 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: process.server
-      ? 'http://127.0.0.1:3000'
-      : '/'
+    baseURL: '/'
   },
 
   /* auth: {
@@ -314,12 +312,12 @@ module.exports = {
     },
   },
   middleware: ['loading'],
-  serverMiddleware: [
-    //'redirect-ssl',
-    //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
-    "~/api/express", // handles /api/** calls
-    // '~/serverMiddleware/forcedomain'
-  ],
+  // serverMiddleware: [
+  //   //'redirect-ssl',
+  //   //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
+  //   "~/api/express", // handles /api/** calls
+  //   // '~/serverMiddleware/forcedomain'
+  // ],
 
   /**
    * Build configuration
