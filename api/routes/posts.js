@@ -19,34 +19,38 @@ const client = contentful.createClient({
 
 
 router.get('/', async (req, res) => {
-  try {
-    const data = await client.getEntries({
-      content_type: 'blogPost',
-      order: '-fields.publishedAt',
-    });
+  const query = {
+    content_type: 'blogPost',
+    order: '-fields.publishedAt',
+  };
 
-    res.set('Cache-Control', 'public, max-age=1800');
-    res.status(200).json(data.items);
+  const data = await client.getEntries(query);
 
-  } catch (error) {
-    console.error('POSTS ERROR:', error);
 
-    res.status(500).json({
-      error: 'Contentful failed',
-      message: error.message,
-    });
-  }
+  const normalize = (item) => ({
+    id: item.sys.id,
+    title: item.fields.title,
+    slug: item.fields.slug,
+    description: item.fields.description,
+    shortDescription: item.fields.shortDescription,
+    type: item.fields.type,
+    publishedAt: item.fields.publishedAt,
+  });
+
+  res.json(data.items.map(normalize));
 });
 
 
 router.get('/:slug', async (req, res) => {
-  try {
-    const { slug } = req.params;
+  const { slug } = req.params;
 
-    const data = await client.getEntries({
-      content_type: 'blogPost',
-      'fields.slug': slug,
-    });
+  const query = {
+    content_type: 'blogPost',
+    'fields.slug': slug,
+  };
+
+  try {
+    const data = await client.getEntries(query);
 
     const item = data.items[0];
 
@@ -54,17 +58,14 @@ router.get('/:slug', async (req, res) => {
       return res.status(404).json(null);
     }
 
-    res.json({
+    const normalize = (item) => ({
       id: item.sys.id,
       ...item.fields,
     });
 
-  } catch (error) {
-    console.error('SLUG ERROR:', error);
-
-    res.status(500).json({
-      error: 'Contentful failed',
-      message: error.message,
-    });
+    res.json(normalize(item));
+  } catch (e) {
+    console.warn(e);
+    res.status(500).json(null);
   }
 });
