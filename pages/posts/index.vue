@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div
-      v-show="showTooltip"
-      class="tooltip-container"
-      :style="{ left: tooltip.position.x, top: tooltip.position.y }"
-    >
+    <div v-show="showTooltip" class="tooltip-container" :style="{ left: tooltip.position.x, top: tooltip.position.y }">
       <v-card v-if="tooltip.loading" dark color="success" class="text-center">
         <v-progress-circular indeterminate />
       </v-card>
@@ -25,47 +21,30 @@
         <ColorfulPage :headline="page.title" flavour="blog"> </ColorfulPage>
 
         <v-row v-if="$fetchState.pending" justify="center">
-          <v-progress-circular
-            indeterminate
-            color="success"
-            size="128"
-            width="12"
-          />
+          <v-progress-circular indeterminate color="success" size="128" width="12" />
         </v-row>
 
         <v-row v-else>
-          <v-col
-            v-for="post in posts"
-            :key="post.fields.id"
-            :cols="12"
-            :sm="6"
-            :md="4"
-          >
-            <v-card
-              :to="`/posts/${post.fields.slug}`"
-              nuxt
-              exact
-              hover
-              height="400px"
-            >
-              <v-img
-                v-if="post.fields.imageTwitter"
-                :src="post.fields.imageTwitter.fields.file.url"
-                min-height="180px"
-                max-height="180px"
-                class="align-end justify-end"
-              >
-                <div class="image-caption pa-2 pt-1 pb-1 caption">
-                  <span class="image-caption__time-since white--text">
-                    {{ post.fields.publishedAt | timeSince }} by
-                  </span>
-                  <span class="image-caption__by-author posts--text ml-1">
-                    {{ post.fields.author }}
-                  </span>
-                </div>
-              </v-img>
-              <v-card-title>{{ post.fields.shortTitle }}</v-card-title>
-              <v-card-text>{{ post.fields.description }}</v-card-text>
+          <v-col v-for="post in posts" :key="post.id" :cols="12" :sm="6" :md="4">
+            <v-card class="patch-card" :to="`/posts/${post.slug}`" nuxt>
+
+              <div class="patch-header">
+                <v-chip small :color="getTypeColor(post.type)" dark>
+                  {{ post.type || 'update' }}
+                </v-chip>
+
+                <span class="patch-time">
+                  {{ post.publishedAt | timeSince }}
+                </span>
+              </div>
+              <div class="patch-title">
+                {{ post.title }}
+              </div>
+
+              <div class="patch-desc">
+                {{ post.shortDescription }}
+              </div>
+
             </v-card>
           </v-col>
         </v-row>
@@ -89,26 +68,27 @@ export default {
   mixins: [BreadcrumbSchemaMixin],
   async fetch() {
     const { data } = await this.$axios.get("/api/posts");
-    this.posts = data;
+    this.posts = data || [];
+    console.log(data)
   },
-  /*async asyncData({ app }) {
+  // async asyncData({ app }) {
 
-    const { data } = await app.$axios.get('/api/posts');
-    const posts = data;
+  //   const { data } = await app.$axios.get('/api/posts');
+  //   const posts = data;
 
-    return {
-      fixedTime: new Date(),
-      //posts,
-    };
-  },*/
+  //   return {
+  //     fixedTime: new Date(),
+  //     //posts,
+  //   };
+  // },
   data() {
     return {
       fixedTime: new Date(),
       posts: [],
       page: {
-        title: "Roleplaying Articles",
+        title: "Новости",
         description:
-          "Session Reports and other related articles from the Wrath & Glory Universe.",
+          "Новости",
       },
       showTooltip: false,
       tooltip: {
@@ -124,7 +104,7 @@ export default {
 
     return {
       title,
-      titleTemplate: "%s | Posts",
+      titleTemplate: "Посты",
       meta: [
         { hid: "description", name: "description", content: description },
 
@@ -163,7 +143,7 @@ export default {
           to: "/",
         },
         {
-          text: "Posts",
+          text: "Посты",
           disabled: false,
           nuxt: true,
           exact: true,
@@ -171,6 +151,17 @@ export default {
         },
       ];
     },
+  },
+  methods: {
+    getTypeColor(type) {
+      switch (type) {
+        case 'patch': return 'green';
+        case 'news': return 'blue';
+        case 'bugfix': return 'red';
+        case 'feature': return 'purple';
+        default: return 'grey';
+      }
+    }
   },
   filters: {
     timeSince(value) {
@@ -183,21 +174,21 @@ export default {
 
       if (interval > 7) {
         let options = { year: "numeric", month: "short", day: "numeric" };
-        return date.toLocaleDateString("en-US", options);
+        return date.toLocaleDateString("ru-RU", options);
       }
 
       if (interval > 1) {
-        return interval + " days ago";
+        return interval + " дней назад";
       }
       interval = Math.floor(seconds / 3600);
       if (interval > 1) {
-        return interval + " hours ago";
+        return interval + " часов назад";
       }
       interval = Math.floor(seconds / 60);
       if (interval > 1) {
-        return interval + " minutes ago";
+        return interval + " минут назад";
       }
-      return Math.floor(seconds) + " seconds ago";
+      return Math.floor(seconds) + " секунд назад";
     },
   },
 };
@@ -217,10 +208,41 @@ export default {
   justify-content: flex-end;
   display: flex;
 
-  &__time-since {
-  }
+  &__time-since {}
 
-  &__by-author {
-  }
+  &__by-author {}
+}
+
+.patch-card {
+  padding: 16px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  border-left: 4px solid #00e5ff;
+  background: #151515;
+}
+
+.patch-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.patch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.patch-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.patch-desc {
+  margin-top: 8px;
+  font-size: 14px;
+  opacity: 0.8;
 }
 </style>

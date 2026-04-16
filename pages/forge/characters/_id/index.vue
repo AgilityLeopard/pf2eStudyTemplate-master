@@ -1968,6 +1968,10 @@ export default {
       this.tempHP = this.$store.getters['characters/characterTempHitPointsById'](this.characterId);
       return 1;
     },
+
+    heritageLabel() {
+      return this.$store.getters['characters/characterHeritageLabelById'](this.characterId);
+    },
     speciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
@@ -3290,9 +3294,7 @@ export default {
       const nameField = form.getTextField('Character Name');
       const level = form.getTextField('LEVEL');
 
-      const Class = form.getTextField('Class');
-      const Background = form.getTextField('Background');
-      const Heritage = form.getTextField('Heritage and Traits');
+
 
       /*Характеристики */
       const str = form.getTextField('STRENGTH STAT');
@@ -3341,7 +3343,7 @@ export default {
       /* */
 
       /* Черты */
-      const skillFeat = ''
+      let skillFeat = ''
       this1.talents.forEach(item => {
         if (item.category === 'ancestry') {
           const skillPlace = item.level === '1' ? 'ANCESTRY FEAT' : 'SKILL FEAT ' + item.level + '-1';
@@ -3379,49 +3381,50 @@ export default {
       })
 
       /* Классовая особенность */
-      this1.characterArchetype.archetypeFeatures.forEach(item => {
+      if (this1.characterArchetype) {
+        this1.characterArchetype.archetypeFeatures.forEach(item => {
 
-        if (item.level === '1') {
-          // skillFeat = '; ' + item.name;
-          excludeFeature.push(item.name);
-          classFeature.push({
-            place: 'CLASS FEATS & FEATURES',
-            name: item.name
-          })
-        }
-        else {
-          // if (!excludeFeature.includes(item.name)) {
-          excludeFeature.push(item.name);
-          const skillPlace = 'CLASS FEAT ' + item.level + '-2';
-          classFeature.push({
-            place: skillPlace,
-            name: item.name
-          })
+          if (item.level === '1') {
+            // skillFeat = '; ' + item.name;
+            excludeFeature.push(item.name);
+            classFeature.push({
+              place: 'CLASS FEATS & FEATURES',
+              name: item.name
+            })
+          }
+          else {
+            // if (!excludeFeature.includes(item.name)) {
+            excludeFeature.push(item.name);
+            const skillPlace = 'CLASS FEAT ' + item.level + '-2';
+            classFeature.push({
+              place: skillPlace,
+              name: item.name
+            })
 
-          // const skill = form.getTextField(skillPlace);
-          // skill.setText(String(item.name));
-          // skill.updateAppearances(customFont);
-          // }
-        }
+            // const skill = form.getTextField(skillPlace);
+            // skill.setText(String(item.name));
+            // skill.updateAppearances(customFont);
+            // }
+          }
 
-      })
+        })
 
-      let t = classFeature.reduce((acc, { place, name }) => {
-        acc[place] = acc[place] ? `${acc[place]}; ${name}` : name;
-        return acc;
-      }, {});
+        let t = classFeature.reduce((acc, { place, name }) => {
+          acc[place] = acc[place] ? `${acc[place]}; ${name}` : name;
+          return acc;
+        }, {});
 
-      const grouped = Object.entries(t).map(
-        ([place, name]) => ({ place, name })
-      );
+        const grouped = Object.entries(t).map(
+          ([place, name]) => ({ place, name })
+        );
 
-      grouped.forEach(item => {
-        const skill = form.getTextField(item.place);
-        skill.setText(String(item.name));
-        skill.updateAppearances(customFont);
-      })
+        grouped.forEach(item => {
+          const skill = form.getTextField(item.place);
+          skill.setText(String(item.name));
+          skill.updateAppearances(customFont);
+        })
 
-
+      }
 
       /* */
       // Скиллы
@@ -3433,20 +3436,100 @@ export default {
 
         // Общее количество
         const total = parseInt(char1) + parseInt(char2) + parseInt(char3) - skill.conditionalAdjustment;
+        console.log(skill)
         const name = skill.key.toUpperCase() === 'PERFOMANCE' ? 'PERFORMANCE' : skill.key;
-        const fieldText = form.getTextField(name.toUpperCase());
-        fieldText.setText(String(total));
-        fieldText.updateAppearances(customFont);
 
-        // Изученное
+
+        if (!skill.custom) {
+          const fieldText = form.getTextField(name.toUpperCase());
+          fieldText.setText(String(total));
+          fieldText.updateAppearances(customFont);
+
+          const fieldPROFICIENCY = form.getTextField(name.toUpperCase() + ' PROFICIENCY');
+          if (fieldPROFICIENCY) {
+            fieldPROFICIENCY.setText(String(char1 + char3));
+            fieldPROFICIENCY.updateAppearances(customFont);
+          }
+
+          const attribute = skill.attribute === 'intellect' ? 'INTELLIGENCE' : skill.attribute;
+          console.log(attribute);
+          const fieldAttribute = form.getTextField(name.toUpperCase() + ' ' + attribute.toUpperCase());
+          if (fieldAttribute) {
+            fieldAttribute.setText(String(char2));
+            fieldAttribute.updateAppearances(customFont);
+          }
+          // Изученное
+
+          if (name) {
+            switch (skill.value) {
+              case "T":
+                const prof = form.getCheckBox(name.toUpperCase() + ' TRAINED');
+
+                prof.check();
+                break;
+              case "E":
+                const prof1 = form.getCheckBox(name.toUpperCase() + ' EXPERT');
+                prof1.check();
+                break;
+              case "M":
+                const prof2 = form.getCheckBox(name.toUpperCase() + ' MASTER');
+                prof2.check();
+                break;
+              case "L":
+                const prof3 = form.getCheckBox(name.toUpperCase() + ' LEGENDARY');
+                prof3.check();
+                break;
+            }
+
+
+
+          }
+
+
+        }
+
       })
 
+      /* Защиты*/
+      const AC = form.getTextField('AC');
+      const wear = this1.$store.getters["characters/characterWearById"](
+        this1.characterId
+      );
 
 
+      let totalAC = 10;
+      if (wear) {
+        const modDex = Math.floor(
+          (this1.characterAttributes["dexterity"] - 10) / 2
+        );
 
+        const wearModDex = wear.modDex ? wear.modDex : 0;
+        const dex = modDex > wearModDex ? wearModDex : modDex;
+        const Def = wear.category ? this1.profiencyRepository[this1.skillDefence[wear.category]] : 0;
+        const bonusAC = wear.acBonus ? wear.acBonus : 0;
+        const arm = Def === 0 ? 0 : this1.characterLevel();
+
+
+        totalAC = 10 + dex + Def + arm + bonusAC;
+      }
+
+      if (!wear) {
+        const Def = this.profiencyRepository[this.skillDefence["unarmored"]];
+        totalAC = totalAC + Def
+      }
+
+      console.log(totalAC)
+
+      AC.setText(String(totalAC));
+      AC.updateAppearances(customFont);
 
       /* */
       // Заполняем текст с кастомным шрифтом
+      const Class = form.getTextField('Class');
+      const Background = form.getTextField('Background');
+      const Heritage = form.getTextField('Heritage and Traits');
+      const Ancestry = form.getTextField('Ancestry');
+
       nameField.setText(this1.characterName);
       nameField.updateAppearances(customFont);
 
@@ -3459,7 +3542,11 @@ export default {
 
       if (this1.speciesLabel) {
         const keyword = this1.archetypeLabel ? this1.keywords.filter(s => s.name !== this1.archetypeLabel.toLowerCase()).map(s => s.name).join(', ') : this1.keywords.map(s => s.name).join(', ')
-        Heritage.setText(this1.speciesLabel + '( ' + keyword + ')');
+
+        Ancestry.setText(this1.speciesLabel);
+        Ancestry.updateAppearances(customFont);
+
+        Heritage.setText(this1.heritageLabel + ' (' + keyword + ')');
         Heritage.updateAppearances(customFont);
       }
 
@@ -3901,18 +3988,23 @@ export default {
         const modDex = Math.floor(
           (this.characterAttributes["dexterity"] - 10) / 2
         );
-        const wearModDex = wear.modDex ? wear.modDex : 0;
+        const wearModDex = wear.dexCap ? wear.dexCap : 0;
         const dex = modDex > wearModDex ? wearModDex : modDex;
-        const Def = wear.category ? this.profiencyRepository[this.skillDefence[wear.category]] : 0;
+        const Def = wear.category
+          ? this.profiencyRepository[this.skillDefence[wear.category]]
+          : 0;
+
         const bonusAC = wear.acBonus ? wear.acBonus : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();
+
         return 10 + dex + Def + arm + bonusAC - status;
       }
 
       const modDex = Math.floor(
         (this.characterAttributes["dexterity"] - 10) / 2
       );
-      return 10 + modDex - status;
+      const Def = this.profiencyRepository[this.skillDefence["unarmored"]];
+      return 10 + modDex + Def - status;
     },
 
     characterNotesCancel() {

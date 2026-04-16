@@ -1,49 +1,53 @@
 <template>
-  <v-row justify="center">
-    <v-dialog v-model="previewDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
+  <v-row justify="center" dense>
+    <!-- Диалог предпросмотра -->
+    <v-dialog v-model="previewDialog" width="600" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
       <archetype-preview v-if="previewItem" :character-id="characterId" :item="previewItem" choose-mode
         @select="selectArchetypeForChar" @cancel="previewDialog = false" />
     </v-dialog>
 
-    <v-col>
-      <h1 class="headline">Выберите класс</h1>
+    <v-col cols="12">
+      <h1 class="headline mb-4">Выберите класс</h1>
+      <v-text-field v-model="searchQuery" solo placeholder="Поиск..." prepend-inner-icon="mdi-magnify" clearable />
     </v-col>
 
-    <v-col :cols="12">
-      <v-text-field v-model="searchQuery" solo placeholder="Поиск..." prepend-inner-icon="search" clearable />
-    </v-col>
-
-    <v-col :cols="12">
-      <v-card>
-        <v-list v-if="archetypeFaction">
-          <v-list-item v-for="item in archetypeFaction" :key="item.key" two-line
-            :disabled="item.tier > characterSettingTier" @click.stop="updatePreview(item)">
-            <v-list-item-avatar tile>
+    <!-- Карточки классов -->
+    <v-col cols="12">
+      <v-row dense>
+        <v-col v-for="item in archetypeFaction" :key="item.key" cols="12" sm="6" md="4" lg="3">
+          <v-card class="d-flex flex-column align-center pa-4 hoverable" :elevation="4"
+            :disabled="item.tier > characterSettingTier" @click="updatePreview(item)">
+            <!-- Аватар -->
+            <v-avatar size="96" class="mb-3" tile>
               <img :src="getAvatar(item.key)" />
-            </v-list-item-avatar>
+            </v-avatar>
 
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.name }}
-                <v-chip v-if="
-                  item.source && !['core', 'coreab'].includes(item.source.key)
-                " color="info" outlined tags x-small label>
-                  {{ item.source.key.toUpperCase() }}
-                </v-chip>
-              </v-list-item-title>
-            </v-list-item-content>
+            <!-- Название -->
+            <div class="text-h6 font-weight-bold text-center mb-1">
+              {{ item.name }}
+            </div>
 
-            <v-list-item-action class="hidden-sm-and-up">
-              <v-btn dense icon>
-                <v-icon color="primary"> arrow_forward_ios </v-icon>
-              </v-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-      </v-card>
+            <!-- Источник -->
+            <v-chip v-if="item.source && !['core', 'coreab'].includes(item.source.key)" color="info" outlined x-small>
+              {{ item.source.key.toUpperCase() }}
+            </v-chip>
+
+            <!-- Tier -->
+            <div v-if="item.tier" class="mt-2 grey--text text--darken-1 text-caption">
+              Tier {{ item.tier }}
+            </div>
+
+            <!-- Кнопка просмотра на мобильных -->
+            <v-btn v-if="$vuetify.breakpoint.xsOnly" icon small class="mt-2">
+              <v-icon color="primary">mdi-arrow-right</v-icon>
+            </v-btn>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
+
 
 <script>
 import { mapMutations } from "vuex";

@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^16.0.3",
+    "@nuxt/content": "^3.8.2",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/google-analytics": "^2.4.0",
@@ -46,6 +47,7 @@
     "lodash": "^4.17.21",
     "lodash.merge": "^4.6.2",
     "lodash.template": "^4.5.0",
+    "markdown-it": "^13.0.1",
     "marked": "^4.3.0",
     "netlify-lambda": "^2.0.16",
     "nprogress": "^0.2.0",

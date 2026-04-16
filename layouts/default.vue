@@ -119,7 +119,9 @@ export default {
         },
         // { to: '/bestiary', title: 'Bestiary', subtitle: 'Find Threats', icon: '' },
         // { to: '/network', title: 'Network', subtitle: 'Find Assets', icon: '' },
-        // { to: '/posts', title: 'Articles', subtitle: 'Hobby Articles', icon: '' },
+        {
+          to: '/posts', title: 'Новости', subtitle: 'Патчноуты и обновления', icon: ''
+        },
         // { to: '/ether', title: 'Ether', subtitle: 'Browse Let´s Plays', icon: '' },
         {
           to: "/library",

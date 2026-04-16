@@ -25,10 +25,7 @@
 
           <p>
             Перевод взят с сайта
-            <a
-              href="https://pf2e-ru-translation.readthedocs.io/ru/latest/index.html"
-              >pf2e-ru-translation</a
-            >
+            <a href="https://pf2e-ru-translation.readthedocs.io/ru/latest/index.html">pf2e-ru-translation</a>
           </p>
 
           <p>
@@ -53,7 +50,7 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: 'A fan page for the Warhammer 40k universe, especially the Wrath & Glory Role Playing game.',
+          content: '',
         },
       ],
     };

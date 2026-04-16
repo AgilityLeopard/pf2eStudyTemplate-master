@@ -13,7 +13,7 @@ const ascensionPackages = require('./ascensionPackages');
 const traits = require('./traits');
 // const deitys = require('./deity');
 
-// const posts = require('./posts');
+const posts = require('./posts');
 // const actualPlays = require('./actualPlays');
 
 // const users = require('./users.js_');
@@ -36,7 +36,7 @@ module.exports = (app) => {
   app.use('/action', actions);
   //via contentfull
   // app.use('/homebrews', homebrews);
-  // app.use('/posts', posts);
+  app.use('/posts', posts);
   // app.use('/actual-plays', actualPlays);
 
   // // Users

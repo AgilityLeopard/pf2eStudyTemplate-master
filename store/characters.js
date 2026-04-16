@@ -1,6 +1,8 @@
 const BUILDER_VERSION = 11;
+import { rollDiceFormula } from '@/utils/dice'
 
 export const state = () => ({
+  namespaced: true, // 👈 ОБЯЗАТЕЛЬНО
   list: [],
   characters: {},
   // version: 1,
@@ -35,6 +37,8 @@ export const getters = {
 
   characterVersionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].version : undefined,
+  characterDiceChatById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].diceChat : [],
 
   CharacterClassModFeature: (state) => (id) =>
     state.characters[id] ? state.characters[id].version : undefined,
@@ -626,6 +630,7 @@ export const getters = {
     return character.customSkills;
   },
 };
+
 
 export const mutations = {
   setCharacterName(state, payload) {
@@ -1450,7 +1455,7 @@ export const mutations = {
     const character = state.characters[payload.id];
     const key = payload.payload.key;
     if (character.BackgroundFreeBoost2 != "" && character.BackgroundFreeBoost2 != character.BackgroundFreeBoost) {
-      const newValue = character.attributes[haracter.BackgroundFreeBoost2] > 18 ? 1 : 2;
+      const newValue = character.attributes[character.BackgroundFreeBoost2] > 18 ? 1 : 2;
       character.attributesBackgroundBoost[character.BackgroundFreeBoost2] -= 1;
       character.attributes[character.BackgroundFreeBoost2] -= newValue;
 
@@ -2958,6 +2963,18 @@ export const mutations = {
         break;
     }
   },
+  ADD_DICE_MESSAGE(state, { characterId, message }) {
+    const character = state.characters[characterId];
+
+    if (!character) return;
+
+    if (!character.diceChat) {
+      character.diceChat = [];
+    }
+
+    character.diceChat.push(message);
+    console.log(character.diceChat)
+  }
 };
 
 export const actions = {
@@ -3037,6 +3054,20 @@ export const actions = {
       );
     }
   },
+  rollDice({ commit }, { characterId, formula }) {
+    const result = rollDiceFormula(formula);
+
+    commit('ADD_DICE_MESSAGE', {
+      characterId,
+      message: {
+        id: Date.now(),
+        formula,
+        result: result.total,
+        rolls: result.rolls,
+        time: new Date()
+      }
+    });
+  }
 };
 
 const getDefaultState = () => ({
@@ -3046,6 +3077,7 @@ const getDefaultState = () => ({
   settingSelected: true,
   settingTier: 3,
   settingTitle: "",
+  diceChat: [],
   settingHomebrewContent: [], // e.g. pax
   settingHouserules: {
     "rank-advancement-type": "milestone",
@@ -3292,7 +3324,6 @@ const getDefaultState = () => ({
     will: "U",
   },
   skillChoiceInitial: [],
-  // skillFromModification: [],
   skillAttack:
   {
     simple: "U",

@@ -77,16 +77,17 @@
     <v-col :cols="12">
       <div>
         <h3 class="subtitle-1"><strong>Источники</strong></h3>
-
         <p class="body-2">Включить контент из других источников</p>
 
-        <div v-for="homebrew in settingOfficialOptions.filter(
-          (i) => i.show === true
-        )" :key="homebrew.key">
+        <!-- 🔹 Общий переключатель "Выбрать все" -->
+        <v-switch v-model="allHomebrews" label="Выбрать все" color="primary" dense @change="toggleAllHomebrews" />
+
+        <div v-for="homebrew in settingOfficialOptions.filter(i => i.show === true)" :key="homebrew.key">
           <v-switch v-if="homebrew.optional" v-model="enabledHomebrews" :value="homebrew.key" :hint="homebrew.hint"
             persistent-hint color="primary" dense :disabled="homebrew.disabled" @change="updateHomebrew(homebrew)">
             <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
           </v-switch>
+
           <v-switch v-else value input-value="true" :hint="homebrew.hint" persistent-hint color="primary" dense disabled
             @change="updateHomebrew(homebrew)">
             <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
@@ -121,6 +122,7 @@ export default {
         archetypes: { exclude: [] },
         homebrews: [],
       },
+      allHomebrews: [],
       avatar: '',
       selectAvatarDialog: false,
       myCroppa: {},
@@ -763,6 +765,20 @@ export default {
     },
   },
   methods: {
+    toggleAllHomebrews() {
+      const optionalKeys = this.settingOfficialOptions
+        .filter(i => i.show && i.optional && !i.disabled)
+        .map(i => i.key);
+
+      if (this.allHomebrews) {
+        // добавляем все опциональные в enabledHomebrews, не трогая уже включённые
+        this.enabledHomebrews = Array.from(new Set([...this.enabledHomebrews, ...optionalKeys]));
+      } else {
+        // снимаем все опциональные
+        this.enabledHomebrews = this.enabledHomebrews.filter(k => !optionalKeys.includes(k));
+      }
+      this.updateHomebrew();
+    },
     setNewAvatar: function () {
       const url = this.myCroppa.generateDataUrl('jpg', 0.8);
       if (!url) {

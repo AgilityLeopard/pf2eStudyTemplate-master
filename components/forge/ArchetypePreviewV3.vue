@@ -1,308 +1,123 @@
 <template lang="html">
-  <v-card v-if="item" class="pa-0">
-    <v-card-title
-      v-if="chooseMode"
-      style="background-color: #262e37; color: #fff"
-    >
-      <span>Подтвердите класс</span>
-      <v-spacer />
-      <v-icon dark @click="$emit('cancel')"> close </v-icon>
-    </v-card-title>
+  <v-card v-if="item" class="pa-4 elevation-3">
+    <!-- Заголовок класса -->
+    <v-row align="center">
+      <v-col cols="12" md="8">
+        <h2 class="headline">{{ item.name }}</h2>
+        <span class="subtitle-1 grey--text" v-html="item.hint"></span>
+      </v-col>
+      <v-col cols="12" md="4" class="d-flex justify-end">
+        <v-avatar size="96">
+          <img :src="avatar" />
+        </v-avatar>
+      </v-col>
+    </v-row>
 
-    <v-card-title primary-title>
-      <div>
-        <h3 class="headline md0">
-          {{ item.name }}
-        </h3>
-      </div>
-      <v-spacer />
-      <div>
-        <img :src="avatar" style="width: 96px" />
-      </div>
-    </v-card-title>
+    <v-divider class="my-4" />
 
-    <v-divider />
-    <v-card-text class="pt-4">
-      <div>
-        <trait-view
-          v-if="item.trait"
-          :item="item"
-          class="mb-2"
-          style="font-size: 14px"
-        />
-      </div>
-      <p class="text-lg-justify">
-        <i><div v-html="item.hint"></div> </i>
-      </p>
+    <!-- Основные параметры и хиты -->
+    <v-row class="mb-4">
+      <v-col cols="12" md="6">
+        <v-card outlined class="pa-3 light-red-border">
+          <h3 class="subtitle-1 mb-2">Ключевые аттрибуты</h3>
+          <p v-if="item.keyAbility.length"><strong>{{ characterLabelAttribute(item.keyAbility) }}</strong></p>
+          <p v-else><strong>{{ characterLabelAttributeBoost(item.attributeBoost) }}</strong></p>
+          <p>На 1-м уровне ваш класс дает усиление по вашему выбору</p>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-card outlined class="pa-3 light-red-border">
+          <h3 class="subtitle-1 mb-2">Хиты</h3>
+          <p><strong>{{ item.hitpoints }} + мод Телосложения</strong></p>
+          <p>Увеличение максимального количества хитов на каждом уровне</p>
+        </v-card>
+      </v-col>
+    </v-row>
 
-      <p><v-divider /></p>
-
-      <div class="two-column-holder light-red-border">
-        <div class="two-column-left">
-          <h3 class="exclude_from_nav">Ключевые аттрибуты</h3>
-          <p class="" v-if="item.keyAbility.length > 0">
-            <strong> {{ characterLabelAttribute(item.keyAbility) }}</strong>
+    <!-- Навыки, атаки и защиты -->
+    <v-row class="mb-4">
+      <v-col cols="12" md="6">
+        <v-card outlined class="pa-3 dark-red-border">
+          <h3 class="subtitle-1 mb-2">Навыки</h3>
+          <p v-if="item.skillTrainedChoice.length">
+            <strong>Обучен в навыке (на выбор):</strong> {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}
           </p>
-          <p
-            class=""
-            v-else="characterLabelAttributeBoost(item.attributeBoost)"
-          >
-            <strong>
-              {{ characterLabelAttributeBoost(item.attributeBoost) }}</strong
-            >
+          <p v-if="item.skillTrained.length">
+            <strong>Обучен в навыке:</strong> {{ characterLabelSkillTrainedChoice(item.skillTrained) }}
           </p>
-          <p class="">
-            На 1-м уровне ваш класс дает вам усиление по вашему выбору
-          </p>
-        </div>
-        <div class="two-column-right">
-          <h3 class="exclude_from_nav">Хиты</h3>
-          <p class="">
-            <strong> {{ item.hitpoints }} + мод Телосложения</strong>
-          </p>
-          <p class="">
-            Вы увеличиваете свое максимальное количество хитов на это число на
-            1-м уровне и на каждом последующем уровне.
-          </p>
-        </div>
-      </div>
+          <p><strong>Дополнительные навыки:</strong> {{ item.skillTrainedPoints }} + мод Интеллекта</p>
 
-      <div class="class-sidebar">
-        <div class="two-column-holder dark-red-border">
-          <div class="two-column-left">
-            <h3 class="exclude_from_nav" id="Perception">Внимательность</h3>
-            <p>{{ characterlabel(characterPerseption) }}</p>
+          <h3 class="subtitle-1 mb-2 mt-3">Внимательность</h3>
+          <p>{{ characterlabel(characterPerseption) }}</p>
 
-            <h3 class="exclude_from_nav" id="SavingThrows">Спасброски</h3>
-            <span v-for="item1 in SavingRepository" v-bind:key="item.key">
-              <p>
-                {{ characterlabel(item.saving[item1.key]) }} в
-                {{ item1.name }}
-              </p>
-            </span>
-            <h3 class="exclude_from_nav" id="Skills">Навыки</h3>
+          <h3 class="subtitle-1 mb-2 mt-3">Спасброски</h3>
+          <span v-for="save in SavingRepository" :key="save.key">
+            <p>{{ characterlabel(item.saving[save.key]) }} в {{ save.name }}</p>
+          </span>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-card outlined class="pa-3 dark-red-border">
+          <h3 class="subtitle-1 mb-2">Атаки</h3>
+          <span v-for="w in WeaponRepository" :key="w.key">
+            <p v-if="item.skillAttack[w.key]">{{ characterlabel(item.skillAttack[w.key]) }} в {{ w.name }}</p>
+          </span>
 
-            <p v-if="item.skillTrainedChoice.length > 0">
-              <strong>Обучен в навыке (на выбор):</strong>
-              {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}
-            </p>
+          <h3 class="subtitle-1 mb-2 mt-3">Защиты</h3>
+          <span v-for="d in DefenceRepository" :key="d.key">
+            <p v-if="item.skillDefence[d.key]">{{ characterlabel(item.skillDefence[d.key]) }} в {{ d.name }}</p>
+          </span>
 
-            <p v-if="item.skillTrained.length > 0">
-              <strong>Обучен в навыке:</strong>
-              {{ characterLabelSkillTrainedChoice(item.skillTrained) }}
-            </p>
+          <h3 class="subtitle-1 mb-2 mt-3">Класс Сл</h3>
+          <p>{{ characterlabel(item.skillClass) }}</p>
+        </v-card>
+      </v-col>
+    </v-row>
 
-            <p>
-              <strong>Обучен дополнительным навыкам, в кол-ве равном:</strong>
-              {{ item.skillTrainedPoints }} + мод Интеллекта
-            </p>
-          </div>
-          <div class="two-column-right">
-            <h3 class="exclude_from_nav" id="attacks">Атаки</h3>
-            <span v-for="item1 in WeaponRepository" v-bind:key="item1.key">
-              <p v-if="item.skillAttack[item1.key]">
-                {{ characterlabel(item.skillAttack[item1.key]) }} в
-                {{ item1.name }}
-              </p>
-            </span>
-            <h3 class="exclude_from_nav" id="defenses">Защиты</h3>
-            <span v-for="item1 in DefenceRepository" v-bind:key="item.key">
-              <p v-if="item.skillDefence[item1.key]">
-                {{ characterlabel(item.skillDefence[item1.key]) }} в
-                {{ item1.name }}
-              </p>
-            </span>
-
-            <h3 class="exclude_from_nav" id="ClassDC">Класс Сл</h3>
-            <p>
-              КС класса {{ item.name }}: {{ characterlabel(item.skillClass) }}
-            </p>
-          </div>
-        </div>
-      </div>
-
-            <div class="mt-2 body-2 text-justify">
-        <h3 class="headline">Классовые особенности</h3>
-        <div v-for="feature in item.archetypeFeatures" class="text-lg-justify">
-          <h3 class="main-holder split-header">
-            <span class="left-header">{{ feature.name }}</span
-            ><span class="right-header">{{ feature.level }}</span>
-          </h3>
-
-           
-          <!-- <div >
-          <h3 ><span style="display: inline-block; width: 50%;">{{ feature.name }}</span><span style="display: inline-block; text-align: right; width: 50%;">Уровень {{ feature.level }}</span></h3>
-          </div> -->
-
-          <p class="main-holder">
-            <div v-if="feature.description" v-html="feature.description"></div>
-            <div v-if="feature.snippet" v-html="feature.snippet"></div>
-
-            <div
-              v-if="feature.action"
-              v-html="feature.action.description"
-            ></div>
-          </p>
-
-          <div v-if="feature.options" v-for="feature1 in feature.options" class="mt-2">
-            
-            <h2 class="headline"  v-if="feature1.name">{{feature1.name}}</h2>
-            <div
-              v-if="
-                feature.type !== 'Skill Choice' &&
-                feature.type !== 'Weapon Choice' 
-              "
-            >
-              <div>
-                <trait-view
-                  v-if="feature1"
-                  :item="
-                    feature1
-                  "
-                  class="mb-2"
-                  style="font-size: 14px"
-                />
+    <!-- Особенности класса -->
+    <v-row>
+      <v-col cols="12">
+        <h3 class="headline mb-3">Особенности класса</h3>
+        <v-row>
+          <v-col cols="12" md="6" v-for="feature in item.archetypeFeatures" :key="feature.key">
+            <v-card outlined class="pa-3 mb-3 elevation-2">
+              <div class="d-flex justify-space-between mb-2">
+                <strong>{{ feature.name }}</strong>
+                <span>Уровень {{ feature.level }}</span>
               </div>
- 
-                <div
-                  v-if="
-                    feature1
-                      .snippet
-                  "
-                  v-html="
-                    feature1
-                      .snippet
-                  "
-                ></div>
-              
-              <div
-                v-if="
-                  feature1.feat
-                "
-              >
-                <strong>Черта:</strong>
-                <span
-                  v-html="
-                    feature1.feat
-                  "
-                ></span>
-              </div>
-              <div
-                v-if="
-                  feature1.spells
-                "
-              >
-                <strong>Заклинание:</strong>
-                <span
-                v-for="(spells, level) in feature1
-                      .spells"
-                >
-              
-               <h3>Уровень {{ level }}</h3>
-              <ul>
-                <li v-for="spell in spells" :key="spell">
-                  {{ SpellName(spell) }}
-                </li>
-              </ul>
-              </span>
-              </div>
-              <div
-                v-if="
-                  feature1
-                    .focusSpell
-                "
-              >
-                <strong>Фокусное заклинание:</strong>
-                <span
- 
-                > {{SpellName( feature1.focusSpell)}}</span>
-              </div>
-               <div
-                v-if="
-                  feature1.spell
-                "
-              >
-                <strong>Заклинание:</strong>
-                <span
- 
-                > {{SpellName( feature1.spell)}}</span>
-              </div>
-              <div
-                v-if="
-                  feature1.skill
-                "
-              >
-                <strong>Навык:</strong>
-                <span
-                  v-html="
-                    feature1
-                      .skill
-                  "
-                ></span>
-              </div>
+              <div v-if="feature.description" v-html="feature.description"></div>
+              <div v-if="feature.snippet" v-html="feature.snippet"></div>
+              <div v-if="feature.action" v-html="feature.action.description"></div>
 
-              <div></div>
-
-              <div
-                v-if="
-                  feature1
-                    .subFeature
-                "
-              >
-                              <div  v-if="feature1.selected && feature1
-                    .find((s) => s.key === feature1.selected)">
-                  <div
-                 v-if="feature1
-                    .find((s) => s.key === feature1.selected).subFeature"
-                  v-for="item in feature1
-                    .find((s) => s.key === feature1.selected)
-                    .subfeature1.filter((t) => t.level <= characterLevel())"
-                >
-                  <div>
-                    <h4 class="main-holder split-header1">
-                      <span class="left-header">{{ item.name }}</span
-                      ><span class="right-header">{{ item.level }}</span>
-                    </h4>
-                    <div
-                      v-if="item.snippet"
-                      v-html="item.snippet"
-                    ></div>
-                    <div v-else v-html="item.snippet"></div>
+              <!-- Опции фич -->
+              <div v-if="feature.options" v-for="opt in feature.options" :key="opt.key" class="mt-2">
+                <h4 v-if="opt.name">{{ opt.name }}</h4>
+                <trait-view v-if="opt" :item="opt" style="font-size: 14px" class="mb-1" />
+                <div v-if="opt.snippet" v-html="opt.snippet"></div>
+                <div v-if="opt.feat"><strong>Черта:</strong> <span v-html="opt.feat"></span></div>
+                <div v-if="opt.spells">
+                  <strong>Заклинания:</strong>
+                  <div v-for="(spells, lvl) in opt.spells" :key="lvl">
+                    <h5>Уровень {{ lvl }}</h5>
+                    <ul>
+                      <li v-for="spell in spells" :key="spell">{{ SpellName(spell) }}</li>
+                    </ul>
                   </div>
                 </div>
-            </div>
+                <div v-if="opt.focusSpell"><strong>Фокусное заклинание:</strong> {{ SpellName(opt.focusSpell) }}</div>
               </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
 
-            </div>
-
-            <div v-if="feature1.selected && feature1.type === 'Weapon Choice'">
-              <div>
-                <div
-                  v-if="
-                    feature1
-                      .description
-                  "
-                  v-html="
-                    feature1
-                      .description
-                  "
-                ></div>
-              </div>
-            </div>
-            <div></div>
-          </div> 
-        
-      </div>
-      </div>
-    </v-card-text>
-
-    <v-divider v-if="chooseMode" />
+    <!-- Действия выбора -->
+    <v-divider class="my-4" v-if="chooseMode" />
     <v-card-actions v-if="chooseMode">
-      <v-btn left outlined color="red" @click="$emit('cancel')"> Отмена </v-btn>
+      <v-btn outlined color="red" @click="$emit('cancel')">Отмена</v-btn>
       <v-spacer />
-      <v-btn right color="green" @click="$emit('select', item)">
-        Выберите класс
-      </v-btn>
+      <v-btn color="green" @click="$emit('select', item)">Выберите класс</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -320,7 +135,7 @@ export default {
     StatRepository,
     SluggerMixin,
   ],
-    components:{traitView},
+  components: { traitView },
   props: {
     characterId: {
       type: String,
@@ -333,7 +148,7 @@ export default {
     spells: {
       type: Object,
       required: true,
-      
+
     },
     keywords: {
       type: Array,
@@ -384,10 +199,10 @@ export default {
       return [];
     },
     wargearText() {
-      if ( this.item.wargearString ) {
+      if (this.item.wargearString) {
         return this.item.wargearString;
       }
-      if ( this.item.wargear && this.item.wargear.length > 0 ) {
+      if (this.item.wargear && this.item.wargear.length > 0) {
         return this.item.wargear.map((g) => {
           if (g.amount) {
             return `${g.amount}x ${g.name}`;
@@ -397,7 +212,7 @@ export default {
       }
       return this.item.wargear;
     },
-     characterSettingTier() {
+    characterSettingTier() {
       return this.$store.getters['characters/characterSettingTierById'](this.characterId);
     },
     characterFactionKey() {
@@ -406,7 +221,7 @@ export default {
     characterSpeciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
-    characterSpeciesKey(){
+    characterSpeciesKey() {
       return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
     },
     characterArchetypeKey() {
@@ -456,33 +271,33 @@ export default {
     },
   },
   methods: {
-  SpellName(spell) {
+    SpellName(spell) {
       const spell1 = this.textToKebab(spell);
       return this.spells.find(s => s.key === spell1)?.name || '';
     },
-     characterlabel(key){
-        switch (key) {
-          case "U":
-            return "Нетренирован"
-         case "T":
-            return "Тренирован"
-         case "E":
-            return "Эксперт"
-          case "M":
-            return "Мастер"
-          case "L":
-            return "Легенда"
-          default:
-            break;
-        }
+    characterlabel(key) {
+      switch (key) {
+        case "U":
+          return "Нетренирован"
+        case "T":
+          return "Тренирован"
+        case "E":
+          return "Эксперт"
+        case "M":
+          return "Мастер"
+        case "L":
+          return "Легенда"
+        default:
+          break;
+      }
     },
-    characterLabelAttribute(keyAbility){
+    characterLabelAttribute(keyAbility) {
       return this.attributeRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
     },
-    characterLabelAttributeBoost(item){
+    characterLabelAttributeBoost(item) {
       return item.filter((a) => a.value > 0).map(s => s.name).join(', ')
     },
-    characterLabelSkillTrainedChoice(keyAbility){
+    characterLabelSkillTrainedChoice(keyAbility) {
       return this.skillRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
     },
   },
@@ -497,6 +312,7 @@ export default {
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;

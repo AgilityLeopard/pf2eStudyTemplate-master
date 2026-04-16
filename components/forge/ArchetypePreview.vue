@@ -1,134 +1,83 @@
 <template lang="html">
-  <v-card v-if="item" class="pa-0">
-    <v-card-title
-      v-if="chooseMode"
-      style="background-color: #262e37; color: #fff"
-    >
-      <span>Подтвердите класс</span>
+  <v-card v-if="item" class="pa-3" style="background-color: #1e242c; color: #fff; max-width: 600px;">
+    <!-- Заголовок -->
+    <v-row align="center">
+      <v-col cols="8">
+        <h3 class="headline mb-1">{{ item.name }}</h3>
+        <span class="subtitle-2 grey--text" v-html="item.hint"></span>
+      </v-col>
+      <v-col cols="4" class="d-flex justify-end">
+        <v-avatar size="64">
+          <img :src="avatar" />
+        </v-avatar>
+      </v-col>
+    </v-row>
+
+    <v-divider class="my-3" />
+
+    <!-- Ключевые аттрибуты и хиты -->
+    <v-row class="d-flex" align="stretch">
+      <v-col cols="12" md="6">
+        <v-card outlined class="pa-2 mb-2 d-flex flex-column fill-height" style="border-color: #ff6f61;">
+          <strong>Ключевые аттрибуты</strong>
+          <p class="mb-0" v-if="item.keyAbility.length">{{ characterLabelAttribute(item.keyAbility) }}</p>
+          <p class="mb-0" v-else>{{ characterLabelAttributeBoost(item.attributeBoost) }}</p>
+          <small>На 1-м уровне усиление по выбору</small>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-card outlined class="pa-2 mb-2 d-flex flex-column fill-height" style="border-color: #ff6f61;">
+          <strong>Хиты</strong>
+          <p class="mb-0">{{ item.hitpoints }} + мод Телосложения</p>
+          <small>Макс. хитов на 1-м уровне и каждом последующем</small>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Навыки и атаки -->
+    <v-row class="d-flex" align="stretch">
+      <v-col cols="6">
+        <v-card outlined class="pa-2 mb-2 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <strong>Навыки</strong>
+          <p v-if="item.skillTrainedChoice.length" class="mb-0">
+            Обучен (выбор): {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}
+          </p>
+          <p v-if="item.skillTrained.length" class="mb-0">
+            Обучен: {{ characterLabelSkillTrainedChoice(item.skillTrained) }}
+          </p>
+          <small>Дополнительно: {{ item.skillTrainedPoints }} + мод Интеллекта</small>
+        </v-card>
+      </v-col>
+      <v-col cols="6">
+        <v-card outlined class="pa-2 mb-2 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <strong>Атаки</strong>
+          <p v-for="w in WeaponRepository" :key="w.key" class="mb-0" v-if="item.skillAttack[w.key]">
+            {{ w.name }}: {{ characterlabel(item.skillAttack[w.key]) }}
+          </p>
+
+        </v-card>
+      </v-col>
+    </v-row>
+
+
+    <!-- Навыки и атаки -->
+    <v-row class="d-flex" align="stretch">
+      <v-col cols="12">
+        <v-card outlined class="pa-2 mb-2 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <strong>Защиты</strong>
+          <p v-for="d in DefenceRepository" :key="d.key" class="mb-0" v-if="item.skillDefence[d.key]">
+            {{ d.name }}: {{ characterlabel(item.skillDefence[d.key]) }}
+          </p>
+          <p>КС класса: {{ characterlabel(item.skillClass) }}</p>
+        </v-card>
+      </v-col>
+    </v-row>
+    <!-- Действия -->
+    <v-divider class="my-3" />
+    <v-card-actions>
+      <v-btn outlined color="red" @click="$emit('cancel')">Отмена</v-btn>
       <v-spacer />
-      <v-icon dark @click="$emit('cancel')"> close </v-icon>
-    </v-card-title>
-
-    <v-card-title primary-title>
-      <div>
-        <h3 class="headline md0">
-          {{ item.name }}
-        </h3>
-      </div>
-      <v-spacer />
-      <div>
-        <img :src="avatar" style="width: 96px" />
-      </div>
-    </v-card-title>
-
-    <v-divider />
-    <v-card-text class="pt-4">
-      <div>
-        <trait-view
-          v-if="item.trait"
-          :item="item"
-          class="mb-2"
-          style="font-size: 14px"
-        />
-      </div>
-      <p class="text-lg-justify">
-        <i><div v-html="item.hint"></div> </i>
-      </p>
-
-      <p><v-divider /></p>
-
-      <div class="two-column-holder light-red-border">
-        <div class="two-column-left">
-          <h3 class="exclude_from_nav">Ключевые аттрибуты</h3>
-          <p class="" v-if="item.keyAbility.length > 0">
-            <strong> {{ characterLabelAttribute(item.keyAbility) }}</strong>
-          </p>
-          <p
-            class=""
-            v-else="characterLabelAttributeBoost(item.attributeBoost)"
-          >
-            <strong>
-              {{ characterLabelAttributeBoost(item.attributeBoost) }}</strong
-            >
-          </p>
-          <p class="">
-            На 1-м уровне ваш класс дает вам усиление по вашему выбору
-          </p>
-        </div>
-        <div class="two-column-right">
-          <h3 class="exclude_from_nav">Хиты</h3>
-          <p class="">
-            <strong> {{ item.hitpoints }} + мод Телосложения</strong>
-          </p>
-          <p class="">
-            Вы увеличиваете свое максимальное количество хитов на это число на
-            1-м уровне и на каждом последующем уровне.
-          </p>
-        </div>
-      </div>
-
-      <div class="class-sidebar">
-        <div class="two-column-holder dark-red-border">
-          <div class="two-column-left">
-            <h3 class="exclude_from_nav" id="Perception">Внимательность</h3>
-            <p>{{ characterlabel(item.Perception) }}</p>
-
-            <h3 class="exclude_from_nav" id="SavingThrows">Спасброски</h3>
-            <span v-for="item1 in SavingRepository" v-bind:key="item1.key">
-              <p>
-                {{ characterlabel(item.saving[item1.key]) }} в
-                {{ item1.name }}
-              </p>
-            </span>
-            <h3 class="exclude_from_nav" id="Skills">Навыки</h3>
-
-            <p v-if="item.skillTrainedChoice.length > 0">
-              <strong>Обучен в навыке (на выбор):</strong>
-              {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}
-            </p>
-
-            <p v-if="item.skillTrained.length > 0">
-              <strong>Обучен в навыке:</strong>
-              {{ characterLabelSkillTrainedChoice(item.skillTrained) }}
-            </p>
-
-            <p>
-              <strong>Обучен дополнительным навыкам, в кол-ве равном:</strong>
-              {{ item.skillTrainedPoints }} + мод Интеллекта
-            </p>
-          </div>
-          <div class="two-column-right">
-            <h3 class="exclude_from_nav" id="attacks">Атаки</h3>
-            <span v-for="item1 in WeaponRepository" v-bind:key="item1.key">
-              <p v-if="item.skillAttack[item1.key]">
-                {{ characterlabel(item.skillAttack[item1.key]) }} в
-                {{ item1.name }}
-              </p>
-            </span>
-            <h3 class="exclude_from_nav" id="defenses">Защиты</h3>
-            <span v-for="item1 in DefenceRepository" v-bind:key="item.key">
-              <p v-if="item.skillDefence[item1.key]">
-                {{ characterlabel(item.skillDefence[item1.key]) }} в
-                {{ item1.name }}
-              </p>
-            </span>
-
-            <h3 class="exclude_from_nav" id="ClassDC">Класс Сл</h3>
-            <p>
-              КС класса {{ item.name }}: {{ characterlabel(item.skillClass) }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </v-card-text>
-
-    <v-divider v-if="chooseMode" />
-    <v-card-actions v-if="chooseMode">
-      <v-btn left outlined color="red" @click="$emit('cancel')"> Отмена </v-btn>
-      <v-spacer />
-      <v-btn right color="green" @click="$emit('select', item)">
-        Выберите класс
-      </v-btn>
+      <v-btn color="green" @click="$emit('select', item)">Выберите класс</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -146,7 +95,7 @@ export default {
     StatRepository,
     SluggerMixin,
   ],
-    components:{traitView},
+  components: { traitView },
   props: {
     characterId: {
       type: String,
@@ -205,10 +154,10 @@ export default {
       return [];
     },
     wargearText() {
-      if ( this.item.wargearString ) {
+      if (this.item.wargearString) {
         return this.item.wargearString;
       }
-      if ( this.item.wargear && this.item.wargear.length > 0 ) {
+      if (this.item.wargear && this.item.wargear.length > 0) {
         return this.item.wargear.map((g) => {
           if (g.amount) {
             return `${g.amount}x ${g.name}`;
@@ -218,7 +167,7 @@ export default {
       }
       return this.item.wargear;
     },
-     characterSettingTier() {
+    characterSettingTier() {
       return this.$store.getters['characters/characterSettingTierById'](this.characterId);
     },
     characterFactionKey() {
@@ -227,7 +176,7 @@ export default {
     characterSpeciesLabel() {
       return this.$store.getters['characters/characterSpeciesLabelById'](this.characterId);
     },
-    characterSpeciesKey(){
+    characterSpeciesKey() {
       return this.$store.getters['characters/characterSpeciesKeyById'](this.characterId);
     },
     characterArchetypeKey() {
@@ -277,29 +226,29 @@ export default {
     },
   },
   methods: {
-     characterlabel(key){
-        switch (key) {
-          case "U":
-            return "Нетренирован"
-         case "T":
-            return "Тренирован"
-         case "E":
-            return "Эксперт"
-          case "M":
-            return "Мастер"
-          case "L":
-            return "Легенда"
-          default:
-            break;
-        }
+    characterlabel(key) {
+      switch (key) {
+        case "U":
+          return "Нетренирован"
+        case "T":
+          return "Обучен"
+        case "E":
+          return "Эксперт"
+        case "M":
+          return "Мастер"
+        case "L":
+          return "Легенда"
+        default:
+          break;
+      }
     },
-    characterLabelAttribute(keyAbility){
+    characterLabelAttribute(keyAbility) {
       return this.attributeRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
     },
-    characterLabelAttributeBoost(item){
+    characterLabelAttributeBoost(item) {
       return item.filter((a) => a.value > 0).map(s => s.name).join(', ')
     },
-    characterLabelSkillTrainedChoice(keyAbility){
+    characterLabelSkillTrainedChoice(keyAbility) {
       return this.skillRepository.filter((a) => keyAbility.includes(a.key)).map(s => s.name).join(', ')
     },
   },
@@ -314,6 +263,7 @@ export default {
   padding: 0.1em 0.25em;
   list-style-type: none !important;
 }
+
 .trait {
   background-color: #5e0000;
   color: #fff;

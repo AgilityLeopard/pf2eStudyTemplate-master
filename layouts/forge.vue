@@ -3,280 +3,157 @@
     <AppLoader :visible="$store.state.ui.loading" />
     <v-navigation-drawer v-model="drawer.open" app :clipped="drawer.clipped" :fixed="drawer.fixed"
       :permanent="drawer.permanent" :mini-variant="drawer.mini" width="320">
-      <div class="compact-list">
-        <v-list>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title> Максимальные хиты </v-list-item-title>
-            </v-list-item-content>
 
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill color="green" text-color="white">
-                {{ characterHitPointsMax() }}
-              </v-chip>
-            </v-list-item-action>
-          </v-list-item>
 
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title> Класс доспехов </v-list-item-title>
-            </v-list-item-content>
 
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill color="green" text-color="white">
-                {{ characterArmor() }}
-              </v-chip>
-            </v-list-item-action>
-          </v-list-item>
+      <v-card outlined class="builder-sidebar pa-2">
+        <!-- Верхняя часть: основные характеристики -->
+        <div class="top-block mb-3">
+          <v-list dense>
 
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title> Скорость: </v-list-item-title>
-            </v-list-item-content>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title> Максимальные хиты </v-list-item-title>
+              </v-list-item-content>
 
-            <v-list-item-action class="hidden-xs-only">
-              {{ сharacterSpeedLabel() }}
-            </v-list-item-action>
-          </v-list-item>
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="green" text-color="white">
+                  {{ characterHitPointsMax() }}
+                </v-chip>
+              </v-list-item-action>
+            </v-list-item>
 
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title> Внимательность </v-list-item-title>
-            </v-list-item-content>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title> Класс доспехов </v-list-item-title>
+              </v-list-item-content>
 
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill dark :color="getClassChipColor(characterPerseption)" class="ml-2">
-                {{
-                  ModAttributePerception(Perception.attribute, Perception.key)
-                }}
-              </v-chip>
-            </v-list-item-action>
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill :color="getClassChipColor(characterPerseption)" dark class="ml-2">
-                {{ characterlabel(characterPerseption) }}
-              </v-chip>
-            </v-list-item-action>
-          </v-list-item>
+              <v-list-item-action class="hidden-xs-only">
+                <v-chip pill color="green" text-color="white">
+                  {{ characterArmor() }}
+                </v-chip>
+              </v-list-item-action>
+            </v-list-item>
 
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title> Сложность класса </v-list-item-title>
-            </v-list-item-content>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title> Скорость: </v-list-item-title>
+              </v-list-item-content>
 
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill :color="getClassChipColor(characterSkillClass)" dark class="ml-2">
-                {{ ModAttributeClass() }}
-              </v-chip>
-            </v-list-item-action>
-            <v-list-item-action class="hidden-xs-only">
-              <v-chip pill :color="getClassChipColor(characterSkillClass)" dark class="ml-2">
-                {{ characterlabel(characterSkillClass) }}
-              </v-chip>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-      </div>
-      <!-- <div class="px-4 py-2">
-        <div class="d-flex align-center justify-space-between mb-2">
-          <span>Максимальные хиты</span>
-          <v-chip pill color="green" text-color="white">
-            {{ characterHitPointsMax() }}
-          </v-chip>
+              <v-list-item-action class="hidden-xs-only">
+                {{ сharacterSpeedLabel() }}
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title class="stat-title">Внимательность</v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <div class="chip-row">
+                  <v-chip small :color="getClassChipColor(characterPerseption)" dark class="mr-1">
+                    {{ ModAttributePerception(Perception.attribute, Perception.key) }}
+                  </v-chip>
+                  <v-chip small :color="getClassChipColor(characterPerseption)" dark>
+                    {{ characterlabel(characterPerseption) }}
+                  </v-chip>
+                </div>
+              </v-list-item-action>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title class="stat-title">Сложность класса</v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <div class="chip-row">
+                  <v-chip small :color="getClassChipColor(characterSkillClass)" dark class="mr-1">
+                    {{ ModAttributeClass() }}
+                  </v-chip>
+                  <v-chip small :color="getClassChipColor(characterSkillClass)" dark>
+                    {{ characterlabel(characterSkillClass) }}
+                  </v-chip>
+                </div>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
         </div>
 
-        <div class="d-flex align-center justify-space-between mb-2">
-          <span>Класс доспехов</span>
-          <v-chip pill color="green" text-color="white">
-            {{ characterArmor() }}
-          </v-chip>
-        </div>
-
-        <div class="d-flex align-center justify-space-between mb-2">
-          <span>Скорость:</span>
-          <span class="ml-2">{{ сharacterSpeedLabel() }}</span>
-        </div>
-
-        <div class="d-flex align-center justify-space-between mb-2">
-          <span>Внимательность</span>
-          <div class="d-flex">
-            <v-chip
-              pill
-              :color="getClassChipColor(characterPerseption)"
-              dark
-              class="ml-2"
-            >
-              {{ ModAttributePerception(Perception.attribute, Perception.key) }}
-            </v-chip>
-            <v-chip
-              pill
-              :color="getClassChipColor(characterPerseption)"
-              dark
-              class="ml-2"
-            >
-              {{ characterlabel(characterPerseption) }}
-            </v-chip>
-          </div>
-        </div>
-
-        <div class="d-flex align-center justify-space-between mb-2">
-          <span>Сложность класса</span>
-          <div class="d-flex">
-            <v-chip
-              pill
-              :color="getClassChipColor(characterSkillClass)"
-              dark
-              class="ml-2"
-            >
-              {{ ModAttributeClass() }}
-            </v-chip>
-            <v-chip
-              pill
-              :color="getClassChipColor(characterSkillClass)"
-              dark
-              class="ml-2"
-            >
-              {{ characterlabel(characterSkillClass) }}
-            </v-chip>
-          </div>
-        </div>
-      </div> -->
-      <div class="compact-list">
-        <div class="px-4 py-2">
-          <!-- Характеристики -->
-          <h3 class="mb-2">Характеристики</h3>
-          <div class="stat-row" v-for="attribute in attributeRepository" @click="openAtt()">
-            <div class="stat-group d-flex mb-1">
-              <v-btn block small class="stat-name-btn" depressed>
-                <span class="truncate">{{ attribute.name }}</span>
-              </v-btn>
-              <v-btn small class="stat-mod-btn ml-2" depressed>
-
-                {{ ModAttributeReal(attribute.key) }}
-              </v-btn>
+        <!-- Нижняя часть: характеристики, навыки, спасброски, оружие, доспехи -->
+        <div class="bottom-block">
+          <div class="section">
+            <h3 class="section-title">Характеристики</h3>
+            <div class="stat-row" v-for="attribute in attributeRepository" :key="attribute.key" @click="openAtt()">
+              <v-btn block small class="stat-name-btn" depressed>{{ attribute.name }}</v-btn>
+              <v-btn small class="stat-mod-btn ml-1" depressed>{{ ModAttributeReal(attribute.key) }}</v-btn>
             </div>
           </div>
 
-          <!-- Навыки -->
-          <h3 class="mb-2 mt-4">Навыки</h3>
-          <v-list>
-            <v-list-item v-for="skill in finalSkillRepository" two-line @click="openSkills(skill)"
-              :style="{ backgroundColor: getSkillRankColor(skill.key) }" class="skill-item">
-              <v-list-item-content class="skill-row">
-                <v-list-item-title class="skill-label">
-                  {{ skill.name }}
-                </v-list-item-title>
-              </v-list-item-content>
+          <div class="section mt-3">
+            <h3 class="section-title">Навыки</h3>
+            <v-list dense>
+              <v-list-item v-for="skill in finalSkillRepository" :key="skill.key" @click="openSkills(skill)">
+                <v-list-item-content>{{ skill.name }}</v-list-item-content>
+                <v-list-item-action>
+                  <div class="chip-row">
+                    <v-chip small :color="getRankChipColor(skill.key)" dark>{{ ModAttribute(skill.attribute, skill.key)
+                    }}</v-chip>
+                    <v-chip small :color="getRankChipColor(skill.key)" dark class="ml-1">{{ SkillLabel(skill.key)
+                    }}</v-chip>
+                  </div>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </div>
 
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill :color="getRankChipColor(skill.key)" dark class="ml-2">
-                  {{ ModAttribute(skill.attribute, skill.key) }}
-                </v-chip>
-              </v-list-item-action>
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip small :color="getRankChipColor(skill.key)" dark class="ml-2">
-                  {{ SkillLabel(skill.key) }}
-                </v-chip>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
+          <div class="section mt-3">
+            <h3 class="section-title">Спасброски</h3>
+            <v-list dense>
+              <v-list-item v-for="saving in SavingRepository" :key="saving.key" @click="openSaves(saving)">
+                <v-list-item-content>{{ saving.name }}</v-list-item-content>
+                <v-list-item-action>
+                  <div class="chip-row">
+                    <v-chip small :color="getClassChipColor(characterSaving[saving.key])" dark>{{
+                      ModAttributeSaving(saving.attribute, saving.key) }}</v-chip>
+                    <v-chip small :color="getClassChipColor(characterSaving[saving.key])" dark class="ml-1">{{
+                      characterlabel(characterSaving[saving.key]) }}</v-chip>
+                  </div>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </div>
 
-          <!-- Спасброски -->
-          <h3 class="mb-2 mt-4">Спасброски</h3>
-          <v-list>
-            <v-list-item v-for="saving in SavingRepository" two-line @click=" openSaves(saving)">
-              <v-list-item-content class="skill-row">
-                <v-list-item-title class="skill-label">{{
-                  saving.name
-                }}</v-list-item-title>
-              </v-list-item-content>
+          <div class="section mt-3">
+            <h3 class="section-title">Владение оружием</h3>
+            <v-list dense>
+              <v-list-item v-for="attack in WeaponRepository" :key="attack.key">
+                <v-list-item-content>{{ attack.name }}</v-list-item-content>
+                <v-list-item-action>
+                  <div class="chip-row">
+                    <v-chip small :color="getClassChipColor(skillAttack[attack.key])" dark>{{
+                      characterlabel(skillAttack[attack.key]) }}</v-chip>
+                  </div>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </div>
 
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill :color="getClassChipColor(characterSaving[saving.key])" dark class="ml-2">
-                  {{ ModAttributeSaving(saving.attribute, saving.key) }}
-                </v-chip>
-              </v-list-item-action>
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill :color="getClassChipColor(characterSaving[saving.key])" dark class="ml-2">
-                  {{ characterlabel(characterSaving[saving.key]) }}
-                </v-chip>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-
-          <!-- Владение оружием -->
-          <h3 class="mb-2 mt-4">Владение оружием</h3>
-          <v-list>
-            <v-list-item v-for="attack in WeaponRepository" two-line>
-              <v-list-item-content class="skill-row">
-                <v-list-item-title class="skill-label">{{
-                  attack.name
-                }}</v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill :color="getClassChipColor(skillAttack[attack.key])" dark class="ml-2">
-                  {{ characterlabel(skillAttack[attack.key]) }}
-                </v-chip>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-
-          <!-- Владение доспехами -->
-          <h3 class="mb-2 mt-4">Владение доспехами</h3>
-          <v-list>
-            <v-list-item v-for="defence in DefenceRepository" two-line>
-              <v-list-item-content class="skill-row">
-                <v-list-item-title class="skill-label">{{
-                  defence.name
-                }}</v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill :color="getClassChipColor(skillDefence[defence.key])" dark class="ml-2">
-                  {{ characterlabel(skillDefence[defence.key]) }}
-                </v-chip>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-
-          <h3 class="mb-2 mt-4">Сопротивление</h3>
-          <v-list>
-            <v-list-item v-for="resistance in characterResistance()" two-line>
-              <v-list-item-content class="skill-row">
-                <v-list-item-title class="skill-label">
-
-                  {{
-                    DamageType.find(
-                      (t) => t.key === resistance.key
-                    ).name
-                  }}
-
-
-
-                  {{ resistance.value }}</v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-action class="hidden-xs-only">
-                <!-- <v-chip pill :color="getClassChipColor(skillDefence[defence.key])" dark class="ml-2">
-                  {{ characterlabel(skillDefence[defence.key]) }}
-                </v-chip> -->
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-
-          <!-- Языки -->
-          <h3 class="mb-2 mt-4">Языки</h3>
-          <v-list>
-            <v-list-item v-for="lang in characterLanguages" two-line>
-              <v-list-item-content class="skill-row">
-                <v-list-item-title class="skill-label">{{
-                  lang.name
-                }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
+          <div class="section mt-3">
+            <h3 class="section-title">Владение доспехами</h3>
+            <v-list dense>
+              <v-list-item v-for="defence in DefenceRepository" :key="defence.key">
+                <v-list-item-content>{{ defence.name }}</v-list-item-content>
+                <v-list-item-action>
+                  <div class="chip-row">
+                    <v-chip small :color="getClassChipColor(skillDefence[defence.key])" dark>{{
+                      characterlabel(skillDefence[defence.key]) }}</v-chip>
+                  </div>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </div>
         </div>
-      </div>
+      </v-card>
+
 
       <!-- Диалог по нажатию на навы -->
       <!-- <v-dialog
@@ -509,8 +386,10 @@
                         action.name
                       }}</v-list-item-content>
                       <v-list-item-action>
+  <div class="chip-row">
                         <v-chip small>{{ action.cost }}</v-chip>
-                      </v-list-item-action>
+                      </div>
+</v-list-item-action>
                     </v-list-item> -->
                   </v-list>
                 </v-expansion-panel-content>
@@ -817,7 +696,7 @@
             Главная
           </v-btn>
           <v-btn small text nuxt :to="routes.species" :disabled="!settingSelected">
-            1. Наследие
+            1. Родословная
             <v-chip small class="select-chip" v-if="!characterSpeciesLabel || !characterHeritageLabel">
               !
             </v-chip>
@@ -912,6 +791,16 @@
           <v-icon>chevron_right</v-icon>
         </v-btn>
       </v-container>
+      <!-- <DiceChat /> -->
+
+      <v-btn fab small color="primary" dark class="dice-fab" @click="showDiceChat = !showDiceChat">
+        <v-icon>casino</v-icon>
+      </v-btn>
+      <transition name="slide-fade">
+        <div v-if="showDiceChat" class="dice-chat-wrapper">
+          <DiceChat />
+        </div>
+      </transition>
     </v-main>
 
     <v-footer app dark :color="spendBuildingPoints > totalBuildPoints ? 'error' : ''" class="caption">
@@ -940,14 +829,15 @@ import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 import SluggerMixin from "~/mixins/SluggerMixin";
 import AppLoader from '~/components/AppLoader.vue';
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
+import DiceChat from '@/components/DiceChat.vue';
 
 export default {
   name: "Forge",
   components: {
     DefaultFooter,
     ToolbarAccountActions,
-    AppLoader
-
+    AppLoader,
+    DiceChat
   },
   mixins: [StatRepositoryMixin, SluggerMixin, WargearTraitRepositoryMixin],
   data() {
@@ -956,6 +846,7 @@ export default {
       savesDialog: false,
       attDialog: false,
       actionList: undefined,
+      showDiceChat: false,
       skill: {
         key: "acrobatics",
         name: "Акробатика",
@@ -1815,6 +1706,7 @@ export default {
         const Def = wear.category
           ? this.profiencyRepository[this.skillDefence[wear.category]]
           : 0;
+
         const bonusAC = wear.acBonus ? wear.acBonus : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();
         return 10 + dex + Def + arm + bonusAC;
@@ -1823,7 +1715,9 @@ export default {
       const modDex = Math.floor(
         (this.characterAttributes["dexterity"] - 10) / 2
       );
-      return 10 + modDex;
+
+      const Def = this.profiencyRepository[this.skillDefence["unarmored"]];
+      return 10 + modDex + Def;
     },
     characterHitPointsMax() {
       const species = this.characterHitPoints["species"]
@@ -2450,267 +2344,82 @@ export default {
   border-top: 2px solid #25262b;
 }
 
-/*
-      <v-expansion-panels multiple>
-        <!-- Характеристики -->
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-4 pt-2 pb-2">
-            Характеристики
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div class="stat-row" v-for="attribute in attributeRepository">
-              <div class="stat-group">
-                <!-- <div class="attr" v-for="attribute in attributeRepository">
-                <p>{{ attribute.short }}</p>
-                <p>{{ (characterAttributes[attribute.key] - 10) / 2 }}</p>
-              </div> -->
-                <v-btn block small class="stat-name-btn" depressed>
-                  <span class="truncate"> {{ attribute.name }}</span>
-                </v-btn>
-                <v-btn small class="stat-mod-btn" depressed>
-                  {{
-                    (characterAttributes[attribute.key] - 10) / 2 >= 0
-                      ? "+"
-                      : ""
-                  }}{{ (characterAttributes[attribute.key] - 10) / 2 }}
-                </v-btn>
-              </div>
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+.builder-sidebar {
 
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-4 pt-2 pb-2">
-            Навыки
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-list>
-              <v-list-item
-                v-for="skill in finalSkillRepository"
-                :key="skill.key"
-                two-line
-                @click="openSkills(skill)"
-                :style="{ backgroundColor: getSkillRankColor(skill.key) }"
-                class="skill-item"
-              >
-                <v-list-item-content class="skill-row">
-                  <v-list-item-title class="skill-label">
-                    {{ skill.name }}
-                    <!-- <v-chip
-                      v-if="getSkillRank(skill.key) > 0"
-                      x-small
-                      label
-                      class="ml-1"
-                      :color="getRankChipColor(skill.key)"
-                      dark
-                    >
-                      {{ getSkillRankName(skill.key) }}
-                    </v-chip> -->
-                  </v-list-item-title>
-                </v-list-item-content>
+  min-width: 220px;
 
-                <v-list-item-action class="hidden-xs-only">
-                  <v-chip
-                    pill
-                    :color="getRankChipColor(skill.key)"
-                    dark
-                    class="ml-2"
-                  >
-                    {{ ModAttribute(skill.attribute, skill.key) }}
-                  </v-chip>
-                </v-list-item-action>
-                <v-list-item-action class="hidden-xs-only">
-                  <v-chip
-                    small
-                    :color="getRankChipColor(skill.key)"
-                    dark
-                    class="ml-2"
-                  >
-                    {{ SkillLabel(skill.key) }}
-                  </v-chip>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-            <!-- <div class="group_rec">
-          <div   v-for="skill in finalSkillRepository">
-         
 
-                <v-btn class = "group_skill" style="width: 100%" @click="openSkills(skill)">
-                  
-                  <div>{{ skill.name }}</div> <div> {{ModAttribute(skill.attribute, skill.key)}}</div> <div>  {{characterSkills[skill.key] }}</div>
+  font-size: 0.75rem;
+}
 
-                </v-btn> 
+.top-block {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 4px;
+}
 
-        </div> 
-      </div>-->
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+.stat-title {
+  font-weight: 500;
+  font-size: 0.75rem;
+}
 
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-4 pt-2 pb-2">
-            Спасброски
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-list>
-              <v-list-item
-                v-for="saving in SavingRepository"
-                :key="saving.key"
-                two-line
-                @click="openSaves(saving)"
-              >
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ saving.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
+.bottom-block {
+  margin-top: 4px;
+}
 
-                <v-list-item-action class="hidden-xs-only">
-                  <v-chip
-                    pill
-                    :color="getClassChipColor(characterSaving[saving.key])"
-                    dark
-                    class="ml-2"
-                  >
-                    {{ ModAttributeSaving(saving.attribute, saving.key) }}
-                  </v-chip>
-                </v-list-item-action>
-                <v-list-item-action class="hidden-xs-only">
-                  <v-chip
-                    pill
-                    :color="getClassChipColor(characterSaving[saving.key])"
-                    dark
-                    class="ml-2"
-                  >
-                    {{ characterlabel(characterSaving[saving.key]) }}
-                  </v-chip>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-            <!-- <div class="group_rec">
-          <div   v-for="skill in finalSkillRepository">
-         
+.section {
+  margin-bottom: 12px;
+}
 
-                <v-btn class = "group_skill" style="width: 100%" @click="openSkills(skill)">
-                  
-                  <div>{{ skill.name }}</div> <div> {{ModAttribute(skill.attribute, skill.key)}}</div> <div>  {{characterSkills[skill.key] }}</div>
+.section-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
 
-                </v-btn> 
+/* Строки со статистикой */
+.stat-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+  flex-wrap: nowrap;
+  /* чтобы чипы не переносились */
+}
 
-        </div> 
-      </div>-->
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+/* Чипы в списках (включая list-item-action) */
+.v-list-item-action {
+  display: flex !important;
+  flex-wrap: nowrap;
+  align-items: center;
+}
 
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-4 pt-2 pb-2">
-            Владение оружием
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-list>
-              <v-list-item
-                v-for="attack in WeaponRepository"
-                :key="attack.key"
-                two-line
-              >
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ attack.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
+.v-chip {
+  font-size: 0.65rem;
+  height: 18px;
+  line-height: 18px;
+  margin-right: 2px;
+  /* небольшой отступ между чипами */
+}
 
-                <v-list-item-action class="hidden-xs-only">
-                  <v-chip
-                    pill
-                    :color="getClassChipColor(skillAttack[attack.key])"
-                    dark
-                    class="ml-2"
-                  >
-                    {{ characterlabel(skillAttack[attack.key]) }}
-                  </v-chip>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+.chip-row {
+  display: flex !important;
+  flex-wrap: nowrap;
+  align-items: center;
+}
 
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-4 pt-2 pb-2">
-            Владение доспехами
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-list>
-              <v-list-item
-                v-for="defence in DefenceRepository"
-                :key="defence.key"
-                two-line
-              >
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ defence.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
+.dice-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
 
-                <v-list-item-action class="hidden-xs-only">
-                  <v-chip
-                    pill
-                    :color="getClassChipColor(skillDefence[defence.key])"
-                    dark
-                    class="ml-2"
-                  >
-                    {{ characterlabel(skillDefence[defence.key]) }}
-                  </v-chip>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+.dice-chat-wrapper {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 1000;
 
-        <!-- <v-expansion-panel> 
-            <v-expansion-panel-header class="pa-4 pt-2 pb-2">
-
-              Хит-поинты
-            </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div>
-          <div >
-            <p> Максимальные хиты: {{ characterHitPointsMax() }}</p> 
-
-        </div>
-        </div>
-        </v-expansion-panel-content>
-      </v-expansion-panel> -->
-
-        <v-expansion-panel>
-          <v-expansion-panel-header class="pa-4 pt-2 pb-2">
-            Языки
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-list>
-              <v-list-item
-                v-for="lang in characterLanguages"
-                :key="lang.name"
-                two-line
-              >
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ lang.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <!-- <div class="group_rec">
-          <div   v-for="skill in finalSkillRepository">
-         
-
-                <v-btn class = "group_skill" style="width: 100%" @click="openSkills(skill)">
-                  
-                  <div>{{ skill.name }}</div> <div> {{ModAttribute(skill.attribute, skill.key)}}</div> <div>  {{characterSkills[skill.key] }}</div>
-
-                </v-btn> 
-
-        </div> 
-      </div>-->
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>*/
+  width: 350px;
+  max-height: 500px;
+}
 </style>

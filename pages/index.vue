@@ -1,29 +1,9 @@
 <template lang="html">
   <v-row justify="center" no-gutters dense>
-    <v-col
-      v-for="section in sections"
-      :key="section.key"
-      :cols="12"
-      :sm="12"
-      :md="6"
-      :lg="4"
-      :xl="4"
-      class="pa-3"
-    >
-      <v-card
-        :to="section.link.route"
-        :disabled="!section.isActive"
-        class="card"
-        exact
-        nuxt
-        hover
-      >
+    <v-col v-for="section in sections" :key="section.key" :cols="12" :sm="12" :md="6" :lg="4" :xl="4" class="pa-3">
+      <v-card :to="section.link.route" :disabled="!section.isActive" class="card" exact nuxt hover>
         <div class="card__image-container">
-          <div
-            class="card__image"
-            :style="{ backgroundImage: 'url(' + section.imageSrc + ')' }"
-            loading
-          />
+          <div class="card__image" :style="{ backgroundImage: 'url(' + section.imageSrc + ')' }" loading />
         </div>
 
         <div class="card__content-container pa-4">
@@ -127,17 +107,17 @@ export default {
         //   isActive: true,
         //   classes: [],
         // },
-        // {
-        //   key: 'posts',
-        //   title: 'Roleplaying <strong>Articles</strong>',
-        //   subtitle: 'Writings about the Hobby',
-        //   imageSrc: '/img/artwork_posts_tile.jpg',
-        //   imageCredit: 'Artwork from Pixabay',
-        //   htmlText: '',
-        //   link: { text: 'To the Posts', route: '/posts' },
-        //   isActive: true,
-        //   classes: [],
-        // },
+        {
+          key: 'posts',
+          title: '<strong>Новости</strong>',
+          subtitle: 'Новости о Билдере для Pathfinder и Starfinder',
+          imageSrc: '/img/artwork_posts_tile.jpg',
+          imageCredit: 'Artwork from Pixabay',
+          htmlText: '',
+          link: { text: 'Новости и Обновления', route: '/posts' },
+          isActive: true,
+          classes: [],
+        },
         // {
         //   key: 'eather',
         //   title: 'Прогресс заполнения базы данных',
@@ -244,17 +224,21 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .hover-card {
   cursor: pointer;
 }
+
 .hover-card:hover {
   -webkit-box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
     0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
   box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
     0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
 }
+
 .greyscale {
-  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  -webkit-filter: grayscale(100%);
+  /* Safari 6.0 - 9.0 */
   filter: grayscale(100%);
 }
 </style>
