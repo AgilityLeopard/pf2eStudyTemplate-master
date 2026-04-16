@@ -274,7 +274,7 @@ module.exports = {
    */
   axios: {
     axios: {
-      baseURL: process.env.BASE_URL,
+
       browserBaseURL: '/'
     }
   },
