@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="post && post.fields" class="patch-hero">
+    <div class="patch-hero">
 
       <dod-default-breadcrumbs :items="breadcrumbItems" />
 
@@ -24,7 +24,7 @@
 
 
 
-    <v-row v-if="post && post.fields" justify="center" no-gutters dense class="mt-4">
+    <v-row justify="center" no-gutters dense class="mt-4">
       <v-col :cols="12" :md="12">
         <!-- <ColorfulEntry :headline="post.fields.title" flavour="blog"> -->
         <v-row>
@@ -54,14 +54,6 @@ import ContentfulHtmlText from "@/components/shared/ContentulHtmlText";
 import DoomTooltip from "@/components/shared/DoomTooltip";
 import MarkdownIt from 'markdown-it';
 
-
-import { createClient } from 'contentful'
-const client = createClient({
-  space: "q5mmqgvlgv4h",
-  accessToken: "f17binpap1iiDrWuh2f-3jknjEVdTahs4eXN8BTkQAo",
-})
-
-
 const md = new MarkdownIt({
   html: true,
   linkify: true,
@@ -83,20 +75,19 @@ export default {
     const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
     this.post = data[0];
   },*/
-  async asyncData({ params, error }) {
-    const data = await client.getEntries({
-      content_type: 'blogPost',
-      'fields.slug': params.slug
-    })
+  async asyncData({ params, app, error }) {
+    try {
+      const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
 
-    const post = data.items?.[0]
+      const post = Array.isArray(data) ? data[0] : data;
 
-    if (!post) {
-      return error({ statusCode: 404, message: 'Post not found' })
-    }
+      if (!post) {
+        return error({ statusCode: 404, message: "Post not found" });
+      }
 
-    return {
-      post
+      return { post };
+    } catch (e) {
+      return error({ statusCode: 500, message: "API error" });
     }
   },
   data() {
