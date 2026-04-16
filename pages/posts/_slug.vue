@@ -53,6 +53,12 @@ import ColorfulEntry from "~/components/shared/ColorfulEntry";
 import ContentfulHtmlText from "@/components/shared/ContentulHtmlText";
 import DoomTooltip from "@/components/shared/DoomTooltip";
 import MarkdownIt from 'markdown-it';
+import { createClient } from 'contentful'
+
+const client = createClient({
+  space: process.env.NUXT_ENV_CTF_SPACE_ID,
+  accessToken: process.env.NUXT_ENV_CTF_CD_ACCESS_TOKEN,
+})
 
 const md = new MarkdownIt({
   html: true,
@@ -75,20 +81,24 @@ export default {
     const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
     this.post = data[0];
   },*/
-  async asyncData({ params, $axios, error }) {
+  async asyncData({ params }) {
+    const slug = params.slug
+
     try {
-      const { slug } = params;
-      const { data } = await $axios.get(`/api/posts/${slug}`);
+      const data = await client.getEntries({
+        content_type: 'blogPost',
+        'fields.slug': slug,
+      })
 
-      const post = Array.isArray(data) ? data[0] : data;
+      const post = data.items[0]
 
-      if (!post) {
-        return error({ statusCode: 404, message: "Post not found" });
+      return {
+        post,
+        slug,
       }
-
-      return { post };
-    } catch (e) {
-      return error({ statusCode: 500, message: "API error" });
+    } catch (err) {
+      console.warn(err)
+      return { post: null }
     }
   },
   data() {
