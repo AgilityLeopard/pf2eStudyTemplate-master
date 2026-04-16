@@ -145,7 +145,6 @@ module.exports = {
     { src: '~/plugins/router-loader.js', ssr: false },
     "~/plugins/filters.js",
     "~/plugins/hint-box-component.js",
-    '~/plugins/contentful.js'
 
   ],
   /*
@@ -153,11 +152,7 @@ module.exports = {
    */
 
   env: {
-    ...config,
-    NODE_ENV: 'production',
-
-    CTF_SPACE_ID: 'q5mmqgvlgv4h',
-    CTF_TOKEN: 'your_delivery_token_here'
+    ...config
   },
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
@@ -278,7 +273,10 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: '/'
+    browserBaseURL: "/",
+    baseURL: process.server
+      ? "http://localhost:3000"
+      : "/"
   },
 
   /* auth: {
@@ -318,10 +316,10 @@ module.exports = {
   },
   middleware: ['loading'],
   serverMiddleware: [
-    //   //'redirect-ssl',
-    //   //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
+    //'redirect-ssl',
+    //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
     "~/api/express", // handles /api/** calls
-    //   // '~/serverMiddleware/forcedomain'
+    '~/serverMiddleware/forcedomain'
   ],
 
   /**
