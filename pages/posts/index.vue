@@ -66,23 +66,23 @@ export default {
     DodDefaultBreadcrumbs,
   },
   mixins: [BreadcrumbSchemaMixin],
-  async asyncData({ $axios }) {
-    const { data } = await $axios.get("/api/posts");
-
-    return {
-      posts: data || []
-    };
-  },
-  // async asyncData({ app }) {
-
-  //   const { data } = await app.$axios.get('/api/posts');
-  //   const posts = data;
+  // async asyncData({ $axios }) {
+  //   const { data } = await $axios.get("/api/posts");
 
   //   return {
-  //     fixedTime: new Date(),
-  //     //posts,
+  //     posts: data || []
   //   };
-  // },
+  // }
+  async asyncData({ app }) {
+
+    const { data } = await app.$axios.get('/api/posts');
+    const posts = data;
+
+    return {
+      fixedTime: new Date(),
+      posts,
+    };
+  },
   data() {
     return {
       fixedTime: new Date(),

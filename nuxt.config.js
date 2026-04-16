@@ -273,8 +273,9 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: '/',
-    browserBaseURL: '/'
+    baseURL: process.server
+      ? 'http://127.0.0.1:3000'
+      : '/'
   },
 
   /* auth: {
