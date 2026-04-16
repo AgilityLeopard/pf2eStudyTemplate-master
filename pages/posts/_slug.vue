@@ -87,7 +87,12 @@ export default {
 
       return { post };
     } catch (e) {
-      return error({ statusCode: 500, message: "API error" });
+      console.error('POST SSR ERROR:', e);
+
+      return error({
+        statusCode: 500,
+        message: e?.response?.data || e.message || "API error"
+      });
     }
   },
   data() {
