@@ -153,7 +153,11 @@ module.exports = {
    */
 
   env: {
-    ...config
+    ...config,
+    NODE_ENV: 'production',
+
+    CTF_SPACE_ID: 'q5mmqgvlgv4h',
+    CTF_TOKEN: 'your_delivery_token_here'
   },
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
