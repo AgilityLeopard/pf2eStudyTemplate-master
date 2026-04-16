@@ -57,8 +57,8 @@ import MarkdownIt from 'markdown-it';
 
 import { createClient } from 'contentful'
 const client = createClient({
-  space: process.env.NUXT_ENV_CTF_SPACE_ID,
-  accessToken: process.env.NUXT_ENV_CTF_CD_ACCESS_TOKEN,
+  space: "q5mmqgvlgv4h",
+  accessToken: "f17binpap1iiDrWuh2f-3jknjEVdTahs4eXN8BTkQAo",
 })
 
 

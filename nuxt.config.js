@@ -273,10 +273,9 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    axios: {
 
-      browserBaseURL: '/'
-    }
+    browserBaseURL: "/"
+
   },
 
   /* auth: {
@@ -319,7 +318,7 @@ module.exports = {
     //'redirect-ssl',
     //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
     "~/api/express", // handles /api/** calls
-    '~/serverMiddleware/forcedomain'
+    // '~/serverMiddleware/forcedomain'
   ],
 
   /**
