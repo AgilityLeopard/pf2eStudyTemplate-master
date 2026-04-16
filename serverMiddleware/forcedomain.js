@@ -13,9 +13,12 @@ export default function (req, res, next) {
     return next()
   }
 
-  if (env === 'production' && host !== forceDomain) {
-    res.writeHead(301, { Location: forceDomain + url })
-    return res.end()
+  const allowedHosts = ['shadow-of-tales.ru', 'www.shadow-of-tales.ru']
+
+  if (env === 'production' && !allowedHosts.includes(host)) {
+    return res.writeHead(301, {
+      Location: `https://www.shadow-of-tales.ru${url}`
+    }).end()
   }
 
   return next()
