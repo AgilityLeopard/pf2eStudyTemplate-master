@@ -53,12 +53,6 @@ import ColorfulEntry from "~/components/shared/ColorfulEntry";
 import ContentfulHtmlText from "@/components/shared/ContentulHtmlText";
 import DoomTooltip from "@/components/shared/DoomTooltip";
 import MarkdownIt from 'markdown-it';
-import { createClient } from 'contentful'
-
-const client = createClient({
-  space: process.env.NUXT_ENV_CTF_SPACE_ID,
-  accessToken: process.env.NUXT_ENV_CTF_CD_ACCESS_TOKEN,
-})
 
 const md = new MarkdownIt({
   html: true,
@@ -81,24 +75,27 @@ export default {
     const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
     this.post = data[0];
   },*/
-  async asyncData({ params }) {
-    const slug = params.slug
-
+  async asyncData({ params, app, error }) {
     try {
-      const data = await client.getEntries({
-        content_type: 'blogPost',
-        'fields.slug': slug,
-      })
+      const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
 
-      const post = data.items[0]
+      const post = Array.isArray(data) ? data[0] : data;
 
-      return {
-        post,
-        slug,
+      if (!post) {
+        return error({ statusCode: 404, message: "Post not found" });
       }
-    } catch (err) {
-      console.warn(err)
-      return { post: null }
+
+      return post.json({
+        id: post.sys.id,
+        title: post.fields.title,
+        slug: post.fields.slug,
+        description: post.fields.description,
+        shortDescription: post.fields.shortDescription,
+        type: post.fields.type,
+        publishedAt: post.fields.publishedAt,
+      })
+    } catch (e) {
+      return error({ statusCode: 500, message: "API error" });
     }
   },
   data() {
