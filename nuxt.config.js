@@ -274,7 +274,7 @@ module.exports = {
    */
   axios: {
     baseURL: process.server
-      ? 'https://shadow-of-tales.ru'
+      ? 'http://shadow-of-tales.ru'
       : '/',
   },
 
