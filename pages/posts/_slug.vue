@@ -77,7 +77,10 @@ export default {
   },*/
   async asyncData({ params, app, error }) {
     try {
-      const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
+      const data = await app.$cf.getEntries({
+        content_type: 'blogPost',
+        'fields.slug': params.slug
+      })
 
       const post = Array.isArray(data) ? data[0] : data;
 
