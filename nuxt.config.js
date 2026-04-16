@@ -273,7 +273,9 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    browserBaseURL: "/",
+    baseURL: process.server
+      ? 'https://shadow-of-tales.ru'
+      : '/',
   },
 
   /* auth: {
