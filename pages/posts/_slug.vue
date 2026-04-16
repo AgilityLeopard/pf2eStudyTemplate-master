@@ -106,6 +106,11 @@ export default {
     };
   },
   head() {
+    if (!this.post) {
+      return {
+        title: 'Loading...'
+      }
+    }
     const { title, description } = this.post;
     const image = this.post.image
       ? `https:${this.post.image.fields.file.url}`
