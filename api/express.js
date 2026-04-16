@@ -8,9 +8,13 @@ const app = express();
 app.use(express.json());
 
 const mountRoutes = require('./routes');
-
+app.use((req, res, next) => {
+  console.log("API HIT:", req.url);
+  next();
+});
 
 mountRoutes(app);
+
 
 module.exports = {
   path: '/api',
