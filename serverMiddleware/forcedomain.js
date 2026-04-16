@@ -13,7 +13,7 @@ export default function (req, res, next) {
     return next()
   }
 
-  if (env === 'production') {
+  if (env === 'production' && host !== forceDomain) {
     res.writeHead(301, { Location: forceDomain + url })
     return res.end()
   }
