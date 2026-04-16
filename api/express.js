@@ -9,6 +9,9 @@ app.use(express.json());
 
 const mountRoutes = require('./routes');
 
+console.log('SPACE:', NUXT_ENV_CTF_SPACE_ID);
+console.log('TOKEN OK:', !!NUXT_ENV_CTF_CD_ACCESS_TOKEN);
+
 mountRoutes(app);
 
 module.exports = {
