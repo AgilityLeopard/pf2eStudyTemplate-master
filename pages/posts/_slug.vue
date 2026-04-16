@@ -85,15 +85,7 @@ export default {
         return error({ statusCode: 404, message: "Post not found" });
       }
 
-      return post.json({
-        id: post.sys.id,
-        title: post.fields.title,
-        slug: post.fields.slug,
-        description: post.fields.description,
-        shortDescription: post.fields.shortDescription,
-        type: post.fields.type,
-        publishedAt: post.fields.publishedAt,
-      })
+      return { post };
     } catch (e) {
       return error({ statusCode: 500, message: "API error" });
     }

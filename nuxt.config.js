@@ -273,7 +273,10 @@ module.exports = {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    browserBaseURL: "/",
+    axios: {
+      baseURL: 'http://shadow-of-tales.ru' || 'http://localhost:3000',
+      browserBaseURL: '/'
+    }
   },
 
   /* auth: {

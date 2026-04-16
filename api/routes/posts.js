@@ -49,6 +49,8 @@ router.get('/:slug', async (req, res) => {
     'fields.slug': slug,
   };
 
+  console.log(client);
+
   try {
     const data = await client.getEntries(query);
 
