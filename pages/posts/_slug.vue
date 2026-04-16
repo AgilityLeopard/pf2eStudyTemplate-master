@@ -75,9 +75,10 @@ export default {
     const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
     this.post = data[0];
   },*/
-  async asyncData({ params, app, error }) {
+  async asyncData({ params, $axios, error }) {
     try {
-      const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
+      const { slug } = params;
+      const { data } = await $axios.get(`/api/posts/${slug}`);
 
       const post = Array.isArray(data) ? data[0] : data;
 
