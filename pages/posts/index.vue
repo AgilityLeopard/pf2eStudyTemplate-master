@@ -66,10 +66,12 @@ export default {
     DodDefaultBreadcrumbs,
   },
   mixins: [BreadcrumbSchemaMixin],
-  async fetch() {
-    const { data } = await this.$axios.get("/api/posts");
-    this.posts = data || [];
-    console.log(data)
+  async asyncData({ $axios }) {
+    const { data } = await $axios.get("/api/posts");
+
+    return {
+      posts: data || []
+    };
   },
   // async asyncData({ app }) {
 
