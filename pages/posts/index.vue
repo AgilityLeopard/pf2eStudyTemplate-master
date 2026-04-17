@@ -55,13 +55,11 @@ export default {
 
   // 💥 ВАЖНО: максимально простой SSR-safe запрос
   async asyncData({ $axios }) {
-    try {
-      const { data } = await $axios.get("/api/posts");
-      return { posts: data || [] };
-    } catch (e) {
-      console.error("POSTS SSR ERROR:", e);
-      return { posts: [] };
-    }
+    const { data } = await $axios.get('/api/posts');
+
+    return {
+      posts: data || []
+    };
   },
 
   data() {
