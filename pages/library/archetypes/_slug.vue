@@ -6,23 +6,37 @@
     <!-- Species Details -->
     <v-row justify="center" no-gutters>
       <v-tabs centered grow color="red">
-        <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`">
-          <h2 class="subtitle-2">Описание</h2>
-        </v-tab>
+        <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`"
+          ><h2 class="subtitle-2">Описание</h2></v-tab
+        >
 
-        <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`">
-          <h2 class="subtitle-2">Черты</h2>
-        </v-tab>
+        <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`"
+          ><h2 class="subtitle-2">Черты</h2></v-tab
+        >
 
-        <v-tab-item class="my-tab-item" key="tab-ancestry" :value="`tab-ancestry`">
+        <v-tab-item
+          class="my-tab-item"
+          key="tab-ancestry"
+          :value="`tab-ancestry`"
+        >
           <v-col :cols="12">
             <ColorfulEntry :headline="item.name" flavour="forge">
-              <talents-preview :talents="talents" :level="20" :list="talents" :type="item.key" choose-mode />
+              <talents-preview
+                :talents="talents"
+                :level="20"
+                :list="talents"
+                :type="item.key"
+                choose-mode
+              />
             </ColorfulEntry>
           </v-col>
         </v-tab-item>
 
-        <v-tab-item class="my-tab-item" key="tab-heritage" :value="`tab-heritage`">
+        <v-tab-item
+          class="my-tab-item"
+          key="tab-heritage"
+          :value="`tab-heritage`"
+        >
           <v-col :cols="12">
             <ColorfulEntry :headline="item.name" flavour="forge">
               <archetype-preview :item="item" :spells="spells" />
@@ -86,7 +100,6 @@ export default {
       ],
     };
   },
-
   async asyncData({ params, $axios, error }) {
     const { slug } = params;
 

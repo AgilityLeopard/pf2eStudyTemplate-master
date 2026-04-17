@@ -1,10 +1,14 @@
-import { createClient } from 'contentful'
+const contentful = require('contentful');
+// use default environment config for convenience
+// these will be set via `env` property in nuxt.config.js
+const config = {
+  space: process.env.NUXT_ENV_CTF_SPACE_ID,
+  accessToken: process.env.NUXT_ENV_CTF_CD_ACCESS_TOKEN,
+};
 
-export default (context, inject) => {
-  const client = createClient({
-    space: process.env.CTF_SPACE_ID,
-    accessToken: process.env.CTF_TOKEN,
-  })
-
-  inject('cf', client)
-}
+// export `createClient` to use it in page components
+module.exports = {
+  createClient() {
+    return contentful.createClient(config);
+  },
+};
