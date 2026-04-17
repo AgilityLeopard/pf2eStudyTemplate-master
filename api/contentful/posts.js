@@ -1,5 +1,5 @@
 const contentful = require('contentful');
-const config = require('../.contentful.json');
+const config = require('../../.contentful.json');
 
 const client = contentful.createClient({
     space: config.NUXT_ENV_CTF_SPACE_ID,
