@@ -71,25 +71,38 @@ export default {
     DodDefaultBreadcrumbs,
   },
   mixins: [ArticleSchemaMixin, BreadcrumbSchemaMixin],
-  /*async fetch() {
-    const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
-    this.post = data[0];
-  },*/
-  async asyncData({ params, app, error }) {
+  async fetch() {
     try {
-      const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
+      const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
 
       const post = Array.isArray(data) ? data[0] : data;
 
       if (!post) {
-        return error({ statusCode: 404, message: "Post not found" });
+        return;
       }
 
-      return { post };
+      this.post = post;
     } catch (e) {
-      return error({ statusCode: 500, message: "API error" });
+      // важно: не даём упасть странице
+      this.post = null;
+      console.error(e);
     }
   },
+  // async asyncData({ params, app, error }) {
+  //   try {
+  //     const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
+
+  //     const post = Array.isArray(data) ? data[0] : data;
+
+  //     if (!post) {
+  //       return error({ statusCode: 404, message: "Post not found" });
+  //     }
+
+  //     return { post };
+  //   } catch (e) {
+  //     return error({ statusCode: 500, message: "API error" });
+  //   }
+  // },
   data() {
     return {
       showTooltip: false,
