@@ -76,8 +76,14 @@ export default {
     this.post = data[0];
   },*/
   async asyncData({ params, app, error }) {
+    console.log("FULL AXIOS CONFIG:", app.$axios.defaults);
+    console.log("BASE URL:", app.$axios.defaults.baseURL);
     try {
-      const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
+      const url = process.server
+        ? `http://127.0.0.1:3000/api/posts/${params.slug}`
+        : `/api/posts/${params.slug}`;
+
+      const { data } = await app.$axios.get(url);
 
       const post = Array.isArray(data) ? data[0] : data;
 
@@ -87,6 +93,7 @@ export default {
 
       return { post };
     } catch (e) {
+      console.error('SSR ERROR:', e?.response?.data || e.message);
       return error({ statusCode: 500, message: "API error" });
     }
   },

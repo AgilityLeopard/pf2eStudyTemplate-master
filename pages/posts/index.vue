@@ -66,11 +66,25 @@ export default {
     DodDefaultBreadcrumbs,
   },
   mixins: [BreadcrumbSchemaMixin],
-  async fetch() {
-    const { data } = await this.$axios.get("/api/posts");
-    this.posts = data || [];
-    console.log(data)
+  async asyncData({ app, error }) {
+    try {
+      const url = process.server
+        ? `http://127.0.0.1:3000/api/posts`
+        : `/api/posts`;
+
+      const { data } = await app.$axios.get(url);
+
+      return { posts: data };
+    } catch (e) {
+      console.error('SSR ERROR:', e?.response?.data || e.message);
+      return error({ statusCode: 500, message: "API error" });
+    }
   },
+  // async fetch() {
+  //   const { data } = await this.$axios.get("/api/posts");
+  //   this.posts = data || [];
+  //   console.log(data)
+  // },
   // async asyncData({ app }) {
 
   //   const { data } = await app.$axios.get('/api/posts');
