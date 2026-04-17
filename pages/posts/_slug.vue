@@ -79,17 +79,12 @@ export default {
       };
     }
 
-    const { title, description } = this.page;
+
 
     return {
       title,
       titleTemplate: "Новости",
-      meta: [
-        { hid: "description", name: "description", content: description },
-        { hid: "og:title", name: "og:title", content: title },
-        { hid: "og:description", name: "og:description", content: description },
-        { hid: "og:image", name: "og:image", content: image },
-      ],
+
     };
   },
 
