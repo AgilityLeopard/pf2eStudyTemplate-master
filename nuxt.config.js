@@ -319,7 +319,13 @@ module.exports = {
     "~/api/express", // handles /api/** calls
     // '~/serverMiddleware/forcedomain'
   ],
-
+  hooks: {
+    render: {
+      route({ url }) {
+        console.log('SSR ROUTE HIT:', url)
+      }
+    }
+  },
   /**
    * Build configuration
    */
