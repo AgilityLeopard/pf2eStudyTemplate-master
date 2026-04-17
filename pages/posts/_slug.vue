@@ -79,26 +79,15 @@ export default {
     const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
     this.post = data[0];
   },*/
-  async asyncData({ params, app, error }) {
-    console.log("FULL AXIOS CONFIG:", app.$axios.defaults);
-    console.log("BASE URL:", app.$axios.defaults.baseURL);
+  async asyncData(ctx) {
+    console.log('SLUG asyncData SSR CALLED', ctx.params.slug);
+
     try {
-      const url = process.server
-        ? `http://localhost:3000/api/posts/${params.slug}`
-        : `/api/posts/${params.slug}`;
-
-      const { data } = await app.$axios.get(url);
-
-      const post = Array.isArray(data) ? data[0] : data;
-
-      if (!post) {
-        return error({ statusCode: 404, message: "Post not found" });
-      }
-
-      return { post };
+      const { data } = await ctx.$axios.get(`/api/posts/${ctx.params.slug}`);
+      return { post: data };
     } catch (e) {
-      console.error('SSR ERROR:', e?.response?.data || e.message);
-      return error({ statusCode: 500, message: "API error" });
+      console.error('SLUG ERROR:', e);
+      return { post: null };
     }
   },
   data() {
