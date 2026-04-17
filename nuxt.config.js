@@ -274,8 +274,6 @@ module.exports = {
    */
   axios: {
     browserBaseURL: "/",
-    baseURL: 'http://127.0.0.1:3000'
-
   },
 
   /* auth: {
@@ -318,15 +316,9 @@ module.exports = {
     //'redirect-ssl',
     //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
     "~/api/express", // handles /api/** calls
-    // '~/serverMiddleware/forcedomain'
+    '~/serverMiddleware/forcedomain'
   ],
-  hooks: {
-    render: {
-      routeDone(url, result, context) {
-        console.log('SSR ROUTE HIT:', url)
-      }
-    }
-  },
+
   /**
    * Build configuration
    */
