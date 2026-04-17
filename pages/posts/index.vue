@@ -1,61 +1,60 @@
 <template>
-  <div v-if="!post">LOADING...</div>
-  <div v-else>
 
-    <div>
-      <div v-show="showTooltip" class="tooltip-container"
-        :style="{ left: tooltip.position.x, top: tooltip.position.y }">
-        <v-card v-if="tooltip.loading" dark color="success" class="text-center">
-          <v-progress-circular indeterminate />
-        </v-card>
-        <v-card v-else raised dark color="success">
-          <v-card-title class="tooltip-container__header">
-            {{ hintBoxItem.title }}
-          </v-card-title>
-          <v-card-text>
-            {{ hintBoxItem.description }}
-          </v-card-text>
-        </v-card>
-      </div>
 
-      <dod-default-breadcrumbs :items="breadcrumbItems" />
 
-      <v-row justify="center" no-gutters dense class="mt-4">
-        <v-col :cols="12" :md="12">
-          <ColorfulPage :headline="page.title" flavour="blog"> </ColorfulPage>
-
-          <v-row v-if="$fetchState.pending" justify="center">
-            <v-progress-circular indeterminate color="success" size="128" width="12" />
-          </v-row>
-
-          <v-row v-else>
-            <v-col v-for="post in posts" :key="post.id" :cols="12" :sm="6" :md="4">
-              <v-card class="patch-card" :to="`/posts/${post.slug}`" nuxt>
-
-                <div class="patch-header">
-                  <v-chip small :color="getTypeColor(post.type)" dark>
-                    {{ post.type || 'update' }}
-                  </v-chip>
-
-                  <span class="patch-time">
-                    {{ post.publishedAt | timeSince }}
-                  </span>
-                </div>
-                <div class="patch-title">
-                  {{ post.title }}
-                </div>
-
-                <div class="patch-desc">
-                  {{ post.shortDescription }}
-                </div>
-
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+  <div>
+    <div v-show="showTooltip" class="tooltip-container" :style="{ left: tooltip.position.x, top: tooltip.position.y }">
+      <v-card v-if="tooltip.loading" dark color="success" class="text-center">
+        <v-progress-circular indeterminate />
+      </v-card>
+      <v-card v-else raised dark color="success">
+        <v-card-title class="tooltip-container__header">
+          {{ hintBoxItem.title }}
+        </v-card-title>
+        <v-card-text>
+          {{ hintBoxItem.description }}
+        </v-card-text>
+      </v-card>
     </div>
+
+    <dod-default-breadcrumbs :items="breadcrumbItems" />
+
+    <v-row justify="center" no-gutters dense class="mt-4">
+      <v-col :cols="12" :md="12">
+        <ColorfulPage :headline="page.title" flavour="blog"> </ColorfulPage>
+
+        <v-row v-if="$fetchState.pending" justify="center">
+          <v-progress-circular indeterminate color="success" size="128" width="12" />
+        </v-row>
+
+        <v-row v-else>
+          <v-col v-for="post in posts" :key="post.id" :cols="12" :sm="6" :md="4">
+            <v-card class="patch-card" :to="`/posts/${post.slug}`" nuxt>
+
+              <div class="patch-header">
+                <v-chip small :color="getTypeColor(post.type)" dark>
+                  {{ post.type || 'update' }}
+                </v-chip>
+
+                <span class="patch-time">
+                  {{ post.publishedAt | timeSince }}
+                </span>
+              </div>
+              <div class="patch-title">
+                {{ post.title }}
+              </div>
+
+              <div class="patch-desc">
+                {{ post.shortDescription }}
+              </div>
+
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
   </div>
+
 </template>
 
 <script>

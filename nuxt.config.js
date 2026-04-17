@@ -274,7 +274,8 @@ module.exports = {
    */
   axios: {
     browserBaseURL: "/",
-    baseURL: 'http://shadow-of-tales.ru'
+    baseURL: 'http://127.0.0.1:3001'
+
   },
 
   /* auth: {
