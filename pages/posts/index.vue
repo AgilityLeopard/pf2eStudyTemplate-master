@@ -71,14 +71,16 @@ export default {
     DodDefaultBreadcrumbs,
   },
   mixins: [BreadcrumbSchemaMixin],
-  async asyncData({ $axios, query, error }) {
-    const { data } = await $axios.get('/api/posts');
-    const posts = data;
+  async asyncData({ $axios, req }) {
+    const baseURL = process.server
+      ? 'http://localhost:3000'
+      : '';
 
-    return {
-      fixedTime: new Date(),
-      posts,
-    };
+    const { data } = await $axios.get('/api/posts', {
+      baseURL
+    });
+
+    return { posts: data };
   },
   // async asyncData(ctx) {
   //   console.log('INDEX asyncData SSR CALLED');

@@ -79,16 +79,16 @@ export default {
     const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
     this.post = data[0];
   },*/
-  async asyncData(ctx) {
-    console.log('SLUG asyncData SSR CALLED', ctx.params.slug);
+  async asyncData({ $axios, params }) {
+    const baseURL = process.server
+      ? 'http://localhost:3000'
+      : '';
 
-    try {
-      const { data } = await ctx.$axios.get(`/api/posts/${ctx.params.slug}`);
-      return { post: data };
-    } catch (e) {
-      console.error('SLUG ERROR:', e);
-      return { post: null };
-    }
+    const { data } = await $axios.get(`/api/posts/${params.slug}`, {
+      baseURL
+    });
+
+    return { post: data };
   },
   data() {
     return {
