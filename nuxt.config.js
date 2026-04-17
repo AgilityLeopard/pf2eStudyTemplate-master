@@ -321,7 +321,7 @@ module.exports = {
   ],
   hooks: {
     render: {
-      route({ url }) {
+      routeDone(url, result, context) {
         console.log('SSR ROUTE HIT:', url)
       }
     }
