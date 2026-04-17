@@ -80,7 +80,7 @@ export default {
     console.log("BASE URL:", app.$axios.defaults.baseURL);
     try {
       const url = process.server
-        ? `http://127.0.0.1:3000/api/posts/${params.slug}`
+        ? `http://localhost:3000/api/posts/${params.slug}`
         : `/api/posts/${params.slug}`;
 
       const { data } = await app.$axios.get(url);
