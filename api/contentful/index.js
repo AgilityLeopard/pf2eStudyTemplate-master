@@ -6,6 +6,7 @@ const client = contentful.createClient({
     accessToken: config.NUXT_ENV_CTF_CD_ACCESS_TOKEN,
 });
 
+
 function normalize(item) {
     return {
         id: item.sys.id,
