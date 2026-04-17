@@ -1,5 +1,5 @@
 const router = require('express-promise-router')();
-const { getPosts, getPostBySlug } = require('../../api/contentful/posts');
+const { getPosts, getPostBySlug } = require('../contentful/posts');
 
 router.get('/', async (req, res) => {
   const posts = await getPosts();
