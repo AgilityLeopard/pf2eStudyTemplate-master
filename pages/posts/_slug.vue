@@ -1,22 +1,25 @@
 <template>
-  <div>
-    <div class="patch-hero">
+  <div v-if="!post">LOADING...</div>
+  <div v-else>
 
-      <dod-default-breadcrumbs :items="breadcrumbItems" />
+    <div>
+      <div class="patch-hero">
 
-      <v-chip :color="getTypeColor(post.type)" dark>
-        {{ post.type || 'update' }}
-      </v-chip>
+        <dod-default-breadcrumbs :items="breadcrumbItems" />
 
-      <h1>{{ post.title }}</h1>
+        <v-chip :color="getTypeColor(post.type)" dark>
+          {{ post.type || 'update' }}
+        </v-chip>
 
-      <div class="meta">
-        {{ post.publishedAt | timeSince }}
+        <h1>{{ post.title }}</h1>
+
+        <div class="meta">
+          {{ post.publishedAt | timeSince }}
+
+        </div>
 
       </div>
-
-    </div>
-    <!-- 
+      <!-- 
     <doom-tooltip v-show="showTooltip" :loading="tooltip.loading" :position="tooltip.position"
       :title="tooltipItem.title" :type="tooltipItem.type">
       {{ tooltipItem.description }}
@@ -24,22 +27,23 @@
 
 
 
-    <v-row justify="center" no-gutters dense class="mt-4">
-      <v-col :cols="12" :md="12">
-        <!-- <ColorfulEntry :headline="post.fields.title" flavour="blog"> -->
-        <v-row>
+      <v-row justify="center" no-gutters dense class="mt-4">
+        <v-col :cols="12" :md="12">
+          <!-- <ColorfulEntry :headline="post.fields.title" flavour="blog"> -->
+          <v-row>
 
-          <v-col :cols="12" :md="10">
-            <div class="patch-content" v-html="toMarkdown(post.description)" />
-          </v-col>
-        </v-row>
-        <!-- </ColorfulEntry> -->
+            <v-col :cols="12" :md="10">
+              <div class="patch-content" v-html="toMarkdown(post.description)" />
+            </v-col>
+          </v-row>
+          <!-- </ColorfulEntry> -->
 
-        <v-row>
-          <v-col :cols="12"> </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
+          <v-row>
+            <v-col :cols="12"> </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 
