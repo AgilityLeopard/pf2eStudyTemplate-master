@@ -43,7 +43,7 @@ export default {
   components: {
     DodDefaultBreadcrumbs,
   },
-  mixins: [ArticleSchemaMixin, BreadcrumbSchemaMixin],
+  mixins: [BreadcrumbSchemaMixin],
 
   data() {
     return {
@@ -79,12 +79,7 @@ export default {
       };
     }
 
-    const title = this.post.title || "";
-    const description = this.post.description || "";
-
-    const image = this.post.image
-      ? `https:${this.post.image.fields.file.url}`
-      : `http://www.shadow-of-tales.ru/img/artwork_posts.jpg`;
+    const { title, description } = this.page;
 
     return {
       title,
