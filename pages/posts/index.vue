@@ -71,17 +71,26 @@ export default {
     DodDefaultBreadcrumbs,
   },
   mixins: [BreadcrumbSchemaMixin],
-  async asyncData(ctx) {
-    console.log('INDEX asyncData SSR CALLED');
+  async asyncData({ $axios, query, error }) {
+    const { data } = await $axios.get('/api/posts');
+    const posts = data;
 
-    try {
-      const { data } = await ctx.$axios.get('/api/posts');
-      return { posts: data };
-    } catch (e) {
-      console.error('INDEX ERROR:', e);
-      return { posts: [] };
-    }
+    return {
+      fixedTime: new Date(),
+      posts,
+    };
   },
+  // async asyncData(ctx) {
+  //   console.log('INDEX asyncData SSR CALLED');
+
+  //   try {
+  //     const { data } = await ctx.$axios.get('/api/posts');
+  //     return { posts: data };
+  //   } catch (e) {
+  //     console.error('INDEX ERROR:', e);
+  //     return { posts: [] };
+  //   }
+  // },
   // async fetch() {
   //   const { data } = await this.$axios.get("/api/posts");
   //   this.posts = data || [];
