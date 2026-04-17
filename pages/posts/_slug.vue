@@ -80,7 +80,7 @@ export default {
   },*/
   async asyncData({ $axios, params }) {
     const baseURL = process.server
-      ? 'http://localhost:3000'
+      ? 'http://127.0.0.1:3000'
       : '';
 
     const { data } = await $axios.get(`/api/posts/${params.slug}`, {
