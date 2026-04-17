@@ -274,7 +274,7 @@ module.exports = {
    */
   axios: {
     browserBaseURL: "/",
-    baseURL: process.env.BASE_URL || "https://shadow-of-tales.ru"
+    baseURL: process.env.BASE_URL || "http://shadow-of-tales.ru"
   },
 
   /* auth: {
@@ -313,12 +313,12 @@ module.exports = {
     },
   },
   middleware: ['loading'],
-  serverMiddleware: [
-    //'redirect-ssl',
-    //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
-    "~/api/express", // handles /api/** calls
-    // '~/serverMiddleware/forcedomain'
-  ],
+  // serverMiddleware: [
+  //   //'redirect-ssl',
+  //   //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
+  //   "~/api/express", // handles /api/** calls
+  //   // '~/serverMiddleware/forcedomain'
+  // ],
 
   /**
    * Build configuration
