@@ -1,6 +1,4 @@
 <template>
-
-
   <div>
     <div class="patch-hero">
 
@@ -43,7 +41,6 @@
       </v-col>
     </v-row>
   </div>
-
 </template>
 
 <script>
@@ -78,12 +75,20 @@ export default {
     const { data } = await this.$axios.get(`/api/posts/${this.$route.params.slug}`);
     this.post = data[0];
   },*/
-  async asyncData({ $axios, params }) {
-    const { data } = await $axios.get(`/api/posts/${params.slug}`);
+  async asyncData({ params, app, error }) {
+    try {
+      const { data } = await app.$axios.get(`/api/posts/${params.slug}`);
 
-    return {
-      post: data
-    };
+      const post = Array.isArray(data) ? data[0] : data;
+
+      if (!post) {
+        return error({ statusCode: 404, message: "Post not found" });
+      }
+
+      return { post };
+    } catch (e) {
+      return error({ statusCode: 500, message: "API error" });
+    }
   },
   data() {
     return {

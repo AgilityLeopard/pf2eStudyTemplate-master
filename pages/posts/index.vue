@@ -1,7 +1,4 @@
 <template>
-
-
-
   <div>
     <div v-show="showTooltip" class="tooltip-container" :style="{ left: tooltip.position.x, top: tooltip.position.y }">
       <v-card v-if="tooltip.loading" dark color="success" class="text-center">
@@ -54,7 +51,6 @@
       </v-col>
     </v-row>
   </div>
-
 </template>
 
 <script>
@@ -70,28 +66,6 @@ export default {
     DodDefaultBreadcrumbs,
   },
   mixins: [BreadcrumbSchemaMixin],
-  // async asyncData({ $axios, req }) {
-  //   const baseURL = process.server
-  //     ? 'http://127.0.0.1:3000'
-  //     : '';
-
-  //   const { data } = await $axios.get('/api/posts', {
-  //     baseURL
-  //   });
-
-  //   return { posts: data };
-  // },
-  // async asyncData(ctx) {
-  //   console.log('INDEX asyncData SSR CALLED');
-
-  //   try {
-  //     const { data } = await ctx.$axios.get('/api/posts');
-  //     return { posts: data };
-  //   } catch (e) {
-  //     console.error('INDEX ERROR:', e);
-  //     return { posts: [] };
-  //   }
-  // },
   async fetch() {
     const { data } = await this.$axios.get("/api/posts");
     this.posts = data || [];

@@ -316,7 +316,7 @@ module.exports = {
     //'redirect-ssl',
     //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),
     "~/api/express", // handles /api/** calls
-    '~/serverMiddleware/forcedomain'
+    // '~/serverMiddleware/forcedomain'
   ],
 
   /**
