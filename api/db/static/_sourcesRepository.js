@@ -13,6 +13,7 @@ const source = {
   kingmaker: { book: 'Кингмейкер', key: 'kingmaker', version: 'v0', link: '' },
   godsMagic: { book: 'Pathfinder Lost Omens Gods & Magic', key: 'godsMagic', version: 'v0', link: '' },
   societyGuide: { book: 'Pathfinder Lost Omens Pathfinder Society Guide', key: 'societyGuide', version: 'v0', link: '' },
+  LODC: { book: 'Pathfinder Lost Omens Draconic Codex', key: 'LODC', version: 'v0', link: '' },
 
   advancedPlayersGuide: {
     book: "Pathfinder: Advanced Player’s Guide",
@@ -70,6 +71,13 @@ const source = {
     link: ""
   },
 
+  lostOmensTravel: {
+    book: "Pathfinder Lost Omens Travel Guide",
+    key: "lostOmensTravel",
+    version: "v0",
+    link: ""
+  },
+
   lostOmensCharacterGuide: {
     book: "Lost Omens: Character Guide",
     key: "lostOmensCharacterGuide",
@@ -98,6 +106,12 @@ const source = {
     link: ""
   },
 
+  lostOmensHellfire: {
+    book: "Pathfinder Lost Omens Hellfire Dispatches",
+    key: "lostOmensHellfire",
+    version: "v0",
+    link: ""
+  },
   lostOmensImpossibleLands: {
     book: "Lost Omens: Impossible Lands",
     key: "lostOmensImpossibleLands",
@@ -270,6 +284,12 @@ const source = {
     link: ""
   },
 
+  kindledMagic: {
+    book: "Pathfinder #169: Kindled Magic",
+    key: "kindledMagic",
+    version: "v0",
+    link: ""
+  },
   spokenOnTheSongWind: {
     book: "Pathfinder #170: Spoken on the Song Wind",
     key: "spokenOnTheSongWind",
@@ -458,6 +478,12 @@ const source = {
     version: "v0",
     link: ""
   },
+  lordOfTheTrinityStar: {
+    book: "Pathfinder #220: Crypt of Runes",
+    key: "cryptofRunes",
+    version: "v0",
+    link: ""
+  },
   fallOfPlaguestone: {
     book: "Pathfinder Adventure: The Fall of Plaguestone",
     key: "fallOfPlaguestone",
@@ -547,8 +573,14 @@ const source = {
     key: "wakeTheDead4",
     version: "v0",
     link: ""
-  }
+  },
 
+  wakeTheDead5: {
+    book: "Pathfinder Wake the Dead #5",
+    key: "wakeTheDead5",
+    version: "v0",
+    link: ""
+  }
 
 
 

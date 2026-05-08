@@ -3066,7 +3066,7 @@ const barbarian = [
         name: 'Ярость',
         snippet: 'Вы получаете действие Ярость, которое позволяет вам впадать в бешенство.',
         level: 1,
-        item: { key: "Rage" },
+        item: { key: "rage" },
         type: "Class Feature",
         key: 'Rage',
     },
@@ -3117,9 +3117,10 @@ const barbarian = [
         type: "Class Feature",
         key: "Spirit Resistance",
         modification: {
-            key: "Void",
+            key: "void",
             value: "3+@constitution",
             type: "Resistance",
+            selector: "void",
             mode: "Upgrade",
             level: 9
         },
@@ -3156,24 +3157,411 @@ const barbarian = [
         snippet: "Вы получаете сопротивление колющему и рубящему урону.",
         type: "Class Feature",
         key: "Animal Resistance",
-        modification: {
-            key: "Physical",
+        modification: [{
+            key: "slashing",
             value: "3+@constitution",
+
             type: "Resistance",
             mode: "Upgrade",
             level: 9
         },
+        {
+            key: "piercing",
+            value: "3+@constitution",
+
+            type: "Resistance",
+            mode: "Upgrade",
+            level: 9
+        },
+        ],
         level: 9
     },
     {
         ...sourceMod("playerCore2"),
         name: "Драконий инстинкт",
-        snippet: "Вы призываете ярость могучего дракона и проявляете невероятные возможности. Возможно, ваша культура почитает драконье величие, или вы получили свою связь, выпив или искупавшись в драконьей крови или после того, как увидели, как мародерствующий змей сжег вашу деревню.",
+        snippet:
+            "<p>" +
+            "Вы призываете ярость могучего дракона и проявляете невероятные возможности. " +
+            "Возможно, ваша культура почитает драконье величие, или вы получили свою связь, " +
+            "выпив или искупавшись в драконьей крови или после того, как увидели, как " +
+            "мародерствующий змей сжёг вашу деревню. Выберите вид дракона из Таблица " +
+            "Драконьих инстинктов, который будет видом дракона вашего инстинкта. В ней " +
+            "приведены драконы из Monster Core, но ваш Мастер может разрешить использовать " +
+            "драконов из других источников и определить их обычай и тип дыхания дракона." +
+            "</p>" +
+
+            "<table>" +
+            "<thead>" +
+            "<tr>" +
+            "<th>Дракон</th>" +
+            "<th>Обычай</th>" +
+            "<th>Дыхание дракона</th>" +
+            "</tr>" +
+            "</thead>" +
+
+            "<tbody>" +
+            "<tr><td>Адамантиновый</td><td>Природный</td><td>Дробящий</td></tr>" +
+            "<tr><td>Болотный</td><td>Природный</td><td>Кислота</td></tr>" +
+            "<tr><td>Визирь</td><td>Оккультный</td><td>Огонь</td></tr>" +
+            "<tr><td>Вопящий</td><td>Арканный</td><td>Звук</td></tr>" +
+            "<tr><td>Воскрешения</td><td>Сакральный</td><td>Пустота</td></tr>" +
+            "<tr><td>Восторга</td><td>Сакральный</td><td>Духовный</td></tr>" +
+            "<tr><td>Грозовой короны</td><td>Природный</td><td>Электричество</td></tr>" +
+            "<tr><td>Достатка</td><td>Арканный</td><td>Сила</td></tr>" +
+            "<tr><td>Душегуб</td><td>Сакральный</td><td>Звук</td></tr>" +
+            "<tr><td>Дьявольский</td><td>Сакральный</td><td>Огненный</td></tr>" +
+            "<tr><td>Желания</td><td>Арканный</td><td>Ментальный</td></tr>" +
+            "<tr><td>Загробный</td><td>Сакральный</td><td>Духовный</td></tr>" +
+            "<tr><td>Знамений</td><td>Оккультный</td><td>Ментальный</td></tr>" +
+            "<tr><td>Измороси</td><td>Природный</td><td>Холод</td></tr>" +
+            "<tr><td>Клятвенный</td><td>Сакральный</td><td>Духовный</td></tr>" +
+            "<tr><td>Конспиратор</td><td>Оккультный</td><td>Яд</td></tr>" +
+            "<tr><td>Корраловый</td><td>Природный</td><td>Дробящий</td></tr>" +
+            "<tr><td>Кристаллический</td><td>Природный</td><td>Колющий</td></tr>" +
+            "<tr><td>Лесной</td><td>Природный</td><td>Колющий</td></tr>" +
+            "<tr><td>Магматический</td><td>Природный</td><td>Огонь</td></tr>" +
+            "<tr><td>Миража</td><td>Арканный</td><td>Ментальный</td></tr>" +
+            "<tr><td>Монарший</td><td>Оккультный</td><td>Ментальный</td></tr>" +
+            "<tr><td>Морской</td><td>Природный</td><td>Дробящий</td></tr>" +
+            "<tr><td>Мудрец</td><td>Оккультный</td><td>Ментальный</td></tr>" +
+            "<tr><td>Небесный</td><td>Сакральный</td><td>Электричество</td></tr>" +
+            "<tr><td>Неземной</td><td>Сакральный</td><td>Духовный</td></tr>" +
+            "<tr><td>Облачный</td><td>Природный</td><td>Электричество</td></tr>" +
+            "<tr><td>Отчаяния</td><td>Оккультный</td><td>Звук</td></tr>" +
+            "<tr><td>Пепельный</td><td>Природный</td><td>Огонь</td></tr>" +
+            "<tr><td>Пересмешник</td><td>Оккультный</td><td>Дробящий</td></tr>" +
+            "<tr><td>Подземный</td><td>Арканный</td><td>Огонь</td></tr>" +
+            "<tr><td>Рогатый</td><td>Природный</td><td>Яд</td></tr>" +
+            "<tr><td>Рунный</td><td>Арканный</td><td>Огонь</td></tr>" +
+            "<tr><td>Силовой</td><td>Арканный</td><td>Сила</td></tr>" +
+            "<tr><td>Солевой</td><td>Природный</td><td>Дробящий</td></tr>" +
+            "<tr><td>Стрижающий</td><td>Арканный</td><td>Пустота</td></tr>" +
+            "<tr><td>Теневой</td><td>Оккультный</td><td>Пустота</td></tr>" +
+            "<tr><td>Фазовый</td><td>Арканный</td><td>Сила</td></tr>" +
+            "<tr><td>Хрональный</td><td>Арканный</td><td>Сила</td></tr>" +
+            "<tr><td>Шепчущий</td><td>Оккультный</td><td>Ментальный</td></tr>" +
+            "<tr><td>Белый</td><td>Арканный</td><td>Конус холода</td></tr>" +
+            "<tr><td>Зелёный</td><td>Арканный</td><td>Конус яда</td></tr>" +
+            "<tr><td>Красный</td><td>Арканный</td><td>Конус огня</td></tr>" +
+            "<tr><td>Синий</td><td>Арканный</td><td>Линия электричества</td></tr>" +
+            "<tr><td>Чёрный</td><td>Арканный</td><td>Линия кислоты</td></tr>" +
+            "<tr><td>Бронзовый</td><td>Арканный</td><td>Линия электричества</td></tr>" +
+            "<tr><td>Золотой</td><td>Арканный</td><td>Конус огня</td></tr>" +
+            "<tr><td>Латунный</td><td>Арканный</td><td>Линия огня</td></tr>" +
+            "<tr><td>Медный</td><td>Арканный</td><td>Линия кислоты</td></tr>" +
+            "<tr><td>Серебряный</td><td>Арканный</td><td>Конус холод</td></tr>" +
+            "</tbody>" +
+            "</table>",
         key: "Dragon Instinct",
+        options: [
+            {
+                key: "Adamantine",
+                name: "Адамантиновый",
+                tradition: "Первобытная",
+                damageType: "bludgeoning"
+            },
+            {
+                key: "Swamp",
+                name: "Болотный",
+                tradition: "Первобытная",
+                damageType: "acid"
+            },
+            {
+                key: "Vizier",
+                name: "Визирь",
+                tradition: "Оккультная",
+                damageType: "fire"
+            },
+            {
+                key: "Screaming",
+                name: "Вопящий",
+                tradition: "Мистическая",
+                damageType: "sonic"
+            },
+            {
+                key: "Resurrection",
+                name: "Воскрешения",
+                tradition: "Сакральная",
+                damageType: "void"
+            },
+            {
+                key: "Euphoria",
+                name: "Восторга",
+                tradition: "Сакральная",
+                damageType: "spirit"
+            },
+            {
+                key: "StormCrowned",
+                name: "Грозовой короны",
+                tradition: "Первобытная",
+                damageType: "electricity"
+            },
+            {
+                key: "Prosperity",
+                name: "Достатка",
+                tradition: "Мистическая",
+                damageType: "force"
+            },
+            {
+                key: "Soulrender",
+                name: "Душегуб",
+                tradition: "Сакральная",
+                damageType: "sonic"
+            },
+            {
+                key: "Diabolic",
+                name: "Дьявольский",
+                tradition: "Сакральная",
+                damageType: "fire"
+            },
+            {
+                key: "Desire",
+                name: "Желания",
+                tradition: "Мистическая",
+                damageType: "mental"
+            },
+            {
+                key: "Underworld",
+                name: "Загробный",
+                tradition: "Сакральная",
+                damageType: "spirit"
+            },
+            {
+                key: "Omen",
+                name: "Знамений",
+                tradition: "Оккультная",
+                damageType: "mental"
+            },
+            {
+                key: "Rime",
+                name: "Измороси",
+                tradition: "Первобытная",
+                damageType: "cold"
+            },
+            {
+                key: "Oath",
+                name: "Клятвенный",
+                tradition: "Сакральная",
+                damageType: "spirit"
+            },
+            {
+                key: "Conspirator",
+                name: "Конспиратор",
+                tradition: "Оккультная",
+                damageType: "poison"
+            },
+            {
+                key: "Coral",
+                name: "Корраловый",
+                tradition: "Первобытная",
+                damageType: "bludgeoning"
+            },
+            {
+                key: "Crystal",
+                name: "Кристаллический",
+                tradition: "Первобытная",
+                damageType: "piercing"
+            },
+            {
+                key: "Forest",
+                name: "Лесной",
+                tradition: "Первобытная",
+                damageType: "piercing"
+            },
+            {
+                key: "Magma",
+                name: "Магматический",
+                tradition: "Первобытная",
+                damageType: "fire"
+            },
+            {
+                key: "Mirage",
+                name: "Миражный",
+                tradition: "Мистическая",
+                damageType: "mental"
+            },
+            {
+                key: "Monarch",
+                name: "Монарший",
+                tradition: "Оккультная",
+                damageType: "mental"
+            },
+            {
+                key: "Sea",
+                name: "Морской",
+                tradition: "Первобытная",
+                damageType: "bludgeoning"
+            },
+            {
+                key: "Sage",
+                name: "Мудрец",
+                tradition: "Оккультная",
+                damageType: "mental"
+            },
+            {
+                key: "Celestial",
+                name: "Небесный",
+                tradition: "Сакральная",
+                damageType: "electricity"
+            },
+            {
+                key: "Empyreal",
+                name: "Неземной",
+                tradition: "Сакральная",
+                damageType: "spirit"
+            },
+            {
+                key: "Cloud",
+                name: "Облачный",
+                tradition: "Первобытная",
+                damageType: "electricity"
+            },
+            {
+                key: "Despair",
+                name: "Отчаяния",
+                tradition: "Оккультная",
+                damageType: "sonic"
+            },
+            {
+                key: "Ash",
+                name: "Пепельный",
+                tradition: "Первобытная",
+                damageType: "fire"
+            },
+            {
+                key: "Mocking",
+                name: "Пересмешник",
+                tradition: "Оккультная",
+                damageType: "bludgeoning"
+            },
+            {
+                key: "UnderworldFire",
+                name: "Подземный",
+                tradition: "Мистическая",
+                damageType: "fire"
+            },
+            {
+                key: "Horned",
+                name: "Рогатый",
+                tradition: "Первобытная",
+                damageType: "poison"
+            },
+            {
+                key: "Runic",
+                name: "Рунный",
+                tradition: "Мистическая",
+                damageType: "fire"
+            },
+            {
+                key: "Force",
+                name: "Силовой",
+                tradition: "Мистическая",
+                damageType: "force"
+            },
+            {
+                key: "Salt",
+                name: "Солевой",
+                tradition: "Первобытная",
+                damageType: "bludgeoning"
+            },
+            {
+                key: "Ravaging",
+                name: "Стрижающий",
+                tradition: "Мистическая",
+                damageType: "void"
+            },
+            {
+                key: "Shadow",
+                name: "Теневой",
+                tradition: "Оккультная",
+                damageType: "void"
+            },
+            {
+                key: "Phase",
+                name: "Фазовый",
+                tradition: "Мистическая",
+                damageType: "force"
+            },
+            {
+                key: "Chronal",
+                name: "Хрональный",
+                tradition: "Мистическая",
+                damageType: "force"
+            },
+            {
+                key: "Whispering",
+                name: "Шепчущий",
+                tradition: "Оккультная",
+                damageType: "mental"
+            },
+            {
+                key: "White",
+                name: "Белый",
+                tradition: "Мистическая",
+                damageType: "cold"
+            },
+            {
+                key: "Green",
+                name: "Зелёный",
+                tradition: "Мистическая",
+                damageType: "poison"
+            },
+            {
+                key: "Red",
+                name: "Красный",
+                tradition: "Мистическая",
+                damageType: "fire"
+            },
+            {
+                key: "Blue",
+                name: "Синий",
+                tradition: "Мистическая",
+                damageType: "electricity"
+            },
+            {
+                key: "Black",
+                name: "Чёрный",
+                tradition: "Мистическая",
+                damageType: "acid"
+            },
+            {
+                key: "Bronze",
+                name: "Бронзовый",
+                tradition: "Мистическая",
+                damageType: "electricity"
+            },
+            {
+                key: "Gold",
+                name: "Золотой",
+                tradition: "Мистическая",
+                damageType: "fire"
+            },
+            {
+                key: "Brass",
+                name: "Латунный",
+                tradition: "Мистическая",
+                damageType: "fire"
+            },
+            {
+                key: "Copper",
+                name: "Медный",
+                tradition: "Мистическая",
+                damageType: "acid"
+            },
+            {
+                key: "Silver",
+                name: "Серебряный",
+                tradition: "Мистическая",
+                damageType: "cold"
+            }
+        ],
+        selectedoptions: "",
         type: "Class Feature",
         subFeature: ["Dragon Fury", "Dragon Specialization", "Dragon Resistance"],
         level: 1
     },
+
+
     {
         ...sourceMod("playerCore2"),
         name: "Умение инстинкта",
@@ -3197,7 +3585,7 @@ const barbarian = [
         type: "Class Feature",
         key: "Dragon Resistance",
         modification: {
-            key: "DragonBreath",
+            key: "@Dragon Instinct",
             value: "3+@constitution",
             type: "Resistance",
             mode: "Upgrade",
@@ -3210,6 +3598,22 @@ const barbarian = [
         name: "Инстинкт гиганта",
         snippet: "Ваша ярость даёт вам необузданную силу и размеры гиганта. Это не обязательно означает, что вы почитаете гигантов, вы можете насмехаться над ними или даже стремиться убить их! Вместо этого вы можете казаться другим людям гигантом из-за своей исключительной силы или неординарных эмоций и эго.",
         key: "Giant Instinct",
+        options: [{
+            key: "Cold",
+            name: "Холод",
+            damageType: "cold"
+        },
+        {
+            key: "Electricity",
+            name: "Электричество",
+            damageType: "electricity"
+        },
+        {
+            key: "Fire",
+            name: "Огонь",
+            damageType: "fire"
+        },
+        ],
         type: "Class Feature",
         subFeature: ["Giant Fury", "Giant Specialization", "Giant Resistance"],
         level: 1
@@ -3235,14 +3639,24 @@ const barbarian = [
         name: "Сопротивление инстинкта",
         snippet: "Вы получаете сопротивление дробящему урону и на ваш выбор холоду, электричеству, или огню, что вы выбираете когда получаете 'Яростное сопротивление'.",
         type: "Class Feature",
+
         key: "Giant Resistance",
-        modification: {
-            key: "GiantResist",
+        modification: [{
+            key: "@GiantResist",
             value: "3+@constitution",
             type: "Resistance",
             mode: "Upgrade",
             level: 9
         },
+        {
+            key: "bludgeoning",
+            value: "3+@constitution",
+            type: "Resistance",
+            mode: "Upgrade",
+            level: 9
+        }
+        ]
+        ,
         level: 9
     },
     {
@@ -3277,7 +3691,7 @@ const barbarian = [
         type: "Class Feature",
         key: "Fury Resistance",
         modification: {
-            key: "WeaponDamage",
+            key: "weaponDamage",
             value: "3+@constitution",
             type: "Resistance",
             mode: "Upgrade",

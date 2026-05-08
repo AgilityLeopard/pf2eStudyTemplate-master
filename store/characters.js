@@ -40,6 +40,11 @@ export const getters = {
   characterDiceChatById: (state) => (id) =>
     state.characters[id] ? state.characters[id].diceChat : [],
 
+  CharacterFluffById: (state) => (id, field) => {
+    const fluff = state.characters[id]?.fluff || {};
+    return field ? fluff[field] : fluff;
+  },
+
   CharacterClassModFeature: (state) => (id) =>
     state.characters[id] ? state.characters[id].version : undefined,
   // Character setting
@@ -65,11 +70,6 @@ export const getters = {
   characterSettingOfficialOptionsById: (state) => (id) =>
     state.characters[id] && state.characters[id].settingOfficialOptions
       ? state.characters[id].settingOfficialOptions : [],
-
-  characterSettingHouserulesById: (state) => (id) =>
-    state.characters[id] && state.characters[id].settingHouserules
-      ? state.characters[id].settingHouserules
-      : getDefaultState().settingHouserules,
 
   // Cost & Spending
   characterSpeciesCostsById: (state) => (id) =>
@@ -268,11 +268,77 @@ export const getters = {
     state.characters[id] ? state.characters[id].archetype.mimic : undefined,
   characterStatusById: (state) => (id) =>
     state.characters[id] ? state.characters[id].status : [],
+  characterAttributeBoostSummary: (state, getters) => (id) => {
+    const character = state.characters[id]
+    console.log(state.characters[id], 'back')
+    const boosts = [
+      character.attributesBackgroundBoost,
+      character.attributesBackground2Boost,
 
+
+      character.attributesAncestryFlaw,
+      character.attributesAncestryBoost,
+
+      character.attributesClassBoost,
+
+      character.attributesBoost,
+      character.attributesBoost5,
+      character.attributesBoost10,
+      character.attributesBoost15,
+      character.attributesBoost20,
+    ];
+
+
+    const result = {
+      strength: 0,
+      dexterity: 0,
+      constitution: 0,
+      intellect: 0,
+      wisdom: 0,
+      charisma: 0
+    };
+
+    boosts.forEach(boost => {
+      Object.keys(boost).forEach(stat => {
+        if (result[stat] !== undefined) {
+          result[stat] += boost[stat] ?? 0;
+        }
+      });
+    });
+
+    Object.keys(result).forEach(stat => {
+      const total = result[stat];
+
+      if (total > 4) {
+        const normal = 4;
+        const overflow = total - 4;
+
+        const adjusted = normal + overflow * 0.5;
+
+        // убираем 0.5 — только целые числа
+        result[stat] = Math.floor(adjusted);
+      }
+    });
+    // boosts.forEach(boost => {
+    //   if (!boost) return;
+
+    //   console.log(boost)
+    //   boost.forEach(stat => {
+    //     console.log(stat)
+    //     if (result[stat] !== undefined) {
+    //       result[stat] += 1;
+    //     }
+    //   });
+
+
+    // });
+    console.log(result)
+    return result;
+  },
   characterFluffNotesById: (state) => (id) =>
     state.characters[id]?.fluff?.notes
       ? state.characters[id].fluff.notes
-      : getDefaultState().fluff.notes,
+      : [],
   characterSkillPointsLevelById: (state) => (id) =>
     state.characters[id] ? state.characters[id].SkillPointsLevel : {},
   characterSkillTableLevelById: (state) => (id) =>
@@ -388,8 +454,65 @@ export const getters = {
     state.characters[id] ? state.characters[id].Perception : "U",
   characterWearById: (state) => (id) =>
     state.characters[id] ? state.characters[id].wearArmor : undefined,
-  characterResistanceById: (state) => (id) =>
-    state.characters[id] ? state.characters[id].Resistance : [],
+  characterResistanceById: (state, getters) => (id) => {
+    const character = state.characters[id];
+
+    if (!character) return [];
+    console.log(character.Resistance)
+    return character.Resistance.map(item => {
+
+      if (!item.value) return item;
+
+      let formula = item.value.toString();
+
+      formula = formula.replaceAll(
+        "@constitution",
+        Math.floor(
+          getters.characterAttributeBoostSummary(id)["constitution"]
+        )
+      );
+
+      formula = formula.replaceAll(
+        "level",
+        character.level
+      );
+
+      let calculated = 0;
+
+      try {
+        calculated = Math.floor(
+          Function(`return (${formula})`)()
+        );
+      } catch (e) {
+        console.error("Formula error:", formula);
+      }
+
+      // =====================
+      // Resolve dynamic key
+      // =====================
+
+      let resolvedKey = item.key;
+
+      if (resolvedKey?.startsWith("@")) {
+
+        const enhancementKey =
+          resolvedKey.slice(1);
+
+        const enhancement =
+          character.enhancements?.find(s => s.key === item.featureKey).selectedOptionsList
+
+        if (enhancement) {
+          resolvedKey = enhancement.damageType;
+        }
+      }
+
+      return {
+        ...item,
+        key: resolvedKey,
+        NewValue: calculated
+      };
+    });
+  },
 
   characterVisionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].vision : "Обычное",
@@ -766,38 +889,12 @@ export const mutations = {
             }
           case ("Resistance"):
             {
-              if (character.Resistance.find(i => i.source === 'heritage' && item.source === 'heritage' && i.key === item.key)) {
-                const res = character.Resistance.find(i => i.source === 'heritage' && item.source === 'heritage' && i.key === item.key);
-                res.value = 1
-                switch (res.set) {
-                  case ("level/2"):
-                    {
+              let res = item;
 
-                      const modRaw = (character.level) / 2;       // настоящее дробное значение
-                      const mod = Math.floor(modRaw);
-                      res.value = mod === 0 ? 1 : mod;
-                    }
-                }
 
-              }
 
-              else {
-                const res = item;
-                res.value = 1;
-                switch (res.set) {
-                  case ("level/2"):
-                    {
+              character.Resistance.push(res);
 
-                      const modRaw = (character.level) / 2;       // настоящее дробное значение
-                      const mod = Math.floor(modRaw);
-                      res.value = mod === 0 ? 1 : mod;
-                    }
-                }
-                character.Resistance.push(res);
-              }
-
-              // if (item.mode !== "Upgrade")
-              //   character.Bonus.push(item);
 
 
               break;
@@ -850,42 +947,7 @@ export const mutations = {
             }
           case ("Skill"):
             {
-              // if (item.mode === "Upgrade") {
 
-              //   const Initial = character.skillChoiceInitial;
-              //   const Back = character.BackSkill;
-              //   const classSkill = character.ClassSkill;
-              //   const trained = character.TrainedSkillClass;
-              //   const modSkill = character.skillFromModification[item.key];
-
-              //   if (modSkill > 0) character.SkillPoints = character.SkillPoints + 1;
-              //   else {
-
-              //   }
-
-              //   //Если он в списке 
-
-              //   if ([Back, classSkill, trained, Initial].join().includes(item.key)) {
-              //     character.SkillPoints = character.SkillPoints + 1;
-              //     if (Initial.includes(item.key)) character.skillChoiceInitial = Initial.filter(s => s !== item.key);
-              //   }
-              //   else {
-              //     if (!Initial.includes(item.key)) {
-
-
-
-              //       var keys = Object.keys(character.SkillsTrained);
-              //       var loc = keys.indexOf(character.skills[item.key]);
-              //       character.skills[item.key] = keys[loc + 1];
-              //     }
-
-              //   }
-
-              //   //Чтобы занести в лист модификаций
-
-              //   character.skillFromModification[item.key] += 1;
-
-              // }
               if (item.mode === "Add") {
                 if (item.key === 'Lore') {
 
@@ -922,26 +984,7 @@ export const mutations = {
               if (item.group === 'skill')
                 character.Bonus.push(item)
             }
-          // case ("Weapon"): {
-          //   // gear.traits.includes(item.key)
-          //   const war = character.wargear.filter(w => w.name === item.key)
-          //   //по названию
-          //   if (war)
-          //     war.forEach(w => {
-          //       w.category = item.value === "martial" ? "simple" : w.category;
-          //       w.category = item.value === "advanced" ? "martial" : w.category;
 
-          //     })
-          //   //по трейтам
-          //   const traits = character.wargear.filter(w => w.traits.includes(item.key))
-          //   if (traits)
-          //     traits.forEach(w => {
-          //       w.category = w.category === "martial" ? "simple" : w.category;
-          //       w.category = w.category === "advanced" ? "martial" : w.category;
-
-          //     })
-          //   break;
-          // }
         }
 
       }
@@ -1070,6 +1113,23 @@ export const mutations = {
               }
 
               break;
+            }
+          case ("Resistance"):
+            {
+
+
+              character.Resistance = character.Resistance.filter(i => i.featureKey !== item.featureKey)
+
+
+
+
+
+              // if (item.mode !== "Upgrade")
+              //   character.Bonus.push(item);
+
+
+              break;
+
             }
           // case ("Resistance"):
           //   {
@@ -1794,13 +1854,15 @@ export const mutations = {
 
       while (i <= character.level) {
         let lab = 'level' + i
-        const skillLevel = character.SkillPointsLevel[lab];
-        if (skillLevel != "") {
-          var keys = Object.keys(character.SkillsTrained);
-          var loc = keys.indexOf(character.skills[skillLevel]);
-          const newValue = keys[loc + 1];
-          if (newValue === 'T' || newValue === 'M' && i >= 7 || newValue === 'E' && i >= 3 || newValue === 'L' && i >= 15) {
-            character.skills[skillLevel] = newValue;
+        if (character.SkillPointsLevel) {
+          const skillLevel = character.SkillPointsLevel[lab];
+          if (skillLevel != "") {
+            var keys = Object.keys(character.SkillsTrained);
+            var loc = keys.indexOf(character.skills[skillLevel]);
+            const newValue = keys[loc + 1];
+            if (newValue === 'T' || newValue === 'M' && i >= 7 || newValue === 'E' && i >= 3 || newValue === 'L' && i >= 15) {
+              character.skills[skillLevel] = newValue;
+            }
           }
         }
 
@@ -1878,7 +1940,7 @@ export const mutations = {
   setCharacterAttribute(state, payload) {
     const char = state.characters[payload.id];
 
-    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    let theAttribute = state.characters[payload.id].attributes[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributes[payload.payload.key] =
       payload.payload.value;
@@ -1932,7 +1994,7 @@ export const mutations = {
   setCharacterAncestryBoost(state, payload) {
     const character = state.characters[payload.id];
     const species = state.characters[payload.id].species;
-    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    let theAttribute = state.characters[payload.id].attributes[payload.payload.key];
 
     Object.keys(character.attributesAncestryBoost).forEach((key, index) => {
       if (character.attributesAncestryBoost[key] != 0)
@@ -1950,7 +2012,7 @@ export const mutations = {
   setCharacterAttributeBoost(state, payload) {
     const char = state.characters[payload.id];
 
-    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    let theAttribute = state.characters[payload.id].attributes[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesBoost[payload.payload.key] =
       payload.payload.value;
@@ -1958,7 +2020,7 @@ export const mutations = {
   setCharacterAttributeBoost5(state, payload) {
     const char = state.characters[payload.id];
 
-    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    let theAttribute = state.characters[payload.id].attributes[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesBoost5[payload.payload.key] =
       payload.payload.value;
@@ -1967,7 +2029,7 @@ export const mutations = {
   setCharacterAttributeBoost10(state, payload) {
     const char = state.characters[payload.id];
 
-    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    let theAttribute = state.characters[payload.id].attributes[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesBoost10[payload.payload.key] =
       payload.payload.value;
@@ -1975,7 +2037,7 @@ export const mutations = {
   setCharacterAttributeBoost15(state, payload) {
     const char = state.characters[payload.id];
 
-    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    let theAttribute = state.characters[payload.id].attributes[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesBoost15[payload.payload.key] =
       payload.payload.value;
@@ -1983,7 +2045,7 @@ export const mutations = {
   setCharacterAttributeBoost20(state, payload) {
     const char = state.characters[payload.id];
 
-    let theAttribute = state.characters[payload.id].attributes[payload.key];
+    let theAttribute = state.characters[payload.id].attributes[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesBoost20[payload.payload.key] =
       payload.payload.value;
@@ -1992,7 +2054,7 @@ export const mutations = {
     const char = state.characters[payload.id];
 
     let theAttribute =
-      state.characters[payload.id].attributesBackgroundBoost[payload.key];
+      state.characters[payload.id].attributesBackgroundBoost[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesBackgroundBoost[payload.payload.key] =
       payload.payload.value;
@@ -2001,7 +2063,7 @@ export const mutations = {
     const char = state.characters[payload.id];
 
     let theAttribute =
-      state.characters[payload.id].attributesAncestryBoost[payload.key];
+      state.characters[payload.id].attributesAncestryBoost[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesAncestryBoost[payload.payload.key] =
       payload.payload.value;
@@ -2011,7 +2073,7 @@ export const mutations = {
     const char = state.characters[payload.id].attributesClassBoost[payload.key];
 
     let theAttribute =
-      state.characters[payload.id].attributesClassBoost[payload.key];
+      state.characters[payload.id].attributesClassBoost[payload.payload.key];
     theAttribute = payload.payload.value;
     state.characters[payload.id].attributesClassBoost[payload.payload.key] =
       payload.payload.value;
@@ -2074,6 +2136,17 @@ export const mutations = {
     const char = state.characters[payload.id];
 
     char.modificatorsBonus = char.modificatorsBonus.filter(t => t.source !== payload.source);
+  },
+  setCharacterFluff(state, payload) {
+    const char = state.characters[payload.id];
+
+
+    if (!char.fluff) {
+      char.fluff = {}
+    }
+
+    char.fluff[payload.field] = payload.value
+
   },
   addCharacterCustomSkill(state, payload) {
     let { id, skill } = payload;
@@ -2340,6 +2413,7 @@ export const mutations = {
     character.spells.push(talent);
 
   },
+
   addCharacterSpontSpell(state, payload) {
     const character = state.characters[payload.id];
     if (character.spellsSpontaneous.find(t => t.level === payload.level))
@@ -2347,15 +2421,6 @@ export const mutations = {
     else
       character.spellsSpontaneous.push(payload);
   },
-  // removeCharacterSpontSpell(state, payload) {
-  //   const character = state.characters[payload.id];
-  //   if (character.spellsSpontaneous.find(t => t.level === payload.level))
-  //     character.spellsSpontaneous.find(t => t.level === payload.level).value = payload.value
-  //   else
-  //     character.spellsSpontaneous.push = payload;
-  //   character.spellsSpontaneous[payload.level] = payload.value <= 0 ? 0 : payload.value - 1 ; // cleanup
-
-  // },
   editCharacterSpell(state, payload) {
     const character = state.characters[payload.id];
     const spell = character.spells.find((t) => t.id === payload.talentId); // cleanup
@@ -2558,39 +2623,56 @@ export const mutations = {
     }
   },
 
-  updateCharacterWargear(state, payload) {
-    const character = state.characters[payload.id];
-    const gearId = payload.gear.id;
-    const edit = payload.notEnc;
-    const armor = payload.armor;
-    const Wargear =
-      character.wargear.find((t) => t.id === gearId);
-    if (Wargear && edit === false && armor === false) {
-      Wargear.runeWeapon.striking = payload.striking;
-      Wargear.runeWeapon.potency = payload.potency;
-      Wargear.damage = payload.damage;
-      Wargear.runeWeapon.property = payload.property;
+  updateCharacterModification(state, { id, mod }) {
+    const character = state.characters[id];
+    if (!character) return;
 
-      Wargear.runes.striking = payload.striking;
-      Wargear.runes.potency = payload.potency;
-      Wargear.damage = payload.damage;
-      Wargear.runes.property = payload.property;
-    }
-    if (Wargear && edit === false && armor === true) {
-      Wargear.runeArmor.resilient = payload.resilient;
-      Wargear.runeArmor.potency = payload.potency;
+    const index = character.enhancements.findIndex(t => t.key === mod.key);
+    if (index === -1) return;
 
-      Wargear.runeArmor.property = payload.property;
+    const oldGear = character.enhancements[index];
 
-      Wargear.runes.resilient = payload.resilient;
-      Wargear.runes.potency = payload.potency;
-      Wargear.runes.property = payload.property;
-    }
+    // 🔥 аккуратный merge, чтобы не терять поля
+    const mergedGear = {
+      ...oldGear,
+      ...mod,
 
-    if (Wargear && edit === true) {
-      Wargear.qty = payload.qty;
-    }
+    };
+    console.log(mergedGear)
+    character.enhancements.splice(index, 1, mergedGear);
+  },
+  updateCharacterWargear(state, { id, gear }) {
+    const character = state.characters[id];
+    if (!character) return;
 
+    const index = character.wargear.findIndex(t => t.id === gear.id);
+    if (index === -1) return;
+
+    const oldGear = character.wargear[index];
+
+    // 🔥 аккуратный merge, чтобы не терять поля
+    const mergedGear = {
+      ...oldGear,
+      ...gear,
+
+      // ⚠️ отдельно защищаем вложенные структуры
+      runeWeapon: {
+        ...oldGear.runeWeapon,
+        ...gear.runeWeapon,
+      },
+
+      runeArmor: {
+        ...oldGear.runeArmor,
+        ...gear.runeArmor,
+      },
+
+      runes: {
+        ...oldGear.runes,
+        ...gear.runes,
+      },
+    };
+
+    character.wargear.splice(index, 1, mergedGear);
   },
 
   // Wargear { id, name, source, (variant) }
@@ -2784,12 +2866,33 @@ export const mutations = {
       (language) => language.source !== source
     );
   },
-  setCharacterFluffNotes(state, payload) {
-    const { id, notes } = payload;
-    const character = state.characters[id];
-    if (character.fluff === undefined) character["fluff"] = { notes: "" };
-    character.fluff.notes = notes;
+  setCharacterFluffNotes(state, { id, notes }) {
+    const character = state.characters[id]
+    if (!character.fluff.notes) return
+
+    const index = character.fluff.notes.findIndex(n => n.id === notes.id)
+
+    if (index !== -1) {
+      character.fluff.notes.splice(index, 1, {
+        ...character.fluff.notes[index],
+        ...notes
+      })
+    }
   },
+  addCharacterFluffNotes(state, { id, notes }) {
+    const character = state.characters[id]
+    if (!character.fluff.notes) character.fluff.notes = []
+
+    character.fluff.notes.push(notes)
+  },
+  deleteFluffNotes(state, { id, noteId }) {
+    const character = state.characters[id]
+
+
+    character.fluff.notes = character.fluff.notes.filter(k => k.id !== noteId)
+  },
+
+
 
   // Keywords
   addCharacterKeyword(state, payload) {
@@ -3079,10 +3182,6 @@ const getDefaultState = () => ({
   settingTitle: "",
   diceChat: [],
   settingHomebrewContent: [], // e.g. pax
-  settingHouserules: {
-    "rank-advancement-type": "milestone",
-    "skill-attribute-advancement-costs": "v15",
-  },
   customXp: 0,
   customRank: 1,
   level: 1,
@@ -3111,7 +3210,6 @@ const getDefaultState = () => ({
 
   //Зрение
   vision: "Обычное",
-
 
   //Бусты и Понижения
   //1-й уровень, стандартный
@@ -3238,37 +3336,6 @@ const getDefaultState = () => ({
   },
   SkillPoints: 0,
 
-
-
-  SkillPointsLevel: {
-
-    level0: "",
-    level1: "",
-    level2: "",
-    level3: "",
-    level4: "",
-
-    level5: "",
-    level6: "",
-    level7: "",
-    level8: "",
-    level9: "",
-
-    level10: "",
-    level11: "",
-    level12: "",
-    level13: "",
-    level14: "",
-
-    level15: "",
-    level16: "",
-    level17: "",
-    level18: "",
-    level19: "",
-
-    level20: "",
-  },
-
   //Сетка уровней
   SkillSheet: [],
   SkillPointBackground: 0,
@@ -3393,7 +3460,21 @@ const getDefaultState = () => ({
   objectives: [],
   objectiveArchived: false,
   fluff: {
-    notes: "",
+    notes: [],
+    general: {
+      Appearance: "",
+      Personality: "",
+      Alignment: "",
+      Beliefs: "",
+      Age: "",
+      Height: "",
+      Weight: "",
+      Gender: "",
+      Faction: "",
+      Ethnicity: "",
+      Nationality: "",
+
+    },
   },
   SkillPointsFeat: 0,
   HeroPoints: 0,

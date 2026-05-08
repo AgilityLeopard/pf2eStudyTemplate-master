@@ -818,6 +818,11 @@ export default {
         },
       ],
       DamageType: [
+
+        {
+          key: "weaponDamage",
+          name: "физический от оружия"
+        },
         {
           key: "piercing",
           name: "колющий"

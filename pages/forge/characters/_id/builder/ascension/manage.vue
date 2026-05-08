@@ -1,68 +1,94 @@
 <template>
   <v-row justify="center">
-    <v-progress-circular
-      v-if="!ascension"
-      indeterminate
-      color="success"
-      size="128"
-      width="12"
-    />
+    <!-- Loader -->
+    <v-progress-circular v-if="!ascension" indeterminate color="success" size="96" width="8" />
 
-    <v-col v-if="ascension" :xs="12">
-      <div class="d-flex flex-no-wrap justify-space-between mb-2">
-        <div>
-          <h3 class="headline">{{ ascension.nameBackground }}</h3>
-          <h4 class="subtitle-1 grey--text">{{ ascension.hint }}</h4>
-          <v-btn small outlined color="primary" @click="doChangeAscensionMode">
-            <v-icon small>settings</v-icon>
-            Сменить предысторию
-          </v-btn>
-        </div>
-        <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
-      </div>
+    <v-col v-else cols="12" lg="10">
 
-      <!-- <ul class="simple">
-        <li v-if="ascension.trait" v-for="trait in ascension.trait" class="traits">
-          <p class="trait">{{ trait }}</p>
-        </li>
-      </ul> -->
-      <v-divider />
+      <!-- 🧭 Header -->
+      <v-card class="mb-4 pa-4" outlined>
+        <v-row align="center">
+          <v-col cols="12" md="8">
+            <h2 class="text-h4 font-weight-bold">
+              {{ ascension.nameBackground }}
+            </h2>
 
-      <div class="mt-2 body-2 text-lg-justify">
-        <!-- <p>
-          <strong>XP Cost:</strong> {{ species.cost }}, incl. Stats ({{ species.costs.stats }} XP)
-        </p> -->
+            <div class="grey--text mb-2">
+              {{ ascension.hint }}
+            </div>
 
-        <p>
-          <strong>Характеристика на выбор:</strong>
-          {{ characterLabelAttribute(ascension.boost1) }}
-        </p>
+            <v-btn small outlined color="primary" @click="doChangeAscensionMode">
+              <v-icon small left>mdi-cog</v-icon>
+              Сменить предысторию
+            </v-btn>
+          </v-col>
 
-        <p><strong>Характеристика на выбор 2:</strong> Свободное повышение</p>
+          <v-col cols="12" md="4" class="text-right">
+            <v-avatar size="96" tile>
+              <img :src="avatar" />
+            </v-avatar>
+          </v-col>
+        </v-row>
+      </v-card>
 
-        <p v-if="ascension.skill">
+      <!-- ⚙️ Основные бонусы -->
+      <v-row class="d-flex" align="stretch">
+        <v-col cols="12" md="6">
+          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+            <h3 class="text-h6 mb-2">Характеристика на выбор</h3>
+            <strong>
+              {{ characterLabelAttribute(ascension.boost1) }}
+            </strong>
+
+            <div class="mt-2 text--secondary">
+              Первое усиление характеристик
+            </div>
+          </v-card>
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+            <h3 class="text-h6 mb-2">Второе усиление</h3>
+            <strong>Свободное повышение</strong>
+
+            <div class="mt-2 text--secondary">
+              Выбор игрока
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- 🎯 Навыки -->
+      <v-card outlined class="pa-4 mt-4" style="border-color: #c75d5d;">
+        <h3 class="text-h6 mb-2">Навыки</h3>
+
+        <div v-if="ascension.skill">
           <strong>Навык от предыстории:</strong>
           {{ characterLabelSkillTrainedChoice(ascension.skill) }}
-        </p>
+        </div>
+
+        <div class="mt-2">
+          <strong>Дополнительно:</strong>
+          +1 навык или бонус (по правилам)
+        </div>
+      </v-card>
+
+      <!-- 📚 Лор -->
+      <v-card v-if="ascension.lore || ascension.description" outlined class="pa-4 mt-4" style="border-color: #c75d5d;">
+        <h3 class="text-h6 mb-2">История</h3>
 
         <p v-if="ascension.lore">
-          <strong>Знание от предыстории:</strong> {{ ascension.lore }}
+          <strong>Знание:</strong> {{ ascension.lore }}
         </p>
 
         <p v-if="ascension.description">
-          <strong>Описание</strong> {{ ascension.description }}
+          <strong>Описание:</strong> {{ ascension.description }}
         </p>
+      </v-card>
 
-        <!-- <p><strong>Скорость:</strong> {{ ascension.speed }}</p> -->
-      </div>
-
-      <div class="body-2">
-        <p><v-divider /></p>
-      </div>
     </v-col>
   </v-row>
 </template>
-
 <script>
 import AscensionPreview from "~/components/forge/AscensionPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
@@ -362,25 +388,147 @@ export default {
 </script>
 
 <style scoped>
-.traits {
-  background-color: #d9c484;
-  display: inline-block;
-  margin: 0.1em 0.15em !important;
-  padding: 0.1em 0.25em;
-  list-style-type: none !important;
-}
-.trait {
-  background-color: #5e0000;
-  color: #fff;
-  display: inline-block;
-  font-weight: bolder;
-  margin: 0;
-  padding: 0 0.25em;
+.v-card {
+  border-radius: 14px;
+  transition: 0.2s;
 }
 
-.simple {
-  display: inherit;
-  margin-bottom: 0;
-  padding-inline-start: 0.2em;
+.v-card:hover {
+  transform: translateY(-2px);
+}
+
+.right-header {
+  float: right;
+}
+
+.left-header {
+  float: left;
+}
+
+.h3 {
+  font-size: 24px;
+  font-weight: normal;
+  color: #5d0000;
+}
+
+.h4 {
+  color: #a76652;
+  font-weight: normal;
+  font-size: 20px;
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+
+.split-header {
+  border-bottom: 1.5px solid;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+
+.split-header1 {
+  border-bottom: 1.5px;
+  padding-bottom: 5px;
+  overflow: hidden;
+}
+
+.main-holder p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.two-column-holder {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.two-column-left {
+  flex: 50%;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+}
+
+@media screen and (max-width: 600px) {
+  .two-column-left {
+    flex: 100%;
+    flex-wrap: wrap;
+    padding: 20px 30px;
+  }
+}
+
+.two-column-right {
+  flex: 50%;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+}
+
+.light-red-border .two-column-left {
+  border-right: 1px solid #d85058;
+}
+
+@media screen and (max-width: 600px) {
+  .light-red-border .two-column-left {
+    border-bottom: 1px solid #d85058;
+    border-right: none;
+  }
+}
+
+.class-sidebar {
+  /* background: #fdfdfd; */
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0px 2px 12px rgb(0 0 0 / 20%);
+  /* color: #5c1c16; */
+  word-break: break-word;
+}
+
+.dark-red-border .two-column-left {
+  border-right: 1px solid #5c1c16;
+}
+
+@media screen and (max-width: 600px) {
+  .dark-red-border .two-column-left {
+    border-bottom: 1px solid #5c1c16;
+    border-right: none;
+  }
+}
+
+h1 {
+  color: #3366ff;
+}
+
+h2 {
+  color: #ff4d4d;
+}
+
+h3 {
+  color: #ff9977;
+}
+
+h4,
+h5,
+h6 {
+  color: #ffffff;
+}
+
+.feature-text h1 {
+  color: #3366ff;
+}
+
+.feature-text h2 {
+  color: #ff4d4d;
+}
+
+.feature-text h3 {
+  color: #ff9977;
+}
+
+.highlight-term {
+  background-color: rgba(255, 255, 0, 0.2);
+  border-bottom: 1px dotted yellow;
+  cursor: help;
 }
 </style>

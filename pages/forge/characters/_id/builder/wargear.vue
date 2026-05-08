@@ -398,6 +398,7 @@
       <v-tab-item class="my-tab-item" key="tab-armor" :value="`tab-armor`">
 
 
+
         <v-btn outlined block color="success" class="mt-2" @click="ArmorSearchDialog = true">
           Добавить доспех
         </v-btn>
@@ -975,6 +976,7 @@ export default {
       dialogResilientArmor: false,
       dialogPotencyArmor: false,
       dialogPropertyArmor: false,
+
 
       Weapon: undefined,
       money: undefined,

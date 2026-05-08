@@ -5,7 +5,7 @@ const talents = require('./talents');
 const actions = require('./action.js');
 const abilityAncestry = require('./abilityAncestry.js');
 const heritage = require('./heritage');
-const factions = require('./factions');
+// const factions = require('./factions');
 const species = require('./species');
 const archetypes = require('./archetypes');
 const ascensionPackages = require('./ascensionPackages');
@@ -26,7 +26,7 @@ module.exports = (app) => {
   app.use('/wargear', wargear);
   app.use('/psychic-powers', psychicPowers);
 
-  app.use('/factions', factions);
+  // app.use('/factions', factions);
   app.use('/species', species);
   app.use('/archetypes', archetypes);
   app.use('/ascension-packages', ascensionPackages);

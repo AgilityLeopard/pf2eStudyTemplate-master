@@ -384,8 +384,12 @@ export default {
         place: talent.place,
         description: talent.description,
         rank: talent.rank,
+        ritual: talent.ritual,
         cell: talent.cell,
+        duration: talent.duration,
+        time: talent.time,
         cast: false,
+        cost: talent.cost,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,
         selected: undefined,
         source: `talent.${talentUniqueId}`,
@@ -467,7 +471,7 @@ export default {
 
     },
     filteredHeaders() {
-      if (this.archetype.prepared === false) {
+      if (this.archetype?.prepared === false && this.type != 'ritual') {
         return this.headers.filter(h => h.value !== 'prepapared');
       }
       return this.headers;
@@ -545,9 +549,9 @@ export default {
       // filteredTalents = filteredTalents.filter((talent) => talent.traditions && talent.traditions.toString().toUpperCase().includes(lowercaseKeywords))
 
       //const rank = this.rank;
-      const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
-        (t) => t == 0
-      ) - 1;
+      // const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
+      //   (t) => t == 0
+      // ) - 1;
 
       filteredTalents.forEach(spell => {
         if (spell.damage && spell.heightening?.damage /*&& spell.key === 'grisly-growths'*/) {
@@ -562,7 +566,9 @@ export default {
           const index1 = heightened?.indexOf("d", 0);
           const diceInterval = heightened?.slice(0, index1);
           const interval = spell.heightening?.interval;
-
+          const cant = this.archetype.spellProgression[this.characterLevel()].findIndex(
+            (t) => t == 0
+          ) - 1;
           const rank = spell.traits.join(',').includes('заговор') ? cant : spell.rank;
 
           const powerLevel2 = parseInt(dice) + (rank - interval) * (parseInt(diceInterval));

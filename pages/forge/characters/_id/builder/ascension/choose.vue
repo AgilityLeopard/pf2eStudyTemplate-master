@@ -1,83 +1,99 @@
 <template>
   <v-row justify="center">
     <v-col :cols="12">
-      <h1 class="headline">Выберите Предыстория</h1>
-    </v-col>
+      <h1 class="text-h5 mb-4">Выберите предысторию</h1>
 
-    <v-dialog v-model="ascensionDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
-      <ascension-preview v-if="selectedAscension" :character-id="characterId" :item="selectedAscension" choose-mode
-        @select="selectAscensionForChar" @cancel="ascensionDialog = false" />
-    </v-dialog>
+      <v-dialog v-model="ascensionDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
+        <ascension-preview v-if="selectedAscension" :character-id="characterId" :item="selectedAscension" choose-mode
+          @select="selectAscensionForChar" @cancel="ascensionDialog = false" />
+      </v-dialog>
 
-    <v-col cols="12">
-      <v-progress-circular v-if="!ascensionList" indeterminate color="success" size="128" width="12" />
+      <!-- loader -->
+      <v-progress-circular v-if="!ascensionList" indeterminate color="success" size="96" width="8" />
 
-      <v-card v-if="ascensionList">
-        <v-card-title>
-          <v-text-field v-model="searchQuery" filled dense prepend-inner-icon="search" clearable label="Поиск" />
+      <v-card v-else class="ascension-list-card" outlined>
+
+        <!-- SEARCH + FILTERS -->
+        <v-card-title class="pb-2">
+          <v-text-field v-model="searchQuery" dense filled clearable prepend-inner-icon="mdi-magnify"
+            label="Поиск предыстории" />
         </v-card-title>
+
+        <v-card-text class="pt-0">
+          <v-row dense>
+            <v-col cols="12" md="4">
+              <v-select v-model="selectedRarityFilters" :items="rarityFilters" item-text="name" item-value="name"
+                multiple dense outlined label="Редкость" />
+            </v-col>
+
+            <v-col cols="12" md="4">
+              <v-select v-model="selectedSourceFilters" :items="sourceFilters" item-text="name" item-value="name"
+                multiple dense outlined label="Источник" />
+            </v-col>
+
+            <v-col cols="12" md="4">
+              <v-select v-model="selectedAbilityFilters" :items="abilityFilters" item-text="name" item-value="key"
+                multiple dense outlined label="Характеристика" />
+            </v-col>
+          </v-row>
+        </v-card-text>
+
         <v-divider />
 
-        <v-card-title>
-          <v-container class="bg-surface-variant">
-            <v-row>
-              <v-col :cols="6">
-                <v-select label="Редкость" multiple v-model="selectedRarityFilters" :items="rarityFilters"
-                  item-text="name" item-value="name">
-                </v-select>
-              </v-col>
+        <!-- LIST -->
+        <v-list class="ascension-list" two-line dense>
 
-              <v-col :cols="6">
-                <v-select label="Источник" v-model="selectedSourceFilters" multiple :items="sourceFilters"
-                  item-text="name" item-value="name">
-                </v-select>
-              </v-col>
+          <v-list-item v-for="item in filteredTalents" :key="item.key" class="ascension-item"
+            @click.stop="updatePreview(item)">
 
-              <v-col :cols="6">
-                <v-select label="Характеристика" v-model="selectedAbilityFilters" multiple :items="abilityFilters"
-                  item-text="name" item-value="key">
-                </v-select>
-              </v-col>
-            </v-row>
-
-            <!-- <v-row>
-          <v-col :cols="6">
-            <v-select
-              label="Трейты"
-              v-model="selectedtraitsFilters"
-              multiple
-              :items="tagFilters"
-              item-text="name"
-              item-value="name"
-            >
-            </v-select>
-          </v-col>
-        </v-row> -->
-          </v-container>
-        </v-card-title>
-
-        <v-list>
-          <v-list-item v-for="item in filteredTalents" :key="item.key" @click.stop="updatePreview(item)">
-            <v-list-item-avatar tile>
+            <!-- avatar -->
+            <v-list-item-avatar tile size="48">
               <img :src="getAvatar(item.key)" />
             </v-list-item-avatar>
 
+            <!-- content -->
             <v-list-item-content>
-              <v-list-item-title>
-                {{ item.nameBackground }}
-                <v-chip v-if="item.source" color="info" outlined tags x-small label>
-                  {{ item.source.key.toUpperCase() }}
+              <v-list-item-title class="d-flex align-center gap-2">
+                <span class="font-weight-medium">
+                  {{ item.nameBackground }}
+                </span>
+
+                <v-chip v-if="item.source" x-small outlined class="ml-2" color="info">
+                  {{ item.source.book }}
+                </v-chip>
+
+                <v-chip v-if="item.rarity" x-small outlined class="ml-2" color="grey">
+                  {{ item.rarity }}
                 </v-chip>
               </v-list-item-title>
-              <v-list-item-subtitle>{{ item.hint }}</v-list-item-subtitle>
+
+              <v-list-item-subtitle class="ascension-hint">
+                {{ item.hint }}
+              </v-list-item-subtitle>
+
+              <!-- quick info row -->
+              <!-- <div class="ascension-meta">
+                <span v-if="item.boost1">
+                  + {{ characterLabelAttribute(item.boost1) }}
+                </span>
+
+                <span v-if="item.skill">
+                  • {{ characterLabelSkillTrainedChoice(item.skill) }}
+                </span>
+
+                <span v-if="item.lore">
+                  • {{ item.lore }}
+                </span>
+              </div> -->
             </v-list-item-content>
+
           </v-list-item>
+
         </v-list>
       </v-card>
     </v-col>
   </v-row>
 </template>
-
 <script>
 import AscensionPreview from "~/components/forge/AscensionPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
@@ -540,4 +556,46 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.ascension-list-card {
+  border-radius: 12px;
+}
+
+/* list item */
+.ascension-item {
+  transition: 0.15s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ascension-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* subtitle */
+.ascension-hint {
+  opacity: 0.7;
+  font-size: 13px;
+}
+
+/* meta line under subtitle */
+.ascension-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.65;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* chips spacing fix */
+.v-chip {
+  height: 18px;
+  font-size: 10px;
+}
+
+/* nicer avatar */
+.v-list-item-avatar img {
+  border-radius: 6px;
+  object-fit: cover;
+}
+</style>

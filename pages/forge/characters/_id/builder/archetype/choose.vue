@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" dense>
     <!-- Диалог предпросмотра -->
-    <v-dialog v-model="previewDialog" width="600" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
+    <v-dialog v-model="previewDialog" width="800" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
       <archetype-preview v-if="previewItem" :character-id="characterId" :item="previewItem" choose-mode
         @select="selectArchetypeForChar" @cancel="previewDialog = false" />
     </v-dialog>
@@ -139,6 +139,12 @@ export default {
         this.characterId
       );
     },
+    characterKeywords() {
+      return this.$store.getters["characters/characterKeywordsRawById"](
+        this.characterId
+      );
+
+    },
   },
   watch: {
     characterSpeciesKey: {
@@ -165,6 +171,9 @@ export default {
       "setCharacterArchetype",
       "setCharacterFaction",
     ]),
+    characterLevel() {
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
     async getAbilityList(sources) {
       const config = {
         params: {
@@ -261,8 +270,119 @@ export default {
       this.previewItem = item;
       this.previewDialog = true;
     },
+    removeTalentsByKeywords(keywords = []) {
+      const id = this.characterId;
+      const level = this.characterLevel();
+
+      const sheet = this.$store.getters[
+        "characters/characterSkillSheetById"
+      ](this.characterId);
+
+      const talents = this.$store.getters[
+        "characters/characterTalentsById"
+      ](this.characterId);
+
+      if (!keywords.length || !talents?.length) return;
+
+      const keywordSet = new Set(
+        keywords.map(k => k.toString().toLowerCase())
+      );
+
+      const targets = talents.filter(talent => {
+        if (!talent?.traits) return false;
+
+        return talent.traits.some(trait =>
+          keywordSet.has(trait.toString().toLowerCase())
+        );
+      });
+
+      targets.forEach(talent => {
+        const level1 = talent.level;
+
+        if (talent.system?.rules?.length > 0) {
+          talent.system.rules.forEach(item => {
+
+            // ===== SKILL =====
+            if (item.skill) {
+              if (
+                sheet.find(
+                  i =>
+                    i.key === item.skill &&
+                    i.level === level1 &&
+                    i.type === "feat"
+                )
+              ) {
+                this.$store.commit("characters/removeSkillSheet", {
+                  id,
+                  key: item.skill,
+                  level: level1,
+                  type: "feat",
+                  optional: false,
+                });
+
+                if (level1 === 1) {
+                  this.$store.commit(
+                    "characters/setCharacterSkillPointClassUp",
+                    {
+                      id,
+                      write: false,
+                      payload: { key: 1, value: -1 },
+                    }
+                  );
+                }
+              }
+            }
+
+            // ===== FEAT =====
+            if (item.feat) {
+              const loreKey =
+                this.textToCamel(talent.key) +
+                "-" +
+                this.textToCamel(item.feat);
+
+              [1, 3, 7, 15].forEach(lvl => {
+                this.$store.commit("characters/removeSkillSheet", {
+                  id,
+                  key: loreKey,
+                  level: lvl,
+                  type: "feat",
+                  optional: false,
+                });
+              });
+            }
+          });
+        }
+
+        // ===== CORE REMOVAL =====
+        this.$store.commit("characters/clearModification", {
+          id,
+          level,
+        });
+
+        this.$store.commit("characters/removeModification", {
+          id,
+          talentId: talent.id,
+        });
+
+        this.$store.commit("characters/removeCharacterTalent", {
+          id,
+          talentId: talent.id,
+        });
+
+        this.$store.commit("characters/setModification", {
+          id,
+          level,
+        });
+      });
+    },
     selectArchetypeForChar(item) {
       const id = this.characterId;
+
+      const heritageTrait = this.characterKeywords
+        .filter(s => s.source === "archetype")
+        .map(s => s.name);
+
+      this.removeTalentsByKeywords([heritageTrait]);
 
       //Устанавиливаем класс персонажа
       this.setCharacterArchetype({

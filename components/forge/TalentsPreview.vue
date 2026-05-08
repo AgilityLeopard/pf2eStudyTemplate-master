@@ -1,139 +1,105 @@
-<template lang="html">
-  <v-card>
-    <v-card-title style="background-color: #262e37; color: #fff">
-      <span>Подтвердите выбор Таланта</span>
+<template>
+  <v-card class="talents-card">
+    <v-card-title class="talents-header">
+      <span class="header-title">Подтвердите выбор таланта</span>
       <v-spacer />
-      <v-icon dark @click="$emit('cancel')"> close </v-icon>
+      <v-btn icon small @click="$emit('cancel')">
+        <v-icon small>mdi-close</v-icon>
+      </v-btn>
     </v-card-title>
 
-    <v-divider />
+    <v-divider class="ui-divider" />
 
-    <!-- <v-card-title>
-      <v-text-field v-model="searchQuery" filled dense prepend-inner-icon="search" clearable label="Поиск" />
-    </v-card-title> -->
-    <v-divider />
-
-    <!-- <v-card-title>
-      <v-container class="bg-surface-variant">
-        <v-row>
-          <v-col :cols="6">
-            <v-select label="Редкость" multiple v-model="selectedRarityFilters" :items="rarityFilters" item-text="name"
-              item-value="name">
-            </v-select>
-          </v-col>
-
-          <v-col :cols="6">
-            <v-select label="Источник" v-model="selectedSourceFilters" multiple :items="sourceFilters" item-text="name"
-              item-value="name">
-            </v-select>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col :cols="6">
-            <v-select label="Трейты" v-model="selectedtraitsFilters" multiple :items="tagFilters" item-text="name"
-              item-value="name">
-            </v-select>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-title> -->
-
-    <v-divider />
     <v-card-text>
       <v-row>
-        <v-col cols="6" sm="4">
-          <v-text-field v-model="searchQuery" filled dense clearable prepend-inner-icon="search" label="Поиск" />
+        <!-- ФИЛЬТРЫ -->
+        <v-col cols="6" sm="4" class="filters-col">
+          <div class="filters-wrapper">
 
-          <v-range-slider v-model="levelRange" :min="0" :max="this.level" :step="1" thumb-label="always"
-            label="Уровень"></v-range-slider>
+            <v-text-field v-model="searchQuery" dense outlined clearable prepend-inner-icon="mdi-magnify"
+              label="Поиск" />
 
+            <v-range-slider v-model="levelRange" :min="0" :max="this.level" step="1" thumb-label label="Уровень" />
 
+            <v-select v-model="selectedSourceFilters" :items="filterSourceOptions" label="Источник" item-text="name"
+              item-value="key" multiple dense outlined />
 
+            <v-select v-model="selectedRarityFilters" :items="rarityRepository" label="Редкость" item-text="name"
+              item-value="key" multiple dense outlined />
 
-          <v-select v-model="selectedSourceFilters" :items="filterSourceOptions" label="Источник" item-text="name"
-            item-value="key" multiple />
+            <v-select v-model="selectedTraitFilters" :items="typeFilters" label="Трейты" item-text="name"
+              item-value="name" multiple dense outlined />
 
-
-          <v-select label="Редкость" v-model="selectedRarityFilters" :items="rarityRepository" item-text="name"
-            item-value="key" multiple>
-          </v-select>
-
-          <v-select label="Трейты" v-model="selectedTraitFilters" :items="typeFilters" item-text="name"
-            item-value="name" multiple>
-          </v-select>
+          </div>
         </v-col>
+
+        <!-- ТАБЛИЦА -->
         <v-col cols="6" sm="8">
           <div class="table-wrapper">
+
             <v-data-table :headers="headers" :items="searchResult" :search="searchQuery" :page.sync="pagination.page"
-              show-expand item-key="name" hide-default-footer :loading="!talents" class="fixed-columns-table"
-              loading-text="Загрузка черт, пожалуйста, подождите" @page-count="pagination.pageCount = $event">
-              <template v-slot:no-data />
+              show-expand item-key="name" hide-default-footer :loading="!talents" class="ui-table"
+              loading-text="Загрузка черт..." @page-count="pagination.pageCount = $event">
 
+              <!-- NAME -->
               <template v-slot:item.name="{ item }">
-                <span>{{ item.name }}</span>
-
-                <div>
+                <div class="table-name">
+                  <span class="name-text">{{ item.name }}</span>
                   <trait-view v-if="item.traits" :item="item" />
                 </div>
               </template>
 
+              <!-- LEVEL -->
               <template v-slot:item.system.level="{ item }">
-                <v-chip>
+                <span class="level-badge">
                   {{ item.system.level.value }}
-                </v-chip>
+                </span>
               </template>
 
-              <template v-slot:item.prerequisitesKey="{ item }">
-                <!-- <v-chip> -->
-                <v-icon v-if="item.isVal === true" color="error">close</v-icon>
-                <v-icon v-if="item.isVal === false" color="success">check</v-icon>
-                <!-- {{ item.prerequisitesKey }} -->
-                <!-- </v-chip> -->
-              </template>
-              <!-- 
-        <template v-slot:item.prerequisitesHtml="{ item }">
-          <span v-if="item.requirementsText" v-html="item.requirementsText" />
-        </template> -->
-
+              <!-- DESCRIPTION -->
               <template v-slot:item.description="{ item }">
-                <span v-html="item.description.split('.').find(s => s.trim() !== '') + '.'"></span>
+                <span class="table-description" v-html="item.description.split('.').find(s => s.trim() !== '') + '.'">
+
+                </span>
               </template>
 
+              <!-- ADD -->
               <template v-slot:item.buy="{ item }">
-                <v-btn color="success" x-small :disabled="item.isVal === true" v-if="!DiffrentTalent(item)"
-                  @click="addTalent(item, type, item.level)">
-                  add
+                <v-btn outlaned icon small class="ui-btn ui-btn--primary" :disabled="item.isVal === true"
+                  v-if="!DiffrentTalent(item)" @click="addTalent(item, type, item.level)">
+                  <v-icon small>mdi-plus</v-icon>
                 </v-btn>
               </template>
 
-              <!-- В тексте -->
+              <!-- EXPANDED -->
               <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length">
-                  <CardItem :item="item" />
+                <td :colspan="headers.length" class="expanded-cell">
+                  <div class="expanded-wrapper">
+                    <CardItem :item="item" />
+                  </div>
                 </td>
               </template>
 
-              <template v-slot:no-results>
-                <span class="text-center">Ваш поиск по "{{ searchQuery }}" не дал результатов.</span>
-              </template>
             </v-data-table>
           </div>
-          <div class="text-center pt-2">
+
+          <div class="pagination-wrapper">
             <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
           </div>
         </v-col>
       </v-row>
     </v-card-text>
 
+    <v-divider class="ui-divider" />
 
-
-    <v-divider />
-    <v-card-actions>
-      <v-btn outlined color="red" left @click="$emit('cancel')"> Cancel </v-btn>
+    <v-card-actions class="footer">
+      <v-btn text color="error" @click="$emit('cancel')">
+        Отмена
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
+
 
 <script lang="js">
 import SluggerMixin from '~/mixins/SluggerMixin';
@@ -805,226 +771,127 @@ export default {
 </script>
 
 <style scoped lang="css">
-.traits {
-  background-color: #d9c484;
-  display: inline-block;
-  margin: 0.1em 0.15em !important;
-  padding: 0.1em 0.25em;
-  list-style-type: none !important;
+.talents-card {
+  border-radius: 10px;
 }
 
-.trait {
-  background-color: #5e0000;
-  color: #fff;
-  display: inline-block;
-  font-weight: bolder;
-  margin: 0;
-  padding: 0 0.25em;
+/* HEADER */
+.talents-header {
+  padding: 12px 16px;
 }
 
-.simple {
-  display: inherit;
-  margin-bottom: 0;
-  padding-inline-start: 0.2em;
-}
-
-.head {
-  /* color: rgb(57, 54, 54); */
-  width: fit-content;
-  /* font-size: 24px; */
-  font-style: normal;
-  /* font-family: goodOTCondBold; */
-  font-weight: normal;
-  line-height: 24px;
-  /* text-transform: uppercase; */
-}
-
-.line {
-  height: 1px;
-  margin: 0 1rem;
-  flex-grow: 1;
-  background: #676767;
-}
-
-.tag {
-  color: #fff;
-  padding: 0.5rem;
-  font-size: 18px;
-  font-style: normal;
-  text-align: center;
-  font-family: goodOTCondBold;
-  font-weight: normal;
-  line-height: 24px;
-  white-space: nowrap;
-  border-radius: 0.25rem;
-  text-transform: uppercase;
-}
-
-.rowFeat {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-.main-holder p {
-  display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-}
-</style>
-
-<style scoped>
-.fixed-columns-table .v-data-table__wrapper table {
-  table-layout: fixed !important;
-  /* фиксированная сетка */
-  width: 100%;
-}
-
-.fixed-columns-table th,
-.fixed-columns-table td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.fixed-columns-table th {
+.header-title {
+  font-size: 1rem;
   font-weight: 600;
-  background-color: rgba(var(--v-theme-surface-variant), 0.5);
 }
 
-/* Настраиваем ширину каждой колонки (по порядку) */
-.fixed-columns-table th:nth-child(1),
-.fixed-columns-table td:nth-child(1) {
-  width: 40%;
-  /* Название предмета */
+/* ОБЩИЕ ЛИНИИ */
+.ui-divider {
+  background-color: rgba(var(--v-border-color, 150, 150, 150), 0.2);
 }
 
-.fixed-columns-table th:nth-child(2),
-.fixed-columns-table td:nth-child(2) {
-  width: 20%;
-  /* Тип */
+/* ФИЛЬТРЫ */
+.filters-col {
+  border-right: 1px solid rgba(var(--v-border-color, 150, 150, 150), 0.15);
 }
 
-.fixed-columns-table th:nth-child(3),
-.fixed-columns-table td:nth-child(3) {
-  width: 15%;
-  /* Цена */
+.filters-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.fixed-columns-table th:nth-child(4),
-.fixed-columns-table td:nth-child(4) {
-  width: 25%;
-  /* Прочее */
+/* TABLE */
+.ui-table {
+  background: transparent;
 }
 
 .table-wrapper {
   max-height: 500px;
-  /* или любая фиксированная высота */
   overflow-y: auto;
-  /* добавляет прокрутку */
 }
 
-.expanded-content {
-  max-height: 300px;
-  /* ограничиваем раскрытие */
-  overflow-y: auto;
-  /* прокрутка внутри строки */
+/* NAME */
+.table-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-/* Можно ограничить высоту ячеек */
-.v-data-table tbody td {
-  max-width: 250px;
-  /* можно подбирать */
+.name-text {
+  font-weight: 500;
 }
 
-/* Убираем растягивание при раскрытии */
-.v-data-table__expanded__content td {
-  max-width: none !important;
+/* LEVEL BADGE (в стиле твоих тегов) */
+.level-badge {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(var(--v-theme-primary), 0.15);
+  color: var(--v-theme-primary);
+  font-weight: 500;
 }
 
-.table-container {
-  width: 100%;
-  overflow-x: hidden;
-  /* не даем появиться горизонтальному скроллу */
+/* DESCRIPTION */
+.table-description {
+  font-size: 0.85rem;
+  opacity: 0.75;
 }
 
+.ui-btn {
+  border-radius: 10px;
+
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  transition: var(--ui-transition);
+}
+
+.ui-btn--primary {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border: 1px solid color-mix(in srgb, var(--ui-text) 60%, transparent);
+  /* 👈 ключ */
+
+
+  &:hover {
+    border-color: var(--ui-accent);
+    background: var(--ui-surface-hover);
+  }
+}
+
+/* EXPANDED */
 .expanded-cell {
   padding: 0 !important;
-  background-color: rgba(var(--v-theme-surface-variant), 0.05);
+  background: rgba(var(--v-theme-surface-variant), 0.05);
 }
 
 .expanded-wrapper {
-  display: block;
-  max-width: 100%;
-  overflow-x: hidden;
-  padding: 16px 20px;
-  box-sizing: border-box;
-  background-color: var(--v-theme-surface);
+  padding: 16px;
   border-left: 3px solid var(--v-theme-primary);
-  border-radius: 0 0 8px 8px;
 }
 
-.expanded-header {
+/* PAGINATION */
+.pagination-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
 }
 
-.expanded-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-  word-break: break-word;
+/* FOOTER */
+.footer {
+  justify-content: flex-end;
 }
 
-.expanded-tag {
-  background-color: rgba(var(--v-theme-primary), 0.15);
-  color: var(--v-theme-primary);
-  border-radius: 8px;
-  padding: 2px 8px;
-  font-size: 0.8rem;
+/* SCROLL */
+.table-wrapper::-webkit-scrollbar {
+  width: 6px;
 }
 
-.expanded-meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 4px 12px;
-  font-size: 0.85rem;
-  margin-top: 8px;
-  word-break: break-word;
-}
 
-.expanded-divider {
-  width: 100%;
-  height: 1px;
-  background-color: rgba(var(--v-border-color, 150, 150, 150), 0.2);
-  margin: 10px 0;
-}
 
-.expanded-description {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  color: var(--v-theme-on-surface);
-  word-break: break-word;
-  white-space: normal;
-}
-
-.v-data-table {
-  table-layout: fixed !important;
-}
-
-.v-data-table thead th,
-.v-data-table tbody td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  /* чтобы переносились строки */
-  word-wrap: break-word;
-  vertical-align: top;
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.3);
+  border-radius: 3px;
 }
 </style>

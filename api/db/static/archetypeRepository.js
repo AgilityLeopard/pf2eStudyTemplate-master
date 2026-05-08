@@ -1184,8 +1184,6 @@ const playerCore = [
             ]
     },
 
-
-
     //Волшебник
     {
         ...archetype(source.playerCore.key, 94, 'Wizard'),
@@ -1391,6 +1389,7 @@ const playerCore = [
     }
 
 ];
+
 
 const playerCore2 = [
     //оракул

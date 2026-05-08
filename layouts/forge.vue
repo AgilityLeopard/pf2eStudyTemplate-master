@@ -4,20 +4,18 @@
     <v-navigation-drawer v-model="drawer.open" app :clipped="drawer.clipped" :fixed="drawer.fixed"
       :permanent="drawer.permanent" :mini-variant="drawer.mini" width="320">
 
+      <v-card outlined class="builder-sidebar pa-3 ui-panel">
 
-
-      <v-card outlined class="builder-sidebar pa-2">
-        <!-- Верхняя часть: основные характеристики -->
+        <!-- TOP -->
         <div class="top-block mb-3">
           <v-list dense>
 
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title> Максимальные хиты </v-list-item-title>
+                <v-list-item-title>Максимальные хиты</v-list-item-title>
               </v-list-item-content>
-
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill color="green" text-color="white">
+              <v-list-item-action>
+                <v-chip class="ui-chip ui-chip--success">
                   {{ characterHitPointsMax() }}
                 </v-chip>
               </v-list-item-action>
@@ -25,11 +23,10 @@
 
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title> Класс доспехов </v-list-item-title>
+                <v-list-item-title>Класс доспехов</v-list-item-title>
               </v-list-item-content>
-
-              <v-list-item-action class="hidden-xs-only">
-                <v-chip pill color="green" text-color="white">
+              <v-list-item-action>
+                <v-chip class="ui-chip ui-chip--success">
                   {{ characterArmor() }}
                 </v-chip>
               </v-list-item-action>
@@ -37,23 +34,23 @@
 
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title> Скорость: </v-list-item-title>
+                <v-list-item-title>Скорость</v-list-item-title>
               </v-list-item-content>
-
-              <v-list-item-action class="hidden-xs-only">
+              <v-list-item-action>
                 {{ сharacterSpeedLabel() }}
               </v-list-item-action>
             </v-list-item>
+
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title class="stat-title">Внимательность</v-list-item-title>
+                <v-list-item-title>Внимательность</v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
                 <div class="chip-row">
-                  <v-chip small :color="getClassChipColor(characterPerseption)" dark class="mr-1">
+                  <v-chip small class="ui-chip mr-1">
                     {{ ModAttributePerception(Perception.attribute, Perception.key) }}
                   </v-chip>
-                  <v-chip small :color="getClassChipColor(characterPerseption)" dark>
+                  <v-chip :color="getClassChipColor(characterPerseption)" small class="ui-chip ui-chip--color">
                     {{ characterlabel(characterPerseption) }}
                   </v-chip>
                 </div>
@@ -62,164 +59,103 @@
 
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title class="stat-title">Сложность класса</v-list-item-title>
+                <v-list-item-title>Сложность класса</v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
                 <div class="chip-row">
-                  <v-chip small :color="getClassChipColor(characterSkillClass)" dark class="mr-1">
+                  <v-chip small class="ui-chip mr-1">
                     {{ ModAttributeClass() }}
                   </v-chip>
-                  <v-chip small :color="getClassChipColor(characterSkillClass)" dark>
+                  <v-chip :color="getClassChipColor(characterSkillClass)" small class="ui-chip ui-chip--color">
                     {{ characterlabel(characterSkillClass) }}
                   </v-chip>
                 </div>
               </v-list-item-action>
             </v-list-item>
+
           </v-list>
         </div>
 
-        <!-- Нижняя часть: характеристики, навыки, спасброски, оружие, доспехи -->
+        <!-- BOTTOM -->
         <div class="bottom-block">
+
+          <!-- ATTRIBUTES -->
           <div class="section">
             <h3 class="section-title">Характеристики</h3>
-            <div class="stat-row" v-for="attribute in attributeRepository" :key="attribute.key" @click="openAtt()">
-              <v-btn block small class="stat-name-btn" depressed>{{ attribute.name }}</v-btn>
-              <v-btn small class="stat-mod-btn ml-1" depressed>{{ ModAttributeReal(attribute.key) }}</v-btn>
+
+            <div v-for="attribute in attributeRepository" :key="attribute.key" class="stat-row" @click="openAtt()">
+              <v-btn class="ui-btn ui-btn--secondary stat-name-btn" small depressed>
+                {{ attribute.name }}
+              </v-btn>
+
+              <v-btn class="ui-btn ui-btn--ghost stat-mod-btn ml-1" small depressed>
+                {{ ModAttributeReal(attribute.key) }}
+              </v-btn>
             </div>
           </div>
 
-          <div class="section mt-3">
+
+          <!-- Сопротивления и иммунитеты -->
+          <div v-if="ResImWeak.length > 0" lass="section mt-4">
+            <h3 class="section-title">Сопротивления</h3>
+
+            <v-chip bottom v-for="res in ResImWeak">
+              <span>{{DamageType.find(t => t.key === res.key)?.name || res.key}} {{ res.NewValue }} </span>
+
+            </v-chip>
+          </div>
+
+          <!-- SKILLS -->
+          <div class="section mt-4">
             <h3 class="section-title">Навыки</h3>
+
             <v-list dense>
               <v-list-item v-for="skill in finalSkillRepository" :key="skill.key" @click="openSkills(skill)">
                 <v-list-item-content>{{ skill.name }}</v-list-item-content>
+
                 <v-list-item-action>
                   <div class="chip-row">
-                    <v-chip small :color="getRankChipColor(skill.key)" dark>{{ ModAttribute(skill.attribute, skill.key)
-                    }}</v-chip>
-                    <v-chip small :color="getRankChipColor(skill.key)" dark class="ml-1">{{ SkillLabel(skill.key)
-                    }}</v-chip>
+                    <v-chip small class="ui-chip mr-1">
+                      {{ ModAttribute(skill.attribute, skill.key) }}
+                    </v-chip>
+                    <v-chip :color="getRankChipColor(skill.key)" small class="ui-chip ui-chip--color">
+                      {{ SkillLabel(skill.key) }}
+                    </v-chip>
                   </div>
                 </v-list-item-action>
               </v-list-item>
             </v-list>
           </div>
 
-          <div class="section mt-3">
+
+
+          <!-- SAVES -->
+          <div class="section mt-4">
             <h3 class="section-title">Спасброски</h3>
+
             <v-list dense>
               <v-list-item v-for="saving in SavingRepository" :key="saving.key" @click="openSaves(saving)">
                 <v-list-item-content>{{ saving.name }}</v-list-item-content>
+
                 <v-list-item-action>
                   <div class="chip-row">
-                    <v-chip small :color="getClassChipColor(characterSaving[saving.key])" dark>{{
-                      ModAttributeSaving(saving.attribute, saving.key) }}</v-chip>
-                    <v-chip small :color="getClassChipColor(characterSaving[saving.key])" dark class="ml-1">{{
-                      characterlabel(characterSaving[saving.key]) }}</v-chip>
+                    <v-chip small class="ui-chip mr-1">
+                      {{ ModAttributeSaving(saving.attribute, saving.key) }}
+                    </v-chip>
+                    <v-chip :color="getClassChipColor(characterSaving[saving.key])" small
+                      class="ui-chip ui-chip--color">
+                      {{ characterlabel(characterSaving[saving.key]) }}
+                    </v-chip>
                   </div>
                 </v-list-item-action>
               </v-list-item>
             </v-list>
           </div>
 
-          <div class="section mt-3">
-            <h3 class="section-title">Владение оружием</h3>
-            <v-list dense>
-              <v-list-item v-for="attack in WeaponRepository" :key="attack.key">
-                <v-list-item-content>{{ attack.name }}</v-list-item-content>
-                <v-list-item-action>
-                  <div class="chip-row">
-                    <v-chip small :color="getClassChipColor(skillAttack[attack.key])" dark>{{
-                      characterlabel(skillAttack[attack.key]) }}</v-chip>
-                  </div>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </div>
-
-          <div class="section mt-3">
-            <h3 class="section-title">Владение доспехами</h3>
-            <v-list dense>
-              <v-list-item v-for="defence in DefenceRepository" :key="defence.key">
-                <v-list-item-content>{{ defence.name }}</v-list-item-content>
-                <v-list-item-action>
-                  <div class="chip-row">
-                    <v-chip small :color="getClassChipColor(skillDefence[defence.key])" dark>{{
-                      characterlabel(skillDefence[defence.key]) }}</v-chip>
-                  </div>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </div>
         </div>
+
       </v-card>
 
-
-      <!-- Диалог по нажатию на навы -->
-      <!-- <v-dialog
-        v-model="skillsDialog"
-        width="600px"
-        scrollable
-        :fullscreen="$vuetify.breakpoint.xsOnly"
-      >
-        <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff">
-            Навыки
-            <v-spacer />
-            <v-icon dark @click="closeSkills">close</v-icon>
-          </v-card-title>
-
-          <v-card-text class="pt-4">
-            <v-container class="bg-primary mb-6">
-              <v-row align-items="start" style="height: 150px">
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Навык </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ skill.name }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1">
-                    {{
-                      attributeRepository.find(
-                        (item) => item.key === skill.attribute
-                      ).short
-                    }}
-                  </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ (characterAttributes[skill.attribute] - 10) / 2 }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Владение </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ profiencyRepository[SkillProf(skill.key)] }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Уровень </v-sheet>
-                  <v-sheet
-                    v-if="profiencyRepository[SkillProf(skill.key)] !== 0"
-                    class="text-center pa-2 ma-2"
-                  >
-                    {{ characterLevel() }}
-                  </v-sheet>
-                  <v-sheet v-else class="text-center pa-2 ma-2"> 0 </v-sheet>
-                </v-col>
-              </v-row>
-              <v-divider></v-divider>
-              <v-row>
-                <div class="pt-4 pb-2" v-html="skill.description"></div>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog> -->
       <v-dialog v-model="attDialog" width="1000px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
         <v-card>
           <!-- Заголовок -->
@@ -228,396 +164,152 @@
             <v-spacer />
             <v-icon dark @click="closeAtt">close</v-icon>
           </v-card-title>
-          <v-card-text class="pt-4">
 
-            <table class="boost-table">
-              <thead>
-                <tr>
-                  <th v-for="attr in finalRepository">{{ attr }}</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <!-- <tr v-for="(row, index) in tableRows">
-                  <td v-for="attr in finalRepository">
-                    {{ formatCell(row[attr], row, attr) }}
-                  </td>
-                </tr> -->
-                <tr v-for="(row, rowIndex) in tableRows" :key="row.source">
-                  <td class="boost-cell">{{ row.source }}</td>
-                  <td class="boost-cell">{{ formatBoost('strength', rowIndex) }}</td>
-                  <td class="boost-cell">{{ formatBoost('dexterity', rowIndex) }}</td>
-                  <td class="boost-cell">{{ formatBoost('constitution', rowIndex) }}</td>
-                  <td class="boost-cell">{{ formatBoost('intellect', rowIndex) }}</td>
-                  <td class="boost-cell">{{ formatBoost('wisdom', rowIndex) }}</td>
-                  <td class="boost-cell">{{ formatBoost('charisma', rowIndex) }}</td>
-
-                </tr>
-              </tbody>
-
-              <tfoot>
-                <tr>
-                  <th>
-
-                  </th>
-                  <th v-for="attr in attributeRepository" class="boost-footer">
-                    <!-- = {{ formatTotal(attr) }} -->
-                    = {{ ModAttributeReal(attr.key) }}
-                  </th>
-                </tr>
-              </tfoot>
-            </table>
-
-
-
-          </v-card-text>
+          <attribute-table :characterId="$route.params.id" />
 
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="skillsDialog" width="1000px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
-        <v-card>
-          <!-- Заголовок -->
-          <v-card-title style="background-color: #262e37; color: #fff">
-            {{ skill.name }}
+      <v-dialog v-model="skillsDialog" max-width="1000" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
+        <v-card class="ui-dialog">
+
+          <!-- HEADER -->
+          <v-card-title class="ui-dialog__header">
+            <div class="text-h6">{{ skill.name }}</div>
             <v-spacer />
-            <v-icon dark @click="closeSkills">close</v-icon>
+            <v-btn icon @click="closeSkills">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-card-title>
 
-          <!-- Контент -->
-          <v-card-text class="pt-4">
-            <!-- Основная инфа -->
-            <!-- <v-container class="bg-primary mb-6">
-              <v-row align-items="start" style="height: 150px">
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Навык </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ skill.name }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1">
-                    {{
-                      attributeRepository.find(
-                        (item) => item.key === skill.attribute
-                      ).short
-                    }}
-                  </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ (characterAttributes[skill.attribute] - 10) / 2 }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Владение </v-sheet>
-                  <v-sheet class="text-center pa-2 ma-2">
-                    {{ profiencyRepository[SkillProf(skill.key)] }}
-                  </v-sheet>
-                </v-col>
-                <v-col>
-                  <v-sheet class="text-center small pa-1"> Уровень </v-sheet>
-                  <v-sheet
-                    v-if="profiencyRepository[SkillProf(skill.key)] !== 0"
-                    class="text-center pa-2 ma-2"
-                  >
-                    {{ characterLevel() }}
-                  </v-sheet>
-                  <v-sheet v-else class="text-center pa-2 ma-2"> 0 </v-sheet>
-                </v-col>
-              </v-row>
-              <v-divider></v-divider>
-              <v-row>
-                <div class="pt-4 pb-2" v-html="skill.description"></div>
-              </v-row>
-            </v-container> -->
+          <v-divider />
 
-            <!-- Аккордеон -->
-            <v-expansion-panels multiple>
-              <v-expansion-panel>
-                <v-expansion-panel-header>Описание навыка</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="pt-4 pb-2" v-html="skill.description"></div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <!-- Actions -->
-              <v-expansion-panel>
-                <v-expansion-panel-header>Действия навыка</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-list dense>
-                    <v-list-item v-for="(action, i) in skill.actions || []">
-                      <v-expansion-panel>
-                        <v-expansion-panel-header>
-                          {{ action?.name }}</v-expansion-panel-header>
-                        <v-expansion-panel-content>
-                          <v-card class="glass-card pa-4">
-                            <v-card-title class="headline">
-                              {{ action?.name }}
-                            </v-card-title>
-                            <v-card-text>
-                              <v-row>
-                                <div>
-                                  <trait-view v-if="action" :item="action" class="mb-2" />
-                                </div>
-                              </v-row>
-                              <div class="pt-4 pb-2" v-html="action?.description"></div>
-                              <p>
-                                <strong>Category:</strong>
-                                {{ action?.category }}
-                              </p>
-                              <p v-if="action?.requirements">
-                                <strong>Requirements:</strong>
-                                {{ action.requirements }}
-                              </p>
-                              <p v-if="action?.source">
-                                <strong>Source:</strong> {{ action.source }}
-                              </p>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                            </v-card-actions>
-                          </v-card>
-                        </v-expansion-panel-content>
-                      </v-expansion-panel>
-                    </v-list-item>
-                    <!-- <v-list-item
-                      v-for="(action, i) in skill.actions || []"
-                      :key="i"
-                    >
-                      <v-list-item-content>{{
-                        action.name
-                      }}</v-list-item-content>
-                      <v-list-item-action>
-  <div class="chip-row">
-                        <v-chip small>{{ action.cost }}</v-chip>
+          <!-- CONTENT -->
+          <v-card-text class="ui-dialog__content">
+
+            <!-- DESCRIPTION -->
+            <v-card class="ui-section mb-4" outlined>
+              <v-card-title class="ui-section__title">
+                Описание навыка
+              </v-card-title>
+              <v-card-text v-html="skill.description" />
+            </v-card>
+
+            <!-- ACTIONS -->
+            <v-card class="ui-section mb-4" outlined>
+              <v-card-title class="ui-section__title">
+                Действия
+              </v-card-title>
+
+              <v-list dense>
+                <v-list-item v-for="action in skill.actions || []" :key="action.id">
+                  <v-list-item-content>
+                    <v-list-item-title class="font-weight-medium">
+                      {{ action.name }}
+                    </v-list-item-title>
+
+                    <v-list-item-subtitle v-html="action.description" />
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-card>
+
+            <!-- BREAKDOWN (НОРМАЛЬНАЯ ФОРМУЛА) -->
+            <v-card class="ui-section mb-4" outlined>
+              <v-card-title class="ui-section__title">
+                Расчёт
+              </v-card-title>
+
+              <div class="ui-formula">
+
+                <div class="ui-formula__total">
+                  {{ skillTotal(skill) >= 0 ? '+' : '' }}{{ skillTotal(skill) }}
+                </div>
+
+                <div class="ui-formula__parts">
+
+                  <div class="ui-formula__part">
+                    <v-chip small class="ui-chip">{{ profiencyRepository[SkillProf(skill.key)] }}</v-chip>
+                    <span>Владение</span>
+                  </div>
+
+                  <div class="ui-formula__operator">+</div>
+
+                  <div class="ui-formula__part">
+                    <v-chip small class="ui-chip">
+                      {{ (characterAttributes[skill.attribute] - 10) / 2 }}
+                    </v-chip>
+                    <span>Атрибут</span>
+                  </div>
+
+                  <div class="ui-formula__operator">+</div>
+
+                  <div class="ui-formula__part">
+                    <v-chip small class="ui-chip">
+                      {{ profiencyRepository[SkillProf(skill.key)] !== 0 ? characterLevel() : 0 }}
+                    </v-chip>
+                    <span>Уровень</span>
+                  </div>
+
+                </div>
+              </div>
+            </v-card>
+
+            <!-- MODIFIERS -->
+            <v-card class="ui-section" outlined>
+              <v-card-title class="ui-section__title">
+                Модификаторы
+              </v-card-title>
+
+              <div v-for="char in charactermodificatorsBonus" :key="char.id">
+                <div v-if="char.selector === skill.key || char.selector === 'skill-check'" class="ui-modifier"
+                  v-html="char.description" />
+                <v-divider />
+              </div>
+            </v-card>
+
+            <v-card class="ui-section mt-4" outlined>
+              <v-card-title class="ui-section__title">
+                Таймлайн
+              </v-card-title>
+
+              <v-timeline dense align-top>
+
+                <v-timeline-item v-for="(event, index) in skill.event" :key="index"
+                  :color="event.active ? 'green' : 'grey'" small>
+
+                  <template v-slot:icon>
+                    <v-icon small>
+                      mdi-badge-account
+                    </v-icon>
+                  </template>
+
+                  <v-card class="ui-timeline-card" outlined>
+
+                    <v-card-title class="ui-timeline-header">
+                      <div class="ui-timeline-source">
+                        {{ event.source }}
                       </div>
-</v-list-item-action>
-                    </v-list-item> -->
-                  </v-list>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
 
-              <!-- Breakdown -->
-              <v-expansion-panel>
-                <v-expansion-panel-header>Расшифровка</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-container class="pa-0 pb-4">
-                    <v-row align="center" dense>
-                      <span class="font-weight-bold">
-                        <span v-if="skillTotal(skill) < 0"></span>
-                        <span v-else>+</span>
-                        {{ skillTotal(skill) }}
-                      </span>
-                      =
-                      <!-- Бонус владения -->
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <kbd v-bind="attrs" v-on="on">
-                            {{ profiencyRepository[SkillProf(skill.key)] }}
-                          </kbd>
-                        </template>
-                        <span>Вы {{ SkillLabelName(skill.key) }}, что дает вам бонус
-                          {{ profiencyRepository[SkillProf(skill.key)] }}</span>
-                      </v-tooltip>
+                      <v-spacer />
 
-                      +
+                      <v-chip small class="ui-timeline-level">
+                        Уровень {{ event.level }}
+                      </v-chip>
+                    </v-card-title>
 
-                      <!-- Модификатор атрибута -->
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <kbd v-bind="attrs" v-on="on">
-                            {{ (characterAttributes[skill.attribute] - 10) / 2 }}
-                          </kbd>
-                        </template>
-                        <span>
-                          Модификатор атрибута
-                          {{
-                            attributeRepository.find(
-                              (i) => i.key === skill.attribute
-                            )?.short
-                          }}
-                        </span>
-                      </v-tooltip>
+                    <v-card-text class="ui-timeline-text">
+                      {{ event.details }}
+                    </v-card-text>
 
-                      +
+                  </v-card>
 
-                      <!-- Бонус уровня (только если есть владение) -->
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <kbd v-bind="attrs" v-on="on">
-                            {{
-                              profiencyRepository[SkillProf(skill.key)] !== 0
-                                ? characterLevel()
-                                : 0
-                            }}
-                          </kbd>
-                        </template>
-                        <span v-if="profiencyRepository[SkillProf(skill.key)] !== 0">Поскольку вы обучены этому
-                          навыку,
-                          вы
-                          добавляете свой
-                          уровень.</span>
-                        <span v-if="profiencyRepository[SkillProf(skill.key)] === 0">Поскольку вы не обучены этому
-                          навыку,
-                          вы не добавляете
-                          свой уровень.</span>
-                      </v-tooltip>
-                    </v-row>
-                  </v-container>
+                </v-timeline-item>
 
-                  <v-divider></v-divider>
+              </v-timeline>
+            </v-card>
 
-                  <!-- Блок с модификаторами -->
-                  <v-container class="pa-0 mt-4">
-                    <v-row dense>
-                      <v-col
-                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'skill-check' || finalSkillRepository.flatMap(k => k.key).includes(t.selector))">
-                        <div v-if="char.selector === skill.key || char.selector === 'skill-check'"
-                          v-html="char.description"></div>
-                        <v-divider></v-divider>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-
-              <!-- Timeline -->
-              <v-expansion-panel>
-                <v-expansion-panel-header>Таймлайн навыка</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-list dense>
-                    <v-list-item v-for="(event, index) in skill.event">
-                      <v-list-item-content>
-                        <v-list-item-title style="
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                          ">
-                          <span>{{ event.source }}</span>
-                          <span style="font-size: 0.8rem; font-weight: normal">Уровень {{ event.level }}</span>
-                        </v-list-item-title>
-                        <v-list-item-subtitle style="font-style: italic; font-size: 0.75rem">
-                          {{ event.details }}
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-icon>
-                        <v-icon :color="event.active ? 'green' : 'grey'">mdi-badge-account</v-icon>
-                      </v-list-item-icon>
-                    </v-list-item>
-                  </v-list>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </v-card-text>
-
-          <!-- Нижняя панель -->
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <v-dialog v-model="savesDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
-        <v-card>
-          <v-card-title style="background-color: #262e37; color: #fff">
-            Спасброски
-            <v-spacer />
-            <v-icon dark @click="closeSaves">close</v-icon>
-          </v-card-title>
-
-          <v-card-text class="pt-4">
-            <v-expansion-panels multiple>
-              <!-- Описание спасброска -->
-              <v-expansion-panel>
-                <v-expansion-panel-header>Описание спасброска</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <div class="pt-4 pb-2" v-html="save.description"></div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-
-              <!-- Расшифровка бонусов -->
-              <v-expansion-panel>
-                <v-expansion-panel-header>Расшифровка бонусов</v-expansion-panel-header>
-                <v-expansion-panel-content>
-
-                  <!-- Блок с бонусами -->
-                  <v-container class="pa-0 pb-4">
-                    <v-row align="center" dense>
-                      <span class="font-weight-bold">
-                        <span v-if="saveTotal(save) < 0"></span>
-                        <span v-else>+</span>
-                        {{ saveTotal(save) }}
-                      </span>
-                      =
-                      <!-- Бонус владения -->
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <kbd v-bind="attrs" v-on="on">
-                            {{ profiencyRepository[characterSaving[save.key]] }}
-                          </kbd>
-                        </template>
-                        <span>
-                          Вы {{ SaveLabelName(characterSaving[save.key]) }}, этим спасброском, что дает вам бонус
-                          {{ profiencyRepository[characterSaving[save.key]] }}
-                        </span>
-                      </v-tooltip>
-
-                      +
-
-                      <!-- Модификатор атрибута -->
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <kbd v-bind="attrs" v-on="on">
-                            {{ (characterAttributes[save.attribute] - 10) / 2 }}
-                          </kbd>
-                        </template>
-                        <span>
-                          Модификатор атрибута
-                          {{attributeRepository.find((i) => i.key === save.attribute)?.short}}
-                        </span>
-                      </v-tooltip>
-
-                      +
-
-                      <!-- Бонус уровня -->
-                      <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                          <kbd v-bind="attrs" v-on="on">
-                            {{ profiencyRepository[characterSaving[save.key]] !== 0 ? characterLevel() : 0 }}
-                          </kbd>
-                        </template>
-                        <span v-if="profiencyRepository[characterSaving[save.key]] !== 0">
-                          Поскольку вы владеете этим спасброском, добавляется уровень.
-                        </span>
-                        <span v-else>
-                          Поскольку вы не владеете этим спасброском, уровень не добавляется.
-                        </span>
-                      </v-tooltip>
-                    </v-row>
-                  </v-container>
-
-                  <v-divider></v-divider>
-
-                  <!-- Блок с модификаторами -->
-                  <v-container class="pa-0 mt-4">
-                    <v-row dense>
-                      <v-col
-                        v-for="char in charactermodificatorsBonus.filter(t => t.selector === 'saving-throw' || SavingRepository.flatMap(t => t.key).includes(t.selector))">
-                        <div v-if="char.selector === save.key || char.selector === 'saving-throw'"
-                          v-html="char.description">
-                        </div>
-                        <v-divider></v-divider>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-
-              <!-- Timeline -->
-              <v-expansion-panel>
-                <v-expansion-panel-header>Таймлайн спасброска</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-list dense>
+            <!-- <v-list dense>
                     <v-list-item v-for="(event, index) in save.event">
                       <v-list-item-content>
                         <v-list-item-title style="
@@ -636,19 +328,137 @@
                         <v-icon :color="event.active ? 'green' : 'grey'">mdi-badge-account</v-icon>
                       </v-list-item-icon>
                     </v-list-item>
-                  </v-list>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
+                  </v-list> -->
 
           </v-card-text>
-          <v-divider></v-divider>
+
+          <v-divider />
+
+          <!-- FOOTER -->
+          <v-card-actions>
+            <v-spacer />
+          </v-card-actions>
+
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="savesDialog" max-width="600" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
+        <v-card class="ui-dialog">
+
+          <v-card-title class="ui-dialog__header">
+            <div class="text-h6">Спасбросок</div>
+            <v-spacer />
+            <v-btn icon @click="closeSaves">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-divider />
+
+          <v-card-text class="ui-dialog__content">
+
+            <v-card class="ui-section mb-4" outlined>
+              <v-card-title class="ui-section__title">
+                Описание
+              </v-card-title>
+              <v-card-text v-html="save.description" />
+            </v-card>
+
+            <v-card class="ui-section" outlined>
+              <v-card-title class="ui-section__title">
+                Расчёт
+              </v-card-title>
+
+              <div class="ui-formula">
+
+                <div class="ui-formula__total">
+                  {{ saveTotal(save) >= 0 ? '+' : '' }}{{ saveTotal(save) }}
+                </div>
+
+                <div class="ui-formula__parts">
+
+                  <div class="ui-formula__part">
+                    <v-chip small class="ui-chip">
+                      {{ profiencyRepository[characterSaving[save.key]] }}
+                    </v-chip>
+                    <span>Владение</span>
+                  </div>
+
+                  <div class="ui-formula__operator">+</div>
+
+                  <div class="ui-formula__part">
+                    <v-chip small class="ui-chip">
+                      {{ (characterAttributes[save.attribute] - 10) / 2 }}
+                    </v-chip>
+                    <span>Атрибут</span>
+                  </div>
+
+                  <div class="ui-formula__operator">+</div>
+
+                  <div class="ui-formula__part">
+                    <v-chip small class="ui-chip">
+                      {{ profiencyRepository[characterSaving[save.key]] !== 0 ? characterLevel() : 0 }}
+                    </v-chip>
+                    <span>Уровень</span>
+                  </div>
+
+                </div>
+              </div>
+
+            </v-card>
+
+            <v-card class="ui-section mt-4" outlined>
+              <v-card-title class="ui-section__title">
+                Таймлайн
+              </v-card-title>
+
+              <v-timeline dense align-top>
+
+                <v-timeline-item v-for="(event, index) in save.event" :key="index"
+                  :color="event.active ? 'green' : 'grey'" small>
+
+                  <template v-slot:icon>
+                    <v-icon small>
+                      mdi-badge-account
+                    </v-icon>
+                  </template>
+
+                  <v-card class="ui-timeline-card" outlined>
+
+                    <v-card-title class="ui-timeline-header">
+                      <div class="ui-timeline-source">
+                        {{ event.source }}
+                      </div>
+
+                      <v-spacer />
+
+                      <v-chip small class="ui-timeline-level">
+                        Уровень {{ event.level }}
+                      </v-chip>
+                    </v-card-title>
+
+                    <v-card-text class="ui-timeline-text">
+                      {{ event.details }}
+                    </v-card-text>
+
+                  </v-card>
+
+                </v-timeline-item>
+
+              </v-timeline>
+            </v-card>
+
+          </v-card-text>
+
+          <v-divider />
 
           <v-card-actions>
             <v-spacer />
           </v-card-actions>
+
         </v-card>
       </v-dialog>
+
     </v-navigation-drawer>
 
     <v-app-bar app dark dense style="background-color: #212121" :fixed="toolbar.fixed"
@@ -681,13 +491,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-toolbar dense style="
-          position: sticky;
-          top: 48px;
-          z-index: 5;
-          /* background-color: #212121; */
-          overflow: auto;
-        ">
+      <v-toolbar class="builder-toolbar" dense>
         <v-toolbar-items>
           <v-btn small text nuxt :to="`/forge/my-characters`" icon>
             <v-icon>supervisor_account</v-icon>
@@ -737,15 +541,15 @@
               !
             </v-chip>
           </v-btn>
-          <v-btn small text nuxt :to="routes.wargear" :disabled="!settingSelected">
+          <!-- <v-btn small text nuxt :to="routes.wargear" :disabled="!settingSelected">
             6. Снаряжение
-          </v-btn>
-          <v-btn small text nuxt :to="routes.psychic" :disabled="!settingSelected">
+          </v-btn> -->
+          <!-- <v-btn small text nuxt :to="routes.psychic" :disabled="!settingSelected">
             7. Заклинания
-          </v-btn>
-          <v-btn small text nuxt :to="routes.background" :disabled="!settingSelected">
+          </v-btn> -->
+          <!-- <v-btn small text nuxt :to="routes.background" :disabled="!settingSelected">
             8. Детали Персонажа
-          </v-btn>
+          </v-btn> -->
           <v-btn small nuxt icon exact :to="`/forge/characters/${$route.params.id}`" :disabled="!settingSelected">
             <v-icon>description</v-icon>
           </v-btn>
@@ -810,10 +614,10 @@
       </div>
       <div class="d-block d-sm-none">
         <v-btn tile small nuxt :to="linkPrev" :disabled="linkCurrentIndex === 0">
-          <v-icon left small> chevron_left </v-icon>prev
+          <v-icon left small> chevron_left </v-icon>Пред
         </v-btn>
         <v-btn tile small nuxt :to="linkNext" :disabled="linkCurrentIndex === 8">
-          next<v-icon right small> chevron_right </v-icon>
+          След<v-icon right small> chevron_right </v-icon>
         </v-btn>
       </div>
       <v-spacer />
@@ -830,6 +634,8 @@ import SluggerMixin from "~/mixins/SluggerMixin";
 import AppLoader from '~/components/AppLoader.vue';
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 import DiceChat from '@/components/DiceChat.vue';
+import AttributeTable from '~/components/forge/character/AttributeTable.vue';
+
 
 export default {
   name: "Forge",
@@ -837,7 +643,8 @@ export default {
     DefaultFooter,
     ToolbarAccountActions,
     AppLoader,
-    DiceChat
+    DiceChat,
+    AttributeTable
   },
   mixins: [StatRepositoryMixin, SluggerMixin, WargearTraitRepositoryMixin],
   data() {
@@ -992,63 +799,63 @@ export default {
           text: this.characterSpeciesLabel,
           cost: this.characterSpeciesCost,
         },
+        // {
+        //   id: 2,
+        //   path: this.routes.heritage,
+        //   hint: "Родословная",
+        //   text: this.characterHeritageLabel,
+        //   cost: this.characterSpeciesCost,
+        // },
         {
           id: 2,
-          path: this.routes.heritage,
-          hint: "Родословная",
-          text: this.characterHeritageLabel,
-          cost: this.characterSpeciesCost,
-        },
-        {
-          id: 3,
           path: this.routes.archetype,
           hint: "Класс",
           text: this.characterArchetype,
           cost: this.characterArchetypeCost,
         },
         {
-          id: 4,
+          id: 3,
           path: this.routes.ascension,
           hint: "Предыстория",
           text: this.characterAscension,
           cost: this.characterAscensionCost,
         },
         {
-          id: 5,
+          id: 4,
           path: this.routes.stats,
           // hint: 'Навыки и Характеристики',
           text: "Навыки и Характеристики",
           cost: this.characterAttributeCost + this.characterSkillCost,
         },
         {
-          id: 6,
+          id: 5,
           path: this.routes.talents,
           hint: `Черты`,
           // text: `${this.characterTalents.length} Черт взято`,
           cost: this.characterTalentCost,
         },
-        {
-          id: 7,
-          path: this.routes.psychic,
-          hint: `Заклинания`,
-          // text: `${this.characterPsychicPowers.length}Зак`,
-          cost: this.characterPsychicPowerCost,
-        },
+        // {
+        //   id: 6,
+        //   path: this.routes.psychic,
+        //   hint: `Заклинания`,
+        //   // text: `${this.characterPsychicPowers.length}Зак`,
+        //   cost: this.characterPsychicPowerCost,
+        // },
         { divider: true },
-        {
-          id: 8,
-          path: this.routes.wargear,
-          hint: "",
-          text: "Снаряжение",
-          cost: null,
-        },
-        {
-          id: 9,
-          path: this.routes.background,
-          hint: "Языки",
-          // text: this.characterFaction ? this.characterFaction.name : undefined,
-          cost: null,
-        },
+        // {
+        //   id: 8,
+        //   path: this.routes.wargear,
+        //   hint: "",
+        //   text: "Снаряжение",
+        //   cost: null,
+        // },
+        // {
+        //   id: 9,
+        //   path: this.routes.background,
+        //   hint: "Языки",
+        //   // text: this.characterFaction ? this.characterFaction.name : undefined,
+        //   cost: null,
+        // },
       ];
     },
 
@@ -1090,6 +897,15 @@ export default {
         this.$route.params.id
       );
     },
+    Resistance() {
+      return this.$store.getters["characters/characterResistanceById"](
+        this.$route.params.id
+      );
+    },
+    ResImWeak() {
+      return this.Resistance
+    },
+
     totalBuildPoints() {
       return this.$store.getters["characters/characterTotalBuildPointsById"](
         this.$route.params.id
@@ -1179,6 +995,7 @@ export default {
         this.$route.params.id
       );
     },
+
 
     // see core page 156
     maximumBuildPointsForAttributes() {
@@ -1481,10 +1298,14 @@ export default {
     },
 
     ModAttributeReal(attribute) {
+      let result = 0
 
+      this.tableRows.forEach((row, rowIndex) => {
+        result += this.formatBoost(attribute, rowIndex)
+      })
 
-      const result = this.characterAttributes[attribute]
-      const modRaw = (result - 10) / 2;       // настоящее дробное значение
+      // const result = this.characterAttributes[attribute]
+      const modRaw = (result);       // настоящее дробное значение
       const mod = Math.floor(modRaw);         // отображаемое целое значение
 
 
@@ -1992,12 +1813,6 @@ export default {
       }
     },
 
-    getSkillRank(skillKey) {
-      const skillSheet = this.characterSkillSheet || [];
-      const level = this.characterLevel()
-
-      return skillSheet.filter((s) => s.key === skillKey && s.level <= level && s.combinded !== true).length;
-    },
 
     getSkillRankName(skillKey) {
       const rank = this.getSkillRank(skillKey);
@@ -2016,6 +1831,13 @@ export default {
           return "Нетренирован";
       }
     },
+    getSkillRank(skillKey) {
+      const skillSheet = this.characterSkillSheet || [];
+      const level = this.characterLevel()
+
+      return skillSheet.filter((s) => s.key === skillKey && s.level <= level && s.combinded !== true).length;
+    },
+
     getRankChipColor(skillKey) {
       const rank = this.getSkillRank(skillKey);
       switch (rank) {
@@ -2393,11 +2215,26 @@ export default {
 }
 
 .v-chip {
-  font-size: 0.65rem;
-  height: 18px;
-  line-height: 18px;
-  margin-right: 2px;
-  /* небольшой отступ между чипами */
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  color: var(--ui-text);
+
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+}
+
+/* тёмная тема */
+.theme--dark .v-chip {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+}
+
+/* светлая тема */
+.theme--light .v-chip {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+
 }
 
 .chip-row {
@@ -2421,5 +2258,245 @@ export default {
 
   width: 350px;
   max-height: 500px;
+}
+
+/* =========================
+   PANEL / CARD SYSTEM
+========================= */
+
+.ui-panel {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+}
+
+/* =========================
+   BUTTON SYSTEM
+========================= */
+
+.ui-btn {
+  border-radius: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-transform: none;
+  transition: 0.2s ease;
+
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+
+.ui-btn--primary {
+  border: 1px solid var(--ui-accent);
+  background: var(--ui-accent-soft);
+}
+
+.ui-btn--secondary {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+}
+
+.ui-btn--ghost {
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+/* контраст под тему */
+.theme--light .ui-btn {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.theme--dark .ui-btn {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* =========================
+   CHIP SYSTEM
+========================= */
+
+.ui-chip {
+  border-radius: 8px;
+  font-weight: 500;
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+
+}
+
+.ui-chip--color {
+  color: #ccc;
+}
+
+/* смысловые состояния */
+.ui-chip--success {
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.ui-chip--danger {
+  border-color: rgba(244, 67, 54, 0.5);
+}
+
+.ui-chip--info {
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+/* =========================
+   SIDEBAR LAYOUT HELPERS
+========================= */
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 12px 0 8px;
+  opacity: 0.9;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.stat-name-btn {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.stat-mod-btn {
+  min-width: 44px;
+  justify-content: center;
+}
+
+.chip-row {
+  display: flex;
+  align-items: center;
+}
+
+/* =========================
+   OPTIONAL: smooth UI feel
+========================= */
+
+.ui-btn:hover {
+  transform: translateY(-1px);
+}
+
+.builder-toolbar {
+  position: sticky;
+  width: 100%;
+
+  z-index: 5;
+
+  background: var(--ui-surface);
+  border-bottom: 1px solid var(--ui-border);
+
+  height: 48px;
+}
+
+.toolbar-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+
+.toolbar-items {
+  padding-top: 55px !important;
+}
+
+.ui-dialog {
+  border-radius: 14px;
+}
+
+.ui-dialog__header {
+  background: #262e37;
+  color: #fff;
+}
+
+.ui-dialog__content {
+  background: var(--ui-surface, #1e1e1e);
+}
+
+/* Секции */
+.ui-section {
+  border-radius: 12px;
+}
+
+/* Формула */
+.ui-formula {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.ui-formula__total {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.ui-formula__parts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.ui-formula__part {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ui-formula__operator {
+  opacity: 0.6;
+  font-weight: bold;
+}
+
+.ui-chip {
+  font-weight: 600;
+
+}
+
+/* Модификаторы */
+.ui-modifier {
+  padding: 8px 0;
+  opacity: 0.9;
+}
+
+.ui-timeline-card {
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.ui-timeline-header {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  padding-bottom: 4px;
+}
+
+.ui-timeline-source {
+  font-weight: 600;
+}
+
+.ui-timeline-level {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.ui-timeline-text {
+  font-size: 12px;
+  opacity: 0.85;
+  font-style: italic;
+}
+
+.v-container {
+  padding-top: 112px !important;
+  /* 64 (app-bar) + 48 (toolbar) */
 }
 </style>

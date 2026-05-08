@@ -47,7 +47,7 @@
 
       <v-slider :value="characterCustomLevel" :min="1" :max="20" class="pb-2" label="Уровень"
         hint="Установите уровень персонажа" step="1" ticks thumb-label="always" dense outlined persistent-hint
-        type="number" @input="setLevel" />
+        type="number" @change="setLevel" />
     </v-col>
 
     <v-col :cols="12" :sm="5">
@@ -122,7 +122,7 @@ export default {
         archetypes: { exclude: [] },
         homebrews: [],
       },
-      allHomebrews: [],
+      allHomebrews: false,
       avatar: '',
       selectAvatarDialog: false,
       myCroppa: {},
@@ -700,18 +700,6 @@ export default {
         },
       ],
       enabledHomebrews: [],
-      settingHouseruleSelectors: [
-        {
-          key: 'skill-attribute-advancement-costs',
-          name: 'Skill & Attribute Advancement Costs Method',
-          hint: 'Use regular advancement costs or legacy (v1) advancement costs, that favour skills.',
-          selected: 'v15',
-          items: [
-            { value: 'v10', text: 'Legacy Flair (Cheaper skills)' },
-            { value: 'v15', text: 'By the book (Revised Rules)' },
-          ],
-        },
-      ],
     };
   },
   computed: {
@@ -740,9 +728,6 @@ export default {
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
     },
-    settingHouserules() {
-      return this.$store.getters['characters/characterSettingHouserulesById'](this.characterId);
-    },
   },
   watch: {
     settingHomebrews: {
@@ -753,24 +738,14 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
-    settingHouserules: {
-      handler(newVal) {
-        if (newVal) {
-          this.settingHouseruleSelectors.forEach((rules) => {
-            rules.selected = newVal[rules.key];
-          });
-        }
-      },
-      immediate: true, // make this watch function is called when component created
-    },
   },
   methods: {
-    toggleAllHomebrews() {
+    toggleAllHomebrews(value) {
       const optionalKeys = this.settingOfficialOptions
         .filter(i => i.show && i.optional && !i.disabled)
         .map(i => i.key);
 
-      if (this.allHomebrews) {
+      if (value) {
         // добавляем все опциональные в enabledHomebrews, не трогая уже включённые
         this.enabledHomebrews = Array.from(new Set([...this.enabledHomebrews, ...optionalKeys]));
       } else {
@@ -818,9 +793,6 @@ export default {
     },
     updateOfficial(event) {
       this.$store.commit('characters/setSettingOfficial', { id: this.characterId, content: this.enabledHomebrews });
-    },
-    updateHouserules(value, key) {
-      this.$store.commit('characters/setSettingHouserules', { id: this.characterId, houserule: { key, value } });
     },
   },
 };

@@ -58,53 +58,53 @@
       </v-row>
 
       <!-- 🛡️ Профили -->
+
+
+
+
+      <!-- ⚔️ Атаки и Защиты -->
       <v-row class="d-flex" align="stretch">
         <v-col cols="12" md="4">
           <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
-            <h3 class="text-h6">Внимательность</h3>
-            {{ characterlabel(item.Perception) }}
-          </v-card>
-        </v-col>
-
-        <v-col cols="12" md="4">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
-            <h3 class="text-h6">Спасброски</h3>
+            <h3 class="text-h6"> Спасброски/КС </h3>
 
             <div v-for="item1 in SavingRepository" :key="item1.key">
-              {{ characterlabel(item.saving[item1.key]) }} — {{ item1.name }}
+              <v-chip small :color="getClassChipColor(characterSaving[item1.key])" dark> {{
+                characterlabel(characterSaving[item1.key]) }}</v-chip>
+              {{ item1.name }}
+            </div>
+            <div>
+              <v-chip small :color="getClassChipColor(characterSkillClass)" dark> {{
+                characterlabel(characterSkillClass) }}</v-chip> КС класса
+            </div>
+
+            <div><v-chip small :color="getClassChipColor(characterPerseption)" dark> {{
+              characterlabel(characterPerseption) }}</v-chip> Внимательность
             </div>
           </v-card>
         </v-col>
 
         <v-col cols="12" md="4">
           <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
-            <h3 class="text-h6">КС класса</h3>
-            {{ characterlabel(item.skillClass) }}
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <!-- ⚔️ Атаки и Защиты -->
-      <v-row class="d-flex" align="stretch">
-        <v-col cols="12" md="6">
-          <v-card outlined class="pa-4" style="border-color: #c75d5d;">
             <h3 class="text-h6">Атаки</h3>
 
             <div v-for="item1 in WeaponRepository" :key="item1.key">
-              <div v-if="item.skillAttack[item1.key]">
-                {{ characterlabel(item.skillAttack[item1.key]) }} — {{ item1.name }}
+              <div v-if="skillAttack[item1.key]">
+                <v-chip small :color="getClassChipColor(skillAttack[item1.key])" dark> {{
+                  characterlabel(skillAttack[item1.key]) }}</v-chip> {{ item1.name }}
               </div>
             </div>
           </v-card>
         </v-col>
 
-        <v-col cols="12" md="6">
-          <v-card outlined class="pa-4" style="border-color: #c75d5d;">
+        <v-col cols="12" md="4">
+          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
             <h3 class="text-h6">Защиты</h3>
 
             <div v-for="item1 in DefenceRepository" :key="item1.key">
-              <div v-if="item.skillDefence[item1.key]">
-                {{ characterlabel(item.skillDefence[item1.key]) }} — {{ item1.name }}
+              <div v-if="skillDefence[item1.key]">
+                <v-chip small :color="getClassChipColor(skillDefence[item1.key])" dark> {{
+                  characterlabel(skillDefence[item1.key]) }}</v-chip> {{ item1.name }}
               </div>
             </div>
           </v-card>
@@ -131,6 +131,7 @@
         </div>
       </v-card>
 
+
       <!-- 🌟 Фичи -->
       <v-card class="mt-4 pa-4" outlined>
         <h2 class="text-h5 mb-4">Классовые особенности</h2>
@@ -145,24 +146,68 @@
             </v-expansion-panel-header>
 
             <v-expansion-panel-content>
-              <div class="feature-text text-with-tooltips" v-if="feature.description"
-                v-html="highlightedText(feature.description)"></div>
-              <!-- <div v-if="feature.description">
-                <rich-text-with-tooltips :html="feature.description" :terms="terms" />
-              </div> -->
+              <div class="feature-text text-with-tooltips" v-if="feature.description" v-html="feature.description">
+              </div>
               <div class="feature-text text-with-tooltips" v-if="feature.snippet" v-html="feature.snippet"></div>
 
+              <div class="feature-text text-with-tooltips" v-if="feature.action"">
+                    <CardItem :item="feature.action" />
+              </div>
+
               <!-- Выбор -->
-              <v-select v-if="feature.options" v-model="feature.selected" :items="feature.options" item-text="name"
-                item-value="key" dense outlined @change="changeSelectedOption(feature, item)" />
+              <v-select v-if="feature.options" v-model="feature.selected" :items="feature.options || []"
+                :disabled="!feature.options || !feature.options.length" item-text="name" item-value="key" dense outlined
+                @change="changeSelectedOption(feature, item)" />
 
               <!-- Выбранная опция -->
-              <v-card v-if="feature.selected" class="mt-3 pa-3 grey" outlined>
+              <v-card v-if="feature.selected" class="mt-3 pa-3" outlined>
                 <div v-if="getSelectedOption(feature)">
                   <trait-view :item="getSelectedOption(feature)" />
 
                   <div class="feature-text" v-if="getSelectedOption(feature).snippet"
-                    v-html="getSelectedOption(feature).snippet"></div>
+                    v-html="getSelectedOption(feature).snippet">
+                  </div>
+
+                  <v-divider></v-divider>
+                  <p></p>
+
+                  <!-- <div v-for="subItem in selectedOption.subFeature" :key="subItem.key" class="subfeature-option">
+                    <label>
+                      {{ subItem.key }}
+                      <input type="radio" 
+                        v-model="selectedOption.selectedSubFeature" :value="subItem.key"
+                        @input="changeSelectedSubFeature(selectedOption, subItem.key)" />
+                      {{ subItem.name }} (Уровень {{ subItem.level }})
+                    </label>
+                  </div> -->
+
+
+
+                  <v-select v-if="getSelectedOption(feature).options" v-model="feature.selectedOptions"
+                    :items="getSelectedOption(feature).options || []" item-text="name" item-value="key" dense outlined
+                    @change="value => changeSelectedOptionsFeature(
+                      feature,
+                      value,
+                      getSelectedOption(feature).options
+                    )" />
+
+                  <v-card v-for="sub in getSelectedOption(feature).subFeature" :key="sub.key" class="mb-3">
+
+                    <div class="d-flex justify-space-between w-100">
+                      <span>{{ sub.name }}</span>
+                      <span class="grey--text">Ур. {{ sub.level }}</span>
+                    </div>
+
+                    <div v-if="sub.snippet" class="feature-text">
+                      {{ sub.snippet }}
+                    </div>
+
+
+
+
+
+                  </v-card>
+                  <!-- {{ getSelectedOption(feature) }} -->
                 </div>
               </v-card>
             </v-expansion-panel-content>
@@ -184,10 +229,11 @@ import StatRepository from "~/mixins/StatRepositoryMixin";
 import WargearTraitRepository from "~/mixins/WargearTraitRepositoryMixin";
 import traitView from "~/components/TraitView";
 import richTextWithTooltips from "~/components/RichTextWithTooltips";
+import CardItem from '../../../../../../components/CardItem.vue';
 
 export default {
   name: "archetype-manage",
-  components: { ArchetypePreview, traitView, richTextWithTooltips },
+  components: { ArchetypePreview, traitView, richTextWithTooltips, CardItem },
   mixins: [
     CharacterCreationMixin,
     SluggerMixin,
@@ -200,6 +246,7 @@ export default {
       characterId: params.id,
     };
   },
+
   data() {
     return {
       loading: false,
@@ -216,6 +263,8 @@ export default {
       ]
     };
   },
+
+
   computed: {
     characterSettingTier() {
       return this.$store.getters["characters/characterSettingTierById"](
@@ -237,6 +286,11 @@ export default {
         this.characterId
       );
     },
+    characterSkillClass() {
+      return this.$store.getters["characters/characterSkillClassById"](
+        this.characterId
+      );
+    },
     characterArchetypeKey() {
       return this.$store.getters["characters/characterArchetypeKeyById"](
         this.characterId
@@ -244,7 +298,7 @@ export default {
     },
     characterArchetypeCost() {
       return this.$store.getters["characters/characterArchetypeCostsById"](
-        this.$route.params.id
+        this.characterId
       );
     },
     characterArchetypeLabel() {
@@ -342,34 +396,26 @@ export default {
 
 
   },
+
   watch: {
-    sources: {
-      handler: async function (newVal) {
-        if (!newVal) return;
-
-        // сначала подгружаем данные, которые нужны для архетипа
-        await this.getAbilityList(newVal);
-        await this.getActionList(newVal);
-        // await this.getWargearList(newVal);
-        await this.getPsychicPowers(newVal);
-
-        // теперь безопасно загружаем архетип
-        if (
-          this.characterArchetypeKey &&
-          this.characterArchetypeKey !== "unknown"
-        ) {
-          this.loadArchetype(this.characterArchetypeKey);
-        }
-      },
+    characterArchetypeKey: {
       immediate: true,
-    },
+      handler(val) {
+        if (!val || val === "unknown") return;
+
+        this.initArchetype();
+      }
+    }
   },
   methods: {
+    async initArchetype() {
+      await this.getAbilityList(this.sources);
+      await this.getActionList(this.sources);
+      await this.getPsychicPowers(this.sources);
 
+      await this.loadArchetype(this.characterArchetypeKey);
+    },
     async getPsychicPowers(sources) {
-      const config = {
-        params: { source: this.sources.join(','), },
-      };
       this.loading = true;
       const { data } = await this.$axios.get('/api/psychic-powers/');
       this.loading = false;
@@ -385,7 +431,7 @@ export default {
       };
       const { data } = await this.$axios.get(
         "/api/abilityAncestry/",
-        config.source
+        config.params
       );
 
       this.abilityList = data;
@@ -396,9 +442,20 @@ export default {
           source: sources.join(","),
         },
       };
-      const { data } = await this.$axios.get("/api/action/", config.source);
 
-      this.actionList = data;
+      const { data } = await this.$axios.get("/api/action/");
+
+      this.actionList = data.map(s => {
+        const t = s.system;
+
+        return {
+          ...s,
+          ...t
+        };
+      });
+
+
+      console.log(this.actionList)
     },
     async loadArchetype(key) {
       this.loading = true;
@@ -437,10 +494,13 @@ export default {
         let abilityList = [];
 
         //Сюда кладем то, что дается больше одного раза и смотрим под-опции
+
         ability.forEach((ab) => {
           if (Array.isArray(ab.level)) {
             abilityInArray.push(ab);
           }
+
+
 
           if (ab.options) {
             if (ab.type.includes("Weapon Group")) {
@@ -457,6 +517,10 @@ export default {
                 ab.options = listOption;
               });
             }
+
+            ab.selectedOptions = enc.find((s) => s.key === ab.key)
+              ? enc.find((s) => s.key === ab.key).selectedOptions
+              : "";
 
             ab.options.forEach((s) => {
               if (s.subFeature) {
@@ -478,6 +542,8 @@ export default {
               ? enc.find((s) => s.key === ab.key).selected
               : "";
 
+
+
             ab.oldValue = enc.find((s) => s.key === ab.key)
               ? enc.find((s) => s.key === ab.key).selected
               : "";
@@ -494,7 +560,7 @@ export default {
                 s.subFeature = SubFeature;
 
                 if (ab.selected && ab.options.find(s => s.key === ab.selected)) {
-                  console.log(enc)
+
                   ab.options.find(s => s.key === ab.selected).selectedSubFeature = enc.find((t) => t.key === ab.options.find(s => s.key === ab.selected).key)
                     ? enc.find((t) => t.key === ab.options.find(s => s.key === ab.selected).key).selected
                     : "";
@@ -545,6 +611,7 @@ export default {
             subFeature: tal.subFeature,
             options: tal.options,
             selected: tal.selected,
+            selectedOptions: tal.selectedOptions,
             selectedSubFeature: tal.selectedSubFeature || undefined,
             selectedSubFeatureOldValue: tal.selectedSubFeature || undefined,
             oldValue: tal.oldValue || undefined,
@@ -618,16 +685,6 @@ export default {
       const key = this.textToKebab(spell);
       return this.psychicPowersList?.find(s => s.key === key)?.name || '';
     },
-    characterlabel(key) {
-      const map = {
-        U: "Нетренирован",
-        T: "Тренирован",
-        E: "Эксперт",
-        M: "Мастер",
-        L: "Легенда"
-      };
-      return map[key] || "";
-    },
 
     characterLabelAttribute(keys) {
       return this.attributeRepository
@@ -662,7 +719,96 @@ export default {
         this.characterId
       );
     },
+    removeFeatureEffects(item, feature) {
+      const id = this.characterId;
 
+      if (!item) return;
+
+      if (item.focusSpell) {
+        this.$store.commit("characters/removeCharacterFocusSpell", {
+          id,
+          key: this.textToKebab(item.focusSpell),
+          featureKey: feature.key,
+          type: feature.type,
+          source: "archetype"
+        });
+      }
+
+      if (item.skill) {
+        const skills = Array.isArray(item.skill)
+          ? item.skill
+          : [item.skill];
+
+        skills.forEach(s => {
+          this.$store.commit("characters/removeSkillSheet", {
+            id,
+            key: s,
+            level: feature.level,
+            type: "skill",
+            optional: true
+          });
+        });
+      }
+
+      if (item.modification) {
+        this.$store.commit(
+          "characters/removeCharacterModificationByFeature",
+          {
+            id,
+            featureKey: feature.key
+          }
+        );
+      }
+    },
+
+    addFeatureEffects(item, feature) {
+      const id = this.characterId;
+
+      if (!item) return;
+
+      if (item.focusSpell) {
+        this.$store.commit("characters/addCharacterFocusSpell", {
+          id,
+          key: this.textToKebab(item.focusSpell),
+          featureKey: feature.key,
+          type: feature.type,
+          source: "archetype"
+        });
+      }
+
+      if (item.skill) {
+        const skills = Array.isArray(item.skill)
+          ? item.skill
+          : [item.skill];
+
+        skills.forEach(s => {
+          this.$store.commit("characters/addSkillSheet", {
+            id,
+            key: s,
+            level: feature.level,
+            type: "class",
+            optional: true
+          });
+        });
+      }
+
+      if (item.modification) {
+        const mods = Array.isArray(item.modification)
+          ? item.modification
+          : [item.modification];
+
+        this.$store.commit("characters/addCharacterModifications", {
+          id,
+          content: {
+            modifications: mods.map(m => ({
+              ...m,
+              featureKey: feature.key
+            })),
+            source: "archetype"
+          }
+        });
+      }
+    },
     changeSelectedOption(feature, inx) {
       const level = this.characterLevel;
       const id = this.characterId;
@@ -889,7 +1035,7 @@ export default {
                 id: this.characterId,
                 content: { modifications: mod1, source: "archetype" },
               });
-              console.log("Добавил:", mod1)
+
             }
 
 
@@ -904,6 +1050,19 @@ export default {
       feature.oldValue = feature.selected || feature.oldValue;
     },
 
+    changeSelectedOptionsFeature(feature, selected, options) {
+      const id = this.characterId;
+      const level = this.characterLevel;
+
+      const mod = {
+        ...feature,
+        selectedOptions: selected,
+        selectedOptionsList: options.find(s => s.key === selected) || []
+      }
+
+
+      this.$store.commit("characters/updateCharacterModification", { id, mod });
+    },
     changeSelectedSubFeature(parentFeature, subItemKey) {
       const id = this.characterId;
       const level = this.characterLevel;
@@ -1023,6 +1182,39 @@ export default {
       return this.$store.getters["characters/characterLevelById"](
         this.characterId
       );
+    },
+    getClassChipColor(skillKey) {
+      //const rank = this.getSkillRank(skillKey);
+      switch (skillKey) {
+        case "U":
+          return "grey";
+        case "T":
+          return "#171f69";
+        case "E":
+          return "#3c005e";
+        case "M":
+          return "#664400";
+        case "L":
+          return "#5e0000";
+        default:
+          return "grey";
+      }
+    },
+    characterlabel(key) {
+      switch (key) {
+        case "U":
+          return "Н";
+        case "T":
+          return "Т";
+        case "E":
+          return "Э";
+        case "M":
+          return "М";
+        case "L":
+          return "Л";
+        default:
+          return "Н";
+      }
     },
 
   },

@@ -7,205 +7,191 @@
     </v-col>
 
     <v-expansion-panels multiple>
-      <v-expansion-panel v-for="levelAncestry in 20" :key="levelAncestry" v-if="
+      <v-expansion-panel class="ui-panel" v-for="levelAncestry in characterLevel()" :key="levelAncestry" v-if="
         levelAncestry <= characterLevel() &&
         (archetype?.keywords === 'плут' ||
           levelSkill['class'].includes(levelAncestry))
       ">
-        <v-expansion-panel-header>{{ levelAncestry }} уровень
-          <v-skeleton-loader v-if="
-            !getDisplayProgress(levelAncestry).max &&
-            getDisplayProgress(levelAncestry).current
-          " type="chip" width="100" height="32" class="mx-2" />
 
-          <v-chip v-else-if="
-            !(
-              getDisplayProgress(levelAncestry).current ===
-              getDisplayProgress(levelAncestry).max
-            ) && archetype
-          " style="flex: none" right pill>
-            {{ getDisplayProgress(levelAncestry).current }}
-            /
-            {{ getDisplayProgress(levelAncestry).max }}
-          </v-chip>
+        <!-- <v-expansion-panel-header>
+          {{ levelAncestry }} уровень
+        </v-expansion-panel-header> -->
+
+        <v-expansion-panel-header class="ui-panel-header">
+          <div class="ui-panel-header__title"> <span>{{ levelAncestry }} </span> <span class="ui-panel-level"> уровень
+            </span> </div>
+          <v-skeleton-loader v-if="!levelProgressMap[levelAncestry].max && levelProgressMap[levelAncestry].current"
+            type="chip" width="100" height="32" class="mx-2" />
+
+
+          <v-chip class="ui-chip ui-chip--progress" style="flex: none" right pill> {{
+            levelProgressMap[levelAncestry].current }} / {{
+              levelProgressMap[levelAncestry].max }} </v-chip>
         </v-expansion-panel-header>
 
-        <v-expansion-panel-content :key="levelAncestry">
-          <v-col v-if="levelAncestry === 1">
-            <v-col :cols="12">
-              <h3 class="headline">Повышение от Наследия</h3>
-            </v-col>
+        <v-expansion-panel-content class="ui-panel-content">
+          <div class="ui-section">
+            <v-col v-if="levelAncestry === 1">
 
-            <v-container v-if="species" class="bg-surface-variant">
-              <v-row>
-                <v-alert v-if="!species" type="warning" class="caption ml-4 mr-4" dense outlined border="left">
+
+              <v-col :cols="12">
+                <h3 class="ui-h3">Повышение от Наследия</h3>
+              </v-col>
+
+              <v-container v-if="species" class="bg-surface-variant">
+                <v-row>
+                  <!-- <v-alert v-if="!species" type="warning" class="caption ml-4 mr-4" dense outlined border="left">
+                    Выберите наследие
+                  </v-alert> -->
+
+                  <div v-if="!species" class="ui-message ui-message--warning">
+                    Выберите наследие
+                  </div>
+
+                  <v-col :cols="12" :md="12">
+                    <div v-if="
+                      selectedAncestryBoost === selectedAncestryBoost2 &&
+                      selectedAncestryBoost !== '' &&
+                      boost == 2
+                    " class="ui-message ui-message--error">
+                      Вы не можете выбрать одну и ту же характеристику
+                    </div>
+                  </v-col>
+                  <v-col v-if="boost == 2" :cols="12" :md="6">
+                    <v-select class="ui-select" label="Повышение от Наследия" v-model="selectedAncestryBoost2"
+                      :items="AncestryAttribute2" item-text="name" item-value="key" dense outlined
+                      @change="updateSelect2(selectedAncestryBoost2)"></v-select>
+                  </v-col>
+
+                  <v-col :cols="12" :md="6">
+                    <v-select class="ui-select" label="Свободное повышение" v-model="selectedAncestryBoost"
+                      :items="AncestryAttribute" item-text="name" item-value="key" dense outlined
+                      @change="updateSelect(selectedAncestryBoost)"></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+
+              <v-col v-else>
+                <div class="ui-message ui-message--warning">
                   Выберите наследие
-                </v-alert>
+                </div>
+              </v-col>
 
-                <v-col :cols="12" :md="12">
-                  <v-alert v-if="
-                    selectedAncestryBoost === selectedAncestryBoost2 &&
-                    selectedAncestryBoost !== '' &&
-                    boost == 2
-                  " type="error" class="caption ml-4 mr-4" dense outlined border="left">
-                    Вы не можете выбрать одну и ту же характеристику
-                  </v-alert>
-                </v-col>
-                <v-col v-if="boost == 2" :cols="12" :md="6">
-                  <v-select label="Повышение от Наследия" v-model="selectedAncestryBoost2" :items="AncestryAttribute2"
-                    item-text="name" item-value="key" @change="updateSelect2(selectedAncestryBoost2)"></v-select>
-                </v-col>
+              <v-col :cols="12">
+                <h3 class="ui-h3">Повышение от Предыстории</h3>
+              </v-col>
 
-                <v-col :cols="12" :md="6">
-                  <v-select label="Свободное повышение" v-model="selectedAncestryBoost" :items="AncestryAttribute"
-                    item-text="name" item-value="key" @change="updateSelect(selectedAncestryBoost)"></v-select>
-                </v-col>
-              </v-row>
-            </v-container>
+              <v-col v-if="!ascension" :cols="12">
+                <div class="ui-message ui-message--warning">
+                  Выберите предысторию
+                </div>
+              </v-col>
 
-            <v-col v-else>
-              <v-alert type="warning" class="caption ml-4 mr-4" dense outlined border="left">
-                Выберите наследие
-              </v-alert>
+              <v-container v-if="ascension" class="bg-surface-variant">
+                <v-row>
+                  <v-col :cols="12" :md="12">
+                    <div v-if="
+                      selectedBackgroundBoost === selectedBackgroundBoost2 &&
+                      selectedBackgroundBoost !== ''
+                    " class="ui-message ui-message--error">
+                      Вы не можете выбрать одну и ту же характеристику
+                    </div>
+                  </v-col>
+
+                  <v-col :cols="6" :md="6">
+                    <v-select class="ui-select" label="Повышение от предыстории" v-model="selectedBackgroundBoost"
+                      :items="BackgroundAttribute" item-text="name" item-value="key" dense outlined
+                      @change="updateSelectBackground(selectedBackgroundBoost)"></v-select>
+                  </v-col>
+
+                  <v-col :cols="6" :md="6">
+                    <v-select class="ui-select" label="Свободное повышение" v-model="selectedBackgroundBoost2"
+                      :items="BackgroundAttribute2" item-text="name" item-value="key" dense outlined
+                      @change="updateSelectBackground2(selectedBackgroundBoost2)"></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-col :cols="12">
+                <h3 class="ui-h3">
+                  Повышения Класса {{ archetype ? archetype.name : "" }}
+                </h3>
+              </v-col>
+
+
+              <v-col v-if="archetype && archetype.keyAbility.length > 1" :cols="6" :md="6">
+                <v-select class="ui-select" label="Повышение Характеристики от класса" v-model="selectedClassBoost"
+                  :items="ClassAttribute" item-text="name" item-value="key" dense outlined
+                  @change="updateSelectClassAttribute(selectedClassBoost)"></v-select>
+              </v-col>
+
+              <v-col v-if="archetype && archetype.skillTrainedChoice.length > 1" :cols="6" :md="6">
+                <v-select class="ui-select" label="Повышение Навыка от класса" v-model="selectedClassSkill"
+                  :items="ClassSkill" item-text="name" item-value="key" dense outlined
+                  @change="updateSelectClassSkill(selectedClassSkill)"></v-select>
+              </v-col>
+
+              <v-col v-if="!archetype" :cols="12">
+                <div class="ui-message ui-message--warning">
+                  Выберите Класс
+                </div>
+              </v-col>
+
+              <v-col v-if="
+                archetype &&
+                archetype.skillTrainedChoice.length == 0 &&
+                archetype.keyAbility.length == 0
+              " :cols="12">
+                <div class="ui-message ui-message--warning">
+                  У класса нет повышений на выбор
+                </div>
+              </v-col>
+
+              <v-row></v-row>
+              <v-col v-if="archetype">
+                <v-btn outlined color="success" @click="dialogAttributeLevel1 = true">
+                  Повышение Аттрибутов
+                  <v-chip class="ui-chip" v-if="
+                    characterProgressionBoost(levelAncestry) !== 0 && archetype
+                  " style="flex: none" right pill>
+                    {{ characterProgressionBoost(levelAncestry) }}</v-chip>
+                </v-btn>
+
+                <v-btn outlined color="success" @click="dialogSkillLevel1 = true">
+                  Повышение Навыков
+                  <v-chip class="ui-chip" v-if="
+                    characterProgressionSkill(levelAncestry) !== 0 && archetype
+                  " style="flex: none" right pill>
+                    {{ characterProgressionSkill(levelAncestry) }}</v-chip>
+                </v-btn>
+              </v-col>
             </v-col>
 
-            <v-col :cols="12">
-              <h3 class="headline">Повышение от Предыстории</h3>
-            </v-col>
+            <div v-if="archetype && levelAncestry !== 1">
 
-            <v-col v-if="!ascension" :cols="12">
-              <v-alert type="warning" class="caption ml-4 mr-4" dense outlined border="left">
-                Выберите предысторию
-              </v-alert>
-            </v-col>
-
-            <v-container v-if="ascension" class="bg-surface-variant">
-              <v-row>
-                <v-col :cols="12" :md="12">
-                  <v-alert v-if="
-                    selectedBackgroundBoost === selectedBackgroundBoost2 &&
-                    selectedBackgroundBoost !== ''
-                  " type="error" class="caption ml-4 mr-4" dense outlined border="left">
-                    Вы не можете выбрать одну и ту же характеристику
-                  </v-alert>
-                </v-col>
-
-                <v-col :cols="6" :md="6">
-                  <v-select label="Повышение от предыстории" v-model="selectedBackgroundBoost"
-                    :items="BackgroundAttribute" item-text="name" item-value="key"
-                    @change="updateSelectBackground(selectedBackgroundBoost)"></v-select>
-                </v-col>
-
-                <v-col :cols="6" :md="6">
-                  <v-select label="Свободное повышение" v-model="selectedBackgroundBoost2" :items="BackgroundAttribute2"
-                    item-text="name" item-value="key"
-                    @change="updateSelectBackground2(selectedBackgroundBoost2)"></v-select>
-                </v-col>
-              </v-row>
-            </v-container>
-            <v-col :cols="12">
-              <h3 class="headline">
-                Повышения Класса {{ archetype ? archetype.name : "" }}
-              </h3>
-            </v-col>
-
-
-            <v-col v-if="archetype && archetype.keyAbility.length > 1" :cols="6" :md="6">
-              <v-select label="Повышение Характеристики от класса" v-model="selectedClassBoost" :items="ClassAttribute"
-                item-text="name" item-value="key" @change="updateSelectClassAttribute(selectedClassBoost)"></v-select>
-            </v-col>
-
-            <v-col v-if="archetype && archetype.skillTrainedChoice.length > 1" :cols="6" :md="6">
-              <v-select label="Повышение Навыка от класса" v-model="selectedClassSkill" :items="ClassSkill"
-                item-text="name" item-value="key" @change="updateSelectClassSkill(selectedClassSkill)"></v-select>
-            </v-col>
-
-            <v-col v-if="!archetype" :cols="12">
-              <v-alert type="warning" class="caption ml-4 mr-4" dense outlined border="left">
-                Выберите Класс
-              </v-alert>
-            </v-col>
-
-            <v-col v-if="
-              archetype &&
-              archetype.skillTrainedChoice.length == 0 &&
-              archetype.keyAbility.length == 0
-            " :cols="12">
-              <v-alert type="warning" class="caption ml-4 mr-4" dense outlined border="left">
-                У класса нет повышений на выбор
-              </v-alert>
-            </v-col>
-
-            <v-row></v-row>
-            <v-col v-if="archetype">
-              <v-btn outlined color="success" @click="dialogAttributeLevel1 = true">
+              <!-- АТРИБУТЫ -->
+              <v-btn v-if="isBoostLevel(levelAncestry)" outlined color="success"
+                @click="openBoostDialog(levelAncestry)">
                 Повышение Аттрибутов
-                <v-chip v-if="
-                  characterProgressionBoost(levelAncestry) !== 0 && archetype
-                " style="flex: none" right pill>
-                  {{ characterProgressionBoost(levelAncestry) }}</v-chip>
+
+                <v-chip v-if="characterProgressionBoost(levelAncestry) !== 0" class="ui-chip" pill>
+                  {{ characterProgressionBoost(levelAncestry) }}
+                </v-chip>
               </v-btn>
 
-              <v-btn outlined color="success" @click="dialogSkillLevel1 = true">
+              <!-- НАВЫКИ -->
+              <v-btn v-if="isSkillLevel(levelAncestry)" outlined color="success" @click="openSkillLevel(levelAncestry)">
                 Повышение Навыков
-                <v-chip v-if="
-                  characterProgressionSkill(levelAncestry) !== 0 && archetype
-                " style="flex: none" right pill>
-                  {{ characterProgressionSkill(levelAncestry) }}</v-chip>
+
+                <v-chip v-if="characterProgressionSkill(levelAncestry) !== 0" class="ui-chip" pill>
+                  {{ characterProgressionSkill(levelAncestry) }}
+                </v-chip>
               </v-btn>
-            </v-col>
-          </v-col>
 
-          <v-col v-if="
-            levelAncestry > 1 &&
-            (((levelAncestry - 1) % 2 == 0 && archetype) ||
-              archetype?.keywords === 'плут')
-          ">
-            <v-btn outlined color="success" @click="openSkillLevel(levelAncestry)">
-              Повышение Навыков
-              <v-chip v-if="
-                characterProgressionSkill(levelAncestry) !== 0 && archetype
-              " style="flex: none" right pill>
-                {{ characterProgressionSkill(levelAncestry) }}</v-chip>
-            </v-btn>
-          </v-col>
-          <v-col v-if="levelAncestry === 5">
-            <v-btn outlined color="success" @click="manageBoost5 = true">
-              Повышение Аттрибутов
-            </v-btn>
-            <v-chip v-if="characterProgressionBoost(levelAncestry) !== 0 && archetype" style="flex: none" right pill>
-              {{ characterProgressionBoost(levelAncestry) }}</v-chip>
-          </v-col>
+            </div>
+            <div v-if="!archetype">Для повышения Аттрибутов и навыков выберите класс</div>
 
-          <v-col v-if="levelAncestry === 10">
-            <v-btn outlined color="success" @click="manageBoost10 = true">
-              Повышение Аттрибутов
-              <v-chip v-if="
-                characterProgressionBoost(levelAncestry) !== 0 && archetype
-              " style="flex: none" right pill>
-                {{ characterProgressionBoost(levelAncestry) }}</v-chip>
-            </v-btn>
-          </v-col>
 
-          <v-col v-if="levelAncestry === 15">
-            <v-btn outlined color="success" @click="manageBoost15 = true">
-              Повышение Аттрибутов
-              <v-chip v-if="
-                characterProgressionBoost(levelAncestry) !== 0 && archetype
-              " style="flex: none" right pill>
-                {{ characterProgressionBoost(levelAncestry) }}</v-chip>
-            </v-btn>
-          </v-col>
-
-          <v-col v-if="levelAncestry === 20">
-            <v-btn outlined color="success" @click="manageBoost20 = true">
-              Повышение Аттрибутов
-              <v-chip v-if="
-                characterProgressionBoost(levelAncestry) !== 0 && archetype
-              " style="flex: none" right pill>
-                {{ characterProgressionBoost(levelAncestry) }}</v-chip>
-            </v-btn>
-          </v-col>
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -213,7 +199,7 @@
     <!-- Диалог повышения -->
     <v-dialog v-model="dialogAttributeLevel1" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
       <v-card>
-        <v-card-title style="background-color: #262e37; color: #fff">
+        <v-card-title class="ui-dialog-header">
           <span>Повышение аттрибутов</span>
           <v-spacer />
           <v-icon @click="dialogAttributeLevel1 = false"> close </v-icon>
@@ -234,7 +220,7 @@
               </v-card-title>
 
 
-              <v-simple-table class="skill-table dense">
+              <v-simple-table class="ui-table dense">
                 <template v-slot:default>
                   <!-- <thead>
                 <tr>
@@ -244,13 +230,12 @@
                 </tr>
               </thead> -->
                   <tbody>
-                    <tr v-for="attribute in attributeRepository" class="skill-row"
-                      :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 1), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 1) }"
+                    <tr v-for="attribute in attributeRepository" class="ui-row"
+                      :class="{ 'ui-row--disabled': isAttributeDisabledLevel(attribute.key, 1), 'ui-row--active': isAttributeUpgradedLevel(attribute.key, 1) }"
                       @click="handleAttributeClickLevel(attribute.key, 1)">
                       <!-- <td>{{ attribute.name }}</td> -->
-                      <td class="skill-name">
-                        <div class="skill-row-inner">{{ attribute.name }}</div>
-                      </td>
+                      <td class="ui-cell ui-cell--name">
+                        {{ attribute.name }} </td>
 
                       <td class="skill-mod">
                         {{ ModProfAttr(attribute.key, 1) }}
@@ -280,9 +265,46 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="boostDialog" width="600px" scrollable>
+      <v-card>
+
+        <v-card-title class="ui-dialog-header">
+          Повышение аттрибутов ({{ currentLevel }} уровень)
+          <v-spacer />
+          <v-icon @click="boostDialog = false">close</v-icon>
+        </v-card-title>
+
+        <v-card-text class="pa-4">
+
+          <div class="ui-section-header">
+            Свободные повышения: {{ 4 - currentBoost }}
+          </div>
+
+          <v-simple-table class="ui-table">
+            <tbody>
+              <tr v-for="attr in attributeRepository" :key="attr.key" class="ui-row" :class="{
+                'ui-row--disabled': isAttributeDisabledLevel(attr.key, currentLevel),
+                'ui-row--active': isAttributeUpgradedLevel(attr.key, currentLevel)
+              }" @click="handleAttributeClickLevel(attr.key, currentLevel)">
+                <td class="ui-cell ui-cell--name">
+                  {{ attr.name }}
+                </td>
+
+                <td class="ui-cell ui-cell--mod">
+                  {{ ModProfAttr(attr.key, currentLevel) }}
+                </td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+
+        </v-card-text>
+
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="dialogSkillLevel1" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
       <v-card>
-        <v-card-title style="background-color: #262e37; color: #fff">
+        <v-card-title class="ui-dialog-header">
           <span>Повышение Характеристик</span>
           <v-spacer />
           <v-icon @click="dialogSkillLevel1 = false"> close </v-icon>
@@ -296,62 +318,58 @@
         <v-card-text class="pa-6">
           <v-col :cols="12" :md="12">
             <v-card>
-              <v-card-title style="background-color: green; color: #fff" class="body-1 pt-1 pb-1">
-                <h2 class="subtitle-1">
-                  Количество свободных повышений навыков:
-                  {{
-                    characterSkillPointClass +
 
-                    modInt(1) -
-                    // characterOptional(1) -
-                    skillSheetPoints("", 1)
+              <div class="ui-section-header">
+                Количество свободных повышений навыков:
+                {{ characterSkillPointClass + modInt(1) - skillSheetPoints("", 1) }}
+              </div>
 
-                  }}
-                </h2>
-              </v-card-title>
-              <v-simple-table class="skill-table dense">
+
+              <v-simple-table class="ui-table dense">
                 <tbody>
-                  <tr v-for="skill in finalSkillRepository" :key="skill.key" class="skill-row"
-                    :class="{ 'skill-row--disabled': isSkillDisabled(skill), 'skill-row--trained-up': isSkillUpgraded(skill) }"
-                    @click="handleSkillClick(skill)">
-                    <td class="skill-name">
-                      <div class="skill-row-inner">{{ skill.name }}</div>
+                  <tr v-for="skill in finalSkillRepository" :key="skill.key" class="ui-row" :class="{
+                    'ui-row--disabled': isSkillDisabled(skill),
+                    'ui-row--active': isSkillUpgraded(skill)
+                  }" @click="handleSkillClick(skill)">
+                    <!-- NAME -->
+                    <td class="ui-cell ui-cell--name">
+                      {{ skill.name }}
                     </td>
 
-                    <td class="skill-mod">
-                      {{ (ModAttribute(skill.attribute, skill.key, 1) >= 0 ? '+' : '') + ModAttribute(skill.attribute,
-                        skill.key, 1) }}
+                    <!-- MOD -->
+                    <td class="ui-cell ui-cell--mod">
+                      {{
+                        (ModAttribute(skill.attribute, skill.key, 1) >= 0 ? '+' : '') +
+                        ModAttribute(skill.attribute, skill.key, 1)
+                      }}
                     </td>
 
-                    <!-- Атрибут и модификатор -->
-                    <td class="skill-train">
-                      <v-col class="justify-center text-center">
-                        <v-row class="justify-center text-center">
+                    <!-- ATTRIBUTE -->
+                    <td class="ui-cell ui-cell--attr">
+                      <div class="ui-attr-block">
+                        <span class="ui-attr-short">
                           {{attributeRepository.find(i => i.key === skill.attribute)?.short}}
-                        </v-row>
-
-                        <v-row class="justify-center text-center">
+                        </span>
+                        <span class="ui-attr-mod">
                           {{ (characterAttributes[skill.attribute] - 10) / 2 }}
-                        </v-row>
-                      </v-col>
+                        </span>
+                      </div>
                     </td>
 
-                    <!-- Владение -->
-                    <td class="skill-train">
-                      <v-col class="justify-center text-center">
-                        <v-row class="justify-center text-center">Владение</v-row>
-                        <v-row class="justify-center text-center">
-                          {{ ModProf(skill.attribute, skill.key, 1) }}
-                        </v-row>
-                      </v-col>
+                    <!-- PROF -->
+                    <td class="ui-cell ui-cell--center">
+                      {{ ModProf(skill.attribute, skill.key, 1) }}
                     </td>
 
-                    <td class="skill-train">
+                    <!-- TRAINED -->
+                    <td class="ui-cell ui-cell--center">
                       {{ skillSheetTrained(skill.key, 1) }}
+
                     </td>
 
-                    <td class="skill-delete" v-if="skill.custom">
-                      <v-icon small color="red" @click.stop="removeCustomSkill(skill.key, 1)">
+                    <!-- DELETE -->
+                    <td class="ui-cell ui-cell--actions" v-if="skill.custom">
+                      <v-icon small class="ui-icon-danger" @click.stop="removeCustomSkill(skill.key, 1)">
                         mdi-delete
                       </v-icon>
                     </td>
@@ -396,7 +414,7 @@
           " type="info" text dense border="left">
           Недостаточно очков Навыка для добавления нового Знания
         </v-alert>
-        <v-card-title style="background-color: #262e37; color: #fff">
+        <v-card-title class="ui-dialog-header">
           Редактирование Знаний
           <v-spacer />
           <v-icon dark @click="closeSkillsSettings">close</v-icon>
@@ -425,7 +443,7 @@
     <!-- Скилл на каждом уровне -->
     <v-dialog v-model="dialogSkill" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
       <v-card>
-        <v-card-title style="background-color: #262e37; color: #fff">
+        <v-card-title class="ui-dialog-header">
           <span>Повышение Характеристик</span>
           <v-spacer />
           <v-icon @click="dialogSkill = false"> close </v-icon>
@@ -446,13 +464,14 @@
                 </h2>
               </v-card-title>
 
-              <v-simple-table class="skill-table dense">
+              <v-simple-table class="ui-table dense">
                 <tbody>
-                  <tr v-for="skill in finalSkillRepository" :key="skill.key" class="skill-row"
-                    :class="{ 'skill-row--disabled': isSkillDisabledLevel(skill, skillLevel), 'skill-row--trained-up': isSkillUpgradedLevel(skill, skillLevel) }"
+                  <tr v-for="skill in finalSkillRepository" :key="skill.key" class="ui-row"
+                    :class="{ 'ui-row--disabled': isSkillDisabledLevel(skill, skillLevel), 'ui-row--active': isSkillUpgradedLevel(skill, skillLevel) }"
                     @click="handleSkillClickLevel(skill, skillLevel)">
-                    <td class="skill-name">
-                      <div class="skill-row-inner">{{ skill.name }}</div>
+
+
+                    <td class="ui-cell ui-cell--name">{{ skill.name }}
                     </td>
 
                     <td class="skill-mod">
@@ -510,177 +529,6 @@
       </v-card>
     </v-dialog>
 
-    <!-- Аттрибуты 5, 10, 15, 20 -->
-    <v-dialog v-model="manageBoost5" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
-      <v-card>
-        <v-card-title style="background-color: #262e37; color: #fff">
-          <span>Повышение аттрибутов</span>
-          <v-spacer />
-          <v-icon @click="dialogAttributeLevel1 = false"> close </v-icon>
-        </v-card-title>
-        <v-divider />
-
-        <v-card-title> </v-card-title>
-
-        <v-divider />
-        <v-card-text class="pa-6">
-          <v-card-title style="background-color: green; color: #fff" class="body-1 pt-1 pb-1">
-            <h2 class="subtitle-1">
-              Количество свободных повышений: {{ 4 - characterBoost5 }}
-            </h2>
-          </v-card-title>
-
-          <v-simple-table class="skill-table dense">
-            <template v-slot:default>
-              <!-- <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead> -->
-              <tbody>
-                <tr v-for="attribute in attributeRepository" class="skill-row"
-                  :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 5), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 5) }"
-                  @click="handleAttributeClickLevel(attribute.key, 5)">
-                  <!-- <td>{{ attribute.name }}</td> -->
-                  <td class="skill-name">
-                    <div class="skill-row-inner">{{ attribute.name }}</div>
-                  </td>
-
-                  <td class="skill-mod">
-                    {{ ModProfAttr(attribute.key, 5) }}
-                  </td>
-
-
-
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="manageBoost10" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
-      <v-card>
-        <v-card-title style="background-color: green; color: #fff" class="body-1 pt-1 pb-1">
-          <h2 class="subtitle-1">
-            Количество свободных повышений: {{ 4 - characterBoost10 }}
-          </h2>
-        </v-card-title>
-
-        <v-simple-table class="skill-table dense">
-          <template v-slot:default>
-            <!-- <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead> -->
-            <tbody>
-              <tr v-for="attribute in attributeRepository" class="skill-row"
-                :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 10), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 10) }"
-                @click="handleAttributeClickLevel(attribute.key, 10)">
-                <!-- <td>{{ attribute.name }}</td> -->
-                <td class="skill-name">
-                  <div class="skill-row-inner">{{ attribute.name }}</div>
-                </td>
-
-                <td class="skill-mod">
-                  {{ ModProfAttr(attribute.key, 10) }}
-                </td>
-
-
-
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="manageBoost15" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
-      <v-card>
-        <v-card-title style="background-color: green; color: #fff" class="body-1 pt-1 pb-1">
-          <h2 class="subtitle-1">
-            Количество свободных повышений: {{ 4 - characterBoost15 }}
-          </h2>
-        </v-card-title>
-
-        <v-simple-table class="skill-table dense">
-          <template v-slot:default>
-            <!-- <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead> -->
-            <tbody>
-              <tr v-for="attribute in attributeRepository" class="skill-row"
-                :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 15), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 15) }"
-                @click="handleAttributeClickLevel(attribute.key, 15)">
-                <!-- <td>{{ attribute.name }}</td> -->
-                <td class="skill-name">
-                  <div class="skill-row-inner">{{ attribute.name }}</div>
-                </td>
-
-                <td class="skill-mod">
-                  {{ ModProfAttr(attribute.key, 15) }}
-                </td>
-
-
-
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="manageBoost20" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
-      <v-card>
-        <v-card-title style="background-color: green; color: #fff" class="body-1 pt-1 pb-1">
-          <h2 class="subtitle-1">
-            Количество свободных повышений: {{ 4 - characterBoost20 }}
-          </h2>
-        </v-card-title>
-
-        <v-simple-table class="skill-table dense">
-          <template v-slot:default>
-            <!-- <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead> -->
-            <tbody>
-              <tr v-for="attribute in attributeRepository" class="skill-row"
-                :class="{ 'skill-row--disabled': isAttributeDisabledLevel(attribute.key, 20), 'skill-row--trained-up': isAttributeUpgradedLevel(attribute.key, 20) }"
-                @click="handleAttributeClickLevel(attribute.key, 20)">
-                <!-- <td>{{ attribute.name }}</td> -->
-                <td class="skill-name">
-                  <div class="skill-row-inner">{{ attribute.name }}</div>
-                </td>
-
-                <td class="skill-mod">
-                  {{ ModProfAttr(attribute.key, 20) }}
-                </td>
-
-
-
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-
-      </v-card>
-    </v-dialog>
   </v-row>
 </template>
 
@@ -702,6 +550,7 @@ export default {
     };
   },
   data() {
+
     return {
       attributeHeaders: [
         { text: 'Характеристика', sortable: false, align: 'left', class: 'text-left small pa-1' },
@@ -787,6 +636,21 @@ export default {
         3: "M",
         4: "L",
       },
+      boostDialog: false,
+      currentLevel: null,
+
+      dialogAttributeLevel1: false,
+      dialogSkillLevel1: false,
+      dialogSkill: false,
+
+      // вместо characterBoost5/10/15/20
+      boostState: {
+        1: 0,
+        5: 0,
+        10: 0,
+        15: 0,
+        20: 0
+      }
     };
   },
   head() {
@@ -795,6 +659,53 @@ export default {
     };
   },
   computed: {
+    tableRows() {
+      return [
+        {
+          source: 'Предыстория',
+          stats:
+            this.characterBackgroundBoost,
+        },
+        {
+          source: 'Наследие',
+          stats: this.mergeStats(
+            this.characterAncestryBoost,
+            this.characterAttributesAncestryFlaw
+          )
+        },
+        {
+          source: 'Класс',
+          stats: this.characterClassBoost1
+        },
+        {
+          source: '1 уровень',
+          stats: this.characterAttributeBoost
+        },
+        {
+          source: '5 уровень',
+          stats: this.characterAttributeBoost5
+        },
+        {
+          source: '10 уровень',
+          stats: this.characterAttributeBoost10
+        },
+        {
+          source: '15 уровень',
+          stats: this.characterAttributeBoost15
+        },
+        {
+          source: '20 уровень',
+          stats: this.characterAttributeBoost20
+        },
+      ].filter(row => row.stats);
+    },
+
+    availableLevels() {
+      return Array.from({ length: this.characterLevel }, (_, i) => i + 1)
+    },
+    currentBoost() {
+      return this.boostState[this.currentLevel] || 0
+    },
     archetypePrerequisitesValid() {
       const archetype = this.archetype;
 
@@ -832,8 +743,42 @@ export default {
         this.skillSheetPoints("", 1)
       )
     },
+    levelProgressMap() {
+      const map = {}
+      for (let lvl = 1; lvl <= this.characterLevel(); lvl++) {
+        const data = this.getDisplayProgress(lvl) || {}
+
+        map[lvl] = {
+          current: data.current || 0,
+          max: data.max || 0
+        }
+      }
+      return map
+    },
     remainingBuildPoints() {
       return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
+    },
+    characterClassBoost1() {
+      return this.$store.getters['characters/characterAttributesClassBoost'](this.characterId);
+    },
+
+    characterAttributeBoost() {
+      return this.$store.getters['characters/characterAttributeBoost'](this.characterId);
+    },
+    characterAttributeBoost5() {
+      return this.$store.getters['characters/characterAttributeBoost5'](this.characterId);
+    },
+    characterAttributeBoost10() {
+      return this.$store.getters['characters/characterAttributeBoost10'](this.characterId);
+    },
+    characterAttributeBoost15() {
+      return this.$store.getters['characters/characterAttributeBoost15'](this.characterId);
+    },
+    characterAttributeBoost20() {
+      return this.$store.getters['characters/characterAttributeBoost20'](this.characterId);
+    },
+    characterAncestryBoost() {
+      return this.$store.getters['characters/characterAncestryBoostById'](this.characterId);
     },
     settingTier() {
       return this.$store.getters['characters/characterSettingTierById'](this.characterId);
@@ -994,9 +939,6 @@ export default {
         ...this.skillDefence,
       ];
     },
-    settingHouserules() {
-      return this.$store.getters['characters/characterSettingHouserulesById'](this.characterId);
-    },
     CharacterskillFromModification() {
       return this.$store.getters['characters/CharacterskillFromModificationById'](this.characterId);
     },
@@ -1095,7 +1037,7 @@ export default {
     },
     characterSkillSheet() {
       return this.$store.getters["characters/characterSkillSheetById"](
-        this.$route.params.id
+        this.characterId
       );
     },
     async loadSpecies(key) {
@@ -1346,30 +1288,50 @@ export default {
       const char3 = char1 === 0 ? 0 : level;
       return parseInt(char1) + parseInt(char3);
     },
+    formatBoost(stat, rowIndex) {
+      let count = 0;
+
+      for (let i = 0; i <= rowIndex; i++) {
+        count += this.tableRows[i].stats?.[stat] || 0;
+      }
+
+      if (count <= 4) return this.tableRows[rowIndex].stats?.[stat] || 0;
+
+      // после 4
+      if (this.tableRows[rowIndex].stats?.[stat] === 0) return 0;
+
+      return (count - 4) % 2 === 1 ? 0.5 : 1;
+    },
     ModProfAttr(attr, level) {
-      let result = this.characterAttributesEnhanced[attr];
-      let boost = this.characterAttributesEnhanced[attr] > 18 ? 1 : 2;
+      // let result = this.characterAttributesEnhanced[attr];
+      let result = 0
+
+      this.tableRows.forEach((row, rowIndex) => {
+        result += this.formatBoost(attr, rowIndex)
+      })
+
+      let boost = result > 4 ? 0.5 : 1;
       if (level !== 20 && this.characterAttributesBoost20[attr] > 0) {
         result = result - boost;
-        boost = result > 18 ? 1 : 2;
+        boost = result > 4 ? 0.5 : 1;
       }
 
       if (level < 15 && this.characterAttributesBoost15[attr] > 0) {
         result = result - boost;
-        boost = result > 18 ? 1 : 2;
+        boost = result > 4 ? 0.5 : 1;
       }
 
       if (level < 10 && this.characterAttributesBoost10[attr] > 0) {
         result = result - boost;
-        boost = result > 18 ? 1 : 2;
+        boost = result > 4 ? 0.5 : 1;
       }
 
       if (level < 5 && this.characterAttributesBoost5[attr] > 0) {
         result = result - boost;
-        boost = result > 18 ? 1 : 2;
+        boost = result > 4 ? 0.5 : 1;
       }
-
-      const modRaw = (result - 10) / 2;       // настоящее дробное значение
+      // const result = this.characterAttributes[attribute]
+      const modRaw = (result);       // настоящее дробное значение
       const mod = Math.floor(modRaw);         // отображаемое целое значение
 
 
@@ -1603,24 +1565,6 @@ export default {
     SkillClass() {
       return this.$store.getters['characters/characterSkillClassById'](this.characterId);
     },
-    affordableAttributeColor(currentValue) {
-      const attributeNewValueCost = {
-        v10: [0, 0, 4, 6, 8, 15, 18, 21, 32, 36, 40, 55, 72],
-        v15: [0, 0, 4, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50],
-      };
-      const costKey = this.settingHouserules['skill-attribute-advancement-costs'] ? this.settingHouserules['skill-attribute-advancement-costs'] : 'v15';
-      const cost = attributeNewValueCost[costKey][currentValue + 1];
-      return this.isAffordable(cost) ? 'green' : 'orange';
-    },
-    affordableSkillColor(currentSkillValue) {
-      const skillNewValueCost = {
-        v10: [0, 1, 2, 3, 4, 10, 12, 14, 24],
-        v15: [0, 2, 4, 6, 8, 10, 12, 14, 16],
-      };
-      const costKey = this.settingHouserules['skill-attribute-advancement-costs'] ? this.settingHouserules['skill-attribute-advancement-costs'] : 'v15';
-      const cost = skillNewValueCost[costKey][currentSkillValue + 1];
-      return this.isAffordable(cost) ? 'green' : 'orange';
-    },
     isAffordable(cost) {
       return cost <= this.remainingBuildPoints;
     },
@@ -1652,7 +1596,57 @@ export default {
         max: this.calculateProgressMax(level)
       };
     },
+    SkillLabel(skill) {
+      //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
+      const level = this.characterLevel()
+      const prof = this.characterSkillSheet.filter(
+        (s) => s.key === skill && s.level <= level && s.combinded !== true
+      ).length;
 
+      switch (prof) {
+        case 0:
+          return "Н";
+        case 1:
+          return "Т";
+        case 2:
+          return "Э";
+        case 3:
+          return "М";
+        case 4:
+          return "Л";
+        default:
+          return "Н";
+      }
+
+      // const char1 = this.profiencyRepository[this.charSkill[prof]];
+      // const char2 = (this.characterAttributes[attribute] - 10) / 2;
+      // const char3 = char1 === 0 ? 0 : this.characterLevel();
+      // return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    getSkillRank(skillKey, level) {
+      const skillSheet = this.characterSkillSheet() || [];
+      // const level = this.characterLevel()
+
+      return skillSheet.filter((s) => s.key === skillKey && s.level <= level && s.combinded !== true).length;
+    },
+
+    getRankChipColor(skillKey, level) {
+      const rank = this.getSkillRank(skillKey, level);
+      switch (rank) {
+        case 0: // Нетренирован
+          return "grey";
+        case 1: // Тренирован
+          return "#171f69";
+        case 2: // Эксперт
+          return "#3c005e";
+        case 3: // Мастер
+          return "#664400";
+        case 4: // Легенда
+          return "#5e0000";
+        default:
+          return "grey";
+      }
+    },
     calculateProgress(level) {
       let boost = 0;
       let modInt = 0;
@@ -1725,7 +1719,31 @@ export default {
       });
       return boost + skill;
     },
+    mergeStats(...inputs) {
+      const result = {
+        strength: 0,
+        dexterity: 0,
+        constitution: 0,
+        intellect: 0,
+        wisdom: 0,
+        charisma: 0
+      };
 
+      inputs.forEach(input => {
+        if (!input) return;
+
+        // 2️⃣ Если это объект со значениями
+        if (typeof input === 'object') {
+          Object.keys(result).forEach(stat => {
+            result[stat] += Number(input[stat] || 0);
+          });
+        }
+      });
+
+
+
+      return result;
+    },
     calculateProgressMax(level) {
       let boost = 0;
       let modInt = 0;
@@ -1791,7 +1809,19 @@ export default {
       });
       return boost + skill;
     },
-
+    isSkillLevel(level) {
+      return (
+        ((level - 1) % 2 === 0) ||
+        this.archetype?.keywords === 'плут'
+      )
+    },
+    isBoostLevel(level) {
+      return [1, 5, 10, 15, 20].includes(level)
+    },
+    openBoostDialog(level) {
+      this.currentLevel = level
+      this.boostDialog = true
+    },
     characterProgression(level) {
       return this.calculateProgress(level);
     },
@@ -2067,6 +2097,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/* =========================
+   UTILITIES
+========================= */
+
 .small {
   height: 24px;
 }
@@ -2075,9 +2109,14 @@ td.small {
   font-size: 12px;
 }
 
+/* =========================
+   LAYOUT
+========================= */
+
 .my-tabs-container {
   height: 620px;
   overflow: hidden;
+  background: var(--ui-background);
 }
 
 .my-tab-item {
@@ -2085,232 +2124,634 @@ td.small {
   overflow-y: auto;
 }
 
+/* ФИЛЬТРЫ */
+.filters-col {
+  border-right: 1px solid rgba(var(--v-border-color, 150, 150, 150), 0.15);
+}
+
+.filters-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
 .sexy_line {
   display: block;
-  border: none;
-  color: white;
   height: 1px;
-  background: black;
-  background: -webkit-gradient(radial,
-      50% 50%,
-      0,
-      50% 50%,
-      350,
-      from(#000),
-      to(#fff));
+  border: none;
+  background: linear-gradient(to right,
+      transparent,
+      var(--ui-border),
+      transparent);
 }
 
-.resource-box {
-  $size: 12px;
-  min-height: $size;
-  max-height: $size;
-  min-width: $size;
-  max-width: $size;
-  border: 1px solid hsl(0, 0%, 85%);
-  box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
-  cursor: pointer;
+/* =========================
+   BOX SYSTEM (resource / faith)
+========================= */
 
-  box-sizing: inherit;
+.resource-box,
+.faith-box {
+  border: 1px solid var(--ui-border);
+  box-shadow: inset 0 0 4px var(--ui-shadow);
   margin: 2px;
-
-  &--filled {
-    &:before {
-      content: "";
-      display: block;
-      height: 7px;
-      width: 7px;
-      margin-top: 1.5px;
-      margin-left: 1.5px;
-    }
-
-    &::before {
-      background-color: hsl(0, 100%, 37%);
-    }
-  }
-
-  &--filled-light::before {
-    background-color: hsl(62, 70%, 44%) !important;
-  }
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 6px;
+  transition: 0.15s ease;
 }
 
-tr.v-data-table__selected {
-  background: #7d92f5 !important;
+/* sizes */
+.resource-box {
+  width: 12px;
+  height: 12px;
 }
-
-// .select {
-//   background: #7d92f5 !important;
-// }
 
 .faith-box {
-  min-height: 20px;
-  max-height: 20px;
-  min-width: 20px;
-  max-width: 20px;
-  border: 1px solid hsl(0, 0%, 85%);
-  box-shadow: inset 0 0 4px 0 hsl(0, 0%, 85%);
-  cursor: pointer;
-
-  box-sizing: inherit;
-  margin: 2px;
-
-  &--filled {
-    &:before {
-      content: "";
-      display: block;
-      height: 10px;
-      width: 10px;
-      margin-top: 4px;
-      margin-left: 4px;
-    }
-
-    &::before {
-      background-color: hsl(0, 100%, 37%);
-    }
-  }
-
-  .select-chip {
-    --badge-height-xs: calc(1rem * var(--mantine-scale));
-    --badge-height-sm: calc(1.125rem * var(--mantine-scale));
-    --badge-height-md: calc(1.25rem * var(--mantine-scale));
-    --badge-height-lg: calc(1.625rem * var(--mantine-scale));
-    --badge-height-xl: calc(2rem * var(--mantine-scale));
-    --badge-fz-xs: calc(0.5625rem * var(--mantine-scale));
-    --badge-fz-sm: calc(0.625rem * var(--mantine-scale));
-    --badge-fz-md: calc(0.6875rem * var(--mantine-scale));
-    --badge-fz-lg: calc(0.8125rem * var(--mantine-scale));
-    --badge-fz-xl: calc(1rem * var(--mantine-scale));
-    --badge-padding-x-xs: calc(0.375rem * var(--mantine-scale));
-    --badge-padding-x-sm: calc(0.5rem * var(--mantine-scale));
-    --badge-padding-x-md: calc(0.625rem * var(--mantine-scale));
-    --badge-padding-x-lg: calc(0.75rem * var(--mantine-scale));
-    --badge-padding-x-xl: calc(1rem * var(--mantine-scale));
-    --badge-height: var(--badge-height-md);
-    --badge-fz: var(--badge-fz-md);
-    --badge-padding-x: var(--badge-padding-x-md);
-    --badge-radius: calc(62.5rem * var(--mantine-scale));
-    --badge-lh: calc(var(--badge-height) - calc(0.125rem * var(--mantine-scale)));
-    --badge-color: var(--mantine-color-white);
-    --badge-bg: var(--mantine-primary-color-filled);
-    --badge-border-width: calc(0.0625rem * var(--mantine-scale));
-    --badge-bd: var(--badge-border-width) solid transparent;
-    -webkit-tap-highlight-color: transparent;
-    font-size: var(--badge-fz);
-    border-radius: var(--badge-radius);
-    height: var(--badge-height);
-    line-height: var(--badge-lh);
-    text-decoration: none;
-    padding: 0 var(--badge-padding-x);
-    display: inline-grid;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: calc(0.015625rem * var(--mantine-scale));
-    cursor: default;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    color: var(--badge-color);
-    background: var(--badge-bg);
-    border: var(--badge-bd);
-    background-color: blue;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-    cursor: inherit;
-  }
+  width: 20px;
+  height: 20px;
 }
 
-.compact-btn {
-  min-width: 28px !important;
-  height: 28px !important;
+/* hover = subtle lift */
+.resource-box:hover,
+.faith-box:hover {
+  transform: translateY(-1px) scale(1.03);
+  border-color: var(--ui-accent);
 }
 
-/* Стили для таблицы */
+/* filled */
+.resource-box--filled::before,
+.faith-box--filled::before {
+  content: "";
+  display: block;
+  width: 70%;
+  height: 70%;
+  margin: auto;
+  background: var(--ui-danger);
+  border-radius: 2px;
+}
+
+/* alt fill */
+.resource-box--filled-light::before {
+  background: var(--ui-warning) !important;
+}
+
+/* =========================
+   TABLE BASE (GLOBAL BEHAVIOR)
+========================= */
+
+tr.v-data-table__selected {
+  background: var(--ui-focus) !important;
+}
+
+/* =========================
+   SKILL TABLE (MAIN COMPONENT)
+========================= */
+
 .skill-table {
   font-size: 13px;
   border-collapse: collapse;
-  /* убираем визуальные пробелы между ячейками */
 
+  td {
+    padding: 5px 6px !important;
+    color: var(--ui-text);
+    vertical-align: middle;
+  }
+
+  /* ROW */
   .skill-row {
-    transition: background 0.15s ease, box-shadow 0.15s ease;
-    height: 34px;
+    height: 36px;
     cursor: pointer;
-    box-sizing: border-box;
     position: relative;
-    /* чтобы ::before позиционировался внутри строки */
-    /* важно для inset box-shadow */
+    transition: 0.15s ease;
+    border-bottom: 1px solid var(--ui-border);
 
+    /* hover = clean elevation */
     &:hover {
-      background: rgba(255, 255, 255, 0.05);
-      /* подсветка при hover */
-      box-shadow: inset 0 0 0 1px rgba(255, 200, 80, 0.4);
-      /* золотая рамка PF2e */
+      background: var(--ui-hover);
+    }
+
+    /* active click feel */
+    &:active {
+      background: var(--ui-surface-active);
+    }
+
+    /* disabled */
+    &--disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    /* trained / upgraded */
+    &--trained-up {
+      background: color-mix(in srgb, var(--ui-warning) 10%, transparent);
+
+      td:first-child::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(to bottom,
+            var(--ui-warning),
+            var(--ui-accent));
+      }
     }
   }
 
-  /* выключенные навыки */
-  .skill-row--disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    box-shadow: none;
-    /* рамка не нужна */
-  }
-
-  .skill-row--disabled:hover {
-    background: none;
-    box-shadow: none;
-  }
-
-  /* Прокачанный навык */
-  .skill-row--trained-up td:first-child {
-    position: relative;
-    //  background: rgba(255, 215, 100, 0.08);
-    /* золотой, мягкий */
-  }
-
-  .skill-row--trained-up {
-    background: rgba(255, 215, 100, 0.08);
-    /* золотой, мягкий */
-    position: relative;
-  }
-
-  .skill-row--trained-up td:first-child::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(to bottom, #f7d26a, #d99a2b);
-    pointer-events: none;
-  }
-
-  td {
-    padding: 4px 6px !important;
-    box-sizing: border-box;
-    /* предотвращает сдвиг контента при hover */
-  }
-
+  /* columns */
   .skill-name {
     width: 35%;
     font-weight: 500;
   }
 
   .skill-mod {
-    text-align: center;
     width: 40px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--ui-accent);
   }
 
   .skill-train {
-    text-align: center;
     width: 70px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ui-muted);
   }
 
   .skill-delete {
     width: 32px;
     text-align: center;
   }
+}
+
+/* =========================
+   BUTTON SYSTEM (IMPORTANT UPGRADE)
+========================= */
+
+.compact-btn {
+  min-width: 28px !important;
+  height: 28px !important;
+}
+
+/* Vuetify override (critical for consistency) */
+.v-btn {
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* primary action */
+.v-btn.primary {
+  background: var(--ui-accent) !important;
+  color: var(--ui-text-inverse) !important;
+}
+
+/* subtle buttons */
+.v-btn:not(.primary):not(.error):not(.success) {
+  background: var(--ui-surface-soft) !important;
+  color: var(--ui-text) !important;
+}
+
+/* hover feel */
+.v-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* =========================
+   CHIPS (VERY IMPORTANT VISUAL FIX)
+========================= */
+
+.v-chip {
+  background: var(--ui-surface-soft) !important;
+  color: var(--ui-text) !important;
+  font-weight: 500;
+  border: 1px solid var(--ui-border);
+}
+
+/* success chip (progress / stats) */
+.v-chip.success--text {
+  background: var(--ui-success) !important;
+  color: var(--ui-text-inverse) !important;
+}
+
+/* =========================
+   CARD HEADER STATES
+========================= */
+
+.v-card-title {
+  color: var(--ui-text);
+  font-weight: 600;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+/* success header */
+.card-title-success {
+  background: var(--ui-success);
+  color: var(--ui-text-inverse);
+}
+
+/* =========================
+   DIALOG SYSTEM (IMPORTANT UX FIX)
+========================= */
+
+.v-dialog .v-card {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px var(--ui-shadow);
+}
+
+/* dialog header */
+.v-dialog .v-card-title {
+  background: var(--ui-surface-soft);
+}
+
+/* =========================
+   LIST ITEMS
+========================= */
+
+.v-list-item {
+  border-radius: 8px;
+  transition: 0.15s ease;
+}
+
+.v-list-item:hover {
+  background: var(--ui-hover);
+}
+
+/* =========================
+   GLOBAL FEEL FIXES
+========================= */
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* better click feedback globally */
+button,
+.v-btn,
+.skill-row {
+  user-select: none;
+}
+
+/* smoother transitions everywhere */
+.skill-row,
+.v-btn,
+.v-chip,
+.resource-box,
+.faith-box {
+  transition: 0.15s ease;
+}
+
+.ui-btn {
+  border-radius: 10px;
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  transition: var(--ui-transition);
+}
+
+.ui-btn--primary {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
+
+  &:hover {
+    border-color: var(--ui-accent);
+    background: var(--ui-surface-hover);
+  }
+}
+
+.ui-chip {
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+
+  height: 26px;
+  padding: 0 10px;
+
+  background: var(--ui-surface-soft);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+
+  transition: var(--ui-transition);
+}
+
+/* прогресс-чип (главный кейс у тебя) */
+.ui-chip--progress {
+  background: color-mix(in srgb, var(--ui-accent) 12%, transparent);
+  border-color: var(--ui-accent);
+  color: var(--ui-text);
+}
+
+/* hover эффект */
+.ui-chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--ui-border-strong);
+}
+
+.ui-chip--complete {
+  background: color-mix(in srgb, var(--ui-success) 15%, transparent);
+  border-color: var(--ui-success);
+}
+
+.ui-panel {
+  border-radius: 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+  overflow: hidden;
+
+  transition: var(--ui-transition);
+}
+
+.ui-panel:hover {
+  border-color: var(--ui-border-strong);
+  background: var(--ui-surface-hover);
+}
+
+.ui-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  padding: 10px 12px;
+
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ui-text);
+
+  letter-spacing: 0.2px;
+}
+
+/* левая часть (текст + уровень) */
+.ui-panel-header__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* уровень как бейдж */
+.ui-panel-level {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+
+  border-radius: 999px;
+  background: var(--ui-surface-soft);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text-muted);
+}
+
+.ui-panel-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* секции внутри панели */
+.ui-section {
+  padding: 12px;
+  border-radius: 12px;
+
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+}
+
+.ui-section__title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--ui-text);
+}
+
+.ui-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+/* фиксируем геометрию */
+.ui-table td {
+  padding: 6px 10px;
+  position: relative;
+  color: var(--ui-text);
+  vertical-align: middle;
+}
+
+/* строки */
+.ui-row {
+  position: relative;
+  height: 36px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+/* hover НЕ меняет layout */
+.ui-row:hover {
+  background: var(--ui-hover);
+}
+
+.ui-row--active td {
+  position: relative;
+}
+
+.ui-row--active td::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* disabled */
+.ui-row--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* чтобы текст был выше overlay */
+.ui-row td {
+  position: relative;
+  z-index: 1;
+}
+
+.ui-cell {
+  // display: flex;
+  align-items: center;
+}
+
+.ui-cell--name {
+  justify-content: flex-start;
+  // font-weight: 500;
+}
+
+/* numeric center */
+.ui-cell--mod,
+.ui-cell--center {
+  text-align: center;
+  // font-weight: 600;
+}
+
+/* attribute block */
+.ui-attr-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.ui-attr-short {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.ui-attr-mod {
+  font-size: 13px;
+  // font-weight: 600;
+}
+
+/* delete icon */
+.ui-icon-danger {
+  color: var(--ui-danger);
+  opacity: 0.8;
+  transition: var(--ui-transition);
+}
+
+.ui-icon-danger:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.ui-dialog .v-card {
+  background: var(--ui-surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.ui-dialog-header {
+  background: var(--ui-surface-soft);
+  border-bottom: 1px solid var(--ui-border);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ui-message {
+  display: flex;
+  align-items: center;
+
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface-soft);
+  color: var(--ui-text);
+
+  margin: 6px 0;
+}
+
+/* warning */
+.ui-message--warning {
+  border-color: var(--ui-warning);
+  background: color-mix(in srgb, var(--ui-warning) 10%, transparent);
+}
+
+/* error */
+.ui-message--error {
+  border-color: var(--ui-danger);
+  background: color-mix(in srgb, var(--ui-danger) 10%, transparent);
+}
+
+/* info */
+.ui-message--info {
+  border-color: var(--ui-accent);
+  background: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+}
+
+.ui-message--info {
+  background: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+}
+
+.ui-select {
+  font-size: 13px;
+  border-right: 1px solid rgba(var(--v-border-color, 150, 150, 150), 0.15);
+}
+
+/* сам input */
+.ui-select .v-input__control {
+  background: var(--ui-surface);
+  border-radius: 10px;
+  border: 1px solid var(--ui-border);
+  transition: var(--ui-transition);
+}
+
+/* hover */
+.ui-select:hover .v-input__control {
+  border-color: var(--ui-border-strong);
+}
+
+/* focus */
+.ui-select.v-input--is-focused .v-input__control {
+  border-color: var(--ui-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ui-accent) 20%, transparent);
+}
+
+/* label */
+.ui-select .v-label {
+  font-size: 12px;
+  color: var(--ui-muted);
+}
+
+.ui-h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ui-text);
+
+  margin: 10px 0;
+  letter-spacing: 0.2px;
+}
+
+.ui-h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ui-text);
+
+  margin: 8px 0;
+  opacity: 0.9;
+}
+
+.ui-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 12px;
+
+  background: var(--ui-surface-soft);
+  border-bottom: 1px solid var(--ui-border);
+
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ui-text);
 }
 </style>

@@ -1,0 +1,136 @@
+body {
+    background: var(--ui-background);
+    color: var(--ui-text);
+}
+
+.v-application {
+    background: var(--ui-background) !important;
+}
+
+.v-application--wrap {
+    background: var(--ui-background) !important;
+}
+
+/* LIGHT */
+.theme--light {
+    --icon-stroke: rgba(0, 0, 0, 0.6);
+    --icon-fill: rgba(0, 0, 0, 0.03);
+}
+
+/* DARK */
+.theme--dark {
+    --icon-stroke: rgba(255, 255, 255, 0.7);
+    --icon-fill: rgba(255, 255, 255, 0.04);
+}
+
+:root {
+    --ui-radius: 10px;
+    --ui-radius-lg: 14px;
+
+    --ui-transition: 0.15s ease;
+
+    --ui-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   LIGHT THEME
+========================= */
+.theme--light {
+    /* BACKGROUND LAYERS */
+    --ui-background: #f6f7f9;
+    /* общий фон приложения */
+    --ui-surface: #ffffff;
+    /* карточки / панели */
+    --ui-surface-soft: #f1f3f5;
+    /* инпуты / вторичные блоки */
+    --ui-surface-hover: #eceff3;
+    --ui-surface-active: #e6eaf0;
+
+    /* TEXT */
+    --ui-text: #1c1c1c;
+    --ui-muted: #6b7280;
+    --ui-text-inverse: #ffffff;
+
+    /* BORDERS */
+    --ui-border: #e5e7eb;
+    --ui-border-strong: #cbd5e1;
+
+    /* INTERACTION */
+    --ui-hover: rgba(0, 0, 0, 0.05);
+    --ui-focus: rgba(59, 130, 246, 0.15);
+
+    /* ACCENTS */
+    --ui-accent: #3b82f6;
+    --ui-success: #16a34a;
+    --ui-warning: #f59e0b;
+    --ui-danger: #ef4444;
+
+    /* EFFECTS */
+    --ui-shadow: rgba(0, 0, 0, 0.08);
+
+    /* ICONS */
+    --icon-filter: none;
+}
+
+/* =========================
+   DARK THEME
+========================= */
+.theme--dark {
+    /* BACKGROUND LAYERS */
+    --ui-background: #121212;
+    --ui-surface: #1e1e1e;
+    --ui-surface-soft: #252525;
+    --ui-surface-hover: #2a2a2a;
+    --ui-surface-active: #333333;
+
+    /* TEXT */
+    --ui-text: #eaeaea;
+    --ui-muted: #9aa0a6;
+    --ui-text-inverse: #000;
+
+    /* BORDERS */
+    --ui-border: #2f2f2f;
+    --ui-border-strong: #3a3a3a;
+
+    /* INTERACTION */
+    --ui-hover: rgba(255, 255, 255, 0.06);
+    --ui-focus: rgba(59, 130, 246, 0.25);
+
+    /* ACCENTS */
+    --ui-accent: #60a5fa;
+    --ui-success: #22c55e;
+    --ui-warning: #fbbf24;
+    --ui-danger: #f87171;
+
+    /* EFFECTS */
+    --ui-shadow: rgba(0, 0, 0, 0.5);
+
+    /* ICONS */
+    --icon-filter: invert(1);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ui-scroll-thumb) transparent;
+}
+
+/* Webkit */
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--ui-scroll-thumb);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ui-scroll-thumb-hover);
+}

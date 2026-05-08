@@ -7,7 +7,7 @@ const config = require('./.contentful.json');
 
 module.exports = {
   configureWebpack: {
-    devtool: "source-map",
+    devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
   },
   productionSourceMap: false,
   // target: "static",
@@ -133,7 +133,8 @@ module.exports = {
    ** Global CSS
    */
   css: ["@/assets/scss/config/_fonts.scss",
-    '~/assets/loader.css'
+    '~/assets/loader.css',
+    '@/assets/theme.css'
   ],
   /*
    ** Plugins to load before mounting the App
@@ -143,6 +144,7 @@ module.exports = {
     { src: "~/plugins/vue-croppa.js", ssr: false },
     { src: '~/plugins/vue-quill-editor.js', ssr: false },
     { src: '~/plugins/router-loader.js', ssr: false },
+    '~/plugins/supabase.js',
     "~/plugins/filters.js",
     "~/plugins/hint-box-component.js",
 
@@ -326,12 +328,18 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
-
+    extend(config, { isDev, isClient }) {
+      if (!isDev && isClient) {
+        config.devtool = false
+      }
+    },
     extend(config, ctx) {
       (config.devtool = "#source-map"),
         (config.node = {
           fs: "empty",
         });
+
+
 
       // Include the compiler version of Vue so that wp-content works
       config.resolve.alias["vue$"] = "vue/dist/vue.esm.js";

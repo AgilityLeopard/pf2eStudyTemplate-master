@@ -10,7 +10,7 @@
         <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`">
           <h2 class="subtitle-2">
             Черты родословной
-            <v-chip style="flex: none" right pill>
+            <v-chip class="ui-chip ui-chip--progress">
               {{ characterMaxType("ancestry") }} /
               {{ Math.trunc((characterLevel() - 1) / 4) + 1 }}
             </v-chip>
@@ -19,7 +19,7 @@
         <v-tab class="caption" key="tab-class" :href="`#tab-class`">
           <h2 class="subtitle-2">
             Черты класса
-            <v-chip v-if="archetype" style="flex: none" right pill>
+            <v-chip class="ui-chip ui-chip--progress" v-if="archetype">
               {{ characterMaxType("class") }} /
               {{
                 Math.trunc(characterLevel() / 2) +
@@ -33,7 +33,7 @@
         <v-tab class="caption" key="tab-skill" :href="`#tab-skill`">
           <h2 class="subtitle-2">
             Черты Навыков
-            <v-chip v-if="archetype" style="flex: none" right pill>
+            <v-chip class="ui-chip ui-chip--progress" v-if="archetype">
               {{ characterMaxType("skill") }} /
               {{
                 archetype?.keywords === "плут"
@@ -46,7 +46,7 @@
         <v-tab class="caption" key="tab-general" :href="`#tab-general`">
           <h2 class="subtitle-2">
             Черты общие
-            <v-chip v-if="archetype" style="flex: none" right pill>
+            <v-chip class="ui-chip ui-chip--progress" v-if="archetype">
               {{ characterMaxType("general") }} /
               {{ Math.trunc((characterLevel() + 1) / 4) + isGeneral("general") }}
             </v-chip>
@@ -81,41 +81,10 @@
           </v-col>
 
           <v-col v-else="characterSpeciesKey">
-            <v-expansion-panels multiple>
-              <v-expansion-panel v-for="levelAncestry in 20" :key="levelAncestry" v-if="
-                levelAncestry <= characterLevel() &&
-                (levelAncestry == 1 || (levelAncestry - 1) % 4 == 0)
-              ">
-                <v-expansion-panel-header>
-                  {{ levelAncestry }} уровень
-                  <span v-if="characterAncestryTalent(levelAncestry)">
-                    {{
-                      "&nbsp;(" +
-                      characterAncestryTalent(levelAncestry)?.label +
-                      ")"
-                    }}</span>
-
-                  <v-col :cols="4" :sm="2">
-                    <v-btn @click="updatePreview(levelAncestry, 'ancestry')"
-                      v-if="!characterAncestryTalent(levelAncestry)">
-                      Выберите черту {{ levelAncestry }}
-                    </v-btn>
-
-                    <v-btn color="error" align="right" x-small v-if="characterAncestryTalent(levelAncestry)"
-                      @click.stop.prevent="
-                        removeTalent(characterAncestryTalent(levelAncestry))
-                        ">Удалить</v-btn>
-                  </v-col>
-                </v-expansion-panel-header>
-
-                <v-expansion-panel-content :key="levelAncestry">
-                  <CardItem v-if="characterAncestryTalent(levelAncestry)" :item="characterTalentsKey(
-                    characterAncestryTalent(levelAncestry)
-                  )" />
-
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
+            <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)"
+              :showLevel="(lvl) => lvl <= characterLevel() && (lvl === 1 || (lvl - 1) % 4 === 0)"
+              :getTalent="characterAncestryTalent" :getTalentData="characterTalentsKey"
+              @select="lvl => updatePreview(lvl, 'ancestry')" @remove="removeTalent" />
           </v-col>
         </v-tab-item>
 
@@ -129,113 +98,29 @@
           </v-col>
 
           <v-col v-else="archetype">
-            <v-expansion-panels multiple>
-              <v-expansion-panel v-for="levelAncestry in 20" :key="levelAncestry" v-if="
-                levelAncestry <= characterLevel() &&
-                (levelAncestry === 2 ||
-                  levelAncestry % 2 === 0 ||
-                  (archetype.isFeatLevelOne && levelAncestry === 1))
-              ">
-                <v-expansion-panel-header>{{ levelAncestry }} уровень
-                  <span v-if="characterClassTalent(levelAncestry)">
-                    {{
-                      "&nbsp;(" +
-                      characterClassTalent(levelAncestry)?.label +
-                      ")"
-                    }}</span>
-                  <v-col :cols="4" :sm="2">
-                    <v-btn @click="updatePreview(levelAncestry, 'class')" v-if="!characterClassTalent(levelAncestry)">
-                      Выберите черту {{ levelAncestry }}
-                    </v-btn>
-
-                    <v-btn color="error" align="right" x-small v-if="characterClassTalent(levelAncestry)"
-                      @click.stop.prevent="
-                        removeTalent(characterClassTalent(levelAncestry))
-                        ">Удалить</v-btn>
-                  </v-col>
-                </v-expansion-panel-header>
-
-                <v-expansion-panel-content :key="levelAncestry">
-                  <CardItem v-if="characterClassTalent(levelAncestry)" :item="characterTalentsKey(
-                    characterClassTalent(levelAncestry)
-                  )
-                    " />
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
+            <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="(lvl) =>
+              lvl <= characterLevel() &&
+              (lvl === 2 || lvl % 2 === 0 || (archetype?.isFeatLevelOne && lvl === 1))
+              " :getTalent="characterClassTalent" :getTalentData="characterTalentsKey"
+              @select="lvl => updatePreview(lvl, 'class')" @remove="removeTalent" />
           </v-col>
         </v-tab-item>
 
         <!-- Черты навыков -->
         <v-tab-item class="my-tab-item" key="tab-skill" :value="`tab-skill`">
-          <v-expansion-panels multiple>
-            <v-expansion-panel v-for="levelAncestry in 20" :key="levelAncestry" v-if="
-              levelAncestry <= characterLevel() &&
-              (levelAncestry == 2 ||
-                levelAncestry % 2 == 0 ||
-                archetype?.keywords === 'плут')
-            ">
-              <v-expansion-panel-header>{{ levelAncestry }} уровень
-                <span v-if="characterSkillTalent(levelAncestry)">
-                  {{
-                    "&nbsp;(" + characterSkillTalent(levelAncestry)?.label + ")"
-                  }}</span>
-                <v-col :cols="4" :sm="2">
-                  <v-btn @click="updatePreview(levelAncestry, 'skill')" v-if="!characterSkillTalent(levelAncestry)">
-                    Выберите черту {{ levelAncestry }}
-                  </v-btn>
-
-                  <v-btn color="error" align="right" x-small v-if="characterSkillTalent(levelAncestry)"
-                    @click.stop.prevent="
-                      removeTalent(characterSkillTalent(levelAncestry))
-                      ">Удалить</v-btn>
-                </v-col>
-              </v-expansion-panel-header>
-
-              <v-expansion-panel-content :key="levelAncestry">
-                <CardItem v-if="characterSkillTalent(levelAncestry)" :item="characterTalentsKey(
-                  characterSkillTalent(levelAncestry)
-                )
-                  " />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+          <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="(lvl) =>
+            lvl <= characterLevel() &&
+            (lvl === 2 || lvl % 2 === 0 || archetype?.keywords === 'плут')
+            " :getTalent="characterSkillTalent" :getTalentData="characterTalentsKey"
+            @select="lvl => updatePreview(lvl, 'skill')" @remove="removeTalent" />
         </v-tab-item>
         <!-- Черты общие -->
         <v-tab-item class="my-tab-item" key="tab-general" :value="`tab-general`">
           <!-- <v-col :cols="8" :sm="10" class="subtitle-1"> Черты Общие </v-col> -->
 
-          <v-expansion-panels multiple>
-            <v-expansion-panel v-for="levelAncestry in 20" :key="levelAncestry" v-if="generalFeatsNumber(levelAncestry)
-
-            ">
-              <v-expansion-panel-header>{{ levelAncestry }} уровень
-                <span v-if="characterGeneralTalent(levelAncestry)">
-                  {{
-                    "&nbsp;(" +
-                    characterGeneralTalent(levelAncestry)?.label +
-                    ")"
-                  }}</span>
-
-                <v-col :cols="4" :sm="2">
-                  <v-btn @click="updatePreview(levelAncestry, 'general')" v-if="!characterGeneralTalent(levelAncestry)">
-                    Выберите черту {{ levelAncestry }}
-                  </v-btn>
-
-                  <v-btn color="error" align="right" x-small v-if="characterGeneralTalent(levelAncestry)"
-                    @click.stop.prevent="
-                      removeTalent(characterGeneralTalent(levelAncestry))
-                      ">Удалить</v-btn>
-                </v-col>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content :key="levelAncestry">
-                <CardItem v-if="characterGeneralTalent(levelAncestry)" :item="characterTalentsKey(
-                  characterGeneralTalent(levelAncestry)
-                )
-                  " />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+          <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="generalFeatsNumber"
+            :getTalent="characterGeneralTalent" :getTalentData="characterTalentsKey"
+            @select="lvl => updatePreview(lvl, 'general')" @remove="removeTalent" />
         </v-tab-item>
         <!-- Доп черты это те, что получены не выбором (например, доп знание от черт наследия) -->
 
@@ -248,6 +133,7 @@
         >
           Дополнительные черты
         </v-col> -->
+
 
           <v-expansion-panels multiple>
             <v-expansion-panel v-if="FreeTalentsLength() !== 0" v-for="levelAncestry in FreeTalentsLength()"
@@ -457,8 +343,11 @@
         </v-tab-item>
 
         <!-- Открытие диалогов выбора черт -->
-        <!-- Класс -->
-        <v-dialog v-model="talentsDialogClass" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
+        <v-dialog v-model="talentsDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
+          <talents-preview :character-id="characterId" :talents="selectedTalents" :level="talentsDialogLevel"
+            :list="talentList" :type="talentsDialogType" choose-mode @cancel="talentsDialog = false" />
+        </v-dialog>
+        <!-- <v-dialog v-model="talentsDialogClass" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
           <talents-preview :character-id="characterId" :talents="selectedTalentsClass" :level="levelTalent"
             :list="talentList" type="class" choose-mode @cancel="talentsDialogClass = false" />
         </v-dialog>
@@ -468,13 +357,13 @@
             :list="talentList" type="adaptation" choose-mode @cancel="talentsDialogAdaptation = false" />
         </v-dialog>
 
-        <!-- Наследие -->
+
         <v-dialog v-model="talentsDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
           <talents-preview :talents="selectedTalentsAncestry" :character-id="characterId" :level="levelTalent"
             :list="talentList" type="ancestry" choose-mode @cancel="talentsDialog = false" />
         </v-dialog>
 
-        <!-- Навыки -->
+
         <v-dialog v-model="talentsDialogSkill" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
           <talents-preview :character-id="characterId" :talents="selectedTalentsSkill" :list="talentList"
             :level="levelTalent" type="skill" choose-mode @cancel="talentsDialogSkill = false" />
@@ -483,7 +372,7 @@
         <v-dialog v-model="talentsDialogGeneral" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
           <talents-preview :character-id="characterId" :talents="selectedTalentsGeneral" :level="levelTalent"
             :list="talentList" type="general" choose-mode @cancel="talentsDialogGeneral = false" />
-        </v-dialog>
+        </v-dialog> -->
       </v-tabs>
     </v-row>
   </div>
@@ -499,6 +388,7 @@ import TalentsPreview from "~/components/forge/TalentsPreview.vue";
 import traitView from '~/components/TraitView';
 import CardItem from '@/components/CardItem.vue';
 import SluggerMixin from '~/mixins/SluggerMixin';
+import FeatLevelList from '~/components/forge/character/FeatLevelList.vue';
 
 export default {
   name: 'Talents',
@@ -509,7 +399,8 @@ export default {
     IssueList,
     TalentsPreview,
     traitView,
-    CardItem
+    CardItem,
+    FeatLevelList
   },
   mixins: [
     KeywordRepositoryMixin,
@@ -535,11 +426,15 @@ export default {
         '.',
         '.',
       ],
+      talentsDialog: false,
+      talentsDialogType: null, // 'class', 'skill', etc
+      talentsDialogLevel: null,
+      selectedTalents: undefined,
       selectedTalentsAncestry: undefined,
       selectedTalentsClass: undefined,
       selectedTalentsSkill: undefined,
       selectedTalentsGeneral: undefined,
-      talentsDialog: false,
+
       talentsDialogClass: false,
       talentsDialogSkill: false,
       talentsDialogGeneral: false,
@@ -864,33 +759,37 @@ export default {
       })
 
       this.levelTalent = levelAncestry;
-      switch (type) {
-        case "ancestry":
-          this.talentsDialog = true;
-          this.selectedTalentsAncestry = list;
-          break;
-        case "adaptation":
-          this.talentsDialogAdaptation = true;
-          this.selectedTalentsClass = list;
-          break;
-        case "class":
-          this.talentsDialogClass = true;
-          this.selectedTalentsClass = list;
-          break;
-        case "skill":
-          this.talentsDialogSkill = true;
-          this.selectedTalentsSkill = list;
-          break;
-        case "stylish":
-          this.talentsDialogSkill = true;
-          this.selectedTalentsSkill = list;
-          break;
-        case "general":
-          this.talentsDialogGeneral = true;
-          this.selectedTalentsGeneral = list;
-          break;
+      this.selectedTalents = list;
+      this.talentsDialog = true
+      this.talentsDialogType = type
+      this.talentsDialogLevel = levelAncestry
+      // switch (type) {
+      //   case "ancestry":
+      //     this.talentsDialog = true;
+      //     this.selectedTalentsAncestry = list;
+      //     break;
+      //   case "adaptation":
+      //     this.talentsDialogAdaptation = true;
+      //     this.selectedTalentsClass = list;
+      //     break;
+      //   case "class":
+      //     this.talentsDialogClass = true;
+      //     this.selectedTalentsClass = list;
+      //     break;
+      //   case "skill":
+      //     this.talentsDialogSkill = true;
+      //     this.selectedTalentsSkill = list;
+      //     break;
+      //   case "stylish":
+      //     this.talentsDialogSkill = true;
+      //     this.selectedTalentsSkill = list;
+      //     break;
+      //   case "general":
+      //     this.talentsDialogGeneral = true;
+      //     this.selectedTalentsGeneral = list;
+      //     break;
 
-      }
+
 
     },
     // characterAttributes() {
@@ -1597,91 +1496,150 @@ export default {
 </script>
 
 <style scoped lang="css">
-.traits {
-  background-color: #d9c484;
-  display: inline-block;
-  margin: 0.1em 0.15em !important;
-  padding: 0.1em 0.25em;
-  list-style-type: none !important;
+.ui-chip {
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+
+  height: 26px;
+  padding: 0 10px;
+
+  background: var(--ui-surface-soft);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+
+  transition: var(--ui-transition);
 }
 
-.trait {
-  background-color: #5e0000;
-  color: #fff;
-  display: inline-block;
-  font-weight: bolder;
-  margin: 0;
-  padding: 0 0.25em;
+/* прогресс-чип (главный кейс у тебя) */
+.ui-chip--progress {
+  background: color-mix(in srgb, var(--ui-accent) 12%, transparent);
+  border-color: var(--ui-accent);
+  color: var(--ui-text);
 }
 
-.simple {
-  display: inherit;
-  margin-bottom: 0;
-  padding-inline-start: 0.2em;
+/* hover эффект */
+.ui-chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--ui-border-strong);
 }
 
-.head {
-  /* color: rgb(57, 54, 54); */
-  width: fit-content;
-  /* font-size: 24px; */
-  font-style: normal;
-  /* font-family: goodOTCondBold; */
-  font-weight: normal;
-  line-height: 24px;
-  /* text-transform: uppercase; */
+.ui-chip--complete {
+  background: color-mix(in srgb, var(--ui-success) 15%, transparent);
+  border-color: var(--ui-success);
 }
 
-.line {
-  height: 1px;
-  margin: 0 1rem;
-  flex-grow: 1;
-  background: #676767;
-}
-
-.tag {
-  color: #fff;
-  padding: 0.5rem;
-  font-size: 18px;
-  font-style: normal;
-  text-align: center;
-  font-family: goodOTCondBold;
-  font-weight: normal;
-  line-height: 24px;
-  white-space: nowrap;
-  border-radius: 0.25rem;
-  text-transform: uppercase;
-}
-
-.rowFeat {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-.main-holder p {
-  display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+.tabs-small {
+  background: transparent;
 }
 
 .tabs-small .v-tab {
-  padding: 0 8px !important;
-  min-width: auto !important;
-  white-space: normal !important;
-  /* ← разрешает перенос */
-  line-height: 1.1 !important;
+  text-transform: none;
+  padding: 8px 12px;
+  min-height: 48px;
 }
 
 .tabs-small h2 {
-  font-size: 12px !important;
-  line-height: 1.2;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.tabs-small .v-chip {
-  transform: scale(0.75);
-  /* уменьшаем */
+/* =========================
+   TALENT SELECT UI (LOCAL FIX)
+========================= */
+
+/* панель выбора уровня (header в expansion panel) */
+.v-expansion-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 10px 12px !important;
+
+  background: var(--ui-surface);
+  border-bottom: 1px solid var(--ui-border);
+
+  font-weight: 600;
+  color: var(--ui-text);
+
+  transition: 0.15s ease;
+}
+
+/* hover только визуальный, без ломания клика */
+.v-expansion-panel-header:hover {
+  background: var(--ui-hover);
+}
+
+/* контейнер справа под кнопку */
+.v-expansion-panel-header .v-col {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* =========================
+   MAIN BUTTON FIX (ВАЖНО ДЛЯ "НЕ КЛИКАЕТСЯ")
+========================= */
+
+/* гарантируем кликабельность и нормальный hit-area */
+.v-expansion-panel-header .v-btn {
+  min-width: 140px;
+  height: 28px;
+
+  padding: 0 10px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  border-radius: 8px;
+
+  pointer-events: auto;
+  /* критично если где-то перекрывается */
+  position: relative;
+  z-index: 2;
+}
+
+/* визуал "Выберите черту" */
+.v-expansion-panel-header .v-btn:not(.error) {
+  background: var(--ui-surface-soft) !important;
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+}
+
+/* hover */
+.v-expansion-panel-header .v-btn:not(.error):hover {
+  border-color: var(--ui-accent);
+  background: var(--ui-surface-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   DELETE BUTTON
+========================= */
+
+.v-expansion-panel-header .v-btn.error {
+  min-width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border-radius: 6px;
+}
+
+/* =========================
+   CONTENT AREA (чтобы не "прыгало")
+========================= */
+
+.v-expansion-panel-content {
+  background: var(--ui-surface);
+  border-top: 1px solid var(--ui-border);
+}
+
+.v-expansion-panel-content__wrap {
+  padding: 12px;
 }
 </style>

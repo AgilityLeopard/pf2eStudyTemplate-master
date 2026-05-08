@@ -1,213 +1,185 @@
 <template>
   <v-row justify="center">
-    <v-progress-circular v-if="!species" indeterminate color="success" size="128" width="12" />
 
+    <!-- Loader -->
+    <v-progress-circular v-if="!species" indeterminate color="success" size="96" width="8" />
 
-    <v-col v-if="species" :xs="12">
-      <div class="d-flex flex-no-wrap justify-space-between mb-2">
-        <div>
-          <h3 class="headline">{{ species.nameAncestry }}</h3>
-          <h4 class="subtitle-1 grey--text">{{ species.hint }}</h4>
-          <v-btn small outlined color="primary" @click="doChangeSpeciesMode">
-            <v-icon small>settings</v-icon>
-            изменить наследие
-          </v-btn>
+    <v-col v-else cols="12" lg="10">
+
+      <!-- 🧭 HEADER -->
+      <v-card class="mb-4 pa-4" outlined>
+        <v-row align="center">
+
+          <v-col cols="12" md="8">
+            <h2 class="text-h4 font-weight-bold">
+              {{ species.nameAncestry }}
+            </h2>
+
+            <div class="grey--text mb-2">
+              {{ species.hint }}
+            </div>
+
+            <v-btn small outlined color="primary" @click="doChangeSpeciesMode">
+              <v-icon small left>mdi-cog</v-icon>
+              изменить наследие
+            </v-btn>
+          </v-col>
+
+          <v-col cols="12" md="4" class="text-right">
+            <v-avatar size="96" tile>
+              <img :src="avatar" />
+            </v-avatar>
+          </v-col>
+
+        </v-row>
+      </v-card>
+
+      <!-- 🧬 TRAITS -->
+      <v-card class="mb-4 pa-4" outlined>
+        <trait-view v-if="species.trait" :item="species" />
+      </v-card>
+
+      <!-- ⚙️ CORE STATS -->
+      <v-row class="d-flex" align="stretch">
+
+        <!-- Attributes -->
+        <v-col cols="12" md="6">
+          <v-card outlined class="pa-4 fill-height" style="border-color:#c75d5d;">
+            <h3 class="text-h6 mb-2">Повышение характеристик</h3>
+
+            <div v-if="species.attributeBoost?.length">
+              <div v-for="boost in species.attributeBoost" :key="boost.name">
+                <strong v-if="boost.value > 0">{{ boost.name }}</strong>
+              </div>
+            </div>
+
+            <div v-for="boost in species.abilityBoost" :key="boost.name">
+              <strong>Свободное повышение</strong>
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- HP -->
+        <v-col cols="12" md="6">
+          <v-card outlined class="pa-4 fill-height" style="border-color:#ff6f61;">
+            <h3 class="text-h6 mb-2">Хиты</h3>
+
+            <strong>
+              {{ species.ancestryHitPoint }} + мод Телосложения
+            </strong>
+
+            <div class="text--secondary mt-2">
+              На 1 уровне
+            </div>
+          </v-card>
+        </v-col>
+
+      </v-row>
+
+      <!-- 📜 LANGUAGES / INFO -->
+      <v-card class="mt-4 pa-4" outlined>
+        <h3 class="text-h6 mb-2">Общая информация</h3>
+
+        <p>
+          <strong>Языки:</strong>
+          {{ species.language.join(", ") }}
+          + {{ species.freeLanguage }} на выбор
+        </p>
+
+        <p>
+          <strong>Размер:</strong>
+          {{ size(species.size) }}
+        </p>
+
+        <p>
+          <strong>Скорость:</strong>
+          {{ species.speed }}
+        </p>
+      </v-card>
+
+      <!-- 📚 DESCRIPTION -->
+      <v-card class="mt-4 pa-4" outlined>
+        <h3 class="text-h6 mb-3">Описание</h3>
+
+        <div v-for="description in species.Description" :key="description.name">
+
+          <div v-if="description.name === 'Faith'">
+            <h4>Верование</h4>
+            <div v-html="description.about"></div>
+          </div>
+
+          <div v-if="description.name === 'avanturist'">
+            <h4>Авантюристы</h4>
+            <div v-html="description.about"></div>
+          </div>
+
+          <div v-if="description.name === 'physical'">
+            <h4>Физическое описание</h4>
+            <div v-html="description.about"></div>
+          </div>
+
+          <div v-if="description.name === 'society'">
+            <h4 c>Общество</h4>
+            <div v-html="description.about"></div>
+          </div>
+
+          <v-divider class="my-2" />
+
         </div>
-        <v-avatar size="96" tile><img :src="avatar" /></v-avatar>
-      </div>
 
-      <!-- Трейты -->
-      <div>
-        <trait-view v-if="species.trait" :item="species" class="mb-2" style="font-size: 14px" />
-      </div>
+        <!-- Names -->
+        <div v-if="species.exampleName">
+          <h4>Имена</h4>
+          <div v-html="species.exampleName"></div>
+        </div>
 
-      <v-divider />
+      </v-card>
 
-      <v-tabs centered grow color="red">
-        <!-- Заголовки вверху -->
-        <v-tab class="caption" key="tab-ancestry" :href="`#tab-ancestry`">
-          <h2 class="subtitle-2">Родословная</h2>
-        </v-tab>
-        <v-tab class="caption" key="tab-heritage" :href="`#tab-heritage`">
-          <h2 class="subtitle-2">Наследие </h2>
-        </v-tab>
+      <!-- 🧬 FEATURES -->
+      <v-card v-if="species.speciesFeatures.length !== 0" class="mt-4 pa-4" outlined>
 
-        <!-- Вкладка с родословными -->
-        <v-tab-item class="my-tab-item" key="tab-ancestry" :value="`tab-ancestry`">
-          <div class="pa-2">
-            <div class="mt-2 body-2 text-lg-justify">
+        <h2 class="text-h5 mb-4">Особенности родословной</h2>
 
-              <p><strong>Скорость:</strong> {{ species.speed }}</p>
-              <p><strong>Хитов:</strong> {{ species.ancestryHitPoint }}</p>
+        <v-expansion-panels>
+          <v-expansion-panel v-for="feature in species.speciesFeatures" :key="feature.key">
+            <v-expansion-panel-header>
+              {{ feature.name }}
+            </v-expansion-panel-header>
 
-              <span class="subtitle-1 mt-2">Повышение характеристик</span>
-              <v-divider />
+            <v-expansion-panel-content>
 
-              <div v-for="boost in species.attributeBoost" class="text-lg-justify">
-                <div v-if="boost.value > 0">
-                  <strong>{{ boost.name }}</strong>
-                </div>
-              </div>
+              <div v-if="feature.description" v-html="feature.description"></div>
+              <div v-else>{{ feature.snippet }}</div>
 
-              <div v-for="boost in species.abilityBoost" class="text-lg-justify">
-                <div>
-                  <strong> Свободное повышение </strong>
-                </div>
-              </div>
+              <div v-if="feature.action" v-html="feature.action.description"></div>
 
-              <p></p>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
 
-              <span v-if="species.attributeFlaw.find((t) => t.value < 0)" class="subtitle-1 mt-2">
-                Понижение характеристик
-              </span>
+      </v-card>
 
-              <v-divider v-if="species.attributeFlaw.find((t) => t.value < 0)" />
+      <!-- 🧬 HERITAGE -->
+      <v-card class="mt-4 pa-4" outlined>
+        <h2 class="text-h5 mb-3">Наследие</h2>
 
-              <div v-for="flaw in species.attributeFlaw" class="text-lg-justify">
-                <div v-if="flaw.value < 0">
-                  <strong>{{ flaw.name }}</strong>
-                </div>
-              </div>
+        <v-select v-model="selectedHeritage" :items="heritage" item-value="key" item-text="nameAncestry" outlined dense
+          return-object @input="selectHeritageForChar" />
 
-              <p><v-divider /></p>
+        <div v-if="selectedHeritage" class="mt-3">
 
-              <p>
-                <strong>Доступные языки:</strong> {{ species.language.join(", ") }} +
-                {{ species.freeLanguage }} на выбор + количество языков, равное вашему
-                модификатору Интеллекта (если положительный)
-              </p>
+          <div v-html="selectedHeritage.previewText"></div>
+          <div v-html="selectedHeritage.description"></div>
 
-              <p><strong>Размер:</strong> {{ size(species.size) }}</p>
-            </div>
+          <v-select v-if="modification(selectedHeritage).length" v-model="selectedHeritage.selected"
+            :items="modification(selectedHeritage)" item-text="name" item-value="key" outlined dense
+            @input="changeSelectedOption(selectedHeritage)" class="mt-3" />
 
-            <div v-if="species.Description" class="body-2">
-              <p><v-divider /></p>
+        </div>
 
+      </v-card>
 
-              <div v-for="description in species.Description" class="text-lg-justify">
-                <div v-if="description.name == 'Faith'">
-                  <span class="subtitle-1 mt-2">Верование</span>
-
-                  <p><v-divider /></p>
-
-                  <div v-if="description.about" v-html="description.about"></div>
-                  <strong> Популярные эдикты</strong>
-                  <div v-if="description.edicts" v-html="description.edicts"></div>
-
-                  <p></p>
-
-                  <strong> Популярные анафемы</strong>
-                  <div v-if="description.anathema" v-html="description.anathema"></div>
-                </div>
-
-                <p></p>
-
-                <div v-if="description.name == 'avanturist'">
-                  <span class="subtitle-1 mt-2">Авантюристы</span>
-                  <p><v-divider /></p>
-                  <div v-if="description.about" v-html="description.about"></div>
-                </div>
-
-                <p></p>
-                <div v-if="description.name === 'physical'">
-                  <span class="subtitle-1 mt-2">Физическое описание</span>
-                  <p><v-divider /></p>
-                  <div v-if="description.about" v-html="description.about"></div>
-
-                </div>
-
-                <p></p>
-                <div v-if="description.name === 'society'">
-                  <span class="subtitle-1 mt-2">Общество</span>
-                  <p><v-divider /></p>
-                  <div v-if="description.about" v-html="description.about"></div>
-                </div>
-              </div>
-
-              <p></p>
-              <div v-if="species.exampleName">
-                <span class="subtitle-1 mt-2">Имена</span>
-                <p><v-divider /></p>
-                <span class="subtitle-2 mt-2"><strong>Примеры имен</strong></span>
-                <div v-if="species.exampleName" v-html="species.exampleName"></div>
-              </div>
-
-            </div>
-
-            <div class="mt-2 body-2 text-justify ">
-
-              <h3 class="headline" v-if="species.speciesFeatures.length != 0">Особенности родословной</h3>
-              <div v-for="feature in species.speciesFeatures" class="text-lg-justify " v-bind:key="feature.key">
-                <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
-                <p class="main-holder">
-
-
-                <div v-if="feature.description" v-html="feature.description"></div>
-                <div v-else>{{ feature.snippet }}</div>
-
-                <div v-if="feature.action" v-html="feature.action.description"></div>
-                </p>
-              </div>
-            </div>
-          </div>
-        </v-tab-item>
-
-        <!-- Вкладка Наследия -->
-        <v-tab-item class="my-tab-item" key="tab-heritage" :value="`tab-heritage`">
-
-          <div v-if="heritageList" class="mt-2 pa-2">
-            <h3 class="headline">Выберите Наследие</h3>
-            <v-select v-model="selectedHeritage" :items="heritage" item-value="key" item-text="nameAncestry" label=""
-              dense outlined persistent-hint return-object @input="selectHeritageForChar">
-            </v-select>
-
-            <div v-if="selectedHeritage" class="mt-2 body-2 text-lg-justify">
-
-              <p>
-              <div v-if="selectedHeritage.previewText" v-html="selectedHeritage.previewText"></div>
-              </p>
-
-              <p>
-              <div v-if="selectedHeritage.description" v-html="selectedHeritage.description"></div>
-              </p>
-
-              <div v-if="selectedHeritage.speciesFeatures"></div>
-
-              <div v-for="feature in selectedHeritage.speciesFeatures" class="text-lg-justify "
-                v-bind:key="feature.key">
-                <h3 class="main-holder split-header"><span class="left-header">{{ feature.name }}</span></h3>
-                <p class="main-holder">
-
-
-                <div v-if="feature.description" v-html="feature.description"></div>
-                <div v-else>{{ feature.snippet }}</div>
-
-                <div v-if="feature.action" v-html="feature.action.description"></div>
-                </p>
-              </div>
-
-              <div v-if="modification(selectedHeritage).length !== 0" class="text-lg-justify ">
-                <h3 class="main-holder split-header"><span class="left-header">Выберите навык</span></h3>
-
-                <p class="main-holder">
-                  <v-select v-model="selectedHeritage.selected" :items="modification(selectedHeritage)" item-value="key"
-                    item-text="name" label="" dense outlined persistent-hint
-                    @input="changeSelectedOption(selectedHeritage)">
-                  </v-select>
-
-                </p>
-              </div>
-
-
-
-              <v-divider />
-            </div>
-
-          </div>
-        </v-tab-item>
-      </v-tabs>
     </v-col>
-
   </v-row>
 </template>
 
@@ -241,6 +213,13 @@ export default {
         this.characterId
       );
     },
+    characterKeywords() {
+      return this.$store.getters["characters/characterKeywordsRawById"](
+        this.characterId
+      );
+
+    },
+
     heritage() {
       const speciesLabel = this.species?.nameAncestry.toUpperCase();
 
@@ -251,21 +230,7 @@ export default {
       else return this.heritageList.filter((s) => s.isUniversal === true);
 
     },
-    // characterSpeciesAstartesChapter() {
-    //   return this.$store.getters[
-    //     "characters/characterSpeciesAstartesChapterById"
-    //   ](this.characterId);
-    // },
-    // enhancements() {
-    //   return this.$store.getters["characters/characterEnhancementsById"](
-    //     this.characterId
-    //   );
-    // },
-    // psychicPowers() {
-    //   return this.$store.getters["characters/characterPsychicPowersById"](
-    //     this.characterId
-    //   );
-    // },
+
     sources() {
       return ["playerCore", "playerCore2", ...this.settingHomebrews];
     },
@@ -312,15 +277,6 @@ export default {
     // АПИ запросы
     // --------------------------------------
 
-    // async getChapterList(sources) {
-    //   const config = {
-    //     params: {
-    //       source: sources.join(","),
-    //     },
-    //   };
-    //   const { data } = await this.$axios.get("/api/species/chapters/", config);
-    //   this.chapterList = data;
-    // },
     async getHeritageList(sources) {
       const config = {
         params: {
@@ -486,6 +442,10 @@ export default {
 
       // if (species.prerequisites)
       //   this.ensurePrerequisites(species.prerequisites);
+      const heritageTrait = this.characterKeywords.find(s => s.source === "heritage")
+
+      if (heritageTrait)
+        this.removeTalentsByKeywords([heritageTrait.name]);
 
       // Очистить перед началом модификации и слова
       this.$store.commit("characters/clearCharacterEnhancementsBySource", {
@@ -589,7 +549,111 @@ export default {
       });
 
     },
+    removeTalentsByKeywords(keywords = []) {
+      const id = this.characterId;
+      const level = this.characterLevel();
 
+      const sheet = this.$store.getters[
+        "characters/characterSkillSheetById"
+      ](this.characterId);
+
+      const talents = this.$store.getters[
+        "characters/characterTalentsById"
+      ](this.characterId);
+
+      if (!keywords.length || !talents?.length) return;
+
+      const keywordSet = new Set(
+        keywords.map(k => k.toString().toLowerCase())
+      );
+
+      const targets = talents.filter(talent => {
+        if (!talent?.traits) return false;
+
+        return talent.traits.some(trait =>
+          keywordSet.has(trait.toString().toLowerCase())
+        );
+      });
+
+      targets.forEach(talent => {
+        const level1 = talent.level;
+
+        if (talent.system?.rules?.length > 0) {
+          talent.system.rules.forEach(item => {
+
+            // ===== SKILL =====
+            if (item.skill) {
+              if (
+                sheet.find(
+                  i =>
+                    i.key === item.skill &&
+                    i.level === level1 &&
+                    i.type === "feat"
+                )
+              ) {
+                this.$store.commit("characters/removeSkillSheet", {
+                  id,
+                  key: item.skill,
+                  level: level1,
+                  type: "feat",
+                  optional: false,
+                });
+
+                if (level1 === 1) {
+                  this.$store.commit(
+                    "characters/setCharacterSkillPointClassUp",
+                    {
+                      id,
+                      write: false,
+                      payload: { key: 1, value: -1 },
+                    }
+                  );
+                }
+              }
+            }
+
+            // ===== FEAT =====
+            if (item.feat) {
+              const loreKey =
+                this.textToCamel(talent.key) +
+                "-" +
+                this.textToCamel(item.feat);
+
+              [1, 3, 7, 15].forEach(lvl => {
+                this.$store.commit("characters/removeSkillSheet", {
+                  id,
+                  key: loreKey,
+                  level: lvl,
+                  type: "feat",
+                  optional: false,
+                });
+              });
+            }
+          });
+        }
+
+        // ===== CORE REMOVAL =====
+        this.$store.commit("characters/clearModification", {
+          id,
+          level,
+        });
+
+        this.$store.commit("characters/removeModification", {
+          id,
+          talentId: talent.id,
+        });
+
+        this.$store.commit("characters/removeCharacterTalent", {
+          id,
+          talentId: talent.id,
+        });
+
+        this.$store.commit("characters/setModification", {
+          id,
+          level,
+        });
+      });
+    },
     changeSelectedOption(feature, inx) {
       const level = this.characterLevel;
 
@@ -684,27 +748,13 @@ export default {
 </script>
 
 <style scoped>
-.traits {
-  background-color: #d9c484;
-  display: inline-block;
-  margin: 0.1em 0.15em !important;
-  padding: 0.1em 0.25em;
-  list-style-type: none !important;
+.v-card {
+  border-radius: 14px;
+  transition: 0.2s;
 }
 
-.trait {
-  background-color: #5e0000;
-  color: #fff;
-  display: inline-block;
-  font-weight: bolder;
-  margin: 0;
-  padding: 0 0.25em;
-}
-
-.simple {
-  display: inherit;
-  margin-bottom: 0;
-  padding-inline-start: 0.2em;
+.v-card:hover {
+  transform: translateY(-2px);
 }
 
 .right-header {
@@ -747,5 +797,98 @@ export default {
   margin-block-end: 1em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
+}
+
+.two-column-holder {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.two-column-left {
+  flex: 50%;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+}
+
+@media screen and (max-width: 600px) {
+  .two-column-left {
+    flex: 100%;
+    flex-wrap: wrap;
+    padding: 20px 30px;
+  }
+}
+
+.two-column-right {
+  flex: 50%;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+}
+
+.light-red-border .two-column-left {
+  border-right: 1px solid #d85058;
+}
+
+@media screen and (max-width: 600px) {
+  .light-red-border .two-column-left {
+    border-bottom: 1px solid #d85058;
+    border-right: none;
+  }
+}
+
+.class-sidebar {
+  /* background: #fdfdfd; */
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0px 2px 12px rgb(0 0 0 / 20%);
+  /* color: #5c1c16; */
+  word-break: break-word;
+}
+
+.dark-red-border .two-column-left {
+  border-right: 1px solid #5c1c16;
+}
+
+@media screen and (max-width: 600px) {
+  .dark-red-border .two-column-left {
+    border-bottom: 1px solid #5c1c16;
+    border-right: none;
+  }
+}
+
+h1 {
+  color: #3366ff;
+}
+
+h2 {
+  color: #ff4d4d;
+}
+
+h3 {
+  color: #ff9977;
+}
+
+h4,
+h5,
+h6 {
+  color: #ffffff;
+}
+
+.feature-text h1 {
+  color: #3366ff;
+}
+
+.feature-text h2 {
+  color: #ff4d4d;
+}
+
+.feature-text h3 {
+  color: #ff9977;
+}
+
+.highlight-term {
+  background-color: rgba(255, 255, 0, 0.2);
+  border-bottom: 1px dotted yellow;
+  cursor: help;
 }
 </style>

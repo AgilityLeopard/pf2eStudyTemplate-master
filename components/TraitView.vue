@@ -1,14 +1,13 @@
 <template lang="html">
   <ul class="simple">
     <li v-for="trait in List(item)" class="traits">
-      <p
-        class="trait"
-        v-if="
-          trait.key !== 'необычный' &&
-          trait.key !== 'редкий' &&
-          trait.key !== 'обычный'
-        "
-      >
+      <p class="trait" v-if="
+        trait.key !== 'необычный' &&
+        trait.key !== 'редкий' &&
+        trait.key !== 'обычный'
+        &&
+        trait.key !== 'уникальный'
+      ">
         <v-tooltip bottom :max-width="280" content-class="trait-tooltip">
           <template v-slot:activator="{ on }">
             <div v-on="on" class="t">
@@ -28,6 +27,18 @@
           <span class="trait-tooltip__inner">{{ trait.desc }}</span>
         </v-tooltip>
       </p>
+
+      <p class="unique" v-if="trait.key === 'уникальный'">
+        <v-tooltip bottom :max-width="280" content-class="trait-tooltip">
+          <template v-slot:activator="{ on }">
+            <div v-on="on" class="t">
+              {{ trait.key }}
+            </div>
+          </template>
+          <span class="trait-tooltip__inner">{{ trait.desc }}</span>
+        </v-tooltip>
+      </p>
+
       <p class="uncommon" v-if="trait.key === 'необычный'">
         <v-tooltip bottom :max-width="280" content-class="trait-tooltip">
           <template v-slot:activator="{ on }">
@@ -38,6 +49,7 @@
           <span class="trait-tooltip__inner">{{ trait.desc }}</span>
         </v-tooltip>
       </p>
+
     </li>
   </ul>
 </template>
@@ -58,9 +70,9 @@ export default {
       required: true,
     },
   },
-    data() {
+  data() {
     return {
-        traitList: undefined,
+      traitList: undefined,
     };
   },
 
@@ -103,25 +115,23 @@ export default {
       data.forEach(t => t.key = t.key.toLowerCase());
       this.traitList = data;
     },
-      traitItem(item)
-    {
-          if (this.traitList !==undefined)
-          {
+    traitItem(item) {
+      if (this.traitList !== undefined) {
 
-            return this.traitList.find(s => s.key === item) ? this.traitList.find(s => s.key === item) : '';
-    }
+        return this.traitList.find(s => s.key === item) ? this.traitList.find(s => s.key === item) : '';
+      }
 
       return '';
     },
     List(item) {
       if (this.traitList !== undefined) {
         const list = [];
-        if(item.trait)
+        if (item.trait)
           this.traitList.filter(s => item.trait.includes(s.key)).forEach(tr => {
-              list.push(tr);
+            list.push(tr);
           })
         const rar = this.traitList.find(s => item.rarity === s.nameEng.toLowerCase())
-        if(rar) list.push(rar)
+        if (rar) list.push(rar)
         return list.filter(t => t.key !== 'обычный');
 
       }
@@ -151,6 +161,16 @@ export default {
 
 .rare {
   background-color: rgb(0, 38, 100);
+  color: #fff;
+  display: inline-block;
+  font-weight: bolder;
+  margin: 0;
+  padding: 0 0.25em;
+  cursor: pointer;
+}
+
+.unique {
+  background-color: rgb(84, 22, 110);
   color: #fff;
   display: inline-block;
   font-weight: bolder;
@@ -208,12 +228,15 @@ export default {
 :deep(.trait-tooltip) {
   /* ограничение ширины; можно адаптивно: max-width: min(80vw, 280px); */
   max-width: 280px;
-  white-space: normal !important; /* переопределяем Vuetify nowrap */
+  white-space: normal !important;
+  /* переопределяем Vuetify nowrap */
 }
 
 :deep(.trait-tooltip .trait-tooltip__inner) {
   display: inline-block;
-  overflow-wrap: anywhere; /* переносим длинные слова/URL */
-  word-break: break-word; /* на случай очень длинных токенов */
+  overflow-wrap: anywhere;
+  /* переносим длинные слова/URL */
+  word-break: break-word;
+  /* на случай очень длинных токенов */
 }
 </style>
