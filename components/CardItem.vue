@@ -76,7 +76,7 @@
       <div class="divider"></div>
 
       <!-- ОБЩЕЕ ДЛЯ ПРЕДМЕТОВ -->
-      <template v-if="['weapon', 'armor', 'shield', 'gear'].includes(item.type)">
+      <template v-if="['weapon', 'armor', 'shield', 'gear', 'equipment', 'consumable'].includes(item.type)">
 
         <div v-if="item.bulk" class="info-line">
           <strong>Нагрузка:</strong>
@@ -157,7 +157,7 @@
       </template>
 
       <!-- ЗАКЛИНАНИЕ -->
-      <template v-if="item.type === 'spell'">
+      <template v-if="['spell', 'ritual'].includes(item.type)">
         <div v-if="item.range" class="info-line">
           <strong>Дистанция:</strong> {{ item.range }}
         </div>
@@ -267,6 +267,10 @@ export default {
   },
   mixins: [WargearTraitRepositoryMixin, StatRepositoryMixin],
   props: {
+    type: {
+      type: Function,
+      required: false,
+    },
     item: {
       type: Object,
       required: true,

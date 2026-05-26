@@ -128,7 +128,7 @@
                                 `Оружие`,
                                 `Доспехи`,
                                 `Расходники`,
-                                `Сокровища`,
+
                                 `Снаряжение`,
 
                               ]" :key="item.toLowerCase()" :value="item.toLowerCase()">
@@ -158,6 +158,13 @@
                                 v-show="wargearSection.selection === 'снаряжение' || wargearSection.selection === 'все'"
                                 :items="gear" :headers="gearHeaders" @view="openDialogItem" :wargearList="wargearList"
                                 :characterId="characterId" />
+
+                              <ConsumableTable
+                                v-show="wargearSection.selection === 'расходники' || wargearSection.selection === 'все'"
+                                :items="consumable" :headers="gearHeaders" @view="openDialogItem"
+                                :wargearList="wargearList" :characterId="characterId" />
+
+
                             </div>
                           </v-col>
                         </v-row>
@@ -545,7 +552,7 @@
                 <v-dialog v-model="psychicDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1200px" scrollable>
                   <psychic-preview :character-id="characterId" :talents="selectedPsychic"
                     :archetype="characterArchetype" :rank="rankSpell" :level="levelSpell" :list="psychicPowersList"
-                    type="spell" choose-mode @cancel="psychicDialog = false" />
+                    :type=spell choose-mode @cancel="psychicDialog = false" />
                 </v-dialog>
               </v-tab-item>
 
@@ -1170,6 +1177,8 @@ import SkillsTable from '~/components/forge/character/SkillsTable.vue';
 import WeaponsTable from '~/components/forge/wargear/WeaponsTable.vue';
 import ArmorTable from '~/components/forge/wargear/ArmorTable.vue';
 import GearTable from '~/components/forge/wargear/GearTable.vue';
+import ConsumableTable from '~/components/forge/wargear/ConsumableTable.vue';
+import TreasureTable from '~/components/forge/wargear/TreasureTable.vue';
 import WargearHeader from '~/components/forge/wargear/WargearHeader.vue';
 import TalentsCard from '~/components/forge/character/TalentsCard.vue';
 import CardItem from '@/components/CardItem.vue';
@@ -1217,7 +1226,9 @@ export default {
     CardItem,
     PsychicPreview,
     EditorContent,
-    AttributeTable
+    AttributeTable,
+    ConsumableTable,
+    TreasureTable
   },
   extensions: [
     StarterKit,
@@ -1294,7 +1305,7 @@ export default {
         '#FFC107', '#FF9800', '#FF5722', '#795548',
         '#607D8B'
       ],
-
+      typeSpell: undefined,
       fluff: {},
       editor: null,   // 👈 сюда
       activeNoteId: null,
@@ -2579,8 +2590,12 @@ export default {
       return this.charGear.filter((w) => ['armor', 'shield'].includes(w.type));
     },
     gear() {
-      return this.charGear.filter((w) => !['armor', 'weapon', 'shield'].includes(w.type));
+      return this.charGear.filter((w) => !['consumable', 'armor', 'weapon', 'shield'].includes(w.type));
     },
+    consumable() {
+      return this.charGear.filter((w) => ['consumable'].includes(w.type));
+    },
+
 
     objectives() {
       if (this.characterSpecies && this.characterSpecies.objectives) {
@@ -3146,7 +3161,7 @@ export default {
           const spell1 = {
             ...spell,
 
-            type: ritual,
+            type: "ritual",
             //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
             // rank: this.characterSpellFocus(levelIndex, i, spell.key)?.traits?.includes('фокус') ? 1 : 0,
             cell: i,
@@ -3249,7 +3264,7 @@ export default {
     },
     openDialog(item) {
       this.selectedItem = item
-      this.dialog = true
+      this.dialogItem = true
     },
     openDialogItem(item) {
       this.selectedItem = item

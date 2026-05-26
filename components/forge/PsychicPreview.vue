@@ -553,8 +553,9 @@ export default {
       //   (t) => t == 0
       // ) - 1;
 
+      const typeSpell = this.type
       filteredTalents.forEach(spell => {
-        if (spell.damage && spell.heightening?.damage /*&& spell.key === 'grisly-growths'*/) {
+        if (spell.damage && spell.heightening?.damage && typeSpell === spell /*&& spell.key === 'grisly-growths'*/) {
 
           const index = spell.damage?.formula?.indexOf("d", 0);
           ///Кубики до и после

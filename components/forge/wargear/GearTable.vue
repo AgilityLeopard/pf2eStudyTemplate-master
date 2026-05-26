@@ -1,6 +1,8 @@
 <template>
     <div>
-        <v-btn outlined block class="mt-2" color="success" @click="GearSearchDialog = true">
+
+        <v-btn class="ui-btn ui-btn--success mt-2" block @click="GearSearchDialog = true">
+
             Добавить снаряжение
         </v-btn>
 
@@ -13,7 +15,7 @@
             </div>
             <div class="table-container">
                 <v-data-table :headers="headersGear" :items="group.items" :search="searchQuery"
-                    class="gear-section-table fixed-columns-table" show-expand item-key="id">
+                    class="gear-section-table fixed-columns-table" hide-default-footer item-key="id">
                     <template v-slot:no-data> Нет предметов </template>
 
                     <template v-slot:item.nameGear="{ item }">

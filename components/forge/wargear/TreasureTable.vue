@@ -1,48 +1,42 @@
 <template>
-
     <div>
 
-        <v-btn class="ui-btn ui-btn--success mt-2" block @click="ArmorSearchDialog = true">
+        <v-btn class="ui-btn ui-btn--success mt-2" block @click="GearSearchDialog = true">
 
-            Добавить доспех
+            Добавить снаряжение
         </v-btn>
 
-        <v-data-table :headers="headersArmor" :items="items" hide-default-footer v-if="items.length">
-            <!-- name -->
-            <template v-slot:item.name="{ item }">
-                {{ item.name }}
-            </template>
-            <!-- group -->
-            <template v-slot:item.group="{ item }">
-                <div class="text-center">
-                    {{ armorGroupName(item.group) }}
-                </div>
+        <v-data-table :headers="headersGear" :items="items" :search="searchQuery"
+            class="gear-section-table fixed-columns-table" hide-default-footer item-key="id">
+            <template v-slot:no-data> Нет предметов </template>
+
+            <template v-slot:item.nameGear="{ item }">
+                <!-- <v-row> -->
+                <span>{{ item.name }}</span>
+                <!-- </v-row>
+                <v-row>
+                  <div>
+                    <trait-view v-if="item.traits" :item="item" class="mb-2" />
+                  </div>
+                </v-row> -->
             </template>
 
-            <!-- bulk -->
-            <template v-slot:item.bulk="{ item }">
-                <div class="text-center">
-                    {{ item.bulk?.value === 0.1 ? 'Л' : item.bulk?.value }}
-                </div>
+            <template v-slot:item.qty="{ item }">
+                <span>
+                    <v-btn icon :disabled="item.qty === 1" @click="decrementQty(item)">
+                        <v-icon color="red"> remove_circle </v-icon>
+                    </v-btn>
+                    {{ item.qty }}
+                    <v-btn icon @click="incrementQty(item)">
+                        <!--"-->
+                        <v-icon color="orange"> add_circle </v-icon>
+                    </v-btn>
+                </span>
             </template>
 
-            <!-- category -->
-            <template v-slot:item.category="{ item }">
-                <div class="text-center">
-                    {{ category(item.category) }}
-                </div>
-            </template>
-
-            <!-- traits -->
-            <template v-slot:item.traits="{ item }">
-                {{ item.traits?.join(', ') }}
-            </template>
-
-            <!-- equip -->
-            <template v-slot:item.equip="{ item }">
-                <v-btn outlined x-small :color="isEquipped(item) ? 'info' : 'warning'" @click="$emit('toggle', item)">
-                    <v-icon left>lock</v-icon>
-                    {{ isEquipped(item) ? 'Снять' : 'Надеть' }}
+            <template v-slot:item.edit="{ item }">
+                <v-btn outlined x-small color="error" @click="remove(item)">
+                    <v-icon left> delete </v-icon>
                 </v-btn>
             </template>
 
@@ -53,60 +47,30 @@
                 </v-btn>
             </template>
 
-            <!-- qty -->
-            <template v-slot:item.qty="{ item }">
-                <div class="d-flex align-center justify-center">
-                    <v-btn icon :disabled="item.qty === 1" @click="decrementQty(item)">
-                        <v-icon color="red">remove_circle</v-icon>
-                    </v-btn>
-
-                    {{ item.qty }}
-
-                    <v-btn icon @click="incrementQty(item)">
-                        <v-icon color="orange">add_circle</v-icon>
-                    </v-btn>
-                </div>
-            </template>
-
-
-            <!-- edit -->
-            <template v-slot:item.edit="{ item }">
-                <v-btn outlined x-small color="info" @click="openWeaponSettings(item)">
-                    <v-icon left>edit</v-icon>
-                </v-btn>
-            </template>
-
-            <!-- delete -->
-            <template v-slot:item.delete="{ item }">
-                <v-btn outlined x-small color="error" @click="remove(item)">
-                    <v-icon left>delete</v-icon>
-                </v-btn>
-            </template>
 
         </v-data-table>
 
-        <div v-else class="text-center mt-2 mb-2">
-            <em>Нет доспехов? Возьми на вкладке Снаряжения!</em>
-        </div>
 
-        <v-dialog v-model="ArmorSearchDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
+        <v-dialog v-model="GearSearchDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1400px" scrollable>
             <v-col :cols="12" v-if="wargearList">
-
                 <v-alert v-if="alertMoney" type="error" dense text border="left">
                     У вас недостаточно денег на покупку
                 </v-alert>
 
 
-                <wargear-search @cancel="ArmorSearchDialog = false" type="armor" :repository="wargearList.filter((item) =>
-                    ['armor', 'shield'].includes(item.type)
-                )" @select="add" />
+                <wargear-search @cancel="GearSearchDialog = false" type="other" :repository="wargearList.filter(
+                    (item) =>
+                        ['consumable'].includes(
+                            item.type
+                        )
+                )
+                    " @select="add" />
             </v-col>
         </v-dialog>
     </div>
 </template>
 
 <script>
-
 import WargearSearch from '~/components/forge/WargearSearch.vue';
 import WargearTrait from '~/mixins/WargearTraitRepositoryMixin';
 import WargearMixin from '~/mixins/WargearMixin';
@@ -125,24 +89,40 @@ export default {
     ],
     data() {
         return {
-            ArmorSearchDialog: false,
+            GearSearchDialog: false,
             alertMoney: false,
-            headersArmor: [
-                { text: 'Название', value: 'name' },
-                { text: 'Группа', value: 'group' },
-                { text: 'Вес', value: 'bulk' },
-                { text: 'Категория', value: 'category' },
-                { text: 'Трейты', value: 'traits' },
-                { text: 'Экип', value: 'equip', sortable: false },
-                { text: 'Просмотр', value: 'view', sortable: false },
+            headersGear: [
                 {
-                    text: 'Кол-во', value: 'qty', align: 'center',
+                    text: 'Название',
+                    value: 'nameGear',
+                    align: 'left',
+                    class: 'text-left',
+                    width: '250px',
+                },
+                {
+                    text: 'Количество',
+                    value: 'qty',
+                    align: 'center',
                     class: 'text-center',
                     width: '150px',
                 },
-                { text: 'Редактировать', value: 'edit', sortable: false },
-                { text: 'Удалить', value: 'delete', sortable: false },
-            ]
+                {
+                    text: '',
+                    value: 'edit',
+                    align: 'center',
+                    class: 'text-center',
+                    width: '60px',
+                },
+                { text: 'Просмотр', value: 'view', sortable: false },
+                {
+                    text: '',
+                    value: 'delete',
+                    align: 'center',
+                    class: 'text-center',
+                    width: '60px',
+                },
+                { text: '', value: 'data-table-expand', width: '50px' }
+            ],
         }
     },
     props: {
@@ -150,11 +130,25 @@ export default {
         headers: Array,
         wargearList: Array,
 
-        isEquipped: Function,
+
 
         characterId: {
             type: String,
             required: true
+        },
+    },
+    computed: {
+        groupedGear() {
+            const groups = {};
+            this.items.forEach(item => {
+                const type = item.usage.value || "Прочее";
+                if (!groups[type]) groups[type] = [];
+                groups[type].push(item);
+            });
+            return Object.entries(groups).map(([type, items]) => ({
+                header: type,
+                items
+            }));
         },
     },
     methods: {
@@ -213,8 +207,8 @@ export default {
 
             this.$store.commit('characters/addCharacterWargear', { id: this.characterId, name: gear.name, source: 'custom', gear: gear1 });
             // Закрываем окна
-            // this.WeaponSearchDialog = false;
-            this.ArmorSearchDialog = false;
+            this.GearSearchDialog = false;
+            //this.ArmorSearchDialog = false;
             // this.GearSearchDialog = false;
             // this.ConsumableSearchDialog = false;
 
@@ -248,6 +242,11 @@ export default {
         changeMoney() {
             this.moneyEditorDialog = false;
             this.$store.commit('characters/setCharacterMoney', { id: this.characterId, value: this.gp === '' ? this.money : this.gp, nominal: this.labelMoney });
+        },
+
+
+        Worn(item) {
+            return this.WornGear[item] ? this.WornGear[item] : 'Прочее'
         },
 
     }
