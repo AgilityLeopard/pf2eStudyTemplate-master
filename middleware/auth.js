@@ -1,7 +1,10 @@
-export default async function ({ app, redirect }) {
-    const { data } = await app.$supabase.auth.getUser()
+// export default function ({ app, redirect }) {
 
-    if (!data.user) {
-        return redirect('/login')
-    }
-}
+//     const session = app.$supabase.auth.session()
+
+//     const user = session?.user
+
+//     if (!user) {
+//         return redirect('/login')
+//     }
+// }

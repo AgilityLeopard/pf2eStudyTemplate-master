@@ -1,4 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+
   <v-app>
     <AppLoader :visible="$store.state.ui.loading" />
     <v-navigation-drawer v-model="drawer.open" :clipped="drawer.clipped" :fixed="drawer.fixed"
@@ -41,7 +42,7 @@
       <v-container class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
         <v-toolbar-title>
           <nuxt-link to="/" class="title brand-logo brand-logo__text">
-            Shadow Tales (Альфа версия)
+            Shadow Tales
           </nuxt-link>
         </v-toolbar-title>
 
@@ -57,6 +58,18 @@
           <v-btn icon @click="toggleDarkTheme">
             <v-icon>mdi-brightness-6</v-icon>
           </v-btn>
+
+          <div v-if="user">
+
+            <nuxt-link to="/profile">👤 {{ profile?.username }}</nuxt-link>
+            <v-btn @click="logout">Выйти</v-btn>
+          </div>
+
+          <div v-else>
+            <nuxt-link to="/login">Войти</nuxt-link>
+            <nuxt-link to="/register">Регистрация</nuxt-link>
+          </div>
+
         </v-toolbar-items>
 
         <v-app-bar-nav-icon @click.stop="toggleDrawer" class="d-md-none" />
@@ -82,6 +95,7 @@
 
     <default-footer />
   </v-app>
+
 </template>
 
 <script>
@@ -104,6 +118,11 @@ export default {
         },
       ],
     };
+  },
+  async mounted() {
+    this.$supabase.auth.onAuthStateChange((event, session) => {
+      this.$store.commit('SET_USER', session?.user || null)
+    })
   },
   data() {
     return {
@@ -205,10 +224,20 @@ export default {
   //   this.$nuxt.$on('route:start', () => { this.loading = true })
   //   this.$nuxt.$on('route:end', () => { this.loading = false })
   // },
+
   computed: {
     theme() {
       return this.$store.getters["theme"];
     },
+    user() {
+      return this.$store.state.user
+    },
+    profile() {
+      return this.$store.state.profile
+    },
+    authReady() {
+      return this.$store.state.authReady
+    }
   },
   watch: {
     theme: {
@@ -219,6 +248,13 @@ export default {
     },
   },
   methods: {
+    async logout() {
+      await this.$supabase.auth.signOut()
+      this.$store.commit('CLEAR_USER')
+      // ❗ очищаем только cloud
+      this.$store.commit('characters/CLEAR_CLOUD')
+      this.$router.push('/login') // ← обязательно
+    },
     toggleDarkTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       let theme = this.$vuetify.theme.dark ? "dark" : "light";

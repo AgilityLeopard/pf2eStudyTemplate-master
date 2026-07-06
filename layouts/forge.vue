@@ -251,6 +251,16 @@
                     <span>Уровень</span>
                   </div>
 
+
+                  <div v-if="itemBonus(skill.key)" class="ui-formula__operator">+</div>
+
+                  <div class="ui-formula__part" v-if="itemBonus(skill.key)">
+                    <v-chip small class="ui-chip">
+                      {{ itemBonus(skill.key).value }}
+                    </v-chip>
+                    <span>Предмет</span>
+                  </div>
+
                 </div>
               </div>
             </v-card>
@@ -262,8 +272,15 @@
               </v-card-title>
 
               <div v-for="char in charactermodificatorsBonus" :key="char.id">
-                <div v-if="char.selector === skill.key || char.selector === 'skill-check'" class="ui-modifier"
-                  v-html="char.description" />
+                <div v-if="char.selector === skill.key || char.selector === 'skill-check'" class="ui-modifier">
+                  <div class="ui-formula__part" v-if="char.type !== 'item'">
+                    <v-chip small class="ui-chip">
+                      {{ char.value }}
+                    </v-chip>
+                    <span>{{ char.type }}</span>
+                    для {{ char.predicate }}
+                  </div>
+                </div>
                 <v-divider />
               </div>
             </v-card>
@@ -467,7 +484,7 @@
 
       <v-toolbar-title>
         <nuxt-link to="/" class="title brand-logo brand-logo__text">
-          Shadow Tales (альфа версия)
+          Shadow Tales
         </nuxt-link>
       </v-toolbar-title>
 
@@ -636,7 +653,6 @@ import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 import DiceChat from '@/components/DiceChat.vue';
 import AttributeTable from '~/components/forge/character/AttributeTable.vue';
 
-
 export default {
   name: "Forge",
   components: {
@@ -646,6 +662,7 @@ export default {
     DiceChat,
     AttributeTable
   },
+
   mixins: [StatRepositoryMixin, SluggerMixin, WargearTraitRepositoryMixin],
   data() {
     return {
@@ -1081,6 +1098,9 @@ export default {
         this.$route.params.id
       );
     },
+    charGear() {
+      return this.$store.getters['characters/characterWargearById'](this.$route.params.id);
+    },
     charactermodificatorsBonus() {
       return (
         this.$store.getters["characters/charactermodificatorsBonusById"](
@@ -1227,6 +1247,14 @@ export default {
       },
       immediate: true, // make this watch function is called when component created
     },
+    '$route.params.id': {
+      immediate: true,
+      handler(id) {
+        if (id) {
+          this.$store.commit('characters/SET_ACTIVE', id)
+        }
+      }
+    },
     characterFactionKey: {
       handler(newVal) {
         if (newVal) {
@@ -1253,7 +1281,8 @@ export default {
       const prof = this.profiencyRepository[this.SkillProf(skill.key)];
       const attr = (this.characterAttributes[skill.attribute] - 10) / 2;
       const lvl = prof !== 0 ? this.characterLevel() : 0;
-      return prof + attr + lvl;
+      const item = this.itemBonus(skill.key) ? this.itemBonus(skill.key).value : 0;
+      return prof + attr + lvl + item;
     },
     enhancements() {
       return this.$store.getters["characters/characterEnhancementsById"](
@@ -1498,6 +1527,29 @@ export default {
       return this.$store.getters["characters/characterResistanceById"](
         this.$route.params.id
       )
+    },
+    itemBonus(skill) {
+      if (!this.charactermodificatorsBonus) return undefined
+      const charGear = this.charGear.filter(item => item.equipped?.invest === true)
+      const itemBonus = this.charactermodificatorsBonus.filter(
+        item =>
+          item.selector === skill &&
+          item.type === 'item' &&
+          charGear.some(gear => gear.key === item.source)
+      )
+
+      let typeMaxItem = itemBonus.length > 0 ? itemBonus[0] : undefined
+
+      if (itemBonus) {
+        itemBonus.forEach(item => {
+          if (typeMaxItem.value < item.value)
+            typeMaxItem = item
+
+        })
+        return typeMaxItem
+      }
+
+      return undefined
     },
     formatBoost(stat, rowIndex) {
       let count = 0;

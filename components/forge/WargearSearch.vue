@@ -4,106 +4,48 @@
       <v-card-title style="background-color: #262e37; color: #fff">
         <span>Подтвердите выбор снаряжения</span>
         <v-spacer />
+        <v-btn @click="$emit('custom-item')">
+          Свой предмет
+        </v-btn>
         <v-icon dark @click="$emit('cancel')"> close </v-icon>
       </v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="6" sm="4">
-            <v-text-field
-              v-model="searchQuery"
-              filled
-              dense
-              clearable
-              prepend-inner-icon="search"
-              label="Поиск"
-            />
+            <v-text-field v-model="searchQuery" filled dense clearable prepend-inner-icon="search" label="Поиск" />
 
-            <v-range-slider
-              v-model="levelRange"
-              :min="0"
-              :max="20"
-              :step="1"
-              thumb-label="always"
-              label="Уровень"
-            ></v-range-slider>
+            <v-range-slider v-model="levelRange" :min="0" :max="20" :step="1" thumb-label="always"
+              label="Уровень"></v-range-slider>
 
-            <v-select
-              v-if="type === 'weapon'"
-              label="Категория"
-              v-model="selectedCategoryWeaponFilters"
-              :items="weaponCategoryRepository"
-              item-text="name"
-              item-value="category"
-              multiple
-            >
+            <v-select v-if="type === 'weapon'" label="Категория" v-model="selectedCategoryWeaponFilters"
+              :items="weaponCategoryRepository" item-text="name" item-value="category" multiple>
             </v-select>
 
-            <v-select
-              label="Тип оружия"
-              v-if="type === 'weapon'"
-              v-model="selectedTypeWeaponFilters"
-              :items="weaponGroup"
-              item-text="name"
-              item-value="group"
-              multiple
-            >
+            <v-select label="Тип оружия" v-if="type === 'weapon'" v-model="selectedTypeWeaponFilters"
+              :items="weaponGroup" item-text="name" item-value="group" multiple>
             </v-select>
 
-            <v-select
-              v-if="type === 'armor'"
-              label="Категория доспехов"
-              v-model="selectedCategoryArmorFilters"
-              :items="armourCategoryRepository"
-              item-text="name"
-              item-value="category"
-              multiple
-            >
+            <v-select v-if="type === 'armor'" label="Категория доспехов" v-model="selectedCategoryArmorFilters"
+              :items="armourCategoryRepository" item-text="name" item-value="category" multiple>
             </v-select>
 
-            <v-select
-              label="Тип доспехов"
-              v-if="type === 'armor'"
-              v-model="selectedTypeArmorFilters"
-              :items="armorGroup"
-              item-text="name"
-              item-value="group"
-              multiple
-            >
+            <v-select label="Тип доспехов" v-if="type === 'armor'" v-model="selectedTypeArmorFilters"
+              :items="armorGroup" item-text="name" item-value="group" multiple>
             </v-select>
 
-            <v-select
-              label="Редкость"
-              v-model="selectedRarityFilters"
-              :items="rarityRepository"
-              item-text="name"
-              item-value="key"
-              multiple
-            >
+            <v-select label="Редкость" v-model="selectedRarityFilters" :items="rarityRepository" item-text="name"
+              item-value="key" multiple>
             </v-select>
 
-            <v-select
-              label="Трейты"
-              v-model="selectedTraitFilters"
-              :items="typeFilters"
-              item-text="name"
-              item-value="name"
-              multiple
-            >
+            <v-select label="Трейты" v-model="selectedTraitFilters" :items="typeFilters" item-text="name"
+              item-value="name" multiple>
             </v-select>
           </v-col>
           <v-col cols="6" sm="8">
             <div class="table-wrapper">
-              <v-data-table
-                :headers="headers"
-                :items="searchResult"
-                item-key="key"
-                :search="searchQuery"
-                :page.sync="pagination.page"
-                hide-default-footer
-                class="fixed-columns-table"
-                show-expand
-                @page-count="pagination.pageCount = $event"
-              >
+              <v-data-table :headers="headers" :items="searchResult" item-key="key" :search="searchQuery"
+                :page.sync="pagination.page" hide-default-footer class="fixed-columns-table" show-expand
+                @page-count="pagination.pageCount = $event">
                 <template v-slot:item.name="{ item }">
                   {{ item.name }}
                   <!-- <div>
@@ -133,12 +75,10 @@
                     add
                   </v-btn>
                 </template>
+
+
                 <template v-slot:item.action-buy="{ item }">
-                  <v-btn
-                    color="info"
-                    x-small
-                    @click="$emit('select', item, true)"
-                  >
+                  <v-btn color="info" x-small @click="$emit('select', item, true)">
                     buy
                   </v-btn>
                 </template>
@@ -177,14 +117,14 @@
               </v-data-table>
             </div>
             <div class="text-center pt-2">
-              <v-pagination
-                v-model="pagination.page"
-                :length="pagination.pageCount"
-              />
+              <v-pagination v-model="pagination.page" :length="pagination.pageCount" />
             </div>
           </v-col>
         </v-row>
+
+
       </v-card-text>
+      <CustomItemDialog v-model="customItemDialog" :type="type" @save="onCustomItemCreated" />
     </v-card>
   </div>
 </template>
@@ -196,6 +136,8 @@ import StatRepositoryMixin from "~/mixins/StatRepositoryMixin";
 import WargearTraitRepositoryMixin from "~/mixins/WargearTraitRepositoryMixin";
 import traitView from "~/components/TraitView";
 import CardItem from "@/components/CardItem.vue";
+import CustomItemDialog from "~/components/forge/wargear/CustomItemDialog.vue";
+
 
 export default {
   name: "WargearSearch",
@@ -204,6 +146,7 @@ export default {
     DodSimpleWeaponStats,
     traitView,
     CardItem,
+    CustomItemDialog
   },
   mixins: [StatRepositoryMixin, WargearTraitRepositoryMixin],
   props: {
@@ -230,12 +173,15 @@ export default {
       selectedTraitFilters: [],
       selectedRarityFilters: [],
       levelRange: [0, 20],
+      customItemDialog: false,
       pagination: {
         page: 1,
         pageCount: 0,
         sortBy: "title",
         rowsPerPage: 25,
       },
+      typeList:
+        ["weapon", "armor", "equipment", "consumable"],
       headers: [
         {
           text: "Название",
@@ -415,6 +361,14 @@ export default {
         this.selectedTypeFilters.push(name);
       }
     },
+    CustomAddItem() {
+      this.customItemDialog = true;
+    },
+
+    onCustomItemCreated(item) {
+      this.$emit("select", item);
+      this.customItemDialog = false;
+    },
     rarity(item) {
       return this.rarityRepository.find((t) => (t.key = item)).name;
     },
@@ -445,7 +399,8 @@ export default {
 
 <style scoped>
 .fixed-columns-table .v-data-table__wrapper table {
-  table-layout: fixed !important; /* фиксированная сетка */
+  table-layout: fixed !important;
+  /* фиксированная сетка */
   width: 100%;
 }
 
@@ -464,37 +419,46 @@ export default {
 /* Настраиваем ширину каждой колонки (по порядку) */
 .fixed-columns-table th:nth-child(1),
 .fixed-columns-table td:nth-child(1) {
-  width: 40%; /* Название предмета */
+  width: 40%;
+  /* Название предмета */
 }
 
 .fixed-columns-table th:nth-child(2),
 .fixed-columns-table td:nth-child(2) {
-  width: 20%; /* Тип */
+  width: 20%;
+  /* Тип */
 }
 
 .fixed-columns-table th:nth-child(3),
 .fixed-columns-table td:nth-child(3) {
-  width: 15%; /* Цена */
+  width: 15%;
+  /* Цена */
 }
 
 .fixed-columns-table th:nth-child(4),
 .fixed-columns-table td:nth-child(4) {
-  width: 25%; /* Прочее */
+  width: 25%;
+  /* Прочее */
 }
 
 .table-wrapper {
-  max-height: 500px; /* или любая фиксированная высота */
-  overflow-y: auto; /* добавляет прокрутку */
+  max-height: 500px;
+  /* или любая фиксированная высота */
+  overflow-y: auto;
+  /* добавляет прокрутку */
 }
 
 .expanded-content {
-  max-height: 300px; /* ограничиваем раскрытие */
-  overflow-y: auto; /* прокрутка внутри строки */
+  max-height: 300px;
+  /* ограничиваем раскрытие */
+  overflow-y: auto;
+  /* прокрутка внутри строки */
 }
 
 /* Можно ограничить высоту ячеек */
 .v-data-table tbody td {
-  max-width: 250px; /* можно подбирать */
+  max-width: 250px;
+  /* можно подбирать */
 }
 
 /* Убираем растягивание при раскрытии */
@@ -504,7 +468,8 @@ export default {
 
 .table-container {
   width: 100%;
-  overflow-x: hidden; /* не даем появиться горизонтальному скроллу */
+  overflow-x: hidden;
+  /* не даем появиться горизонтальному скроллу */
 }
 
 .expanded-cell {
@@ -578,7 +543,8 @@ export default {
 .v-data-table tbody td {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal; /* чтобы переносились строки */
+  white-space: normal;
+  /* чтобы переносились строки */
   word-wrap: break-word;
   vertical-align: top;
 }

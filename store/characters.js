@@ -5,8 +5,10 @@ export const state = () => ({
   namespaced: true, // 👈 ОБЯЗАТЕЛЬНО
   list: [],
   characters: {},
+  activeId: null // 👈
   // version: 1,
 });
+
 
 export const getters = {
   characterIds: (state) => state.list,
@@ -270,7 +272,7 @@ export const getters = {
     state.characters[id] ? state.characters[id].status : [],
   characterAttributeBoostSummary: (state, getters) => (id) => {
     const character = state.characters[id]
-    console.log(state.characters[id], 'back')
+
     const boosts = [
       character.attributesBackgroundBoost,
       character.attributesBackground2Boost,
@@ -319,20 +321,7 @@ export const getters = {
         result[stat] = Math.floor(adjusted);
       }
     });
-    // boosts.forEach(boost => {
-    //   if (!boost) return;
 
-    //   console.log(boost)
-    //   boost.forEach(stat => {
-    //     console.log(stat)
-    //     if (result[stat] !== undefined) {
-    //       result[stat] += 1;
-    //     }
-    //   });
-
-
-    // });
-    console.log(result)
     return result;
   },
   characterFluffNotesById: (state) => (id) =>
@@ -453,12 +442,14 @@ export const getters = {
   characterPerseptionById: (state) => (id) =>
     state.characters[id] ? state.characters[id].Perception : "U",
   characterWearById: (state) => (id) =>
-    state.characters[id] ? state.characters[id].wearArmor : undefined,
+    state.characters[id] ? state.characters[id].wearArmor : {},
+  characterWearShieldById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].wearShield : null,
   characterResistanceById: (state, getters) => (id) => {
     const character = state.characters[id];
 
     if (!character) return [];
-    console.log(character.Resistance)
+
     return character.Resistance.map(item => {
 
       if (!item.value) return item;
@@ -636,6 +627,7 @@ export const getters = {
     const keywords = state.characters[id] ? state.characters[id].keywords : [];
     return keywords.map((k) => (k.replacement ? k.replacement : k.name));
   },
+
   characterLevelById: (state) => (id) =>
     state.characters[id] ? state.characters[id].level : 1,
   // Mutations
@@ -785,6 +777,29 @@ export const mutations = {
   setCustomXp(state, payload) {
     state.characters[payload.id].customXp = payload.xp;
   },
+  Mark(state, payload) {
+    state.characters[payload.id].isMarked = payload.mark;
+  },
+  resetCharacters(state) {
+    state.list = []
+    state.characters = {}
+  },
+  clear(state) {
+    state.list = []
+    state.characters = {}
+  },
+  addFromDB(state, item) {
+    const char = item.data
+
+    state.list.push(item.character_id)
+
+    state.characters[item.character_id] = {
+      ...char,
+      id: item.character_id,
+      isMarked: true // 👈 потому что это из облака
+    }
+
+  },
   setLevel(state, payload) {
     // console.info(`Set Rank manually to ${payload.rank}.`);
     //this.setModification(state, payload);
@@ -906,7 +921,7 @@ export const mutations = {
                 character.saving[item.key] = item.upgrade;
               if (item.mode !== "Upgrade")
                 character.Bonus.push(item);
-              console.log(item)
+
 
               break;
 
@@ -2132,6 +2147,11 @@ export const mutations = {
     })
 
   },
+  updateCharactermodificatorsBonus(state, payload) {
+    const char = state.characters[payload.id];
+    char.modificatorsBonus.find(s => s.source === payload.key).value = payload.value
+
+  },
   clearCharactermodificatorsBonusbySource(state, payload) {
     const char = state.characters[payload.id];
 
@@ -2274,7 +2294,7 @@ export const mutations = {
 
     });
 
-    console.log("моды:", character.enhancements)
+
   },
   removeModification(state, payload) {
     const character = state.characters[payload.id];
@@ -2638,7 +2658,7 @@ export const mutations = {
       ...mod,
 
     };
-    console.log(mergedGear)
+
     character.enhancements.splice(index, 1, mergedGear);
   },
   updateCharacterWargear(state, { id, gear }) {
@@ -2721,6 +2741,40 @@ export const mutations = {
       character.wargear.find((t) => t.id === gearId) !== undefined;
     if (hasWargear) {
       character.wearArmor = undefined;
+    }
+  },
+  wearUpdateCharacterArmor(state, payload) {
+    const character = state.characters[payload.id];
+    const { gearId } = payload;
+
+    if (Object.keys(character.wearArmor).length > 0)
+      character.wearArmor.runes.potency = payload.potency;
+
+  },
+  wearCharacterShield(state, payload) {
+    const character = state.characters[payload.id];
+    const { gearId } = payload;
+    const hasWargear =
+      character.wargear.find((t) => t.id === gearId) !== undefined;
+    if (hasWargear) {
+      character.wearShield = payload.gear;
+    }
+  },
+  wearUpdateCharacterShield(state, payload) {
+    const character = state.characters[payload.id];
+    const { gearId } = payload;
+
+
+    character.wearShield.hp.value = payload.newHp;
+
+  },
+  unwearCharacterShield(state, payload) {
+    const character = state.characters[payload.id];
+    const { gearId } = payload;
+    const hasWargear =
+      character.wargear.find((t) => t.id === gearId) !== undefined;
+    if (hasWargear) {
+      character.wearShield = undefined;
     }
   },
   removeCharacterWargearBySource(state, payload) {
@@ -2985,6 +3039,7 @@ export const mutations = {
       ...state.characters,
       ...newObj,
     };
+
   },
   import(state, payload) {
     state.list.push(payload.id);
@@ -3076,11 +3131,192 @@ export const mutations = {
     }
 
     character.diceChat.push(message);
-    console.log(character.diceChat)
-  }
+
+  },
+  SET_ACTIVE(state, id) {
+    state.activeId = id
+  },
+  updateFromRemote(state, row) {
+    const id = row.id
+
+    // если персонаж не открыт — можно пропустить
+    if (!state.characters[id]) return
+
+    state.characters[id] = {
+      ...state.characters[id],
+      ...row.data
+    }
+  },
+  CLEAR_CLOUD(state) {
+
+    Object.keys(state.characters).forEach(id => {
+      if (state.characters[id].isMarked) {
+        delete state.characters[id]
+      }
+    })
+
+    state.list = state.list.filter(id => {
+      return state.characters[id]
+    })
+  },
+  LOAD_CLOUD(state, rows) {
+
+    rows.forEach(row => {
+
+      const id = row.character_id
+
+
+
+      const char = {
+        ...row.data,
+        id,
+        isMarked: true
+      }
+
+      state.characters[id] = char
+      if (state.list.find(s => s === id)) return
+      state.list.push(id)
+    })
+  },
+  REPLACE_CLOUD(state, rows) {
+
+    const cloudIds = rows.map(r => r.character_id)
+
+    // 🔥 1. снять галочки с тех, кого больше нет в облаке
+    Object.keys(state.characters).forEach(id => {
+
+      const char = state.characters[id]
+
+      if (char.isMarked && !cloudIds.includes(id)) {
+        char.isMarked = false
+      }
+
+    })
+
+    // 🔥 2. обновить / добавить cloud персонажей
+    rows.forEach(row => {
+
+      const id = row.character_id
+
+      const char = {
+        ...row.data,
+        id,
+        isMarked: true
+      }
+
+      state.characters[id] = char
+
+      if (!state.list.includes(id)) {
+        state.list.push(id)
+      }
+    })
+  },
+  UPDATE_FROM_REMOTE(state, row) {
+
+    const id = row.character_id
+
+    if (!state.characters[id]) return
+
+    state.characters[id] = {
+      ...state.characters[id],
+      ...row.data,
+      isMarked: true
+    }
+  },
 };
 
 export const actions = {
+  startAutoSave({ state, dispatch }) {
+
+    let timer = null
+
+    // храним последний snapshot
+    let lastData = null
+
+    setInterval(() => {
+
+      const current = state.characters
+
+      if (!current) return
+
+      const serialized = JSON.stringify(current)
+
+      if (serialized === lastData) return
+
+      lastData = serialized
+
+      clearTimeout(timer)
+
+      timer = setTimeout(() => {
+        // dispatch('saveAllToCloud')
+
+      }, 800)
+
+    }, 1000)
+  },
+
+  async saveAllToCloud({ state }) {
+
+    const updates = Object.values(state.characters)
+
+    for (const char of updates) {
+      await this.$supabase
+        .from('characters')
+        .update({
+          data: char,
+          updated_at: new Date()
+        })
+        .eq('character_id', char.id)
+    }
+  },
+  async loadCharacters({ commit, rootState }) {
+
+    if (!rootState.user) return
+
+    const { data, error } = await this.$supabase
+      .from('Character')
+      .select('*')
+      .eq('user_id', rootState.user.id)
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    // очищаем старый кэш
+    commit('resetCharacters')
+
+    // грузим из базы
+    data.forEach(item => {
+      commit('addFromDB', item)
+    })
+  },
+  async createCharacter({ commit, rootState }, id) {
+
+    // 1. создаём локально (UI)
+    commit('create', id)
+
+    // 2. формируем данные
+    const newChar = {
+      ...getDefaultState(),
+      id
+    }
+
+    // 3. сохраняем в Supabase
+    const { error } = await this.$supabase
+      .from('Character')
+      .insert([
+        {
+          character_id: id,
+          user_id: rootState.user.id,
+          data: newChar
+        }
+      ])
+
+    if (error) {
+      console.error('Supabase error:', error)
+    }
+  },
   clearCharacterAscensionPackage({ commit, state }, payload) {
     const { id, value, key } = payload;
 
@@ -3175,6 +3411,7 @@ export const actions = {
 
 const getDefaultState = () => ({
   id: -1,
+  isMarked: false,
   version: 11, // 7+ is revised
   setting: undefined,
   settingSelected: true,
@@ -3446,10 +3683,12 @@ const getDefaultState = () => ({
     climb: 0,
     burrow: 0,
     swim: 0,
+    fly: 0
   },
   AC: 0,
   wargear: [],
   wearArmor: {},
+  wearShield: {},
   background: {
     origin: undefined,
     accomplishment: undefined,

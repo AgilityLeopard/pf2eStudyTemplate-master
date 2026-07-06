@@ -6,7 +6,7 @@
 
       <v-row justify="center" align="stretch">
         <v-col cols="12" md="4">
-          <character-header-card :characterId="characterId" />
+          <character-header-card :characterId="characterId" :characterArchetype="characterArchetype" />
         </v-col>
 
         <v-col cols="12" md="4">
@@ -22,7 +22,8 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <character-armor-card @click.native="openStatDialog('character-armor-card', 'КД')" />
+          <character-armor-card @click.native="openStatDialog('character-armor-card', 'КД')" :characterId="characterId"
+            :armorClass="armorClass" />
         </v-col>
 
         <v-col cols="12" md="4">
@@ -93,7 +94,7 @@
                       <!-- Левая колонка (30%) -->
                       <v-col cols="12" md="4" class="pa-2 left-col">
                         <SkillsTable :skills="skills" :headers="skillHeaders" :get-rating="characterlabel"
-                          :get-value="computeSkillPool" />
+                          :get-value="computeSkillPool" :characterId="characterId" :actionList="actionList" />
                       </v-col>
 
                       <!-- Правая колонка (70%) -->
@@ -101,7 +102,9 @@
                         <div class="content-box"></div>
                         <div v-if="actionList"></div>
                         <ActionPanels :exploration-actions="explorationActions" :rest-actions="restActions"
-                          :other-actions="otherActions" :icon-action="iconAction" @select="openDialogAction" />
+                          :other-actions="otherActions" :basic-actions="basicActions"
+                          :basic-special-actions="basicSpecialActions" :icon-action="iconAction"
+                          @select="openDialogAction" />
                       </v-col>
                     </v-row>
 
@@ -143,21 +146,19 @@
                                 v-show="wargearSection.selection === 'оружие' || wargearSection.selection === 'все'"
                                 :items="weapons" :headers="weaponHeaders" :attack-modifier="attackModifier"
                                 :damage-modifier="damageModifier" :characterId="characterId" @view="openDialogItem"
-                                :wargearList="wargearList" />
+                                :wargearList="wargearList" :traitList="traitRepository" />
                               <!-- species < abilities -->
 
                               <ArmorTable
                                 v-show="wargearSection.selection === 'доспехи' || wargearSection.selection === 'все'"
-                                :items="armour" :headers="armorHeaders"
-                                :is-equipped="item => characterWearWargear && characterWearWargear.id === item.id"
-                                :characterId="characterId" @toggle="toggleWear" @view="openDialogItem"
-                                :wargearList="wargearList" />
+                                :items="armour" :headers="armorHeaders" :characterId="characterId" @toggle="toggleWear"
+                                @view="openDialogItem" :wargearList="wargearList" :traitList="traitRepository" />
 
                               <!-- species < abilities -->
                               <GearTable
                                 v-show="wargearSection.selection === 'снаряжение' || wargearSection.selection === 'все'"
                                 :items="gear" :headers="gearHeaders" @view="openDialogItem" :wargearList="wargearList"
-                                :characterId="characterId" />
+                                :characterId="characterId" :traitList="traitRepository" />
 
                               <ConsumableTable
                                 v-show="wargearSection.selection === 'расходники' || wargearSection.selection === 'все'"
@@ -672,7 +673,7 @@
                       <!-- Traits -->
                       <v-card class="pa-3 mb-3" outlined>
                         <div class="text-h6 mb-2">Трейты</div>
-                        <v-chip class="ma-1" v-for="trait in keywords">{{ trait.name }}</v-chip>
+                        <v-chip class="ma-1" v-for="trait in keywords" :key="trait.name">{{ trait.name }}</v-chip>
 
                       </v-card>
 
@@ -1113,7 +1114,13 @@
             </v-card>
           </v-dialog>
 
-          <v-dialog v-model="dialogAction" max-width="800px">
+          <v-dialog v-model="dialogAction" max-width="1000px">
+            <v-card>
+              <CardItem :item="selectedAction" />
+            </v-card>
+          </v-dialog>
+
+          <!-- <v-dialog v-model="dialogAction" max-width="800px">
             <v-card class="glass-card pa-4">
               <v-card-title class="headline">
                 {{ selectedAction?.name }}
@@ -1139,7 +1146,7 @@
                 <v-btn text color="grey" @click="dialogAction = false">Close</v-btn>
               </v-card-actions>
             </v-card>
-          </v-dialog>
+          </v-dialog> -->
         </v-col>
       </v-row>
     </v-container>
@@ -1246,7 +1253,7 @@ export default {
   async asyncData({ params, $axios }) {
 
     const talentResponse = await $axios.get('/api/talents/');
-
+    const traitsList = await $axios.get('/api/traits/');
     const psychicPowersResponse = await $axios.get('/api/psychic-powers/');
     const psychicAbilitiesResponse = await $axios.get('/api/psychic-powers/universal-abilities');
     const abilityAncestryResponse = await $axios.get('/api/abilityAncestry/');
@@ -1258,6 +1265,10 @@ export default {
       psychicAbilitiesRepository: psychicAbilitiesResponse.data,
       talentRepository: talentResponse.data.data,
       abilityRepository: abilityAncestryResponse.data,
+      traitRepository: traitsList.data.map(t => ({
+        ...t,
+        key: t.key.toLowerCase()
+      })),
       breadcrumbItems: [
         { text: '', nuxt: true, exact: true, to: '/' },
         { text: 'Билдодельня', nuxt: true, exact: true, to: '/forge/my-characters' },
@@ -1667,6 +1678,7 @@ export default {
     characterName() {
       return this.$store.getters['characters/characterNameById'](this.characterId);
     },
+
     characterSettingTier() {
       return this.$store.getters['characters/characterSettingTierById'](this.characterId);
     },
@@ -1722,6 +1734,14 @@ export default {
     characterWearWargear() {
       return this.$store.getters['characters/characterWearById'](this.characterId);
     },
+    characterWearShield() {
+      return this.$store.getters['characters/characterWearShieldById'](this.characterId);
+    },
+    charactermodificatorsBonus() {
+      return this.$store.getters['characters/charactermodificatorsBonusById'](this.characterId);
+    },
+
+
     keywordStrings() {
       return this.$store.getters['characters/characterKeywordsFinalById'](this.characterId);
     },
@@ -2641,11 +2661,23 @@ export default {
     },
     explorationActions() {
       if (this.actionList)
-        return this.actionList.filter(a => a.traits?.includes("исследование"));
+        return this.actionList.filter(a => a.system.traits?.value.includes("exploration") && a.source.key.includes("playerCore"));
+    },
+    basicActions() {
+      if (this.actionList)
+        return this.actionList.filter(a => !a.system.traits?.value.includes("exploration") && !a.system.traits?.value.includes("downtime"))
+          .filter(a =>
+            a.category = "basic");
+    },
+    basicSpecialActions() {
+      if (this.actionList)
+        return this.actionList.filter(a => !a.system.traits?.value.includes("exploration") && !a.system.traits?.value.includes("downtime"))
+          .filter(a =>
+            a.category = "special basic");
     },
     restActions() {
       if (this.actionList)
-        return this.actionList.filter(a => a.traits?.includes("отдых"));
+        return this.actionList.filter(a => a.traits?.includes("exploration"));
     },
     otherActions() {
       if (this.actionList)
@@ -2656,6 +2688,14 @@ export default {
     archetype() {
       return this.$store.getters['characters/characterArchetypeLabelById'](this.characterId)
     },
+    potencyArmor() {
+      const wear = this.$store.getters["characters/characterWearById"](
+        this.characterId
+      );
+
+      return wear && wear.runes ? wear.runes.potency : 0
+    },
+
 
 
   },
@@ -2727,6 +2767,8 @@ export default {
 
   },
   methods: {
+
+    /*Стили Картинок */
     getContrastColor(hex) {
       if (!hex) return '#000'
 
@@ -2868,6 +2910,8 @@ export default {
         this.editor.commands.setContent('')
       }
     },
+
+
     insertAction1(type) {
       if (!this.editor) return
 
@@ -2896,11 +2940,9 @@ export default {
     setFluff(field, value) {
       this.$store.commit('characters/setCharacterFluff', { id: this.characterId, field: field, value: value });
     },
-    size(size) {
-      if (!size) return "";
-      const s = this.sizeRepository.find((s) => s.key === size);
-      return s ? s.name : "";
-    },
+    /*Конец функций с заметками */
+
+    //Секция со Способностями и особенностями
     buildSections(categories) {
       return categories.map(cat => {
         const items = this.talents
@@ -2947,6 +2989,11 @@ export default {
       })
 
       return res
+    },
+    size(size) {
+      if (!size) return "";
+      const s = this.sizeRepository.find((s) => s.key === size);
+      return s ? s.name : "";
     },
     getClassChipColor(skillKey) {
       //const rank = this.getSkillRank(skillKey);
@@ -3092,13 +3139,12 @@ export default {
     },
 
 
-
     // Обновленные методы с учетом состояний
     ModAttributeSavingWithStatuses(attribute, skill) {
       const char1 = this.profiencyRepository[this.characterSaving[skill]];
       const char2 = (this.characterAttributesWithStatuses[attribute] - 10) / 2;
       const char3 = this.characterLevel();
-
+      const item = this.itemBonus(skill) && this.itemBonus(skill).value ? this.itemBonus(skill).value : 0
 
       let status = 0;
 
@@ -3118,7 +3164,7 @@ export default {
             }
         }
       })
-      const result = parseInt(char1) + parseInt(char2) + parseInt(char3) - status;
+      const result = parseInt(char1) + parseInt(char2) + parseInt(char3) + parseInt(item) - status;
 
       return result > 0 ? "+" + result : result;
 
@@ -3431,8 +3477,16 @@ export default {
       this.loading = true;
       const { data } = await this.$axios.get('/api/psychic-powers/', config);
       this.loading = false;
+      const itemName = data.map(item => {
+        const [nameRu, nameEng] = item.name.split(/\s*\/\s*/, 2);
 
-      this.psychicPowersList = data;
+        return {
+          ...item,
+          name: nameRu,
+          nameEng: nameEng || nameRu
+        };
+      });
+      this.psychicPowersList = itemName;
     },
     async loadArchetype(key) {
 
@@ -3711,12 +3765,12 @@ export default {
       const wr = this.weaponCategoryRepository;
       const ar = this.armourCategoryRepository;
       data.data.forEach(item => {
-        if (!item.runeWeapon && wr.find(t => t.category === item.category)) {
-          item.runeWeapon = item.runes;
+        if (!item.runes && wr.find(t => t.category === item.category)) {
+          item.runes = item.runes;
         }
 
-        if (!item.runeArmor && ar.find(t => t.category === item.category)) {
-          item.runeArmor = item.runes;
+        if (!item.runes && ar.find(t => t.category === item.category)) {
+          item.runes = item.runes;
         }
 
         item.qty = 1;
@@ -3728,6 +3782,16 @@ export default {
           source: sources.join(','),
         },
       };
+
+      data.data = data.data.map(item => {
+        const [nameRu, nameEng] = item.name.split(/\s*\/\s*/, 2);
+
+        return {
+          ...item,
+          name: nameRu,
+          nameEng: nameEng || nameRu
+        };
+      });
       this.wargearList = data.data;
 
     },
@@ -3753,6 +3817,33 @@ export default {
     CharacterFlufftById() {
       this.fluff = this.$store.getters['characters/characterFluffById'](this.characterId);
     },
+    characterShield() {
+      const wear = this.$store.getters["characters/characterWearShieldById"](
+        this.characterId
+      );
+
+
+
+      if (wear) {
+        return wear
+      }
+      return undefined
+
+    },
+    characterShieldHP(newHp) {
+      const wear = this.$store.getters["characters/characterWearShieldById"](
+        this.characterId
+      );
+
+
+
+
+      if (wear) {
+        this.$store.commit('characters/wearUpdateCharacterShield', { id: this.characterId, gearId: wear.id, newHp: newHp });
+      }
+
+
+    },
 
     characterArmor() {
       const wear = this.$store.getters["characters/characterWearById"](
@@ -3760,7 +3851,7 @@ export default {
       );
 
       let status = 0;
-
+      console.log(wear)
       this.activeStatuses.forEach(effect => {
         if (effect && effect.rules) {
           if (effect.rules.find(s => s.selector))
@@ -3787,11 +3878,13 @@ export default {
         const Def = wear.category
           ? this.profiencyRepository[this.skillDefence[wear.category]]
           : 0;
-
+        let potency = 0
+        console.log(wear)
+        potency = this.potencyArmor
         const bonusAC = wear.acBonus ? wear.acBonus : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();
 
-        return 10 + dex + Def + arm + bonusAC - status;
+        return 10 + dex + Def + arm + bonusAC + potency - status;
       }
 
       const modDex = Math.floor(
@@ -3840,14 +3933,46 @@ export default {
       const char1 = this.SkillsTrained[this.characterSkills[skill.key]];
       const char2 = (this.characterAttributesEnhanced[skill.attribute.toLowerCase()] - 10) / 2;
       const char3 = char1 === 0 ? 0 : this.characterLevel();
-
-      return parseInt(char1) + parseInt(char2) + parseInt(char3) - skill.conditionalAdjustment;
+      const item = this.itemBonus(skill.key) && this.itemBonus(skill.key).value && this.itemBonus(skill.key).invest ? this.itemBonus(skill.key).value : 0;
+      return parseInt(char1) + parseInt(char2) + parseInt(char3) + parseInt(item) - skill.conditionalAdjustment;
 
       // const attribute = (this.characterAttributesEnhanced[skill.attribute.toLowerCase()] - 10) / 2;
 
       // return attribute + this.SkillsTrained[skill.value] + this.characterLevel();
 
 
+    },
+    itemBonus(skill) {
+      if (!this.charactermodificatorsBonus) return undefined
+      const wear = this.$store.getters["characters/characterWearById"](
+        this.characterId
+      );
+      const charGear = [
+        ...this.charGear.filter(item => item.equipped?.invest === true)
+      ].filter(Boolean);
+      const itemBonus = this.charactermodificatorsBonus.filter(
+        item =>
+          (item.selector.includes(skill) || item.selector.includes("saving-throw")) &&
+          item.type === 'item' &&
+          charGear.some(gear => gear.key === item.source)
+      )
+
+      let typeMaxItem = itemBonus.length > 0 ? itemBonus[0] : 0
+
+      if (itemBonus) {
+        let invest = itemBonus.length > 0 && charGear.find(gear => gear.key === itemBonus[0].source) ? charGear.find(gear => gear.key === itemBonus[0].source).equipped.invest : false
+        itemBonus.forEach(item => {
+          if (typeMaxItem.value < item.value) {
+            typeMaxItem = item
+            invest = charGear.find(gear => gear.key === item.source).equipped.invest
+          }
+
+
+        })
+        return { ...typeMaxItem, invest: invest }
+      }
+
+      return { ...typeMaxItem, invest: false }
     },
     handleXpInput(value) {
       // Немедленная фильтрация
@@ -3887,11 +4012,12 @@ export default {
     },
     attackModifier(gear) {
 
-      const modAbility = gear.type === 'melee' ? this.characterAttributesEnhanced["strength"] : this.characterAttributesEnhanced["dexterity"];
+      const modAbility = gear.range === null ? this.characterAttributesEnhanced["strength"] : this.characterAttributesEnhanced["dexterity"];
 
       const modProfiency = this.characterArchetype ? this.skillAttack[gear.category] : "U";
+
       const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
-      const rune = this.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+      const rune = this.weaponRunePotency.find(t => gear.runes && t.key === gear.runes.potency) ? this.weaponRunePotency.find(t => gear.runes && t.key === gear.runes.potency).addItemBonus : 0;
 
       return this.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
     },
@@ -3901,10 +4027,10 @@ export default {
     },
     wargearPrice(item) {
       if (item && item.price) {
-        const pp = item.price.value.pp ? item.price.value.pp + " пм" : "";
-        const gp = item.price.value.gp ? item.price.value.gp + " зм" : "";
-        const sp = item.price.value.sp ? item.price.value.sp + " см" : "";
-        const cp = item.price.value.cp ? item.price.value.cp + " мм" : "";
+        const pp = item.price.value.pp ? item.price.value.pp + " пм " : "";
+        const gp = item.price.value.gp ? item.price.value.gp + " зм " : "";
+        const sp = item.price.value.sp ? item.price.value.sp + " см " : "";
+        const cp = item.price.value.cp ? item.price.value.cp + " мм " : "";
         return pp + gp + sp + cp;
       }
     },
@@ -3952,15 +4078,15 @@ export default {
       const damGreaterSpec = specGreater !== "" ? specGreater.bonusDamage[this.skillAttack[gear.category]] : 0;
       const modSpec = damGreaterSpec !== 0 ? damGreaterSpec : damSpec;
 
-      //Для руны мощи
-      const runeStriking = gear.runeWeapon.striking ? gear.runeWeapon.striking : 0;
+      //Для руны мощи 
+      const runeStriking = gear.runes ? gear.runes.striking : 0;
       const damage = gear.damage?.die ? (gear.damage.dice + runeStriking) + gear.damage.die : gear.damage;
       const type = this.DamageType.find(t => t.key === gear.damageOrig.damageType) ? this.DamageType.find(t => t.key === gear.damageOrig.damageType).name : gear.damageOrig.damageType;
 
       ///Руны свойств
       let damageProperty = " ";
       const runeList = this.WeaponRuneProperty;
-      gear.runeWeapon.property.forEach(rune => {
+      gear.runes.property.forEach(rune => {
         const damageRune = runeList.find(t => t.key === rune.toLowerCase());
         if (damageRune) {
           damageProperty = damageProperty + " + " + damageRune.damage + " " + damageRune.type + " ";
@@ -3977,12 +4103,60 @@ export default {
     unwear(gear) {
       this.$store.commit('characters/unwearCharacterWargear', { id: this.characterId, gearId: gear.id, gear: gear });
     },
+    wearShield(gear) {
+
+      this.$store.commit('characters/wearCharacterShield', { id: this.characterId, gearId: gear.id, gear: gear });
+    },
+
+    unwearShield(gear) {
+      this.$store.commit('characters/unwearCharacterShield', { id: this.characterId, gearId: gear.id, gear: gear });
+    },
     toggleWear(item) {
-      if (this.characterWearWargear && this.characterWearWargear.id === item.id) {
-        this.unwear(item)
-      } else {
-        this.wear(item)
+      if (item.type === 'shield') {
+        if (this.characterWearShield && this.characterWearShield.id === item.id) {
+          this.unwearShield(item)
+          const gear1 = {
+            ...item,
+            equip: false,
+            equipped: {
+              ...item.equipped,
+              invest: false
+            }
+          };
+
+          this.$store.commit(
+            'characters/updateCharacterWargear',
+            {
+              id: this.characterId,
+              gear: gear1
+            }
+          );
+        } else {
+          this.wearShield(item)
+        }
       }
+      else
+        if (this.characterWearWargear && this.characterWearWargear.id === item.id) {
+          this.unwear(item)
+          const gear1 = {
+            ...item,
+            equip: false,
+            equipped: {
+              ...item.equipped,
+              invest: false
+            }
+          };
+
+          this.$store.commit(
+            'characters/updateCharacterWargear',
+            {
+              id: this.characterId,
+              gear: gear1
+            }
+          )
+        } else {
+          this.wear(item)
+        }
     },
     openAtt() {
       this.dialogStat = {

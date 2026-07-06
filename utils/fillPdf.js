@@ -66,16 +66,18 @@ export async function fillPdf(this1) {
 
     /* Черты */
     let skillFeat = ''
+
     this1.talents.forEach(item => {
-        if (item.category === 'ancestry') {
-            const skillPlace = item.level === '1' ? 'ANCESTRY FEAT' : 'SKILL FEAT ' + item.level + '-1';
+        if (item.source === 'ancestry') {
+            const skillPlace = item.level === 1 ? 'ANCESTRY FEAT' : 'SKILL FEAT ' + item.level + '-1';
+
             const skill = form.getTextField(skillPlace);
             skill.setText(String(item.name));
             skill.updateAppearances(customFont);
         }
 
-        if (item.category === 'class') {
-            const skillPlace = item.level === '1' ? 'CLASS FEATS & FEATURES' : 'CLASS FEAT ' + item.level + '-1';
+        if (item.source === 'class') {
+            const skillPlace = item.level === 1 ? 'CLASS FEATS & FEATURES' : 'CLASS FEAT ' + item.level + '-1';
             if (skillPlace === 'CLASS FEATS & FEATURES')
                 skillFeat = item.name;
             else {
@@ -85,12 +87,21 @@ export async function fillPdf(this1) {
             }
         }
 
-        if (item.category === 'skill' && item.level !== '1') {
+        if (item.source === 'skill' && item.level !== 1) {
             const skillPlace = 'SKILL FEAT ' + item.level + '-2';
             const skill = form.getTextField(skillPlace);
             skill.setText(String(item.name));
             skill.updateAppearances(customFont);
         }
+
+        if (item.source === 'general' && item.level !== 1) {
+            const skillPlace = 'SKILL FEAT ' + item.level + '-3';
+            const skill = form.getTextField(skillPlace);
+            skill.setText(String(item.name));
+            skill.updateAppearances(customFont);
+        }
+
+
 
 
     })
@@ -102,70 +113,87 @@ export async function fillPdf(this1) {
         name: skillFeat
     })
 
+    let grouped = [];
     /* Классовая особенность */
     if (this1.characterArchetype) {
         this1.characterArchetype.archetypeFeatures.forEach(item => {
+            if (item.level === 1) {
+                // excludeFeature.push(item.name);
+                // classFeature.push({
+                //     place: 'CLASS FEATS & FEATURES',
+                //     name: item.name
+                // });
+                if (!grouped[item.level]) {
+                    grouped[item.level] = [];
+                }
 
-            if (item.level === '1') {
-                // skillFeat = '; ' + item.name;
+                grouped[item.level].push(item.name);
+            } else {
+                if (!grouped[item.level]) {
+                    grouped[item.level] = [];
+                }
+
+                grouped[item.level].push(item.name);
+
                 excludeFeature.push(item.name);
+            }
+        });
+
+
+
+
+
+
+        /* */
+        // Скиллы
+        Object.keys(grouped).forEach(level => {
+            const items = grouped[level];
+
+            if (Number(level) === 1) {
+                // 👉 одна строка без разбивки
                 classFeature.push({
                     place: 'CLASS FEATS & FEATURES',
-                    name: item.name
-                })
+                    name: items.join(', ')
+                });
+
+            } else {
+                // 👉 обычная логика с переносами
+                const lines = distributeToLines(items);
+
+                lines.forEach((line, index) => {
+                    if (!line) return;
+
+                    classFeature.push({
+                        place: `CLASS FEAT ${level - 1}-${index + 1}`,
+                        name: line
+                    });
+                });
             }
-            else {
-                // if (!excludeFeature.includes(item.name)) {
-                excludeFeature.push(item.name);
-                const skillPlace = 'CLASS FEAT ' + item.level + '-2';
-                classFeature.push({
-                    place: skillPlace,
-                    name: item.name
-                })
+        });
 
-                // const skill = form.getTextField(skillPlace);
-                // skill.setText(String(item.name));
-                // skill.updateAppearances(customFont);
-                // }
+
+        classFeature.forEach(item => {
+            if (item.name) {
+                const skill = form.getTextField(item.place);
+
+                skill.setText(String(item.name));
+                skill.updateAppearances(customFont);
             }
+        });
 
-        })
-
-        let t = classFeature.reduce((acc, { place, name }) => {
-            acc[place] = acc[place] ? `${acc[place]}; ${name}` : name;
-            return acc;
-        }, {});
-
-        const grouped = Object.entries(t).map(
-            ([place, name]) => ({ place, name })
-        );
-
-        grouped.forEach(item => {
-            const skill = form.getTextField(item.place);
-            skill.setText(String(item.name));
-            skill.updateAppearances(customFont);
-        })
 
     }
-
-    /* */
-    // Скиллы
-
     this1.skills.forEach(skill => {
         const char1 = this1.SkillsTrained[this1.characterSkills[skill.key]];
         const char2 = (this1.characterAttributesEnhanced[skill.attribute.toLowerCase()] - 10) / 2;
-        const char3 = char1 === 0 ? 0 : this1.characterLevel();
+        const char3 = char1 === 0 ? 0 : this1.characterRank;
 
         // Общее количество
-        const total = parseInt(char1) + parseInt(char2) + parseInt(char3) - skill.conditionalAdjustment;
-        console.log(skill)
         const name = skill.key.toUpperCase() === 'PERFOMANCE' ? 'PERFORMANCE' : skill.key;
 
 
         if (!skill.custom) {
-            const fieldText = form.getTextField(name.toUpperCase());
-            fieldText.setText(String(total));
-            fieldText.updateAppearances(customFont);
+
 
             const fieldPROFICIENCY = form.getTextField(name.toUpperCase() + ' PROFICIENCY');
             if (fieldPROFICIENCY) {
@@ -174,7 +202,7 @@ export async function fillPdf(this1) {
             }
 
             const attribute = skill.attribute === 'intellect' ? 'INTELLIGENCE' : skill.attribute;
-            console.log(attribute);
+
             const fieldAttribute = form.getTextField(name.toUpperCase() + ' ' + attribute.toUpperCase());
             if (fieldAttribute) {
                 fieldAttribute.setText(String(char2));
@@ -203,8 +231,42 @@ export async function fillPdf(this1) {
                         break;
                 }
 
+                let item = 0;
+                if (this1.modificatorBonus) {
+
+                    const itemBonus = this1.modificatorBonus.filter(
+                        item =>
+                            item.selector === skill.key &&
+                            item.type === 'item'
+
+                    )
+
+                    let typeMaxItem = itemBonus.length > 0 ? itemBonus[0] : undefined
+
+                    if (itemBonus) {
+                        itemBonus.forEach(item => {
+                            if (typeMaxItem.value < item.value)
+                                typeMaxItem = item
+
+                        })
+
+                    }
+                    if (typeMaxItem) {
+                        const fieldTextItem = form.getTextField(name.toUpperCase() + ' ITEM');
+                        fieldTextItem.setText(String(typeMaxItem.value || 0));
+                        fieldTextItem.updateAppearances(customFont);
+                        item = typeMaxItem ? typeMaxItem.value : 0;
+                    }
 
 
+                }
+
+                const total = parseInt(char1) + parseInt(char2) + parseInt(char3) + item;
+
+
+                const fieldText = form.getTextField(name.toUpperCase());
+                fieldText.setText(String(total));
+                fieldText.updateAppearances(customFont);
             }
 
 
@@ -212,11 +274,235 @@ export async function fillPdf(this1) {
 
     })
 
+
+    //Деньги
+
+
+    let money = form.getTextField('COPPER');
+
+    money.setText(String(this1.money.cp));
+    money.updateAppearances(customFont);
+
+    money = form.getTextField('SILVER');
+
+    money.setText(String(this1.money.sp));
+    money.updateAppearances(customFont);
+
+    money = form.getTextField('GOLD');
+
+    money.setText(String(this1.money.gp));
+    money.updateAppearances(customFont);
+
+    money = form.getTextField('PLATINUM');
+
+    money.setText(String(this1.money.pp));
+    money.updateAppearances(customFont);
+
+
+    /*Скорость */
+    // Получаем speed из store
+    const originalSpeed = this1.Speed
+
+    const speedLand = form.getTextField('SPEED');
+
+    speedLand.setText(String(originalSpeed["land"]));
+    speedLand.updateAppearances(customFont);
+
+    // Создаем копию объекта, чтобы не мутировать store
+    const speed = { ...originalSpeed };
+
+    const specialSpeed = form.getTextField('SPECIAL MOVEMENT');
+    let move = "";
+    Object.keys(speed).forEach(key => {
+
+
+        move = move + String(this1.speedRepository[key] + ": " + speed[key] + ";")
+
+
+    });
+
+
+    specialSpeed.setText(String(move));
+    specialSpeed.updateAppearances(customFont);
+
+    const per1 = this1.profiencyRepository[this1.SkillPerception];
+    const per2 = (this1.characterAttributesEnhanced["wisdom"] - 10) / 2;
+    const per3 = this1.characterRank;
+
+    const totalPer = parseInt(per1) + parseInt(per2) + parseInt(per3);
+    const fieldTextPer = form.getTextField('PERCEPTION');
+    fieldTextPer.setText(String(totalPer));
+    fieldTextPer.updateAppearances(customFont);
+
+    const fieldPROFICIENCYPer = form.getTextField('PERCEPTION' + ' ' + 'PROFICIENCY');
+    if (fieldPROFICIENCYPer) {
+        fieldPROFICIENCYPer.setText(String(per1 + per3));
+        fieldPROFICIENCYPer.updateAppearances(customFont);
+    }
+
+
+
+    const fieldAttribute = form.getTextField('PERCEPTION WISDOM');
+    if (fieldAttribute) {
+        fieldAttribute.setText(String(per2));
+        fieldAttribute.updateAppearances(customFont);
+    }
+
+    const namePer = 'PERCEPTION'
+    switch (this1.SkillPerception) {
+        case "T":
+            const prof = form.getCheckBox(namePer.toUpperCase() + ' TRAINED');
+
+            prof.check();
+            break;
+        case "E":
+            const prof1 = form.getCheckBox(namePer.toUpperCase() + ' EXPERT');
+            prof1.check();
+            break;
+        case "M":
+            const prof2 = form.getCheckBox(namePer.toUpperCase() + ' MASTER');
+            prof2.check();
+            break;
+        case "L":
+            const prof3 = form.getCheckBox(namePer.toUpperCase() + ' LEGENDARY');
+            prof3.check();
+            break;
+    }
+
+
+
+
+
+
+    Object.entries(this1.characterSaving).forEach(([key, value]) => {
+        const keySave = this1.SavingRepository.find(k => k.key === key).attribute;
+
+        const char1 = this1.SkillsTrained[value];
+        const char2 = (this1.characterAttributesEnhanced[keySave] - 10) / 2;
+        const char3 = char1 === 0 ? 0 : this1.characterRank;
+
+        // Общее количество
+        const total = parseInt(char1) + parseInt(char2) + parseInt(char3);
+
+        const name = key.toUpperCase();
+
+
+        const number = {
+            fortitude: '',
+            reflex: '2',
+            will: '3'
+        }
+
+        const fieldText = form.getTextField(name.toUpperCase());
+        fieldText.setText(String(total));
+        fieldText.updateAppearances(customFont);
+
+        const fieldPROFICIENCY = form.getTextField('PROFICIENCY' + '' + number[key]);
+        if (fieldPROFICIENCY) {
+            fieldPROFICIENCY.setText(String(char1 + char3));
+            fieldPROFICIENCY.updateAppearances(customFont);
+        }
+
+        const attribute = keySave;
+
+        const fieldAttribute = form.getTextField(attribute.toUpperCase());
+        if (fieldAttribute) {
+            fieldAttribute.setText(String(char2));
+            fieldAttribute.updateAppearances(customFont);
+        }
+        // Изученное
+
+        if (name) {
+            switch (value) {
+                case "T":
+                    const prof = form.getCheckBox(name.toUpperCase() + ' TRAINED');
+
+                    prof.check();
+                    break;
+                case "E":
+                    const prof1 = form.getCheckBox(name.toUpperCase() + ' EXPERT');
+                    prof1.check();
+                    break;
+                case "M":
+                    const prof2 = form.getCheckBox(name.toUpperCase() + ' MASTER');
+                    prof2.check();
+                    break;
+                case "L":
+                    const prof3 = form.getCheckBox(name.toUpperCase() + ' LEGENDARY');
+                    prof3.check();
+                    break;
+            }
+
+
+
+        }
+
+
+
+    })
+
+
+    Object.entries(this1.skillDefence).forEach(([key, value]) => {
+
+
+        if (key) {
+            switch (value) {
+                case "T":
+                    const prof = form.getCheckBox(key.toUpperCase() + ' TRAINED');
+
+                    prof.check();
+                    break;
+                case "E":
+                    const prof1 = form.getCheckBox(key.toUpperCase() + ' EXPERT');
+                    prof1.check();
+                    break;
+                case "M":
+                    const prof2 = form.getCheckBox(key.toUpperCase() + ' MASTER');
+                    prof2.check();
+                    break;
+                case "L":
+                    const prof3 = form.getCheckBox(key.toUpperCase() + ' LEGENDARY');
+                    prof3.check();
+                    break;
+            }
+
+
+
+        }
+
+
+
+    })
+
+    money = form.getTextField('PLATINUM');
+
+    money.setText(String(this1.money.pp));
+    money.updateAppearances(customFont);
+
+    /*Хиты */
+    const hitMax = form.getTextField('MAXIMUM HIT POINTS');
+
+
+
+    const species = this1.characterHitPoints["species"]
+        ? this1.characterHitPoints["species"]
+        : 0;
+    const classh = this1.characterHitPoints["class"]
+        ? this1.characterHitPoints["class"]
+        : 0;
+
+    const levelClass =
+        (classh + (this1.characterAttributesEnhanced["constitution"] - 10) / 2) *
+        this1.characterRank;
+
+    hitMax.setText(String(species + levelClass));
+    hitMax.updateAppearances(customFont);
+
     /* Защиты*/
     const AC = form.getTextField('AC');
-
-
     const wear = this1.wear;
+
+
     let totalAC = 10;
     if (this1.wear) {
         const modDex = Math.floor(
@@ -227,10 +513,23 @@ export async function fillPdf(this1) {
         const dex = modDex > wearModDex ? wearModDex : modDex;
         const Def = wear.category ? this1.profiencyRepository[this1.skillDefence[wear.category]] : 0;
         const bonusAC = wear.acBonus ? wear.acBonus : 0;
-        const arm = Def === 0 ? 0 : this1.characterLevel();
+        const arm = Def === 0 ? 0 : this1.characterRank;
 
 
         totalAC = 10 + dex + Def + arm + bonusAC;
+
+        const ACCalc = form.getTextField('AC CALCULATION 1 DEXTERITY');
+        ACCalc.setText(String(dex));
+        ACCalc.updateAppearances(customFont);
+
+        const ACCalc2 = form.getTextField('AC CALCULATION 2 PROFICIENCY');
+        ACCalc2.setText(String(arm + Def));
+        ACCalc2.updateAppearances(customFont);
+
+        const ACCalc3 = form.getTextField('AC CALCULATION 3 ITEM');
+        ACCalc3.setText(String(bonusAC));
+        ACCalc3.updateAppearances(customFont);
+
     }
 
     if (!wear) {
@@ -238,7 +537,67 @@ export async function fillPdf(this1) {
         totalAC = totalAC + Def
     }
 
-    console.log(totalAC)
+
+    let index = 0
+    let weaponIndex = 0
+    let SumTotal = 0;
+    let SumLTotal = 0;
+    this1.wargear.forEach(wargear => {
+        index++;
+        weaponIndex++;
+        if (index > 17) return
+        const skill = form.getTextField('HELD ' + index.toString());
+
+        skill.setText(String(wargear.name));
+        skill.updateAppearances(customFont);
+        let Sum = 0;
+        let SumL = 0;
+        if (wargear.bulk && wargear.bulk?.value >= 1)
+            Sum = Sum + (wargear.bulk ? wargear.bulk.value : 0) * wargear.qty;
+        else
+            SumL = SumL + 1 * wargear.qty;
+
+        const carry = Math.floor(SumL / 10)
+
+        Sum += carry
+        SumL = SumL % 10
+        SumTotal += Sum
+        SumLTotal += SumL
+
+        const skill1 = form.getTextField('HELD BULK ' + index.toString());
+
+        skill1.setText(String((Sum === 0 ? "" : Sum + " ") + + (SumL === 0 ? "" : SumL + "Л")));
+        skill1.updateAppearances(customFont);
+
+        if (wargear.type === 'weapon' && weaponIndex < 4) {
+            const nameWargear = 'MELEE STRIKE ' + weaponIndex.toString()
+            const weap = form.getTextField('MELEE STRIKE ' + weaponIndex.toString());
+
+            weap.setText(wargear.name);
+            weap.updateAppearances(customFont);
+
+            const atkBonus = form.getTextField(nameWargear + " ATTACK BONUS");
+
+            const modAbility = wargear.range === null ? this1.characterAttributesEnhanced["strength"] : this1.characterAttributesEnhanced["dexterity"];
+
+            const modProfiency = this1.characterArchetype ? this1.skillAttack[gear.category] : "U";
+            const modLevel = modProfiency !== "U" ? this1.characterRank : 0;
+            const rune = this1.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+
+            const totalBonAtk = this1.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+
+            atkBonus.setText(String(totalBonAtk));
+            atkBonus.updateAppearances(customFont);
+        }
+
+
+    })
+
+    const blk = form.getTextField('BULK TOTAL');
+
+    blk.setText(String((SumTotal === 0 ? "" : SumTotal + " ") + (SumLTotal === 0 ? "" : SumLTotal + "Л")));
+    blk.updateAppearances(customFont);
+
 
     AC.setText(String(totalAC));
     AC.updateAppearances(customFont);
@@ -262,7 +621,7 @@ export async function fillPdf(this1) {
     if (this1.speciesLabel) {
         const keyword = this1.archetypeLabel ? this1.keywords.filter(s => s.name !== this1.archetypeLabel.toLowerCase()).map(s => s.name).join(', ') : this1.keywords.map(s => s.name).join(', ')
 
-        Ancestry.setText(this1.speciesLabel);
+        Ancestry.setText(this1.speciesLabel || '');
         Ancestry.updateAppearances(customFont);
 
         Heritage.setText(this1.heritageLabel + ' (' + keyword + ')');
@@ -276,4 +635,32 @@ export async function fillPdf(this1) {
     return URL.createObjectURL(new Blob([await pdfDoc.save()], {
         type: 'application/pdf'
     }))
+}
+
+const LIMITS = [25, 35, 35]; // -1, -2, -3
+
+function distributeToLines(items) {
+    const lines = ['', '', '']; // -1, -2, -3
+    let lineIndex = 0;
+
+    items.forEach(name => {
+        if (lineIndex > 2) return;
+
+        let currentLine = lines[lineIndex];
+        const limit = LIMITS[lineIndex];
+
+        const toAdd = currentLine ? ', ' + name : name;
+
+        if ((currentLine + toAdd).length <= limit) {
+            lines[lineIndex] += toAdd;
+        } else {
+            lineIndex++;
+
+            if (lineIndex > 2) return;
+
+            lines[lineIndex] = name;
+        }
+    });
+
+    return lines;
 }

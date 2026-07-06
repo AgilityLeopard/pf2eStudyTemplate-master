@@ -60,18 +60,20 @@
 import { fillPdf } from '~/utils/fillPdf'
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
+import WargearTraitRepositoryMixin from '~/mixins/WargearTraitRepositoryMixin';
 
 export default {
     mixins: [
 
         StatRepositoryMixin,
 
-
+        WargearTraitRepositoryMixin,
         KeywordRepository,
 
     ],
     props: {
-        characterId: String
+        characterId: String,
+        characterArchetype: Object,
     },
     data() {
         return {
@@ -140,6 +142,7 @@ export default {
         editLink() {
             return `/forge/characters/${this.characterId}/builder/setting`
         },
+
         skills() {
             const customSkills = this.$store.getters['characters/characterCustomSkillsById'](this.characterId);
 
@@ -251,6 +254,11 @@ export default {
             }
             return enrichedKeywords;
         },
+        characterSaving() {
+            return this.$store.getters["characters/characterSavingById"](
+                this.characterId
+            );
+        },
     },
 
     methods: {
@@ -267,7 +275,29 @@ export default {
 
             window.open(pdfUrl, '_blank')
         },
+        ModAttributeSaving(attribute, skill) {
+            const char1 = this.profiencyRepository[this.characterSaving[skill]];
+            const char2 = (this.characterAttributesEnhanced[attribute] - 10) / 2;
+            const char3 = this.level;
 
+
+            let status = 0;
+
+
+            const result = parseInt(char1) + parseInt(char2) + parseInt(char3);
+
+            return result;
+
+        },
+        reflexSave() {
+            return this.ModAttributeSavingWithStatuses("dexterity", "reflex")
+        },
+        fortitudeSave() {
+            return this.ModAttributeSavingWithStatuses("constitution", "fortitude")
+        },
+        willSave() {
+            return this.ModAttributeSavingWithStatuses("wisdom", "will")
+        },
 
         getCharacterData() {
             return {
@@ -278,15 +308,42 @@ export default {
                 wear: this.$store.getters["characters/characterWearById"](
                     this.characterId
                 ),
+
+                characterHitPoints: this.$store.getters["characters/characterHitPointsById"](
+                    this.characterId
+                ),
+                skillDefence: this.$store.getters["characters/characterskillDefenceById"](
+                    this.characterId
+                ),
+                SkillPerception: this.$store.getters["characters/characterPerseptionById"](
+                    this.characterId
+                ),
+                modificatorBonus:
+                    this.$store.getters["characters/charactermodificatorsBonusById"](
+                        this.characterId
+                    ),
+
+
+                Speed: this.$store.getters["characters/characterSpeedById"](this.characterId),
                 characterAttributes: this.$store.getters['characters/characterAttributesById'](this.characterId),
                 characterAttributesEnhanced: this.$store.getters['characters/characterAttributesEnhancedById'](this.characterId),
                 SkillsTrained: this.SkillsTrained,
+                SavingRepository: this.SavingRepository,
+                speedRepository: this.speedRepository,
                 skills: this.skills,
+                skillAttack: this.skillAttack,
                 talents: this.$store.getters['characters/characterTalentsById'](this.characterId),
 
+                characterSaving: this.$store.getters["characters/characterSavingById"](
+                    this.characterId
+                ),
+                weaponRunePotency: this.weaponRunePotency,
                 characterSkills: this.$store.getters['characters/characterSkillsById'](this.characterId),
-
+                money: this.$store.getters['characters/characterMoneyById'](this.characterId),
                 characterArchetype: this.characterArchetype,
+                wargear: this.$store.getters["characters/characterWargearById"](
+                    this.characterId
+                ),
 
                 speciesLabel: this.$store.getters['characters/characterSpeciesLabelById'](this.characterId),
                 backgroundLabel: this.$store.getters['characters/characterBackgroundLabelById'](this.characterId),

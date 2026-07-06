@@ -103,6 +103,18 @@
             {{ typeDamage(item.damage.damageType).slice(0, 1).toUpperCase() }}
           </div>
 
+          <div v-if="item.reload && item.reload.value != '-'" class="info-line">
+            <strong>Перезарядка:</strong>
+            {{ item.reload.value }}
+
+          </div>
+
+          <div v-if="item.range" class="info-line">
+            <strong>Дистанция:</strong>
+            {{ item.range }}
+
+          </div>
+
           <div v-if="item.usage" class="info-line">
             <strong>Руки:</strong> {{ Worn(item.usage.value) }}
           </div>
@@ -152,7 +164,8 @@
         <div class="divider"></div>
 
         <!-- DESCRIPTION -->
-        <div v-if="item.description" class="description" v-html="item.description"></div>
+        <div v-if="item.description" class="description" :class="{ 'light-view': !$vuetify.theme.isDark }"
+          v-html="item.description"></div>
 
       </template>
 
@@ -207,7 +220,8 @@
         <div class="divider"></div>
 
         <!-- DESCRIPTION -->
-        <div v-if="item.description" class="description" v-html="item.description"></div>
+        <div v-if="item.description" class="description" :class="{ 'light-view': !$vuetify.theme.dark }"
+          v-html="item.description"></div>
 
       </template>
 
@@ -218,14 +232,16 @@
           {{ item.prerequisites.value }}
         </div>
 
-        <div v-if="item.description" class="description" v-html="item.description.value"></div>
+        <div v-if="item.description" class="description" :class="{ 'light-view': !$vuetify.theme.isDark }"
+          v-html="item.description"></div>
       </template>
 
       <!-- ПРОЧЕЕ (archetype / species) -->
       <template v-if="['archetype', 'species'].includes(item.type)">
         <div class="divider"></div>
 
-        <div v-if="item.description" class="description" v-html="item.description"></div>
+        <div v-if="item.description" class="description" :class="{ 'light-view': !$vuetify.theme.isDark }"
+          v-html="item.description"></div>
       </template>
 
       <!-- ПРОЧЕЕ (archetype / species) -->
@@ -235,14 +251,15 @@
           {{ item.prerequisites.value }}
         </div>
 
-        <div v-if="item.description" class="description" v-html="item.description.value"></div>
+        <div v-if="item.system.description.value" class="description" :class="{ 'light-view': !$vuetify.theme.isDark }"
+          v-html="item.system.description.value"></div>
       </template>
 
       <!-- ПРОЧЕЕ (archetype / species) -->
       <!-- <template v-if="['archetype', 'species'].includes(item.type)">
         <div class="divider"></div>
 
-        <div v-if="item.description" class="description" v-html="item.description"></div>
+        <div v-if="item.description"  class="description"  :class="{ 'light-view': !$vuetify.theme.isDark }" v-html="item.description"></div>
       </template> -->
 
       <!-- FOOTER -->
@@ -464,5 +481,9 @@ export default {
 
 .invert-icon {
   filter: invert(1) brightness(1.2);
+}
+
+::v-deep(.description.light-view img.action-icon) {
+  filter: invert(1);
 }
 </style>

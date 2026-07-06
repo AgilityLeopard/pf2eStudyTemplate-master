@@ -1,10 +1,12 @@
-// plugins/auth-login.js
-export default function ({ app }) {
-  app.$auth.onError((error, name, endpoint) => {
-    console.error(` errorName ${name}`, error);
+export default ({ app, store }) => {
 
-    if (name === 'TokenExpiredError') {
-      console.info('token expired, logging out');
-    }
-  });
+  const user = app.$supabase.auth.user()
+
+  store.commit('SET_USER', user)
+
+  // ✅ правильный источник
+  app.$supabase.auth.onAuthStateChange((event, session) => {
+    store.commit('SET_USER', session?.user || null)
+  })
+
 }

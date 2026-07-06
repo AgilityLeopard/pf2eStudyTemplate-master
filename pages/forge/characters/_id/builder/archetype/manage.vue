@@ -454,8 +454,6 @@ export default {
         };
       });
 
-
-      console.log(this.actionList)
     },
     async loadArchetype(key) {
       this.loading = true;

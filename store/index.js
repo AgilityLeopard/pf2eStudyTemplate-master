@@ -4,6 +4,9 @@ export const state = () => ({
   version: 1,
   builderVersion: 11,
   theme: 'light',
+  user: null,
+  authReady: false,
+  profile: null
 });
 
 export const getters = {
@@ -35,10 +38,22 @@ export const mutations = {
   },
   setTheme(state, theme) {
     state.theme = theme;
+  },
+  SET_USER(state, user) {
+    state.user = user
+  },
+  SET_AUTH_READY(state, val) {
+    state.authReady = val
+  },
+  CLEAR_USER(state) {
+    state.user = null
+  },
+  SET_PROFILE(state, profile) {
+    state.profile = profile
   }
 };
 
-const baseApiUrl = 'http://www.shadow-of-tales.ru';
+const baseApiUrl = 'https://www.shadow-of-tales.ru';
 
 export const actions = {
   nuxtServerInit({ commit }, { req }) {
@@ -51,6 +66,11 @@ export const actions = {
       ...payload.data,
     };
     context.commit('setState', payload.data);
+  },
+  async initUser({ commit }) {
+    const user = this.$supabase.auth.user()
+
+    commit('SET_USER', user)
   },
   saveCurrentCharacterToDatabase({ context, state, getters }) {
     const body = {
@@ -86,7 +106,7 @@ export const actions = {
    * @param payload
    */
   loadCharacterFromDatabase(context, characterId) {
-    console.log(characterId);
+
     axios.get(`${baseApiUrl}/api/characters/${characterId}`)
       .then((response) => {
         console.log(response);

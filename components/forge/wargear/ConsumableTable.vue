@@ -6,8 +6,8 @@
             Добавить снаряжение
         </v-btn>
 
-        <v-data-table :headers="headersGear" :items="items" :search="searchQuery"
-            class="gear-section-table fixed-columns-table" hide-default-footer item-key="id">
+        <v-data-table :headers="headersGear" :items="items" class="gear-section-table fixed-columns-table"
+            hide-default-footer item-key="id">
             <template v-slot:no-data> Нет предметов </template>
 
             <template v-slot:item.nameGear="{ item }">

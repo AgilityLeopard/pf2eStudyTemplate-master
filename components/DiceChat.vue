@@ -31,9 +31,7 @@ export default {
         messages() {
             const id = this.$route.params.id;
 
-            console.log('ID:', id);
-            console.log('ALL CHARACTERS:', this.$store.state.characters);
-            console.log('CHAR:', this.$store.state.characters?.characters[id]);
+
 
             return this.$store.state.characters?.characters[id]?.diceChat || [];
         }

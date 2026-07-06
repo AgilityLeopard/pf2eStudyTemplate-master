@@ -1200,7 +1200,13 @@ export default {
       levelSkill: {
         class: [1, 3, 5, 7, 9, 10, 11, 13, 15, 17, 19, 20]
       },
-
+      speedRepository: {
+        land: "Наземная",
+        fly: "Полет",
+        climb: "Лазание",
+        burrow: "Копание",
+        swim: "плавание"
+      }
     };
 
   },

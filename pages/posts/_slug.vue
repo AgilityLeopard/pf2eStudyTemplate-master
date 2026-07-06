@@ -59,7 +59,6 @@ export default {
 
   async fetch() {
 
-    console.log(this.$route, this.$route.params.slug)
     try {
       const { data } = await this.$axios.get(
         `/api/posts/${this.$route.params.slug}`

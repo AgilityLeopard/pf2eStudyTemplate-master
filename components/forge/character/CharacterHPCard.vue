@@ -22,6 +22,8 @@
             </span>
         </div>
 
+
+
         <!-- RESIST / IMMUNITY / WEAKNESS -->
         <v-row v-if="ResImWeak.length" dense class="mt-2">
 

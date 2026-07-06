@@ -7,7 +7,7 @@ export default ({ app, store }) => {
     app.router.beforeEach((to, from, next) => {
         // лог для отладки
         // eslint-disable-next-line no-console
-        console.log('[loader] beforeEach -> set loading true')
+
         store.commit('ui/SET_LOADING', true)
         next()
     })
@@ -15,7 +15,7 @@ export default ({ app, store }) => {
     // после перехода — выключаем с небольшой паузой, чтобы увидеть анимацию
     app.router.afterEach(() => {
         // eslint-disable-next-line no-console
-        console.log('[loader] afterEach -> will set loading false in 120ms')
+
         setTimeout(() => store.commit('ui/SET_LOADING', false), 120)
     })
 }

@@ -128,6 +128,8 @@
                     <div>
                       <span>Уровень {{ characterRank(character.id) }} </span>
                     </div>
+
+
                   </div>
                 </v-card-text>
               </div>
@@ -141,7 +143,7 @@
               <v-divider />
 
               <v-card-actions>
-                <v-btn nuxt :to="`/forge/characters/${character.id}/builder/setting`" color="primary" x-small text
+                <v-btn @click="openCharacter(character.id)" color="primary" x-small text
                   :disabled="characterVersion(character.id) < builderVersion">
                   <v-icon left small> edit </v-icon>
                   Изменить
@@ -151,11 +153,26 @@
                   <v-icon small left> description </v-icon>
                   Просмотр
                 </v-btn>
-                <v-btn nuxt :to="`/forge/characters/${character.id}/builder/print`" target="_blank" color="primary"
-                  class="d-none d-md-flex" text x-small v-if="false"
-                  :disabled="characterVersion(character.id) < builderVersion">
-                  <v-icon small left>print</v-icon>Print
-                </v-btn>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <div v-on="on" class="d-flex align-center">
+                      <v-switch :disabled="!$store.state.user" :input-value="character.isMarked"
+                        @change="toggleCloud(character)" inset color="primary" hide-details class="cloud-switch ma-0">
+                        <template v-slot:label>
+                          <div class="d-flex align-center">
+                            <v-icon small class="mr-1">cloud</v-icon>
+                          </div>
+                        </template>
+                      </v-switch>
+                    </div>
+                  </template>
+
+                  <span>
+                    Сохраняет персонажа в вашем аккаунте и синхронизирует между устройствами (не более 5
+                    одновременно)
+                  </span>
+                </v-tooltip>
 
                 <v-btn color="primary" text x-small @click="openExportDialog(character.id)">
                   <v-icon small left>cloud_download</v-icon>
@@ -213,6 +230,28 @@
         </v-row>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="confirmDialog.show" max-width="400">
+      <v-card>
+        <v-card-title>Подтверждение</v-card-title>
+
+        <v-card-text>
+          {{ confirmDialog.text }}
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer />
+
+          <v-btn text @click="resolveConfirm(false)">
+            Отмена
+          </v-btn>
+
+          <v-btn color="red" text @click="resolveConfirm(true)">
+            Удалить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -232,6 +271,11 @@ export default {
   props: [],
   data() {
     return {
+      confirmDialog: {
+        show: false,
+        text: '',
+        resolve: null
+      },
       importDialog: false,
       importSnippet: '',
       exportDialog: false,
@@ -253,6 +297,23 @@ export default {
         ],
       },
     };
+  },
+  async mounted() {
+    if (process.client) {
+      document.addEventListener('visibilitychange', this.onVisible)
+    }
+
+    this.syncInterval = setInterval(() => {
+      this.loadCloudCharacters()
+    }, 5000) // каждые 5 сек
+
+  },
+  beforeDestroy() {
+    if (process.client) {
+      document.removeEventListener('visibilitychange', this.onVisible)
+    }
+
+    clearInterval(this.syncInterval)
   },
   head() {
     const title = 'Создание персонажа для Pathfinder 2e | Билдодельня';
@@ -329,6 +390,44 @@ export default {
     },
   },
   methods: {
+    async loadCloudCharacters() {
+      if (!this.$store.state.user) return
+
+      const { data, error } = await this.$supabase
+        .from('Character')
+        .select('*')
+        .eq('user_id', this.$store.state.user.id)
+
+      this.$store.commit('characters/REPLACE_CLOUD', data)
+    },
+    async onVisible() {
+      if (document.visibilityState === 'visible') {
+        await this.loadCloudCharacters()
+      }
+    },
+    openCharacter(id) {
+
+      // 1. ставим активного персонажа
+      this.$store.commit('characters/SET_ACTIVE', id)
+
+      // 2. идём в билд
+      this.$router.push(`/forge/characters/${id}/builder/setting`)
+    },
+    confirm(text) {
+      this.confirmDialog.text = text
+      this.confirmDialog.show = true
+
+      return new Promise(resolve => {
+        this.confirmDialog.resolve = resolve
+      })
+    },
+
+    resolveConfirm(result) {
+      this.confirmDialog.show = false
+      if (this.confirmDialog.resolve) {
+        this.confirmDialog.resolve(result)
+      }
+    },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -377,6 +476,44 @@ export default {
     isLegacyVersion(id) {
       return this.characterVersion(id) <= 6;
     },
+    async toggleCloud(character) {
+
+      const newValue = !character.isMarked
+
+      if (!newValue) {
+        const ok = await this.confirm('Удалить из облака?')
+        if (!ok) return
+      }
+
+
+
+      if (newValue) {
+        await this.markToCloud(character)
+
+      } else {
+        await this.removeFromCloud(character.id)
+      }
+    },
+    async markToCloud(character) {
+      await this.$supabase
+        .from('Character')
+        .upsert({
+          character_id: character.id,
+          user_id: this.$store.state.user.id,
+          data: character
+        })
+
+      this.$store.commit('characters/Mark', { id: character.id, mark: true });
+    },
+    async removeFromCloud(id) {
+
+      await this.$supabase
+        .from('Character')
+        .delete()
+        .eq('character_id', id)
+
+      this.$store.commit('characters/Mark', { id: id, mark: false });
+    },
     characterAvatar(id) {
       const customAvatarUrl = this.$store.getters['characters/characterAvatarUrlById'](id);
       if (customAvatarUrl) {
@@ -401,6 +538,7 @@ export default {
       return '/img/avatars/species/playercore-human.png';
     },
     load(characterId) {
+
       this.$axios.get(`/api/characters/${characterId}`)
         .then((response) => {
           this.$store.dispatch('populateState', response);
@@ -409,6 +547,7 @@ export default {
       // this.$store.dispatch('loadCharacterFromDatabase', characterId );
     },
     loadChar() {
+      this.$store.commit('characters/SET_ACTIVE', characterId);
       this.$store.dispatch('loadCharacterFromDatabase', { id: 3 });
     },
     saveChar() {
@@ -416,7 +555,8 @@ export default {
     },
     newCharacter() {
       const newCharId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-      this.$store.commit('characters/create', newCharId);
+      // this.$store.commit('characters/create', newCharId);
+      this.$store.dispatch('characters/createCharacter', newCharId);
       this.$ga.event('New Character', 'click', newCharId, 10);
     },
     openDeleteDialog(id) {
@@ -425,8 +565,10 @@ export default {
     },
     deleteCharacter() {
       const id = this.deleteId;
+      this.removeFromCloud(id);
       this.$store.commit('characters/remove', id);
       this.deleteDialog = false;
+
       this.$ga.event('Delete Character', 'click', id, 1);
     },
     openExportDialog(id) {
@@ -452,6 +594,9 @@ export default {
       document.getElementById('exportSnippetId').select();
       document.execCommand("copy");
     },
+    MarkCloud(id) {
+      this.$store.commit('characters/Mark', { id: id, mark: true });
+    },
     importJson(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -462,9 +607,9 @@ export default {
           const jsonData = JSON.parse(e.target.result);
           // Здесь сохраняем данные в store или локальный state
           this.importCharacter(e.target.result)
-          console.log('Импортировано успешно:', jsonData);
+
         } catch (err) {
-          console.error('Ошибка при парсинге JSON:', err);
+
           alert('Неверный формат JSON!');
         }
       };

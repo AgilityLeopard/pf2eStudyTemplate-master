@@ -484,6 +484,7 @@ const playerCore = [
     "name": "Лечение ран / Treat Wounds",
     "system": {
       "actionType": {
+
         "value": "passive"
       },
       "actions": {
@@ -542,6 +543,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "sense-motive"
   },
@@ -1162,6 +1164,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "sustain"
   },
@@ -1262,6 +1265,7 @@ const playerCore = [
       }
     },
     "type": "action",
+    "category": "special basic",
     "remaster": true,
     ...sourceMod("playerCore"),
     "key": "grab-an-edge"
@@ -3190,6 +3194,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "delay"
   },
@@ -3507,6 +3512,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "dismiss"
   },
@@ -3774,6 +3780,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "stride"
   },
@@ -3840,6 +3847,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "seek"
   },
@@ -5617,6 +5625,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "burrow"
   },
@@ -5746,6 +5755,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "aid"
   },
@@ -5842,6 +5852,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "drop-prone"
   },
@@ -8309,6 +8320,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "stand"
   },
@@ -8660,6 +8672,7 @@ const playerCore = [
       }
     },
     "type": "action",
+    "category": "special basic",
     "remaster": true,
     ...sourceMod("playerCore"),
     "key": "mount"
@@ -9750,6 +9763,7 @@ const playerCore = [
       }
     },
     "type": "action",
+    "category": "basic",
     "remaster": true,
     ...sourceMod("playerCore"),
     "key": "escape"
@@ -10081,6 +10095,7 @@ const playerCore = [
       }
     },
     "type": "action",
+    "category": "basic",
     "remaster": true,
     ...sourceMod("playerCore"),
     "key": "crawl"
@@ -10236,6 +10251,7 @@ const playerCore = [
       }
     },
     "type": "action",
+    "category": "basic",
     "remaster": true,
     ...sourceMod("playerCore"),
     "key": "step"
@@ -10339,6 +10355,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "avert-gaze"
   },
@@ -10866,6 +10883,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "strike"
   },
@@ -12449,6 +12467,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "cast-a-spell"
   },
@@ -13066,6 +13085,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "fly"
   },
@@ -13399,6 +13419,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "leap"
   },
@@ -13513,6 +13534,7 @@ const playerCore = [
       }
     },
     "type": "action",
+    "category": "basic",
     "remaster": true,
     ...sourceMod("playerCore"),
     "key": "ready"
@@ -16088,6 +16110,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("GMCore"),
     "key": "invest-an-item"
   },
@@ -17058,6 +17081,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "interact"
   },
@@ -17251,6 +17275,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "arrest-a-fall"
   },
@@ -17843,6 +17868,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "point-out"
   },
@@ -18479,6 +18505,7 @@ const playerCore = [
       }
     },
     "type": "action",
+    "category": "basic",
     "remaster": true,
     ...sourceMod("playerCore"),
     "key": "take-cover"
@@ -18908,6 +18935,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "basic",
     ...sourceMod("playerCore"),
     "key": "release"
   },
@@ -19321,6 +19349,7 @@ const playerCore = [
     },
     "type": "action",
     "remaster": true,
+    "category": "special basic",
     ...sourceMod("playerCore"),
     "key": "raise-a-shield"
   },

@@ -371,6 +371,11 @@ export default {
           crit: "Увеличиваете радиус урона брызг бомбы (если есть) до 10 футов.",
         },
         {
+          group: "crossbow",
+          name: "Арбалет",
+          crit: "Увеличиваете радиус урона брызг бомбы (если есть) до 10 футов.",
+        },
+        {
           group: "bow",
           name: "Лук",
           crit: "Если цель критического попадания находится рядом с поверхностью, она застревает на этой поверхности из-за снаряда. Цель получает состояние обездвижен и должна потратить действие Взаимодействовать (Interact) , чтобы выполнить проверку Атлетики с КС 10 для вытаскивания снаряда; цель не может двигаться с места пока не преуспеет. Существо не становится застрявшим, если оно бестелесное, жидкое (водный элементаль или слизь), или может другим образом освободиться без усилий."
@@ -466,6 +471,111 @@ export default {
         },
 
       ],
+      materialGradeRepository: [
+        {
+          key: "low",
+          name: "Низкое качество"
+        },
+        {
+          key: "standard",
+          name: "Стандартное качество"
+        },
+        {
+          key: "high",
+          name: "Высокое качество"
+        }
+      ],
+      materialRepository: [
+        {
+          key: "none",
+          name: "Без материала",
+          grades: []
+        },
+
+        {
+          key: "adamantine",
+          name: "Адамантин",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "cold-iron",
+          name: "Холодное железо",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "dawnsilver",
+          name: "Мифрил (Dawnsilver)",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "silver",
+          name: "Серебро",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "orichalcum",
+          name: "Орихалк",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "siccatite",
+          name: "Сиккатит",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "inubrix",
+          name: "Инубрис",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "noqual",
+          name: "Ноквал",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "warpglass",
+          name: "Искривлённое стекло",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "abysium",
+          name: "Абизиум",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "dragonhide",
+          name: "Драконья кожа",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "keep-stone",
+          name: "Крепкокамень",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "peachwood",
+          name: "Персиковое дерево",
+          grades: ["standard", "high"]
+        },
+
+        {
+          key: "sunsilver",
+          name: "Солнечное серебро",
+          grades: ["standard", "high"]
+        }
+      ],
       weaponCategoryRepository: [
         {
           category: "martial",
@@ -507,7 +617,7 @@ export default {
           key: 0,
           name: "Нет",
           addDice: 0,
-          slug: ""
+          slug: "none"
         },
         {
           key: 1,
@@ -585,7 +695,7 @@ export default {
           key: 0,
           name: "Нет",
           addDice: 0,
-          slug: ""
+          slug: "none"
         },
         {
           key: 1,
@@ -795,6 +905,45 @@ export default {
         },
 
       ],
+      weaponRuneStriking: [
+        {
+          key: 0,
+          name: "Нет",
+          addDice: 0,
+          slug: "none"
+        },
+        {
+          key: 1,
+          name: "Разящая руна",
+          addDice: 1,
+          slug: "reinforcing-rune"
+        },
+        {
+          key: 2,
+          name: "Разящая руна [Отличная]",
+          addDice: 2,
+          slug: "reinforcing-rune"
+        },
+        {
+          key: 3,
+          name: "Разящая руна [Отличная]",
+          addDice: 3,
+          slug: "reinforcing-rune"
+        },
+        {
+          key: 4,
+          name: "Разящая руна [Отличная]",
+          addDice: 3,
+          slug: "reinforcing-rune"
+        },
+        {
+          key: 5,
+          name: "Разящая руна [Отличная]",
+          addDice: 3,
+          slug: "reinforcing-rune-supreme"
+        }
+      ],
+
       ArmorRuneProperty: [
         {
           key: "returning",
@@ -931,6 +1080,7 @@ export default {
         "wornshoes": "Обувь",
         "held-in-two-hands": "2",
         "held-in-one-hand": "1",
+        "held-in-one-plus-hands": "1+",
 
       }
 

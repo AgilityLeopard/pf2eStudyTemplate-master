@@ -130,7 +130,7 @@ module.exports = {
 
   },
   /*
-   ** Global CSS
+   ** Global C SS
    */
   css: ["@/assets/scss/config/_fonts.scss",
     '~/assets/loader.css',
@@ -145,8 +145,15 @@ module.exports = {
     { src: '~/plugins/vue-quill-editor.js', ssr: false },
     { src: '~/plugins/router-loader.js', ssr: false },
     '~/plugins/supabase.js',
+    '~/plugins/init-auth.js',
+    '~/plugins/auth.js',
     "~/plugins/filters.js",
     "~/plugins/hint-box-component.js",
+    "~/plugins/vuex-sync.js",
+
+    '~/plugins/characters-realtime.js',
+
+
 
   ],
   /*
@@ -313,7 +320,7 @@ module.exports = {
       },
     },
   },
-  middleware: ['loading'],
+  middleware: ['loading', 'guest', 'auth'],
   serverMiddleware: [
     //'redirect-ssl',
     //redirectSSL.create({enabled: process.env.NODE_ENV === 'production'}),

@@ -69,7 +69,7 @@ export default {
   async fetch() {
     const { data } = await this.$axios.get("/api/posts");
     this.posts = data || [];
-    console.log(data)
+
   },
   // async asyncData({ app }) {
 

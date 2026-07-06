@@ -52,14 +52,14 @@
               <span>
                 {{ attackModifier(item) }} /
                 {{
-                  item.traits.includes("быстрое")
+                  item.trait.includes("быстрое")
                     ? attackModifier(item) - 4
                     : attackModifier(item) - 5
                 }}
 
                 /
                 {{
-                  item.traits.includes("быстрое")
+                  item.trait.includes("быстрое")
                     ? attackModifier(item) - 8
                     : attackModifier(item) - 10
                 }}

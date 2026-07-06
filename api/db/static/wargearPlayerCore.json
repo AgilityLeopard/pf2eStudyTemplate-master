@@ -54,7 +54,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -129,7 +129,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -183,7 +183,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -291,7 +291,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -366,7 +366,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -694,7 +694,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -760,7 +760,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -1019,7 +1019,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -1073,7 +1073,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -1181,7 +1181,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -1235,7 +1235,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -1398,7 +1398,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -1470,7 +1470,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -1542,7 +1542,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -1614,7 +1614,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -1687,7 +1687,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -2626,7 +2626,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -2696,7 +2696,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -2766,7 +2766,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -2836,7 +2836,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -2906,7 +2906,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -2971,7 +2971,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3025,7 +3025,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -3074,7 +3074,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -3132,7 +3132,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -3181,7 +3181,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -3241,7 +3241,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3306,7 +3306,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3371,7 +3371,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3436,7 +3436,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3501,7 +3501,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3566,7 +3566,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3631,7 +3631,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3746,7 +3746,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3811,7 +3811,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3877,7 +3877,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -3929,7 +3929,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 2,
@@ -4009,7 +4009,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -4073,7 +4073,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -4138,7 +4138,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -4192,7 +4192,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -4529,7 +4529,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -4578,7 +4578,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -4627,7 +4627,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -4676,7 +4676,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -4725,7 +4725,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -5837,7 +5837,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -5980,7 +5980,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6029,7 +6029,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6078,7 +6078,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6139,7 +6139,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6188,7 +6188,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6246,7 +6246,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6306,7 +6306,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -6360,7 +6360,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6409,7 +6409,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6458,7 +6458,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6507,7 +6507,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6556,7 +6556,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -6616,7 +6616,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -6681,7 +6681,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -6938,7 +6938,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -7003,7 +7003,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -7055,7 +7055,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -7113,7 +7113,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -7162,7 +7162,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -7229,7 +7229,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -7281,7 +7281,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -7365,7 +7365,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -7440,7 +7440,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -7489,7 +7489,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -7536,7 +7536,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -7592,7 +7592,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -7658,7 +7658,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -7718,7 +7718,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -7783,7 +7783,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -7848,7 +7848,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -7913,7 +7913,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -7967,7 +7967,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -8027,7 +8027,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -8081,7 +8081,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -8178,7 +8178,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -8415,7 +8415,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -8491,7 +8491,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -8567,7 +8567,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -8621,7 +8621,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -8670,7 +8670,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -8730,7 +8730,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -8795,7 +8795,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -8901,7 +8901,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -8957,7 +8957,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -9006,7 +9006,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -9115,7 +9115,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -9169,7 +9169,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -9216,7 +9216,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -9285,7 +9285,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -9351,7 +9351,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -9405,7 +9405,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -9461,7 +9461,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -9525,7 +9525,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -9581,7 +9581,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -9641,7 +9641,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -9695,7 +9695,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -10090,7 +10090,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10203,7 +10203,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10268,7 +10268,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10373,7 +10373,7 @@
     "type": "backpack",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -10446,7 +10446,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10524,7 +10524,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10590,7 +10590,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10655,7 +10655,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10709,7 +10709,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -10769,7 +10769,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10841,7 +10841,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10913,7 +10913,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -10985,7 +10985,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -11057,7 +11057,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -11126,7 +11126,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -11175,7 +11175,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -11224,7 +11224,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -11849,7 +11849,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -11915,7 +11915,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -11980,7 +11980,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -12034,7 +12034,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12091,7 +12091,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12140,7 +12140,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12198,7 +12198,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12264,7 +12264,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12313,7 +12313,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12362,7 +12362,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12534,7 +12534,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 2,
@@ -12620,7 +12620,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -12674,7 +12674,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12734,7 +12734,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -12805,7 +12805,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12871,7 +12871,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -12972,7 +12972,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -13021,7 +13021,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -13070,7 +13070,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -13119,7 +13119,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -13166,7 +13166,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -13240,7 +13240,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 2,
@@ -13324,7 +13324,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 1,
@@ -13455,7 +13455,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -13729,7 +13729,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -13806,7 +13806,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -13883,7 +13883,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -13984,7 +13984,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14033,7 +14033,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14082,7 +14082,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14225,7 +14225,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14274,7 +14274,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14323,7 +14323,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14372,7 +14372,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14575,7 +14575,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 1,
@@ -14641,7 +14641,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -14828,7 +14828,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -14960,7 +14960,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -15009,7 +15009,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -15056,7 +15056,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -15112,7 +15112,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -15181,7 +15181,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15246,7 +15246,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15311,7 +15311,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15376,7 +15376,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15441,7 +15441,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15506,7 +15506,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15571,7 +15571,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15636,7 +15636,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15720,7 +15720,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15804,7 +15804,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15888,7 +15888,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -15972,7 +15972,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16035,7 +16035,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16100,7 +16100,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16163,7 +16163,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16217,7 +16217,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -16284,7 +16284,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16356,7 +16356,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16428,7 +16428,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16500,7 +16500,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -16552,7 +16552,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -16608,7 +16608,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -16664,7 +16664,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -16761,7 +16761,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -17110,7 +17110,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -17457,7 +17457,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -17523,7 +17523,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -17588,7 +17588,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -17642,7 +17642,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -17691,7 +17691,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -17743,7 +17743,7 @@
     "type": "backpack",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -17803,7 +17803,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -17857,7 +17857,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -17981,7 +17981,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -18047,7 +18047,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 2,
@@ -18118,7 +18118,7 @@
     "type": "backpack",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -18178,7 +18178,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -18278,7 +18278,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -18829,7 +18829,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -18889,7 +18889,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -18943,7 +18943,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -18992,7 +18992,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -19050,7 +19050,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -19099,7 +19099,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -19159,7 +19159,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -19261,7 +19261,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -19411,7 +19411,7 @@
     "type": "backpack",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -19619,7 +19619,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 1,
@@ -19685,7 +19685,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -19755,7 +19755,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -19820,7 +19820,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -19874,7 +19874,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -19983,7 +19983,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -20037,7 +20037,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -20146,7 +20146,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -20200,7 +20200,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -20260,7 +20260,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -20312,7 +20312,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -20368,7 +20368,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -20435,7 +20435,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -20495,7 +20495,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -20690,7 +20690,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -20888,7 +20888,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -21100,7 +21100,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -21160,7 +21160,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -21287,7 +21287,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -21356,7 +21356,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -21416,7 +21416,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -21535,7 +21535,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -21600,7 +21600,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -21665,7 +21665,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -21730,7 +21730,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -21787,7 +21787,7 @@
     "type": "backpack",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -21847,7 +21847,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -21901,7 +21901,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -22030,7 +22030,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -22094,7 +22094,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -22218,7 +22218,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -22280,7 +22280,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 0,
@@ -22338,7 +22338,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -22457,7 +22457,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -22522,7 +22522,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -22576,7 +22576,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -22639,7 +22639,7 @@
     "type": "armor",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": {
       "potency": 1,
@@ -22785,7 +22785,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -22912,7 +22912,7 @@
     "type": "equipment",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null
+      "invest": null
     },
     "runes": null,
     "specific": null
@@ -23024,7 +23024,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {
@@ -23472,7 +23472,7 @@
     "type": "weapon",
     "equipped": {
       "carryType": "worn",
-      "инвестируемый": null,
+      "invest": null,
       "handsHeld": 0
     },
     "runes": {

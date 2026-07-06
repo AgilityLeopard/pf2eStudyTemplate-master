@@ -17,6 +17,9 @@
                             </span>
 
                             <span>{{ action.name }}</span>
+                            <!-- 
+                            <div v-if="action.system.description?.value" v-html="action.system.description?.value">
+                            </div> -->
 
                             <div v-if="action?.actions">
                                 <img :src="iconAction(action.actions.value)"
@@ -36,15 +39,19 @@ export default {
         explorationActions: Array,
         restActions: Array,
         otherActions: Array,
+        basicActions: Array,
         iconAction: Function
     },
 
     computed: {
         sections() {
             return [
+                { title: 'Базовые действия', items: this.basicActions },
+                { title: 'Специальные Базовые действия', items: this.basicSpecialActions },
                 { title: 'Исследование', items: this.explorationActions },
                 { title: 'Отдых', items: this.restActions },
                 { title: 'Прочие', items: this.otherActions }
+
             ].filter(s => s.items && s.items.length)
         }
     }

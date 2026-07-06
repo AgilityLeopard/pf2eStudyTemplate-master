@@ -1,11 +1,14 @@
 <template>
     <div>
-        <span>
-            {{ title }}:
+        <div class="rune-selector-header">
+            <!-- <div class="subtitle-2 font-weight-medium">
+                {{ title }}
+            </div> -->
+
             <v-btn outlined small color="primary" @click="dialog = true">
                 {{ label }}
             </v-btn>
-        </span>
+        </div>
 
         <v-dialog v-model="dialog" max-width="1400px">
             <v-card>
@@ -16,18 +19,20 @@
 
                     <v-row>
                         <v-col cols="6" sm="4">
-                            <v-list dense>
-                                <v-list-item v-for="rune in runes" :key="rune.key" @click="select(rune.key)"
-                                    :class="{ 'selected-rune': isSelected(rune.key) }">
-                                    <v-list-item-title>
-                                        {{ rune.name }}
-                                    </v-list-item-title>
+                            <div class="runes-list">
+                                <v-list dense>
+                                    <v-list-item v-for="rune in runes" :key="rune.key" @click="select(rune.key)"
+                                        :class="{ 'selected-rune': isSelected(rune.key) }">
+                                        <v-list-item-title>
+                                            {{ rune.name }}
+                                        </v-list-item-title>
 
-                                    <v-list-item-icon v-if="isSelected(rune.key)">
-                                        <v-icon color="success">mdi-check</v-icon>
-                                    </v-list-item-icon>
-                                </v-list-item>
-                            </v-list>
+                                        <v-list-item-icon v-if="isSelected(rune.key)">
+                                            <v-icon color="success">mdi-check</v-icon>
+                                        </v-list-item-icon>
+                                    </v-list-item>
+                                </v-list>
+                            </div>
                         </v-col>
 
                         <v-col cols="6" sm="8">
@@ -58,7 +63,7 @@ export default {
         CardItem
     },
     props: {
-        value: [Number, Array],
+        value: [Number, Array, String],
         runes: Array,
         title: String,
         multiple: Boolean,
@@ -115,3 +120,23 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.runes-list {
+    max-height: 600px;
+    /* нужная высота */
+    overflow-y: auto;
+}
+
+.rune-selector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.rune-selector-header .v-btn {
+    flex-shrink: 0;
+}
+</style>

@@ -918,9 +918,18 @@ export default {
       }
 
       let items = talents; // все данные
+      const itemName = talents.map(item => {
+        const [nameRu, nameEng] = item.name.split(/\s*\/\s*/, 2);
 
+        return {
+          ...item,
+          name: nameRu,
+          nameEng: nameEng || nameRu
+        };
+      });
 
-      this.talentList = talents;
+      this.talentList = itemName;
+
       const rules = talents.flatMap(t => t.system.rules).filter(Boolean).filter(t => !['FlatModifier', 'RollOption', 'AdjustModifier', 'ItemAlteration'].includes(t.key));
       // console.table(rules);
 
@@ -963,6 +972,7 @@ export default {
         aggregatedTalent.place = talent.place;
         aggregatedTalent.level = talent.level;
         aggregatedTalent.system = rawTalent.system;
+        aggregatedTalent.description = talent.description;
         // for each special talent, check respectively
         if (talent.options) {
           aggregatedTalent.selected = talent.selected;
@@ -1029,6 +1039,7 @@ export default {
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
+        aggregatedTalent.description = talent.description;
         // for each special talent, check respectively
         if (talent.options) {
           aggregatedTalent.selected = talent.selected;
@@ -1078,6 +1089,7 @@ export default {
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
+        aggregatedTalent.description = talent.description;
         // for each special talent, check respectively
         if (talent.options) {
           aggregatedTalent.selected = talent.selected;
@@ -1126,6 +1138,7 @@ export default {
         aggregatedTalent.cost = talent.cost;
         aggregatedTalent.label = aggregatedTalent.name;
         aggregatedTalent.place = talent.place;
+        aggregatedTalent.description = talent.description;
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
@@ -1176,7 +1189,7 @@ export default {
         aggregatedTalent.place = talent.place;
         aggregatedTalent.level = talent.level;
         aggregatedTalent.trait = talent.traits;
-
+        aggregatedTalent.description = talent.description;
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;
@@ -1227,6 +1240,7 @@ export default {
         aggregatedTalent.place = talent.place;
         aggregatedTalent.level = talent.level;
         aggregatedTalent.trait = talent.traits;
+        aggregatedTalent.description = talent.description;
         // for each special talent, check respectively
         if (talent.selected) {
           aggregatedTalent.selected = talent.selected;

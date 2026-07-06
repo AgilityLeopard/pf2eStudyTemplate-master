@@ -1213,7 +1213,7 @@ export default {
       const config = {
         params: { /*source: this.sources.join(',')*/ },
       };
-      console.log(sources, this.sources)
+
       this.loading = true;
       const { data } = await this.$axios.get('/api/psychic-powers/', config);
       this.loading = false;

@@ -20,7 +20,7 @@ router.get('/', (request, response) => {
   if (request.query.source) {
     const sources = request.query.source.split(',');
     items = items.filter(i => i.source && i.source.key ? sources.includes(i.source.key) : false);
-    console.log(sources)
+
   }
 
   // if (filterSourceString) {
