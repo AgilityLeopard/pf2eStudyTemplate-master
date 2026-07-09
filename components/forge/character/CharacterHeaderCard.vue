@@ -331,12 +331,16 @@ export default {
                 SavingRepository: this.SavingRepository,
                 speedRepository: this.speedRepository,
                 skills: this.skills,
-                skillAttack: this.skillAttack,
+                skillAttack: this.$store.getters["characters/characterskillAttackById"](
+                    this.characterId
+                ),
                 talents: this.$store.getters['characters/characterTalentsById'](this.characterId),
 
                 characterSaving: this.$store.getters["characters/characterSavingById"](
                     this.characterId
                 ),
+
+                psychicPowers: this.$store.getters['characters/characterSpellsById'](this.characterId),
                 weaponRunePotency: this.weaponRunePotency,
                 characterSkills: this.$store.getters['characters/characterSkillsById'](this.characterId),
                 money: this.$store.getters['characters/characterMoneyById'](this.characterId),
@@ -344,6 +348,8 @@ export default {
                 wargear: this.$store.getters["characters/characterWargearById"](
                     this.characterId
                 ),
+                DamageType: this.DamageType,
+                enc: this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.level),
 
                 speciesLabel: this.$store.getters['characters/characterSpeciesLabelById'](this.characterId),
                 backgroundLabel: this.$store.getters['characters/characterBackgroundLabelById'](this.characterId),

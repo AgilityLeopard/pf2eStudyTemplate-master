@@ -188,9 +188,9 @@
                 <v-row>
 
                   <!-- LEFT -->
-                  <v-col cols="6">
+                  <v-col cols="12" md="6" class="pb-0 pb-md-3">
 
-                    <v-sheet class="pa-2 overflow-y-auto" height="600" outlined>
+                    <v-sheet class="section-sheet" outlined>
 
                       <v-expansion-panels multiple>
 
@@ -206,7 +206,7 @@
 
                             <v-card v-for="(items, level) in section.levels" :key="level" class="mb-2" outlined>
 
-                              <v-list dense>
+                              <v-list>
 
                                 <v-list-item v-for="item in items" :key="item.name" @click="openFeat(item)"
                                   class="feat-row">
@@ -235,9 +235,9 @@
                   </v-col>
 
                   <!-- RIGHT -->
-                  <v-col cols="6">
+                  <v-col cols="12" md="6" class="pb-0 pb-md-3">
 
-                    <v-sheet class="pa-2 overflow-y-auto" height="600" outlined>
+                    <v-sheet class="section-sheet" outlined>
 
                       <v-expansion-panels multiple>
 
@@ -253,7 +253,7 @@
 
                             <v-card v-for="(items, level) in section.levels" :key="level" class="mb-2" outlined>
 
-                              <v-list dense>
+                              <v-list>
 
                                 <v-list-item v-for="item in items" :key="item.name" @click="openDialogItem(item)"
                                   class="feat-row">
@@ -309,6 +309,8 @@
                   <v-expansion-panel v-if="characterArchetype && characterArchetype.spellProgression"
                     class="custom-panel">
                     <v-expansion-panel-header>Заклинания {{ archetype }}</v-expansion-panel-header>
+
+
                     <v-expansion-panel-content>
                       <div class="pa-2">
                         <v-col :cols="12" v-if="
@@ -345,51 +347,35 @@
                             </h2>
                             <div class="ammo-container" v-if="characterArchetype.prepared === false">
                               <!-- Патроны -->
-                              <div class="magazine" @click="
-                                handleClick(
-                                  $event,
-                                  levelAncestry - 1,
-                                  characterSpont[levelAncestry - 1]
-                                    ? characterSpont[levelAncestry - 1].value
-                                    : characterArchetype.spellProgression[
-                                    characterLevel()
-                                    ]?.[levelAncestry - 1]
-                                )
-                                " @contextmenu.prevent="
-                                  handleClick(
-                                    $event,
-                                    levelAncestry - 1,
-                                    characterSpont[levelAncestry - 1]
-                                      ? characterSpont[levelAncestry - 1].value
-                                      : characterArchetype.spellProgression[
-                                      characterLevel()
-                                      ]?.[levelAncestry - 1]
-                                  )
-                                  ">
-                                <span v-for="n in characterArchetype.spellProgression[
-                                  characterLevel()
-                                ]?.[levelAncestry - 1] || 0" class="bullet" :class="{
-                                  filled:
-                                    n <=
-                                    (characterSpont[levelAncestry - 1]?.value || 0),
-                                }">
-                                  🔸
-                                  <!-- 
-                          <p>
-                            Value:
-                            {{ characterSpont[levelAncestry - 1]?.value }}
-                          </p>
-                          <p>n: {{ n }}</p> -->
-                                </span>
+                              <div class="spell-charges">
+                                <div
+                                  v-for="n in characterArchetype.spellProgression[characterLevel()]?.[levelAncestry - 1] || 0"
+                                  :key="n" class="charge-dot" :class="{
+                                    used: n > (characterSpont[levelAncestry - 1]?.value || 0)
+                                  }" @click.left="changeBullet(levelAncestry - 1, -1)"
+                                  @contextmenu.prevent="changeBullet(levelAncestry - 1, +1)">
+                                  <v-icon small>
+                                    mdi-flash
+                                  </v-icon>
+                                </div>
                               </div>
                             </div>
 
                             <v-data-table :headers="filteredHeaders" :items="psychicPowers(levelAncestry - 1)"
                               :item-class="getItemClass" item-key="cellIndex" hide-default-footer dense>
+
                               <template v-slot:item.cast="{ item }">
                                 <v-btn v-if="item.name" outlined x-small color="info" @click="updateCast(item)">
                                   <v-icon left>mdi-auto-fix</v-icon> Сотв
                                 </v-btn>
+                              </template>
+
+                              <template v-slot:item.signature="{ item }">
+                                <v-icon
+                                  v-if="item.disableSign === false && (levelAncestry - 1) !== 0 && characterLevel() >= 3"
+                                  small :color="isSignature(item) ? 'amber' : ''" @click="toggleSignature(item)">
+                                  mdi-star-circle
+                                </v-icon>
                               </template>
 
                               <template v-slot:item.name="{ item }">
@@ -450,8 +436,9 @@
 
 
                               <template v-slot:item.button="{ item }">
-                                <v-btn v-if="item.name" outlined x-small color="error"
-                                  @click.stop.prevent="removeTalent(item)">
+                                <v-btn
+                                  v-if="item.name && ((characterArchetype.prepared === false && item.disableSign === false) || characterArchetype.prepared === true)"
+                                  outlined x-small color="error" @click.stop.prevent="removeTalent(item)">
                                   <v-icon left>delete</v-icon> Удалить
                                 </v-btn>
 
@@ -467,6 +454,126 @@
                           </v-card>
                         </v-col>
                       </div>
+                    </v-expansion-panel-content>
+
+
+                  </v-expansion-panel>
+
+                  <v-expansion-panel class="custom-panel">
+                    <v-expansion-panel-header>Фокусные заклинания</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+
+
+                      <v-col :cols="12" v-if="characterArchetype && characterArchetype.spellFocusPool">
+                        <v-col :cols="12">
+                          <span>
+                            <br />
+                            <b>Сложность заклинаний:</b> {{ ModAttributeClassSpell() }}
+                          </span>
+
+                          <span>
+                            <br />
+                            <b>Атака заклинанием:</b>
+                            +{{ ModAttributeAttackSpell() }}
+                          </span>
+
+                          <span>
+                            <br />
+                            <b>Запас фокуса:</b>
+                            {{ characterArchetype.spellFocusPool }}
+                          </span>
+                        </v-col>
+
+                        <v-card class="mb-4" dense outlined v-for="rank in [0, 1]" :key="rank">
+                          <h2 class="subtitle-1 text-center">
+                            {{ rank === 0 ? "Чары" : "Фокусные заклинания" }}
+                          </h2>
+
+                          <v-data-table :headers="filteredHeadersRitual"
+                            :items="generateTableFocusRows(rank).filter(r => r.rank === rank)" item-key="cellIndex"
+                            hide-default-footer dense>
+                            <template v-slot:item.name="{ item }">
+                              <span v-if="!item.name">Пустой слот</span>
+                              {{ item.name }}
+                            </template>
+
+                            <template v-slot:item.action="{ item }">
+                              <div v-if="item?.time">
+                                <img :src="iconAction(item?.time?.value)"
+                                  :class="{ 'invert-icon': !$vuetify.theme.dark }" />
+                              </div>
+                            </template>
+
+                            <template v-slot:item.duration="{ item }">
+                              <span v-if="item?.duration?.sustained">
+                                Поддерживаемое до
+                              </span>
+                              {{ item?.duration?.value }}
+                            </template>
+
+                            <template v-slot:item.distance="{ item }">
+                              {{ item?.distance || "-" }}
+                            </template>
+
+                            <template v-slot:item.saving="{ item }">
+                              <span v-if="item?.defense?.save">
+                                <span v-if="item?.defense?.save?.basic">
+                                  Базовый
+                                </span>
+
+                                {{
+                                  SavingRepository.find(
+                                    t => t.key === item?.defense?.save?.statistic
+                                  ).name
+                                }}
+                              </span>
+
+                              <span v-if="item?.traits?.includes('атака')">
+                                КБ
+                              </span>
+                            </template>
+
+                            <template v-slot:item.area="{ item }">
+                              <span v-if="item?.area">
+                                {{ item.area.value }}-фут.
+                                {{ areaRepository[item.area.type] }}
+                              </span>
+
+                              <span v-if="item?.area && item?.target">
+                                /
+                              </span>
+
+                              <span v-if="item?.target">
+                                {{ item.target }}
+                              </span>
+                            </template>
+
+                            <template v-slot:item.view="{ item }">
+                              <v-btn v-if="item.name" outlined x-small color="info" @click="openDialogItem(item)">
+                                <v-icon left>visibility</v-icon>
+                                Просмотр
+                              </v-btn>
+                            </template>
+
+                            <template v-slot:item.button="{ item }">
+                              <v-btn v-if="item.name && item.removeBlock === false" outlined x-small color="error"
+                                @click.stop.prevent="removeTalent(item)">
+                                <v-icon left>delete</v-icon>
+                                Удалить
+                              </v-btn>
+
+                              <v-btn v-if="!item.name" outlined x-small color="success"
+                                @click="updatePreview(item.rank, item.cell)">
+                                <v-icon left>add</v-icon>
+                                Добавить
+                              </v-btn>
+                            </template>
+                          </v-data-table>
+                        </v-card>
+                      </v-col>
+
+
+
                     </v-expansion-panel-content>
                   </v-expansion-panel>
 
@@ -548,6 +655,8 @@
                       </div>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
+
+
                 </v-expansion-panels>
 
                 <v-dialog v-model="psychicDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="1200px" scrollable>
@@ -787,21 +896,31 @@
                   <!-- LEFT: список -->
                   <div class="notes-sidebar">
 
-                    <v-btn small block color="primary" @click="createNote">
+                    <v-btn small block class="mb-2" color="primary" @click="createNote">
                       + Добавить
                     </v-btn>
 
-                    <v-dialog v-model="settingsDialog" max-width="500">
-                      <v-card class="pa-4">
+                    <v-dialog v-model="settingsDialog" :fullscreen="$vuetify.breakpoint.xsOnly" max-width="500">
 
+
+                      <v-card class="pa-4">
+                        <v-toolbar flat dense>
+                          <v-toolbar-title>Настройки заметки</v-toolbar-title>
+                          <v-spacer />
+                          <v-btn icon @click="settingsDialog = false">
+                            <v-icon>close</v-icon>
+                          </v-btn>
+                        </v-toolbar>
                         <!-- TITLE -->
-                        <v-text-field v-model="editNote.title" label="Заголоваок" dense outlined class="mb-3" />
+                        <v-text-field v-model="editNote.title" label="Заголовок" dense outlined class="mb-3" />
 
                         <!-- ICON + COLOR -->
-                        <div class="d-flex align-center mb-4">
+                        <div class="mb-4" :class="$vuetify.breakpoint.xsOnly
+                          ? 'd-flex flex-column align-start'
+                          : 'd-flex align-center'">
 
                           <!-- ICON -->
-                          <v-menu v-model="iconPicker" offset-y>
+                          <v-menu v-model="iconPicker" class="mr-3" offset-y>
                             <template v-slot:activator="{ on, attrs }">
                               <v-btn icon large v-bind="attrs" v-on="on">
                                 <v-icon>{{ editNote.icon || 'mdi-notebook' }}</v-icon>
@@ -853,21 +972,25 @@
                         </div>
 
                         <!-- ACTIONS -->
-                        <div class="d-flex justify-space-between">
+                        <div :class="$vuetify.breakpoint.xsOnly
+                          ? 'd-flex flex-column'
+                          : 'd-flex justify-space-between align-center'">
 
-                          <!-- DELETE -->
-                          <v-btn color="red" text @click="deleteNote(editNote.id)">
-                            Удалить Заметку
+                          <v-btn color="red" text :block="$vuetify.breakpoint.xsOnly" class="mb-2"
+                            @click="deleteNote(editNote.id)">
+                            Удалить заметку
                           </v-btn>
 
-                          <!-- RIGHT SIDE -->
-                          <div>
-                            <v-btn text @click="settingsDialog = false">
+                          <div :class="$vuetify.breakpoint.xsOnly
+                            ? 'd-flex flex-column'
+                            : ''">
+                            <v-btn text :block="$vuetify.breakpoint.xsOnly" class="mb-2"
+                              @click="settingsDialog = false">
                               Отмена
                             </v-btn>
 
-                            <v-btn color="primary" @click="saveNoteSettings">
-                              Обновление
+                            <v-btn color="primary" :block="$vuetify.breakpoint.xsOnly" @click="saveNoteSettings">
+                              Сохранить
                             </v-btn>
                           </div>
 
@@ -1280,6 +1403,9 @@ export default {
   data() {
     return {
       statDialog: false,
+      characterSignatureSpells: {
+
+      },
       dialogComponent: null,
       dialogTitle: '',
       dialogStat: {
@@ -1395,6 +1521,7 @@ export default {
           sortable: false, class: 'small pa-1'
           , width: '50px'
         },
+        { text: 'Коронное', value: 'signature', align: 'center', class: 'small pa-1', sortable: false },
         {
           text: 'Название',
           value: 'name',
@@ -1536,6 +1663,12 @@ export default {
     //---------------------------
     notes() {
       return this.$store.getters['characters/characterFluffNotesById'](this.characterId)
+    },
+    signatureSpells() {
+      const data =
+        this.$store.getters['characters/characterSignatureSpellsById'](this.characterId);
+
+      return Array.isArray(data) ? data : [];
     },
     activeNoteTitle() {
       return this.activeNote?.title || ''
@@ -1720,7 +1853,16 @@ export default {
       return this.$store.getters['characters/characterAscensionLabelById'](this.characterId);
     },
     characterSpont() {
-      return this.$store.getters['characters/characterSpellsSpontaneousById'](this.characterId);
+      const list =
+        this.$store.getters['characters/characterSpellsSpontaneousById'](this.characterId) || [];
+
+      const map = {};
+
+      list.forEach(x => {
+        map[x.level] = x;
+      });
+
+      return map;
     },
     characterFactionKey() {
       return this.$store.getters['characters/characterFactionKeyById'](this.characterId);
@@ -2396,11 +2538,14 @@ export default {
       if (this.characterArchetype.prepared === false) {
         return this.psychicPowersHeaders.filter(h => h.value !== 'cast');
       }
+      else {
+        return this.psychicPowersHeaders.filter(h => h.value !== 'signature');
+      }
       return this.psychicPowersHeaders;
     },
     filteredHeadersRitual() {
 
-      return this.psychicPowersHeaders.filter(h => h.value !== 'cast');
+      return this.psychicPowersHeaders.filter(h => h.value !== 'cast' && h.value !== 'signature');
 
     },
     otherAbilities() {
@@ -2695,7 +2840,9 @@ export default {
 
       return wear && wear.runes ? wear.runes.potency : 0
     },
-
+    signatureSpellsMap() {
+      return this.characterSignatureSpells || {};
+    }
 
 
   },
@@ -2767,7 +2914,13 @@ export default {
 
   },
   methods: {
+    isSignature(item) {
+      if (!item.key) return false
 
+      return this.signatureSpells.some(
+        s => s.rank === item.rank && s.key === item.key
+      );
+    },
     /*Стили Картинок */
     getContrastColor(hex) {
       if (!hex) return '#000'
@@ -3103,6 +3256,13 @@ export default {
       // this.activeStatuses = this.activeStatuses.filter(s => s.key !== statusKey);
     },
 
+    spendCharge(level) {
+      const pool = this.characterSpont[level];
+
+      if (!pool || pool.value <= 0) return;
+
+      this.$set(pool, 'value', pool.value - 1);
+    },
     // Проверка активности состояния
     isStatusActive(statusKey) {
       return this.activeStatuses.some(s => s.key === statusKey);
@@ -3226,53 +3386,162 @@ export default {
     psychicPowers(levelIndex) {
       const powers = this.$store.getters['characters/characterSpellsById'](this.characterId);
 
-      const progression = this.characterArchetype.spellProgression[this.characterLevel()]?.[levelIndex] || 0;
-      //const prep = this.$store.getters["characters/characterSpellsPrepareById"](this.characterId);
-      if (progression !== 0) {
-        //this.crossedRows = [];
-        let spells = [];
-        for (let i = 1; i <= progression; i++) {
+      const progression =
+        this.characterArchetype.spellProgression[this.characterLevel()]?.[levelIndex] || 0;
 
-          const rawTalent = this.psychicPowersList?.find(s => s.key === powers.find((power) => power.rank === levelIndex && power.cell === i)?.key);
-          const spell = {
-            ...powers.find((power) => power.rank === levelIndex && power.cell === i),
-            ...rawTalent,
-            rank: levelIndex,
-            cell: i,
-            trait: rawTalent?.traits
-          }
+      if (progression === 0) return [];
 
-          if (spell.damage && spell.heightening?.damage /*&& spell.key === 'grisly-growths'*/) {
+      const signatureKey = this.characterSignatureSpells?.[levelIndex];
 
+      const spells = [];
 
-            const cant = this.characterArchetype.spellProgression[this.characterLevel()].findIndex(
-              (t) => t == 0
-            ) - 1;
+      for (let i = 1; i <= progression; i++) {
 
-            const index = spell.damage?.formula?.indexOf("d", 0);
-            ///Кубики до и после
-            const dice = spell.damage?.formula?.slice(0, index);
-            const diceSize = spell.damage.formula?.slice(index + 1);
+        const baseSpell =
+          powers.find(
+            power => power.rank === levelIndex && power.cell === i
+          );
 
-            const heightened = Object.values(spell.heightening?.damage)[0];
+        const rawTalent = this.psychicPowersList?.find(
+          s => s.key === baseSpell?.key
+        );
 
-            const index1 = heightened?.indexOf("d", 0);
-            const diceInterval = heightened?.slice(0, index1);
-            const interval = spell.heightening?.interval;
+        let spell = {
+          ...baseSpell,
+          ...rawTalent,
+          rank: levelIndex,
+          isSignature: false,
+          disableSign: false,
+          cell: i,
+          trait: rawTalent?.traits
+        };
 
-            const rank = spell.traits.join(',').includes('заговор') ? cant : spell.rank;
+        // 💥 SIGNATURE LOGIC
+        const signature = this.signatureSpells.find(s => s.key === spell.key);
 
-            const powerLevel2 = parseInt(dice) + (rank - interval) * (parseInt(diceInterval));
-            spell.Power = "<span style='color: green'>" + powerLevel2 + "d" + diceSize + "</span>";
-          }
-
-          spells.push(spell);
+        if (signature && this.characterLevel() >= 3) {
+          spell.isSignature = true;
+          spell.signatureRank = signature.rank;
         }
-        return spells;
+
+        // =========================
+        // 🔥 DAMAGE LOGIC (как у тебя)
+        // =========================
+        if (spell?.damage && spell?.heightening?.damage) {
+
+          const cant =
+            this.characterArchetype.spellProgression[this.characterLevel()]
+              .findIndex((t) => t == 0) - 1;
+
+          const index = spell.damage?.formula?.indexOf("d", 0);
+          const dice = spell.damage?.formula?.slice(0, index);
+          const diceSize = spell.damage.formula?.slice(index + 1);
+
+          const heightened = Object.values(spell.heightening?.damage)[0];
+
+          const index1 = heightened?.indexOf("d", 0);
+          const diceInterval = heightened?.slice(0, index1);
+          const interval = spell.heightening?.interval;
+
+          const rank = spell.traits.join(',').includes('заговор')
+            ? cant
+            : spell.rank;
+
+          const powerLevel2 =
+            parseInt(dice) +
+            Math.floor((rank - spell.level) / interval) * parseInt(diceInterval);
+
+          spell.Power =
+            "<span style='color: green'>" +
+            powerLevel2 +
+            "d" +
+            diceSize +
+            "</span>";
+        }
+
+
+
+        spells.push(spell);
       }
 
-      return [];
+      // =====================================
+      // Виртуальные сигнатурные заклинания
+      // =====================================
 
+      if (levelIndex > 0 && this.characterLevel() >= 3) {
+
+        // Берем только те сигнатурные,
+        // которые уже можно усиливать
+        const signatures = this.signatureSpells.filter(
+          s => s.rank <= levelIndex
+        );
+
+        signatures.forEach(signature => {
+
+          // Если такое заклинание уже есть в таблице этого ранга —
+          // ничего не добавляем
+          if (spells.some(spell => spell.key === signature.key))
+            return;
+
+          const raw = this.psychicPowersList?.find(
+            sp => sp.key === signature.key
+          );
+
+          if (!raw)
+            return;
+
+          const virtualSpell = {
+            ...raw,
+
+            key: raw.key,
+
+            rank: levelIndex,              // текущий отображаемый ранг
+            sourceRank: signature.rank,    // с какого ранга стало сигнатурным
+
+            cell: progression + spells.length + 1,
+
+            isSignature: true,
+            signature: true,
+            disableSign: true,
+            signatureCopy: true,
+          };
+
+          // ----- Damage -----
+          if (virtualSpell.damage && virtualSpell.heightening?.damage) {
+
+            const cant =
+              this.characterArchetype.spellProgression[this.characterLevel()]
+                .findIndex(t => t == 0) - 1;
+
+            const index = virtualSpell.damage.formula.indexOf("d");
+
+            const dice = virtualSpell.damage.formula.slice(0, index);
+            const diceSize = virtualSpell.damage.formula.slice(index + 1);
+
+            const heightened = Object.values(
+              virtualSpell.heightening.damage
+            )[0];
+
+            const index1 = heightened.indexOf("d");
+
+            const diceInterval = heightened.slice(0, index1);
+            const interval = virtualSpell.heightening.interval;
+
+            const rank = virtualSpell.traits.includes("заговор")
+              ? cant
+              : virtualSpell.rank;
+
+            virtualSpell.Power =
+              `<span style='color:green'>${parseInt(dice) + Math.floor((rank - virtualSpell.level) / interval) * parseInt(diceInterval)}d${diceSize}</span>`;
+          }
+
+          spells.push(virtualSpell);
+
+        });
+
+      }
+
+      return spells;
     },
     groupedGear() {
       const groups = {};
@@ -3289,12 +3558,17 @@ export default {
       }));
     },
     getItemClass(item) {
-      return item.cast ? 'crossed-row' : ''
+      if (this.characterArchetype?.prepared === false)
+        return item.isSignature ? 'signature-row' : '';
+      else
+        return item.cast ? 'crossed-row' : ''
     },
     updateCast(item) {
       const spell = this.$store.getters["characters/characterSpellsById"](
         this.characterId
       );
+
+
       if (spell.find(s => s.id === item.id)) {
         item.cast = item.rank !== 0 ? !item.cast : item.cast;
         this.$store.commit('characters/editCharacterSpell', { id: this.characterId, talentId: item.id, cast: item.cast });
@@ -3654,6 +3928,32 @@ export default {
 
 
     },
+    changeBullet(level, delta) {
+      const max =
+        this.characterArchetype.spellProgression?.[this.characterLevel()]?.[level] || 0;
+
+      if (!this.characterSpont[level]) {
+        this.$store.commit('characters/addCharacterSpontSpell', {
+          id: this.characterId,
+          level,
+          value: max,
+        });
+      }
+
+      const current = this.characterSpont[level].value || 0;
+
+      let next = current + delta;
+
+      // ограничения
+      if (next < 0) next = 0;
+      if (next > max) next = max;
+
+      this.$store.commit('characters/addCharacterSpontSpell', {
+        id: this.characterId,
+        level,
+        value: next,
+      });
+    },
     removeBullet(level, value) {
       const progression = this.characterArchetype.spellProgression[this.characterLevel()]?.[level] || 0;
       if (!this.characterSpont[level]) {
@@ -3677,8 +3977,23 @@ export default {
     removeTalent(talent) {
       const id = this.characterId;
       const source = `talent.${talent.id}`;
-      if (!talent.ritual)
+
+      if (!talent.ritual) {
+        const existing = this.signatureSpells.find(
+          s => s.rank === talent.level && s.key === talent.key
+        );
+
+        // если уже есть — убираем
+        if (existing) {
+          this.$store.commit('characters/removeSignatureSpell', {
+            id: this.characterId,
+            rank: talent.level
+          });
+
+        }
+
         this.$store.commit('characters/removeCharacterSpell', { id, talentId: talent.id });
+      }
       else
         this.$store.commit('characters/removeCharacterRitualSpell', { id, talentId: talent.id });
     },
@@ -3801,7 +4116,66 @@ export default {
       );
     },
 
+    generateTableFocusRows(levelIndex) {
+      const progression =
+        this.$store.getters['characters/characterFocusPoolById'](this.characterId);
+      const spellFocus = this.$store.getters['characters/characterFocusSpellById'](this.characterId);
+      source: "archetype"
 
+
+      let spells = [];
+      let i = 0;
+      spellFocus.forEach(spell => {
+        const spell1 = {
+          ...this.characterSpellFocus(levelIndex, i, spell.key),
+          //  name: this.characterSpell(levelIndex, i).name ? this.characterSpell(levelIndex, i).name : 'пустой слот',
+          rank: this.characterSpellFocus(levelIndex, i, spell.key)?.traits?.includes('фокус') ? 1 : 0,
+          cell: i,
+          removeBlock: spell.source === "archetype" ? true : false,
+        }
+        if (this.characterSpellFocus(levelIndex, i, spell1.key))
+          spells.push(spell1);
+
+        i++;
+      }
+      )
+      return spells || [];
+
+
+    },
+    characterSpellFocus(rank, cell, spell) {
+      // { id, name, cost, selection}
+      if (this.psychicPowersList === undefined) {
+        return false;
+      }
+
+      const rawTalent = this.psychicPowersList.find(t => t.key === spell);
+
+      if (rawTalent === undefined) {
+
+        return []
+      }
+
+      const aggregatedTalent = Object.assign({}, rawTalent);
+      //console.info(`[${talent.id}] Found ${aggregatedTalent.name} for ${talent.key}`);
+
+      aggregatedTalent.description = rawTalent.description;
+
+      aggregatedTalent.id = rawTalent.id;
+
+      // aggregatedTalent.cost = talent.cost;
+
+      aggregatedTalent.label = aggregatedTalent.name;
+      aggregatedTalent.rank = rawTalent.rank;
+      aggregatedTalent.cell = rawTalent.cell;
+
+      if (rawTalent.selected) {
+        aggregatedTalent.selected = rawTalent.selected;
+
+      }
+      return aggregatedTalent;
+
+    },
     ModAttributeClass() {
       const char1 = this.profiencyRepository[this.SkillClass()] ? this.profiencyRepository[this.SkillClass()] : 0;
       const char3 = this.characterLevel();
@@ -3809,7 +4183,27 @@ export default {
       return 10 + parseInt(char1) + parseInt(char3);
 
     },
+    toggleSignature(item) {
+      const existing = this.signatureSpells.find(
+        s => s.rank === item.level
+      );
 
+      // если уже есть — убираем
+      if (existing) {
+        this.$store.commit('characters/removeSignatureSpell', {
+          id: this.characterId,
+          rank: item.level
+        });
+        return;
+      }
+
+      // иначе ставим новое (заменяя старое автоматически)
+      this.$store.commit('characters/setSignatureSpell', {
+        id: this.characterId,
+        rank: item.level,
+        key: item.key
+      });
+    },
     characterNotesOpenEditor() {
       this.characterNotesEditorModel = this.$store.getters['characters/characterFluffNotesById'](this.characterId);
       this.characterNotesShowEditor = true;
@@ -4384,7 +4778,7 @@ td.small {
    TABLE STRIKE
 ========================= */
 
-.crossed-row td {
+::v-deep .crossed-row td {
   text-decoration: line-through;
   color: var(--ui-muted);
 }
@@ -4496,6 +4890,44 @@ td.small {
   height: 100%;
 }
 
+.tiptap-editor {
+
+  min-height: 300px;
+
+}
+
+@media (max-width:600px) {
+
+  .notes-wrapper {
+    flex-direction: column;
+  }
+
+  .notes-sidebar {
+    width: 100% !important;
+    max-width: none !important;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    padding: 8px;
+    overflow: visible;
+  }
+
+  .notes-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+  }
+}
+
+// .notes-list {
+//   display: flex;
+//   overflow-x: auto;
+//   gap: 8px;
+// }
+
+.note-item {
+  flex: 0 0 auto;
+}
+
 .notes-sidebar {
   width: 220px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -4549,5 +4981,62 @@ td.small {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.spell-charges {
+  display: flex;
+  gap: 6px;
+  padding: 6px 0;
+  align-items: center;
+}
+
+.charge-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.charge-dot:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+}
+
+.charge-dot.used {
+  opacity: 0.25;
+  filter: grayscale(1);
+}
+
+::v-deep .signature-row {
+  background: linear-gradient(90deg,
+      rgba(255, 215, 0, 0.15),
+      rgba(255, 140, 0, 0.08));
+  border-left: 3px solid gold;
+  font-weight: 600;
+}
+
+::v-deep .signature-row td {
+  color: #ffd86b;
+}
+
+.section-sheet {
+  padding: 8px;
+  overflow-y: auto;
+  height: 600px;
+}
+
+@media (max-width:960px) {
+  .section-sheet {
+    height: auto;
+    overflow: visible;
+  }
 }
 </style>

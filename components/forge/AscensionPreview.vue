@@ -82,7 +82,7 @@
       </v-btn>
       <v-spacer />
       <v-btn class="ui-btn ui-btn--primary" @click="$emit('select', item)">
-        Выберите класс
+        Выберите Предысторию
       </v-btn>
     </v-card-actions>
 

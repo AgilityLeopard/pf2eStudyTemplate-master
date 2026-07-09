@@ -388,6 +388,7 @@ export default {
         cell: talent.cell,
         duration: talent.duration,
         time: talent.time,
+        isSignature: false,
         cast: false,
         cost: talent.cost,
         placeholder: (match !== null && match !== undefined) ? match[1] : undefined,

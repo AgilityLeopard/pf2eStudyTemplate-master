@@ -48,7 +48,7 @@
 
             <!-- Source -->
             <v-chip v-if="item.source" x-small outlined color="info">
-              {{ item.source.key.toUpperCase() }}
+              {{ item.source.book.toUpperCase() }}
             </v-chip>
 
             <!-- Hint (optional) -->

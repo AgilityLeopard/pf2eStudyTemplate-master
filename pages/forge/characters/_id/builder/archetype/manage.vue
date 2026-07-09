@@ -5,31 +5,48 @@
 
     <v-col v-else cols="12" lg="10">
 
-      <!-- 🧙 Header -->
-      <v-card class="mb-4 pa-4" outlined>
+      <v-card class="preview-section mb-4 pa-4" outlined>
+
         <v-row align="center">
-          <v-col cols="12" md="8">
-            <h2 class="text-h4 font-weight-bold">{{ item.name }}</h2>
-            <div class="grey--text mb-2">{{ item.hint }}</div>
 
-            <v-btn small outlined color="primary" @click="doChangeMode">
-              <v-icon small left>mdi-cog</v-icon>
-              Сменить класс
-            </v-btn>
-          </v-col>
+          <v-col cols="12" md="3" class="text-center order-md-last">
 
-          <v-col cols="12" md="4" class="text-right">
             <v-avatar size="96" tile>
               <img :src="avatar" />
             </v-avatar>
+
           </v-col>
+
+
+          <v-col cols="12" md="9">
+
+            <div class="preview-title">
+              {{ item.name }}
+            </div>
+
+            <div class="preview-subtitle mb-3">
+              {{ item.hint }}
+            </div>
+
+
+            <v-btn small outlined color="primary" class="mt-2" @click="doChangeMode">
+              <v-icon small left>
+                mdi-cog
+              </v-icon>
+
+              Сменить класс
+            </v-btn>
+
+          </v-col>
+
         </v-row>
+
       </v-card>
 
       <!-- ⚙️ Основные характеристики -->
       <v-row class="d-flex" align="stretch">
         <v-col cols="12" md="6">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <v-card outlined class="pa-4 preview-section">
             <h3 class="text-h6 mb-2">Ключевая характеристика</h3>
 
             <div v-if="item.keyAbility.length">
@@ -46,7 +63,7 @@
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <v-card outlined class="pa-4 preview-section">
             <h3 class="text-h6 mb-2">Хиты</h3>
             <strong>{{ item.hitpoints }} + мод Телосложения</strong>
 
@@ -63,9 +80,9 @@
 
 
       <!-- ⚔️ Атаки и Защиты -->
-      <v-row class="d-flex" align="stretch">
+      <v-row align="stretch">
         <v-col cols="12" md="4">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <v-card outlined class="pa-4 preview-section fill-height">
             <h3 class="text-h6"> Спасброски/КС </h3>
 
             <div v-for="item1 in SavingRepository" :key="item1.key">
@@ -85,7 +102,7 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <v-card outlined class="pa-4 preview-section fill-height">
             <h3 class="text-h6">Атаки</h3>
 
             <div v-for="item1 in WeaponRepository" :key="item1.key">
@@ -98,7 +115,7 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <v-card outlined class="pa-4 preview-section fill-height">
             <h3 class="text-h6">Защиты</h3>
 
             <div v-for="item1 in DefenceRepository" :key="item1.key">
@@ -112,7 +129,7 @@
       </v-row>
 
       <!-- 🎯 Навыки -->
-      <v-card outlined class="pa-4 mt-4" style="border-color: #c75d5d;">
+      <v-card outlined class="mt-4 preview-section">
         <h3 class="text-h6 mb-2">Навыки</h3>
 
         <div v-if="item.skillTrainedChoice.length">
@@ -133,13 +150,13 @@
 
 
       <!-- 🌟 Фичи -->
-      <v-card class="mt-4 pa-4" outlined>
+      <v-card class="preview-section mt-4" outlined>
         <h2 class="text-h5 mb-4">Классовые особенности</h2>
 
-        <v-expansion-panels>
+        <v-expansion-panels accordion flat>
           <v-expansion-panel v-for="feature in item.archetypeFeatures" :key="feature.key">
             <v-expansion-panel-header>
-              <div class="d-flex justify-space-between w-100">
+              <div class="feature-header">
                 <span>{{ feature.name }}</span>
                 <span class="grey--text">Ур. {{ feature.level }}</span>
               </div>
@@ -160,13 +177,41 @@
                 @change="changeSelectedOption(feature, item)" />
 
               <!-- Выбранная опция -->
-              <v-card v-if="feature.selected" class="mt-3 pa-3" outlined>
+              <v-card v-if="feature.selected" class="preview-section" outlined>
                 <div v-if="getSelectedOption(feature)">
                   <trait-view :item="getSelectedOption(feature)" />
 
                   <div class="feature-text" v-if="getSelectedOption(feature).snippet"
                     v-html="getSelectedOption(feature).snippet">
                   </div>
+                  <v-divider></v-divider>
+
+                  <div class="feature-text" v-if="getSelectedOption(feature).spell">
+
+                    Заклинание Музы: <v-btn text small color="primary" class="pa-0 ml-1"
+                      @click="openDialogItem(GetSpell(getSelectedOption(feature).spell))">
+                      {{ SpellName(getSelectedOption(feature).spell) }}
+                    </v-btn>
+
+
+                    Черта Музы: <v-btn text small color="primary" class="pa-0 ml-1"
+                      @click="openDialogItem(GetFeat(getSelectedOption(feature).feat))">
+                      {{ GetFeat(getSelectedOption(feature).feat).name }}
+                    </v-btn>
+                    <!-- Вариант всплывашки, оставить  -->
+                    <!-- <v-menu open-on-hover offset-y max-width="500">
+                      <template v-slot:activator="{ on, attrs }">
+                        <span class="spell-link" v-bind="attrs" v-on="on">
+                          {{ SpellName(getSelectedOption(feature).spell) }}
+                        </span>
+                      </template>
+
+<CardItem :item="GetSpell(getSelectedOption(feature).spell)" />
+</v-menu> -->
+
+                  </div>
+
+
 
                   <v-divider></v-divider>
                   <p></p>
@@ -191,9 +236,9 @@
                       getSelectedOption(feature).options
                     )" />
 
-                  <v-card v-for="sub in getSelectedOption(feature).subFeature" :key="sub.key" class="mb-3">
+                  <v-card v-for="sub in getSelectedOption(feature).subFeature" :key="sub.key" class="preview-section">
 
-                    <div class="d-flex justify-space-between w-100">
+                    <div class="feature-header">
                       <span>{{ sub.name }}</span>
                       <span class="grey--text">Ур. {{ sub.level }}</span>
                     </div>
@@ -214,6 +259,12 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </v-card>
+
+      <v-dialog v-model="dialogItem" max-width="1000px">
+        <v-card>
+          <CardItem :item="selectedItem" />
+        </v-card>
+      </v-dialog>
 
     </v-col>
   </v-row>
@@ -251,9 +302,12 @@ export default {
     return {
       loading: false,
       item: undefined,
+      selectedItem: {},
       abilityList: undefined,
+      dialogItem: false,
       actionList: undefined,
       deityList: undefined,
+      talentList: undefined,
       oldValue: undefined,
       terms: [
         { term: 'Strike', tooltip: 'Тип базовой атаки персонажа.' },
@@ -412,7 +466,7 @@ export default {
       await this.getAbilityList(this.sources);
       await this.getActionList(this.sources);
       await this.getPsychicPowers(this.sources);
-
+      await this.getTalent(this.sources);
       await this.loadArchetype(this.characterArchetypeKey);
     },
     async getPsychicPowers(sources) {
@@ -422,7 +476,13 @@ export default {
 
       this.psychicPowersList = data;
     },
+    async getTalent(sources) {
+      this.loading = true;
+      const { data } = await this.$axios.get('/api/talents/');
+      this.loading = false;
 
+      this.talentList = data.data;
+    },
     async getAbilityList(sources) {
       const config = {
         params: {
@@ -682,6 +742,14 @@ export default {
     SpellName(spell) {
       const key = this.textToKebab(spell);
       return this.psychicPowersList?.find(s => s.key === key)?.name || '';
+    },
+    GetSpell(spell) {
+      const key = this.textToKebab(spell);
+      return this.psychicPowersList?.find(s => s.key === key);
+    },
+    GetFeat(spell) {
+      const key = this.textToKebab(spell);
+      return this.talentList?.find(s => s.key === spell);
     },
 
     characterLabelAttribute(keys) {
@@ -1181,6 +1249,10 @@ export default {
         this.characterId
       );
     },
+    openDialogItem(item) {
+      this.selectedItem = item
+      this.dialogItem = true
+    },
     getClassChipColor(skillKey) {
       //const rank = this.getSkillRank(skillKey);
       switch (skillKey) {
@@ -1362,5 +1434,70 @@ h6 {
   background-color: rgba(255, 255, 0, 0.2);
   border-bottom: 1px dotted yellow;
   cursor: help;
+}
+
+.preview-section {
+  border-radius: 16px;
+}
+
+.preview-section {
+  border-radius: 16px;
+  padding: 16px;
+  /* height: 100%; */
+}
+
+.preview-section>div {
+  margin-bottom: 6px;
+}
+
+.preview-section h3 {
+  margin-bottom: 12px;
+}
+
+.preview-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+
+.preview-subtitle {
+  opacity: .75;
+  line-height: 1.5;
+}
+
+
+@media(max-width:600px) {
+
+  .preview-title {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .preview-subtitle {
+    text-align: center;
+  }
+
+}
+
+.feature-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+}
+
+
+@media(max-width:600px) {
+
+  .feature-header {
+
+    flex-direction: column;
+    align-items: flex-start;
+
+  }
+
 }
 </style>

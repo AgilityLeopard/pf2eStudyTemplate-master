@@ -47,6 +47,7 @@ export default {
 
   data() {
     return {
+
       post: null,
       showTooltip: false,
       tooltip: {
@@ -67,6 +68,7 @@ export default {
       const post = Array.isArray(data) ? data[0] : data;
 
       this.post = post || null;
+
     } catch (e) {
       console.error(e);
       this.post = null;
@@ -92,11 +94,26 @@ export default {
   computed: {
     breadcrumbItems() {
       return [
-        { text: "", to: "/" },
-        { text: "Посты", to: "/posts" },
         {
-          text: this.post?.title || "",
-          to: this.post?.slug ? `/posts/${this.post.slug}` : "/posts",
+          text: "",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/",
+        },
+        {
+          text: "Посты",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/posts",
+        },
+        {
+          text: this.post ? this.post.title : "",
+          disabled: true,
+          nuxt: true,
+          exact: true,
+          to: this.post ? `/posts/${this.post.slug}` : "",
         },
       ];
     },

@@ -13,44 +13,88 @@
     <v-card-text>
       <v-row>
         <!-- ФИЛЬТРЫ -->
-        <v-col cols="6" sm="4" class="filters-col">
-          <div class="filters-wrapper">
 
-            <v-text-field v-model="searchQuery" dense outlined clearable prepend-inner-icon="mdi-magnify"
-              label="Поиск" />
+        <v-expansion-panels class="mb-4">
+          <v-expansion-panel>
 
-            <v-range-slider v-model="levelRange" :min="0" :max="this.level" step="1" thumb-label label="Уровень" />
+            <v-expansion-panel-header>
+              <div class="d-flex align-center">
+                <v-icon left>
+                  mdi-filter-variant
+                </v-icon>
 
-            <v-select v-model="selectedSourceFilters" :items="filterSourceOptions" label="Источник" item-text="name"
-              item-value="key" multiple dense outlined />
+                Фильтры
 
-            <v-select v-model="selectedRarityFilters" :items="rarityRepository" label="Редкость" item-text="name"
-              item-value="key" multiple dense outlined />
+                <v-chip v-if="activeFiltersCount" small class="ml-2">
+                  {{ activeFiltersCount }}
+                </v-chip>
 
-            <v-select v-model="selectedTraitFilters" :items="typeFilters" label="Трейты" item-text="name"
-              item-value="name" multiple dense outlined />
+              </div>
+            </v-expansion-panel-header>
 
-          </div>
-        </v-col>
 
+            <v-expansion-panel-content>
+
+              <v-row dense>
+
+                <v-col cols="12" md="4">
+
+                  <v-range-slider v-model="levelRange" :min="0" :max="level" step="1" thumb-label label="Уровень" />
+
+                </v-col>
+
+
+                <v-col cols="12" md="4">
+
+                  <v-select v-model="selectedSourceFilters" :items="filterSourceOptions" label="Источник"
+                    item-text="name" item-value="key" multiple dense outlined />
+
+                </v-col>
+
+
+                <v-col cols="12" md="4">
+
+                  <v-select v-model="selectedTraitFilters" :items="typeFilters" label="Трейты" item-text="name"
+                    item-value="name" multiple dense outlined />
+
+                </v-col>
+
+
+              </v-row>
+
+
+            </v-expansion-panel-content>
+
+          </v-expansion-panel>
+        </v-expansion-panels>
+
+        <div class="result-info">
+          Найдено: {{ searchResult.length }}
+        </div>
         <!-- ТАБЛИЦА -->
-        <v-col cols="6" sm="8">
+        <v-col cols="12">
           <div class="table-wrapper">
 
-            <v-data-table :headers="headers" :items="searchResult" :search="searchQuery" :page.sync="pagination.page"
-              show-expand item-key="name" hide-default-footer :loading="!talents" class="ui-table"
-              loading-text="Загрузка черт..." @page-count="pagination.pageCount = $event">
+            <v-data-table :headers="tableHeaders" :items="searchResult" :search="searchQuery" mobile-breakpoint="0"
+              :page.sync="pagination.page" show-expand item-key="name" hide-default-footer :loading="!talents"
+              class="ui-table" loading-text="Загрузка черт..." @page-count="pagination.pageCount = $event">
+
 
               <!-- NAME -->
               <template v-slot:item.name="{ item }">
                 <div class="table-name">
                   <span class="name-text">{{ item.name }}</span>
-                  <trait-view v-if="item.traits" :item="item" />
+                  <div class="mobile-traits">
+
+                    <trait-view v-if="item.traits" :item="item" />
+
+                  </div>
+                  <!-- <trait-view v-if="item.traits" :item="item" /> -->
                 </div>
               </template>
 
               <!-- LEVEL -->
-              <template v-slot:item.system.level="{ item }">
+              <template v-slot:item.level="{ item }">
                 <span class="level-badge">
                   {{ item.system.level.value }}
                 </span>
@@ -65,19 +109,40 @@
 
               <!-- ADD -->
               <template v-slot:item.buy="{ item }">
-                <v-btn outlaned icon small class="ui-btn ui-btn--primary" :disabled="item.isVal === true"
-                  v-if="!DiffrentTalent(item)" @click="addTalent(item, type, item.level)">
-                  <v-icon small>mdi-plus</v-icon>
+                <v-btn small icon color="primary" :disabled="item.isVal === true" v-if="!DiffrentTalent(item)"
+                  @click="addTalent(item, type, item.level)">
+                  <v-icon>mdi-plus-circle</v-icon>
                 </v-btn>
               </template>
 
               <!-- EXPANDED -->
               <template v-slot:expanded-item="{ headers, item }">
+
                 <td :colspan="headers.length" class="expanded-cell">
+
                   <div class="expanded-wrapper">
+
+                    <div class="mb-3">
+
+                      <strong>
+                        {{ item.name }}
+                      </strong>
+
+                      <div class="table-description" v-html="item.description
+                        .split('.')
+                        .find(s => s.trim() !== '') + '.'
+                        " />
+
+                    </div>
+
+
                     <CardItem :item="item" />
+
+
                   </div>
+
                 </td>
+
               </template>
 
             </v-data-table>
@@ -177,6 +242,51 @@ export default {
         ancestry1: "Черта родословной 1 Уровня",
         ancestry2: "Черта родословной 2 Уровня",
       },
+
+      headersMobile: [
+        {
+          text: 'Название',
+          value: 'name',
+
+          sortable: true,
+          width: '35%'
+
+        },
+        {
+          text: 'Уровень',
+          value: 'level',
+          align: 'center',
+          width: 55,
+          sortable: true,
+        },
+        // {
+        //   text: 'Тр.',
+        //   value: 'prerequisitesKey',
+        //   align: 'center',
+        //   sortable: false,
+        // },
+
+        // {
+        //   text: 'Описание',
+        //   value: 'description',
+        //   sortable: false,
+        //   width: "250px",
+        // },
+        /*{
+          text: 'Effect',
+          value: 'effect',
+          sortable: false,
+        },*/
+        {
+          text: 'Добавить',
+          value: 'buy',
+
+          width: 48,
+          sortable: false,
+
+        },
+        // { text: "", value: "data-table-expand", width: "20px", },
+      ],
       headers: [
         {
           text: 'Название',
@@ -187,7 +297,7 @@ export default {
         },
         {
           text: 'Уровень',
-          value: 'system.level',
+          value: 'level',
           align: 'center',
           width: "100px",
           sortable: true,
@@ -217,7 +327,7 @@ export default {
           sortable: false,
           width: "50px",
         },
-        { text: "", value: "data-table-expand", width: "50px" },
+        // { text: "", value: "data-table-expand", width: "50px" },
       ],
 
       wargearList: undefined,
@@ -267,20 +377,7 @@ export default {
       ],
     };
   },
-  computed: {
-    avatar() {
-      if (this.talents === undefined) return '';
-      return `/img/avatars/talents/${this.talents.key}.png`;
-    },
-    attributes() {
-      if (this.talents === undefined || this.talents.prerequisites === undefined) return undefined;
-      return this.talents.prerequisites.filter(pre => pre.group === 'attributes').map(pre => `${this.getAttributeByKey(pre.value).name} ${pre.threshold}`).join(', ');
-    },
-    skills() {
-      if (this.talents === undefined || this.talents.prerequisites === undefined) return undefined;
-      return this.talents.prerequisites.filter(pre => pre.group === 'skills').map(pre => `${this.getSkillByKey(pre.value).name} ${pre.threshold}`).join(', ');
-    },
-  },
+
   methods:
   {
 
@@ -547,6 +644,30 @@ export default {
   },
   computed:
   {
+    tableHeaders() {
+
+      if (this.$vuetify.breakpoint.xsOnly) {
+
+        return this.headersMobile
+
+      }
+
+
+      return this.headers
+
+    },
+    avatar() {
+      if (this.talents === undefined) return '';
+      return `/img/avatars/talents/${this.talents.key}.png`;
+    },
+    attributes() {
+      if (this.talents === undefined || this.talents.prerequisites === undefined) return undefined;
+      return this.talents.prerequisites.filter(pre => pre.group === 'attributes').map(pre => `${this.getAttributeByKey(pre.value).name} ${pre.threshold}`).join(', ');
+    },
+    skills() {
+      if (this.talents === undefined || this.talents.prerequisites === undefined) return undefined;
+      return this.talents.prerequisites.filter(pre => pre.group === 'skills').map(pre => `${this.getSkillByKey(pre.value).name} ${pre.threshold}`).join(', ');
+    },
     characterTalents() {
       return this.$store.getters['characters/characterTalentsById'](this.characterId);
     },
@@ -770,7 +891,7 @@ export default {
 };
 </script>
 
-<style scoped lang="css">
+<style scoped>
 .talents-card {
   border-radius: 10px;
 }
@@ -787,7 +908,9 @@ export default {
 
 /* ОБЩИЕ ЛИНИИ */
 .ui-divider {
-  background-color: rgba(var(--v-border-color, 150, 150, 150), 0.2);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border);
 }
 
 /* ФИЛЬТРЫ */
@@ -803,23 +926,28 @@ export default {
 
 /* TABLE */
 .ui-table {
-  background: transparent;
+  width: 100%;
+  min-width: 0;
 }
 
 .table-wrapper {
-  max-height: 500px;
+
+  overflow-x: auto;
   overflow-y: auto;
+
 }
 
 /* NAME */
 .table-name {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  min-width: 0;
 }
 
 .name-text {
-  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* LEVEL BADGE (в стиле твоих тегов) */
@@ -893,5 +1021,83 @@ export default {
 .table-wrapper::-webkit-scrollbar-thumb {
   background: rgba(120, 120, 120, 0.3);
   border-radius: 3px;
+}
+
+@media(max-width:600px) {
+
+  .mobile-hide {
+    display: none;
+  }
+
+}
+
+.ui-table :deep(td) {
+
+  padding: 8px !important;
+
+}
+
+
+@media(max-width:600px) {
+
+  .ui-table :deep(td) {
+
+    padding: 6px 4px !important;
+    font-size: 12px;
+
+  }
+
+
+  .name-text {
+
+    font-size: 13px;
+
+  }
+
+}
+
+@media(max-width:600px) {
+
+  .mobile-traits {
+
+    max-width: 120px;
+    overflow: hidden;
+
+  }
+
+}
+
+.ui-table :deep(th:first-child),
+.ui-table :deep(td:first-child) {
+  width: auto;
+}
+
+@media (max-width:600px) {
+
+  .ui-table :deep(table) {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .ui-table thead {
+    display: none;
+  }
+
+}
+
+.ui-table :deep(th:nth-child(2)),
+.ui-table :deep(td:nth-child(2)) {
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  text-align: center;
+}
+
+.ui-table :deep(th:nth-child(3)),
+.ui-table :deep(td:nth-child(3)) {
+  width: 42px;
+  min-width: 42px;
+  max-width: 42px;
+  text-align: center;
 }
 </style>

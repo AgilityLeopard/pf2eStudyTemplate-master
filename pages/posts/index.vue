@@ -1,10 +1,10 @@
 <template>
   <div>
     <div v-show="showTooltip" class="tooltip-container" :style="{ left: tooltip.position.x, top: tooltip.position.y }">
-      <v-card v-if="tooltip.loading" dark color="success" class="text-center">
+      <v-card v-if="tooltip.loading" class="ui-card">
         <v-progress-circular indeterminate />
       </v-card>
-      <v-card v-else raised dark color="success">
+      <v-card v-else raised class="ui-card">
         <v-card-title class="tooltip-container__header">
           {{ hintBoxItem.title }}
         </v-card-title>
@@ -83,6 +83,24 @@ export default {
   // },
   data() {
     return {
+      breadcrumbItems: [
+
+        {
+          text: "",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/",
+        },
+        {
+          text: "Посты",
+          disabled: false,
+          nuxt: true,
+          exact: true,
+          to: "/posts",
+        },
+
+      ],
       fixedTime: new Date(),
       posts: [],
       page: {
@@ -133,24 +151,7 @@ export default {
     };
   },
   computed: {
-    breadcrumbItems() {
-      return [
-        {
-          text: "",
-          disabled: false,
-          nuxt: true,
-          exact: true,
-          to: "/",
-        },
-        {
-          text: "Посты",
-          disabled: false,
-          nuxt: true,
-          exact: true,
-          to: "/posts",
-        },
-      ];
-    },
+
   },
   methods: {
     getTypeColor(type) {
@@ -218,7 +219,7 @@ export default {
   border-radius: 12px;
   transition: all 0.2s ease;
   border-left: 4px solid #00e5ff;
-  background: #151515;
+  // background: #151515;
 }
 
 .patch-card:hover {

@@ -88,7 +88,7 @@
 
 
         <!-- EDITOR DIALOG -->
-        <v-dialog v-model="weaponEditorDialog" width="700px">
+        <v-dialog v-model="weaponEditorDialog" width="700px" :fullscreen="$vuetify.breakpoint.smAndDown">
             <v-card class="ui-card">
 
                 <!-- HEADER -->
@@ -102,7 +102,8 @@
                 <v-card-text>
                     <v-row dense>
 
-                        <v-col v-for="field in fields" :key="field.key" :cols="field.type === 'editor' ? 12 : 6">
+                        <v-col v-for="field in fields" :key="field.key" :cols="12"
+                            :md="field.type === 'editor' ? 12 : 6">
                             <v-card outlined class="pa-3 fill-height">
 
                                 <!-- Заголовок только для составных полей -->
@@ -130,12 +131,12 @@
 
                                 <!-- HP -->
                                 <v-row v-else-if="field.type === 'hp' && editItem[field.key]" dense>
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field v-model.number="editItem[field.key].value" label="HP" dense
                                             outlined hide-details="auto" />
                                     </v-col>
 
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field v-model.number="editItem[field.key].max" label="Макс." dense
                                             outlined hide-details="auto" />
                                     </v-col>
@@ -143,19 +144,19 @@
 
                                 <v-row v-else-if="field.type === 'damageOrig' && editItem[field.key]" dense>
 
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-text-field v-model.number="editItem[field.key].dice" label="Урон" dense
                                             outlined hide-details="auto" />
                                     </v-col>
 
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-select v-model.number="editItem[field.key].die" :items="dieOptions"
                                             :item-text="dieOptions.name || 'name'"
                                             :item-value="dieOptions.value || 'value'" label="Кость" dense outlined
                                             hide-details="auto" />
                                     </v-col>
 
-                                    <v-col cols="6">
+                                    <v-col cols="12" md="6">
                                         <v-select v-model="editItem[field.key].damageType" :items="DamageType"
                                             item-text="name" item-value="key" label="Тип урона" dense outlined
                                             hide-details="auto" />
@@ -263,7 +264,7 @@
                             </v-card>
                         </v-col>
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                             <v-card outlined class="pa-3 fill-height">
                                 <div class="subtitle-2 font-weight-medium mb-3">
                                     Руна Разящая
@@ -277,7 +278,7 @@
                             </v-card>
                         </v-col>
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                             <v-card outlined class="pa-3 fill-height">
                                 <div class="subtitle-2 font-weight-medium mb-3">
                                     Руна Мощи
@@ -291,7 +292,7 @@
                             </v-card>
                         </v-col>
 
-                        <v-col cols="6">
+                        <v-col cols="12" md="6">
                             <v-card outlined class="pa-3 fill-height">
                                 <div class="subtitle-2 font-weight-medium mb-3">
                                     Руны свойств
@@ -309,9 +310,8 @@
                     </v-row>
                 </v-card-text>
                 <!-- ACTIONS -->
-                <v-card-actions>
-                    <v-spacer />
-                    <v-btn class="ui-btn ui-btn--success" @click="saveWeapon">
+                <v-card-actions class="pa-4">
+                    <v-btn block class="ui-btn ui-btn--success" @click="saveWeapon">
                         Сохранить
                     </v-btn>
                 </v-card-actions>
@@ -1291,7 +1291,8 @@ export default {
 /* ===== TOOLBAR ===== */
 .tiptap-toolbar {
     display: flex;
-    gap: 6px;
+    flex-wrap: wrap;
+    gap: 4px;
     padding: 6px;
 
     background: var(--ui-surface-soft);
@@ -1351,5 +1352,34 @@ export default {
 
 .light-editor .ProseMirror img.action-icon {
     filter: invert(1);
+}
+
+@media (max-width:600px) {
+
+    .fill-height {
+        height: auto !important;
+    }
+
+}
+
+.ui-btn {
+
+
+    border-radius: 10px !important;
+
+
+    text-transform: none !important;
+
+
+}
+
+@media(max-width:600px) {
+
+    .tiptap-editor {
+
+        min-height: 220px;
+
+    }
+
 }
 </style>

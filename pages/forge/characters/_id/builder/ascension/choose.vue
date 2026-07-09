@@ -19,21 +19,21 @@
             label="Поиск предыстории" />
         </v-card-title>
 
-        <v-card-text class="pt-0">
+        <v-card-text class="pt-0 filter-area">
           <v-row dense>
             <v-col cols="12" md="4">
               <v-select v-model="selectedRarityFilters" :items="rarityFilters" item-text="name" item-value="name"
-                multiple dense outlined label="Редкость" />
+                multiple dense outlined hide-details label="Редкость" />
             </v-col>
 
             <v-col cols="12" md="4">
               <v-select v-model="selectedSourceFilters" :items="sourceFilters" item-text="name" item-value="name"
-                multiple dense outlined label="Источник" />
+                multiple dense outlined hide-details label="Источник" />
             </v-col>
 
             <v-col cols="12" md="4">
               <v-select v-model="selectedAbilityFilters" :items="abilityFilters" item-text="name" item-value="key"
-                multiple dense outlined label="Характеристика" />
+                multiple dense outlined hide-details label="Характеристика" />
             </v-col>
           </v-row>
         </v-card-text>
@@ -47,24 +47,28 @@
             @click.stop="updatePreview(item)">
 
             <!-- avatar -->
-            <v-list-item-avatar tile size="48">
+            <v-list-item-avatar size="56">
               <img :src="getAvatar(item.key)" />
             </v-list-item-avatar>
 
             <!-- content -->
             <v-list-item-content>
-              <v-list-item-title class="d-flex align-center gap-2">
+              <v-list-item-title class="ascension-title">
                 <span class="font-weight-medium">
                   {{ item.nameBackground }}
                 </span>
 
-                <v-chip v-if="item.source" x-small outlined class="ml-2" color="info">
-                  {{ item.source.book }}
-                </v-chip>
+                <div class="ascension-tags">
 
-                <v-chip v-if="item.rarity" x-small outlined class="ml-2" color="grey">
-                  {{ item.rarity }}
-                </v-chip>
+                  <v-chip v-if="item.source" x-small outlined color="info">
+                    {{ item.source.book }}
+                  </v-chip>
+
+                  <v-chip v-if="item.rarity" x-small outlined color="grey">
+                    {{ item.rarity }}
+                  </v-chip>
+
+                </div>
               </v-list-item-title>
 
               <v-list-item-subtitle class="ascension-hint">
@@ -94,6 +98,8 @@
     </v-col>
   </v-row>
 </template>
+
+
 <script>
 import AscensionPreview from "~/components/forge/AscensionPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
@@ -558,17 +564,39 @@ export default {
 
 <style scoped>
 .ascension-list-card {
-  border-radius: 12px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ascension-title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ascension-hint {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+.ascension-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 /* list item */
 .ascension-item {
-  transition: 0.15s ease;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 6px 8px;
+  border-radius: 12px;
+  transition: .15s ease;
 }
 
+
+
 .ascension-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--v-theme-primary), 0.08);
 }
 
 /* subtitle */
@@ -595,7 +623,10 @@ export default {
 
 /* nicer avatar */
 .v-list-item-avatar img {
-  border-radius: 6px;
-  object-fit: cover;
+  border-radius: 12px;
+}
+
+.filter-area {
+  padding-bottom: 8px;
 }
 </style>

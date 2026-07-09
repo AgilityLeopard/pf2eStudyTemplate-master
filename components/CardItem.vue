@@ -207,6 +207,12 @@
           </span>
         </div>
 
+        <div v-if="item.Power" class="info-line">
+          <strong>Урон этой ячейкой:</strong>
+          <span v-if="item.Power" v-html="item.Power"></span>
+        </div>
+
+
         <div v-if="item.defense?.save" class="info-line">
           <strong>Защита:</strong>
           <span v-if="item.defense.save.basic">Базовый </span>

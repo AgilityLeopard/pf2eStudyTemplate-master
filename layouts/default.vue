@@ -3,13 +3,38 @@
   <v-app>
     <AppLoader :visible="$store.state.ui.loading" />
     <v-navigation-drawer v-model="drawer.open" :clipped="drawer.clipped" :fixed="drawer.fixed"
-      :permanent="drawer.permanent" :mini-variant="drawer.mini" app right disable-resize-watcher>
+      :permanent="drawer.permanent" :mini-variant="drawer.mini" app disable-resize-watcher>
       <v-list>
-        <v-list-item>
-          <v-btn icon href="">
-            <v-icon>mdi-discord</v-icon>
-          </v-btn>
+        <v-list-item href="https://t.me/shadowtalesgm" target="_blank">
+          <v-list-item-icon>
+            <v-icon>mdi-telegram</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title>
+            Telegram
+          </v-list-item-title>
         </v-list-item>
+
+        <v-list-item href="https://discord.gg/5rEDvSSXSZ" target="_blank">
+          <v-list-item-icon>
+            <v-icon>mdi-discord</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title>
+            Discord
+          </v-list-item-title>
+        </v-list-item>
+
+        <v-list-item @click="toggleDarkTheme">
+          <v-list-item-icon>
+            <v-icon>mdi-theme-light-dark</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title>
+            Тема
+          </v-list-item-title>
+        </v-list-item>
+
         <div v-for="item in navigation" :key="item.to">
           <v-list-group v-if="item.children">
             <template v-slot:activator>
@@ -34,56 +59,183 @@
           </v-list-item>
           <v-divider />
         </div>
+
       </v-list>
     </v-navigation-drawer>
 
     <v-app-bar app dark dense style="background-color: #212121" :fixed="toolbar.fixed"
       :clipped-left="toolbar.clippedLeft">
-      <v-container class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
+      <v-container fluid class="px-2 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
+        <!-- MOBILE MENU -->
+        <v-app-bar-nav-icon class="d-md-none" @click.stop="toggleDrawer" />
         <v-toolbar-title>
           <nuxt-link to="/" class="title brand-logo brand-logo__text">
             Shadow Tales
           </nuxt-link>
         </v-toolbar-title>
 
-        <v-spacer />
+        <v-spacer class="d-none d-md-flex" />
 
-        <v-toolbar-items>
-          <v-btn class="d-none d-md-inline-flex" icon href="https://discord.gg/5rEDvSSXSZ">
-            <v-icon>mdi-telegram</v-icon>
+        <v-toolbar-items class="mobile-actions">
+          <v-btn icon class="top-icon-btn d-none d-md-flex" href="https://t.me/shadowtalesgm" target="_blank">
+            <v-icon size="20">mdi-telegram</v-icon>
           </v-btn>
-          <v-btn class="d-none d-md-inline-flex" icon href="https://discord.gg/5rEDvSSXSZ">
-            <v-icon>mdi-discord</v-icon>
+
+          <v-btn icon class="top-icon-btn d-none d-md-flex" href="https://discord.gg/5rEDvSSXSZ" target="_blank">
+            <v-icon size="20">mdi-discord</v-icon>
           </v-btn>
-          <v-btn icon @click="toggleDarkTheme">
-            <v-icon>mdi-brightness-6</v-icon>
+
+          <v-btn icon class="top-icon-btn d-none d-md-flex" @click="toggleDarkTheme">
+            <v-icon size="20">
+              mdi-theme-light-dark
+            </v-icon>
           </v-btn>
+
 
           <div v-if="user">
 
-            <nuxt-link to="/profile">👤 {{ profile?.username }}</nuxt-link>
-            <v-btn @click="logout">Выйти</v-btn>
+            <template v-if="user">
+              <v-menu offset-y bottom left>
+                <template #activator="{ on, attrs }">
+                  <v-btn icon class="ml-2 profile-btn" v-bind="attrs" v-on="on">
+                    <v-avatar size="36">
+                      <v-icon size="26">mdi-account-circle</v-icon>
+                    </v-avatar>
+                  </v-btn>
+                </template>
+
+                <v-card min-width="240">
+                  <v-list dense>
+
+                    <v-list-item>
+                      <v-list-item-avatar>
+                        <v-avatar size="42">
+                          <v-icon large>mdi-account-circle</v-icon>
+                        </v-avatar>
+                      </v-list-item-avatar>
+
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          {{ profile?.username }}
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle>
+                          Игрок
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+
+                    <v-divider />
+
+                    <v-list-item to="/profile" nuxt>
+                      <v-list-item-icon>
+                        <v-icon>mdi-account</v-icon>
+                      </v-list-item-icon>
+
+                      <v-list-item-title>
+                        Профиль
+                      </v-list-item-title>
+                    </v-list-item>
+
+                    <v-list-item @click="logout">
+                      <v-list-item-icon>
+                        <v-icon color="error">mdi-logout</v-icon>
+                      </v-list-item-icon>
+
+                      <v-list-item-title>
+                        Выйти
+                      </v-list-item-title>
+                    </v-list-item>
+
+                  </v-list>
+                </v-card>
+              </v-menu>
+            </template>
           </div>
 
-          <div v-else>
-            <nuxt-link to="/login">Войти</nuxt-link>
-            <nuxt-link to="/register">Регистрация</nuxt-link>
-          </div>
+          <div v-else class="auth-buttons">
 
+            <!-- MOBILE -->
+            <v-menu offset-y class="d-md-none">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon class="d-flex d-md-none" v-bind="attrs" v-on="on">
+                  <v-icon>
+                    mdi-account-circle
+                  </v-icon>
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-list dense>
+
+                  <v-list-item to="/login" nuxt>
+                    <v-list-item-icon>
+                      <v-icon>
+                        mdi-login
+                      </v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-title>
+                      Войти
+                    </v-list-item-title>
+                  </v-list-item>
+
+
+                  <v-list-item to="/register" nuxt>
+                    <v-list-item-icon>
+                      <v-icon>
+                        mdi-account-plus
+                      </v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-title>
+                      Регистрация
+                    </v-list-item-title>
+                  </v-list-item>
+
+                </v-list>
+              </v-card>
+
+            </v-menu>
+
+
+            <!-- DESKTOP -->
+            <div class="d-none d-md-flex auth-buttons">
+              <v-btn text small class="auth-btn" to="/login" nuxt>
+                <v-icon left small>mdi-login</v-icon>
+                Войти
+              </v-btn>
+
+              <v-btn small class="auth-btn auth-btn--primary" to="/register" nuxt>
+                <v-icon left small>mdi-account-plus</v-icon>
+                Регистрация
+              </v-btn>
+            </div>
+
+          </div>
         </v-toolbar-items>
 
-        <v-app-bar-nav-icon @click.stop="toggleDrawer" class="d-md-none" />
+        <!-- <v-app-bar-nav-icon @click.stop="toggleDrawer" class="d-md-none  mr-2" /> -->
       </v-container>
     </v-app-bar>
 
     <v-main>
-      <v-toolbar dense class="d-none d-md-block">
-        <v-container class="pa-0 fill-height" :class="{ 'pl-2 pr-2': this.$vuetify.breakpoint.mdAndUp }">
-          <v-toolbar-items>
-            <v-btn v-for="item in navigation" :key="item.to" smallt text nuxt :to="item.to">
+      <v-toolbar dense flat class="navigation-toolbar d-none d-md-block">
+        <v-container fluid class="px-2 fill-height">
+
+          <v-toolbar-items class="nav-items">
+
+            <v-btn v-for="item in navigation" :key="item.to" :to="item.to" nuxt text class="nav-button"
+              active-class="nav-button-active">
+              <v-icon v-if="item.icon" small left>
+                {{ item.icon }}
+              </v-icon>
+
               {{ item.title }}
             </v-btn>
+
           </v-toolbar-items>
+
         </v-container>
       </v-toolbar>
 
@@ -284,6 +436,127 @@ export default {
   &__text {
     color: hsl(0, 0%, 100%);
     text-decoration: none;
+  }
+}
+
+.profile-btn {
+  transition: .2s;
+}
+
+.profile-btn:hover {
+  transform: scale(1.08);
+}
+
+.profile-btn .v-avatar {
+  border: 2px solid rgba(0, 229, 255, .55);
+  box-shadow: 0 0 10px rgba(0, 229, 255, .35);
+}
+
+.top-icon-btn {
+  margin: 0 4px;
+  border-radius: 50%;
+  transition: 0.2s ease;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.top-icon-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 229, 255, 0.12);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+}
+
+.theme--dark .top-icon-btn {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.auth-btn {
+  border-radius: 8px;
+  text-transform: none;
+  transition: 0.2s;
+}
+
+.auth-btn:hover {
+  transform: translateY(-1px);
+}
+
+.auth-btn--primary {
+  background: rgba(0, 229, 255, 0.12);
+}
+
+.auth-btn--primary:hover {
+  background: rgba(0, 229, 255, 0.22);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+@media (max-width:600px) {
+
+  .brand-logo__text {
+    font-size: 18px;
+  }
+}
+
+.mobile-actions {
+  display: flex;
+  align-items: center;
+}
+
+@media(max-width:600px) {
+  .mobile-actions {
+    flex: 0 0 auto;
+  }
+}
+
+.navigation-toolbar {
+  background: transparent !important;
+}
+
+
+.nav-button {
+  height: 42px !important;
+  min-height: 42px !important;
+
+  border-radius: 12px;
+
+  text-transform: none;
+  letter-spacing: 0;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  padding: 0 18px !important;
+
+  transition: .2s ease;
+
+  .v-icon {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: rgba(25, 118, 210, .12);
+    transform: translateY(-1px);
+  }
+}
+
+
+.nav-items {
+  gap: 10px;
+  align-items: center;
+}
+
+
+.nav-button-active {
+  background: rgba(25, 118, 210, .18) !important;
+  color: #1976d2 !important;
+  font-weight: 600;
+
+  &:before {
+    opacity: 0 !important;
   }
 }
 </style>

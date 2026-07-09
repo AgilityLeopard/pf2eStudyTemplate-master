@@ -17,13 +17,13 @@
               {{ ascension.hint }}
             </div>
 
-            <v-btn small outlined color="primary" @click="doChangeAscensionMode">
+            <v-btn small outlined rounded color="primary" @click="doChangeAscensionMode">
               <v-icon small left>mdi-cog</v-icon>
               Сменить предысторию
             </v-btn>
           </v-col>
 
-          <v-col cols="12" md="4" class="text-right">
+          <v-col cols="12" md="4" class="text-center text-md-right">
             <v-avatar size="96" tile>
               <img :src="avatar" />
             </v-avatar>
@@ -34,7 +34,7 @@
       <!-- ⚙️ Основные бонусы -->
       <v-row class="d-flex" align="stretch">
         <v-col cols="12" md="6">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <v-card outlined class="preview-section d-flex flex-column fill-height">
             <h3 class="text-h6 mb-2">Характеристика на выбор</h3>
             <strong>
               {{ characterLabelAttribute(ascension.boost1) }}
@@ -47,7 +47,7 @@
         </v-col>
 
         <v-col cols="12" md="6">
-          <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
+          <v-card outlined class="preview-section d-flex flex-column fill-height">
             <h3 class="text-h6 mb-2">Второе усиление</h3>
             <strong>Свободное повышение</strong>
 
@@ -77,18 +77,25 @@
       <v-card v-if="ascension.lore || ascension.description" outlined class="pa-4 mt-4" style="border-color: #c75d5d;">
         <h3 class="text-h6 mb-2">История</h3>
 
-        <p v-if="ascension.lore">
-          <strong>Знание:</strong> {{ ascension.lore }}
-        </p>
+        <div v-if="ascension.lore" class="mb-3">
+          <strong>Знание</strong>
+          <div class="text--secondary mt-1">
+            {{ ascension.lore }}
+          </div>
+        </div>
 
-        <p v-if="ascension.description">
-          <strong>Описание:</strong> {{ ascension.description }}
-        </p>
+        <div v-if="ascension.description">
+          <strong>Описание</strong>
+          <div class="text--secondary mt-1">
+            {{ ascension.description }}
+          </div>
+        </div>
       </v-card>
 
     </v-col>
   </v-row>
 </template>
+
 <script>
 import AscensionPreview from "~/components/forge/AscensionPreview.vue";
 import SluggerMixin from "~/mixins/SluggerMixin";
@@ -530,5 +537,20 @@ h6 {
   background-color: rgba(255, 255, 0, 0.2);
   border-bottom: 1px dotted yellow;
   cursor: help;
+}
+
+.preview-section {
+  padding: 16px;
+  border-radius: 14px;
+  min-height: 100%;
+  transition: 0.2s ease;
+}
+
+.preview-section:hover {
+  transform: translateY(-2px);
+}
+
+.preview-section h3 {
+  margin-bottom: 12px;
 }
 </style>

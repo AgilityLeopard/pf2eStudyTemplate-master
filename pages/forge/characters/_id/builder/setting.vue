@@ -2,7 +2,7 @@
   <v-row>
     <v-dialog v-model="selectAvatarDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
       <v-card class="pa-0">
-        <v-card-title style="background-color: #262e37; color: #fff">
+        <v-card-title class="ui-dialog__header">
           <span>Подтвердите аватар</span>
           <v-spacer />
           <v-icon dark @click="selectAvatarDialog = false"> закрыть </v-icon>
@@ -10,10 +10,15 @@
 
         <v-card-text class="pt-4">
           <div>
-            <client-only>
-              <croppa v-model="myCroppa" :file-size-limit="31457280" :width="300" :height="300"
-                :prevent-white-space="myCroppaConfig.preventWhiteSpace" class="croppa-circle" />
-            </client-only>
+            <div class="st-avatar-editor">
+
+              <client-only>
+
+
+                <croppa v-model="myCroppa" :file-size-limit="31457280" :width="300" :height="300"
+                  :prevent-white-space="myCroppaConfig.preventWhiteSpace" class="croppa-circle" />
+              </client-only>
+            </div>
           </div>
           <span class="caption">
             Перетаскивайте и масштабируйте (прокручивая) до тех пор, пока
@@ -21,8 +26,8 @@
           </span>
 
           <div>
-            <v-switch v-model="myCroppaConfig.preventWhiteSpace" label="Изображение в пределах границы без фона"
-              dense></v-switch>
+            <v-switch v-model="myCroppaConfig.preventWhiteSpace"
+              label="Изображение в пределах границы без фона"></v-switch>
           </div>
         </v-card-text>
 
@@ -31,7 +36,7 @@
             Отмена
           </v-btn>
           <v-spacer />
-          <v-btn right color="green" @click="setNewAvatar">
+          <v-btn right primary color="green" @click="setNewAvatar">
             Выбрать аватар
           </v-btn>
         </v-card-actions>
@@ -39,38 +44,46 @@
     </v-dialog>
 
     <v-col :cols="12" :sm="7">
-      <h2 class="title mb-2">
-        <strong>Персонаж</strong>
-      </h2>
+      <div class="st-panel">
 
-      <v-text-field label="Имя персонажа" :value="characterName" dense outlined @input="setCharacterName" />
 
-      <v-slider :value="characterCustomLevel" :min="1" :max="20" class="pb-2" label="Уровень"
-        hint="Установите уровень персонажа" step="1" ticks thumb-label="always" dense outlined persistent-hint
-        type="number" @change="setLevel" />
+        <h3 class="subtitle-1">
+
+          <strong>Персонаж</strong>
+        </h3>
+
+        <v-text-field label="Имя персонажа" :value="characterName" dense outlined @input="setCharacterName" />
+
+        <v-slider :value="characterCustomLevel" :min="1" :max="20" class="pb-2" label="Уровень"
+          hint="Установите уровень персонажа" step="1" ticks thumb-label="always" dense outlined type="number"
+          @change="setLevel" />
+      </div>
     </v-col>
 
     <v-col :cols="12" :sm="5">
-      <div class="mb-2">
-        <!-- custom avatar -->
-        <v-badge bordered overlap color="error" v-show="characterAvatarUrl">
-          <template v-slot:badge>
-            <v-icon color="white" @click.stop="setCharacterAvatar(undefined)">close</v-icon>
-          </template>
-          <v-avatar size="86" style="border-radius: 50%" @click="selectAvatarDialog = true">
-            <v-img :src="characterAvatarUrl"></v-img>
+      <div class="st-panel">
+
+        <div>
+          <!-- custom avatar -->
+          <v-badge bordered overlap color="error" v-show="characterAvatarUrl">
+            <template v-slot:badge>
+              <v-icon color="white" @click.stop="setCharacterAvatar(undefined)">close</v-icon>
+            </template>
+            <v-avatar size="86" style="border-radius: 50%" @click="selectAvatarDialog = true">
+              <v-img :src="characterAvatarUrl"></v-img>
+            </v-avatar>
+          </v-badge>
+
+          <!-- placeholder -->
+          <v-avatar size="86" @click="selectAvatarDialog = true" v-show="!characterAvatarUrl">
+            <v-img src="/img/avatar_placeholder_grey.png"></v-img>
           </v-avatar>
-        </v-badge>
 
-        <!-- placeholder -->
-        <v-avatar size="86" @click="selectAvatarDialog = true" v-show="!characterAvatarUrl">
-          <v-img src="/img/avatar_placeholder_grey.png"></v-img>
-        </v-avatar>
-
-        <em class="d-none">{{
-          characterAvatarUrl ? characterAvatarUrl.length : 0
-        }}</em>
-        <div><a @click="selectAvatarDialog = true">изменить аватар</a></div>
+          <em class="d-none">{{
+            characterAvatarUrl ? characterAvatarUrl.length : 0
+          }}</em>
+          <div><a @click="selectAvatarDialog = true">изменить аватар</a></div>
+        </div>
       </div>
     </v-col>
 
@@ -80,15 +93,15 @@
         <p class="body-2">Включить контент из других источников</p>
 
         <!-- 🔹 Общий переключатель "Выбрать все" -->
-        <v-switch v-model="allHomebrews" label="Выбрать все" color="primary" dense @change="toggleAllHomebrews" />
+        <v-switch v-model="allHomebrews" label="Выбрать все" color="primary" @change="toggleAllHomebrews" />
 
         <div v-for="homebrew in settingOfficialOptions.filter(i => i.show === true)" :key="homebrew.key">
           <v-switch v-if="homebrew.optional" v-model="enabledHomebrews" :value="homebrew.key" :hint="homebrew.hint"
-            persistent-hint color="primary" dense :disabled="homebrew.disabled" @change="updateHomebrew(homebrew)">
+            color="primary" :disabled="homebrew.disabled" @change="updateHomebrew(homebrew)">
             <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
           </v-switch>
 
-          <v-switch v-else value input-value="true" :hint="homebrew.hint" persistent-hint color="primary" dense disabled
+          <v-switch v-else value input-value="true" :hint="homebrew.hint" color="primary" disabled
             @change="updateHomebrew(homebrew)">
             <template v-slot:label><span class="body-2">{{ homebrew.name }}</span></template>
           </v-switch>
@@ -798,7 +811,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped>
 .croppa-container canvas {
   border: 0.5px dashed grey;
 }
@@ -817,5 +830,38 @@ export default {
   /* обрезаем всё, что выходит за границы круга */
   width: 300px;
   height: 300px;
+}
+
+.st-panel {
+
+  margin-bottom: 16px;
+
+  border: 1px solid var(--ui-border);
+
+  /* border-radius: 16px; */
+
+  overflow: hidden;
+
+}
+
+.ui-dialog__header {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 20;
+
+  background: var(--ui-surface);
+
+  /* border-bottom: 1px solid var(--ui-border); */
+
+}
+
+.st-avatar-editor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 </style>

@@ -7,18 +7,20 @@
     </v-dialog>
 
     <v-col cols="12">
-      <h1 class="headline mb-4">Выберите класс</h1>
-      <v-text-field v-model="searchQuery" solo placeholder="Поиск..." prepend-inner-icon="mdi-magnify" clearable />
+      <h2 class="section-title">Выберите класс</h2>
+
+      <v-text-field v-model="searchQuery" outlined rounded hide-details clearable prepend-inner-icon="mdi-magnify"
+        label="Поиск класса" />
     </v-col>
 
     <!-- Карточки классов -->
     <v-col cols="12">
-      <v-row dense>
+      <v-row>
         <v-col v-for="item in archetypeFaction" :key="item.key" cols="12" sm="6" md="4" lg="3">
-          <v-card class="d-flex flex-column align-center pa-4 hoverable" :elevation="4"
+          <v-card class="species-card  d-flex flex-column align-center pa-4 hoverable" elevation="3"
             :disabled="item.tier > characterSettingTier" @click="updatePreview(item)">
             <!-- Аватар -->
-            <v-avatar size="96" class="mb-3" tile>
+            <v-avatar :size="$vuetify.breakpoint.smAndDown ? 72 : 96" class="mb-3" tile>
               <img :src="getAvatar(item.key)" />
             </v-avatar>
 
@@ -29,7 +31,7 @@
 
             <!-- Источник -->
             <v-chip v-if="item.source && !['core', 'coreab'].includes(item.source.key)" color="info" outlined x-small>
-              {{ item.source.key.toUpperCase() }}
+              {{ item.source.book.toUpperCase() }}
             </v-chip>
 
             <!-- Tier -->
@@ -38,9 +40,9 @@
             </div>
 
             <!-- Кнопка просмотра на мобильных -->
-            <v-btn v-if="$vuetify.breakpoint.xsOnly" icon small class="mt-2">
+            <!-- <v-btn v-if="$vuetify.breakpoint.xsOnly" icon small class="mt-2">
               <v-icon color="primary">mdi-arrow-right</v-icon>
-            </v-btn>
+            </v-btn> -->
           </v-card>
         </v-col>
       </v-row>
@@ -761,4 +763,88 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.species-card {
+  border-radius: 18px;
+
+  cursor: pointer;
+
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  color: var(--ui-text);
+  box-shadow: inset 0 0 4px var(--ui-shadow);
+
+  user-select: none;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* hover эффект */
+.species-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border-color: rgba(199, 93, 93, 0.5);
+}
+
+
+
+/* avatar чуть мягче */
+.species-card .v-avatar {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+
+.species-card:active {
+
+  transform: scale(.98);
+
+}
+
+.section-title {
+
+  display: flex;
+
+  align-items: center;
+
+  min-height: 42px;
+
+  padding: 0 16px;
+
+  margin: 0;
+
+  border-bottom: 1px solid var(--ui-border);
+
+  font-size: .72rem;
+
+  letter-spacing: .14em;
+
+  text-transform: uppercase;
+
+  font-weight: 700;
+
+}
+
+@media (hover:hover) {
+
+  .species-card:hover {
+
+    transform: translateY(-4px);
+
+  }
+
+}
+
+.species-card.v-card--disabled {
+
+  opacity: .45;
+
+  filter: grayscale(.35);
+
+}
+</style>

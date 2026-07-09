@@ -88,51 +88,109 @@
 
         <v-row>
           <v-col v-for="character in characterSets.filter((i) => i !== undefined)" v-if="characterSets"
-            :key="character.id" :cols="12" :sm="6" :md="6" :lg="4">
+            :key="character.id" :cols="12" :sm="6" :md="6" :lg="2">
             <v-card v-if="character">
-              <div class="card">
-                <div class="card__image-container">
-                  <div class="card__image" style="border-radius: 50%" :style="{
-                    backgroundImage:
-                      'url(' + characterAvatar(character.id) + ')',
-                  }" loading />
-                </div>
+              <v-card class="character-card" elevation="4">
 
-                <v-card-text class="pa-0">
-                  <div class="card__content-container pa-4">
-                    <h3>{{ characterName(character.id) }}</h3>
+                <!-- AVATAR -->
+                <div class="character-cover" :style="{
+                  backgroundImage: `url(${characterAvatar(character.id) || '/img/default-avatar.png'})`
+                }">
 
-                    <div v-if="isLegacyVersion(character.id)">
-                      <v-btn @click="openExportDialog(character.id)" color="warning" small>
-                        <v-icon left small>cloud_download</v-icon>
-                        Экспортировать Легаси
-                      </v-btn>
-                    </div>
-                    <div v-else-if="
-                      characterVersion(character.id) < builderVersion
-                    ">
-                      <v-btn @click="migrateCharacter(character.id)" color="warning" x-small>
-                        <v-icon left small> cloud_upload </v-icon>
-                        Импорт (v{{ characterVersion(character.id) }})
-                      </v-btn>
-                    </div>
+                  <div class="character-overlay"></div>
 
-                    <div v-if="
-                      characterSpeciesLabel(character.id) &&
-                      characterArchetypeLabel(character.id)
-                    ">
-                      <span>{{ characterSpeciesLabel(character.id) }} •
-                        {{ characterArchetypeLabel(character.id) }}</span>
+
+                  <div class="character-info">
+
+                    <h2>
+                      {{ characterName(character.id) }}
+                    </h2>
+
+
+                    <div class="character-meta">
+
+                      <span>
+                        {{ characterSpeciesLabel(character.id) }}
+                      </span>
+
+                      <span v-if="characterArchetypeLabel(character.id)">
+                        • {{ characterArchetypeLabel(character.id) }}
+                      </span>
+
                     </div>
 
-                    <div>
-                      <span>Уровень {{ characterRank(character.id) }} </span>
-                    </div>
+
+                    <v-chip small color="primary" class="mt-2">
+                      Уровень {{ characterRank(character.id) }}
+                    </v-chip>
 
 
                   </div>
-                </v-card-text>
-              </div>
+
+
+                </div>
+
+
+
+                <!-- ACTIONS -->
+
+                <v-card-actions class="character-actions">
+
+
+                  <v-btn icon color="primary" @click="openCharacter(character.id)"
+                    :disabled="characterVersion(character.id) < builderVersion">
+                    <v-icon>
+                      mdi-pencil
+                    </v-icon>
+                  </v-btn>
+
+
+                  <v-btn icon color="primary" nuxt :to="`/forge/characters/${character.id}`">
+                    <v-icon>
+                      mdi-file-document
+                    </v-icon>
+                  </v-btn>
+
+
+
+                  <v-spacer />
+
+
+
+                  <v-tooltip bottom>
+
+                    <template v-slot:activator="{ on }">
+                      <v-switch v-on="on" :disabled="!$store.state.user" :input-value="character.isMarked"
+                        @change="toggleCloud(character)" inset hide-details class="mt-0" />
+                    </template>
+
+
+                    <span>
+                      Синхронизация персонажа
+                    </span>
+
+                  </v-tooltip>
+
+
+
+                  <v-btn icon color="primary" @click="openExportDialog(character.id)">
+                    <v-icon>
+                      mdi-download
+                    </v-icon>
+                  </v-btn>
+
+
+                  <v-btn icon color="error" @click="openDeleteDialog(character.id)">
+                    <v-icon>
+                      mdi-delete
+                    </v-icon>
+                  </v-btn>
+
+
+                </v-card-actions>
+
+
+              </v-card>
 
               <v-divider />
 
@@ -142,7 +200,7 @@
 
               <v-divider />
 
-              <v-card-actions>
+              <!-- <v-card-actions>
                 <v-btn @click="openCharacter(character.id)" color="primary" x-small text
                   :disabled="characterVersion(character.id) < builderVersion">
                   <v-icon left small> edit </v-icon>
@@ -179,14 +237,12 @@
                   Экспорт
                 </v-btn>
 
-                <!-- <div color="primary" text x-small>
-                  <input type="file" @change="importJson" accept=".json" />
-                </div> -->
 
-                <v-btn color="error" text small @click="openDeleteDialog(character.id)">
-                  <v-icon small>delete</v-icon>Удалить
-                </v-btn>
-              </v-card-actions>
+              <v-btn color="error" text small @click="openDeleteDialog(character.id)">
+                <v-icon small>delete</v-icon>Удалить
+              </v-btn>
+              </v-card-actions> -->
+
             </v-card>
           </v-col>
 
@@ -629,43 +685,147 @@ export default {
   },
 };
 </script>
-
 <style scoped lang="scss">
-.card {
-  //max-width: 640px;
-  height: 120px;
-  display: flex;
+.character-card {
 
-  &__image-container {
-    width: 120px;
-    min-width: 120px;
-    object-fit: contain;
-    align-self: flex-start;
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  transition: .25s ease;
+
+
+}
+
+
+.character-card:hover {
+
+  transform: translateY(-5px);
+
+}
+
+
+
+/* IMAGE */
+
+.character-cover {
+
+  height: 190px;
+
+  position: relative;
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-repeat: no-repeat;
+
+}
+
+
+.character-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+
+  background:
+    linear-gradient(180deg,
+      transparent 20%,
+      rgba(0, 0, 0, .85));
+
+}
+
+
+
+
+.character-info {
+
+  position: absolute;
+
+  left: 20px;
+
+  bottom: 20px;
+
+  color: white;
+
+}
+
+
+
+.character-info h2 {
+
+  margin: 0;
+
+  font-size: 26px;
+
+  font-weight: 800;
+
+  text-shadow:
+    0 2px 8px black;
+
+}
+
+
+
+.character-meta {
+
+  margin-top: 6px;
+
+  font-size: 14px;
+
+  opacity: .9;
+
+}
+
+
+
+
+.character-actions {
+
+  padding: 8px 12px;
+
+}
+
+
+
+.character-actions .v-btn {
+
+  margin-right: 4px;
+
+}
+
+
+
+
+/* MOBILE */
+
+@media(max-width:600px) {
+
+
+  .character-cover {
+
+    height: 220px;
+
   }
 
-  &__image {
-    background-position: center center;
-    background-size: cover;
-    height: 120px;
-    width: 120px;
+
+  .character-info {
+
+    left: 15px;
+
+    bottom: 15px;
+
   }
 
-  &__content-container {
-    flex: 1 1 auto;
-    //color: rgba(0, 0, 0, 0.54);
+
+  .character-info h2 {
+
+    font-size: 22px;
+
   }
 
-  &__campaign-container {
-    //color: rgba(255, 255, 255, 0.7);
-    //background-color: #424242;
-  }
 
-  &__content-subtitle {}
-
-  &__content-footer {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
 }
 </style>

@@ -126,8 +126,13 @@ export default {
     List(item) {
       if (this.traitList !== undefined) {
         const list = [];
+
         if (item.trait)
           this.traitList.filter(s => item.trait.includes(s.key)).forEach(tr => {
+            list.push(tr);
+          })
+        else if (item.traits)
+          this.traitList.filter(s => item.traits.includes(s.key)).forEach(tr => {
             list.push(tr);
           })
         const rar = this.traitList.find(s => item.rarity === s.nameEng.toLowerCase())

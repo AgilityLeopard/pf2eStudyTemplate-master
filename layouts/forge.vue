@@ -2,15 +2,15 @@
   <v-app>
     <AppLoader :visible="$store.state.ui.loading" />
     <v-navigation-drawer v-model="drawer.open" app :clipped="drawer.clipped" :fixed="drawer.fixed"
-      :permanent="drawer.permanent" :mini-variant="drawer.mini" width="320">
+      :permanent="drawer.permanent" :mini-variant="drawer.mini" :width="$vuetify.breakpoint.smAndDown ? 280 : 320">
 
       <v-card outlined class="builder-sidebar pa-3 ui-panel">
 
         <!-- TOP -->
-        <div class="top-block mb-3">
-          <v-list dense>
+        <div class="top-block st-panel mb-4">
+          <v-list dense class="st-list">
 
-            <v-list-item>
+            <v-list-item class="st-row">
               <v-list-item-content>
                 <v-list-item-title>Максимальные хиты</v-list-item-title>
               </v-list-item-content>
@@ -21,7 +21,7 @@
               </v-list-item-action>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item class="st-row">
               <v-list-item-content>
                 <v-list-item-title>Класс доспехов</v-list-item-title>
               </v-list-item-content>
@@ -32,7 +32,7 @@
               </v-list-item-action>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item class="st-row">
               <v-list-item-content>
                 <v-list-item-title>Скорость</v-list-item-title>
               </v-list-item-content>
@@ -41,32 +41,32 @@
               </v-list-item-action>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item class="st-row">
               <v-list-item-content>
                 <v-list-item-title>Внимательность</v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
                 <div class="chip-row">
-                  <v-chip small class="ui-chip mr-1">
+                  <v-chip small class="ui-chip ">
                     {{ ModAttributePerception(Perception.attribute, Perception.key) }}
                   </v-chip>
-                  <v-chip :color="getClassChipColor(characterPerseption)" small class="ui-chip ui-chip--color">
+                  <v-chip :color="getClassChipColor(characterPerseption)" small class="ui-chip--class">
                     {{ characterlabel(characterPerseption) }}
                   </v-chip>
                 </div>
               </v-list-item-action>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item class="st-row">
               <v-list-item-content>
                 <v-list-item-title>Сложность класса</v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
                 <div class="chip-row">
-                  <v-chip small class="ui-chip mr-1">
+                  <v-chip small class="ui-chip ">
                     {{ ModAttributeClass() }}
                   </v-chip>
-                  <v-chip :color="getClassChipColor(characterSkillClass)" small class="ui-chip ui-chip--color">
+                  <v-chip :color="getClassChipColor(characterSkillClass)" small class="ui-chip--class">
                     {{ characterlabel(characterSkillClass) }}
                   </v-chip>
                 </div>
@@ -76,28 +76,51 @@
           </v-list>
         </div>
 
+
         <!-- BOTTOM -->
         <div class="bottom-block">
 
           <!-- ATTRIBUTES -->
-          <div class="section">
-            <h3 class="section-title">Характеристики</h3>
+          <div class="section st-panel">
+            <h2 class="section-title">Характеристики</h2>
 
             <div v-for="attribute in attributeRepository" :key="attribute.key" class="stat-row" @click="openAtt()">
-              <v-btn class="ui-btn ui-btn--secondary stat-name-btn" small depressed>
-                {{ attribute.name }}
-              </v-btn>
 
-              <v-btn class="ui-btn ui-btn--ghost stat-mod-btn ml-1" small depressed>
+              <div class="stat-name">
+                {{ attribute.name }}
+              </div>
+
+              <v-chip small class="stat-value">
                 {{ ModAttributeReal(attribute.key) }}
-              </v-btn>
+              </v-chip>
+
             </div>
           </div>
+          <!-- SAVES -->
+          <div class="section st-panel mt-4">
+            <h2 class="section-title">Спасброски</h2>
 
+            <v-list dense class="st-list">
+              <v-list-item v-for="saving in SavingRepository" :key="saving.key" @click="openSaves(saving)">
+                <v-list-item-content>{{ saving.name }}</v-list-item-content>
+
+                <v-list-item-action>
+                  <div class="chip-row">
+                    <v-chip small class="ui-chip ">
+                      {{ ModAttributeSaving(saving.attribute, saving.key) }}
+                    </v-chip>
+                    <v-chip :color="getClassChipColor(characterSaving[saving.key])" small class="ui-chip--class">
+                      {{ characterlabel(characterSaving[saving.key]) }}
+                    </v-chip>
+                  </div>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </div>
 
           <!-- Сопротивления и иммунитеты -->
-          <div v-if="ResImWeak.length > 0" lass="section mt-4">
-            <h3 class="section-title">Сопротивления</h3>
+          <div v-if="ResImWeak.length > 0" class="section st-panel mt-4">
+            <h2 class="section-title">Сопротивления</h2>
 
             <v-chip bottom v-for="res in ResImWeak">
               <span>{{DamageType.find(t => t.key === res.key)?.name || res.key}} {{ res.NewValue }} </span>
@@ -106,19 +129,20 @@
           </div>
 
           <!-- SKILLS -->
-          <div class="section mt-4">
-            <h3 class="section-title">Навыки</h3>
+          <div class="section st-panel mt-4">
+            <h2 class="section-title">Навыки</h2>
 
-            <v-list dense>
-              <v-list-item v-for="skill in finalSkillRepository" :key="skill.key" @click="openSkills(skill)">
-                <v-list-item-content>{{ skill.name }}</v-list-item-content>
+            <v-list dense class="st-list">
+              <v-list-item class="st-list-item" v-for="skill in finalSkillRepository" :key="skill.key"
+                @click="openSkills(skill)">
+                <v-list-item-content class="st-list-content">{{ skill.name }}</v-list-item-content>
 
-                <v-list-item-action>
+                <v-list-item-action class="st-list-action">
                   <div class="chip-row">
-                    <v-chip small class="ui-chip mr-1">
+                    <v-chip small class="ui-chip ">
                       {{ ModAttribute(skill.attribute, skill.key) }}
                     </v-chip>
-                    <v-chip :color="getRankChipColor(skill.key)" small class="ui-chip ui-chip--color">
+                    <v-chip :color="getRankChipColor(skill.key)" small class="ui-chip--class">
                       {{ SkillLabel(skill.key) }}
                     </v-chip>
                   </div>
@@ -129,28 +153,7 @@
 
 
 
-          <!-- SAVES -->
-          <div class="section mt-4">
-            <h3 class="section-title">Спасброски</h3>
 
-            <v-list dense>
-              <v-list-item v-for="saving in SavingRepository" :key="saving.key" @click="openSaves(saving)">
-                <v-list-item-content>{{ saving.name }}</v-list-item-content>
-
-                <v-list-item-action>
-                  <div class="chip-row">
-                    <v-chip small class="ui-chip mr-1">
-                      {{ ModAttributeSaving(saving.attribute, saving.key) }}
-                    </v-chip>
-                    <v-chip :color="getClassChipColor(characterSaving[saving.key])" small
-                      class="ui-chip ui-chip--color">
-                      {{ characterlabel(characterSaving[saving.key]) }}
-                    </v-chip>
-                  </div>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </div>
 
         </div>
 
@@ -201,7 +204,7 @@
                 Действия
               </v-card-title>
 
-              <v-list dense>
+              <v-list dense class="st-list">
                 <v-list-item v-for="action in skill.actions || []" :key="action.id">
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-medium">
@@ -326,7 +329,10 @@
               </v-timeline>
             </v-card>
 
-            <!-- <v-list dense>
+            <!-- <v-list
+    dense
+    class="st-list"
+>
                     <v-list-item v-for="(event, index) in save.event">
                       <v-list-item-content>
                         <v-list-item-title style="
@@ -352,7 +358,7 @@
           <v-divider />
 
           <!-- FOOTER -->
-          <v-card-actions>
+          <v-card-actions class="ui-dialog__footer">
             <v-spacer />
           </v-card-actions>
 
@@ -469,7 +475,7 @@
 
           <v-divider />
 
-          <v-card-actions>
+          <v-card-actions class="ui-dialog__footer">
             <v-spacer />
           </v-card-actions>
 
@@ -478,12 +484,12 @@
 
     </v-navigation-drawer>
 
-    <v-app-bar app dark dense style="background-color: #212121" :fixed="toolbar.fixed"
+    <v-app-bar app dark dense flat style="background-color: #212121" :fixed="toolbar.fixed"
       :clipped-left="toolbar.clippedLeft">
       <v-app-bar-nav-icon @click.stop="toggleDrawer" />
 
-      <v-toolbar-title>
-        <nuxt-link to="/" class="title brand-logo brand-logo__text">
+      <v-toolbar-title class="pa-0">
+        <nuxt-link to="/" class="brand-logo">
           Shadow Tales
         </nuxt-link>
       </v-toolbar-title>
@@ -508,7 +514,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-toolbar class="builder-toolbar" dense>
+      <v-toolbar class="builder-toolbar" dense flat>
         <v-toolbar-items>
           <v-btn small text nuxt :to="`/forge/my-characters`" icon>
             <v-icon>supervisor_account</v-icon>
@@ -573,7 +579,7 @@
         </v-toolbar-items>
       </v-toolbar>
 
-      <v-container>
+      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="builder-container">
         <v-btn v-if="false" small color="green lighten-2"
           style="position: fixed; top: 174px; right: 350px; margin-right: 50%">
           <v-icon>chevron_left</v-icon>
@@ -614,14 +620,14 @@
       </v-container>
       <!-- <DiceChat /> -->
 
-      <v-btn fab small color="primary" dark class="dice-fab" @click="showDiceChat = !showDiceChat">
+      <!-- <v-btn fab small color="primary" dark class="dice-fab" @click="showDiceChat = !showDiceChat">
         <v-icon>casino</v-icon>
       </v-btn>
       <transition name="slide-fade">
         <div v-if="showDiceChat" class="dice-chat-wrapper">
           <DiceChat />
         </div>
-      </transition>
+      </transition> -->
     </v-main>
 
     <v-footer app dark :color="spendBuildingPoints > totalBuildPoints ? 'error' : ''" class="caption">
@@ -1928,6 +1934,7 @@ export default {
 };
 </script>
 
+<!-- 
 <style lang="scss" scoped>
 .dod-container {
   @media (min-width: 768px) {
@@ -2374,7 +2381,7 @@ export default {
 
 }
 
-.ui-chip--color {
+. {
   color: #ccc;
 }
 
@@ -2550,5 +2557,908 @@ export default {
 .v-container {
   padding-top: 112px !important;
   /* 64 (app-bar) + 48 (toolbar) */
+}
+</style>
+ 
+-->
+
+<style scoped>
+/* =========================================
+   SHADOW TALES UI FOUNDATION
+   Step 1
+   Theme aware version
+========================================= */
+
+
+/* =========================================
+   THEME TOKENS
+========================================= */
+
+
+/* DARK THEME */
+
+.theme--dark {
+
+  --ui-background: #0d1117;
+
+  --ui-surface: #161c23;
+
+  --ui-surface-hover: #202833;
+
+  --ui-border: rgba(255, 255, 255, .08);
+
+  --ui-text: #e6e6e6;
+
+  --ui-text-muted: #e6e6e6;
+
+  --ui-chip-bg: rgba(255, 255, 255, .08);
+
+}
+
+
+/* LIGHT THEME */
+
+.theme--light {
+
+  --ui-background: #f4f5f7;
+
+  --ui-surface: #ffffff;
+
+  --ui-surface-hover: #eef1f5;
+
+  --ui-border: rgba(0, 0, 0, .10);
+
+  --ui-text: #1b1d22;
+
+  --ui-text-muted: rgba(0, 0, 0, .55);
+
+  --ui-chip-bg: rgba(0, 0, 0, .06);
+
+}
+
+
+
+/* =========================================
+   APPLICATION
+========================================= */
+
+
+.v-application {
+
+  background: var(--ui-background) !important;
+
+}
+
+
+.v-main {
+
+  background:
+
+    radial-gradient(circle at top,
+      rgba(255, 255, 255, .04),
+      transparent 450px),
+
+    var(--ui-background);
+
+}
+
+
+
+/* =========================================
+   CARDS / PANELS
+========================================= */
+
+
+.v-card {
+
+  background: var(--ui-surface) !important;
+
+  color: var(--ui-text) !important;
+
+}
+
+
+
+/* Sidebar */
+
+.builder-sidebar {
+
+  background: var(--ui-surface) !important;
+
+  border: none !important;
+
+}
+
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+
+.ui-section {
+
+
+  background:
+
+    linear-gradient(145deg,
+      rgba(255, 255, 255, .04),
+      rgba(255, 255, 255, .01)),
+
+    var(--ui-surface) !important;
+
+
+  border:
+
+    1px solid var(--ui-border) !important;
+
+
+  border-radius: 16px !important;
+
+  overflow: hidden;
+
+
+}
+
+
+
+/* Section title */
+
+
+.ui-section__title {
+
+
+  padding: 14px 18px !important;
+
+
+  font-size: .78rem !important;
+
+
+  text-transform: uppercase;
+
+
+  letter-spacing: .12em;
+
+
+  font-weight: 700;
+
+
+  color: var(--ui-text-muted) !important;
+
+
+}
+
+
+
+/* =========================================
+   LISTS
+========================================= */
+
+
+.v-list-item {
+
+
+  border-radius: 12px;
+
+
+  transition: .2s ease;
+
+
+}
+
+
+
+.v-list-item:hover {
+
+
+  background: var(--ui-surface-hover);
+
+
+}
+
+
+
+.v-list-item__title,
+
+.v-list-item__content {
+
+
+  color: var(--ui-text) !important;
+
+
+}
+
+
+
+/* =========================================
+   TITLES
+========================================= */
+
+
+.section-title {
+
+  display: flex;
+
+  align-items: center;
+
+  min-height: 42px;
+
+  padding: 0 16px;
+
+  margin: 0;
+
+  border-bottom: 1px solid var(--ui-border);
+
+  font-size: .72rem;
+
+  letter-spacing: .14em;
+
+  text-transform: uppercase;
+
+  font-weight: 700;
+
+}
+
+.st-panel>.st-list {
+
+  padding: 6px !important;
+
+}
+
+.st-panel>.st-list {
+
+  padding: 6px !important;
+
+}
+
+/* ========================================
+   Builder Navigation
+======================================== */
+
+.builder-toolbar {
+
+  overflow-x: auto;
+
+  overflow-y: hidden;
+
+  scrollbar-width: none;
+
+}
+
+.builder-toolbar::-webkit-scrollbar {
+
+  display: none;
+
+}
+
+.builder-toolbar .v-toolbar__content {
+
+  gap: 6px;
+
+  padding: 0 8px;
+
+  min-width: max-content;
+
+}
+
+.builder-toolbar .v-btn {
+
+  border-radius: 999px !important;
+
+  min-width: auto;
+
+  padding: 0 14px;
+
+  font-size: .84rem;
+
+}
+
+.builder-toolbar .v-btn {
+
+  border-radius: 999px !important;
+
+  min-width: auto;
+
+  padding: 0 14px;
+
+  font-size: .84rem;
+
+}
+
+.builder-toolbar .v-btn:hover {
+
+  background: var(--ui-surface-hover) !important;
+
+}
+
+.select-chip {
+
+  transform: scale(.8);
+
+  margin-left: 4px;
+
+}
+
+
+/* =========================================
+   DIVIDERS
+========================================= */
+
+
+.v-divider {
+
+
+  border-color: var(--ui-border) !important;
+
+
+}
+
+
+
+/* =========================================
+   DIALOGS
+========================================= */
+
+
+.ui-dialog {
+
+
+  border-radius: 20px !important;
+
+
+  overflow: hidden;
+
+
+}
+
+
+
+.ui-dialog__header {
+
+
+  background:
+
+
+    linear-gradient(90deg,
+
+      var(--ui-surface-hover),
+
+      var(--ui-surface));
+
+
+}
+
+
+
+/* =========================================
+   CHIPS
+========================================= */
+
+
+.ui-chip {
+
+
+  /* background: var(--ui-chip-bg) !important; */
+
+
+  color: var(--ui-text) !important;
+
+
+  border-radius: 8px !important;
+
+
+  font-weight: 600;
+
+
+}
+
+.ui-chip--class {
+
+
+  /* background: var(--ui-chip-bg) !important; */
+
+
+  color: #e6e6e6;
+
+
+  border-radius: 8px !important;
+
+
+  font-weight: 600;
+
+
+}
+
+
+.ui-chip--success {
+
+
+  background: var(--ui-chip-bg) !important;
+
+  color: var(--ui-text) !important;
+
+
+}
+
+
+
+/* . {
+
+
+  font-size: .72rem !important;
+
+
+} */
+
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+
+.ui-btn {
+
+
+  border-radius: 10px !important;
+
+
+  text-transform: none !important;
+
+
+}
+
+
+
+.ui-btn--secondary {
+
+
+  background: var(--ui-chip-bg) !important;
+
+
+}
+
+
+
+/* =========================================
+   BRAND
+========================================= */
+
+
+.brand-logo {
+
+  text-decoration: none;
+
+  font-size: 1.2rem;
+
+  font-weight: 600;
+
+  letter-spacing: -.02em;
+
+  color: var(--ui-text);
+
+  transition: .2s;
+
+}
+
+
+.brand-logo:hover {
+
+  opacity: .85;
+
+}
+
+
+
+/* =========================================
+   ATTRIBUTE FIX
+========================================= */
+
+
+.stat-row,
+
+.builder-sidebar .v-list-item {
+
+
+  display: flex;
+
+  align-items: center;
+
+
+}
+
+
+
+.stat-name-btn {
+
+
+  flex: 1;
+
+
+}
+
+
+
+.stat-mod-btn {
+
+
+  min-width: 52px;
+
+
+  justify-content: center;
+
+
+  margin-left: 8px;
+
+
+}
+
+/* Формула */
+.ui-formula {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.ui-formula__total {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.ui-formula__parts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.ui-formula__part {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ui-formula__operator {
+  opacity: 0.6;
+  font-weight: bold;
+}
+
+/* =========================================
+   APP BAR
+========================================= */
+
+.v-app-bar {
+
+  backdrop-filter: blur(18px);
+
+  -webkit-backdrop-filter: blur(18px);
+
+  border-bottom: 1px solid var(--ui-border);
+
+  box-shadow: none !important;
+
+}
+
+/* =========================================
+   BUILDER TOOLBAR
+========================================= */
+
+.builder-toolbar {
+
+  background: transparent !important;
+
+  box-shadow: none !important;
+
+  border-bottom: 1px solid var(--ui-border);
+
+  padding: 0 8px;
+
+}
+
+.builder-toolbar .v-btn {
+
+  text-transform: none;
+
+  letter-spacing: 0;
+
+  border-radius: 10px;
+
+  font-weight: 500;
+
+  padding: 0 14px;
+
+  transition: .18s;
+
+}
+
+.builder-toolbar .v-btn {
+
+  text-transform: none;
+
+  letter-spacing: 0;
+
+  border-radius: 10px;
+
+  font-weight: 500;
+
+  padding: 0 14px;
+
+  transition: .18s;
+
+}
+
+.builder-toolbar .nuxt-link-exact-active {
+
+  background: var(--ui-surface-hover) !important;
+
+  font-weight: 600;
+
+}
+
+.v-footer {
+
+  border-top: 1px solid var(--ui-border);
+
+  box-shadow: none !important;
+
+}
+
+.v-footer {
+
+  border-top: 1px solid var(--ui-border);
+
+  box-shadow: none !important;
+
+}
+
+/* =========================================
+   CHARACTER SUMMARY
+========================================= */
+
+.st-panel {
+
+  margin-bottom: 16px;
+
+  border: 1px solid var(--ui-border);
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+}
+
+
+
+.st-list {
+
+  padding: 6px !important;
+
+}
+
+
+
+.st-row {
+
+  border-radius: 12px;
+
+  min-height: 52px !important;
+
+  transition: .18s;
+
+}
+
+
+
+.st-row:hover {
+
+  background: var(--ui-surface-hover);
+
+}
+
+.st-panel .v-list-item__title {
+
+  font-size: .86rem;
+
+  font-weight: 500;
+
+}
+
+.st-panel .v-list-item__action {
+
+  margin-left: 20px;
+
+}
+
+.st-panel .ui-chip {
+
+  min-width: 42px;
+
+  justify-content: center;
+
+}
+
+.chip-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+}
+
+
+
+/* =========================================
+   ATTRIBUTES
+========================================= */
+
+.stat-row {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  min-height: 46px;
+
+  padding: 0 14px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: .18s;
+
+}
+
+.stat-row:hover {
+
+  background: var(--ui-surface-hover);
+
+}
+
+.stat-name {
+
+  font-weight: 500;
+
+  font-size: .92rem;
+
+}
+
+.stat-value {
+
+  min-width: 42px;
+
+  justify-content: center;
+
+  font-weight: 700;
+
+}
+
+.builder-container {
+
+  padding-top: 16px !important;
+
+}
+
+@media(max-width:600px) {
+
+  .builder-container {
+
+    padding: 8px !important;
+
+  }
+
+}
+
+
+
+@media(max-width:600px) {
+
+  .st-row {
+
+    min-height: 40px !important;
+
+  }
+
+  .ui-chip {
+
+    min-height: 28px;
+
+    padding: 0 10px;
+
+  }
+
+
+
+  @media (max-width: 600px) {
+
+    .st-row,
+    .st-list-item,
+    .v-list-item {
+
+      min-height: 56px !important;
+
+    }
+
+  }
+}
+
+.ui-dialog__header {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 20;
+
+  background: var(--ui-surface);
+
+  border-bottom: 1px solid var(--ui-border);
+
+}
+
+.ui-dialog__content {
+
+  overscroll-behavior: contain;
+
+  -webkit-overflow-scrolling: touch;
+
+}
+
+.ui-dialog__footer {
+
+  position: sticky;
+
+  bottom: 0;
+
+  background: var(--ui-surface);
+
+  border-top: 1px solid var(--ui-border);
+
+  z-index: 20;
+
+}
+
+@media(max-width:600px) {
+
+  .v-timeline {
+
+    padding-left: 0 !important;
+
+  }
+
+  .v-timeline-item__body {
+
+    max-width: 100% !important;
+
+  }
+
+}
+
+@media(max-width:600px) {
+
+  .v-main {
+
+    padding-top: 56px !important;
+
+  }
+
+}
+
+@media(max-width:600px) {
+
+  .v-main {
+
+    padding-top: 56px !important;
+
+  }
+
 }
 </style>

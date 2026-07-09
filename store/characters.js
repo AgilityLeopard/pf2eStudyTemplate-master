@@ -374,6 +374,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].attributesBoost15 : {},
   characterAttributeBoost20: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesBoost20 : {},
+  characterSignatureSpellsById: (state) => (id) =>
+    state.characters[id] ? state.characters[id].signatureSpells : {},
   characterAncestryBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesAncestryBoost : {},
   characterBackgroundBoostId: (state) => (id) =>
@@ -2786,6 +2788,17 @@ export const mutations = {
   },
 
   // Psychic Powers
+  setSignatureSpell(state, { id, rank, key }) {
+    const char = state.characters[id];
+    if (char.signatureSpells)
+      char.signatureSpells = char.signatureSpells.filter(s => s.rank !== rank);
+
+    char.signatureSpells.push({ rank, key });
+  },
+  removeSignatureSpell(state, { id, rank }) {
+    const char = state.characters[id];
+    char.signatureSpells = char.signatureSpells.filter(s => s.rank !== rank);
+  },
   addCharacterPsychicPower(state, payload) {
     const character = state.characters[payload.id];
     const hasPower =
@@ -3584,6 +3597,7 @@ const getDefaultState = () => ({
   TrainedSkillClass: [],
   TrainedAdditionalSkillClass: undefined,
   spellsList: [],
+  signatureSpells: [],
   //Окончательный вид
   skills: {
     acrobatics: "U",

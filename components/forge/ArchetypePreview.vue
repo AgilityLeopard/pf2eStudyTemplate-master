@@ -1,136 +1,289 @@
 <template lang="html">
-  <v-card class="preview-card d-flex flex-column mb-4 pa-4" outlined>
 
+  <v-card class="preview-card">
 
-    <!-- Заголовок -->
-    <v-row align="center">
-      <v-col cols="8">
-        <h3 class="headline mb-1">{{ item.name }}</h3>
-        <span class="subtitle-2 grey--text" v-html="item.hint"></span>
-      </v-col>
-      <v-col cols="4" class="d-flex justify-end">
-        <v-avatar size="64">
-          <img :src="avatar" />
-        </v-avatar>
-      </v-col>
-    </v-row>
+    <!-- HEADER -->
+    <div class="preview-header">
 
-    <v-divider class="my-3" />
+      <v-row align="center">
 
-    <!-- Ключевые аттрибуты и хиты -->
-    <v-row class="d-flex" align="stretch">
-      <v-col cols="12" md="6">
-        <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
-          <strong>Ключевые аттрибуты</strong>
-          <p class="mb-0" v-if="item.keyAbility.length">{{ characterLabelAttribute(item.keyAbility) }}</p>
-          <p class="mb-0" v-else>{{ characterLabelAttributeBoost(item.attributeBoost) }}</p>
-          <small>На 1-м уровне усиление по выбору</small>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-card outlined class="pa-2 mb-2 d-flex flex-column fill-height" style="border-color: #ff6f61;">
-          <strong>Хиты</strong>
-          <p class="mb-0">{{ item.hitpoints }} + мод Телосложения</p>
-          <small>Макс. хитов на 1-м уровне и каждом последующем</small>
-        </v-card>
-      </v-col>
-    </v-row>
+        <v-col cols="12" md="9">
 
-    <!-- Навыки и атаки -->
-    <v-row class="d-flex" align="stretch">
-
-      <v-col cols="12" md="4">
-        <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
-          <h3 class="text-h6"> Спасброски/КС </h3>
-
-          <div v-for="item1 in SavingRepository" :key="item1.key">
-            <v-chip small :color="getClassChipColor(item.saving[item1.key])" dark> {{
-              characterlabel(item.saving[item1.key]) }}</v-chip>
-            {{ item1.name }}
-          </div>
-          <div>
-            <v-chip small :color="getClassChipColor(item.skillClass)" dark> {{
-              characterlabel(item.skillClass) }}</v-chip> КС класса
+          <div class="preview-title">
+            {{ item.name }}
           </div>
 
-          <div><v-chip small :color="getClassChipColor(item.Perception)" dark> {{
-            characterlabel(item.Perception) }}</v-chip> Внимательность
-          </div>
-        </v-card>
-      </v-col>
+          <div class="preview-subtitle" v-html="item.hint" />
 
-      <v-col cols="12" md="4">
-        <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
-          <h3 class="text-h6">Атаки</h3>
+        </v-col>
 
-          <div v-for="w in WeaponRepository" :key="w.key">
-            <div v-if="item.skillAttack[w.key]">
-              <v-chip small :color="getClassChipColor(item.skillAttack[w.key])" dark> {{
-                characterlabel(item.skillAttack[w.key]) }}</v-chip> {{ w.name }}
+        <v-col cols="12" md="3" class="text-center">
+
+          <v-avatar size="72" class="preview-avatar">
+            <img :src="avatar">
+          </v-avatar>
+
+        </v-col>
+
+      </v-row>
+
+    </div>
+
+
+    <v-divider />
+
+
+    <!-- CONTENT -->
+    <v-card-text class="preview-content">
+
+
+      <!-- Ключевые атрибуты и хиты -->
+      <v-row align="stretch">
+
+        <v-col cols="12" md="6">
+
+          <v-card outlined class="preview-section fill-height">
+
+            <strong>
+              Ключевые аттрибуты
+            </strong>
+
+            <p v-if="item.keyAbility.length">
+              {{ characterLabelAttribute(item.keyAbility) }}
+            </p>
+
+            <p v-else>
+              {{ characterLabelAttributeBoost(item.attributeBoost) }}
+            </p>
+
+            <small>
+              На 1-м уровне усиление по выбору
+            </small>
+
+          </v-card>
+
+        </v-col>
+
+
+        <v-col cols="12" md="6">
+
+          <v-card outlined class="preview-section fill-height">
+
+            <strong>
+              Хиты
+            </strong>
+
+            <p>
+              {{ item.hitpoints }} + мод Телосложения
+            </p>
+
+            <small>
+              Макс. хитов на 1-м уровне и каждом последующем
+            </small>
+
+          </v-card>
+
+        </v-col>
+
+      </v-row>
+
+
+
+      <!-- СПАСБРОСКИ / АТАКИ / ЗАЩИТЫ -->
+      <v-row align="stretch">
+
+
+        <v-col cols="12" md="4">
+
+          <v-card outlined class="preview-section fill-height">
+
+            <h3 class="section-title">
+              Спасброски / КС
+            </h3>
+
+
+            <div v-for="item1 in SavingRepository" :key="item1.key" class="preview-line">
+
+              <span>
+                {{ item1.name }}
+              </span>
+
+              <v-chip small :color="getClassChipColor(item.saving[item1.key])" dark>
+                {{ characterlabel(item.saving[item1.key]) }}
+              </v-chip>
+
             </div>
-          </div>
-        </v-card>
-      </v-col>
 
-      <v-col cols="12" md="4">
-        <v-card outlined class="pa-4 d-flex flex-column fill-height" style="border-color: #c75d5d;">
-          <h3 class="text-h6">Защиты</h3>
 
-          <div v-for="w in DefenceRepository" :key="w.key">
-            <div v-if="item.skillDefence[w.key]">
-              <v-chip small :color="getClassChipColor(item.skillDefence[w.key])" dark> {{
-                characterlabel(item.skillDefence[w.key]) }}</v-chip> {{ w.name }}
+            <div class="preview-line">
+
+              <span>
+                КС класса
+              </span>
+
+              <v-chip small :color="getClassChipColor(item.skillClass)" dark>
+                {{ characterlabel(item.skillClass) }}
+              </v-chip>
+
             </div>
-          </div>
-        </v-card>
-      </v-col>
-
-      <!-- nen -->
 
 
+            <div class="preview-line">
+
+              <span>
+                Внимательность
+              </span>
+
+              <v-chip small :color="getClassChipColor(item.Perception)" dark>
+                {{ characterlabel(item.Perception) }}
+              </v-chip>
+
+            </div>
 
 
+          </v-card>
 
-
-    </v-row>
-
-    <v-card outlined class="pa-4 mt-4" style="border-color: #c75d5d;">
-      <h3 class="text-h6 mb-2">Навыки</h3>
-
-      <div v-if="item.skillTrainedChoice.length">
-        <strong>На выбор:</strong>
-        {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}
-      </div>
-
-      <div v-if="item.skillTrained.length">
-        <strong>Обучен:</strong>
-        {{ characterLabelSkillTrainedChoice(item.skillTrained) }}
-      </div>
-
-      <div class="mt-2">
-        <strong>Дополнительно:</strong>
-        {{ item.skillTrainedPoints }} + мод Интеллекта
-      </div>
-    </v-card>
+        </v-col>
 
 
 
+        <v-col cols="12" md="4">
+
+          <v-card outlined class="preview-section fill-height">
+
+            <h3 class="section-title">
+              Атаки
+            </h3>
 
 
-    <!-- Действия -->
-    <v-divider class="my-3" />
+            <div v-for="w in WeaponRepository" :key="w.key">
+
+              <div v-if="item.skillAttack[w.key]" class="preview-line">
+
+                <span>
+                  {{ w.name }}
+                </span>
+
+                <v-chip small :color="getClassChipColor(item.skillAttack[w.key])" dark>
+                  {{ characterlabel(item.skillAttack[w.key]) }}
+                </v-chip>
+
+              </div>
+
+            </div>
+
+
+          </v-card>
+
+        </v-col>
+
+
+
+        <v-col cols="12" md="4">
+
+          <v-card outlined class="preview-section fill-height">
+
+            <h3 class="section-title">
+              Защиты
+            </h3>
+
+
+            <div v-for="w in DefenceRepository" :key="w.key">
+
+              <div v-if="item.skillDefence[w.key]" class="preview-line">
+
+                <span>
+                  {{ w.name }}
+                </span>
+
+                <v-chip small :color="getClassChipColor(item.skillDefence[w.key])" dark>
+                  {{ characterlabel(item.skillDefence[w.key]) }}
+                </v-chip>
+
+              </div>
+
+            </div>
+
+
+          </v-card>
+
+        </v-col>
+
+
+      </v-row>
+
+
+
+      <!-- НАВЫКИ -->
+      <v-card outlined class="preview-section mt-4">
+
+        <h3 class="section-title">
+          Навыки
+        </h3>
+
+
+        <div v-if="item.skillTrainedChoice.length">
+          <strong>
+            На выбор:
+          </strong>
+
+          {{ characterLabelSkillTrainedChoice(item.skillTrainedChoice) }}
+        </div>
+
+
+        <div v-if="item.skillTrained.length">
+          <strong>
+            Обучен:
+          </strong>
+
+          {{ characterLabelSkillTrainedChoice(item.skillTrained) }}
+        </div>
+
+
+        <div class="mt-2">
+
+          <strong>
+            Дополнительно:
+          </strong>
+
+          {{ item.skillTrainedPoints }} + мод Интеллекта
+
+        </div>
+
+
+      </v-card>
+
+
+    </v-card-text>
+
+
+
+    <v-divider />
+
+
+    <!-- ACTIONS -->
     <v-card-actions class="card-actions-sticky">
+
       <v-btn class="ui-btn ui-btn--secondary" @click="$emit('cancel')">
         Отмена
       </v-btn>
+
+
       <v-spacer />
+
+
       <v-btn class="ui-btn ui-btn--primary" @click="$emit('select', item)">
         Выберите класс
       </v-btn>
+
+
     </v-card-actions>
 
+
   </v-card>
+
 </template>
+
 
 <script lang="js">
 import KeywordRepository from '~/mixins/KeywordRepositoryMixin';
@@ -528,8 +681,19 @@ h6 {
 }
 
 .preview-card {
-  height: 100%;
-  /* background: var(--v-background-base); */
+
+  padding: 24px;
+
+}
+
+@media (max-width:600px) {
+
+  .preview-card {
+
+    padding: 16px;
+
+  }
+
 }
 
 .preview-scroll {
@@ -544,14 +708,151 @@ h6 {
 }
 
 .card-actions-sticky {
+
+  padding: 16px;
+
+  gap: 12px;
+
+}
+
+.card-actions-sticky {
+
+  padding: 16px;
+
+  gap: 12px;
+
+}
+
+.preview-list>* {
+
+  margin-bottom: 12px;
+
+}
+
+.card-actions-sticky {
   position: sticky;
   bottom: 0;
   z-index: 10;
 
-  background: var(--v-theme-surface);
+  /* background: var(--v-theme-surface); */
   border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
 
   padding-top: 12px;
   padding-bottom: 12px;
+}
+
+.card-actions-sticky {
+
+  background: var(--ui-surface);
+  gap: 12px;
+
+  display: flex;
+}
+
+.card-actions-sticky .v-btn {
+
+  flex: 1;
+
+}
+
+.preview-card p,
+.preview-card small {
+
+  line-height: 1.55;
+
+}
+
+.preview-card small {
+
+  opacity: .72;
+
+}
+
+.preview-section {
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+}
+
+.preview-header {
+  padding: 20px 24px;
+  margin: -1px -1px 24px;
+
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.preview-title {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.preview-subtitle {
+  margin-top: 8px;
+
+  font-size: 10px;
+
+  opacity: .75;
+
+  line-height: 1.6;
+}
+
+.preview-avatar {
+
+  margin: auto;
+
+  border: 1px solid var(--ui-border);
+
+  box-shadow: 0 4px 14px var(--ui-shadow);
+
+}
+
+@media (max-width:600px) {
+
+  .preview-header {
+
+    padding: 20px 16px;
+
+    text-align: center;
+
+  }
+
+  .preview-title {
+
+    font-size: 24px;
+
+    margin-top: 12px;
+
+  }
+
+  .preview-avatar {
+
+    margin-bottom: 16px;
+
+  }
+
+}
+
+.preview-content {
+  padding: 24px;
+}
+
+.preview-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+
+@media(max-width:600px) {
+
+  .preview-content {
+    padding: 16px;
+  }
+
 }
 </style>

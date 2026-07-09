@@ -53,8 +53,18 @@
               </div>
             </div>
 
+
+
             <div v-for="boost in species.abilityBoost" :key="boost.name">
               <strong>Свободное повышение</strong>
+            </div>
+
+            <h3 class="text-h6 mb-2">Понижение характеристик</h3>
+
+            <div v-if="species.attributeFlaw?.length">
+              <div v-for="boost in species.attributeFlaw" :key="boost.name">
+                <strong v-if="boost.value < 0">{{ boost.name }}</strong>
+              </div>
             </div>
           </v-card>
         </v-col>

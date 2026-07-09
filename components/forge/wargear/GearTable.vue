@@ -340,7 +340,7 @@ export default {
             fields: [
                 { key: 'name', type: 'string', label: 'Название' },
 
-                { key: 'bulk', type: 'number', label: 'Нагрузка' },
+                { key: 'bulk', type: 'number', label: 'Нагрузка', hint: "0.1 в поле = 1Л" },
 
                 { key: 'level', type: 'number', label: 'Уровень' },
 
@@ -406,13 +406,7 @@ export default {
                     class: 'text-center',
                     width: '150px',
                 },
-                {
-                    text: '',
-                    value: 'edit',
-                    align: 'center',
-                    class: 'text-center',
-                    width: '60px',
-                },
+
                 {
                     text: 'Экипировать',
                     value: 'equip',
@@ -428,6 +422,13 @@ export default {
                     width: '60px',
                 },
                 { text: 'Просмотр', value: 'view', sortable: false },
+                {
+                    text: '',
+                    value: 'edit',
+                    align: 'center',
+                    class: 'text-center',
+                    width: '60px',
+                },
                 {
                     text: '',
                     value: 'delete',
@@ -846,6 +847,7 @@ export default {
     }
 }
 </script>
+
 <style>
 /* ===== TABLE ===== */
 .ui-table {

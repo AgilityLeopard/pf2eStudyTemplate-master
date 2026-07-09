@@ -2,7 +2,7 @@
   <div>
     <v-card class="mb-4">
       <v-card-title style="background-color: #262e37; color: #fff">
-        <span>Подтвердите выбор снаряжения</span>
+        <span>Добавление снаряжения</span>
         <v-spacer />
         <v-btn @click="$emit('custom-item')">
           Свой предмет
@@ -11,40 +11,56 @@
       </v-card-title>
       <v-card-text>
         <v-row>
-          <v-col cols="6" sm="4">
-            <v-text-field v-model="searchQuery" filled dense clearable prepend-inner-icon="search" label="Поиск" />
 
-            <v-range-slider v-model="levelRange" :min="0" :max="20" :step="1" thumb-label="always"
-              label="Уровень"></v-range-slider>
 
-            <v-select v-if="type === 'weapon'" label="Категория" v-model="selectedCategoryWeaponFilters"
-              :items="weaponCategoryRepository" item-text="name" item-value="category" multiple>
-            </v-select>
+          <v-col cols="12" sm="4">
 
-            <v-select label="Тип оружия" v-if="type === 'weapon'" v-model="selectedTypeWeaponFilters"
-              :items="weaponGroup" item-text="name" item-value="group" multiple>
-            </v-select>
 
-            <v-select v-if="type === 'armor'" label="Категория доспехов" v-model="selectedCategoryArmorFilters"
-              :items="armourCategoryRepository" item-text="name" item-value="category" multiple>
-            </v-select>
+            <v-expansion-panels flat>
+              <v-expansion-panel>
 
-            <v-select label="Тип доспехов" v-if="type === 'armor'" v-model="selectedTypeArmorFilters"
-              :items="armorGroup" item-text="name" item-value="group" multiple>
-            </v-select>
+                <v-expansion-panel-header>
+                  <v-icon left small>mdi-filter-variant</v-icon>
+                  Фильтры
+                </v-expansion-panel-header>
 
-            <v-select label="Редкость" v-model="selectedRarityFilters" :items="rarityRepository" item-text="name"
-              item-value="key" multiple>
-            </v-select>
+                <v-expansion-panel-content>
 
-            <v-select label="Трейты" v-model="selectedTraitFilters" :items="typeFilters" item-text="name"
-              item-value="name" multiple>
-            </v-select>
+                  <v-text-field v-model="searchQuery" filled dense clearable prepend-inner-icon="search"
+                    label="Поиск" />
+
+                  <v-range-slider v-model="levelRange" :min="0" :max="20" :step="1" thumb-label="always"
+                    label="Уровень" />
+
+                  <v-select v-if="type === 'weapon'" label="Категория" v-model="selectedCategoryWeaponFilters"
+                    :items="weaponCategoryRepository" item-text="name" item-value="category" multiple />
+
+                  <v-select v-if="type === 'weapon'" label="Тип оружия" v-model="selectedTypeWeaponFilters"
+                    :items="weaponGroup" item-text="name" item-value="group" multiple />
+
+                  <v-select v-if="type === 'armor'" label="Категория доспехов" v-model="selectedCategoryArmorFilters"
+                    :items="armourCategoryRepository" item-text="name" item-value="category" multiple />
+
+                  <v-select v-if="type === 'armor'" label="Тип доспехов" v-model="selectedTypeArmorFilters"
+                    :items="armorGroup" item-text="name" item-value="group" multiple />
+
+                  <v-select label="Редкость" v-model="selectedRarityFilters" :items="rarityRepository" item-text="name"
+                    item-value="key" multiple />
+
+                  <v-select label="Трейты" v-model="selectedTraitFilters" :items="typeFilters" item-text="name"
+                    item-value="name" multiple />
+
+                </v-expansion-panel-content>
+
+              </v-expansion-panel>
+            </v-expansion-panels>
+
           </v-col>
-          <v-col cols="6" sm="8">
+
+          <v-col cols="12" sm="8">
             <div class="table-wrapper">
-              <v-data-table :headers="headers" :items="searchResult" item-key="key" :search="searchQuery"
-                :page.sync="pagination.page" hide-default-footer class="fixed-columns-table" show-expand
+              <v-data-table :headers="tableHeaders" :items="searchResult" item-key="key" :search="searchQuery"
+                mobile-breakpoint="0" :page.sync="pagination.page" hide-default-footer class="ui-table" show-expand
                 @page-count="pagination.pageCount = $event">
                 <template v-slot:item.name="{ item }">
                   {{ item.name }}
@@ -262,6 +278,21 @@ export default {
     };
   },
   computed: {
+    tableHeaders() {
+
+      if (this.$vuetify.breakpoint.xsOnly) {
+
+        return [
+          { text: "Название", value: "name", width: '35%' },
+          { text: "Ур.", value: "level", width: 50 },
+          { text: "", value: "action-add", sortable: false, width: 40 },
+          { text: "", value: "action-buy", sortable: false, width: 40 },
+        ]
+
+      }
+
+      return this.headers
+    },
     typeFilters() {
       if (this.repository === undefined) {
         return [];
@@ -547,5 +578,141 @@ export default {
   /* чтобы переносились строки */
   word-wrap: break-word;
   vertical-align: top;
+}
+
+@media (max-width:600px) {
+
+  .fixed-columns-table table {
+    table-layout: fixed;
+  }
+
+  .fixed-columns-table thead {
+    display: none;
+  }
+
+  .fixed-columns-table :deep(td) {
+    padding: 6px 4px !important;
+    font-size: 12px;
+  }
+
+}
+
+.fixed-columns-table :deep(td:first-child) {
+  width: auto;
+}
+
+.fixed-columns-table :deep(td:nth-child(2)) {
+  width: 40px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.fixed-columns-table :deep(td:nth-child(3)) {
+  width: 42px;
+  text-align: center;
+}
+
+/* TABLE */
+.ui-table {
+  width: 100%;
+  min-width: 0;
+}
+
+.table-wrapper {
+
+  overflow-x: auto;
+  overflow-y: auto;
+
+}
+
+/* NAME */
+.table-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media(max-width:600px) {
+
+  .mobile-hide {
+    display: none;
+  }
+
+}
+
+.ui-table :deep(td) {
+
+  padding: 8px !important;
+
+}
+
+
+@media(max-width:600px) {
+
+  .ui-table :deep(td) {
+
+    padding: 6px 4px !important;
+    font-size: 12px;
+
+  }
+
+
+  .name-text {
+
+    font-size: 13px;
+
+  }
+
+}
+
+@media(max-width:600px) {
+
+  .mobile-traits {
+
+    max-width: 120px;
+    overflow: hidden;
+
+  }
+
+}
+
+.ui-table :deep(th:first-child),
+.ui-table :deep(td:first-child) {
+  width: auto;
+}
+
+@media (max-width:600px) {
+
+  .ui-table :deep(table) {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .ui-table thead {
+    display: none;
+  }
+
+}
+
+.ui-table :deep(th:nth-child(2)),
+.ui-table :deep(td:nth-child(2)) {
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  text-align: center;
+}
+
+.ui-table :deep(th:nth-child(3)),
+.ui-table :deep(td:nth-child(3)) {
+  width: 42px;
+  min-width: 42px;
+  max-width: 42px;
+  text-align: center;
 }
 </style>

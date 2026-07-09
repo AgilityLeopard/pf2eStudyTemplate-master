@@ -1,26 +1,30 @@
 <template lang="html">
-  <v-row justify="center" no-gutters dense>
-    <v-col v-for="section in sections" :key="section.key" :cols="12" :sm="12" :md="6" :lg="4" :xl="4" class="pa-3">
-      <v-card :to="section.link.route" :disabled="!section.isActive" class="card" exact nuxt hover>
+  <v-row justify="center" dense>
+    <v-col v-for="section in sections" :key="section.key" cols="12" sm="6" md="4" class="pa-2">
+      <v-card :to="section.link.route" :disabled="!section.isActive" class="section-card" exact nuxt hover>
+
         <div class="card__image-container">
-          <div class="card__image" :style="{ backgroundImage: 'url(' + section.imageSrc + ')' }" loading />
+          <div class="card__image" :style="{
+            backgroundImage: `url(${section.imageSrc})`
+          }"></div>
         </div>
 
-        <div class="card__content-container pa-4">
-          <h2 class="headline" v-html="section.title" />
+        <div class="section-card__body">
 
-          <h3 class="card__content-subtitle pb-4 subtitle-2">
+          <h2 class="text-h6 font-weight-bold mb-1" v-html="section.title" />
+
+          <div class="text-subtitle-2 mb-2 grey--text">
             {{ section.subtitle }}
-          </h3>
-
-          <p class="body-2 d-none d-sm-block" v-html="section.htmlText" />
-
-          <div class="card__content-footer d-none d-sm-block">
-            <v-btn block color="success">
-              {{ section.link.text }}
-            </v-btn>
           </div>
+
+          <p class="body-2 mb-0 section-card__text" v-html="section.htmlText" />
+
+          <v-btn class="mt-4" block small color="success">
+            {{ section.link.text }}
+          </v-btn>
+
         </div>
+
       </v-card>
     </v-col>
   </v-row>
@@ -158,87 +162,74 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// xs < 600
-.card {
-  //max-width: 640px;
-  height: 140px;
-  display: flex;
+.section-card {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  transition: .25s ease;
 
-  &__image-container {
-    width: 30%;
-    min-width: 30%;
-    object-fit: contain;
-    align-self: flex-start;
+  &:hover {
+    transform: translateY(-3px);
   }
 
   &__image {
-    background-position: center center;
+    height: 150px;
     background-size: cover;
-    height: 140px;
+    background-position: center;
   }
 
-  &__content-container {
-    flex: 1 1 auto;
+  &__body {
+    padding: 16px;
   }
 
-  &__content-footer {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
+  &__text {
+    min-height: 40px;
   }
 }
 
-// sm small
-@media only screen and (min-width: 600px) {
-  .card {
-    height: 180px;
 
-    &__image-container {
-      width: 25%;
-      min-width: 25%;
-    }
+// телефоны
+@media (max-width: 600px) {
+
+  .section-card {
 
     &__image {
-      height: 180px;
+      height: 110px;
+    }
+
+    &__body {
+      padding: 12px;
+    }
+
+    .text-h6 {
+      font-size: 1rem !important;
+    }
+
+    &__text {
+      display: none;
     }
   }
+
 }
 
-// md medium
-@media only screen and (min-width: 960px) {
-  .card {
-    height: 240px;
 
-    &__image-container {
-      width: 25%;
-      min-width: 25%;
-    }
+// планшеты+
+@media (min-width: 960px) {
+
+  .section-card {
+
+    display: flex;
+    min-height: 190px;
 
     &__image {
-      height: 240px;
+      width: 40%;
+      height: auto;
+      min-height: 190px;
+    }
+
+    &__body {
+      flex: 1;
     }
   }
-}
-
-.flexcard {
-  display: flex;
-  flex-direction: column;
-}
-
-.hover-card {
-  cursor: pointer;
-}
-
-.hover-card:hover {
-  -webkit-box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
-    0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
-  box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2),
-    0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12) !important;
-}
-
-.greyscale {
-  -webkit-filter: grayscale(100%);
-  /* Safari 6.0 - 9.0 */
-  filter: grayscale(100%);
 }
 </style>

@@ -474,6 +474,47 @@ export async function fillPdf(this1) {
 
     })
 
+    const AttackDes =
+    {
+        simple: "SIMPLE WEAPONS",
+        martial: "MARTIAL WEAPONS",
+        advanced: "ADVANCED WEAPON",
+        unarmed: "UNARMED"
+    }
+
+    Object.entries(this1.skillAttack).forEach(([key, value]) => {
+
+
+
+        if (key) {
+            switch (value) {
+                case "T":
+                    const prof = form.getCheckBox(AttackDes[key].toUpperCase() + ' TRAINED');
+
+                    prof.check();
+                    break;
+                case "E":
+                    const prof1 = form.getCheckBox(AttackDes[key].toUpperCase() + ' EXPERT');
+                    prof1.check();
+                    break;
+                case "M":
+                    const prof2 = form.getCheckBox(AttackDes[key].toUpperCase() + ' MASTER');
+                    prof2.check();
+                    break;
+                case "L":
+                    const prof3 = form.getCheckBox(AttackDes[key].toUpperCase() + ' LEGENDARY');
+                    prof3.check();
+                    break;
+            }
+
+
+
+        }
+
+
+
+    })
+
     money = form.getTextField('PLATINUM');
 
     money.setText(String(this1.money.pp));
@@ -540,11 +581,13 @@ export async function fillPdf(this1) {
 
     let index = 0
     let weaponIndex = 0
+    let weaponDexIndex = 0
+
     let SumTotal = 0;
     let SumLTotal = 0;
     this1.wargear.forEach(wargear => {
         index++;
-        weaponIndex++;
+
         if (index > 17) return
         const skill = form.getTextField('HELD ' + index.toString());
 
@@ -569,7 +612,9 @@ export async function fillPdf(this1) {
         skill1.setText(String((Sum === 0 ? "" : Sum + " ") + + (SumL === 0 ? "" : SumL + "Л")));
         skill1.updateAppearances(customFont);
 
-        if (wargear.type === 'weapon' && weaponIndex < 4) {
+        //ближнее оружие
+        if (wargear.type === 'weapon' && weaponIndex < 4 && wargear.range === null) {
+            weaponIndex++;
             const nameWargear = 'MELEE STRIKE ' + weaponIndex.toString()
             const weap = form.getTextField('MELEE STRIKE ' + weaponIndex.toString());
 
@@ -580,16 +625,183 @@ export async function fillPdf(this1) {
 
             const modAbility = wargear.range === null ? this1.characterAttributesEnhanced["strength"] : this1.characterAttributesEnhanced["dexterity"];
 
-            const modProfiency = this1.characterArchetype ? this1.skillAttack[gear.category] : "U";
+            const modProfiency = this1.characterArchetype ? this1.skillAttack[wargear.category] : "U";
             const modLevel = modProfiency !== "U" ? this1.characterRank : 0;
-            const rune = this1.weaponRunePotency.find(t => t.key === gear.runeWeapon.potency).addItemBonus
+            const rune = wargear.runes ? wargear.runes.potency : 0
+
+            const totalBonAtk = this1.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
+
+            const traits = wargear.traits.join(', ')
+            atkBonus.setText(String(totalBonAtk));
+            atkBonus.updateAppearances(customFont);
+
+            const strWeap = form.getTextField(nameWargear + ' STRENGTH');
+
+            strWeap.setText(String((modAbility - 10) / 2));
+            strWeap.updateAppearances(customFont);
+
+
+
+            const profWeap = form.getTextField(nameWargear + ' PROFICIENCY');
+
+            profWeap.setText(String(this1.profiencyRepository[modProfiency] + modLevel));
+            profWeap.updateAppearances(customFont);
+
+
+            const runeWeap = form.getTextField(nameWargear + ' ITEM');
+
+            runeWeap.setText(String(rune));
+            runeWeap.updateAppearances(customFont);
+
+            const traitsWeap = form.getTextField(nameWargear + ' TRAITS AND NOTES');
+
+            traitsWeap.setText(String(traits));
+            traitsWeap.updateAppearances(customFont);
+
+
+            const mod = (modAbility - 10) / 2;
+            const enc = this1.enc;
+
+            //Для вычисления специализаций
+            const spec = enc.find(s => s.type === "Weapon Specialization") ? enc.find(s => s.type === "Weapon Specialization") : "";
+            const specGreater = enc.find(s => s.type === "greater-weapon-specialization") ? enc.find(s => s.type === "greater-weapon-specialization") : "";
+
+            const damSpec = spec !== "" ? spec.bonusDamage[this1.skillAttack[wargear.category]] : 0;
+            const damGreaterSpec = specGreater !== "" ? specGreater.bonusDamage[this1.skillAttack[wargear.category]] : 0;
+            const modSpec = damGreaterSpec !== 0 ? damGreaterSpec : damSpec;
+
+            //Для руны мощи 
+            const runeStriking = wargear.runes ? wargear.runes.striking : 0;
+            const damage = wargear.damage?.die ? (wargear.damage.dice + runeStriking) + wargear.damage.die : wargear.damage;
+            const type = this1.DamageType.find(t => t.key === wargear.damageOrig.damageType) ? this1.DamageType.find(t => t.key === wargear.damageOrig.damageType).name : wargear.damageOrig.damageType;
+
+            ///Руны свойств
+            let damageProperty = " ";
+            const runeList = this1.WeaponRuneProperty;
+            wargear.runes.property.forEach(rune => {
+                const damageRune = runeList.find(t => t.key === rune.toLowerCase());
+                if (damageRune) {
+                    damageProperty = damageProperty + " + " + damageRune.damage + " " + damageRune.type + " ";
+                }
+            })
+
+            const damageCalc = damage.toString() + (mod + modSpec < 0 ? " " : " + ") + (mod + modSpec).toString() + " " + type + damageProperty;
+
+            const damageWeap = form.getTextField(nameWargear + ' DAMAGE');
+
+            damageWeap.setText(String(damageCalc));
+            damageWeap.updateAppearances(customFont);
+
+
+
+            const damageTypeWeap = wargear.damageOrig.damageType.slice(0, 1).toUpperCase()
+
+            const damageCheck = form.getCheckBox(String(damageTypeWeap + (weaponIndex > 1 ? '_' + weaponIndex : '')));
+            damageCheck.check();
+
+
+
+        }
+
+        //ближнее оружие
+        if (wargear.type === 'weapon' && weaponDexIndex < 3 && wargear.range !== null) {
+            weaponDexIndex++;
+            const nameWargear = 'RANGED STRIKE ' + (weaponDexIndex + 3).toString()
+            const weap = form.getTextField('RANGED STRIKE ' + (weaponDexIndex + 3).toString());
+
+            weap.setText(wargear.name);
+            weap.updateAppearances(customFont);
+
+            const atkBonus = form.getTextField(nameWargear + " ATTACK BONUS");
+
+            const modAbility = wargear.range === null ? this1.characterAttributesEnhanced["strength"] : this1.characterAttributesEnhanced["dexterity"];
+
+            const modProfiency = this1.characterArchetype ? this1.skillAttack[wargear.category] : "U";
+            const modLevel = modProfiency !== "U" ? this1.characterRank : 0;
+            const rune = wargear.runes ? wargear.runes.potency : 0
 
             const totalBonAtk = this1.profiencyRepository[modProfiency] + (modAbility - 10) / 2 + modLevel + rune;
 
             atkBonus.setText(String(totalBonAtk));
             atkBonus.updateAppearances(customFont);
-        }
 
+            const strWeap = form.getTextField(nameWargear + ' STRENGTH');
+
+            strWeap.setText(String((modAbility - 10) / 2));
+            strWeap.updateAppearances(customFont);
+
+
+
+            const profWeap = form.getTextField(nameWargear + ' PROFICIENCY');
+
+            profWeap.setText(String(this1.profiencyRepository[modProfiency] + modLevel));
+            profWeap.updateAppearances(customFont);
+
+
+            const runeWeap = form.getTextField(nameWargear + ' ITEM');
+
+            runeWeap.setText(String(rune));
+            runeWeap.updateAppearances(customFont);
+
+            const traitsWeap = form.getTextField(nameWargear + ' TRAITS AND NOTES');
+
+            traitsWeap.setText(String(traits));
+            traitsWeap.updateAppearances(customFont);
+
+
+            const mod = (modAbility - 10) / 2;
+            const enc = this1.enc;
+
+            //Для вычисления специализаций
+            const spec = enc.find(s => s.type === "Weapon Specialization") ? enc.find(s => s.type === "Weapon Specialization") : "";
+            const specGreater = enc.find(s => s.type === "greater-weapon-specialization") ? enc.find(s => s.type === "greater-weapon-specialization") : "";
+
+            const damSpec = spec !== "" ? spec.bonusDamage[this1.skillAttack[wargear.category]] : 0;
+            const damGreaterSpec = specGreater !== "" ? specGreater.bonusDamage[this1.skillAttack[wargear.category]] : 0;
+            const modSpec = damGreaterSpec !== 0 ? damGreaterSpec : damSpec;
+
+            //Для руны мощи 
+            const runeStriking = wargear.runes ? wargear.runes.striking : 0;
+            const damage = wargear.damage?.die ? (wargear.damage.dice + runeStriking) + wargear.damage.die : wargear.damage;
+            const type = this1.DamageType.find(t => t.key === wargear.damageOrig.damageType) ? this1.DamageType.find(t => t.key === wargear.damageOrig.damageType).name : wargear.damageOrig.damageType;
+
+            ///Руны свойств
+            let damageProperty = " ";
+            const runeList = this1.WeaponRuneProperty;
+            wargear.runes.property.forEach(rune => {
+                const damageRune = runeList.find(t => t.key === rune.toLowerCase());
+                if (damageRune) {
+                    damageProperty = damageProperty + " + " + damageRune.damage + " " + damageRune.type + " ";
+                }
+            })
+
+            const damageCalc = damage.toString() + (mod + modSpec < 0 ? " " : " + ") + (mod + modSpec).toString() + " " + type + damageProperty;
+
+            const damageWeap = form.getTextField(nameWargear + ' DAMAGE');
+
+            damageWeap.setText(String(damageCalc));
+            damageWeap.updateAppearances(customFont);
+
+
+
+            const damageTypeWeap = wargear.damageOrig.damageType.slice(0, 1).toUpperCase()
+
+            const damageCheck = form.getCheckBox(String(damageTypeWeap + (weaponDexIndex + 3)));
+            damageCheck.check();
+            // const spec = enc.filter(s => s.type === 'Attack' && s.criticalSpecialization && s.criticalSpecialization === true)
+            // if (spec) {
+
+
+
+            //     const specWeap = form.getTextField('CRITICAL SPECIALIZATIONS');
+
+            //     specWeap.setText(String(damageCalc));
+            //     specWeap.updateAppearances(customFont);
+            // }
+
+
+
+        }
 
     })
 
@@ -601,6 +813,163 @@ export async function fillPdf(this1) {
 
     AC.setText(String(totalAC));
     AC.updateAppearances(customFont);
+
+
+    //Спеллы
+    if (this1.characterArchetype && this1.characterArchetype.spellProgression) {
+
+        const Tradition = {
+            "арканный": "ARCANE",
+            "природный": "PRIMAL",
+            "сакральный": "DIVINE",
+            "оккультный": "OCCULT"
+        }
+        if (Tradition[this1.characterArchetype.spellTradition]) {
+            const sp = form.getCheckBox(Tradition[this1.characterArchetype.spellTradition]);
+            sp.check();
+        }
+
+        const radio = form.getRadioGroup(
+            'Magical Tradition'
+        );
+
+        radio.select(this1.characterArchetype.prepared === false ? 'Spontaneous Caster' : 'Prepared Caster'); // имя выбранной опции
+
+        const profSpell = this1.characterArchetype.spellsClass["attack"]
+
+        if (profSpell) {
+            switch (profSpell) {
+                case "T":
+                    const prof = form.getCheckBox('SPELL ATTACK' + ' TRAINED');
+
+                    prof.check();
+                    break;
+                case "E":
+                    const prof1 = form.getCheckBox('SPELL ATTACK' + ' EXPERT');
+                    prof1.check();
+                    break;
+                case "M":
+                    const prof2 = form.getCheckBox('SPELL ATTACK' + ' MASTER');
+                    prof2.check();
+                    break;
+                case "L":
+                    const prof3 = form.getCheckBox('SPELL ATTACK' + ' LEGENDARY');
+                    prof3.check();
+                    break;
+            }
+
+        }
+
+        const attrSpell = (this1.characterAttributes[this1.characterArchetype.attributeBoost.find(t => t.value > 0).key] - 10) / 2;
+        const levelSpell = this1.characterRank;
+
+        const modSpell = this1.profiencyRepository[this1.characterArchetype.spellsClass["attack"]];
+
+        const attrSpellAttack = form.getTextField('SPELL ATTACK');
+        attrSpellAttack.setText(String(parseInt(attrSpell) + parseInt(levelSpell) + parseInt(modSpell)));
+        attrSpellAttack.updateAppearances(customFont);
+
+        const prodSpellBonus = form.getTextField('SPELL ATTACK PROFICIENCY');
+        prodSpellBonus.setText(String(parseInt(modSpell + levelSpell)));
+        prodSpellBonus.updateAppearances(customFont);
+
+        const attrSpellBonus = form.getTextField('SPELL ATTACK KEY');
+        attrSpellBonus.setText(String(parseInt(attrSpell)));
+        attrSpellBonus.updateAppearances(customFont);
+
+        // ---------- SPELLS PER DAY / CANTRIPS PER DAY ----------
+
+        const progression =
+            this1.characterArchetype.spellProgression[this1.characterRank];
+
+        // progression например: [5, 4, 3, 2, 0, 0]
+
+        const firstZero = progression.findIndex(v => v === 0);
+
+        // если 0 нет (20 уровень) - берем всю длину массива
+        const maxRank =
+            firstZero === -1 || this1.characterRank === 20
+                ? progression.length
+                : firstZero;
+
+        // Cantrips
+        if (progression.length > 0) {
+            const field = form.getTextField('CANTRIPS PER DAY');
+            field.setText(String(progression[0]));
+            field.updateAppearances(customFont);
+        }
+
+        // SPELLS PER DAY 1,2,3...
+        for (let i = 1; i < maxRank; i++) {
+            const field = form.getTextField(`SPELLS PER DAY ${i}`);
+            field.setText(String(progression[i]));
+            field.updateAppearances(customFont);
+        }
+
+        const maxRankCant = form.getTextField(`CANTRIPS RANK`);
+        maxRankCant.setText(String(maxRank - 1));
+        maxRankCant.updateAppearances(customFont);
+
+        const maxRankFocus = form.getTextField(`FOCUS SPELL RANK`);
+        maxRankFocus.setText(String(maxRank - 1));
+        maxRankFocus.updateAppearances(customFont);
+
+
+        const spells = (this1.psychicPowers ?? [])
+            .filter(spell => spell.rank !== 0);
+        for (let i = 0; i < Math.min(spells.length, 74); i++) {
+            const spell = spells[i];
+
+            // SPELL N
+            const nameField = form.getTextField(`SPELL ${i + 1}`);
+            nameField.setText(spell.name ?? '');
+            nameField.updateAppearances(customFont);
+
+            // SPELL ACTION N
+            let action = spell.time?.value ?? '';
+
+            if (action === 'reaction')
+                action = 'р';
+            else if (action === 'free')
+                action = 'св';
+
+            const actionField = form.getTextField(`SPELL ACTION ${i + 1}`);
+            actionField.setText(String(action));
+            actionField.updateAppearances(customFont);
+
+            // SPELL RANK N
+            const rankField = form.getTextField(`SPELL RANK ${i + 1}`);
+            rankField.setText(String(spell.rank ?? ''));
+            rankField.updateAppearances(customFont);
+        }
+    }
+
+    const Cantrips = (this1.psychicPowers ?? [])
+        .filter(spell => spell.rank === 0);
+
+    for (let i = 0; i < Math.min(Cantrips.length, 24); i++) {
+        const spell = Cantrips[i];
+
+        // SPELL N
+        const nameField = form.getTextField(`CANTRIP NAME ${i + 1}`);
+        nameField.setText(spell.name ?? '');
+        nameField.updateAppearances(customFont);
+
+        // SPELL ACTION N
+        let action = spell.time?.value ?? '';
+
+        if (action === 'reaction')
+            action = 'р';
+        else if (action === 'free')
+            action = 'св';
+
+        const actionField = form.getTextField(`CANTRIP ${i + 1} ACTIONS`);
+        actionField.setText(String(action));
+        actionField.updateAppearances(customFont);
+
+
+    }
+
 
     /* */
     // Заполняем текст с кастомным шрифтом
