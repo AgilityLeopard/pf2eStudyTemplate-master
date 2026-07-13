@@ -50,6 +50,10 @@
                   <v-select label="Трейты" v-model="selectedTraitFilters" :items="typeFilters" item-text="name"
                     item-value="name" multiple />
 
+
+                  <v-select v-model="selectedSourceFilters" :items="sourceFilters" item-text="name" item-value="name"
+                    multiple label="Источник" />
+
                 </v-expansion-panel-content>
 
               </v-expansion-panel>
@@ -188,6 +192,7 @@ export default {
       selectedTypeArmorFilters: [],
       selectedTraitFilters: [],
       selectedRarityFilters: [],
+      selectedSourceFilters: [],
       levelRange: [0, 20],
       customItemDialog: false,
       pagination: {
@@ -278,6 +283,23 @@ export default {
     };
   },
   computed: {
+    sourceFilters() {
+      if (this.repository === undefined) {
+        return [];
+      }
+
+
+      let reduced = [];
+      this.repository.forEach((item) => {
+        if (item.source.book) {
+          reduced.push(item.source.book);
+        }
+      });
+
+      reduced = reduced.filter((item) => item.trim().length > 0);
+      const distinct = [...new Set(reduced)];
+      return distinct.sort().map((tag) => ({ name: tag }));
+    },
     tableHeaders() {
 
       if (this.$vuetify.breakpoint.xsOnly) {
@@ -328,6 +350,12 @@ export default {
       if (maxLevel != 0) {
         searchResult = searchResult.filter(
           (item) => item.level.value >= minLevel && item.level.value <= maxLevel
+        );
+      }
+
+      if (this.selectedSourceFilters.length > 0) {
+        searchResult = searchResult.filter((item) =>
+          this.selectedSourceFilters.includes(item.source.book)
         );
       }
 

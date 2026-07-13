@@ -4107,6 +4107,7 @@ export default {
           nameEng: nameEng || nameRu
         };
       });
+
       this.wargearList = data.data;
 
     },
@@ -4245,7 +4246,7 @@ export default {
       );
 
       let status = 0;
-      console.log(wear)
+
       this.activeStatuses.forEach(effect => {
         if (effect && effect.rules) {
           if (effect.rules.find(s => s.selector))
@@ -4273,7 +4274,7 @@ export default {
           ? this.profiencyRepository[this.skillDefence[wear.category]]
           : 0;
         let potency = 0
-        console.log(wear)
+
         potency = this.potencyArmor
         const bonusAC = wear.acBonus ? wear.acBonus : 0;
         const arm = Def === 0 ? 0 : this.characterLevel();

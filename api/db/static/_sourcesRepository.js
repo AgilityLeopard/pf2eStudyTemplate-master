@@ -191,7 +191,7 @@ const source = {
     link: ""
   },
 
-  againstTriad: {
+  hauntedCity: {
     book: "Pathfinder #148: Fires of the Haunted City",
     key: "hauntedCity",
     version: "v0",
@@ -478,7 +478,7 @@ const source = {
     version: "v0",
     link: ""
   },
-  lordOfTheTrinityStar: {
+  cryptofRunes: {
     book: "Pathfinder #220: Crypt of Runes",
     key: "cryptofRunes",
     version: "v0",

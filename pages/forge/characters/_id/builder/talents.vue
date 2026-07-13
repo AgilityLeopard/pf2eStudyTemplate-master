@@ -11,8 +11,8 @@
           <h2 class="subtitle-2">
             Черты родословной
             <v-chip class="ui-chip ui-chip--progress">
-              {{ characterMaxType("ancestry") }} /
-              {{ Math.trunc((characterLevel() - 1) / 4) + 1 }}
+              {{ characterTalentCount.ancestry }} /
+              {{ Math.trunc((characterLevel - 1) / 4) + 1 }}
             </v-chip>
           </h2>
         </v-tab>
@@ -20,9 +20,9 @@
           <h2 class="subtitle-2">
             Черты класса
             <v-chip class="ui-chip ui-chip--progress" v-if="archetype">
-              {{ characterMaxType("class") }} /
+              {{ characterTalentCount.class }} /
               {{
-                Math.trunc(characterLevel() / 2) +
+                Math.trunc(characterLevel / 2) +
                 (archetype.isFeatLevelOne && archetype.isFeatLevelOne === true
                   ? 1
                   : 0)
@@ -34,11 +34,11 @@
           <h2 class="subtitle-2">
             Черты Навыков
             <v-chip class="ui-chip ui-chip--progress" v-if="archetype">
-              {{ characterMaxType("skill") }} /
+              {{ characterTalentCount.skill }} /
               {{
                 archetype?.keywords === "плут"
-                  ? Math.trunc(characterLevel() / 1)
-                  : Math.trunc(characterLevel() / 2)
+                  ? Math.trunc(characterLevel / 1)
+                  : Math.trunc(characterLevel / 2)
               }}
             </v-chip>
           </h2>
@@ -47,18 +47,18 @@
           <h2 class="subtitle-2">
             Черты общие
             <v-chip class="ui-chip ui-chip--progress" v-if="archetype">
-              {{ characterMaxType("general") }} /
-              {{ Math.trunc((characterLevel() + 1) / 4) + isGeneral("general") }}
+              {{ characterTalentCount.general }} /
+              {{ Math.trunc((characterLevel + 1) / 4) + generalBonusCount }}
             </v-chip>
           </h2>
         </v-tab>
 
-        <v-tab class="caption" key="tab-additional" :href="`#tab-additional`" v-if="FreeTalentsLength() !== 0">
+        <v-tab class="caption" key="tab-additional" :href="`#tab-additional`" v-if="freeTalentsLength !== 0">
           <h2 class="subtitle-2">Черты дополнительные</h2>
         </v-tab>
         <!-- Для воина -->
         <v-tab v-if="
-          archetype && characterLevel() >= 8 && archetype?.keywords === 'воин'
+          archetype && characterLevel >= 8 && archetype?.keywords === 'воин'
         " class="caption" key="tab-adaptation" :href="`#tab-adaptation`">
           <h2 class="subtitle-2">Боевая адаптация</h2>
         </v-tab>
@@ -66,7 +66,7 @@
         <!-- Для сорвиголовы -->
         <v-tab v-if="
           archetype &&
-          characterLevel() >= 3 &&
+          characterLevel >= 3 &&
           archetype?.keywords === 'сорвиголова'
         " class="caption" key="tab-stylish" :href="`#tab-stylish`">
           <h2 class="subtitle-2">Стильные приёмы</h2>
@@ -82,7 +82,7 @@
 
           <v-col v-else="characterSpeciesKey">
             <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)"
-              :showLevel="(lvl) => lvl <= characterLevel() && (lvl === 1 || (lvl - 1) % 4 === 0)"
+              :showLevel="(lvl) => lvl <= characterLevel && (lvl === 1 || (lvl - 1) % 4 === 0)"
               :getTalent="characterAncestryTalent" :getTalentData="characterTalentsKey"
               @select="lvl => updatePreview(lvl, 'ancestry')" @remove="removeTalent" />
           </v-col>
@@ -99,7 +99,7 @@
 
           <v-col v-else="archetype">
             <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="(lvl) =>
-              lvl <= characterLevel() &&
+              lvl <= characterLevel &&
               (lvl === 2 || lvl % 2 === 0 || (archetype?.isFeatLevelOne && lvl === 1))
               " :getTalent="characterClassTalent" :getTalentData="characterTalentsKey"
               @select="lvl => updatePreview(lvl, 'class')" @remove="removeTalent" />
@@ -109,7 +109,7 @@
         <!-- Черты навыков -->
         <v-tab-item class="my-tab-item" key="tab-skill" :value="`tab-skill`">
           <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="(lvl) =>
-            lvl <= characterLevel() &&
+            lvl <= characterLevel &&
             (lvl === 2 || lvl % 2 === 0 || archetype?.keywords === 'плут')
             " :getTalent="characterSkillTalent" :getTalentData="characterTalentsKey"
             @select="lvl => updatePreview(lvl, 'skill')" @remove="removeTalent" />
@@ -126,7 +126,7 @@
 
         <v-tab-item class="my-tab-item" key="tab-additional" :value="`tab-additional`">
           <!-- <v-col
-          v-if="FreeTalentsLength() !== 0"
+          v-if="freeTalentsLength !== 0"
           :cols="8"
           :sm="10"
           class="subtitle-1"
@@ -136,7 +136,7 @@
 
 
           <v-expansion-panels multiple>
-            <v-expansion-panel v-if="FreeTalentsLength() !== 0" v-for="levelAncestry in FreeTalentsLength()"
+            <v-expansion-panel v-if="freeTalentsLength !== 0" v-for="levelAncestry in freeTalentsLength"
               :key="levelAncestry">
               <v-expansion-panel-header>Черта {{ levelAncestry }}</v-expansion-panel-header>
 
@@ -178,7 +178,7 @@
         <!-- адаптация -->
         <v-tab-item class="my-tab-item" key="tab-adaptation" :value="`tab-adaptation`">
           <v-expansion-panels multiple>
-            <v-expansion-panel key="adaptation" v-if="characterLevel() >= 8">
+            <v-expansion-panel key="adaptation" v-if="characterLevel >= 8">
               <v-expansion-panel-header>{{ 8 }} уровень
                 <v-col :cols="4" :sm="2">
                   <v-btn color="error" align="right" x-small v-if="characterClassTalent(8)"
@@ -227,7 +227,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
 
-            <v-expansion-panel key="adaptation14" v-if="characterLevel() >= 14">
+            <v-expansion-panel key="adaptation14" v-if="characterLevel >= 14">
               <v-expansion-panel-header>{{ 14 }} уровень
                 <v-col :cols="4" :sm="2">
                   <v-btn color="error" align="right" x-small v-if="characterClassTalent(14)"
@@ -282,8 +282,8 @@
         <!-- Сорвиголова -->
         <v-tab-item class="my-tab-item" key="tab-stylish" :value="`tab-stylish`">
           <v-expansion-panels multiple>
-            <v-expansion-panel v-for="level in [3, 7, 15].filter((l) => l <= characterLevel())" key="adaptation"
-              v-if="characterLevel() >= 3">
+            <v-expansion-panel v-for="level in [3, 7, 15].filter((l) => l <= characterLevel)" key="adaptation"
+              v-if="characterLevel >= 3">
               <v-expansion-panel-header>{{ level }} уровень
                 <v-col :cols="4" :sm="2">
                   <v-btn color="error" align="right" x-small v-if="characterSkillStylishTalent(level)"
@@ -485,6 +485,22 @@ export default {
     };
   },
   computed: {
+    hasExtraGeneralFeat() {
+
+      return this.enhancements.some(t =>
+
+        t.group === "feat"
+
+        && t.mode === "Add"
+
+        && t.type === "general"
+
+      );
+    },
+    characterLevel() {
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
+    },
+
     settingHomebrews() {
       return this.$store.getters['characters/characterSettingHomebrewsById'](this.characterId);
     },
@@ -497,7 +513,13 @@ export default {
     characterArchetypeKey() {
       return this.$store.getters['characters/characterArchetypeKeyById'](this.characterId);
     },
+    freeTalentsLength() {
 
+      return this.characterTalents.filter(t =>
+        t.place.includes("free")
+      ).length;
+
+    },
 
     searchResult() {
       if (this.talentList === undefined) {
@@ -579,6 +601,93 @@ export default {
     },
     characterTalents() {
       return this.$store.getters['characters/characterTalentsById'](this.characterId);
+    },
+    generalBonusCount() {
+
+      return this.hasExtraGeneralFeat
+        ? 1
+        : 0;
+
+    },
+    characterTalentCount() {
+
+      const result = {
+        ancestry: 0,
+        class: 0,
+        skill: 0,
+        general: 0,
+        free: 0,
+        stylish: 0,
+        adaptation: 0
+      };
+
+      const level = this.characterLevelValue;
+
+      this.characterTalents.forEach(talent => {
+
+        if (level < talent.level)
+          return;
+
+        if (talent.place.startsWith("ancestry"))
+          result.ancestry++;
+
+        else if (talent.place.startsWith("class"))
+          result.class++;
+
+        else if (talent.place.startsWith("skill"))
+          result.skill++;
+
+        else if (talent.place.startsWith("general"))
+          result.general++;
+
+        else if (talent.place.startsWith("free"))
+          result.free++;
+
+        else if (talent.place.startsWith("stylish"))
+          result.stylish++;
+
+        else if (talent.place.startsWith("adaptation"))
+          result.adaptation++;
+
+      });
+
+      return result;
+
+    },
+    talentByKey() {
+      if (!this.talentList) return {};
+
+      return this.talentList.reduce((acc, talent) => {
+        acc[talent.key] = talent;
+        return acc;
+      }, {});
+    },
+    traitByKey() {
+
+      if (!this.traitList)
+        return {};
+
+      return this.traitList.reduce((obj, trait) => {
+
+        obj[trait.key] = trait;
+
+        return obj;
+
+      }, {});
+
+    },
+    characterTalentMap() {
+
+      if (!this.characterTalents.length)
+        return {};
+
+      const map = {};
+
+      this.characterTalents.forEach(talent => {
+        map[talent.place] = this.buildTalent(talent);
+      });
+
+      return map;
     },
     characterTalentLabels() {
       return this.characterTalents.filter((talent) => talent).map((talent) => talent.name);
@@ -708,13 +817,57 @@ export default {
     // },
   },
   methods: {
+    buildTalent(talent) {
 
+      const rawTalent = this.talentByKey[talent.key];
+
+      if (!rawTalent) {
+
+        console.warn(`No talent found for ${talent.key}`);
+
+        return {
+          id: talent.id,
+          key: talent.key,
+          name: talent.name,
+          label: `${talent.name} (Broken)`,
+          snippet: "Legacy talent",
+          cost: 0
+        };
+      }
+
+      const aggregatedTalent = {
+        ...rawTalent,
+
+        id: talent.id,
+        cost: talent.cost,
+        label: rawTalent.name,
+        place: talent.place,
+        level: talent.level,
+        trait: talent.traits,
+        description: talent.description,
+        selected: talent.selected
+      };
+
+      if (talent.options) {
+
+        if (aggregatedTalent.optionsKey === "skill")
+          aggregatedTalent.options = this.finalSkillRepository;
+
+        if (aggregatedTalent.optionsKey === "domain")
+          aggregatedTalent.options = this.finalSkillRepository;
+      }
+
+      return aggregatedTalent;
+    },
     //Вывод окна для выбора черт
     updatePreview(levelAncestry, type) {
 
       const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
       const archetype = this.archetype;
-      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
+      const sources = new Set(this.sources);
+      const lowercaseKeywords = new Set(
+        this.finalKeywords.map(k => k.toLowerCase())
+      );
 
       /*Для Сорвиголоваы*/
       const enc = this.$store.getters["characters/characterEnhancementsById"](
@@ -732,34 +885,56 @@ export default {
       }
       skill.push("acrobatics");
       // const list = [];
-      let list = this.talentList.filter(s => s.system.category === type || (type === 'general' && s.system.category === 'skill') || (type === 'adaptation' && s.system.category === 'class') || (type === 'stylish' && s.system.category === 'skill' /*&& skill.includes(s.skill)*/));
-      const sou = this.sources;
-      list = list.filter(s => sou.includes(s.source.key))
-      const lowercaseKeywords = this.finalKeywords.map(k => k.toLowerCase());
-      if (type === 'class' || type === 'ancestry')
-        list = list.filter(item =>
-          lowercaseKeywords.some(kw => item.traits && item.traits.includes(kw))
-        );
 
-      list.forEach(t => {
-        const tal = t;
-        tal.place = type + levelAncestry;
-        tal.placeLevel = levelAncestry;
-        tal.trait = tal.traits;
-        tal.isVal = false;
+      const list = [];
 
+      for (const talent of this.talentList) {
 
-        const Rest = {
-          "U": 0,
-          "T": 1,
-          "E": 2,
-          "M": 3,
-          "L": 4,
+        const category = talent.system.category;
+
+        const categoryOk =
+          category === type ||
+          (type === "general" && category === "skill") ||
+          (type === "adaptation" && category === "class") ||
+          (type === "stylish" && category === "skill");
+
+        if (!categoryOk)
+          continue;
+
+        if (!sources.has(talent.source.key))
+          continue;
+
+        if (type === "class" || type === "ancestry") {
+
+          const traits = talent.traits || [];
+
+          let found = false;
+
+          for (const trait of traits) {
+
+            if (lowercaseKeywords.has(trait.toLowerCase())) {
+              found = true;
+              break;
+            }
+          }
+
+          if (!found)
+            continue;
         }
-      })
+
+        list.push(talent);
+      }
+
+      const preparedList = list.map(talent => ({
+        ...talent,
+        place: type + levelAncestry,
+        placeLevel: levelAncestry,
+        trait: talent.traits,
+        isVal: false
+      }));
 
       this.levelTalent = levelAncestry;
-      this.selectedTalents = list;
+      this.selectedTalents = preparedList;
       this.talentsDialog = true
       this.talentsDialogType = type
       this.talentsDialogLevel = levelAncestry
@@ -798,9 +973,7 @@ export default {
     // characterSkillSheet() {
     //   return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
     // },
-    characterLevel() {
-      return this.$store.getters['characters/characterLevelById'](this.characterId);
-    },
+
     //АПИ по чертам
     async loadArchetype(key) {
       this.loading = true;
@@ -866,53 +1039,41 @@ export default {
         },
       };
 
-      const page = 1;
-      const perPage = 10000;
+      const params = {
 
-      const params = { page, perPage/*, source: sources.join(',')*/ };
-      const { data, total } = await this.$axios.get('/api/talents/', { params });
+        page: 1,
+
+        perPage: 10000
+
+      }
+      const { data } = await this.$axios.get('/api/talents/', { params });
       const talents = data.data.map(talent => {
         return {
           ...talent
         }
       });
 
-      if (this.traitList !== undefined) {
-        talents.forEach((species) => {
-          const tr = Array.isArray(species.traits)
-            ? species.traits
-            : String(species.traits).split(','); // если не массив — превращаем в массив
+      if (this.traitList) {
 
-          const lowercaseKeywords = species.traits ? tr : '';
+        talents.forEach(talent => {
 
-          species.traits = species.traits ? tr.map((s) =>
-            s.trim()
-          ) : '';
+          const traits = Array.isArray(talent.traits)
+            ? talent.traits
+            : String(talent.traits || "")
+              .split(",")
+              .map(s => s.trim())
+              .filter(Boolean);
 
-          const List1 = this.traitList;
-          const trait = List1.filter((talent) =>
-            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
-          );
+          talent.traits = traits;
 
-          if (trait.length > 0) {
-            const listAbilities = [];
-            species.traits.forEach((talent) => {
+          talent.traitDesc = traits
+            .map(key => this.traitByKey[key])
+            .filter(Boolean)
+            .map(trait => ({
+              name: trait.key,
+              description: trait.desc
+            }));
 
-              const t = trait.find(k => k.key === talent)
-
-              if (t) {
-                const ability1 = {
-                  name: t.key,
-                  description: t.desc,
-                };
-
-                listAbilities.push(ability1);
-              }
-
-
-            });
-            species.traitDesc = listAbilities;
-          }
         });
 
       }
@@ -928,9 +1089,24 @@ export default {
         };
       });
 
-      this.talentList = itemName;
+      this.talentList = talents.map(item => {
 
-      const rules = talents.flatMap(t => t.system.rules).filter(Boolean).filter(t => !['FlatModifier', 'RollOption', 'AdjustModifier', 'ItemAlteration'].includes(t.key));
+        const [nameRu, nameEng] =
+          item.name.split(/\s*\/\s*/, 2);
+
+        return {
+
+          ...item,
+
+          name: nameRu,
+
+          nameEng: nameEng || nameRu
+
+        };
+
+      });
+      Object.freeze(this.talentList);
+      // const rules = talents.flatMap(t => t.system.rules).filter(Boolean).filter(t => !['FlatModifier', 'RollOption', 'AdjustModifier', 'ItemAlteration'].includes(t.key));
       // console.table(rules);
 
       // console.log([...new Set(rules.flatMap(t => t.selector))]);
@@ -938,59 +1114,7 @@ export default {
       this.loading = false;
     },
     characterAncestryTalent(level) {
-      // { id, name, cost, selection}
-      if (this.talentList === undefined) {
-        return false;
-      }
-
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
-      const talents = characterTalents.filter((t) => t).map((talent) => {
-
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
-
-        // not found? return a custom talent without special properties and no cost
-        if (rawTalent === undefined) {
-          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
-          return {
-            id: talent.id,
-            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
-            name: talent.name,
-            key: talent.key,
-            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
-            cost: 0,
-          }
-        }
-
-        const aggregatedTalent = Object.assign({}, rawTalent);
-
-        aggregatedTalent.trait = talent.traits;
-        aggregatedTalent.id = talent.id;
-        aggregatedTalent.cost = talent.cost;
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.place = talent.place;
-        aggregatedTalent.level = talent.level;
-        aggregatedTalent.system = rawTalent.system;
-        aggregatedTalent.description = talent.description;
-        // for each special talent, check respectively
-        if (talent.options) {
-          aggregatedTalent.selected = talent.selected;
-          if (aggregatedTalent.optionsKey === 'skill')
-            aggregatedTalent.options = this.finalSkillRepository;
-          if (aggregatedTalent.optionsKey === 'domain')
-            aggregatedTalent.options = this.finalSkillRepository;
-        }
-
-        // Fetch gear for selected weapon trooper
-
-        return aggregatedTalent;
-      }).sort((a, b) => a.id.localeCompare(b.id));
-      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
-      return talents.find(s => s.place === 'ancestry' + level);
-
-
-
+      return this.characterTalentMap["ancestry" + level] || false;
     },
     characterTalentsKey(key) {
       if (this.talentList === undefined) {
@@ -1006,103 +1130,10 @@ export default {
 
     },
     characterSkillTalent(level) {
-      // { id, name, cost, selection}
-      if (this.talentList === undefined) {
-        return false;
-      }
-
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
-      const talents = characterTalents.filter((t) => t).map((talent) => {
-
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
-
-        // not found? return a custom talent without special properties and no cost
-        if (rawTalent === undefined) {
-          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
-          return {
-            id: talent.id,
-            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
-            name: talent.name,
-            key: talent.key,
-            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
-            cost: 0,
-          }
-        }
-
-        const aggregatedTalent = Object.assign({}, rawTalent);
-
-
-        aggregatedTalent.id = talent.id;
-        aggregatedTalent.trait = talent.traits;
-        aggregatedTalent.cost = talent.cost;
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.place = talent.place;
-        aggregatedTalent.description = talent.description;
-        // for each special talent, check respectively
-        if (talent.options) {
-          aggregatedTalent.selected = talent.selected;
-          if (aggregatedTalent.choice === 'skill')
-            aggregatedTalent.options = this.finalSkillRepository;
-
-        }
-
-        return aggregatedTalent;
-      }).sort((a, b) => a.id.localeCompare(b.id));
-      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
-      return talents.find(s => s.place === 'skill' + level);
-
-
-
+      return this.characterTalentMap["skill" + level] || false;
     },
     characterSkillStylishTalent(level) {
-      // { id, name, cost, selection}
-      if (this.talentList === undefined) {
-        return false;
-      }
-
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
-      const talents = characterTalents.filter((t) => t).map((talent) => {
-
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
-
-        // not found? return a custom talent without special properties and no cost
-        if (rawTalent === undefined) {
-          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
-          return {
-            id: talent.id,
-            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
-            name: talent.name,
-            key: talent.key,
-            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
-            cost: 0,
-          }
-        }
-
-        const aggregatedTalent = Object.assign({}, rawTalent);
-
-        aggregatedTalent.id = talent.id;
-        aggregatedTalent.trait = talent.traits;
-        aggregatedTalent.cost = talent.cost;
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.place = talent.place;
-        aggregatedTalent.description = talent.description;
-        // for each special talent, check respectively
-        if (talent.options) {
-          aggregatedTalent.selected = talent.selected;
-          if (aggregatedTalent.choice === 'skill')
-            aggregatedTalent.options = this.finalSkillRepository;
-
-        }
-
-        return aggregatedTalent;
-      }).sort((a, b) => a.id.localeCompare(b.id));
-
-      return talents.find(s => s.place === 'stylish' + level)
-
+      return this.characterTalentMap["stylish" + level] || false;
     },
 
     characterBackgroundTalent(level) {
@@ -1155,233 +1186,43 @@ export default {
 
     },
     characterClassTalent(level) {
-      // { id, name, cost, selection}
-      if (this.talentList === undefined) {
-        return false;
-      }
-
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
-      const talents = characterTalents.filter((t) => t).map((talent) => {
-
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
-
-        // not found? return a custom talent without special properties and no cost
-        if (rawTalent === undefined) {
-          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
-          return {
-            id: talent.id,
-            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
-            name: talent.name,
-            key: talent.key,
-            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
-            cost: 0,
-          }
-        }
-
-        const aggregatedTalent = Object.assign({}, rawTalent);
-
-
-        aggregatedTalent.id = talent.id;
-        aggregatedTalent.cost = talent.cost;
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.place = talent.place;
-        aggregatedTalent.level = talent.level;
-        aggregatedTalent.trait = talent.traits;
-        aggregatedTalent.description = talent.description;
-        // for each special talent, check respectively
-        if (talent.selected) {
-          aggregatedTalent.selected = talent.selected;
-        }
-
-        return aggregatedTalent;
-      }).sort((a, b) => a.id.localeCompare(b.id));
-
-
-      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
-      return talents.find(s => s.place === 'class' + level);
-
-
-
+      return this.characterTalentMap["class" + level] || false;
     },
     characterAdaptationTalent(level) {
-      // { id, name, cost, selection}
-      if (this.talentList === undefined) {
-        return false;
-      }
-
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
-      const talents = characterTalents.filter((t) => t).map((talent) => {
-
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
-
-        // not found? return a custom talent without special properties and no cost
-        if (rawTalent === undefined) {
-          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
-          return {
-            id: talent.id,
-            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
-            name: talent.name,
-            key: talent.key,
-            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
-            cost: 0,
-          }
-        }
-
-        const aggregatedTalent = Object.assign({}, rawTalent);
-
-
-        aggregatedTalent.id = talent.id;
-        aggregatedTalent.cost = talent.cost;
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.place = talent.place;
-        aggregatedTalent.level = talent.level;
-        aggregatedTalent.trait = talent.traits;
-        aggregatedTalent.description = talent.description;
-        // for each special talent, check respectively
-        if (talent.selected) {
-          aggregatedTalent.selected = talent.selected;
-        }
-
-        return aggregatedTalent;
-      }).sort((a, b) => a.id.localeCompare(b.id));
-
-
-      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
-      return talents.find(s => s.place === 'adaptation' + level);
-
-
-
+      return this.characterTalentMap["adaptation" + level] || false;
     },
     characterGeneralTalent(level) {
-      // { id, name, cost, selection}
-      if (this.talentList === undefined) {
-        return false;
-      }
-
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
-      const talents = characterTalents.filter((t) => t).map((talent) => {
-
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
-
-        // not found? return a custom talent without special properties and no cost
-        if (rawTalent === undefined) {
-          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
-          return {
-            id: talent.id,
-            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
-            name: talent.name,
-            key: talent.key,
-            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
-            cost: 0,
-          }
-        }
-
-        const aggregatedTalent = Object.assign({}, rawTalent);
-
-
-        aggregatedTalent.id = talent.id;
-        aggregatedTalent.cost = talent.cost;
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.place = talent.place;
-        // for each special talent, check respectively
-        if (talent.selected) {
-          aggregatedTalent.selected = talent.selected;
-        }
-
-
-        return aggregatedTalent;
-      }).sort((a, b) => a.id.localeCompare(b.id));
-
-
-      //console.warn(talents.map((t) => t.wargear[0].selected).join('-'));
-      return talents.find(s => s.place === 'general' + level);
-
-
-
+      return this.characterTalentMap["general" + level] || false;
     },
     characteFreeTalent(level) {
-      // { id, name, cost, selection}
-      if (this.talentList === undefined) {
-        return false;
-      }
-
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-
-      const talents = characterTalents.filter((t) => t).map((talent) => {
-
-        // find the plain talent by key
-        const rawTalent = this.talentList.find((r) => r.key === talent.key);
-
-        // not found? return a custom talent without special properties and no cost
-        if (rawTalent === undefined) {
-          console.warn(`No talent found for ${talent.key}::${talent.name}, using dummy talent.`);
-          return {
-            id: talent.id,
-            label: `${talent.name} (<strong>Broken</strong>, please remove!)`,
-            name: talent.name,
-            key: talent.key,
-            snippet: 'ATTENTION, this is a legacy talent, remove and re-add again.',
-            cost: 0,
-          }
-        }
-
-        const aggregatedTalent = Object.assign({}, rawTalent);
-
-
-        aggregatedTalent.id = talent.id;
-        aggregatedTalent.cost = talent.cost;
-        aggregatedTalent.label = aggregatedTalent.name;
-        aggregatedTalent.place = talent.place;
-
-        // for each special talent, check respectively
-        if (talent.selected) {
-          aggregatedTalent.selected = talent.selected;
-        }
-
-        return aggregatedTalent;
-      }).sort((a, b) => a.id.localeCompare(b.id));
-      return talents.find(s => s.place === 'free' + level);
-
+      return this.characterTalentMap["free" + level] || false;
     },
-    characterMaxType(item) {
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-      const level = this.characterLevel();
 
-      const max = characterTalents ? characterTalents.filter(s => s.place.includes(item)).filter(s => level >= s.level).length : 0;
 
-      return max;
-    },
-    isGeneral(item) {
-      const enc = this.$store.getters["characters/characterEnhancementsById"](
-        this.characterId
-      );
-      const isGeneral = item === "general" && enc.find(t => t.group === "feat" && t.mode === "Add" && t.type === "general") ? 1 : 0;
-      return isGeneral
-    },
     generalFeatsNumber(levelAncestry) {
-      const enc = this.$store.getters["characters/characterEnhancementsById"](
-        this.characterId
-      );
-      const isGeneral = enc.find(t => t.group === "feat" && t.mode === "Add" && t.type === "general") ? true : false;
-      return (levelAncestry <= this.characterLevel() &&
-        (levelAncestry == 3 || (levelAncestry + 1) % 4 == 0)) || (isGeneral === true && levelAncestry === 1)
+
+
+      return (
+        levelAncestry <= this.characterLevelValue &&
+        (
+          levelAncestry == 3
+          ||
+          (levelAncestry + 1) % 4 == 0
+        )
+      )
+        ||
+        (
+          this.hasExtraGeneralFeat
+          &&
+          levelAncestry === 1
+        );
 
     },
-    FreeTalentsLength() {
-      const characterTalents = this.$store.getters['characters/characterTalentsById'](this.characterId);
-      const length = characterTalents.filter(s => s.place.includes("free")).length;
-      return length < 1 ? 0 : length;
-    },
+
     removeTalent(talent) {
       const id = this.characterId;
       const source = `talent.${talent.id}`;
-      const level = this.characterLevel();
+      const level = this.characterLevel;
       const level1 = talent.level;
 
       const sheet = this.$store.getters["characters/characterSkillSheetById"](
@@ -1502,9 +1343,7 @@ export default {
       this.$store.commit('characters/setModification', { id: this.characterId, level });
       this.$store.commit('characters/setCharacterTalentSelected', { id, talent: talentPayload });
     },
-    characterLevel() {
-      return this.$store.getters['characters/characterLevelById'](this.characterId);
-    },
+
   },
 };
 </script>

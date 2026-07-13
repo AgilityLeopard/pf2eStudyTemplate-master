@@ -753,8 +753,10 @@ export const mutations = {
   setCharacterName(state, payload) {
     state.characters[payload.id].name = payload.name;
   },
-  setCharacterAvatar(state, payload) {
-    state.characters[payload.id].avatarUrl = payload.url;
+  setCharacterAvatar(state, { id, url }) {
+    state.characters[id].avatar = url || '';
+
+
   },
   setSettingTier(state, payload) {
     state.characters[payload.id].settingTier = payload.tier;
