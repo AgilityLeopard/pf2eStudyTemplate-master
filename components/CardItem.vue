@@ -492,4 +492,10 @@ export default {
 ::v-deep(.description.light-view img.action-icon) {
   filter: invert(1);
 }
+
+::v-deep(.action-glyph) {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: text-bottom;
+}
 </style>

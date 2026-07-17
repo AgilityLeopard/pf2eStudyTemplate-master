@@ -9,11 +9,31 @@ const traitMap = Object.fromEntries(
         t.key
     ])
 );
+const damageTypes = {
+    weaponDamage: "физический от оружия",
+    piercing: "колющий",
+    slashing: "режущий",
+    bludgeoning: "дробящий",
+    fire: "огонь",
+    acid: "кислота",
+    electricity: "электричество",
+    vitality: "жизненность",
+    force: "сила",
+    void: "пустота",
+    sonic: "звук",
+    cold: "холод",
+    spirit: "дух",
+    mental: "ментальный",
+    poison: "яд",
+    bleed: "кровотечение",
+    precision: "точный",
+    persistent: "продолжительный"
+};
 
 // Функция для безопасного добавления source
 const sourceMod = (sourceKey) => ({
     source: {
-        ...(source[sourceKey] || { key: sourceKey, book: 'Unknown Source' }),
+        ...(source[sourceKey] || { key: sourceKey, book: "Нет в источнике" }),
     },
 });
 
@@ -56,13 +76,21 @@ function translateTraits(traits = []) {
     );
 }
 
+const glyphs = {
+    "Action 1": "action_single",
+    "Action 2": "action_double",
+    "Action 3": "action_triple",
+    "Reaction": "action_reaction",
+    "FreeAction": "action_free",
+};
+
 function convertDescription(text = "") {
     return text
-
+        .replace(/@UUID\[Compendium\.[^\]]*effects[^\]]+\](?:\{[^}]+\})?/gi, "")
         // UUID
         .replace(/@UUID\[[^\]]+\]\{([^}]+)\}/g, "$1")
         .replace(/@UUID\[[^\]]+\]/g, "")
-
+        .replace(/\[\[\/[^\]]+\]\]\{([^}]+)\}/g, "$1")
         // Traits
         .replace(/@Trait\[([^\]]+)\](?:\{([^}]+)\})?/gi, (_, slug, label) => {
             if (label) return label;
@@ -75,57 +103,86 @@ function convertDescription(text = "") {
             return translated.replace(/^\p{Lu}/u, c => c.toLowerCase());
         })
 
-        // Checks
-        .replace(/@Check\[([^\]]+)\]/g, (_, params) => {
+        .replace(/@Check\[([^\]]+)\](?:\{([^}]+)\})?/g, (_, params, label) => {
             const parts = params.split("|");
 
             const names = {
                 fortitude: "Стойкость",
-                reflex: "Реакция",
+                reflex: "Рефлекс",
                 will: "Воля",
-                perception: "Восприятие"
+                perception: "Внимательность"
             };
 
-            let text = names[parts[0]] ?? parts[0];
+            const type = parts[0];
+
+            // Если Foundry уже передал нужную форму — используем её
+            let text = label ?? (names[type] ?? type);
 
             const dc = parts.find(x => x.startsWith("dc:"));
             if (dc) text += ` СЛ ${dc.substring(3)}`;
 
             if (parts.includes("basic"))
                 text = "Базовый спасбросок " + text;
+            else
+                text = "спасбросок " + text;
 
             return text;
         })
 
         // Templates
-        .replace(/@Template\[([^\]]+)\]/g, (_, params) => {
+        .replace(/@Template\[([^\]]+)\](?:\{([^}]+)\})?/g,
+            (_, params, label) => {
 
-            const obj = Object.fromEntries(
-                params.split("|").map(v => v.split(":"))
-            );
+                if (label)
+                    return label;
 
-            const types = {
-                burst: "взрыв",
-                cone: "конус",
-                line: "линия",
-                emanation: "эманация"
-            };
+                const obj = Object.fromEntries(
+                    params.split("|").map(v => v.split(":"))
+                );
 
-            return `${types[obj.type] ?? obj.type} ${obj.distance ?? ""} футов`.trim();
-        })
+                const types = {
+                    burst: "взрыв",
+                    cone: "конус",
+                    line: "линия",
+                    emanation: "эманация"
+                };
+
+                return `${obj.distance ?? ""} футов ${types[obj.type] ?? obj.type}`.trim();
+            })
 
         // Damage
-        .replace(/@Damage\[([^\]]+)\]/g, "$1")
+        .replace(/@Damage\[([^\]]+)\]/g, (_, damage) => {
+            return damage.replace(/\[([^\]]+)\]/g, (_, tags) => {
+                return " " + tags
+                    .split(",")
+                    .map(t => damageTypes[t.trim()] ?? t.trim())
+                    .join(" ");
+            });
+        })
+        .replace(
+            /(\d+d\d+(?:\+\d+)?)(\[([^\]]+)\])/gi,
+            (_, dice, __, tags) => {
+                return (
+                    dice +
+                    " " +
+                    tags
+                        .split(",")
+                        .map(t => damageTypes[t.trim()] ?? t.trim())
+                        .join(" ")
+                );
+            }
+        )
 
         // Roll
         .replace(/@Roll\[([^\]]+)\]/g, "$1")
 
-        // Glyph
-        .replace(/@Glyph\[Action 1\]/g, "1 действие")
-        .replace(/@Glyph\[Action 2\]/g, "2 действия")
-        .replace(/@Glyph\[Action 3\]/g, "3 действия")
-        .replace(/@Glyph\[Reaction\]/g, "Реакция")
-        .replace(/@Glyph\[FreeAction\]/g, "Свободное действие")
+        .replace(/@Glyph\[(.*?)\]/g, (_, glyph) => {
+            const file = glyphs[glyph];
+
+            if (!file) return glyph;
+
+            return `<img src="/img/icon/${file}.png" class="action-glyph" alt="${glyph}">`;
+        })
 
         // Action
         .replace(/@Action\[([^\]]+)\]/g, "$1")
