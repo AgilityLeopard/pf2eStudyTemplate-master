@@ -236,9 +236,6 @@ export default {
                 this.characterId
             );
         },
-        characterLevel() {
-            return this.$store.getters['characters/characterLevelById'](this.characterId);
-        },
         shieldClass() {
             return this.characterShield()
         },
@@ -311,9 +308,38 @@ export default {
 
     },
     methods: {
+
+        // Обновленные методы с учетом состояний
         ModAttributeSavingWithStatuses(attribute, skill) {
-            return this.$parent.ModAttributeSavingWithStatuses(attribute, skill)
+            const char1 = this.profiencyRepository[this.characterSaving[skill]];
+            const char2 = (this.characterAttributes[attribute] - 10) / 2;
+            const char3 = this.characterLevel;
+            const item = this.itemBonus(skill) && this.itemBonus(skill).value ? this.itemBonus(skill).value : 0
+
+            let status = 0;
+
+            // this.activeStatuses.forEach(effect => {
+            //     if (effect && effect.rules) {
+            //         if (effect.rules.find(s => s.selector))
+            //             if (effect.rules.find(s => s.key === 'FlatModifier')) {
+            //                 const att = effect.rules.find(s => s.selector).selector.filter(s => s === 'saving-throw' || s === 'all');
+
+
+            //                 if (att.length !== 0)
+            //                     if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+            //                         status = effect.value
+            //                     else
+            //                         status = -effect.rules.find(s => s.key === 'FlatModifier').value;
+
+            //             }
+            //     }
+            // })
+            const result = parseInt(char1) + parseInt(char2) + parseInt(char3) + parseInt(item) - status;
+
+            return result > 0 ? "+" + result : result;
+
         },
+
         characterArmor() {
             const wear = this.$store.getters["characters/characterWearById"](
                 this.characterId

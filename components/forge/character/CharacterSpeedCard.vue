@@ -28,10 +28,23 @@
 import StatGroup from "~/components/forge/StatGroup.vue"
 import StatIconNumber from '~/components/forge/StatIconNumber.vue';
 import AppIcon from '~/components/forge/Icon.vue';
+import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 
 export default {
     name: "CharacterSpeedCard",
+    mixins: [
 
+        StatRepositoryMixin
+
+
+
+    ],
+    props: {
+        characterId: {
+            type: String,
+
+        },
+    },
     components: {
         StatGroup,
         StatIconNumber,
@@ -44,25 +57,71 @@ export default {
         }
     },
     computed: {
+        SkillPerception() {
+            return this.$store.getters["characters/characterPerseptionById"](
+                this.characterId
+            );
+        },
         speed() {
             return this.characterSpeed()
         },
         perception() {
             return this.ModAttributePerceptionWithStatuses("", "")
         },
+        characterAttributes() {
+            return this.$store.getters["characters/characterAttributesById"](
+                this.characterId
+            );
+        },
+        characterLevel() {
+            return this.$store.getters['characters/characterLevelById'](this.characterId);
+        },
         ClassDC() {
             return this.ModAttributeClass()
+        },
+        SkillClass() {
+            return this.$store.getters["characters/characterSkillClassById"](
+                this.characterId
+            );
         },
     },
     methods: {
         characterSpeed() {
             return this.$parent.characterSpeed
         },
-        ModAttributePerceptionWithStatuses(key, key2) {
-            return this.$parent.ModAttributePerceptionWithStatuses(key, key2)
+
+        ModAttributePerceptionWithStatuses(attribute, skill) {
+
+            const char1 = this.profiencyRepository[this.SkillPerception];
+            const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
+            const char3 = this.characterLevel;
+            let status = 0;
+
+            // this.activeStatuses.forEach(effect => {
+            //     if (effect && effect.rules) {
+            //         if (effect.rules.find(s => s.selector))
+            //             if (effect.rules.find(s => s.key === 'FlatModifier')) {
+            //                 const att = effect.rules.find(s => s.selector).selector.filter(s => s === 'perception' || s === 'all');
+
+
+            //                 if (att.length !== 0)
+            //                     if (effect.rules.find(s => s.key === 'FlatModifier').value === '-value')
+            //                         status = effect.value
+            //                     else
+            //                         status = -effect.rules.find(s => s.key === 'FlatModifier').value;
+
+            //             }
+            //     }
+            // })
+            const result = parseInt(char1) + parseInt(char2) + parseInt(char3) - status;
+            return result > 0 ? "+" + result : result;
         },
         ModAttributeClass() {
-            return this.$parent.ModAttributeClass()
+            const char1 = this.profiencyRepository[this.SkillClass] ? this.profiencyRepository[this.SkillClass] : 0;
+            const char3 = this.characterLevel;
+
+            return 10 + parseInt(char1) + parseInt(char3);
+
         },
     },
 }

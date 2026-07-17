@@ -168,7 +168,7 @@
             <v-icon dark @click="closeAtt">close</v-icon>
           </v-card-title>
 
-          <attribute-table :characterId="$route.params.id" />
+          <attribute-table :characterId="$route.params.id" :tableRows="this.tableRows" />
 
         </v-card>
       </v-dialog>
@@ -524,7 +524,7 @@
           </v-btn>
           <v-btn small text nuxt :to="routes.species" :disabled="!settingSelected">
             1. Родословная
-            <v-chip small class="select-chip" v-if="!characterSpeciesLabel || !characterHeritageLabel">
+            <v-chip small class="ui-chip ui-chip--info" v-if="!characterSpeciesLabel || !characterHeritageLabel">
               !
             </v-chip>
           </v-btn>
@@ -539,20 +539,20 @@
           </v-btn> -->
           <v-btn small text nuxt :to="routes.archetype" :disabled="!settingSelected">
             2. Класс
-            <v-chip small class="select-chip" v-if="!characterArchetype">
+            <v-chip small class="ui-chip ui-chip--info" v-if="!characterArchetype">
               !
             </v-chip>
             <!-- <v-alert small type="info" color="primary"> </v-alert> -->
           </v-btn>
           <v-btn small text nuxt :to="routes.ascension" :disabled="!settingSelected">
             3. Предыстория
-            <v-chip small class="select-chip" v-if="!characterAscension">
+            <v-chip small class="ui-chip ui-chip--info" v-if="!characterAscension">
               !
             </v-chip>
           </v-btn>
           <v-btn small text nuxt :to="routes.stats" :disabled="!settingSelected">
             4. Навыки и характеристики
-            <v-chip small class="select-chip" v-if="
+            <v-chip small class="ui-chip ui-chip--info" v-if="
               progress !== progressMax && progress !== 0 && progressMax !== 0
             ">
               !
@@ -560,7 +560,7 @@
           </v-btn>
           <v-btn small text nuxt :to="routes.talents" :disabled="!settingSelected">
             5. Черты
-            <v-chip small class="select-chip" v-if="progressFeats !== 0">
+            <v-chip small class="ui-chip ui-chip--info" v-if="progressFeats !== 0">
               !
             </v-chip>
           </v-btn>
@@ -938,7 +938,7 @@ export default {
       const progress = this.$store.getters["characters/characterProgressById"](
         this.$route.params.id
       );
-
+      console.log("progress", progress)
       if (!progress) return 0;
 
       const totalValue = progress.reduce(
@@ -973,7 +973,7 @@ export default {
       const progress = this.$store.getters[
         "characters/characterProgressMaxById"
       ](this.$route.params.id);
-
+      console.log("progressMax", progress)
       if (!progress) return 0;
       const totalValue = progress.reduce(
         (sum, item) => sum + (item.value || 0),
@@ -2373,30 +2373,13 @@ export default {
    CHIP SYSTEM
 ========================= */
 
-.ui-chip {
-  border-radius: 8px;
-  font-weight: 500;
-  border: 1px solid var(--ui-border);
-  background: var(--ui-surface);
 
-}
 
 . {
   color: #ccc;
 }
 
-/* смысловые состояния */
-.ui-chip--success {
-  border-color: rgba(76, 175, 80, 0.5);
-}
 
-.ui-chip--danger {
-  border-color: rgba(244, 67, 54, 0.5);
-}
-
-.ui-chip--info {
-  border-color: rgba(33, 150, 243, 0.5);
-}
 
 /* =========================
    SIDEBAR LAYOUT HELPERS
@@ -3125,6 +3108,20 @@ export default {
 .ui-formula__operator {
   opacity: 0.6;
   font-weight: bold;
+}
+
+/* смысловые состояния */
+.ui-chip--success {
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.ui-chip--danger {
+  border-color: rgba(244, 67, 54, 0.5);
+}
+
+.ui-chip--info {
+  border-color: rgba(33, 150, 243, 0.5);
+  background-color: rgba(33, 150, 243, 0.5) !important;
 }
 
 /* =========================================

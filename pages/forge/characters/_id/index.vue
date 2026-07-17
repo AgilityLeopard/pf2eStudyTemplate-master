@@ -18,7 +18,7 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <character-attributes-card @click.native="openAtt()" />
+          <character-attributes-card @click.native="openAtt()" :characterId="characterId" />
         </v-col>
 
         <v-col cols="12" md="4">
@@ -27,7 +27,8 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <character-speed-card @click.native="openStatDialog('character-speed-card', 'Скорость')" />
+          <character-speed-card @click.native="openStatDialog('character-speed-card', 'Скорость')"
+            :characterId="characterId" />
         </v-col>
       </v-row>
 

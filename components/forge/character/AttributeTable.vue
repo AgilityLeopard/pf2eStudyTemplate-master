@@ -43,6 +43,10 @@ export default {
     characterId: {
       type: String,
       required: true
+    },
+    tableRows: {
+      type: Array,
+      required: false
     }
   },
 
@@ -147,11 +151,16 @@ export default {
     modReal(key) {
       return this.ModAttributeReal(key)
     },
+
     ModAttributeReal(attribute) {
+      let result = 0
 
+      this.tableRows.forEach((row, rowIndex) => {
+        result += this.formatBoost(attribute, rowIndex)
+      })
 
-      const result = this.characterAttributes[attribute]
-      const modRaw = (result - 10) / 2;       // настоящее дробное значение
+      // const result = this.characterAttributes[attribute]
+      const modRaw = (result);       // настоящее дробное значение
       const mod = Math.floor(modRaw);         // отображаемое целое значение
 
 

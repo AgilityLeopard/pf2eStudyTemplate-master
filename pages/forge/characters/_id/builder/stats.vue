@@ -1,563 +1,744 @@
-<template lang="html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
+<template lang="html">
   <v-row justify="center">
-
     <h3 class="headline">
       Выберите характеристики и навыки
     </h3>
-
-
     <v-expansion-panels multiple>
-      <v-expansion-panel class="ui-panel" v-for="levelAncestry in characterLevel()" :key="levelAncestry" v-if="
-        levelAncestry <= characterLevel() &&
-        (archetype?.keywords === 'плут' ||
-          levelSkill['class'].includes(levelAncestry))
-      ">
-
-        <!-- <v-expansion-panel-header>
-          {{ levelAncestry }} уровень
-        </v-expansion-panel-header> -->
-
+      <v-expansion-panel class="ui-panel" v-for="level in characterLevel" :key="level">
         <v-expansion-panel-header class="ui-panel-header">
-          <div class="ui-panel-header__title"> <span>{{ levelAncestry }} </span> <span class="ui-panel-level"> уровень
-            </span> </div>
-
-          <v-skeleton-loader v-if="!levelProgressMap[levelAncestry].max && levelProgressMap[levelAncestry].current"
-            type="chip" width="100" height="32" class="mx-2" />
-
-
-          <v-chip class="ui-chip ui-chip--progress" style="flex: none" right pill> {{
-            levelProgressMap[levelAncestry].current }} / {{
-              levelProgressMap[levelAncestry].max }} </v-chip>
+          <div class="ui-panel-header__title">
+            <span>
+              {{ level }}
+            </span>
+            <span class="ui-panel-level">
+              уровень
+            </span>
+          </div>
+          <v-chip class="ui-chip ui-chip--progress" style="flex:none" right pill>
+            {{ levelProgressMap[level]?.current || 0 }}
+            /
+            {{ levelProgressMap[level]?.max || 0 }}
+          </v-chip>
         </v-expansion-panel-header>
-
         <v-expansion-panel-content class="ui-panel-content">
           <div class="ui-section">
-            <v-col v-if="levelAncestry === 1">
+            <!-- ========================= -->
+            <!-- LEVEL 1 INITIAL CHOICES -->
+            <!-- ========================= -->
+            <template v-if="level === 1">
+              <!-- ========================================= -->
+              <!-- НАСЛЕДИЕ -->
+              <!-- ========================================= -->
 
+              <v-card v-if="species" outlined class="ui-choice-card mb-4">
 
+                <div class="ui-section-header">
+                  Наследие
+                </div>
 
-              <div class="ui-section-title">Повышение от Наследия</div>
+                <v-card-text>
 
+                  <!-- Автоматические бонусы -->
 
-              <v-container v-if="species" class="bg-surface-variant">
-                <v-row>
-                  <!-- <v-alert v-if="!species" type="warning" class="caption ml-4 mr-4" dense outlined border="left">
-                    Выберите наследие
-                  </v-alert> -->
-
-                  <div v-if="!species" class="ui-message ui-message--warning">
-                    Выберите наследие
+                  <div class="caption mb-2 grey--text text--darken-1">
+                    Особенности наследия
                   </div>
 
-                  <v-col :cols="12" :md="12">
-                    <div v-if="
-                      selectedAncestryBoost === selectedAncestryBoost2 &&
-                      selectedAncestryBoost !== '' &&
-                      boost == 2
-                    " class="ui-message ui-message--error">
-                      Вы не можете выбрать одну и ту же характеристику
+                  <div class="boost-list mb-4">
+
+                    <v-chip v-for="attr in attributeRepository" :key="'ancestry-info-' + attr.key" outlined small
+                      class="ma-1" :class="{
+                        'chip-boost': isAncestryBoost(attr.key),
+                        'chip-flaw': isAncestryFlaw(attr.key)
+                      }">
+
+                      <v-icon v-if="isAncestryBoost(attr.key)" left small>
+                        mdi-check-circle
+                      </v-icon>
+
+                      <v-icon v-else-if="isAncestryFlaw(attr.key)" left small>
+                        mdi-minus-circle
+                      </v-icon>
+
+                      {{ attr.name }}
+
+                    </v-chip>
+
+                  </div>
+
+
+                  <!-- Первое повышение -->
+
+                  <div class="caption mb-2">
+                    Свободное повышение
+                  </div>
+
+                  <div class="boost-list mb-4">
+
+                    <v-chip-group v-model="selectedAncestryBoost" active-class="primary white--text"
+                      @change="updateSelect">
+
+                      <v-chip v-for="attr in attributeRepository" :key="'ancestry-choice-1-' + attr.key" outlined
+                        :value="attr.key" :disabled="!isAncestryAvailable(
+                          attr.key,
+                          AncestryAttribute
+                        )
+                          ||
+                          attr.key === selectedAncestryBoost2
+                          " :class="{
+                            'ui-chip--locked':
+                              !AncestryAttribute.some(
+                                a => a.key === attr.key
+                              )
+                          }">
+
+                        <v-icon v-if="!AncestryAttribute.some(
+                          a => a.key === attr.key
+                        )" left small>
+                          mdi-lock
+                        </v-icon>
+
+                        {{ attr.name }}
+
+                      </v-chip>
+
+                    </v-chip-group>
+
+                  </div>
+
+
+                  <!-- Второе повышение -->
+
+                  <template v-if="boost === 2">
+
+                    <div class="caption mb-2">
+                      Второе свободное повышение
                     </div>
-                  </v-col>
-                  <v-col v-if="boost == 2" :cols="12" :md="6">
-                    <v-select class="ui-select" label="Повышение от Наследия" v-model="selectedAncestryBoost2"
-                      :items="AncestryAttribute2" item-text="name" item-value="key" dense outlined
-                      @change="updateSelect2(selectedAncestryBoost2)"></v-select>
-                  </v-col>
 
-                  <v-col :cols="12" :md="6">
-                    <v-select class="ui-select" label="Свободное повышение" v-model="selectedAncestryBoost"
-                      :items="AncestryAttribute" item-text="name" item-value="key" dense outlined
-                      @change="updateSelect(selectedAncestryBoost)"></v-select>
-                  </v-col>
-                </v-row>
-              </v-container>
+                    <div class="boost-list">
 
-              <v-col v-else>
-                <div class="ui-message ui-message--warning">
-                  Выберите наследие
-                </div>
-              </v-col>
+                      <v-chip-group v-model="selectedAncestryBoost2" active-class="primary white--text"
+                        @change="updateSelect2">
 
+                        <v-chip v-for="attr in attributeRepository" :key="'ancestry-choice-2-' + attr.key" outlined
+                          :value="attr.key" :disabled="!isAncestryAvailable(
+                            attr.key,
+                            AncestryAttribute2
+                          )
+                            ||
+                            attr.key === selectedAncestryBoost
+                            " :class="{
+                              'ui-chip--locked':
+                                !AncestryAttribute2.some(
+                                  a => a.key === attr.key
+                                )
+                            }">
 
-              <div class="ui-section-title">Повышение от Предыстории</div>
+                          <v-icon v-if="!AncestryAttribute2.some(
+                            a => a.key === attr.key
+                          )" left small>
+                            mdi-lock
+                          </v-icon>
 
+                          {{ attr.name }}
 
-              <v-col v-if="!ascension" :cols="12">
-                <div class="ui-message ui-message--warning">
-                  Выберите предысторию
-                </div>
-              </v-col>
+                        </v-chip>
 
-              <v-container v-if="ascension" class="bg-surface-variant">
-                <v-row>
-                  <v-col :cols="12" :md="12">
-                    <div v-if="
-                      selectedBackgroundBoost === selectedBackgroundBoost2 &&
-                      selectedBackgroundBoost !== ''
-                    " class="ui-message ui-message--error">
-                      Вы не можете выбрать одну и ту же характеристику
+                      </v-chip-group>
+
                     </div>
-                  </v-col>
 
-                  <v-col :cols="12" :md="6">
-                    <v-select class="ui-select" label="Повышение от предыстории" v-model="selectedBackgroundBoost"
-                      :items="BackgroundAttribute" item-text="name" item-value="key" dense outlined
-                      @change="updateSelectBackground(selectedBackgroundBoost)"></v-select>
-                  </v-col>
+                  </template>
 
-                  <v-col :cols="12" :md="6">
-                    <v-select class="ui-select" label="Свободное повышение" v-model="selectedBackgroundBoost2"
-                      :items="BackgroundAttribute2" item-text="name" item-value="key" dense outlined
-                      @change="updateSelectBackground2(selectedBackgroundBoost2)"></v-select>
-                  </v-col>
-                </v-row>
-              </v-container>
+                </v-card-text>
 
-              <div class="ui-section-title">
-                Повышения Класса {{ archetype ? archetype.name : "" }}
+              </v-card>
+
+              <div v-else class="ui-message ui-message--warning mb-4">
+                Выберите наследие
               </div>
 
 
+              <!-- ========================================= -->
+              <!-- ПРЕДЫСТОРИЯ -->
+              <!-- ========================================= -->
 
-              <v-col v-if="archetype && archetype.keyAbility.length > 1" :cols="12" :md="6">
-                <v-select class="ui-select" label="Повышение Характеристики от класса" v-model="selectedClassBoost"
-                  :items="ClassAttribute" item-text="name" item-value="key" dense outlined
-                  @change="updateSelectClassAttribute(selectedClassBoost)"></v-select>
-              </v-col>
+              <v-card v-if="ascension" outlined class="ui-choice-card mb-4">
 
-              <v-col v-if="archetype && archetype.skillTrainedChoice.length > 1" :cols="12" :md="6">
-                <v-select class="ui-select" label="Повышение Навыка от класса" v-model="selectedClassSkill"
-                  :items="ClassSkill" item-text="name" item-value="key" dense outlined
-                  @change="updateSelectClassSkill(selectedClassSkill)"></v-select>
-              </v-col>
-
-              <v-col v-if="!archetype" :cols="12">
-                <div class="ui-message ui-message--warning">
-                  Выберите Класс
+                <div class="ui-section-header">
+                  Предыстория
                 </div>
-              </v-col>
 
-              <v-col v-if="
-                archetype &&
-                archetype.skillTrainedChoice.length == 0 &&
-                archetype.keyAbility.length == 0
-              " :cols="12">
-                <div class="ui-message ui-message--warning">
-                  У класса нет повышений на выбор
+                <v-card-text>
+
+
+
+                  <!-- Выбор -->
+
+                  <div class="caption mb-2">
+                    Свободное повышение
+                  </div>
+
+                  <div class="boost-list mb-4">
+
+                    <v-chip-group v-model="selectedBackgroundBoost" active-class="primary white--text"
+                      @change="updateSelectBackground">
+
+                      <v-chip v-for="attr in attributeRepository" :key="'background-choice-1-' + attr.key" outlined
+                        :value="attr.key" :disabled="!BackgroundAttribute.some(
+                          a => a.key === attr.key
+                        )
+                          ||
+                          attr.key === selectedBackgroundBoost2
+                          " :class="{
+                            'ui-chip--locked':
+                              !BackgroundAttribute.some(
+                                a => a.key === attr.key
+                              )
+                          }">
+
+                        <v-icon v-if="
+                          !BackgroundAttribute.some(
+                            a => a.key === attr.key
+                          )
+                        " left small>
+                          mdi-lock
+                        </v-icon>
+
+                        {{ attr.name }}
+
+                      </v-chip>
+
+                    </v-chip-group>
+
+                  </div>
+
+                  <!-- Второй выбор -->
+
+                  <div class="caption mb-2">
+                    Второе свободное повышение
+                  </div>
+
+                  <div class="boost-list">
+
+                    <v-chip-group v-model="selectedBackgroundBoost2" active-class="primary white--text"
+                      @change="updateSelectBackground2">
+
+                      <v-chip v-for="attr in attributeRepository" :key="'background-choice-2-' + attr.key" outlined
+                        :value="attr.key" :disabled="!BackgroundAttribute2.some(
+                          a => a.key === attr.key
+                        )
+                          ||
+                          attr.key === selectedBackgroundBoost
+                          " :class="{
+                            'ui-chip--locked':
+                              !BackgroundAttribute2.some(
+                                a => a.key === attr.key
+                              )
+                          }">
+
+                        <v-icon v-if="
+                          !BackgroundAttribute2.some(
+                            a => a.key === attr.key
+                          )
+                        " left small>
+                          mdi-lock
+                        </v-icon>
+
+                        {{ attr.name }}
+
+                      </v-chip>
+
+                    </v-chip-group>
+
+                  </div>
+
+                </v-card-text>
+
+              </v-card>
+
+              <div v-else class="ui-message ui-message--warning mb-4">
+                Выберите предысторию
+              </div>
+
+              <!-- ========================================= -->
+              <!-- КЛАСС -->
+              <!-- ========================================= -->
+
+              <v-card v-if="archetype" outlined class="ui-choice-card mb-4">
+
+                <div class="ui-section-header">
+                  Класс — {{ archetype.name }}
                 </div>
-              </v-col>
 
-              <v-row></v-row>
-              <v-col v-if="archetype">
-                <v-btn outlined class="ui-btn ui-btn--accent" @click="dialogAttributeLevel1 = true">
-                  Повышение Аттрибутов
-                  <v-chip class="ui-chip" v-if="
-                    characterProgressionBoost(levelAncestry) !== 0 && archetype
-                  " style="flex: none" right pill>
-                    {{ characterProgressionBoost(levelAncestry) }}</v-chip>
+                <v-card-text>
+
+                  <!-- ================================= -->
+                  <!-- Ключевая характеристика -->
+                  <!-- ================================= -->
+
+                  <template>
+
+                    <div v-if="archetype.keyAbility.length === 1" class="boost-list">
+
+                      <v-chip v-for="attr in attributeRepository" :key="'class-' + archetype.id + '-' + attr.key" small
+                        outlined :class="{
+                          'chip-boost':
+                            archetype.keyAbility.length
+                              ? archetype.keyAbility.includes(attr.key)
+                              : archetype.attributeBoost.some(a => a.key === attr.key)
+                        }">
+
+                        <v-icon v-if="
+                          archetype.keyAbility.length
+                            ? archetype.keyAbility.includes(attr.key)
+                            : archetype.attributeBoost.some(a => a.key === attr.key)
+                        " left small>
+                          mdi-check-circle
+                        </v-icon>
+
+                        {{ attr.name }}
+
+                      </v-chip>
+
+                    </div>
+
+                    <div v-else class="boost-list">
+
+                      <v-chip-group v-model="selectedClassBoost" active-class="primary white--text"
+                        @change="updateSelectClassAttribute">
+
+                        <v-chip v-for="attr in attributeRepository" :key="'background-choice-1-' + attr.key" outlined
+                          :value="attr.key" :disabled="!ClassAttribute.some(
+                            a => a.key === attr.key
+                          )
+
+                            " :class="{
+                              'ui-chip--locked':
+                                !ClassAttribute.some(
+                                  a => a.key === attr.key
+                                )
+                            }">
+
+                          <v-icon v-if="
+                            !ClassAttribute.some(
+                              a => a.key === attr.key
+                            )
+                          " left small>
+                            mdi-lock
+                          </v-icon>
+
+                          {{ attr.name }}
+
+                        </v-chip>
+
+                      </v-chip-group>
+
+                    </div>
+                  </template>
+
+                  <!-- ================================= -->
+                  <!-- Навык класса -->
+                  <!-- ================================= -->
+
+                  <template v-if="archetype.skillTrainedChoice.length > 1">
+
+                    <div class="caption mb-2">
+                      Навык класса
+                    </div>
+
+                    <div class="boost-list">
+
+                      <v-chip-group v-model="selectedClassSkill" active-class="primary white--text"
+                        @change="updateSelectClassSkill">
+
+                        <v-chip v-for="skill in finalSkillRepository" :key="'class-skill-' + skill.key" outlined
+                          :value="skill.key" :disabled="!ClassSkill.some(
+                            s => s.key === skill.key
+                          ) || selectedBackgroundSkill === skill.key" :class="{
+                            'ui-chip--locked':
+                              !ClassSkill.some(
+                                s => s.key === skill.key
+                              )
+                          }">
+
+                          <v-icon v-if="!ClassSkill.some(
+                            s => s.key === skill.key
+                          )" left small>
+                            mdi-lock
+                          </v-icon>
+
+                          {{ skill.name }}
+
+                        </v-chip>
+
+                      </v-chip-group>
+
+                    </div>
+
+                  </template>
+
+                  <!-- Если выбора нет -->
+
+                  <!-- <div v-if="
+                    archetype.keyAbility.length <= 1
+                    &&
+                    archetype.skillTrainedChoice.length <= 1
+                  " class="grey--text">
+
+                    У данного класса нет выбора характеристик или навыков.
+
+                  </div> -->
+
+                </v-card-text>
+
+              </v-card>
+
+              <div v-else class="ui-message ui-message--warning mb-4">
+                Выберите класс
+              </div>
+
+              <!-- ========================================= -->
+              <!-- СТАРТОВЫЕ ПОВЫШЕНИЯ -->
+              <!-- ========================================= -->
+
+              <v-card v-if="isBoostLevel(1) && archetype" outlined class="ui-choice-card mb-4">
+
+
+
+                <div class="ui-section-header">
+                  Стартовые повышения
+                </div>
+
+                <!-- <v-chip small class="ui-chip">
+                  {{ currentBoost }} / 4
+                </v-chip> -->
+
+
+                <v-card-text>
+
+                  <div v-if="isBoostLevel(level)" class="ui-choice-block">
+
+                    <div class="ui-choice-header">
+                      <span class="ui-choice-label">
+                        Выберите четыре характеристики
+                      </span>
+
+                    </div>
+
+                    <v-chip-group multiple class="boost-list">
+
+                      <v-chip v-for="attribute in attributeRepository"
+                        :key="'level-boost-' + level + '-' + attribute.key" outlined
+                        :disabled="isAttributeDisabledLevel(attribute.key, level)" :class="{
+                          'ui-chip--selected':
+                            isAttributeUpgradedLevel(attribute.key, level)
+                        }" @click="handleAttributeClickLevel(attribute.key, level)">
+
+                        {{ attribute.name }}
+
+
+
+                      </v-chip>
+
+                    </v-chip-group>
+
+                  </div>
+
+
+
+                </v-card-text>
+                <v-btn v-if="isSkillLevel(level)" outlined class="ui-btn ui-btn--accent" @click="openSkillLevel(level)">
+                  Повышение навыков
+
+                  <v-chip v-if="characterProgressionSkill(level) > 0" class="ui-chip" color="success" pill>
+                    {{ characterProgressionSkill(level) }}
+                  </v-chip>
+
+                  <v-chip v-else-if="characterProgressionSkill(level) < 0" color="error" text-color="white" pill>
+                    −{{ Math.abs(characterProgressionSkill(level)) }}
+                  </v-chip>
                 </v-btn>
+              </v-card>
+            </template>
 
-                <v-btn outlined class="ui-btn ui-btn--accent" @click="dialogSkillLevel1 = true">
-                  Повышение Навыков
-                  <v-chip class="ui-chip" v-if="
-                    characterProgressionSkill(levelAncestry) !== 0 && archetype
-                  " style="flex: none" right pill>
-                    {{ characterProgressionSkill(levelAncestry) }}</v-chip>
-                </v-btn>
-              </v-col>
-            </v-col>
 
-            <div v-if="archetype && levelAncestry !== 1">
 
-              <!-- АТРИБУТЫ -->
-              <v-btn v-if="isBoostLevel(levelAncestry)" outlined class="ui-btn ui-btn--accent"
-                @click="openBoostDialog(levelAncestry)">
-                Повышение Аттрибутов
 
-                <v-chip v-if="characterProgressionBoost(levelAncestry) !== 0" class="ui-chip" pill>
-                  {{ characterProgressionBoost(levelAncestry) }}
+            <!-- ========================= -->
+            <!-- OTHER LEVELS -->
+            <!-- ========================= -->
+            <template v-if="
+              level !== 1
+              &&
+              archetype
+            ">
+              <!-- <v-btn v-if="isBoostLevel(level)" outlined class="ui-btn ui-btn--accent" @click="openBoostDialog(level)">
+                Повышение атрибутов
+                <v-chip v-if="characterProgressionBoost(level)" class="ui-chip" pill>
+                  {{ characterProgressionBoost(level) }}
+                </v-chip>
+              </v-btn> -->
+
+              <div v-if="isBoostLevel(level)" class="ui-choice-block">
+
+                <div class="ui-choice-label">
+                  Выберите четыре характеристики
+                </div>
+
+                <div class="boost-list">
+
+                  <v-chip-group multiple>
+
+                    <v-chip v-for="attribute in attributeRepository" :key="'level-' + level + '-' + attribute.key"
+                      outlined :disabled="isAttributeDisabledLevel(attribute.key, level)" :class="{
+                        'ui-chip--selected':
+                          isAttributeUpgradedLevel(attribute.key, level)
+                      }" @click="handleAttributeClickLevel(attribute.key, level)">
+
+                      {{ attribute.name }}
+
+
+                    </v-chip>
+
+                  </v-chip-group>
+
+                </div>
+
+
+              </div>
+
+              <v-btn v-if="isSkillLevel(level)" outlined class="ui-btn ui-btn--accent" @click="openSkillLevel(level)">
+                Повышение навыков
+
+                <v-chip v-if="characterProgressionSkill(level) > 0" class="ui-chip" color="success" pill>
+                  {{ characterProgressionSkill(level) }}
+                </v-chip>
+
+                <v-chip v-else-if="characterProgressionSkill(level) < 0" color="error" text-color="white" pill>
+                  −{{ Math.abs(characterProgressionSkill(level)) }}
                 </v-chip>
               </v-btn>
-
-              <!-- НАВЫКИ -->
-              <v-btn v-if="isSkillLevel(levelAncestry)" outlined class="ui-btn ui-btn--accent"
-                @click="openSkillLevel(levelAncestry)">
-                Повышение Навыков
-
-                <v-chip v-if="characterProgressionSkill(levelAncestry) !== 0" class="ui-chip" pill>
-                  {{ characterProgressionSkill(levelAncestry) }}
-                </v-chip>
-              </v-btn>
-
+            </template>
+            <div v-if="!archetype" class="ui-message ui-message--warning">
+              Для повышения атрибутов и навыков выберите класс
             </div>
-            <div v-if="!archetype">Для повышения Аттрибутов и навыков выберите класс</div>
-
-
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
 
-    <!-- Диалог повышения -->
-    <v-dialog v-model="dialogAttributeLevel1" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
-      <v-card>
-        <v-card-title class="ui-dialog-header">
-          <span>Повышение аттрибутов</span>
-          <v-spacer />
-          <v-icon @click="dialogAttributeLevel1 = false"> close </v-icon>
-        </v-card-title>
-
-        <v-divider />
-
-        <v-card-title> </v-card-title>
-
-        <v-divider />
-        <v-card-text class="pa-6">
-          <v-col :cols="12" :md="12">
-            <v-card>
-              <v-card-title class="ui-section-header">
-                <h2 class="subtitle-1">
-                  Количество свободных повышений: {{ 4 - characterBoost }}
-                </h2>
-              </v-card-title>
-
-
-              <v-simple-table class="ui-table dense">
-                <template v-slot:default>
-                  <!-- <thead>
-                <tr>
-                  <th v-for="header in attributeHeaders" :class="header.class">
-                    {{ header.text }}
-                  </th>
-                </tr>
-              </thead> -->
-                  <tbody>
-                    <tr v-for="attribute in attributeRepository" class="ui-row"
-                      :class="{ 'ui-row--disabled': isAttributeDisabledLevel(attribute.key, 1), 'ui-row--active': isAttributeUpgradedLevel(attribute.key, 1) }"
-                      @click="handleAttributeClickLevel(attribute.key, 1)">
-                      <!-- <td>{{ attribute.name }}</td> -->
-                      <td class="ui-cell ui-cell--name">
-                        {{ attribute.name }} </td>
-
-                      <td class="skill-mod">
-                        {{ ModProfAttr(attribute.key, 1) }}
-                      </td>
-
-
-
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-card>
-          </v-col>
-        </v-card-text>
-
-        <v-divider />
-        <v-card-actions>
-          <!-- <v-btn
-            outlined
-            color="red"
-            left
-            @click="dialogAttributeLevel1 = false"
-          >
-            Cancel
-          </v-btn> -->
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
+    <!-- ========================= -->
+    <!-- ATTRIBUTE BOOST DIALOG -->
+    <!-- ========================= -->
     <v-dialog v-model="boostDialog" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
       <v-card>
-
         <v-card-title class="ui-dialog-header">
-          Повышение аттрибутов ({{ currentLevel }} уровень)
+          Повышение атрибутов
+          ({{ currentLevel }} уровень)
           <v-spacer />
-          <v-icon @click="boostDialog = false">close</v-icon>
+          <v-icon @click="boostDialog = false">
+            close
+          </v-icon>
         </v-card-title>
-
+        <v-divider />
         <v-card-text class="pa-4">
-
           <div class="ui-section-header">
-            Свободные повышения: {{ 4 - currentBoost }}
+            Свободные повышения:
+            {{ 4 - currentBoost }}
           </div>
-
           <v-simple-table class="ui-table">
             <tbody>
-              <tr v-for="attr in attributeRepository" :key="attr.key" class="ui-row" :class="{
-                'ui-row--disabled': isAttributeDisabledLevel(attr.key, currentLevel),
-                'ui-row--active': isAttributeUpgradedLevel(attr.key, currentLevel)
-              }" @click="handleAttributeClickLevel(attr.key, currentLevel)">
+              <tr v-for="attribute in attributeRepository" :key="attribute.key" class="ui-row" :class="{
+                'ui-row--disabled':
+                  isAttributeDisabledLevel(
+                    attribute.key,
+                    currentLevel
+                  ),
+                'ui-row--active':
+                  isAttributeUpgradedLevel(
+                    attribute.key,
+                    currentLevel
+                  )
+              }" @click="
+                handleAttributeClickLevel(
+                  attribute.key,
+                  currentLevel
+                )
+                ">
                 <td class="ui-cell ui-cell--name">
-                  {{ attr.name }}
+                  {{ attribute.name }}
                 </td>
-
                 <td class="ui-cell ui-cell--mod">
-                  {{ ModProfAttr(attr.key, currentLevel) }}
+                  {{ ModProfAttr(
+                    attribute.key,
+                    currentLevel
+                  ) }}
                 </td>
               </tr>
             </tbody>
           </v-simple-table>
-
         </v-card-text>
-
       </v-card>
     </v-dialog>
-
-    <v-dialog v-model="dialogSkillLevel1" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
+    <!-- ========================= -->
+    <!-- SKILL LEVEL DIALOG -->
+    <!-- ========================= -->
+    <v-dialog v-model="dialogSkill" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
       <v-card>
         <v-card-title class="ui-dialog-header">
-          <span>Повышение Характеристик</span>
+          Повышение навыков
+          ({{ skillLevel }} уровень)
           <v-spacer />
-          <v-icon @click="dialogSkillLevel1 = false"> close </v-icon>
+          <v-icon tabindex="-1" @click.stop="dialogSkill = false">
+            close
+          </v-icon>
         </v-card-title>
-
         <v-divider />
+        <v-card-text class="pa-4">
+          <v-card>
+            <div class="ui-section-header">
+              Количество свободных очков навыка:
+              {{
+                // 1
+                // +
+                // modInt(skillLevel)
+                // -
+                // skillSheetAll("", skillLevel)
+                calculateSkillProgressMax(skillLevel) - calculateSkillProgress(skillLevel)
+              }}
+            </div>
+            <div class="skill-list">
+              <v-card v-for="skill in finalSkillRepository" :key="skill.key" outlined class="skill-card" :class="{
+                'skill-card--disabled':
+                  isSkillDisabledLevel(
+                    skill,
+                    skillLevel
+                  ),
+                'skill-card--active':
+                  isSkillUpgradedLevel(
+                    skill,
+                    skillLevel
+                  )
+              }" @click="
+                handleSkillClickLevel(
+                  skill,
+                  skillLevel
+                )
+                ">
 
-        <v-card-title> </v-card-title>
-
-        <v-divider />
-        <v-card-text class="pa-6">
-          <v-col :cols="12" :md="12">
-            <v-card>
-
-              <div class="ui-section-header">
-                Количество свободных повышений навыков:
-                {{ characterSkillPointClass + modInt(1) - skillSheetPoints("", 1) }}
-              </div>
-
-
-              <div class="skill-list">
-
-                <v-card v-for="skill in finalSkillRepository" :key="skill.key" class="skill-card" :class="{
-                  'skill-card--disabled': isSkillDisabled(skill),
-                  'skill-card--active': isSkillUpgraded(skill)
-                }" outlined @click="handleSkillClick(skill)">
-
-                  <div class="skill-card__main">
-
-                    <div class="skill-name">
-                      {{ skill.name }}
-                    </div>
-
-
-                    <div class="skill-value">
-                      {{
-                        (ModAttribute(skill.attribute, skill.key, 1) >= 0 ? '+' : '') +
-                        ModAttribute(skill.attribute, skill.key, 1)
-                      }}
-                    </div>
-
+                <div class="skill-card__main">
+                  <div class="skill-name">
+                    {{ skill.name }}
                   </div>
-
-
-                  <div class="skill-meta">
-
-                    <v-chip small outlined>
-                      {{attributeRepository.find(
+                  <div class="skill-value">
+                    {{
+                      (
+                        ModAttribute(
+                          skill.attribute,
+                          skill.key,
+                          skillLevel
+                        )
+                          >= 0
+                          ? '+'
+                          : ''
+                      )
+                      +
+                      ModAttribute(
+                        skill.attribute,
+                        skill.key,
+                        skillLevel
+                      )
+                    }}
+                  </div>
+                </div>
+                <div class="skill-meta">
+                  <v-chip small outlined>
+                    {{
+                      attributeRepository.find(
                         i => i.key === skill.attribute
-                      )?.short}}
-                    </v-chip>
-
-
-                    <span>
-                      Мод:
-                      {{ (characterAttributes[skill.attribute] - 10) / 2 }}
-                    </span>
-
-
-                    <span>
-                      Владение:
-                      {{ ModProf(skill.attribute, skill.key, 1) }}
-                    </span>
-
-
-                    <span>
-                      {{ skillSheetTrained(skill.key, 1) }}
-                    </span>
-
-
-                    <v-icon v-if="skill.custom" small class="ml-auto" @click.stop="removeCustomSkill(skill.key, 1)">
-                      mdi-delete
-                    </v-icon>
-
-                  </div>
-
-
-                </v-card>
-
-              </div>
-
-
-
-              <v-spacer></v-spacer>
-
-              <v-card-actions style="justify-content: center">
-                <v-btn x-small text @click="openSkillsSettings(1)">Дополнительное Знание <v-icon
-                    small>settings</v-icon></v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
+                      )?.short
+                    }}
+                  </v-chip>
+                  <v-chip small outlined>
+                    Владение:
+                    {{
+                      ModProf(
+                        skill.attribute,
+                        skill.key,
+                        skillLevel
+                      )
+                    }}
+                  </v-chip>
+                  <v-chip small outlined>
+                    {{
+                      skillSheetTrained(
+                        skill.key,
+                        skillLevel
+                      )
+                    }}
+                  </v-chip>
+                  <v-icon v-if="skill.custom && skill.optional !== true" small class="skill-delete" @click.stop="
+                    removeCustomSkill(
+                      skill.key
+                    )
+                    ">
+                    mdi-delete
+                  </v-icon>
+                </div>
+              </v-card>
+            </div>
+            <v-card-actions style="justify-content:center">
+              <v-btn x-small text @click="openSkillsSettings(skillLevel)">
+                Дополнительное Знание
+                <v-icon small>
+                  settings
+                </v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-card-text>
-
-        <v-divider />
-        <v-card-actions>
-          <!-- <v-btn outlined color="red" left @click="dialogSkillLevel1 = false">
-            Cancel
-          </v-btn> -->
-        </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- Custom Skills -->
+    <!-- ========================= -->
+    <!-- CUSTOM SKILL DIALOG -->
+    <!-- ========================= -->
     <v-dialog v-model="skillsEditorDialog" width="600px" scrollable :fullscreen="$vuetify.breakpoint.xsOnly">
       <v-card>
         <v-alert :value="alert" type="error" text dense border="left">
           Знание уже существует
         </v-alert>
-        <v-alert :value="skillLevel === 1
-          ? characterSkillPointClass +
-          characterSkillPointClassUp +
-          characterSkillPointBackground -
-          skillSheetPoints('', 1) <=
-          0
-          : 1 - skillSheetAll('', skillLevel) <= 0
-          " type="info" text dense border="left">
-          Недостаточно очков Навыка для добавления нового Знания
+        <v-alert :value="calculateSkillProgressMax(skillLevel) - calculateSkillProgress(skillLevel) <= 0" type="info"
+          text dense border="left">
+          Недостаточно очков навыка для добавления нового знания
         </v-alert>
         <v-card-title class="ui-dialog-header">
-          Редактирование Знаний
+          Редактирование знаний
           <v-spacer />
-          <v-icon dark @click="closeSkillsSettings">close</v-icon>
+          <v-icon @click="closeSkillsSettings">
+            close
+          </v-icon>
         </v-card-title>
-
         <v-card-text class="pt-4">
-          <v-text-field v-model="customSkill.name" dense label="Имя Знания"></v-text-field>
-          <v-textarea v-model="customSkill.description" dense label="Описание"></v-textarea>
+          <v-text-field v-model="customSkill.name" dense label="Имя знания" />
+          <v-textarea v-model="customSkill.description" dense label="Описание" />
         </v-card-text>
-        <v-divider></v-divider>
-
+        <v-divider />
         <v-card-actions>
           <v-spacer />
-          <v-btn small right class="ui-btn ui-btn--accent" :disabled="skillLevel === 1
-            ? characterSkillPointClass +
-            characterSkillPointClassUp +
-            characterSkillPointBackground -
-            skillSheetPoints('', 1) <=
-            0
-            : 1 - skillSheetAll('', skillLevel) <= 0
-            " @click="saveCustomSkill(skillLevel)">Save</v-btn>
+          <v-btn small class="ui-btn ui-btn--accent"
+            :disabled="calculateSkillProgressMax(skillLevel) - calculateSkillProgress(skillLevel) <= 0"
+            @click="saveCustomSkill(skillLevel)">
+            Сохранить
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- Скилл на каждом уровне -->
-    <v-dialog v-model="dialogSkill" :fullscreen="$vuetify.breakpoint.xsOnly" width="600px" scrollable>
-      <v-card>
-        <v-card-title class="ui-dialog-header">
-          <span>Повышение Характеристик</span>
-          <v-spacer />
-          <v-icon @click="dialogSkill = false"> close </v-icon>
-        </v-card-title>
-
-        <v-divider />
-
-        <v-card-title> </v-card-title>
-
-        <v-divider />
-        <v-card-text class="pa-6">
-          <v-col :cols="12" :md="12">
-            <v-card>
-              <v-card-title class="ui-section-header">
-                <h2 class="subtitle-1">
-                  Количество свободных очков навыка:
-                  {{ 1 + modInt(skillLevel) - skillSheetAll("", skillLevel) }}
-                </h2>
-              </v-card-title>
-              <div class="skill-list">
-
-                <v-card v-for="skill in finalSkillRepository" :key="skill.key" class="skill-card" :class="{
-                  'skill-card--disabled': isSkillDisabledLevel(skill, skillLevel),
-                  'skill-card--active': isSkillUpgradedLevel(skill, skillLevel)
-                }" outlined @click="handleSkillClickLevel(skill, skillLevel)">
-
-                  <!-- Название + итоговый модификатор -->
-                  <div class="skill-card__main">
-
-                    <div class="skill-name">
-                      {{ skill.name }}
-                    </div>
-
-                    <div class="skill-value">
-                      {{
-                        (ModAttribute(skill.attribute, skill.key, skillLevel) >= 0 ? '+' : '') +
-                        ModAttribute(skill.attribute, skill.key, skillLevel)
-                      }}
-                    </div>
-
-                  </div>
-
-
-                  <!-- Информация -->
-                  <div class="skill-meta">
-
-                    <!-- Атрибут -->
-                    <v-chip small outlined>
-                      {{attributeRepository.find(
-                        i => i.key === skill.attribute
-                      )?.short}}
-
-                      {{
-                        (characterAttributes[skill.attribute] - 10) / 2
-                      }}
-                    </v-chip>
-
-
-                    <!-- Владение -->
-                    <v-chip small outlined>
-                      Владение:
-                      {{ ModProf(skill.attribute, skill.key, skillLevel) }}
-                    </v-chip>
-
-
-                    <!-- Обучение -->
-                    <v-chip small outlined>
-                      {{ skillSheetTrained(skill.key, skillLevel) }}
-                    </v-chip>
-
-
-                    <!-- Удаление кастомного навыка -->
-                    <v-icon v-if="skill.custom && skill.optional !== true" small class="skill-delete"
-                      @click.stop="removeCustomSkill(skill.key, skillLevel)">
-                      mdi-delete
-                    </v-icon>
-
-
-                  </div>
-
-                </v-card>
-
-              </div>
-              <v-spacer></v-spacer>
-
-
-              <v-card-actions style="justify-content: center">
-                <v-btn x-small text @click="openSkillsSettings(skillLevel)">Дополнительное Знание <v-icon
-                    small>settings</v-icon></v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
   </v-row>
 </template>
-
 <script lang="js">
 import StatRepositoryMixin from '~/mixins/StatRepositoryMixin';
 import SluggerMixin from '~/mixins/SluggerMixin';
-
 export default {
   name: 'Stats',
   layout: 'forge',
@@ -565,14 +746,12 @@ export default {
     StatRepositoryMixin,
     SluggerMixin
   ],
-  props: [],
   async asyncData({ params }) {
     return {
       characterId: params.id,
     };
   },
   data() {
-
     return {
       attributeHeaders: [
         { text: 'Характеристика', sortable: false, align: 'left', class: 'text-left small pa-1' },
@@ -592,44 +771,32 @@ export default {
         { text: "", value: "increment", sortable: false },
         { text: "", value: "delete", sortable: false }
       ],
-
       alert: false,
-      refEx: /\d+/g,
-      manageBoost1: true,
-      manageBoost5: false,
-      manageBoost10: false,
-      modifications: [],
-      manageBoost15: false,
-      manageBoost20: false,
-
-      skillLevel: 1,
-      dialogAttributeLevel1: false,
-      skillsEditorDialog: false,
-      dialogSkillLevel1: false,
       dialogSkill: false,
-
+      modifications: [],
+      skillLevel: 1,
+      skillsEditorDialog: false,
       selectedAncestryBoost: undefined,
       selectedClassBoost: undefined,
       selectedClassSkill: undefined,
+      selectedBackgroundSkill: undefined,
       selectedAncestryBoost2: undefined,
       selectedBackgroundBoost: undefined,
       selectedBackgroundBoost2: undefined,
       selectedBoost: {},
-
       customSkill: {
         key: undefined,
         name: 'Знание',
         attribute: 'intellect',
         description: '',
       },
-
+      saveTimer: undefined,
       selectedId: undefined,
       showAlerts: false,
       archetype: undefined,
       species: undefined,
       ascension: undefined,
       loading: false,
-
       select: {},
       AncestryAttribute: [],
       AncestryAttribute2: [],
@@ -649,9 +816,9 @@ export default {
         T: 1,
         E: 2,
         M: 3,
-        L: 4,
-      }
-      , charSkill: {
+        L: 4
+      },
+      charSkill: {
         0: "U",
         1: "T",
         2: "E",
@@ -660,19 +827,6 @@ export default {
       },
       boostDialog: false,
       currentLevel: null,
-
-      dialogAttributeLevel1: false,
-      dialogSkillLevel1: false,
-      dialogSkill: false,
-
-      // вместо characterBoost5/10/15/20
-      boostState: {
-        1: 0,
-        5: 0,
-        10: 0,
-        15: 0,
-        20: 0
-      }
     };
   },
   head() {
@@ -685,52 +839,54 @@ export default {
       return [
         {
           source: 'Предыстория',
-          stats:
-            this.characterBackgroundBoost,
+          stats: this.characterBackgroundBoost || {}
         },
         {
           source: 'Наследие',
           stats: this.mergeStats(
-            this.characterAncestryBoost,
-            this.characterAttributesAncestryFlaw
+            this.characterAncestryBoost || {},
+            this.characterAttributesAncestryFlaw || {}
           )
         },
         {
           source: 'Класс',
-          stats: this.characterClassBoost1
+          stats: this.characterClassBoost1 || {}
         },
         {
           source: '1 уровень',
-          stats: this.characterAttributeBoost
+          stats: this.characterAttributeBoost || {}
         },
         {
           source: '5 уровень',
-          stats: this.characterAttributeBoost5
+          stats: this.characterAttributeBoost5 || {}
         },
         {
           source: '10 уровень',
-          stats: this.characterAttributeBoost10
+          stats: this.characterAttributeBoost10 || {}
         },
         {
           source: '15 уровень',
-          stats: this.characterAttributeBoost15
+          stats: this.characterAttributeBoost15 || {}
         },
         {
           source: '20 уровень',
-          stats: this.characterAttributeBoost20
+          stats: this.characterAttributeBoost20 || {}
         },
-      ].filter(row => row.stats);
+      ];
     },
-
     availableLevels() {
       return Array.from({ length: this.characterLevel }, (_, i) => i + 1)
     },
     currentBoost() {
-      return this.boostState[this.currentLevel] || 0
+      if (!this.currentLevel) {
+        return 0;
+      }
+      return this.getBoost(
+        this.currentLevel
+      );
     },
     archetypePrerequisitesValid() {
       const archetype = this.archetype;
-
       let fulfilled = true;
       if (archetype && archetype.prerequisites.length > 0) {
         archetype.prerequisites.forEach((prerequisite) => {
@@ -750,32 +906,31 @@ export default {
           }
         });
       }
-
       if (this.ascensionPackages) {
         // this.ascensionPackages.
       }
-
       return fulfilled;
     },
     freeSkillPointsLvl1() {
       return (
         this.characterSkillPointClass +
-
         this.modInt(1) -
         this.skillSheetPoints("", 1)
       )
     },
     levelProgressMap() {
-      const map = {}
-      for (let lvl = 1; lvl <= this.characterLevel(); lvl++) {
-        const data = this.getDisplayProgress(lvl) || {}
-
+      const map = {};
+      for (
+        let lvl = 1;
+        lvl <= this.characterLevel;
+        lvl++
+      ) {
         map[lvl] = {
-          current: data.current || 0,
-          max: data.max || 0
-        }
+          current: this.calculateProgress(lvl),
+          max: this.calculateProgressMax(lvl)
+        };
       }
-      return map
+      return map;
     },
     remainingBuildPoints() {
       return this.$store.getters['characters/characterRemainingBuildPointsById'](this.characterId);
@@ -783,7 +938,6 @@ export default {
     characterClassBoost1() {
       return this.$store.getters['characters/characterAttributesClassBoost'](this.characterId);
     },
-
     characterAttributeBoost() {
       return this.$store.getters['characters/characterAttributeBoost'](this.characterId);
     },
@@ -819,7 +973,6 @@ export default {
     characterAttributeCosts() {
       return this.$store.getters['characters/characterAttributeCostsById'](this.characterId);
     },
-
     characterAttributesClass() {
       return this.$store.getters['characters/characterAttributesClassBoost'](this.characterId);
     },
@@ -832,26 +985,32 @@ export default {
     CharacterskillInitial() {
       return this.$store.getters['characters/CharacterskillInitialById'](this.characterId);
     },
-    characterBoost() {
-      return this.$store.getters['characters/characterBoostById'](this.characterId);
+    characterBoostByLevel() {
+      return {
+        1: this.$store.getters['characters/characterBoostById'](this.characterId),
+        5: this.$store.getters['characters/characterBoost5ById'](this.characterId),
+        10: this.$store.getters['characters/characterBoost10ById'](this.characterId),
+        15: this.$store.getters['characters/characterBoost15ById'](this.characterId),
+        20: this.$store.getters['characters/characterBoost20ById'](this.characterId),
+      };
     },
-    characterBoost5() {
-      return this.$store.getters['characters/characterBoost5ById'](this.characterId);
+    boostByLevel() {
+      return this.characterBoostByLevel;
     },
-    characterBoost10() {
-      return this.$store.getters['characters/characterBoost10ById'](this.characterId);
-    },
-    characterBoost15() {
-      return this.$store.getters['characters/characterBoost15ById'](this.characterId);
-    },
-    characterBoost20() {
-      return this.$store.getters['characters/characterBoost20ById'](this.characterId);
+    attributeBoostByLevel() {
+      return {
+        1: this.characterAttributesBoost || {},
+        5: this.characterAttributesBoost5 || {},
+        10: this.characterAttributesBoost10 || {},
+        15: this.characterAttributesBoost15 || {},
+        20: this.characterAttributesBoost20 || {}
+      };
     },
     characterSkillPoints() {
       return this.$store.getters['characters/characterSkillPointsById'](this.characterId);
     },
-    characterAncestryBoost() {
-      return this.$store.getters['characters/characterAncestryBoostById'](this.characterId);
+    characterLevel() {
+      return this.$store.getters['characters/characterLevelById'](this.characterId);
     },
     characterBackgroundBoost() {
       return this.$store.getters['characters/characterBackgroundBoostId'](this.characterId);
@@ -874,7 +1033,6 @@ export default {
     characterClassSkill() {
       return this.$store.getters['characters/characterClassSkillById'](this.characterId);
     },
-
     characterTrainedSkillClass() {
       return this.$store.getters['characters/characterTrainedSkillClassById'](this.characterId);
     },
@@ -907,7 +1065,6 @@ export default {
     characterSkillPointBackground() {
       return this.$store.getters['characters/characterSkillPointsBackgroundId'](this.characterId);
     },
-
     characterAttributesBoost20() {
       return this.$store.getters['characters/characterAttributeBoost20'](this.characterId);
     },
@@ -965,289 +1122,372 @@ export default {
       return this.$store.getters['characters/CharacterskillFromModificationById'](this.characterId);
     },
   },
-
   watch: {
     characterSpeciesKey: {
-      handler(newVal) {
-        if (newVal && newVal !== 'unknown') {
-          this.loadSpecies(newVal);
+      handler(value) {
+        if (value && value !== 'unknown') {
+          this.loadEntity(
+            'species',
+            value
+          );
         }
       },
-      immediate: true,
+      immediate: true
     },
     characterArchetypeKey: {
-      handler(newVal) {
-        if (newVal && newVal !== 'unknown') {
-          this.loadArchetype(newVal);
+      handler(value) {
+        if (value && value !== 'unknown') {
+          this.loadEntity(
+            'archetype',
+            value
+          );
         }
       },
-      immediate: true,
+      immediate: true
     },
     characterAscensionKey: {
-      handler(newVal) {
-        if (newVal && newVal !== 'unknown') {
-          this.loadAscension(newVal);
+      handler(value) {
+        if (value && value !== 'unknown') {
+          this.loadEntity(
+            'ascension',
+            value
+          );
         }
       },
-      immediate: true,
+      immediate: true
+    },
+    characterBoostByLevel: {
+      deep: true,
+      handler() {
+        this.needsProgressUpdate = true;
+      }
+    },
+
+    characterSkills: {
+      deep: true,
+      handler() {
+        this.needsProgressUpdate = true;
+      }
     },
 
     characterAttributes: {
+      deep: true,
       handler() {
         this.needsProgressUpdate = true;
-      },
-      deep: true
-    },
-    characterBoost() {
-      this.needsProgressUpdate = true;
-    },
-    characterBoost5() {
-      this.needsProgressUpdate = true;
-    },
-    characterBoost10() {
-      this.needsProgressUpdate = true;
-    },
-    characterBoost15() {
-      this.needsProgressUpdate = true;
-    },
-    characterBoost20() {
-      this.needsProgressUpdate = true;
-    },
-    characterSkills: {
-      handler() {
-        this.needsProgressUpdate = true;
-      },
-      deep: true
-    },
-    // ... остальные вотчеры
-
-  },
-  mounted() {
-    // Сохраняем прогресс при загрузке компонента
-    // this.saveProgress();
+      }
+    }
   },
   methods: {
-    async loadArchetype(key) {
-      this.loading = true;
-      if (key === 'advanced') {
-        this.archetype = { prerequisites: [] };
-      } else {
-        const { data } = await this.$axios.get(`/api/archetypes/${key}`);
-        this.archetype = data;
-      }
-      this.selectedClassBoost = this.characterClassBoost;
-
-      this.selectedClassSkill = this.characterSkillSheet().find(s => s.level === 1 && s.type === 'class');
-      this.ClassAttribute = this.attributeRepository.filter(boost => this.archetype.keyAbility.some((m) => boost.key.includes(m)));
-      this.ClassSkill = this.skillRepository.filter(boost => this.archetype.skillTrainedChoice.some((m) => boost.key.includes(m)));
-
-      this.loading = false;
+    isAncestryBoost(key) {
+      return this.species?.attributeBoost?.some(
+        a => a.key === key && a.value > 0
+      );
     },
-    async loadAscension(key) {
-      this.loading = true;
-      let finalData = {};
-      const { data } = await this.$axios.get(`/api/ascension-packages/${key}`);
-      finalData = data;
-      this.ascension = finalData;
 
-      this.BackgroundAttribute = this.attributeRepository.filter(boost => this.ascension.boost1.some((m) => boost.key.includes(m)));
-      this.BackgroundAttribute2 = this.attributeRepository;
-      this.selectedBackgroundBoost = this.characterBackgroundFreeBoost;
-      this.selectedBackgroundBoost2 = this.characterBackgroundFreeBoost2;
-      this.loading = false;
+    isAncestryFlaw(key) {
+      return this.species?.attributeFlaw?.some(
+        a => a.key === key && a.value < 0
+      );
+    },
+    isAncestryAvailable(attr, list) {
+      return list.some(
+        a => a.key === attr
+      );
+    },
+    // =========================
+    // BOOST SELECTION SYSTEM
+    // =========================
+    setBoost(mutation, key, value = 1) {
+      this.$store.commit(
+        `characters/${mutation}`,
+        {
+          id: this.characterId,
+          payload: {
+            key,
+            value
+          }
+        }
+      );
+    },
+    updateSelect(boost) {
+      this.setBoost(
+        'setCharacterAncestryFreeBoost',
+        boost
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    updateSelect2(boost) {
+      this.setBoost(
+        'setCharacterAncestryFreeBoost2',
+        boost
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    updateSelectBackground(boost) {
+      this.setBoost(
+        'setCharacterBackgroundFreeBoost',
+        boost
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    updateSelectBackground2(boost) {
+      this.setBoost(
+        'setCharacterBackgroundFreeBoost2',
+        boost
+      );
+      this.needsProgressUpdate = true;
+    },
+    updateSelectClassAttribute(boost) {
+      this.setBoost(
+        'setCharacterClassAttribute',
+        boost
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    updateSelectClassSkillLevel(boost, level) {
+      this.$store.commit(
+        'characters/setCharacterClassSkillLevel',
+        {
+          id: this.characterId,
+          payload: {
+            key: boost,
+            level
+          }
+        }
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    updateSelectClassSkill(boost) {
+      const sheet =
+        this.characterSkillSheet();
+      // удаляем предыдущий выбор класса
+      this.ClassSkill.forEach(item => {
+        const exists =
+          sheet.find(
+            skill =>
+              skill.key === item.key &&
+              skill.level === 1 &&
+              skill.type === 'skill'
+          );
+        if (exists) {
+          this.$store.commit(
+            "characters/setCharacterSkillPointClassUp",
+            {
+              id: this.characterId,
+              write: false,
+              payload: {
+                key: 1,
+                value: 1
+              }
+            }
+          );
+        }
+        this.$store.commit(
+          'characters/removeSkillSheet',
+          {
+            id: this.characterId,
+            key: item.key,
+            level: 1,
+            type: 'skill',
+            optional: true
+          }
+        );
+        this.$store.commit(
+          'characters/removeSkillSheet',
+          {
+            id: this.characterId,
+            key: item.key,
+            level: 1,
+            type: 'class',
+            optional: true
+          }
+        );
+      });
+      this.$store.commit(
+        'characters/addSkillSheet',
+        {
+          id: this.characterId,
+          key: boost,
+          level: 1,
+          type: 'class',
+          optional: true,
+          combinded: false
+        }
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    async loadEntity(type, key) {
+      try {
+        this.loading = true;
+        const { data } =
+          await this.$axios.get(
+            `/api/${this.getApiName(type)}/${key}`
+          );
+        switch (type) {
+          case "species":
+            this.species = data;
+            this.boost =
+              data?.abilityBoost || 0;
+            this.AncestryAttribute =
+              data.attributeBoost
+                ?.filter(
+                  item => item.value === 0
+                )
+              || [];
+            this.AncestryAttribute2 =
+              [...this.AncestryAttribute];
+            this.selectedAncestryBoost =
+              this.characterAncestryFreeBoost;
+            this.selectedAncestryBoost2 =
+              this.characterAncestryFreeBoost2;
+            break;
+          case "archetype":
+            this.archetype =
+              key === "advanced"
+                ? { prerequisites: [] }
+                : data;
+            this.selectedClassBoost =
+              this.characterClassBoost;
 
+            this.selectedClassSkill =
+              this.characterSkillSheet()
+                .find(
+                  item =>
+                    item.level === 1 &&
+                    item.type === "class"
+                )?.key;
+
+            this.ClassAttribute =
+              this.attributeRepository
+                .filter(item =>
+                  this.archetype.keyAbility
+                    ?.some(
+                      key =>
+                        item.key.includes(key)
+                    )
+                );
+            this.ClassSkill =
+              this.skillRepository
+                .filter(item =>
+                  this.archetype.skillTrainedChoice
+                    ?.some(
+                      key =>
+                        item.key.includes(key)
+                    )
+                );
+            break;
+          case "ascension":
+            this.ascension = data;
+            this.selectedBackgroundSkill = this.characterSkillSheet()
+              .find(
+                item =>
+                  item.level === 1 &&
+                  item.type === "background"
+              )?.key;
+            this.BackgroundAttribute =
+              this.attributeRepository
+                .filter(item =>
+                  data.boost1
+                    ?.some(
+                      key =>
+                        item.key.includes(key)
+                    )
+                );
+            this.BackgroundAttribute2 =
+              this.attributeRepository;
+            this.selectedBackgroundBoost =
+              this.characterBackgroundFreeBoost;
+            this.selectedBackgroundBoost2 =
+              this.characterBackgroundFreeBoost2;
+            break;
+        }
+      }
+      catch (error) {
+        console.error(
+          `Loading ${type} failed`,
+          error
+        );
+      }
+      finally {
+        this.loading = false;
+      }
+    },
+    getApiName(type) {
+      const map = {
+        species:
+          "species",
+        archetype:
+          "archetypes",
+        ascension:
+          "ascension-packages"
+      };
+      return map[type];
+    },
+    getBoost(level) {
+      return this.boostByLevel[level] || 0;
+    },
+    getAttributeBoost(level, attribute) {
+      const data = this.attributeBoostByLevel[level];
+      if (!data) return 0;
+      return data[attribute] || 0;
+    },
+    updateBoost(level, attribute, value) {
+      const mutations = {
+        1: 'setCharacterBoost',
+        5: 'setCharacterBoost5',
+        10: 'setCharacterBoost10',
+        15: 'setCharacterBoost15',
+        20: 'setCharacterBoost20'
+      };
+      if (!mutations[level]) return;
+      this.$store.commit(
+        `characters/${mutations[level]}`,
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value
+          }
+        }
+      );
+    },
+    updateAttributeBoost(level, attribute, value) {
+      const mutations = {
+        1: 'setCharacterAttributeBoost',
+        5: 'setCharacterAttributeBoost5',
+        10: 'setCharacterAttributeBoost10',
+        15: 'setCharacterAttributeBoost15',
+        20: 'setCharacterAttributeBoost20'
+      };
+      if (!mutations[level]) return;
+      this.$store.commit(
+        `characters/${mutations[level]}`,
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value
+          }
+        }
+      );
     },
     characterSkillSheet() {
       return this.$store.getters["characters/characterSkillSheetById"](
         this.characterId
       );
     },
-    async loadSpecies(key) {
-      this.loading = true;
-      const { data } = await this.$axios.get(`/api/species/${key}`);
-
-      this.species = data;
-      this.boost = this.species ? this.species.abilityBoost : 0;
-      this.AncestryAttribute = this.species.attributeBoost.filter(boost => boost.value == 0);
-      this.AncestryAttribute2 = this.species.attributeBoost.filter(boost => boost.value == 0);
-
-      this.selectedAncestryBoost = this.characterAncestryFreeBoost;
-      this.selectedAncestryBoost2 = this.characterAncestryFreeBoost2;
-      this.selectedBoost = this.AncestryFreeBoost;
-      this.loading = false;
-    },
-
     skillChoiceModel(level) {
       return this.skillChoice[this.label(level)];
-    },
-    incrementSkill(skill, level) {
-      //Тест
-      if (this.characterSkillSheet()) {
-        if (this.characterSkillSheet()?.filter(item => item.key === skill && item.type === 'skill' && item.level > level).length !== 0) {
-          const sheet = this.characterSkillSheet()?.filter(item => item.key === skill && item.type === 'skill' && item.level > level).reduce((min, current) => current.level < min.level ? current : min);
-          const length = this.characterSkillSheet()?.filter(item => item.key === skill).length;
-
-          if (sheet && ((length >= 2 && level <= 3) || (length >= 3 && level <= 7) || (length >= 4 && level <= 15)))
-            this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: sheet.level, type: 'skill', optional: false });
-        }
-
-      }
-
-
-      this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: skill, level: level, type: 'skill', optional: false });
-
-      this.$store.commit('characters/setCharacterskillInitial', { id: this.characterId, payload: { value: 1, skill: skill } });
-      var keys = Object.keys(this.SkillsTrained);
-      var loc = keys.indexOf(this.characterSkills[skill]);
-      const newValue = keys[loc + 1];
-      this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1 } });
-      this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
-    },
-    decrementSkill(skill, level) {
-      this.skillChoiceInitial.filter(item => item !== skill);
-      this.$store.commit('characters/setCharacterskillInitial', { id: this.characterId, payload: { value: -1, skill: skill } });
-
-      //Тест
-      this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: skill, level: level, type: 'skill', optional: false });
-
-      var keys = Object.keys(this.SkillsTrained);
-      var loc = keys.indexOf(this.characterSkills[skill]);
-      const newValue = keys[loc - 1];
-      this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints + 1 } });
-      this.$store.commit('characters/setCharacterSkill', { id: this.characterId, payload: { key: skill, value: newValue } });
-    },
-    incrementAttribute(attribute, level) {
-      const newValue = this.characterAttributes[attribute] >= 18 ? this.characterAttributes[attribute] + 1 : this.characterAttributes[attribute] + 2;
-
-      if (attribute == "intellect")
-        this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: attribute, value: this.characterSkillPoints + 1 } });
-
-      //В зависимости от левела
-      switch (level) {
-        case 1:
-          this.$store.commit('characters/setCharacterAttributeBoost', { id: this.characterId, payload: { key: attribute, value: 1 } });
-          this.$store.commit('characters/setCharacterBoost', { id: this.characterId, payload: { key: attribute, value: +1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 5:
-          this.$store.commit('characters/setCharacterAttributeBoost5', { id: this.characterId, payload: { key: attribute, value: 1 } });
-          this.$store.commit('characters/setCharacterBoost5', { id: this.characterId, payload: { key: attribute, value: +1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 10:
-          this.$store.commit('characters/setCharacterAttributeBoost10', { id: this.characterId, payload: { key: attribute, value: 1 } });
-          this.$store.commit('characters/setCharacterBoost10', { id: this.characterId, payload: { key: attribute, value: +1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 15:
-          this.$store.commit('characters/setCharacterAttributeBoost15', { id: this.characterId, payload: { key: attribute, value: 1 } });
-          this.$store.commit('characters/setCharacterBoost15', { id: this.characterId, payload: { key: attribute, value: +1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 20:
-          this.$store.commit('characters/setCharacterAttributeBoost20', { id: this.characterId, payload: { key: attribute, value: 1 } });
-          this.$store.commit('characters/setCharacterBoost20', { id: this.characterId, payload: { key: attribute, value: +1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-      }
-
-    },
-    decrementAttribute(attribute, level) {
-
-      const newValue = this.characterAttributes[attribute] > 18 ? this.characterAttributes[attribute] - 1 : this.characterAttributes[attribute] - 2;
-      if (attribute == "intellect")
-        this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: attribute, value: this.characterSkillPoints - 1 } });
-
-      switch (level) {
-        case 1:
-          this.$store.commit('characters/setCharacterAttributeBoost', { id: this.characterId, payload: { key: attribute, value: 0 } });
-          this.$store.commit('characters/setCharacterBoost', { id: this.characterId, payload: { key: attribute, value: -1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 5:
-          this.$store.commit('characters/setCharacterAttributeBoost5', { id: this.characterId, payload: { key: attribute, value: 0 } });
-          this.$store.commit('characters/setCharacterBoost5', { id: this.characterId, payload: { key: attribute, value: -1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 10:
-          this.$store.commit('characters/setCharacterAttributeBoost10', { id: this.characterId, payload: { key: attribute, value: 0 } });
-          this.$store.commit('characters/setCharacterBoost10', { id: this.characterId, payload: { key: attribute, value: -1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 15:
-          this.$store.commit('characters/setCharacterAttributeBoost15', { id: this.characterId, payload: { key: attribute, value: 0 } });
-          this.$store.commit('characters/setCharacterBoost15', { id: this.characterId, payload: { key: attribute, value: -1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-        case 20:
-          this.$store.commit('characters/setCharacterAttributeBoost20', { id: this.characterId, payload: { key: attribute, value: 0 } });
-          this.$store.commit('characters/setCharacterBoost20', { id: this.characterId, payload: { key: attribute, value: -1 } });
-          this.$store.commit('characters/setCharacterAttribute', { id: this.characterId, payload: { key: attribute, value: newValue } });
-          break;
-      }
-
-    },
-    characterlabel(key) {
-      switch (key) {
-        case "U":
-          return "Нетренирован"
-        case "T":
-          return "Тренирован"
-        case "E":
-          return "Эксперт"
-        case "M":
-          return "Мастер"
-        case "L":
-          return "Легенда"
-        default:
-          return "Нетренирован"
-      }
-    },
-    characterTrained(value) {
-      switch (value) {
-        case 0:
-          return "Нетренирован"
-        case 1:
-          return "Тренирован"
-        case 2:
-          return "Эксперт"
-        case 3:
-          return "Мастер"
-        case 4:
-          return "Легенда"
-        default:
-          return "Нетренирован"
-      }
-    },
-    characterLevel() {
-      return this.$store.getters['characters/characterLevelById'](this.characterId);
-    },
-    characterSkillSheet() {
-      return this.$store.getters['characters/characterSkillSheetById'](this.characterId);
-    },
-    skillSheetTrained(key, level) {
-      const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level <= level && (s.combinded === false || !s.combinded)) : undefined;
-      return skill ? this.characterTrained(skill.length) : this.characterTrained(0);
-    },
-    skillSheetAll(key, level) {
-      const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.level === level && (s.combinded === false || !s.combinded) && s.optional !== true) : undefined;
-      return skill ? skill.length : 0;
-    },
-    skillSheetPoints(key, level) {
-      const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.level === level && s.type === 'skill' && (s.combinded === false || !s.combinded)) : undefined;
-      return skill ? skill.length : 0;
     },
     skillSheetSkillLevel(key, level) {
       const skillSheet = this.characterSkillSheet();
       const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level && (s.combinded === false || !s.combinded)) : undefined;
-      return skill ? skill.length : 0;
-    },
-    skillSheetValue(key, level) {
-      const skillSheet = this.characterSkillSheet();
-      const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level === level && s.combinded === false && s.optional !== true) : undefined;
       return skill ? skill.length : 0;
     },
     skillSheetOptional(key, level) {
@@ -1269,119 +1509,178 @@ export default {
     levelRestrict(key, level) {
       const skillSheet = this.characterSkillSheet();
       const skill = skillSheet ? skillSheet.filter(s => s.key === key && s.level < level && s.combinded === false) : undefined;
-      const ProfLen = skill ? skill.length : 0;
-      if (skill.length === 2 && level < 7)
+      const ProfLen = skill?.length || 0;
+      if (ProfLen === 2 && level < 7)
         return true;
-      if (skill.length === 3 && level < 15)
+      if (ProfLen === 3 && level < 15)
         return true;
-      if (skill.length === 4)
+      if (ProfLen === 4)
         return true;
       return false;
     },
-    ModAttribute(attribute, skill, level) {
-      // const level = this.characterLevel();
-
-      const sheet = this.$store.getters["characters/characterSkillSheetById"](
-        this.characterId
+    formatBoost(stat, rowIndex) {
+      const rows = this.tableRows || [];
+      let count = 0;
+      for (let i = 0; i <= rowIndex; i++) {
+        const row = rows[i];
+        if (!row)
+          continue;
+        count += row.stats?.[stat] || 0;
+      }
+      const current =
+        rows[rowIndex]?.stats?.[stat] || 0;
+      if (count <= 4) {
+        return current;
+      }
+      if (current === 0) {
+        return 0;
+      }
+      return (
+        (count - 4) % 2 === 1
+          ? 0.5
+          : 1
       );
-      const prof = sheet.filter(
-        (s) => s.key === skill && s.level <= level && s.combinded !== true
-      ).length;
-
-      const char1 = this.SkillsTrained[this.charSkill[prof]];
-      // const char1 = this.SkillsTrained[this.characterSkills[skill]];
-      const char2 = (this.characterAttributes[attribute] - 10) / 2;
-      const char3 = char1 === 0 ? 0 : level;
-      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    },
+    // =========================
+    // MODIFIERS SYSTEM
+    // =========================
+    getAbilityModifier(attribute) {
+      const value =
+        this.characterAttributes?.[attribute] ?? 10;
+      return Math.floor(
+        (value - 10) / 2
+      );
+    },
+    getProficiencyValue(rank) {
+      const map = {
+        0: 0,
+        1: 2,
+        2: 4,
+        3: 6,
+        4: 8
+      };
+      return map[rank] || 0;
+    },
+    getSkillRankByLevel(skill, level) {
+      return this.getSkillSheet()
+        .filter(item =>
+          item.key === skill &&
+          item.level <= level &&
+          item.combinded !== true
+        )
+        .length;
+    },
+    ModAttribute(attribute, skill, level) {
+      const rank =
+        this.getSkillRankByLevel(
+          skill,
+          level
+        );
+      const proficiency =
+        this.getProficiencyValue(rank);
+      const ability =
+        this.getAbilityModifier(attribute);
+      const lvl =
+        rank > 0
+          ? level
+          : 0;
+      return (
+        proficiency +
+        ability +
+        lvl
+      );
     },
     ModProf(attribute, skill, level) {
-      // const level = this.characterLevel();
-
-      const sheet = this.$store.getters["characters/characterSkillSheetById"](
-        this.characterId
+      const rank =
+        this.getSkillRankByLevel(
+          skill,
+          level
+        );
+      return (
+        this.getProficiencyValue(rank)
+        +
+        (rank > 0 ? level : 0)
       );
-      const prof = sheet.filter(
-        (s) => s.key === skill && s.level <= level && s.combinded !== true
-      ).length;
-
-      const char1 = this.SkillsTrained[this.charSkill[prof]];
-      // const char1 = this.SkillsTrained[this.characterSkills[skill]];
-      // const char2 = (this.characterAttributes[attribute] - 10) / 2;
-      const char3 = char1 === 0 ? 0 : level;
-      return parseInt(char1) + parseInt(char3);
-    },
-    formatBoost(stat, rowIndex) {
-      let count = 0;
-
-      for (let i = 0; i <= rowIndex; i++) {
-        count += this.tableRows[i].stats?.[stat] || 0;
-      }
-
-      if (count <= 4) return this.tableRows[rowIndex].stats?.[stat] || 0;
-
-      // после 4
-      if (this.tableRows[rowIndex].stats?.[stat] === 0) return 0;
-
-      return (count - 4) % 2 === 1 ? 0.5 : 1;
-    },
-    ModProfAttr(attr, level) {
-      // let result = this.characterAttributesEnhanced[attr];
-      let result = 0
-
-      this.tableRows.forEach((row, rowIndex) => {
-        result += this.formatBoost(attr, rowIndex)
-      })
-
-      let boost = result > 4 ? 0.5 : 1;
-      if (level !== 20 && this.characterAttributesBoost20[attr] > 0) {
-        result = result - boost;
-        boost = result > 4 ? 0.5 : 1;
-      }
-
-      if (level < 15 && this.characterAttributesBoost15[attr] > 0) {
-        result = result - boost;
-        boost = result > 4 ? 0.5 : 1;
-      }
-
-      if (level < 10 && this.characterAttributesBoost10[attr] > 0) {
-        result = result - boost;
-        boost = result > 4 ? 0.5 : 1;
-      }
-
-      if (level < 5 && this.characterAttributesBoost5[attr] > 0) {
-        result = result - boost;
-        boost = result > 4 ? 0.5 : 1;
-      }
-      // const result = this.characterAttributes[attribute]
-      const modRaw = (result);       // настоящее дробное значение
-      const mod = Math.floor(modRaw);         // отображаемое целое значение
-
-
-      const arrow = Number.isInteger(modRaw) ? "" : " ⯅";  // стрелка только если дробное
-
-      return (mod > 0 ? "+ " : " ") + mod + arrow;
-
-
     },
     ModAttributeSaving(attribute, skill) {
-      const char1 = this.SkillsTrained[this.characterSaving[skill]];
-      const char2 = (this.characterAttributes[attribute] - 10) / 2;
-      const char3 = this.characterLevel();
-      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+      const rank =
+        this.characterSaving?.[skill]
+        || 0;
+      return (
+        this.getProficiencyValue(rank)
+        +
+        this.getAbilityModifier(attribute)
+        +
+        this.characterLevel
+      );
+    },
+    ModAttributePerception() {
+      const rank =
+        this.SkillPerception();
+      return (
+        this.getProficiencyValue(
+          this.SkillsTrained[rank]
+        )
+        +
+        this.getAbilityModifier("wisdom")
+        +
+        this.characterLevel
+      );
     },
     ModAttributeClass() {
-      const char1 = this.SkillsTrained[this.SkillClass()];
-      const char3 = this.characterLevel();
-      if (this.archetype)
-        return parseInt(char1) + parseInt(char3);
-      else
-        0
+      const rank =
+        this.SkillClass();
+      if (!this.archetype)
+        return 0;
+      return (
+        this.getProficiencyValue(rank)
+        +
+        this.characterLevel
+      );
     },
-    ModAttributePerception(attribute, skill) {
-      const char1 = this.SkillsTrained[this.SkillPerception()];
-      const char2 = (this.characterAttributes["wisdom"] - 10) / 2;
-      const char3 = this.characterLevel();
-      return parseInt(char1) + parseInt(char2) + parseInt(char3);
+    ModProfAttr(attribute, level) {
+
+      let result = 0;
+
+
+      // старт
+      this.tableRows.forEach((row, rowIndex) => {
+        result += this.formatBoost(attribute, rowIndex);
+      });
+
+
+      // // уровневые повышения
+      // Object.entries(this.attributeBoostByLevel || {})
+      //   .forEach(([lvl, boosts]) => {
+
+      //     if (Number(lvl) <= level) {
+
+      //       if (boosts[attribute]) {
+      //         result += (
+      //           result >= 4
+      //             ? 0.5
+      //             : 1
+      //         );
+      //       }
+
+      //     }
+
+      //   });
+
+
+      const mod = Math.floor(result);
+
+      return (
+        mod > 0
+          ? "+ "
+          : " "
+      )
+        + mod
+        + (
+          Number.isInteger(result)
+            ? ""
+            : " ⯅"
+        );
     },
     MaxSkillPoints() {
       const Max = this.characterSkillPointClass + (this.characterAttributes["intellect"] - 10) / 2;
@@ -1392,266 +1691,22 @@ export default {
     modInt(level) {
       switch (level) {
         case 1:
-          return this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
+          return (this.attributeBoostByLevel[level]?.intellect || 0) + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
         case 5:
-          return this.characterAttributesBoost5["intellect"];
+          return this.attributeBoostByLevel[level]?.intellect || 0;
         case 10:
-          return this.characterAttributesBoost10["intellect"];
+          return this.attributeBoostByLevel[level]?.intellect || 0;
         case 15: ;
-          return this.characterAttributesBoost15["intellect"];
+          return this.attributeBoostByLevel[level]?.intellect || 0;
         case 20:
-          return this.characterAttributesBoost20["intellect"];
+          return this.attributeBoostByLevel[level]?.intellect || 0;
       }
-
       return 0;
-    },
-
-    characterProgressionMax(level) {
-      let boost = 0;
-      let modInt = 0;
-      let skill = 0
-
-      if (level % 5 === 0) {
-        switch (level) {
-          case 5:
-            boost = 4;
-            modInt = this.characterAttributesBoost5["intellect"];
-            break;
-          case 10:
-            boost = 4;
-            modInt = this.characterAttributesBoost10["intellect"];
-            break;
-          case 15:
-            boost = 4;
-            modInt = this.characterAttributesBoost15["intellect"];
-            break;
-          case 20:
-            boost = 4;
-            modInt = this.characterAttributesBoost20["intellect"];
-            break;
-        }
-      }
-
-
-      if (level !== 1) {
-        skill = 1 + modInt;
-      }
-
-
-      if (level === 1) {
-
-        let class1 = this.archetype?.keyAbility?.length > 1 ? 1 : 0;
-        let class2 = this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0;
-        let back = this.BackgroundAttribute?.length > 1 ? 1 : 0;
-        let back2 = this.BackgroundAttribute2?.length > 1 ? 1 : 0;
-        let spec = this.AncestryAttribute?.length > 1 ? 1 : 0;
-        let spec2 = this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0;
-
-
-        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-        boost = 4;
-        skill = this.characterSkillPointClass +
-          this.characterSkillPointBackground +
-          this.characterSkillPointClassUp + modInt;
-
-        this.$store.commit('characters/characterProgressMax', { id: this.characterId, level: level, value: boost + skill + class1 + class2 + back + back2 + spec + spec2 });
-
-        //let other = this.selectedAncestryBoost?.length + this.selectedAncestryBoost2?.length + this.selectedBackgroundBoost?.length + this.selectedBackgroundBoost2?.length;
-        return boost + skill + class1 + class2 + back + back2 + spec + spec2;
-
-      }
-      this.$store.commit('characters/characterProgressMax', { id: this.characterId, level: level, value: boost + skill });
-      return boost + skill;
-    },
-    characterProgressionBoost(level) {
-      let boost = 0;
-      let modInt = 0;
-      if (level % 5 === 0) {
-        switch (level) {
-          case 5:
-            boost = 4 - this.characterBoost5;
-            modInt = this.characterAttributesBoost5["intellect"];
-            break;
-          case 10:
-            boost = 4 - this.characterBoost10;
-            modInt = this.characterAttributesBoost10["intellect"];
-            break;
-          case 15:
-            boost = 4 - this.characterBoost15;
-            modInt = this.characterAttributesBoost15["intellect"];
-            break;
-          case 20:
-            boost = 4 - this.characterBoost20;
-            modInt = this.characterAttributesBoost20["intellect"];
-            break;
-        }
-      }
-
-      let skill = 0
-      if (level === 1) {
-        boost = 4 - this.characterBoost;
-      }
-
-      return boost + skill;
-    },
-    // characterProgressionSkill(level) {
-    //   let boost = 0;
-    //   let modInt = 0;
-    //   if (level % 5 === 0) {
-    //     switch (level) {
-    //       case 5:
-    //         boost = 4 - this.characterBoost5;
-    //         modInt = this.characterAttributesBoost5["intellect"];
-    //         break;
-    //       case 10:
-    //         boost = 4 - this.characterBoost10;
-    //         modInt = this.characterAttributesBoost10["intellect"];
-    //         break;
-    //       case 15:
-    //         boost = 4 - this.characterBoost15;
-    //         modInt = this.characterAttributesBoost15["intellect"];
-    //         break;
-    //       case 20:
-    //         boost = 4 - this.characterBoost20;
-    //         modInt = this.characterAttributesBoost20["intellect"];
-    //         break;
-    //     }
-    //   }
-
-    //   let skill = 0
-    //   if (level !== 1) {
-    //     skill = 1 + modInt - this.skillSheetAll("", level)
-    //   }
-
-
-    //   if (level === 1) {
-    //     modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-    //     skill = this.characterSkillPointClass +
-    //       modInt - this.skillSheetPoints("", 1);
-    //   }
-    //   return skill;
-    // },
-    updateSelect(boost) {
-      this.$store.commit('characters/setCharacterAncestryFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
-    },
-    updateSelect2(boost) {
-      this.$store.commit('characters/setCharacterAncestryFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
-    },
-    updateSelectBackground(boost) {
-      this.$store.commit('characters/setCharacterBackgroundFreeBoost', { id: this.characterId, payload: { key: boost, value: 1 } });
-    },
-    updateSelectClassAttribute(boost) {
-      this.$store.commit('characters/setCharacterClassAttribute', { id: this.characterId, payload: { key: boost, value: 1 } });
-    },
-    updateSelectClassSkill(boost) {
-      // Классовые повышения
-
-      const sheet = this.$store.getters["characters/characterSkillSheetById"](
-        this.characterId
-      );
-
-      this.ClassSkill.forEach(item => {
-        if (sheet.find((i) => i.key === item.key && i.level === 1 && i.type === 'skill'))
-          this.$store.commit("characters/setCharacterSkillPointClassUp", {
-            id: this.characterId,
-            write: false,
-            payload: { key: 1, value: 1 },
-          });
-
-        this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: item.key, level: 1, type: 'skill', optional: true });
-        this.$store.commit('characters/removeSkillSheet', { id: this.characterId, key: item.key, level: 1, type: 'class', optional: true });
-
-
-      })
-
-      let comb = true;
-      if (sheet.find((i) => i.key === boost && i.level === 1))
-        comb = false;
-
-      this.$store.commit('characters/addSkillSheet', { id: this.characterId, key: boost, level: 1, type: 'class', optional: true, combinded: false });
-
-
-      // this.$store.commit('characters/removeSkillSheetbyType', { id: this.characterId, key: boost, type: 'class', optional: false });
-      // this.$store.commit('characters/setCharacterClassSkill', { id: this.characterId, payload: { key: boost, level: 1, optional: true, value: 1 } });
-    },
-    updateSelectBackground2(boost) {
-      this.$store.commit('characters/setCharacterBackgroundFreeBoost2', { id: this.characterId, payload: { key: boost, value: 1 } });
-    },
-    updateSelectClassSkillLevel(boost, level) {
-
-      this.$store.commit('characters/setCharacterClassSkillLevel', { id: this.characterId, payload: { key: boost, level: level } });
-    },
-    SkillPerception() {
-      return this.$store.getters['characters/characterPerseptionById'](this.characterId);
-    },
-    SkillClass() {
-      return this.$store.getters['characters/characterSkillClassById'](this.characterId);
-    },
-    isAffordable(cost) {
-      return cost <= this.remainingBuildPoints;
-    },
-    label(level) {
-      return "level" + level.toString();
-    },
-    openSkillsSettings(level) {
-      this.skillsEditorDialog = true;
-      this.skillLevel = level;
     },
     openSkillLevel(level) {
       this.skillLevel = level;
       this.dialogSkill = true;
     },
-    closeSkillsSettings() {
-      this.customSkill = {
-        key: undefined,
-        name: 'Знание',
-        atttribute: 'intellect',
-        description: '',
-      };
-      this.skillsEditorDialog = false;
-      this.alert = false;
-    },
-    // Новые методы для работы с прогрессом
-    getDisplayProgress(level) {
-      return {
-        current: this.calculateProgress(level),
-        max: this.calculateProgressMax(level)
-      };
-    },
-    SkillLabel(skill) {
-      //      const skills = [...this.skillRepository, ...this.characterCustomSkills];
-      const level = this.characterLevel()
-      const prof = this.characterSkillSheet.filter(
-        (s) => s.key === skill && s.level <= level && s.combinded !== true
-      ).length;
-
-      switch (prof) {
-        case 0:
-          return "Н";
-        case 1:
-          return "Т";
-        case 2:
-          return "Э";
-        case 3:
-          return "М";
-        case 4:
-          return "Л";
-        default:
-          return "Н";
-      }
-
-      // const char1 = this.profiencyRepository[this.charSkill[prof]];
-      // const char2 = (this.characterAttributes[attribute] - 10) / 2;
-      // const char3 = char1 === 0 ? 0 : this.characterLevel();
-      // return parseInt(char1) + parseInt(char2) + parseInt(char3);
-    },
-    getSkillRank(skillKey, level) {
-      const skillSheet = this.characterSkillSheet() || [];
-      // const level = this.characterLevel()
-
-      return skillSheet.filter((s) => s.key === skillKey && s.level <= level && s.combinded !== true).length;
-    },
-
     getRankChipColor(skillKey, level) {
       const rank = this.getSkillRank(skillKey, level);
       switch (rank) {
@@ -1669,78 +1724,6 @@ export default {
           return "grey";
       }
     },
-    calculateProgress(level) {
-      let boost = 0;
-      let modInt = 0;
-
-      if (level % 5 === 0) {
-        switch (level) {
-          case 5:
-            boost = this.characterBoost5;
-            modInt = this.characterAttributesBoost5["intellect"];
-            break;
-          case 10:
-            boost = this.characterBoost10;
-            modInt = this.characterAttributesBoost10["intellect"];
-            break;
-          case 15:
-            boost = this.characterBoost15;
-            modInt = this.characterAttributesBoost15["intellect"];
-            break;
-          case 20:
-            boost = this.characterBoost20;
-            modInt = this.characterAttributesBoost20["intellect"];
-            break;
-        }
-      }
-
-      let skill = 0;
-      // if (level !== 1 ) {
-      //   skill = 1 + modInt - this.skillSheetAll("", level);
-      // }
-
-      if (level !== 1) {
-        if (this.archetype?.keywords === 'плут')
-          skill = this.skillSheetAll("", level);
-        else if (level % 2 !== 0)
-          skill = this.skillSheetAll("", level);
-        else
-          skill = this.skillSheetAll("", level);
-      }
-
-      if (level === 1) {
-        // let class1 = (this.archetype?.keyAbility?.length > 1 ? 1 : 0 ) - (this.characterClassBoost?.length > 0 ? 1 : 0);
-        // let class2 = (this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0) - (this.characterClassSkill?.length > 0 ? 1 : 0);
-        // let back = (this.BackgroundAttribute?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost?.length > 0 ? 1 : 0);
-        // let back2 = (this.BackgroundAttribute2?.length > 1 ? 1 : 0) - (this.characterBackgroundFreeBoost2?.length > 0 ? 1 : 0);
-        // let spec = (this.AncestryAttribute?.length > 1 ? 1 : 0) - (this.characterAncestryFreeBoost?.length > 0 ? 1 : 0);
-        // let spec2 = (this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0) - (this.characterAncestryFreeBoost2?.length > 0 ? 1 : 0);
-
-        let class1 = (this.characterClassBoost?.length > 0 ? 1 : 0)
-        let class2 = (this.selectedClassSkill ? 1 : 0);
-        let back = (this.characterBackgroundFreeBoost?.length > 0 ? 1 : 0);
-        let back2 = (this.characterBackgroundFreeBoost2?.length > 0 ? 1 : 0);
-        let spec = (this.characterAncestryFreeBoost?.length > 0 ? 1 : 0);
-        let spec2 = (this.characterAncestryFreeBoost2?.length > 0 ? 1 : 0);
-
-        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-        boost = this.characterBoost;
-        skill = this.skillSheetPoints("", 1)
-        this.$store.commit('characters/characterProgress', {
-          id: this.characterId,
-          level,
-          value: boost + skill + class1 + class2 + back + back2 + spec + spec2
-        });
-        return boost + skill + class1 + class2 + back + back2 + spec + spec2;
-
-      }
-      this.$store.commit('characters/characterProgress', {
-        id: this.characterId,
-        level,
-        value: boost + skill
-      });
-      return boost + skill;
-    },
     mergeStats(...inputs) {
       const result = {
         strength: 0,
@@ -1750,10 +1733,8 @@ export default {
         wisdom: 0,
         charisma: 0
       };
-
       inputs.forEach(input => {
         if (!input) return;
-
         // 2️⃣ Если это объект со значениями
         if (typeof input === 'object') {
           Object.keys(result).forEach(stat => {
@@ -1761,75 +1742,7 @@ export default {
           });
         }
       });
-
-
-
       return result;
-    },
-    calculateProgressMax(level) {
-      let boost = 0;
-      let modInt = 0;
-      let skill = 0;
-
-      if (level % 5 === 0) {
-        switch (level) {
-          case 5:
-            boost = 4;
-            modInt = this.characterAttributesBoost5["intellect"];
-            break;
-          case 10:
-            boost = 4;
-            modInt = this.characterAttributesBoost10["intellect"];
-            break;
-          case 15:
-            boost = 4;
-            modInt = this.characterAttributesBoost15["intellect"];
-            break;
-          case 20:
-            boost = 4;
-            modInt = this.characterAttributesBoost20["intellect"];
-            break;
-        }
-      }
-
-      if (level !== 1) {
-        if (this.archetype?.keywords === 'плут')
-          skill = 1 + modInt;
-        else if (level % 2 !== 0)
-          skill = 1 + modInt;
-        else
-          skill = modInt;
-      }
-
-
-
-      if (level === 1) {
-        let class1 = this.archetype?.keyAbility?.length > 1 ? 1 : 0;
-        let class2 = this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0;
-        let back = this.BackgroundAttribute?.length > 1 ? 1 : 0;
-        let back2 = this.BackgroundAttribute2?.length > 1 ? 1 : 0;
-        let spec = this.AncestryAttribute?.length > 1 ? 1 : 0;
-        let spec2 = this.AncestryAttribute2?.length > 1 && this.boost === 2 ? 1 : 0;
-
-        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-        boost = 4;
-        skill = this.characterSkillPointClass +
-          modInt //+ this.skillSheetBack();
-
-        this.$store.commit('characters/characterProgressMax', {
-          id: this.characterId,
-          level,
-          value: boost + skill + class1 + class2 + back + back2 + spec + spec2
-        });
-        return boost + skill + class1 + class2 + back + back2 + spec + spec2;
-
-      }
-      this.$store.commit('characters/characterProgressMax', {
-        id: this.characterId,
-        level,
-        value: boost + skill
-      });
-      return boost + skill;
     },
     isSkillLevel(level) {
       return (
@@ -1844,119 +1757,134 @@ export default {
       this.currentLevel = level
       this.boostDialog = true
     },
-    characterProgression(level) {
-      return this.calculateProgress(level);
-    },
-
-    characterProgressionMax(level) {
-      return this.calculateProgressMax(level);
-    },
-
-    characterProgressionBoost(level) {
-      let boost = 0;
-      let modInt = 0;
-
-      if (level % 5 === 0) {
-        switch (level) {
-          case 5:
-            boost = 4 - this.characterBoost5;
-            modInt = this.characterAttributesBoost5["intellect"];
-            break;
-          case 10:
-            boost = 4 - this.characterBoost10;
-            modInt = this.characterAttributesBoost10["intellect"];
-            break;
-          case 15:
-            boost = 4 - this.characterBoost15;
-            modInt = this.characterAttributesBoost15["intellect"];
-            break;
-          case 20:
-            boost = 4 - this.characterBoost20;
-            modInt = this.characterAttributesBoost20["intellect"];
-            break;
-        }
-      }
-
-      let skill = 0;
-      if (level === 1) {
-        boost = 4 - this.characterBoost;
-      }
-
-      return boost + skill;
-    },
-
     characterProgressionSkill(level) {
-      let boost = 0;
-      let modInt = 0;
+      let max = this.calculateSkillProgressMax(level);
+      let current = this.calculateSkillProgress(level);
 
-      if (level % 5 === 0) {
-        switch (level) {
-          case 5:
-            modInt = this.characterAttributesBoost5["intellect"];
-            break;
-          case 10:
-            modInt = this.characterAttributesBoost10["intellect"];
-            break;
-          case 15:
-            modInt = this.characterAttributesBoost15["intellect"];
-            break;
-          case 20:
-            modInt = this.characterAttributesBoost20["intellect"];
-            break;
-        }
-      }
-
-      let skill = 0;
-      if (level !== 1) {
-        skill = 1 + modInt - this.skillSheetAll("", level);
-      }
-
-      if (level === 1) {
-        modInt = this.characterAttributesBoost["intellect"] + this.characterAncestryBoost["intellect"] + this.characterBackgroundBoost["intellect"] + this.characterAttributesClass["intellect"];
-        skill = this.characterSkillPointClass +
-
-          modInt - this.skillSheetPoints("", 1);
-      }
-
-      return skill;
+      return max - current;
     },
-
-    // Метод для сохранения прогресса
+    // =========================
+    // PROGRESSION SYSTEM
+    // =========================
+    getDisplayProgress(level) {
+      return {
+        current: this.calculateProgress(level),
+        max: this.calculateProgressMax(level)
+      };
+    },
     saveProgress() {
-      for (let level = 1; level <= 20; level++) {
-        const progress = this.calculateProgress(level);
-        const progressMax = this.calculateProgressMax(level);
-
+      for (let level = 1; level <= this.characterLevel; level++) {
         this.$store.commit('characters/characterProgress', {
           id: this.characterId,
           level,
-          value: progress
+          value: this.calculateProgress(level)
         });
-
         this.$store.commit('characters/characterProgressMax', {
           id: this.characterId,
           level,
-          value: progressMax
+          value: this.calculateProgressMax(level)
         });
       }
       this.needsProgressUpdate = false;
-    },
-    /////
 
+    },
+    getLevelAttributeBoosts(level) {
+      return this.attributeBoostByLevel[level] || {};
+    },
+    getLevelBoostCount(level) {
+      return this.boostByLevel[level] || 0;
+    },
+    getIntellectModifier(level) {
+      let value = 0;
+      if (level === 1) {
+        value += this.characterAncestryBoost?.intellect || 0;
+        value += this.characterBackgroundBoost?.intellect || 0;
+        value += this.characterAttributesClass?.intellect || 0;
+      }
+      value += this.getLevelAttributeBoosts(level).intellect || 0;
+      return value;
+    },
+    calculateProgress(level) {
+      let result = 0;
+      // Повышения характеристик
+      if (this.isBoostLevel(level)) {
+        result += this.getLevelBoostCount(level);
+      }
+      // Навыки
+      if (level === 1) {
+        let additional = 0;
+        additional += this.characterClassBoost?.length ? 1 : 0;
+        additional += this.selectedClassSkill ? 1 : 0;
+        additional += this.characterBackgroundFreeBoost?.length ? 1 : 0;
+        additional += this.characterBackgroundFreeBoost2?.length ? 1 : 0;
+        additional += this.characterAncestryFreeBoost?.length ? 1 : 0;
+        additional += this.characterAncestryFreeBoost2?.length ? 1 : 0;
+        result += this.skillSheetPoints("", 1);
+        result += additional;
+      } else {
+        result += this.skillSheetAll("", level);
+      }
+      return result;
+    },
+    calculateProgressMax(level) {
+      let result = 0;
+      // Характеристики
+      if (this.isBoostLevel(level)) {
+        result += 4;
+      }
+      // Навыки
+      if (level === 1) {
+        result += this.characterSkillPointClass || 0;
+        result += this.characterSkillPointBackground || 0;
+        result += this.characterSkillPointClassUp || 0;
+        result += this.getIntellectModifier(level);
+        let extra = 0;
+        extra += this.archetype?.keyAbility?.length > 1 ? 1 : 0;
+        extra += this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0;
+        extra += this.selectedBackgroundSkill ? 1 : 0;
+        extra += this.BackgroundAttribute?.length > 1 ? 1 : 0;
+        extra += this.BackgroundAttribute2?.length > 1 ? 1 : 0;
+        extra += this.AncestryAttribute?.length > 1 ? 1 : 0;
+        extra += (
+          this.AncestryAttribute2?.length > 1 &&
+          this.boost === 2
+        ) ? 1 : 0;
+        result += extra;
+      } else {
+        if (
+          level % 2 === 0 &&
+          this.archetype?.keywords !== 'плут'
+        ) {
+          result += this.getIntellectModifier(level);
+        } else {
+          result += 1;
+          result += this.getIntellectModifier(level);
+        }
+      }
+      this.$store.commit(
+        'characters/characterProgressMax',
+        {
+          id: this.characterId,
+          level,
+          value: result
+        }
+      );
+      return result;
+    },
+    characterProgression(level) {
+      return this.calculateProgress(level);
+    },
+    characterProgressionMax(level) {
+      return this.calculateProgressMax(level);
+    },
+    characterProgressionBoost(level) {
+      if (!this.isBoostLevel(level)) {
+        return 0;
+      }
+      return 4 - this.getLevelBoostCount(level);
+    },
     isSkillUpgraded(skill) {
       return this.skillSheetValue(skill.key, 1) > 0;
-    },
-
-    handleSkillClick(skill) {
-      if (this.isSkillDisabled(skill)) return;
-
-      const value = this.skillSheetValue(skill.key, 1);
-
-      if (value > 0) {
-        this.decrementSkill(skill.key, 1);
-      } else {
-        this.incrementSkill(skill.key, 1);
-      }
     },
 
     isSkillDisabled(skill) {
@@ -1969,160 +1897,656 @@ export default {
     },
     ////по уровням
     isSkillUpgradedLevel(skill, level) {
-      return this.skillSheetValue(skill.key, level) > 0;
-    },
-    handleSkillClickLevel(skill, level) {
-      if (this.isSkillDisabledLevel(skill, level)) return;
-
-      const value = this.skillSheetValue(skill.key, level);
-
-      if (value > 0) {
-        this.decrementSkill(skill.key, level);
-      } else {
-        this.incrementSkill(skill.key, level);
-      }
-    },
-
-    isSkillDisabledLevel(skill, skillLevel) {
-      const value = this.skillSheetValue(skill.key, skillLevel);
       return (
-        (
-          ((1 + this.modInt(skillLevel) - this.skillSheetAll("", skillLevel)) <= 0
-            && value === 0)
-          || (this.skillSheetTrained(skill.key, skillLevel) === "Легенда" && value === 0)
-        )
-        // this.skillSheetOptional(skill.key, skillLevel) === true ||
-        // (this.skillSheetValue(skill.key, 1) === 0 &&
-        //   (1 + this.modInt(skillLevel) - this.skillSheetAll("", skillLevel)) <= 0)
-        // || this.skillSheetTrained(skill.key, 1) === "Легенда"
-
-
-
+        this.skillSheetValue(
+          skill.key,
+          level
+        ) > 0
       );
     },
-
-
-    ///Аттрибуты
-    ////по уровням
-    isAttributeUpgradedLevel(att, level) {
-      if (level === 1)
-        return (
-          this.characterAttributesBoost[att] > 0)
-
-      if (level === 5)
-        return (
-          this.characterAttributesBoost5[att] > 0)
-
-      if (level === 10)
-        return (
-          this.characterAttributesBoost10[att] > 0)
-
-      if (level === 15)
-        return (
-          this.characterAttributesBoost15[att] > 0)
-
-
-      if (level === 20)
-        return (
-          this.characterAttributesBoost20[att] > 0)
+    // =========================
+    // SKILLS SYSTEM
+    // =========================
+    getSkillSheet() {
+      return (
+        this.$store.getters[
+          "characters/characterSkillSheetById"
+        ](this.characterId)
+        || []
+      );
     },
-    handleAttributeClickLevel(att, level) {
-      if (this.isAttributeDisabledLevel(att, level)) return;
+    skillSheet() {
+      return this.getSkillSheet();
+    },
+    getSkillEntries(skill, level = null) {
+      return this.getSkillSheet().filter(item => {
+        if (item.key !== skill)
+          return false;
+        if (item.combinded === true)
+          return false;
+        if (level !== null && item.level !== level)
+          return false;
+        return true;
+      });
+    },
+    getSkillRank(skill, level = this.characterLevel) {
+      return this.getSkillSheet()
+        .filter(item =>
+          item.key === skill &&
+          item.level <= level &&
+          item.combinded !== true
+        )
+        .length;
+    },
+    skillRankMap() {
+      const map = {};
+      this.getSkillSheet()
+        .forEach(item => {
+          if (item.combinded === true)
+            return;
+          if (!map[item.key]) {
+            map[item.key] = 0;
+          }
+          map[item.key]++;
+        });
+      return map;
+    },
+    skillSheetValue(skill, level) {
+      return this.getSkillEntries(skill, level).length;
+    },
+    skillSheetAll(key, level) {
+      return this.getSkillSheet()
+        .filter(item =>
+          item.level === level &&
+          item.type === 'skill' &&
+          item.combinded !== true &&
+          item.optional !== true
+        )
+        .length;
+    },
+    skillSheetPoints(key, level) {
+      return this.getSkillSheet()
+        .filter(item =>
+          item.level === level &&
+          item.type === 'skill' &&
+          item.combinded !== true
+        )
+        .length;
+    },
+    calculateSkillProgressMax(level) {
 
-      let value = 0;
+      if (level === 1) {
 
-      if (level === 1)
-        value = this.characterAttributesBoost[att]
+        let result = 0;
 
-      if (level === 5)
-        value = this.characterAttributesBoost5[att]
+        result += this.characterSkillPointClass || 0;
+        result += this.characterSkillPointBackground || 0;
+        result += this.characterSkillPointClassUp || 0;
 
-      if (level === 10)
-        value = this.characterAttributesBoost10[att]
-
-      if (level === 15)
-        value = this.characterAttributesBoost15[att]
+        result += this.getIntellectModifier(level);
 
 
-      if (level === 20)
-        value = this.characterAttributesBoost20[att]
+        let extra = 0;
 
-      if (value === 0) {
-        this.incrementAttribute(att, level);
+        // extra += this.archetype?.keyAbility?.length > 1 ? 1 : 0;
+        extra += this.archetype?.skillTrainedChoice?.length > 1 ? 1 : 0;
+
+        // extra += this.selectedBackgroundSkill ? 1 : 0;
+
+        // extra += this.BackgroundAttribute?.length > 1 ? 1 : 0;
+        // extra += this.BackgroundAttribute2?.length > 1 ? 1 : 0;
+
+        // extra += this.AncestryAttribute?.length > 1 ? 1 : 0;
+
+        // extra += (
+        //   this.AncestryAttribute2?.length > 1 &&
+        //   this.boost === 2
+        // )
+        //   ? 1
+        //   : 0;
+
+
+        return result + extra;
+
+      }
+
+
+      let result = 0;
+
+
+      if (
+        level % 2 === 0 &&
+        this.archetype?.keywords !== 'плут'
+      ) {
+
+        result += this.getIntellectModifier(level);
+
       } else {
-        this.decrementAttribute(att, level);
+
+        result += 1;
+        result += this.getIntellectModifier(level);
+
+      }
+
+
+      return result;
+
+    },
+    calculateSkillProgress(level) {
+
+      if (level === 1) {
+
+        let result = 0;
+
+        result += this.skillSheetPoints("", 1);
+
+        // result += this.characterClassBoost?.length ? 1 : 0;
+        // result += this.selectedClassSkill ? 1 : 0;
+
+        // result += this.selectedBackgroundSkill ? 1 : 0;
+
+        // result += this.characterBackgroundFreeBoost?.length ? 1 : 0;
+        // result += this.characterBackgroundFreeBoost2?.length ? 1 : 0;
+
+        // result += this.characterAncestryFreeBoost?.length ? 1 : 0;
+        // result += this.characterAncestryFreeBoost2?.length ? 1 : 0;
+
+
+        return result;
+
+      }
+
+
+      return this.skillSheetAll("", level);
+
+    },
+    skillSheetTrained(skill, level) {
+      const rank = this.getSkillRank(skill, level);
+      return this.characterTrained(rank);
+    },
+    characterTrained(value) {
+      const ranks = [
+        "Нетренирован",
+        "Тренирован",
+        "Эксперт",
+        "Мастер",
+        "Легенда"
+      ];
+      return ranks[value] || ranks[0];
+    },
+    SkillLabel(skill) {
+      const rank = this.getSkillRank(skill);
+      return [
+        "Н",
+        "Т",
+        "Э",
+        "М",
+        "Л"
+      ][rank] || "Н";
+    },
+    incrementSkill(skill, level) {
+      // if (this.characterSkillPoints <= 0)
+      //   return;
+      const ranks =
+        Object.keys(this.SkillsTrained);
+      const current =
+        this.characterSkills[skill] || "U";
+      const index =
+        ranks.indexOf(current);
+      const next =
+        ranks[index + 1];
+      if (!next)
+        return;
+      this.$store.commit(
+        'characters/addSkillSheet',
+        {
+          id: this.characterId,
+          key: skill,
+          level,
+          type: 'skill',
+          optional: false,
+          combinded: false
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterskillInitial',
+        {
+          id: this.characterId,
+          payload: {
+            value: 1,
+            skill
+          }
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterSkillPoints',
+        {
+          id: this.characterId,
+          payload: {
+            key: skill,
+            value: this.characterSkillPoints - 1
+          }
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterSkill',
+        {
+          id: this.characterId,
+          payload: {
+            key: skill,
+            value: next
+          }
+        }
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    decrementSkill(skill, level) {
+      const rank =
+        this.getSkillRank(skill, level);
+      if (rank <= 0)
+        return;
+
+
+      const ranks =
+        Object.keys(this.SkillsTrained);
+      const current =
+        this.characterSkills[skill];
+      const index =
+        ranks.indexOf(current);
+      const previous =
+        ranks[index - 1] || "U";
+      this.$store.commit(
+        'characters/removeSkillSheet',
+        {
+          id: this.characterId,
+          key: skill,
+          level,
+          type: 'skill',
+          optional: false
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterskillInitial',
+        {
+          id: this.characterId,
+          payload: {
+            value: -1,
+            skill
+          }
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterSkillPoints',
+        {
+          id: this.characterId,
+          payload: {
+            key: skill,
+            value: this.characterSkillPoints + 1
+          }
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterSkill',
+        {
+          id: this.characterId,
+          payload: {
+            key: skill,
+            value: previous
+          }
+        }
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    handleSkillClickLevel(skill, level) {
+      if (this.isSkillDisabledLevel(skill, level))
+        return;
+      if (
+        this.isSkillUpgradedLevel(skill, level)
+      ) {
+        const rank =
+          this.getSkillRank(skill.key, level);
+        if (rank <= 1 && skill.custom)
+          return
+        this.decrementSkill(
+          skill.key,
+          level
+        );
+      }
+      else {
+        this.incrementSkill(
+          skill.key,
+          level
+        );
       }
     },
+    isSkillDisabledLevel(skill, level) {
+      const selected =
+        this.skillSheetValue(
+          skill.key,
+          level
+        );
+      const available = this.calculateSkillProgressMax(level) - this.calculateSkillProgress(level)
+      // 1 +
+      // this.modInt(level) -
+      // this.skillSheetAll("", level);
+      const legendary =
+        this.skillSheetTrained(
+          skill.key,
+          level
+        ) === "Легенда";
 
-    isAttributeDisabledLevel(att, level) {
-      if (level === 1)
-        return (4 - this.characterBoost == 0 &&
-          this.characterAttributesBoost[att] === 0)
-
-      if (level === 5)
-        return (4 - this.characterBoost5 == 0 &&
-          this.characterAttributesBoost5[att] === 0)
-
-      if (level === 10)
-        return (4 - this.characterBoost10 == 0 &&
-          this.characterAttributesBoost10[att] === 0)
-
-      if (level === 15)
-        return (4 - this.characterBoost15 == 0 &&
-          this.characterAttributesBoost15[att] === 0)
-
-
-      if (level === 20)
-        return (4 - this.characterBoost20 == 0 &&
-          this.characterAttributesBoost20[att] === 0)
-
+      return (
+        selected === 0 &&
+        (
+          available <= 0 ||
+          legendary
+        )
+      );
     },
-
+    // =========================
+    // ATTRIBUTES SYSTEM
+    // =========================
+    getAttributeBoostGetter(level) {
+      const map = {
+        1: {
+          boost: 'setCharacterBoost',
+          attribute: 'setCharacterAttributeBoost'
+        },
+        5: {
+          boost: 'setCharacterBoost5',
+          attribute: 'setCharacterAttributeBoost5'
+        },
+        10: {
+          boost: 'setCharacterBoost10',
+          attribute: 'setCharacterAttributeBoost10'
+        },
+        15: {
+          boost: 'setCharacterBoost15',
+          attribute: 'setCharacterAttributeBoost15'
+        },
+        20: {
+          boost: 'setCharacterBoost20',
+          attribute: 'setCharacterAttributeBoost20'
+        }
+      };
+      return map[level];
+    },
+    calculateAttributeChange(attribute, increase = true) {
+      const current =
+        this.characterAttributes[attribute];
+      if (increase) {
+        return current >= 18
+          ? current + 1
+          : current + 2;
+      }
+      return current > 18
+        ? current - 1
+        : current - 2;
+    },
+    incrementAttribute(attribute, level) {
+      const commits =
+        this.getAttributeBoostGetter(level);
+      if (!commits)
+        return;
+      const value =
+        this.calculateAttributeChange(
+          attribute,
+          true
+        );
+      if (attribute === "intellect") {
+        this.$store.commit(
+          'characters/setCharacterSkillPoints',
+          {
+            id: this.characterId,
+            payload: {
+              key: attribute,
+              value: this.characterSkillPoints + 1
+            }
+          }
+        );
+      }
+      this.$store.commit(
+        `characters/${commits.attribute}`,
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value: 1
+          }
+        }
+      );
+      this.$store.commit(
+        `characters/${commits.boost}`,
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value: 1
+          }
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterAttribute',
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value
+          }
+        }
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    decrementAttribute(attribute, level) {
+      const commits =
+        this.getAttributeBoostGetter(level);
+      if (!commits)
+        return;
+      const value =
+        this.calculateAttributeChange(
+          attribute,
+          false
+        );
+      if (attribute === "intellect") {
+        this.$store.commit(
+          'characters/setCharacterSkillPoints',
+          {
+            id: this.characterId,
+            payload: {
+              key: attribute,
+              value: this.characterSkillPoints - 1
+            }
+          }
+        );
+      }
+      this.$store.commit(
+        `characters/${commits.attribute}`,
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value: 0
+          }
+        }
+      );
+      this.$store.commit(
+        `characters/${commits.boost}`,
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value: -1
+          }
+        }
+      );
+      this.$store.commit(
+        'characters/setCharacterAttribute',
+        {
+          id: this.characterId,
+          payload: {
+            key: attribute,
+            value
+          }
+        }
+      );
+      this.needsProgressUpdate = true;
+      this.saveProgress();
+    },
+    isAttributeUpgradedLevel(attribute, level) {
+      return (
+        this.attributeBoostByLevel[level]?.[attribute] > 0
+      );
+    },
+    handleAttributeClickLevel(attribute, level) {
+      if (
+        this.isAttributeDisabledLevel(
+          attribute,
+          level
+        )
+      )
+        return;
+      if (
+        this.isAttributeUpgradedLevel(
+          attribute,
+          level
+        )
+      ) {
+        this.decrementAttribute(
+          attribute,
+          level
+        );
+      }
+      else {
+        this.incrementAttribute(
+          attribute,
+          level
+        );
+      }
+    },
+    isAttributeDisabledLevel(attribute, level) {
+      const used =
+        this.boostByLevel[level] || 0;
+      const selected =
+        this.attributeBoostByLevel[level]?.[attribute] || 0;
+      return (
+        (4 - used <= 0)
+        &&
+        selected === 0
+      );
+    },
     // Добавляем вызов сохранения при важных событиях
     beforeDestroy() {
       if (this.needsProgressUpdate) {
         this.saveProgress();
       }
     },
+    // =========================
+    // HELPERS / UI METHODS
+    // =========================
+    characterlabel(value) {
+      const labels = {
+        U: "Нетренирован",
+        T: "Тренирован",
+        E: "Эксперт",
+        M: "Мастер",
+        L: "Легенда"
+      };
+      return labels[value] || labels.U;
+    },
+    label(level) {
+      return `level${level}`;
+    },
+    SkillPerception() {
+      return this.$store.getters[
+        'characters/characterPerseptionById'
+      ](this.characterId);
+    },
+    SkillClass() {
+      return this.$store.getters[
+        'characters/characterSkillClassById'
+      ](this.characterId);
+    },
+    isAffordable(cost) {
+      return (
+        Number(cost)
+        <=
+        Number(this.remainingBuildPoints)
+      );
+    },
+    openSkillsSettings(level) {
+      this.skillLevel = level;
+      this.skillsEditorDialog = true;
+    },
+    closeSkillsSettings() {
+      this.customSkill = {
+        key: undefined,
+        name: 'Знание',
+        attribute: 'intellect',
+        description: ''
+      };
+      this.skillsEditorDialog = false;
+      this.alert = false;
+    },
     saveCustomSkill(level) {
       this.alert = false;
       const skill = {
-        key: this.textToCamel(this.customSkill.name),
-        name: this.customSkill.name,
-        level: level,
-        attribute: 'intellect',
+        key:
+          this.textToCamel(
+            this.customSkill.name
+          ),
+        name:
+          this.customSkill.name,
+        level,
+        attribute:
+          this.customSkill.attribute
+          ||
+          'intellect',
         type: 'skill',
-        description: this.customSkill.description,
-        optional: false,
+        description:
+          this.customSkill.description,
+        optional: false
       };
-      const doExist = this.skills.find((s) => s.key === skill.key);
-      if (doExist) {
+      const exists =
+        this.skills
+          .some(
+            item =>
+              item.key === skill.key
+          );
+      if (exists) {
         this.alert = true;
-        console.warn(`Skill ${skill.name} already exists.`);
-      } else {
-        this.addCustomSkill(skill);
-        // this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: skill, value: this.characterSkillPoints - 1} });
-        this.closeSkillsSettings();
+        return;
       }
+      this.addCustomSkill(skill);
+      this.closeSkillsSettings();
     },
     addCustomSkill(skill) {
-      const id = this.characterId;
-      this.$store.commit('characters/addCharacterCustomSkill', { id, skill });
+      this.$store.commit(
+        'characters/addCharacterCustomSkill',
+        {
+          id: this.characterId,
+          skill
+        }
+      );
     },
     removeCustomSkill(key) {
-      const id = this.characterId;
-      this.$store.commit('characters/removeCharacterCustomSkill', { id, key });
-      // this.$store.commit('characters/setCharacterSkillPoints', { id: this.characterId, payload: { key: key, value: this.characterSkillPoints + 1} });
+      this.$store.commit(
+        'characters/removeCharacterCustomSkill',
+        {
+          id: this.characterId,
+          key
+        }
+      );
     },
   },
 };
 </script>
-
 <style scoped>
 /* =========================
    UTILITIES
 ========================= */
-
 .small {
   height: 24px;
 }
@@ -2134,7 +2558,6 @@ td.small {
 /* =========================
    LAYOUT
 ========================= */
-
 .my-tabs-container {
   height: 620px;
   overflow: hidden;
@@ -2160,7 +2583,6 @@ td.small {
 /* =========================
    DIVIDER
 ========================= */
-
 .sexy_line {
   display: block;
   height: 1px;
@@ -2174,7 +2596,6 @@ td.small {
 /* =========================
    BOX SYSTEM (resource / faith)
 ========================= */
-
 .resource-box,
 .faith-box {
   border: 1px solid var(--ui-border);
@@ -2225,7 +2646,6 @@ td.small {
 /* =========================
    TABLE BASE (GLOBAL BEHAVIOR)
 ========================= */
-
 tr.v-data-table__selected {
   background: var(--ui-focus) !important;
 }
@@ -2233,7 +2653,6 @@ tr.v-data-table__selected {
 /* =========================
    SKILL TABLE (MAIN COMPONENT)
 ========================= */
-
 .skill-table {
   font-size: 13px;
   border-collapse: collapse;
@@ -2319,7 +2738,6 @@ tr.v-data-table__selected {
 /* =========================
    BUTTON SYSTEM (IMPORTANT UPGRADE)
 ========================= */
-
 .compact-btn {
   min-width: 28px !important;
   height: 28px !important;
@@ -2353,7 +2771,6 @@ tr.v-data-table__selected {
 /* =========================
    CHIPS (VERY IMPORTANT VISUAL FIX)
 ========================= */
-
 .v-chip {
   background: var(--ui-surface-soft) !important;
   color: var(--ui-text) !important;
@@ -2370,7 +2787,6 @@ tr.v-data-table__selected {
 /* =========================
    CARD HEADER STATES
 ========================= */
-
 .v-card-title {
   color: var(--ui-text);
   font-weight: 600;
@@ -2386,7 +2802,6 @@ tr.v-data-table__selected {
 /* =========================
    DIALOG SYSTEM (IMPORTANT UX FIX)
 ========================= */
-
 .v-dialog .v-card {
   background: var(--ui-surface);
   color: var(--ui-text);
@@ -2403,7 +2818,6 @@ tr.v-data-table__selected {
 /* =========================
    LIST ITEMS
 ========================= */
-
 .v-list-item {
   border-radius: 8px;
   transition: 0.15s ease;
@@ -2416,7 +2830,6 @@ tr.v-data-table__selected {
 /* =========================
    GLOBAL FEEL FIXES
 ========================= */
-
 * {
   -webkit-font-smoothing: antialiased;
 }
@@ -2460,14 +2873,11 @@ button,
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
-
   height: 26px;
   padding: 0 10px;
-
   background: var(--ui-surface-soft);
   border: 1px solid var(--ui-border);
   color: var(--ui-text);
-
   transition: var(--ui-transition);
 }
 
@@ -2495,7 +2905,6 @@ button,
   border: 1px solid var(--ui-border);
   background: var(--ui-surface);
   overflow: hidden;
-
   transition: var(--ui-transition);
 }
 
@@ -2508,14 +2917,11 @@ button,
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   width: 100%;
   padding: 10px 12px;
-
   font-weight: 600;
   font-size: 14px;
   color: var(--ui-text);
-
   letter-spacing: 0.2px;
 }
 
@@ -2531,7 +2937,6 @@ button,
   font-size: 12px;
   font-weight: 600;
   padding: 2px 8px;
-
   border-radius: 999px;
   background: var(--ui-surface-soft);
   border: 1px solid var(--ui-border);
@@ -2549,7 +2954,6 @@ button,
 .ui-section {
   padding: 12px;
   border-radius: 12px;
-
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);
 }
@@ -2582,25 +2986,20 @@ button,
   border-left: 5px solid transparent;
 }
 
-
 /* выбранный навык */
 .ui-row--active {
   background: rgba(76, 175, 80, 0.18) !important;
   border-left: 5px solid #4caf50;
-
   box-shadow:
     0 0 0 1px rgba(76, 175, 80, 0.45),
     0 3px 10px rgba(76, 175, 80, 0.25);
-
 }
-
 
 /* текст выбранного */
 .ui-row--active .ui-cell--name {
   font-weight: 700;
   color: #4caf50;
 }
-
 
 /* hover */
 .ui-row--active td:first-child {
@@ -2615,12 +3014,10 @@ button,
   background: rgba(255, 255, 255, 0.06);
 }
 
-
 /* отключенные */
 .ui-row--disabled {
   opacity: .45;
 }
-
 
 /* чтобы строки выглядели как современные элементы списка */
 .ui-cell {
@@ -2687,17 +3084,13 @@ button,
 .ui-message {
   display: flex;
   align-items: center;
-
   padding: 10px 12px;
   border-radius: 10px;
-
   font-size: 13px;
   font-weight: 500;
-
   border: 1px solid var(--ui-border);
   background: var(--ui-surface-soft);
   color: var(--ui-text);
-
   margin: 6px 0;
 }
 
@@ -2757,7 +3150,6 @@ button,
   font-size: 15px;
   font-weight: 700;
   color: var(--ui-text);
-
   margin: 10px 0;
   letter-spacing: 0.2px;
 }
@@ -2766,7 +3158,6 @@ button,
   font-size: 13px;
   font-weight: 600;
   color: var(--ui-text);
-
   margin: 8px 0;
   opacity: 0.9;
 }
@@ -2775,12 +3166,9 @@ button,
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 10px 12px;
-
   background: var(--ui-surface-soft);
   border-bottom: 1px solid var(--ui-border);
-
   font-size: 10px;
   font-weight: 600;
   color: var(--ui-text);
@@ -2792,44 +3180,36 @@ button,
   gap: 10px;
 }
 
-
 .skill-card {
   padding: 12px;
   cursor: pointer;
   transition: all .2s ease;
-
   border: 2px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 12px;
 }
-
 
 .skill-card:hover {
   transform: translateY(-2px);
 }
 
-
 /* ВЫБРАННЫЙ НАВЫК */
 .skill-card--active {
   background: rgba(76, 175, 80, 0.25) !important;
   border: 3px solid #4caf50 !important;
-
   box-shadow:
     0 0 12px rgba(76, 175, 80, .45),
     inset 0 0 20px rgba(76, 175, 80, .15);
 }
-
 
 .skill-card--active .skill-name {
   color: #4caf50;
   font-weight: 800;
 }
 
-
 /* отключенный */
 .skill-card--disabled {
   opacity: .45;
 }
-
 
 /* верхняя строка */
 .skill-card__main {
@@ -2838,18 +3218,15 @@ button,
   align-items: center;
 }
 
-
 .skill-name {
   font-size: 16px;
   font-weight: 600;
 }
 
-
 .skill-value {
   font-size: 18px;
   font-weight: 700;
 }
-
 
 /* нижняя информация */
 .skill-meta {
@@ -2857,9 +3234,79 @@ button,
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-
   margin-top: 10px;
   font-size: 13px;
   opacity: .85;
+}
+
+.ui-info-card {
+  background: rgba(255, 255, 255, .03);
+}
+
+.boost-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.boost-list .v-chip {
+  margin: 4px;
+}
+
+
+@media (max-width: 600px) {
+  .boost-list ::v-deep .v-slide-group__wrapper {
+    overflow: visible !important;
+  }
+
+  .boost-list ::v-deep .v-slide-group__content {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100%;
+  }
+
+  .boost-list .v-chip {
+    flex: 1 1 calc(50% - 8px);
+    justify-content: center;
+  }
+
+
+}
+
+.ui-chip--locked {
+  opacity: .35;
+}
+
+.chip-boost {
+  border-color: #4caf50 !important;
+  color: #4caf50 !important;
+}
+
+
+.chip-flaw {
+  border-color: #f44336 !important;
+  color: #f44336 !important;
+}
+
+.chip-boost-active {
+  background: rgba(76, 175, 80, .25) !important;
+  border-color: #4caf50 !important;
+  color: #4caf50 !important;
+  font-weight: 700;
+}
+
+
+.level-boost-block {
+  margin-top: 16px;
+}
+
+.ui-chip--selected {
+  background: #1976d2 !important;
+  color: var(--ui-text) !important;
+  border-color: #1976d2 !important;
+}
+
+.ui-chip--selected .v-chip__content {
+  color: white !important;
 }
 </style>

@@ -391,6 +391,8 @@ export const getters = {
     state.characters[id] ? state.characters[id].BackgroundFreeBoost : {},
   characterClassBoostById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ClassBoost : {},
+
+
   characterClassSkillById: (state) => (id) =>
     state.characters[id] ? state.characters[id].ClassSkill : {},
   charactermodificatorsBonusById: (state) => (id) =>
@@ -1554,14 +1556,14 @@ export const mutations = {
     const key = payload.payload.key;
     if (character.ClassBoost != "") {
       const newValue = character.attributes[key] > 18 ? 1 : 2;
-      character.attributesClassBoost[haracter.ClassBoost] = payload.payload.value;
+      character.attributesClassBoost[character.ClassBoost] -= 1;
       character.attributes[character.ClassBoost] -= newValue;
 
     }
     character.ClassBoost = payload.payload.key;
     if (key != "") {
       const newValue = character.attributes[key] > 18 ? 1 : 2;
-      character.attributesClassBoost[character.ClassBoost] = payload.payload.value;
+      character.attributesClassBoost[key] = payload.payload.value;
       character.attributes[key] += newValue;
     }
 
@@ -3526,6 +3528,15 @@ const getDefaultState = () => ({
   BackgroundFreeBoost: "",
   BackgroundFreeBoost2: "",
   ClassBoost: "",
+
+  attributesBoostClass: {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intellect: 0,
+    wisdom: 0,
+    charisma: 0,
+  },
 
   //5-й уровень
   attributesBoost5: {

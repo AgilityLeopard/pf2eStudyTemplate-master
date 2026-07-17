@@ -43,6 +43,7 @@
             </v-chip>
           </h2>
         </v-tab>
+
         <v-tab class="caption" key="tab-general" :href="`#tab-general`">
           <h2 class="subtitle-2">
             Черты общие
@@ -118,7 +119,7 @@
         <v-tab-item class="my-tab-item" key="tab-general" :value="`tab-general`">
           <!-- <v-col :cols="8" :sm="10" class="subtitle-1"> Черты Общие </v-col> -->
 
-          <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="generalFeatsNumber"
+          <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="(lvl) => generalFeatsNumber(lvl)"
             :getTalent="characterGeneralTalent" :getTalentData="characterTalentsKey"
             @select="lvl => updatePreview(lvl, 'general')" @remove="removeTalent" />
         </v-tab-item>
@@ -904,6 +905,9 @@ export default {
         if (!sources.has(talent.source.key))
           continue;
 
+        if (talent.system.level.value > levelAncestry)
+          continue;
+
         if (type === "class" || type === "ancestry") {
 
           const traits = talent.traits || [];
@@ -1203,7 +1207,7 @@ export default {
 
 
       return (
-        levelAncestry <= this.characterLevelValue &&
+        levelAncestry <= this.characterLevel &&
         (
           levelAncestry == 3
           ||

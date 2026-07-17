@@ -20,16 +20,181 @@ export default {
     components: {
         StatGroup,
     },
+    props: {
+        characterId: {
+            type: String,
+
+        },
+    },
 
     data() {
         return {
             attributeRepository: this.$parent.attributeRepository,
+
         }
     },
+    computed: {
+        tableRows() {
+            return [
+                {
+                    source: 'Предыстория',
+                    stats:
+                        this.characterBackgroundBoost,
+                },
+                {
+                    source: 'Наследие',
+                    stats: this.mergeStats(
+                        this.characterAncestryBoost,
+                        this.characterAttributesAncestryFlaw
+                    )
+                },
+                {
+                    source: 'Класс',
+                    stats: this.characterClassBoost
+                },
+                {
+                    source: '1 уровень',
+                    stats: this.characterAttributeBoost
+                },
+                {
+                    source: '5 уровень',
+                    stats: this.characterAttributeBoost5
+                },
+                {
+                    source: '10 уровень',
+                    stats: this.characterAttributeBoost10
+                },
+                {
+                    source: '15 уровень',
+                    stats: this.characterAttributeBoost15
+                },
+                {
+                    source: '20 уровень',
+                    stats: this.characterAttributeBoost20
+                },
+            ].filter(row => row.stats);
+        },
 
+        characterBackgroundBoost() {
+            return this.$store.getters['characters/characterBackgroundBoost'](this.$route.params.id);
+        },
+        characterBackground2() {
+            return this.$store.getters['characters/characterBackgroundFreeBoost2ById'](this.$route.params.id);
+        },
+        characterBackgroundBoost() {
+            return this.$store.getters['characters/characterBackgroundBoostId'](this.$route.params.id);
+        },
+        // characterBackground2Boost() {
+        //   return this.$store.getters['characters/characterBackgroundBoost2IdById'](this.characterId);
+        // },
+        characterAncestryFreeBoost() {
+            return this.$store.getters['characters/characterAncestryFreeBoostById'](this.$route.params.id);
+        },
+        characterAttributesAncestryFlaw() {
+            return this.$store.getters['characters/characterAttributesAncestryFlaw'](this.$route.params.id);
+        },
+
+        characterAncestryFreeBoost2() {
+            return this.$store.getters['characters/characterAncestryFreeBoost2ById'](this.$route.params.id);
+        },
+        characterClassBoost() {
+            return this.$store.getters['characters/characterAttributesClassBoost'](this.$route.params.id);
+        },
+
+        characterAttributeBoost() {
+            return this.$store.getters['characters/characterAttributeBoost'](this.$route.params.id);
+        },
+        characterAttributeBoost5() {
+            return this.$store.getters['characters/characterAttributeBoost5'](this.$route.params.id);
+        },
+        characterAttributeBoost10() {
+            return this.$store.getters['characters/characterAttributeBoost10'](this.$route.params.id);
+        },
+        characterAttributeBoost15() {
+            return this.$store.getters['characters/characterAttributeBoost15'](this.$route.params.id);
+        },
+        characterAttributeBoost20() {
+            return this.$store.getters['characters/characterAttributeBoost20'](this.$route.params.id);
+        },
+        characterAncestryBoost() {
+            return this.$store.getters['characters/characterAncestryBoostById'](this.$route.params.id);
+        },
+        SkillPerception() {
+            return this.$store.getters["characters/characterPerseptionById"](
+                this.characterId
+            );
+        },
+
+        characterAttributes() {
+            return this.$store.getters["characters/characterAttributesById"](
+                this.characterId
+            );
+        },
+
+        SkillClass() {
+            return this.$store.getters["characters/characterSkillClassById"](
+                this.characterId
+            );
+        },
+    },
     methods: {
-        ModAttributeReal(key) {
-            return this.$parent.ModAttributeReal(key)
+        formatBoost(stat, rowIndex) {
+            let count = 0;
+
+            for (let i = 0; i <= rowIndex; i++) {
+                count += this.tableRows[i].stats?.[stat] || 0;
+            }
+
+            if (count <= 4) return this.tableRows[rowIndex].stats?.[stat] || 0;
+
+            // после 4
+            if (this.tableRows[rowIndex].stats?.[stat] === 0) return 0;
+
+            return (count - 4) % 2 === 1 ? 0.5 : 1;
+        },
+        mergeStats(...inputs) {
+            const result = {
+                strength: 0,
+                dexterity: 0,
+                constitution: 0,
+                intellect: 0,
+                wisdom: 0,
+                charisma: 0
+            };
+
+            inputs.forEach(input => {
+                if (!input) return;
+
+                // 2️⃣ Если это объект со значениями
+                if (typeof input === 'object') {
+                    Object.keys(result).forEach(stat => {
+                        result[stat] += Number(input[stat] || 0);
+                    });
+                }
+            });
+
+
+
+            return result;
+        },
+
+        ModAttributeReal(attribute) {
+
+            let result = 0
+
+            this.tableRows.forEach((row, rowIndex) => {
+                result += this.formatBoost(attribute, rowIndex)
+            })
+            // const result = this.characterAttributes[attribute]
+            const modRaw = (result);       // настоящее дробное значение
+            const mod = Math.floor(modRaw);         // отображаемое целое значение
+
+
+            const arrow = Number.isInteger(modRaw) ? "" : " ⯅";  // стрелка только если дробное
+
+            return (mod > 0 ? "+ " : " ") + mod + arrow;
+
+
         },
     },
 }
