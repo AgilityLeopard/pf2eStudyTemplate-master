@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     sources() {
-      return ["playerCore", "playerCore2", ...this.settingHomebrews];
+      return ["Pathfinder Player Core 2", "Pathfinder Player Core", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
@@ -106,15 +106,17 @@ export default {
   },
   watch: {
     sources: {
-      handler(newVal) {
-        if (newVal) {
-          this.getAbilityList(newVal);
-          this.getTraitList(newVal);
-          this.getSpeciesList(newVal);
-          //  this.getSpeciesList(newVal);
-        }
+      async handler(newVal) {
+        if (!newVal) return;
+
+        await Promise.all([
+          this.getAbilityList(newVal),
+          this.getTraitList(newVal),
+        ]);
+
+        await this.getSpeciesList(newVal);
       },
-      immediate: true, // make this watch function is called when component created
+      immediate: true,
     },
   },
   asyncData({ params }) {
@@ -133,33 +135,36 @@ export default {
         },
       };
       const { data } = await this.$axios.get("/api/species/", config);
-      if (this.abilityList !== undefined) {
-        data.forEach((species) => {
-          const lowercaseKeywords = species.ancestryAbility.map((s) =>
-            s.toUpperCase()
-          );
 
-          const List = this.abilityList;
-          const ability = List.filter((talent) =>
-            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
-          );
+      const List = this.abilityList || [];
 
-          if (ability.length > 0) {
-            const listAbilities = [];
-            ability.forEach((talent) => {
-              const ability1 = {
-                name: talent.name,
-                key: talent.key,
-                description: talent.description,
-                modification: talent.modification,
-              };
 
-              listAbilities.push(talent);
-            });
-            species.speciesFeatures = listAbilities;
-          }
-        });
-      }
+      data.forEach((species) => {
+        const lowercaseKeywords = species.ancestryAbility.map((s) =>
+          s.toUpperCase()
+        );
+
+
+        const ability = List.filter((talent) =>
+          lowercaseKeywords.includes(talent.key.toString().toUpperCase())
+        );
+
+        if (ability.length > 0) {
+          const listAbilities = [];
+          ability.forEach((talent) => {
+            const ability1 = {
+              name: talent.name,
+              key: talent.key,
+              description: talent.description,
+              modification: talent.modification,
+            };
+
+            listAbilities.push(talent);
+          });
+          species.speciesFeatures = listAbilities;
+        }
+      });
+
 
       if (this.traitList !== undefined) {
         data.forEach((species) => {
@@ -198,9 +203,9 @@ export default {
         },
       };
       const { data } = await this.$axios.get(
-        "/api/abilityAncestry/",
-        config.source
+        "/api/abilityAncestry/"
       );
+
       this.abilityList = data;
     },
     async getTraitList(sources) {
@@ -382,11 +387,12 @@ export default {
       // Модификации от родословной
 
       let modifications = [];
-      species.speciesFeatures
-        .filter((t) => t.modifications !== undefined)
-        .forEach((t) => {
-          modifications = [...modifications, ...t.modifications];
-        });
+      if (species.speciesFeatures)
+        species.speciesFeatures
+          .filter((t) => t.modifications !== undefined)
+          .forEach((t) => {
+            modifications = [...modifications, ...t.modifications];
+          });
 
 
       //Скорость
@@ -439,7 +445,7 @@ export default {
       });
 
       // ключевые слова
-      species.trait.forEach((k) => {
+      species.traits.forEach((k) => {
         const payload = {
           name: k,
           source: "species",

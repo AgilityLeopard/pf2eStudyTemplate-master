@@ -129,6 +129,10 @@ router.get('/:slug', async (request, response) => {
   const { slug } = request.params;
   const item = repository.find(talent => talent.key === slug);
 
-  response.set('Cache-Control', 'public, max-age=3600'); // one hour
+  // response.set('Cache-Control', 'public, max-age=3600'); // one hour
+  response.set(
+    'Cache-Control',
+    'no-store, no-cache, must-revalidate, proxy-revalidate'
+  );
   response.status(200).json(item);
 });

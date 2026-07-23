@@ -5,7 +5,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "sword-cane",
     "bulk": {
       "value": 1
@@ -80,7 +80,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "halberd",
     "bulk": {
       "value": 2
@@ -145,7 +145,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -194,7 +194,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -242,7 +242,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "crossbow",
     "bulk": {
       "value": 2
@@ -317,7 +317,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "crossbow",
     "bulk": {
       "value": 1
@@ -382,7 +382,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "buckler",
     "bulk": {
       "value": 0.1
@@ -432,7 +432,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "tower-shield",
     "bulk": {
       "value": 4
@@ -482,7 +482,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -530,7 +530,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -586,7 +586,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "buckler",
     "bulk": {
       "value": 0.1
@@ -645,7 +645,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "battle-axe",
     "bulk": {
       "value": 1
@@ -710,7 +710,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "bola",
     "bulk": {
       "value": 0.1
@@ -776,7 +776,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -824,7 +824,7 @@
     "level": {
       "value": 15
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -872,7 +872,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -921,7 +921,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -970,7 +970,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "mace",
     "bulk": {
       "value": 1
@@ -1035,7 +1035,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1084,7 +1084,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -1132,7 +1132,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "wakizashi",
     "bulk": {
       "value": 0.1
@@ -1197,7 +1197,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1246,7 +1246,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1294,7 +1294,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1348,7 +1348,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -1420,7 +1420,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -1492,7 +1492,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -1564,7 +1564,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -1630,7 +1630,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "filchers-fork",
     "bulk": {
       "value": 0.1
@@ -1703,7 +1703,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1754,7 +1754,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1805,7 +1805,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1857,7 +1857,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1908,7 +1908,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -1959,7 +1959,7 @@
     "level": {
       "value": 20
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2011,7 +2011,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2062,7 +2062,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2114,7 +2114,7 @@
     "level": {
       "value": 14
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2165,7 +2165,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2217,7 +2217,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2269,7 +2269,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2320,7 +2320,7 @@
     "level": {
       "value": 13
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2371,7 +2371,7 @@
     "level": {
       "value": 15
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2422,7 +2422,7 @@
     "level": {
       "value": 15
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2474,7 +2474,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2525,7 +2525,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -2577,7 +2577,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "guisarme",
     "bulk": {
       "value": 2
@@ -2642,7 +2642,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -2712,7 +2712,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -2782,7 +2782,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -2852,7 +2852,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "gnome-hooked-hammer",
     "bulk": {
       "value": 1
@@ -2922,7 +2922,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "gnome-flickmace",
     "bulk": {
       "value": 1
@@ -2987,7 +2987,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -3036,7 +3036,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -3094,7 +3094,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -3143,7 +3143,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -3192,7 +3192,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "thunder-sling",
     "bulk": {
       "value": 0.1
@@ -3257,7 +3257,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "daikyu",
     "bulk": {
       "value": 2
@@ -3322,7 +3322,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "dwarven-war-axe",
     "bulk": {
       "value": 2
@@ -3387,7 +3387,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "greatclub",
     "bulk": {
       "value": 2
@@ -3452,7 +3452,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "greatpick",
     "bulk": {
       "value": 2
@@ -3517,7 +3517,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "greatsword",
     "bulk": {
       "value": 2
@@ -3582,7 +3582,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "war-flail",
     "bulk": {
       "value": 2
@@ -3647,7 +3647,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "wooden-shield",
     "bulk": {
       "value": 1
@@ -3697,7 +3697,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "longspear",
     "bulk": {
       "value": 2
@@ -3762,7 +3762,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "longbow",
     "bulk": {
       "value": 2
@@ -3827,7 +3827,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "longsword",
     "bulk": {
       "value": 1
@@ -3893,7 +3893,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "full-plate",
     "bulk": {
       "value": 4
@@ -3959,7 +3959,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "dart",
     "bulk": {
       "value": 0.1
@@ -4025,7 +4025,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "club",
     "bulk": {
       "value": 1
@@ -4089,7 +4089,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "blowgun",
     "bulk": {
       "value": 0.1
@@ -4154,7 +4154,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4203,7 +4203,7 @@
     "level": {
       "value": 14
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4251,7 +4251,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4299,7 +4299,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4347,7 +4347,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4395,7 +4395,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4443,7 +4443,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4491,7 +4491,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4540,7 +4540,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4589,7 +4589,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4638,7 +4638,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4687,7 +4687,7 @@
     "level": {
       "value": 9
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4743,7 +4743,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4791,7 +4791,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -4839,7 +4839,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4887,7 +4887,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4935,7 +4935,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -4983,7 +4983,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5031,7 +5031,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5079,7 +5079,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5127,7 +5127,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5175,7 +5175,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5223,7 +5223,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5271,7 +5271,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5319,7 +5319,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5367,7 +5367,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5415,7 +5415,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5463,7 +5463,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5511,7 +5511,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5559,7 +5559,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5607,7 +5607,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5655,7 +5655,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5703,7 +5703,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5751,7 +5751,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5799,7 +5799,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -5848,7 +5848,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -5894,7 +5894,7 @@
     "level": {
       "value": 9
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -5942,7 +5942,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 2
@@ -5991,7 +5991,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -6040,7 +6040,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -6101,7 +6101,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -6150,7 +6150,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -6208,7 +6208,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 2
@@ -6257,7 +6257,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "lance",
     "bulk": {
       "value": 2
@@ -6322,7 +6322,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -6371,7 +6371,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -6420,7 +6420,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -6469,7 +6469,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -6518,7 +6518,7 @@
     "level": {
       "value": 9
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -6567,7 +6567,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "katana",
     "bulk": {
       "value": 1
@@ -6632,7 +6632,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "katar",
     "bulk": {
       "value": 0.1
@@ -6697,7 +6697,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -6745,7 +6745,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -6793,7 +6793,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -6841,7 +6841,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -6889,7 +6889,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "clan-dagger",
     "bulk": {
       "value": 0.1
@@ -6954,7 +6954,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "pick",
     "bulk": {
       "value": 1
@@ -7019,7 +7019,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "studded-leather-armor",
     "bulk": {
       "value": 1
@@ -7075,7 +7075,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -7124,7 +7124,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -7173,7 +7173,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "claw-blade",
     "bulk": {
       "value": 0.1
@@ -7245,7 +7245,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "leather-armor",
     "bulk": {
       "value": 1
@@ -7327,7 +7327,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -7402,7 +7402,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -7451,7 +7451,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -7500,7 +7500,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "chain-mail",
     "bulk": {
       "value": 2
@@ -7556,7 +7556,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "chain-shirt",
     "bulk": {
       "value": 1
@@ -7620,7 +7620,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -7669,7 +7669,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "composite-longbow",
     "bulk": {
       "value": 2
@@ -7734,7 +7734,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "composite-shortbow",
     "bulk": {
       "value": 1
@@ -7799,7 +7799,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "shortbow",
     "bulk": {
       "value": 1
@@ -7864,7 +7864,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "shortsword",
     "bulk": {
       "value": 0.1
@@ -7929,7 +7929,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -7978,7 +7978,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "scythe",
     "bulk": {
       "value": 2
@@ -8043,7 +8043,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -8092,7 +8092,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -8140,7 +8140,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 3
@@ -8189,7 +8189,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "steel-shield",
     "bulk": {
       "value": 1
@@ -8248,7 +8248,7 @@
     "level": {
       "value": 13
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "steel-shield",
     "bulk": {
       "value": 1
@@ -8307,7 +8307,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -8361,7 +8361,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -8437,7 +8437,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -8513,7 +8513,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -8583,7 +8583,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -8632,7 +8632,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -8681,7 +8681,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "maul",
     "bulk": {
       "value": 2
@@ -8746,7 +8746,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "kukri",
     "bulk": {
       "value": 0.1
@@ -8811,7 +8811,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -8863,7 +8863,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 2
@@ -8919,7 +8919,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -8968,7 +8968,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 6
@@ -9017,7 +9017,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -9066,7 +9066,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "gauntlet",
     "bulk": {
       "value": 0.1
@@ -9131,7 +9131,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -9180,7 +9180,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 2
@@ -9236,7 +9236,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "light-pick",
     "bulk": {
       "value": 0.1
@@ -9301,7 +9301,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "light-hammer",
     "bulk": {
       "value": 0.1
@@ -9367,7 +9367,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 3
@@ -9423,7 +9423,7 @@
     "level": {
       "value": 19
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -9487,7 +9487,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -9543,7 +9543,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -9592,7 +9592,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "horsechopper",
     "bulk": {
       "value": 2
@@ -9657,7 +9657,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -9706,7 +9706,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -9754,7 +9754,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -9802,7 +9802,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -9850,7 +9850,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -9898,7 +9898,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -9946,7 +9946,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -9994,7 +9994,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -10040,7 +10040,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "javelin",
     "bulk": {
       "value": 0.1
@@ -10106,7 +10106,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -10154,7 +10154,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "bastard-sword",
     "bulk": {
       "value": 1
@@ -10219,7 +10219,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "sword-cane",
     "bulk": {
       "value": 1
@@ -10284,7 +10284,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -10332,7 +10332,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1,
@@ -10390,7 +10390,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -10468,7 +10468,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -10540,7 +10540,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "mambele",
     "bulk": {
       "value": 1
@@ -10606,7 +10606,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "spirit-thresher",
     "bulk": {
       "value": 2
@@ -10671,7 +10671,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -10720,7 +10720,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "morningstar",
     "bulk": {
       "value": 1
@@ -10791,7 +10791,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -10863,7 +10863,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -10935,7 +10935,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -11007,7 +11007,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -11088,7 +11088,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -11137,7 +11137,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -11186,7 +11186,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 16
@@ -11235,7 +11235,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11283,7 +11283,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11331,7 +11331,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11379,7 +11379,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11427,7 +11427,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11475,7 +11475,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11523,7 +11523,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11571,7 +11571,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11619,7 +11619,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11667,7 +11667,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11715,7 +11715,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11763,7 +11763,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -11811,7 +11811,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -11860,7 +11860,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "main-gauche",
     "bulk": {
       "value": 0.1
@@ -11931,7 +11931,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "sap",
     "bulk": {
       "value": 0.1
@@ -11996,7 +11996,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -12053,7 +12053,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -12102,7 +12102,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -12160,7 +12160,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -12226,7 +12226,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -12275,7 +12275,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -12324,7 +12324,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -12373,7 +12373,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -12421,7 +12421,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -12498,7 +12498,7 @@
     "level": {
       "value": 13
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "full-plate",
     "bulk": {
       "value": 4
@@ -12564,7 +12564,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "starknife",
     "bulk": {
       "value": 0.1
@@ -12636,7 +12636,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -12685,7 +12685,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "nunchaku",
     "bulk": {
       "value": 0.1
@@ -12767,7 +12767,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -12833,7 +12833,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -12882,7 +12882,7 @@
     "level": {
       "value": 14
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -12934,7 +12934,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -12983,7 +12983,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -13032,7 +13032,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -13081,7 +13081,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -13130,7 +13130,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "explorers-clothing",
     "bulk": {
       "value": 0.1
@@ -13204,7 +13204,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "breastplate",
     "bulk": {
       "value": 2
@@ -13288,7 +13288,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "breastplate",
     "bulk": {
       "value": 2
@@ -13354,7 +13354,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -13406,7 +13406,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "orc-necksplitter",
     "bulk": {
       "value": 1
@@ -13471,7 +13471,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -13519,7 +13519,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -13567,7 +13567,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -13615,7 +13615,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -13691,7 +13691,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -13768,7 +13768,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -13845,7 +13845,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -13894,7 +13894,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -13946,7 +13946,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -13995,7 +13995,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -14044,7 +14044,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -14093,7 +14093,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -14141,7 +14141,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -14189,7 +14189,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -14236,7 +14236,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -14285,7 +14285,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -14334,7 +14334,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -14383,7 +14383,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -14431,7 +14431,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -14479,7 +14479,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -14539,7 +14539,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "splint-mail",
     "bulk": {
       "value": 3
@@ -14605,7 +14605,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "splint-mail",
     "bulk": {
       "value": 3
@@ -14661,7 +14661,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -14790,7 +14790,7 @@
     "level": {
       "value": 19
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -14922,7 +14922,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -14971,7 +14971,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -15020,7 +15020,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "full-plate",
     "bulk": {
       "value": 4
@@ -15076,7 +15076,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "half-plate",
     "bulk": {
       "value": 3
@@ -15132,7 +15132,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "bo-staff",
     "bulk": {
       "value": 2
@@ -15197,7 +15197,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15262,7 +15262,7 @@
     "level": {
       "value": 14
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15327,7 +15327,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15392,7 +15392,7 @@
     "level": {
       "value": 20
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15457,7 +15457,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15522,7 +15522,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15587,7 +15587,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15671,7 +15671,7 @@
     "level": {
       "value": 20
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15755,7 +15755,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15839,7 +15839,7 @@
     "level": {
       "value": 14
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15923,7 +15923,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -15988,7 +15988,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "посох",
     "bulk": {
       "value": 1
@@ -16051,7 +16051,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "halfling-sling-staff",
     "bulk": {
       "value": 1
@@ -16116,7 +16116,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "sling",
     "bulk": {
       "value": 0.1
@@ -16179,7 +16179,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16234,7 +16234,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -16306,7 +16306,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -16378,7 +16378,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -16450,7 +16450,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0.1
@@ -16516,7 +16516,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16570,7 +16570,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16626,7 +16626,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16675,7 +16675,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16723,7 +16723,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16772,7 +16772,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16820,7 +16820,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -16869,7 +16869,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16917,7 +16917,7 @@
     "level": {
       "value": 14
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -16969,7 +16969,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -17017,7 +17017,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -17072,7 +17072,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -17168,7 +17168,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -17216,7 +17216,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -17264,7 +17264,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -17312,7 +17312,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -17360,7 +17360,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -17408,7 +17408,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "ranseur",
     "bulk": {
       "value": 2
@@ -17473,7 +17473,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "hand-adze",
     "bulk": {
       "value": 0.1
@@ -17539,7 +17539,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "hand-crossbow",
     "bulk": {
       "value": 0.1
@@ -17604,7 +17604,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -17653,7 +17653,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -17702,7 +17702,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0,
@@ -17754,7 +17754,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "arbalest",
     "bulk": {
       "value": 2
@@ -17819,7 +17819,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 2
@@ -17894,7 +17894,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -17943,7 +17943,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18011,7 +18011,7 @@
     "level": {
       "value": 13
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "chain-mail",
     "bulk": {
       "value": 1
@@ -18077,7 +18077,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1,
@@ -18129,7 +18129,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "greataxe",
     "bulk": {
       "value": 2
@@ -18194,7 +18194,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -18240,7 +18240,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -18289,7 +18289,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18337,7 +18337,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18389,7 +18389,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18437,7 +18437,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18489,7 +18489,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18541,7 +18541,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18589,7 +18589,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18637,7 +18637,7 @@
     "level": {
       "value": 10
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18685,7 +18685,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18737,7 +18737,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -18791,7 +18791,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -18840,7 +18840,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "scimitar",
     "bulk": {
       "value": 1
@@ -18905,7 +18905,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -18954,7 +18954,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -19012,7 +19012,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -19061,7 +19061,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -19110,7 +19110,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "dogslicer",
     "bulk": {
       "value": 0.1
@@ -19175,7 +19175,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -19223,7 +19223,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -19272,7 +19272,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "steel-shield",
     "bulk": {
       "value": 1
@@ -19322,7 +19322,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -19370,7 +19370,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 2,
@@ -19422,7 +19422,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -19470,7 +19470,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -19519,7 +19519,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -19583,7 +19583,7 @@
     "level": {
       "value": 9
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "hide-armor",
     "bulk": {
       "value": 2
@@ -19649,7 +19649,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "hide-armor",
     "bulk": {
       "value": 2
@@ -19705,7 +19705,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "shuriken",
     "bulk": {
       "value": 0
@@ -19771,7 +19771,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "adze",
     "bulk": {
       "value": 2
@@ -19836,7 +19836,7 @@
     "level": {
       "value": 20
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -19885,7 +19885,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -19933,7 +19933,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "hatchet",
     "bulk": {
       "value": 0.1
@@ -19999,7 +19999,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -20048,7 +20048,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -20096,7 +20096,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "trident",
     "bulk": {
       "value": 1
@@ -20162,7 +20162,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -20211,7 +20211,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "heavy-crossbow",
     "bulk": {
       "value": 2
@@ -20276,7 +20276,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 4
@@ -20332,7 +20332,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 4
@@ -20397,7 +20397,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -20446,7 +20446,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "shield-boss",
     "bulk": {
       "value": 0
@@ -20511,7 +20511,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -20559,7 +20559,7 @@
     "level": {
       "value": 17
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -20635,7 +20635,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "alchemical-bomb",
     "bulk": {
       "value": 0
@@ -20706,7 +20706,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -20754,7 +20754,7 @@
     "level": {
       "value": 5
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -20802,7 +20802,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -20850,7 +20850,7 @@
     "level": {
       "value": 9
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -20899,7 +20899,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -20947,7 +20947,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -21062,7 +21062,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -21111,7 +21111,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "falchion",
     "bulk": {
       "value": 2
@@ -21176,7 +21176,7 @@
     "level": {
       "value": 20
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 2
@@ -21249,7 +21249,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -21318,7 +21318,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -21367,7 +21367,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "khakkhara",
     "bulk": {
       "value": 1
@@ -21432,7 +21432,7 @@
     "level": {
       "value": 8
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -21480,7 +21480,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "whip",
     "bulk": {
       "value": 1
@@ -21551,7 +21551,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "whip-claw",
     "bulk": {
       "value": 1
@@ -21616,7 +21616,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "khopesh",
     "bulk": {
       "value": 1
@@ -21681,7 +21681,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "temple-sword",
     "bulk": {
       "value": 1
@@ -21746,7 +21746,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0,
@@ -21798,7 +21798,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "capturing-spetum",
     "bulk": {
       "value": 2
@@ -21863,7 +21863,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -21912,7 +21912,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -21981,7 +21981,7 @@
     "level": {
       "value": 14
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "longsword",
     "bulk": {
       "value": 1
@@ -22056,7 +22056,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -22160,7 +22160,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "dogslicer",
     "bulk": {
       "value": 0.1
@@ -22244,7 +22244,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "scale-mail",
     "bulk": {
       "value": 2
@@ -22300,7 +22300,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": null,
     "bulk": {
       "value": 1
@@ -22349,7 +22349,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "steel-shield",
     "bulk": {
       "value": 1
@@ -22408,7 +22408,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "spiked-gauntlet",
     "bulk": {
       "value": 0.1
@@ -22473,7 +22473,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "shield-spikes",
     "bulk": {
       "value": 0
@@ -22538,7 +22538,7 @@
     "level": {
       "value": 9
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -22603,7 +22603,7 @@
     "level": {
       "value": 6
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "hide-armor",
     "bulk": {
       "value": 2
@@ -22747,7 +22747,7 @@
     "level": {
       "value": 18
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -22874,7 +22874,7 @@
     "level": {
       "value": 11
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -22923,7 +22923,7 @@
     "level": {
       "value": 9
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0
@@ -22975,7 +22975,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": "tengu-gale-blade",
     "bulk": {
       "value": 0.1
@@ -23040,7 +23040,7 @@
     "level": {
       "value": 16
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23088,7 +23088,7 @@
     "level": {
       "value": 4
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23136,7 +23136,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23184,7 +23184,7 @@
     "level": {
       "value": 20
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23230,7 +23230,7 @@
     "level": {
       "value": 7
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23278,7 +23278,7 @@
     "level": {
       "value": 2
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23326,7 +23326,7 @@
     "level": {
       "value": 1
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23375,7 +23375,7 @@
     "level": {
       "value": 3
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1
@@ -23423,7 +23423,7 @@
     "level": {
       "value": 0
     },
-    "sourceKey": "playerCore",
+    "sourceKey": "Pathfinder Player Core",
     "baseItem": "elven-curve-blade",
     "bulk": {
       "value": 2
@@ -23488,7 +23488,7 @@
     "level": {
       "value": 12
     },
-    "sourceKey": "playerCore2",
+    "sourceKey": "Pathfinder Player Core 2",
     "baseItem": null,
     "bulk": {
       "value": 0.1

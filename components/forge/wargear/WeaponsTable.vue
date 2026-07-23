@@ -600,9 +600,7 @@ export default {
             required: true
         },
     },
-    mounted() {
-        console.log(this.$vuetify)
-    },
+
     watch: {
         "editItem.material.type"(newType) {
             const allowed = this.getAvailableGrades(newType);

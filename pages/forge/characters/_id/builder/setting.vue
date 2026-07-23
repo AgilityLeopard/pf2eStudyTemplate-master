@@ -240,15 +240,15 @@ export default {
       get() {
 
         const saved =
-          this.settingHomebrews?.official ?? [];
+          this.settingHomebrews ?? [];
 
 
         // всегда добавляем Player Core
         return [
           ...new Set([
             ...saved,
-            'playerCore',
-            'playerCore2'
+            "Pathfinder Player Core 2",
+            "Pathfinder Player Core"
           ])
         ];
 
@@ -258,10 +258,10 @@ export default {
       set(value) {
 
         this.$store.commit(
-          'characters/setCharacterSettingHomebrews',
+          'characters/setSettingHomebrews',
           {
             id: this.characterId,
-            official: value
+            content: value
           }
         );
 
@@ -275,8 +275,8 @@ export default {
       return Object.values(source).map(book => {
 
         const alwaysEnabled = [
-          'playerCore',
-          'playerCore2'
+          "Pathfinder Player Core",
+          "Pathfinder Player Core 2"
         ].includes(book.key);
 
 
@@ -317,11 +317,58 @@ export default {
         .filter(i => i.show)
         .reduce((acc, item) => {
 
-          if (!acc[item.group]) {
-            acc[item.group] = [];
+          const book = item.name ?? "";
+
+          let group;
+
+          if (
+            book.includes("Lost Omens")
+          ) {
+            group = "Lost Omens";
           }
 
-          acc[item.group].push(item);
+          else if (
+            /^Pathfinder #\d+/.test(book)
+          ) {
+            group = "Adventure Paths";
+          }
+          else if (
+            book.includes("Blog")
+          ) {
+            group = "Other";
+          }
+          else if (
+            book.startsWith("Pathfinder Adventure:") ||
+            book.startsWith("Pathfinder Adventures:") ||
+            book.startsWith("Pathfinder One-Shot") ||
+            book.includes("Beginner Box") ||
+            book.startsWith("Pathfinder Society") ||
+            book.startsWith("Pathfinder Special:")
+          ) {
+            group = "Standalone Adventures";
+          }
+
+          else if (
+            book.startsWith("Pathfinder Adventure Path:") ||
+            book.includes("Hardcover Compilation") ||
+            book.startsWith("Pathfinder Wake the Dead") ||
+            book.includes("Claws") ||
+            book.includes("Kingmaker") ||
+            book.startsWith("Wake the Dead")
+          ) {
+            // Полные кампании/компиляции AP
+            group = "Adventure Paths";
+          }
+
+          else {
+            group = "Core";
+          }
+
+
+          if (!acc[group])
+            acc[group] = [];
+
+          acc[group].push(item);
 
           return acc;
 
@@ -330,10 +377,10 @@ export default {
 
       return Object.fromEntries(
         order
-          .filter(x => groups[x])
-          .map(x => [
-            x,
-            groups[x]
+          .filter(group => groups[group])
+          .map(group => [
+            group,
+            groups[group]
           ])
       );
 

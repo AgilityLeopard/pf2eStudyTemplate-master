@@ -911,7 +911,7 @@ export default {
       }
       return fulfilled;
     },
-    freeSkillPointsLvl1() {
+    freeSkillPoiintsLvl1() {
       return (
         this.characterSkillPointClass +
         this.modInt(1) -
@@ -999,7 +999,10 @@ export default {
     },
     attributeBoostByLevel() {
       return {
-        1: this.characterAttributesBoost || {},
+        1: this.mergeAttributes(
+          this.characterAttributesBoost,
+          this.characterAttributesAncestryFlaw
+        ) || {},
         5: this.characterAttributesBoost5 || {},
         10: this.characterAttributesBoost10 || {},
         15: this.characterAttributesBoost15 || {},
@@ -1043,6 +1046,9 @@ export default {
     },
     characterBackgroundFreeBoost2() {
       return this.$store.getters['characters/characterBackgroundFreeBoost2ById'](this.characterId);
+    },
+    characterAttributesAncestryFlaw() {
+      return this.$store.getters['characters/characterAttributesAncestryFlaw'](this.characterId);
     },
     characterAttributesBoost() {
       return this.$store.getters['characters/characterAttributeBoost'](this.characterId);
@@ -2284,6 +2290,23 @@ export default {
       return current > 18
         ? current - 1
         : current - 2;
+    },
+    mergeAttributes(...objects) {
+      const attributes = [
+        "strength",
+        "dexterity",
+        "constitution",
+        "intellect",
+        "wisdom",
+        "charisma"
+      ];
+
+      return Object.fromEntries(
+        attributes.map(attr => [
+          attr,
+          objects.reduce((sum, obj) => sum + (obj?.[attr] || 0), 0)
+        ])
+      );
     },
     incrementAttribute(attribute, level) {
       const commits =

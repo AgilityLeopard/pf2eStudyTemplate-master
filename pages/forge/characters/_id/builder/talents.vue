@@ -109,7 +109,7 @@
 
         <!-- Черты навыков -->
         <v-tab-item class="my-tab-item" key="tab-skill" :value="`tab-skill`">
-          <FeatLevelList :levels="[...Array(20).keys()].map(i => i + 1)" :showLevel="(lvl) =>
+          <FeatLevelList :levels="[0, ...Array(20).keys()].map((v, i) => i === 0 ? 0 : i)" :showLevel="(lvl) => lvl === 0 ||
             lvl <= characterLevel &&
             (lvl === 2 || lvl % 2 === 0 || archetype?.keywords === 'плут')
             " :getTalent="characterSkillTalent" :getTalentData="characterTalentsKey"
@@ -567,8 +567,8 @@ export default {
     sources() {
       return [
         // ...this.settingOfficialOptions,
-        "playerCore"
-        , "playerCore2"
+        "Pathfinder Player Core"
+        , "Pathfinder Player Core 2"
         , ...this.settingHomebrews,
       ];
     },
@@ -870,6 +870,7 @@ export default {
         this.finalKeywords.map(k => k.toLowerCase())
       );
 
+
       /*Для Сорвиголоваы*/
       const enc = this.$store.getters["characters/characterEnhancementsById"](
         this.characterId
@@ -1134,7 +1135,18 @@ export default {
 
     },
     characterSkillTalent(level) {
+
+
+      if (level === 0) {
+        return this.characterTalentMap["background"]
+
+      }
+
       return this.characterTalentMap["skill" + level] || false;
+
+    },
+    characterBackGroundTalent(level) {
+      return this.characterTalentMap["background"] || false;
     },
     characterSkillStylishTalent(level) {
       return this.characterTalentMap["stylish" + level] || false;

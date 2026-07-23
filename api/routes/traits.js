@@ -12,17 +12,20 @@ router.get('/', async (request, response) => {
 
     const filter = {};
 
-    const filterSourceString = request.query.source;
-    if (filterSourceString) {
-        filter.source = filterSourceString.split(',');
+    // const filterSourceString = request.query.source;
+    // if (filterSourceString) {
+    //     filter.source = filterSourceString.split(',');
 
-        if (filter.source) {
-            items = items.filter((item) => filter.source.includes(item.source.key));
+    //     if (filter.source) {
+    //         items = items.filter((item) => filter.source.includes(item.source.key));
 
-        }
-    }
+    //     }
+    // }
 
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.set(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.status(200).json(items);
 });
 
@@ -32,6 +35,9 @@ router.get('/:slug', async (request, response) => {
 
     const item = repository.find(talent => talent.key === slug);
 
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.set(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.status(200).json(item);
 });

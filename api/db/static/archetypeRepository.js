@@ -1,78 +1,78 @@
-import { source } from './_sourcesRepository';
-import { stringToKebab } from './_stringUtils';
+// import { source } from './_sourcesRepository';
+// import { stringToKebab } from './_stringUtils';
 
-const cost = function (cost, archetype = 0, stats = 0, species = 0, other = 0) {
-    return {
-        cost,
-        costs: {
-            total: cost,
-            archetype,
-            stats,
-            species,
-            other,
-        }
-    };
-}
+// const cost = function (cost, archetype = 0, stats = 0, species = 0, other = 0) {
+//     return {
+//         cost,
+//         costs: {
+//             total: cost,
+//             archetype,
+//             stats,
+//             species,
+//             other,
+//         }
+//     };
+// }
 
-// ...archetype(source.playerCore.key, 99,'Adepta Sororitas','Sister of Battle',2,'Human',94),
+// // //(source.playerCore.key, 99,'Adepta Sororitas','Sister of Battle',2,'Human',94),
 
-const archetype = function (sourceKey, sourcePage, name) {
-    // let speciesSourceKey = 'playerCore';
-    // let speciesName = 'Human';
-    // let split = [];
-    // // split = species.split('/');
-    // // if (split.length === 2) {
-    // //     speciesSourceKey = split[0];
-    // //     speciesName = split[1];
-    // // } else {
-    // //     split = species.split('-');
-    // //     if (split.length >= 2) {
-    // //         speciesSourceKey = split[0];
-    // //         speciesName = split.splice(1).map((i) => i.charAt(0).toUpperCase() + i.slice(1)).join(' ');
-    // //     } else {
-    // //         speciesName = species;
-    // //     }
-    // // }
+// const archetype = function (sourceKey, sourcePage, name) {
+//     // let speciesSourceKey = 'playerCore';
+//     // let speciesName = 'Human';
+//     // let split = [];
+//     // // split = species.split('/');
+//     // // if (split.length === 2) {
+//     // //     speciesSourceKey = split[0];
+//     // //     speciesName = split[1];
+//     // // } else {
+//     // //     split = species.split('-');
+//     // //     if (split.length >= 2) {
+//     // //         speciesSourceKey = split[0];
+//     // //         speciesName = split.splice(1).map((i) => i.charAt(0).toUpperCase() + i.slice(1)).join(' ');
+//     // //     } else {
+//     // //         speciesName = species;
+//     // //     }
+//     // // }
 
-    // const speciesObject = {
-    //     name: speciesName,
-    //     key: `${speciesSourceKey.toLowerCase()}-${stringToKebab(speciesName)}`,
-    //     sourceKey: speciesSourceKey.toLowerCase(),
-    // };
+//     // const speciesObject = {
+//     //     name: speciesName,
+//     //     key: `${speciesSourceKey.toLowerCase()}-${stringToKebab(speciesName)}`,
+//     //     sourceKey: speciesSourceKey.toLowerCase(),
+//     // };
 
-    return {
-        source: {
-            ...source[sourceKey],
-            page: sourcePage,
-        },
-        key: `${stringToKebab(`${sourceKey} ${name}`)}`,
-        name,
-        wargear: [],
-        prerequisites: [],
-        archetypeFeatures: [],
-        influence: 0,
-    };
-}
+//     return {
+//         source: {
+//             ...source[sourceKey],
+//             page: sourcePage,
+//         },
+//         key: `${stringToKebab(`${sourceKey} ${name}`)}`,
+//         name,
+//         wargear: [],
+//         prerequisites: [],
+//         archetypeFeatures: [],
+//         influence: 0,
+//     };
+// }
 
-const statBoost = function (str, dex, con, int, wis, cha) {
-    return {
-        attributeBoost: [
-            { name: "Сила", key: "strength", value: str },
-            { name: "Ловкость", key: "dexterity", value: dex },
-            { name: "Телосложение", key: "constitution", value: con },
-            { name: "Интеллект", key: "intellect", value: int },
-            { name: "Мудрость", key: "wisdom", value: wis },
-            { name: "Харизма", key: "charisma", value: cha },
-        ],
-    };
-};
+// const statBoost = function (str, dex, con, int, wis, cha) {
+//     return {
+//         attributeBoost: [
+//             { name: "Сила", key: "strength", value: str },
+//             { name: "Ловкость", key: "dexterity", value: dex },
+//             { name: "Телосложение", key: "constitution", value: con },
+//             { name: "Интеллект", key: "intellect", value: int },
+//             { name: "Мудрость", key: "wisdom", value: wis },
+//             { name: "Харизма", key: "charisma", value: cha },
+//         ],
+//     };
+// };
 
 const playerCore = [
     //воин
     {
-        ...archetype(source.playerCore.key, 92, 'Fighter'),
-        ...cost(12, 0, 12, 0, 0),
-        ...statBoost(0, 0, 0, 0, 0, 0),
+        //(source.playerCore.key, 92, 'Fighter'),
+        //(12, 0, 12, 0, 0),
+        //(0, 0, 0, 0, 0, 0),
         hint: 'Сражаясь ради чести, жадности, верности или просто ради азарта битвы, вы бесспорно являетесь мастером владения оружием и боевыми техниками. Вы сочетаете свои действия в комбинациях открывающих движений, завершающих ударов, и контратак, когда ваши враги по неосторожности ослабят защиту. Являетесь ли вы рыцарем, наемником, снайпером или мастером клинка, вы искусно отточили свои боевые навыки и обрушиваете сокрушительные критические атаки на своих врагов.',
         name: 'Воин',
         keywords: 'воин',
@@ -339,9 +339,9 @@ const playerCore = [
 
     //плут
     {
-        ...archetype(source.playerCore.key, 92, 'Rogue'),
-        ...cost(12, 0, 12, 0, 0),
-        ...statBoost(0, 0, 0, 0, 0, 0),
+        //(source.playerCore.key, 92, 'Rogue'),
+        //(12, 0, 12, 0, 0),
+        //(0, 0, 0, 0, 0, 0),
         hint: 'Вы умелы и предприимчивы. Применяя свой острый ум и быструю реакцию, вы используете ошибки ваших противников в своих интересах и наносите удар по самому больному месту. Вы ведете опасную игру, ища острых ощущений и проверяя свои навыки, мало заботясь о любых законах, которые могут встать на вашем пути. В то время, как путь каждого плута уникален и пронизан опасностью, единственное, что вас всех объединяет - широта и глубина ваших навыков.',
         name: 'Плут',
         keywords: 'плут',
@@ -551,9 +551,9 @@ const playerCore = [
 
     //Бард
     {
-        ...archetype(source.playerCore.key, 92, 'Bard'),
-        ...cost(12, 0, 12, 0, 0),
-        ...statBoost(0, 0, 0, 0, 0, 1),
+        //(source.playerCore.key, 92, 'Bard'),
+        //(12, 0, 12, 0, 0),
+        //(0, 0, 0, 0, 0, 1),
         hint: 'Вы мастер искусств, знаток скрытых тайн, и обольстительный мастер убеждения. С помощью эффектных выступлений, вы воздействуете на умы и вдохновляете сердца на новые героические свершения. Вы можете использовать свои силы, чтобы стать харизматическим лидером, или, вместо этого вы можете быть советником, манипулятором, ученым, проходимцем или виртуозом. В то время как ваша универсальность заставляет некоторых считать вас привлекательным негодником и мастером на все руки, но опасно списывать вас со счетов, как неумеху.',
         name: 'Бард',
         keywords: 'бард',
@@ -770,9 +770,9 @@ const playerCore = [
 
     //Друид
     {
-        ...archetype(source.playerCore.key, 92, 'Druid'),
-        ...cost(12, 0, 12, 0, 0),
-        ...statBoost(0, 0, 0, 0, 1, 0),
+        //(source.playerCore.key, 92, 'Druid'),
+        //(12, 0, 12, 0, 0),
+        //(0, 0, 0, 0, 1, 0),
         hint: 'Силе природы невозможно сопротивляться. Она может разрушить самую неприступную крепость за считанные минуты, превратив даже самые мощные сооружения в руины,'
             + ' сжечь их до тла, похоронить под снежной лавиной или утопить в волнах. Она может дать нескончаемые дары и захватывающее великолепие тем, кто ее уважает, '
             + 'и мучительную смерть тем, кто относится к ней слишком легкомысленно. Вы один из тех, кто слышит зов природы. Вы трепещите перед величием ее могущества и '
@@ -1013,9 +1013,9 @@ const playerCore = [
 
     //Жрец
     {
-        ...archetype(source.playerCore.key, 92, 'Cleric'),
-        ...cost(12, 0, 12, 0, 0),
-        ...statBoost(0, 0, 0, 0, 1, 0),
+        //(source.playerCore.key, 92, 'Cleric'),
+        //(12, 0, 12, 0, 0),
+        //(0, 0, 0, 0, 1, 0),
         hint: 'Силе природы невозможно сопротивляться. Она может разрушить самую неприступную крепость за считанные минуты, превратив даже самые мощные сооружения в руины,'
             + ' сжечь их до тла, похоронить под снежной лавиной или утопить в волнах. Она может дать нескончаемые дары и захватывающее великолепие тем, кто ее уважает, '
             + 'и мучительную смерть тем, кто относится к ней слишком легкомысленно. Вы один из тех, кто слышит зов природы. Вы трепещите перед величием ее могущества и '
@@ -1186,9 +1186,9 @@ const playerCore = [
 
     //Волшебник
     {
-        ...archetype(source.playerCore.key, 94, 'Wizard'),
-        ...cost(6, 0, 0, 0, 0),
-        ...statBoost(0, 0, 0, 1, 0, 0),
+        //(source.playerCore.key, 94, 'Wizard'),
+        //(6, 0, 0, 0, 0),
+        //(0, 0, 0, 1, 0, 0),
         hint: 'Вы вечный ученик арканных тайн вселенной. Через строгую дисциплину и изучение вы овладеваете магией, используя древние тексты и научные методы, чтобы проникнуть в её суть. '
             + 'Ваша магия — это инструмент, дисциплина и путь к истине.',
         name: 'Волшебник',
@@ -1394,9 +1394,9 @@ const playerCore = [
 const playerCore2 = [
     //оракул
     {
-        ...archetype(source.playerCore2.key, 92, 'Oracle'),
-        ...cost(12, 0, 12, 0, 0),
-        ...statBoost(0, 0, 0, 0, 0, 1),
+        //(source.playerCore2.key, 92, 'Oracle'),
+        //(12, 0, 12, 0, 0),
+        //(0, 0, 0, 0, 0, 1),
         prepared: false,
         hint: 'Ваш проводник божественной силы сторонится традиционных каналов молитвы и служения - вместо этого вы собираете сакральные истины, которые выходят за рамки любого отдельного божества. Вы понимаете великие тайны вселенной, воплощенные во всеобъемлющих концепциях, которые превосходят добро и зло или хаос и порядок, независимо от того, воспринимаете ли вы общую связь между несколькими божествами или полностью обходите стороной их силу. Вы исследуете одну из этих тайн и используете ее силу, чтобы творить чудесные заклинания, но эта сила стоит ужасную цену: чем больше вы ее используете, тем сильнее становится проклятие. Ваши умения - обоюдоострый меч, который вы можете поддерживать как божественный инструмент или как проклятие богов.',
         name: 'Оракул',
@@ -1598,9 +1598,9 @@ const playerCore2 = [
 
     //Чародей
     {
-        ...archetype(source.playerCore2.key, 93, 'Sorcerer'),
-        ...cost(6, 0, 0, 0, 0),
-        ...statBoost(0, 0, 0, 0, 0, 1),
+        //(source.playerCore2.key, 93, 'Sorcerer'),
+        //(6, 0, 0, 0, 0),
+        //(0, 0, 0, 0, 0, 1),
         hint: 'Вы не выбирали стать заклинателем — вы были рождены им. В вашей крови есть магия, независимо от того, коснулось ли божество одного из ваших предков, '
             + 'прародитель причищался с первородным существом или могущественный оккультный ритуал повлиял на ваш род. Самоанализ и учёба позволяют вам совершенствовать '
             + 'свои врожденные магические навыки и открывать новые, более мощные умения.',
@@ -1816,9 +1816,9 @@ const playerCore2 = [
 
     //Варвар
     {
-        ...archetype(source.playerCore2.key, 92, 'Barbarian'),
-        ...cost(12, 0, 12, 0, 0),
-        ...statBoost(1, 0, 0, 0, 0, 0),
+        //(source.playerCore2.key, 92, 'Barbarian'),
+        //(12, 0, 12, 0, 0),
+        //(1, 0, 0, 0, 0, 0),
         hint: 'Ярость поглощает вас в бою. Вы наслаждаетесь тем, что сеете хаос и используете мощное оружие, чтобы пробиваться через своих врагов, полагаясь на невероятную живучесть, не нуждаясь в сложных техниках или строгих тренировках. Ваши приступы ярости проистекают из свирепого инстинкта, который вы можете ассоциировать с животным, духом или какой-то частью себя. Для многих варваров грубая сила — это молот, а каждая проблема выглядит как гвоздь, в то время как другие пытаются сдержать в себе бурю эмоций и высвободить свой гнев только тогда, когда это действительно важно.',
         name: 'Варвар',
         keywords: 'варвар',
@@ -2062,9 +2062,9 @@ const playerCore2 = [
 
     //Алхимик
     {
-        ...archetype(source.playerCore2.key, 93, 'Alchemist'),
-        ...cost(8, 0, 0, 0, 0),
-        ...statBoost(0, 0, 0, 1, 0, 0),
+        //(source.playerCore2.key, 93, 'Alchemist'),
+        //(8, 0, 0, 0, 0),
+        //(0, 0, 0, 1, 0, 0),
         hint: 'Для вас нет более прекрасного зрелища, чем странное варево, бурлящее в мензурке, и вы с самозабвением поглощаете свои гениальные эликсиры. Вы очарованы раскрытием тайн науки и природы, и постоянно, в своей лаборатории или прямо на ходу, экспериментируете с изобретательными составами на все случаи жизни. Вы бесстрашны в рисковой ситуации, бросая в своих врагов взрывчатые и токсичные склянки. Ваш уникальный путь к величию проложен алхимическими отварами, которые доводят ваш ум и тело до предела.',
         name: 'Алхимик',
         keywords: 'алхимик',
@@ -2269,9 +2269,9 @@ const playerCore2 = [
 
     //Ведьма
     {
-        ...archetype(source.playerCore.key, 94, 'Witch'),
-        ...cost(6, 0, 0, 0, 0),
-        ...statBoost(0, 0, 0, 1, 0, 0),
+        //(source.playerCore.key, 94, 'Witch'),
+        //(6, 0, 0, 0, 0),
+        //(0, 0, 0, 1, 0, 0),
         hint: 'Вы повелеваете могущественной магией не через изучение или преданность какому-либо идеалу, но как сосуд или представитель таинственного, потустороннего покровителя, которого даже вы не совсем понимаете. Эта сущность может быть тайным божеством, могущественной феей, проявлением природных энергий, древним духом или любым другим могущественным сверхъестественным существом.',
         name: 'Ведьма',
         keywords: 'ведьма',
@@ -2480,9 +2480,9 @@ const playerCore2 = [
 
     //Монах
     {
-        ...archetype(source.playerCore2.key, 95, 'Monk'),
-        ...cost(10, 0, 0, 0, 0),
-        ...statBoost(0, 0, 0, 0, 0, 0), // Сила или Ловкость (на выбор)
+        //(source.playerCore2.key, 95, 'Monk'),
+        //(10, 0, 0, 0, 0),
+        //(0, 0, 0, 0, 0, 0), // Сила или Ловкость (на выбор)
         hint: 'Разум и дух, вот что дает силу вашему кулаку. Вы стремитесь к совершенству, превращая своё тело в безупречный инструмент, а ум — в дисциплинированный оплот мудрости. Вы — ожесточенный боец, известный своими навыками боевых искусств и боевыми стойками.',
         name: 'Монах',
         keywords: 'монах',
@@ -2671,9 +2671,9 @@ const playerCore2 = [
 
     //Сорвиголова
     {
-        ...archetype(source.playerCore.key, 96, 'Swashbuckler'),
-        ...cost(10, 0, 0, 0, 0),
-        ...statBoost(0, 1, 0, 0, 0, 0), // Ловкость
+        //(source.playerCore.key, 96, 'Swashbuckler'),
+        //(10, 0, 0, 0, 0),
+        //(0, 1, 0, 0, 0, 0), // Ловкость
         hint: 'Для вас битва — танец, в котором вы стильно и изящно двигаетесь среди врагов. Вы со вкусом мечетесь между бойцов и наносите мощные завершающие движения с легким движением запястья и блеском клинка.',
         name: 'Сорвиголова',
         keywords: 'сорвиголова',
@@ -2912,9 +2912,9 @@ const playerCore2 = [
 
     //чемпион
     {
-        ...archetype(source.playerCore2.key, 96, 'Champion'),
-        ...cost(10, 0, 0, 0, 0),
-        ...statBoost(0, 1, 0, 0, 0, 0), // Ловкость
+        //(source.playerCore2.key, 96, 'Champion'),
+        //(10, 0, 0, 0, 0),
+        //(0, 1, 0, 0, 0, 0), // Ловкость
         hint: 'Вы - посланник божества, преданный служитель, взявший на себя тяжелую ношу, и придерживающийся кодекса, который отличает вас от окружающих. В то время как чемпионы существуют для всех мировоззрений, как чемпион добра, вы даете уверенность и надежду невинным. У вас есть мощная защита, которой вы делитесь со своими союзниками и невинными очевидцами, а также святая сила, которую вы используете, чтобы положить конец угрозе зла. Ваша преданность даже привлекает внимание святых духов, которые помогают вам в путешествии.',
         name: 'Чемпион',
         keywords: 'чемпион',
@@ -3222,9 +3222,941 @@ const playerCore2 = [
         ]
     }
 ];
+
+const newArc = [
+    {
+        hint: '',
+        key: 'guardian',
+        name: 'Защитник',
+        keywords: 'защитник',
+
+        hitpoints: 12,
+
+        keyAbility: ["strength"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["athletics"],
+        skillTrainedPoints: 3,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "T"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "unbreakable-mastery",
+            "reaction-time",
+            "guardian-mastery",
+            "unyielding-resolve",
+            "taunt",
+            "reflex-expertise",
+            "tough-to-kill",
+            "unbreakable-expertise",
+            "guardians-techniques",
+            "weapon-expertise",
+            "weapon-specialization",
+            "battle-hardened",
+            "guardian-expertise",
+            "shield-block",
+            "guardians-armor",
+            "unbreakable-legend",
+            "weapon-mastery",
+            "greater-weapon-specialization"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'inventor',
+        name: 'Изобретатель',
+        keywords: 'изобретатель',
+
+        hitpoints: 8,
+
+        keyAbility: ["intellect"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["crafting"],
+        skillTrainedPoints: 3,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "inventor-weapon-expertise",
+            "anvils-hardness",
+            "peerless-inventor",
+            "medium-armor-expertise-inventor",
+            "perception-expertise",
+            "complete-reconfiguration",
+            "master-overdrive",
+            "offensive-boost",
+            "reflex-expertise",
+            "medium-armor-mastery",
+            "greater-weapon-specialization",
+            "revolutionary-innovation",
+            "inventive-mastery",
+            "weapon-specialization",
+            "shield-block",
+            "breakthrough-innovation",
+            "inventive-expertise",
+            "legendary-overdrive",
+            "infinite-invention",
+            "explode",
+            "overdrive",
+            "reconfigure",
+            "expert-overdrive",
+            "churning-mind",
+            "inventor-weapon-mastery",
+            "innovation"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'investigator',
+        name: 'Сыщик',
+        keywords: 'сыщик',
+
+        hitpoints: 8,
+
+        keyAbility: ["intellect"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["society"],
+        skillTrainedPoints: 4,
+
+        Perception: 'E',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "U",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "T",
+            "reflex": "E",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "deductive-improvisation",
+            "perception-legend",
+            "fortitude-expertise",
+            "dogged-will",
+            "on-the-case",
+            "martial-weapon-mastery",
+            "weapon-expertise",
+            "keen-recollection",
+            "perception-mastery",
+            "light-armor-mastery",
+            "methodology",
+            "investigator-expertise",
+            "savvy-reflexes",
+            "master-detective",
+            "greater-weapon-specialization",
+            "devise-a-stratagem",
+            "strategic-strike",
+            "skillful-lessons",
+            "light-armor-expertise",
+            "weapon-specialization",
+            "greater-dogged-will"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'animist',
+        name: 'Анимист',
+        keywords: 'анимист',
+
+        hitpoints: 8,
+
+        keyAbility: ["wisdom"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["religion"],
+        skillTrainedPoints: 2,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "U",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "T",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "expert-protections",
+            "apparition-attunement",
+            "third-apparition",
+            "simple-weapon-expertise",
+            "animistic-practice",
+            "supreme-incarnation",
+            "expert-spellcaster",
+            "perception-expertise",
+            "master-of-mind-and-spirit",
+            "animist-apparition-spellcasting",
+            "weapon-specialization",
+            "fourth-apparition",
+            "legendary-spellcaster",
+            "fortitude-expertise",
+            "master-spellcaster"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'magus',
+        name: 'Магус',
+        keywords: 'магус',
+
+        hitpoints: 8,
+
+        keyAbility: ["dexterity", "strength"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["arcana"],
+        skillTrainedPoints: 2,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "studious-spells",
+            "weapon-expertise",
+            "arcane-spellcasting-magus",
+            "reflex-expertise",
+            "arcane-cascade",
+            "double-spellstrike",
+            "spellstrike",
+            "medium-armor-mastery",
+            "expert-spellcaster",
+            "master-spellcaster",
+            "weapon-mastery",
+            "hybrid-study",
+            "medium-armor-expertise",
+            "weapon-specialization",
+            "greater-weapon-specialization",
+            "conflux-spells",
+            "alertness",
+            "resolve",
+            "juggernaut"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'psychic',
+        name: 'Экстрасенс',
+        keywords: 'экстрасенс',
+
+        hitpoints: 6,
+
+        keyAbility: [],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["occultism"],
+        skillTrainedPoints: 3,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "U",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "U",
+            "medium": "U",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "T",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "psychic-spellcasting",
+            "weapon-expertise",
+            "psi-cantrips-and-amps",
+            "unleash-psyche",
+            "subconscious-mind",
+            "conscious-mind",
+            "signature-spells",
+            "clarity-of-focus",
+            "precognitive-reflexes",
+            "expert-spellcaster",
+            "extrasensory-perception",
+            "walls-of-will",
+            "personal-barrier",
+            "fortitude-expertise",
+            "psychic-weapon-specialization",
+            "master-spellcaster",
+            "fortress-of-will",
+            "infinite-mind",
+            "legendary-spellcaster",
+            "spell-repertoire"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'commander',
+        name: 'Командующий',
+        keywords: 'командующий',
+
+        hitpoints: 8,
+
+        keyAbility: ["intellect"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["society"],
+        skillTrainedPoints: 2,
+
+        Perception: 'E',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "T"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "T",
+            "reflex": "E",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "master-tactician",
+            "commanders-banner",
+            "armor-mastery",
+            "tactics",
+            "legendary-tactician",
+            "expert-tactician",
+            "drilled-reactions",
+            "commanding-will",
+            "fortitude-expertise",
+            "armor-expertise",
+            "military-expertise",
+            "weapon-mastery",
+            "greater-weapon-specialization",
+            "battlefield-intuition",
+            "weapon-specialization",
+            "warfare-expertise",
+            "perception-mastery",
+            "shield-block"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'kineticist',
+        name: 'Кинетик',
+        keywords: 'кинетик',
+
+        hitpoints: 8,
+
+        keyAbility: ["constitution"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["nature"],
+        skillTrainedPoints: 3,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "U",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "U",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "E",
+            "will": "T"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "kinetic-durability",
+            "light-armor-mastery",
+            "kinetic-mastery",
+            "reflow-elements",
+            "kinetic-legend",
+            "kinetic-aura",
+            "kinetic-gate",
+            "second-gates-threshold",
+            "fourth-gates-threshold",
+            "kinetic-quickness",
+            "impulses",
+            "double-reflow",
+            "weapon-expertise",
+            "gates-threshold",
+            "light-armor-expertise",
+            "will-expertise",
+            "perception-expertise",
+            "final-gate",
+            "third-gates-threshold",
+            "extract-element",
+            "kinetic-expertise",
+            "weapon-specialization",
+            "greater-kinetic-durability"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'thaumaturge',
+        name: 'Тауматург',
+        keywords: 'тауматург',
+
+        hitpoints: 8,
+
+        keyAbility: ["charisma"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["arcana", "nature", "occultism", "religion"],
+        skillTrainedPoints: 3,
+
+        Perception: 'E',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "unlimited-esoterica",
+            "first-implement-and-esoterica",
+            "greater-weapon-specialization",
+            "medium-armor-expertise",
+            "second-adept",
+            "esoteric-lore",
+            "third-implement",
+            "implements-empowerment",
+            "earned-resilience",
+            "implement-paragon",
+            "weapon-mastery",
+            "intensify-vulnerability",
+            "thaumaturgic-expertise",
+            "weapon-expertise",
+            "second-implement",
+            "perception-mastery",
+            "perfected-mind",
+            "implement-adept",
+            "weapon-specialization",
+            "thaumaturgic-mastery",
+            "exploit-vulnerability",
+            "medium-armor-mastery",
+            "reflex-expertise",
+            "disciplined-mind"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'ranger',
+        name: 'Рейнджер',
+        keywords: 'рейнджер',
+
+        hitpoints: 10,
+
+        keyAbility: ["dexterity", "strength"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["survival"],
+        skillTrainedPoints: 4,
+
+        Perception: 'E',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "E",
+            "will": "T"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "masterful-hunter",
+            "weapon-specialization",
+            "trackless-journey",
+            "natures-edge",
+            "medium-armor-expertise",
+            "greater-natural-reflexes",
+            "wardens-endurance",
+            "natural-reflexes",
+            "medium-armor-mastery",
+            "greater-weapon-specialization",
+            "hunters-edge",
+            "swift-prey",
+            "perception-legend",
+            "ranger-weapon-expertise",
+            "martial-weapon-mastery",
+            "unimpeded-journey",
+            "hunt-prey",
+            "will-expertise",
+            "ranger-expertise",
+            "perception-mastery"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'summoner',
+        name: 'Призыватель',
+        keywords: 'призыватель',
+
+        hitpoints: 10,
+
+        keyAbility: ["charisma"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: [],
+        skillTrainedPoints: 3,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "U",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "U",
+            "medium": "U",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "eidolon",
+            "eidolon-defensive-expertise",
+            "weapon-specialization",
+            "expert-spellcaster",
+            "instant-manifestation",
+            "shared-vigilance",
+            "eidolon-unarmed-mastery",
+            "shared-resolve",
+            "unlimited-signature-spells",
+            "evolution-feat",
+            "twin-juggernauts",
+            "greater-eidolon-specialization",
+            "defensive-robes",
+            "simple-weapon-expertise",
+            "summoner-spellcasting",
+            "spell-repertoire",
+            "eidolon-unarmed-expertise",
+            "eidolon-symbiosis",
+            "master-spellcaster",
+            "eidolon-weapon-specialization",
+            "eidolon-transcendence",
+            "eidolon-defensive-mastery",
+            "shared-reflexes",
+            "link-spells"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'gunslinger',
+        name: 'Стрелок',
+        keywords: 'стрелок',
+
+        hitpoints: 8,
+
+        keyAbility: ["dexterity"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: [],
+        skillTrainedPoints: 3,
+
+        Perception: 'E',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T",
+            "Simple Firearms, Martial Firearms": "E"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "E",
+            "will": "T"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "shootists-edge",
+            "gunslinger-expertise",
+            "greater-deed",
+            "advanced-deed",
+            "medium-armor-expertise",
+            "gunslingers-way",
+            "slingers-precision",
+            "perception-legend",
+            "medium-armor-mastery",
+            "gunslinging-legend",
+            "blast-dodger",
+            "lead-constitution",
+            "weapon-specialization",
+            "stubborn",
+            "gunslinger-weapon-mastery",
+            "perception-mastery",
+            "greater-weapon-specialization"
+        ],
+
+        modification: []
+    },
+
+
+    {
+        hint: '',
+        key: 'exemplar',
+        name: 'Герой',
+        keywords: 'герой',
+
+        hitpoints: 10,
+
+        keyAbility: ["dexterity", "strength"],
+
+        trait: [],
+
+        rarity: 'common',
+
+        skillTrainedChoice: [],
+        skillTrained: ["religion"],
+        skillTrainedPoints: 3,
+
+        Perception: 'T',
+
+        skillAttack: {
+            "simple": "T",
+            "martial": "T",
+            "advanced": "U",
+            "unarmed": "T"
+        },
+
+        skillDefence: {
+            "unarmored": "T",
+            "light": "T",
+            "medium": "T",
+            "heavy": "U"
+        },
+
+        skillClass: 'T',
+
+        saving: {
+            "fortitude": "E",
+            "reflex": "T",
+            "will": "E"
+        },
+
+        description: [],
+
+        archetypeFeatures: [
+            "shield-block",
+            "burnished-armor-mastery",
+            "perception-expertise",
+            "divine-premonition",
+            "sovereignty-epithet",
+            "greater-spirit-striking",
+            "mortality-reforged",
+            "deific-mastery",
+            "root-epithet",
+            "greater-unassailable-soul",
+            "weapon-expertise",
+            "divine-weapon-mastery",
+            "burnished-armor-expertise",
+            "spirit-striking",
+            "perception-mastery",
+            "humble-strikes",
+            "unassailable-soul",
+            "dominion-epithet",
+            "divine-spark-and-ikons",
+            "godly-expertise"
+        ],
+
+        modification: []
+    },
+]
+
 const archetypeRepository = [
     ...playerCore,
-    ...playerCore2
+    ...playerCore2,
+    ...newArc
 ];
 
 module.exports = archetypeRepository;

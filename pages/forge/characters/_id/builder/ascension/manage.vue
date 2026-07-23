@@ -41,7 +41,7 @@
             </strong>
 
             <div class="mt-2 text--secondary">
-              Первое усиление характеристик
+              Первое усиление характеристики
             </div>
           </v-card>
         </v-col>
@@ -67,15 +67,16 @@
           {{ characterLabelSkillTrainedChoice(ascension.skill) }}
         </div>
 
-        <div class="mt-2">
+
+        <!-- <div class="mt-2">
           <strong>Дополнительно:</strong>
           +1 навык или бонус (по правилам)
-        </div>
+        </div> -->
       </v-card>
 
       <!-- 📚 Лор -->
       <v-card v-if="ascension.lore || ascension.description" outlined class="pa-4 mt-4" style="border-color: #c75d5d;">
-        <h3 class="text-h6 mb-2">История</h3>
+
 
         <div v-if="ascension.lore" class="mb-3">
           <strong>Знание</strong>
@@ -86,8 +87,8 @@
 
         <div v-if="ascension.description">
           <strong>Описание</strong>
-          <div class="text--secondary mt-1">
-            {{ ascension.description }}
+          <div v-html="ascension.description" class="text--secondary mt-1">
+
           </div>
         </div>
       </v-card>
@@ -138,7 +139,8 @@ export default {
     },
     sources() {
       return [
-        "playerCore",
+        "Pathfinder Player Core",
+        "Pathfinder Player Core 2",
         // "fspg",
         // "red1",
         // "cos",

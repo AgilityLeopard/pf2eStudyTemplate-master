@@ -13,15 +13,21 @@
             <span v-if="item.actions" class="action-icon">
 
 
-              <template v-if="item.actions.value !== null">
-                <img :src="iconAction(item.actions.value.toString())" class="action-single"
+
+              <template v-if="item.actions">
+                <img :src="iconAction(item.actions.toString())" class="action-single"
                   :class="{ 'invert-icon': !$vuetify.theme.dark }" />
               </template>
 
-              <template v-if="item.actions.value === null && item.actionType">
-                <img :src="iconAction(item.actionType.value)" class="action-single"
+              <template v-else-if="item.time?.value !== null">
+                <img :src="iconAction(item.time.value.toString())" class="action-single"
                   :class="{ 'invert-icon': !$vuetify.theme.dark }" />
               </template>
+
+              <!-- <template v-else-if="item.actions.value === null && item.actionType">
+                <img :src="iconAction(item.actionType.value)" class="action-single"
+                  :class="{ 'invert-icon': !$vuetify.theme.dark }" />
+              </template> -->
             </span>
 
 
@@ -30,8 +36,8 @@
           <span class="gear-line"></span>
 
           <span class="gear-tag">
-            <template v-if="['archetype', 'species'].includes(item.type)">
-              Особенность {{ item.level || "-" }}
+            <template v-if="['ancestryfeature', 'classfeature'].includes(item.category)">
+              Особенность {{ item.level?.value || "-" }}
             </template>
 
             <template v-else-if="item.type === 'feat'">
@@ -233,9 +239,9 @@
 
       <!-- FEAT -->
       <template v-if="item.type === 'feat'">
-        <div v-if="item.prerequisites" class="info-line">
+        <div v-if="Object.keys(item.prerequisites || {}).length" class="info-line">
           <strong>Требования:</strong>
-          {{ item.prerequisites.value }}
+          {{Object.values(item.prerequisites).map(p => p.value).join(", ")}}
         </div>
 
         <div v-if="item.description" class="description" :class="{ 'light-view': !$vuetify.theme.isDark }"

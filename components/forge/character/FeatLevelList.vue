@@ -7,8 +7,11 @@
             <v-expansion-panel-header class="ui-panel-header">
 
                 <div class="ui-panel-header__title">
-                    <span>{{ level }}</span>
-                    <span class="ui-panel-level">уровень</span>
+
+                    <span v-if="level !== 0">{{ level }}</span>
+                    <span v-if="level !== 0" class="ui-panel-level">уровень</span>
+
+                    <span v-if="level === 0" class="ui-panel-level">Предыстория</span>
 
                     <span v-if="getTalent(level)" class="ml-2">
                         ({{ getTalent(level)?.label }})
@@ -17,12 +20,13 @@
 
                 <div class="d-flex align-center" style="gap: 8px">
 
-                    <v-btn v-if="!getTalent(level)" class="ui-btn" small @click.stop="$emit('select', level)">
+                    <v-btn v-if="!getTalent(level) && level !== 0" class="ui-btn" small
+                        @click.stop="$emit('select', level)">
                         Выберите черту
                     </v-btn>
 
-                    <v-btn v-else class="ui-btn" color="error" small
-                        @click.stop.prevent="$emit('remove', getTalent(level))">
+                    <v-btn v-else-if="level !== 0" class="ui-btn" color="error" small
+                        @click.stop.prevent=" $emit('remove', getTalent(level))">
                         Удалить
                     </v-btn>
 

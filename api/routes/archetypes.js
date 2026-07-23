@@ -1,6 +1,6 @@
 const Router = require('express-promise-router');
 
-const archetypeRepository = require('../db/static/archetypeRepository');
+const archetypeRepository = require('../db/static/classesRepository');
 
 const router = new Router();
 
@@ -20,7 +20,11 @@ router.get('/', (request, response) => {
         }
     }
 
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    // response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.set(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.status(200).json(items);
 });
 
@@ -42,7 +46,11 @@ router.get('/groups/', (request, response) => {
 
     items = [...new Set(items)].sort();
 
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    // response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.set(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.status(200).json(items);
 });
 
@@ -51,6 +59,10 @@ router.get('/:slug', (request, response) => {
 
     const item = archetypeRepository.find((archetype) => archetype.key === slug);
 
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    // response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.set(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.status(200).json(item);
 });

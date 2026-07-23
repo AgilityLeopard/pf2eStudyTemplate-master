@@ -938,7 +938,7 @@ export default {
       const progress = this.$store.getters["characters/characterProgressById"](
         this.$route.params.id
       );
-      console.log("progress", progress)
+
       if (!progress) return 0;
 
       const totalValue = progress.reduce(
@@ -973,7 +973,7 @@ export default {
       const progress = this.$store.getters[
         "characters/characterProgressMaxById"
       ](this.$route.params.id);
-      console.log("progressMax", progress)
+
       if (!progress) return 0;
       const totalValue = progress.reduce(
         (sum, item) => sum + (item.value || 0),

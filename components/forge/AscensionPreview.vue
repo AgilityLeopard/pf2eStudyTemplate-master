@@ -36,7 +36,7 @@
     <v-card-text class="pa-6">
 
       <blockquote class="blockquote font-italic mb-4">
-        <p>"{{ item.description }}"</p>
+        <div v-html="item.description"></div>
       </blockquote>
 
       <!-- ⚙️ BONUSES -->

@@ -220,7 +220,7 @@ export default {
       return filteredTalents;
     },
     sources() {
-      return ["playerCore", ...this.settingHomebrews];
+      return ["Pathfinder Player Core", "Pathfinder Player Core 2", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
@@ -295,7 +295,7 @@ export default {
       // };
       {
         const { data } = await this.$axios.get("/api/talents/", config.params);
-        this.talentList = data.map((talent) => {
+        this.talentList = data.data.map((talent) => {
           // const prerequisitesHtml = this.requirementsToText(talent).join(', ');
           return {
             ...talent,
@@ -345,35 +345,39 @@ export default {
       };
       this.$store.commit("characters/addCharacterAscensionPackage", payload);
 
-      // const talent = this.talentList.find(
-      //   (s) => s.key === ascensionPackage.feat && ascensionPackage.feat
-      // );
+      const talent = this.talentList.find(
+        (s) => s.key === ascensionPackage.feat[0]
+      );
 
-      // if (talent) {
-      //   const match = talent.name.match(/(<.*>)/);
-      //   const talentUniqueId = Math.random()
-      //     .toString(36)
-      //     .replace(/[^a-z]+/g, "")
-      //     .substr(0, 8);
+      if (talent) {
+        const match = talent.name.match(/(<.*>)/);
+        const talentUniqueId = Math.random()
+          .toString(36)
+          .replace(/[^a-z]+/g, "")
+          .substr(0, 8);
 
-      //   const payloadSkill = {
-      //     id: talentUniqueId,
-      //     name: talent.name,
-      //     key: talent.key,
-      //     cost: talent.cost,
-      //     place: "background",
-      //     placeholder:
-      //       match !== null && match !== undefined ? match[1] : undefined,
-      //     selected: undefined,
-      //     choice: talent.optionsKey,
-      //     source: `talent.${talentUniqueId}`,
-      //   };
+        const payloadSkill = {
+          id: talentUniqueId,
+          name: talent.name,
+          key: talent.key,
+          cost: talent.cost,
+          place: "background",
+          level: 0,
+          // placeholder:
+          //   match !== null && match !== undefined ? match[1] : undefined,
+          selected: undefined,
+          choice: talent.optionsKey,
+          source: `talent.${talentUniqueId}`,
+        };
 
-      //   this.$store.commit("characters/addCharacterTalent", {
-      //     id: this.characterId,
-      //     talent: payloadSkill,
-      //   });
-      // }
+        this.$store.commit('characters/removeCharacterTalentbySource', { id: this.characterId, source: "background" });
+        // this.$store.commit('characters/removeCharacterTalent', { id, talentId: talent.id });
+
+        this.$store.commit("characters/addCharacterTalent", {
+          id: this.characterId,
+          talent: payloadSkill,
+        });
+      }
 
       this.$store.commit("characters/characterProgress", {
         id: this.characterId,

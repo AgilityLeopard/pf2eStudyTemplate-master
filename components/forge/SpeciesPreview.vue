@@ -37,7 +37,7 @@
     <v-card-text class="pa-6">
 
       <!-- Intro -->
-      <div class="mb-4" v-html="species.previewText"></div>
+      <div class="mb-4" v-html="species.description"></div>
 
       <!-- ⚙️ ATTRIBUTES -->
       <v-card class="mb-4 pa-4" outlined>
@@ -77,7 +77,7 @@
       </v-card>
 
       <!-- 🧬 FEATURES -->
-      <v-card v-if="species.speciesFeatures.length" class="pa-4" outlined>
+      <v-card v-if="species.speciesFeatures && species.speciesFeatures.length" class="pa-4" outlined>
         <h3 class="text-h6 mb-3">Особенности родословной</h3>
 
         <v-expansion-panels>
@@ -88,10 +88,8 @@
 
             <v-expansion-panel-content>
 
-              <div v-if="feature.description">
-                {{ feature.description }}
-              </div>
 
+              <div v-if="feature.description" class="mb-4" v-html="feature.description"></div>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>

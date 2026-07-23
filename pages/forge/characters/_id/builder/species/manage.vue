@@ -112,8 +112,8 @@
         <h3 class="text-h6 mb-3">Описание</h3>
 
         <div v-for="description in species.Description" :key="description.name">
-
-          <div v-if="description.name === 'Faith'">
+          <div class="mb-4" v-html="species.description"></div>
+          <!-- <div v-if="description.name === 'Faith'">
             <h4>Верование</h4>
             <div v-html="description.about"></div>
           </div>
@@ -131,7 +131,7 @@
           <div v-if="description.name === 'society'">
             <h4 c>Общество</h4>
             <div v-html="description.about"></div>
-          </div>
+          </div> -->
 
           <v-divider class="my-2" />
 
@@ -178,7 +178,7 @@
 
         <div v-if="selectedHeritage" class="mt-3">
 
-          <div v-html="selectedHeritage.previewText"></div>
+          <!-- <div v-html="selectedHeritage.previewText"></div> -->
           <div v-html="selectedHeritage.description"></div>
 
           <v-select v-if="modification(selectedHeritage).length" v-model="selectedHeritage.selected"
@@ -235,14 +235,14 @@ export default {
 
       if (speciesLabel)
         return this.heritageList.filter(
-          (s) => s.isUniversal === true || s.type.toUpperCase() === speciesLabel
+          (s) => s.ancestry === null || s.ancestry.slug.toUpperCase() === speciesLabel
         );
-      else return this.heritageList.filter((s) => s.isUniversal === true);
+      else return this.heritageList.filter((s) => s.ancestry === null);
 
     },
 
     sources() {
-      return ["playerCore", "playerCore2", ...this.settingHomebrews];
+      return ["Pathfinder Player Core 2", "Pathfinder Player Core", ...this.settingHomebrews];
     },
     settingHomebrews() {
       return this.$store.getters["characters/characterSettingHomebrewsById"](
@@ -322,7 +322,7 @@ export default {
               lowercaseKeywords.includes(talent.key.toString().toUpperCase())
             );
 
-            if (ability.length > 0) {
+            if (ability) {
               const listAbilities = [];
               ability.forEach((talent) => {
                 const ability1 = {
@@ -397,7 +397,7 @@ export default {
           lowercaseKeywords.includes(talent.key.toString().toUpperCase())
         );
 
-        if (ability.length > 0) {
+        if (ability) {
           const listAbilities = [];
           ability.forEach((talent) => {
             const ability1 = {
@@ -482,17 +482,17 @@ export default {
 
       // Установить модификации
       let modifications = [];
-      species.speciesFeatures
-        .filter((t) => t.modification !== undefined)
-        .forEach((t) => {
+      // species.speciesFeatures
+      //   .filter((t) => t.modification !== undefined)
+      //   .forEach((t) => {
 
-          //Сменить Сумеречное зрение на темное, если оно уже есть у персонажа и такое позволяет особенность
+      //     //Сменить Сумеречное зрение на темное, если оно уже есть у персонажа и такое позволяет особенность
 
-          if (t.key === "low-light vision up" && vision === "Сумеречное")
-            t.modification.find(t => t.group === "sense").key = "darkvision"
+      //     if (t.key === "low-light vision up" && vision === "Сумеречное")
+      //       t.modification.find(t => t.group === "sense").key = "darkvision"
 
 
-        });
+      //   });
 
       if (species.modification)
         species.modification.forEach((t) => {

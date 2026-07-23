@@ -365,6 +365,10 @@ export const getters = {
     state.characters[id] ? state.characters[id].attributesClassBoost : {},
   characterAttributeBoost: (state) => (id) =>
     state.characters[id] ? state.characters[id].attributesBoost : {},
+  characterSystemFlagsById:
+    (state) => (id) =>
+
+      state.characters[id] ? state.characters[id].systemFlags : {},
   characterAttributeBoost5: (state) => (id) =>
 
     state.characters[id] ? state.characters[id].attributesBoost5 : {},
@@ -2495,6 +2499,54 @@ export const mutations = {
     character.prepared.push(spell);
 
   },
+  setCharacterSystemFlags(state, { id, path, value }) {
+
+    const character = state.characters[id];
+
+    if (!character.systemFlags)
+      character.systemFlags = {};
+
+    const parts = path.split(".");
+
+    let obj = character.systemFlags;
+
+    while (parts.length > 1) {
+
+      const key = parts.shift();
+
+      if (!obj[key])
+        obj[key] = {};
+
+      obj = obj[key];
+
+    }
+
+    obj[parts[0]] = value;
+
+  },
+  clearCharacterSystemFlags(state, { id, path }) {
+
+    const character = state.list.find(x => x.id === id);
+
+    if (!character?.systemFlags)
+      return;
+
+    const parts = path.split(".");
+
+    let obj = character.systemFlags;
+
+    while (parts.length > 1) {
+
+      obj = obj?.[parts.shift()];
+
+      if (!obj)
+        return;
+
+    }
+
+    delete obj[parts[0]];
+
+  },
   removeCharacterPreparedSpell(state, payload) {
     const character = state.characters[payload.id];
     character.prepared = character.prepared?.filter((t) => t.key !== payload.key); // cleanup
@@ -3742,6 +3794,7 @@ const getDefaultState = () => ({
 
     },
   },
+  systemFlags: {},
   SkillPointsFeat: 0,
   HeroPoints: 0,
   focusPool: [],

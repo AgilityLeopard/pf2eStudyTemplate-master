@@ -1793,8 +1793,8 @@ export default {
     // Данные для  источников
     sources() {
       return [
-        'playerCore',
-        'playerCore2',
+        "Pathfinder Player Core",
+        "Pathfinder Player Core 2",
         // 'tnh',
         ...this.settingHomebrews
       ];
@@ -3111,6 +3111,7 @@ export default {
       })
     },
     buildSectionsAb(categories) {
+
       return categories.map(cat => {
 
         const speciesItems = this.speciesAbilities
@@ -3763,145 +3764,356 @@ export default {
       });
       this.psychicPowersList = itemName;
     },
+
+
     async loadArchetype(key) {
+      this.loading = true;
 
-      if (key) {
-
-        let finalData = {};
+      try {
         const { data } = await this.$axios.get(`/api/archetypes/${key}`);
-        finalData = data;
+        const finalData = data;
 
-        // finalData = this.enrichArchetypeFeatures(finalData);
-        const level = this.$store.getters["characters/characterLevelById"](
-          this.characterId
+        const level = this.$store.getters[
+          "characters/characterLevelById"
+        ](this.characterId);
+
+        const List = this.abilityList || [];
+
+        const enc =
+          this.$store.getters[
+            "characters/characterEnhancementsById"
+          ](this.characterId) || [];
+
+        const skill = this.skillRepository;
+        const weapon = this.weaponGroup || [];
+
+        /*
+          archetypeFeatures хранит ключи особенностей
+        */
+
+        const featureKeys = (finalData.archetypeFeatures || [])
+          .map(x => x.toString().toLowerCase());
+
+        let ability = List.filter(item =>
+          featureKeys.includes(
+            item.key.toString().toLowerCase()
+          )
         );
 
-        const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId);
+        let abilityList = [];
+        let repeatedAbilities = [];
 
-        if (this.abilityList !== undefined && this.actionList !== undefined) {
+        ability.forEach(ab => {
 
-          const lowercaseKeywords = finalData.archetypeFeatures.map((s) =>
-            s.toUpperCase()
-          );
+          const saved = enc.find(e => e.key === ab.key);
 
-          //Список особенностей
-          const List = this.abilityList;
-          let ability = List.filter((talent) =>
-            lowercaseKeywords.includes(talent.key.toString().toUpperCase())
-          );
+          ab.selected = saved?.selected || "";
+          ab.oldValue = saved?.selected || "";
 
-          const abilityInArray = [];
-          let SubFeature = [];
+          /*
+            Особенности, которые выдаются на нескольких уровнях
+            (Doctrine, Weapon Specialization и т.п.)
+          */
 
-          //Сюда кладем то, что дается больше одного раза и смотрим под-опции
-          ability.forEach((ab) => {
-            if (Array.isArray(ab.level)) {
-              abilityInArray.push(ab);
+          /*
+            ==========================
+            ChoiceSet
+            ==========================
+          */
+
+          const choiceSetRule =
+            ab.rules?.find(r => r.key === "ChoiceSet");
+
+          if (choiceSetRule) {
+
+            const choices = choiceSetRule.choices;
+
+            // готовые варианты
+            if (Array.isArray(choices)) {
+              ab.choiceSet = [];
+              ab.options = choices;
             }
 
-            if (ab.options) {
-              if (ab.type.includes("Weapon Group")) {
-                const options = this.weaponGroup.filter(s => ab.options.includes(s.group));
-                const listOption = [];
-                options.forEach(s => {
-                  const op = {
-                    key: s.group,
-                    ...s
-                  }
-                  listOption.push(op);
-                  ab.options = listOption;
+            // фильтр
+            else if (choices?.filter) {
 
-                });
+              const filter = choices.filter;
+
+              const tags = filter
+                .filter(f => typeof f === "string")
+                .filter(f => f.startsWith("item:tag:"))
+                .map(f => f.replace("item:tag:", ""));
+
+              ab.choiceSet = tags;
+
+              ab.options = List.filter(item =>
+                tags.some(tag =>
+                  item.traits?.includes(tag) ||
+                  item.otherTags?.includes(tag) ||
+                  item.tags?.includes(tag)
+                )
+              );
+            }
+
+            // weaponGroups
+            else if (choices === "weaponGroups") {
+              ab.options = weapon;
+            }
+          }
+
+          /*
+            Старый формат options
+          */
+
+          if (ab.options?.length) {
+
+            if (ab.type?.includes("Weapon Group")) {
+
+              ab.options = weapon
+                .filter(w => ab.options.includes(w.group))
+                .map(w => ({
+                  key: w.group,
+                  ...w
+                }));
+
+            }
+
+            if (ab.type === "Class Feature") {
+
+              ab.options = List.filter(f =>
+                ab.options.includes(f.key)
+              );
+
+            }
+
+            ab.options.forEach(option => {
+
+              if (option.subFeature) {
+
+                option.subFeature = List.filter(f =>
+                  option.subFeature.includes(f.key)
+                );
+
               }
 
-              if (ab.type === "Class Feature") {
-                const options = List.filter(ability => ab.options.includes(ability.key));
+            });
 
-                ab.options = options;
-              }
+          }
 
+          /*
+            Grants
+          */
 
-              ab.selected = enc.find(s => s.key === ab.key) ? enc.find(s => s.key === ab.key).selected : "";
+          ab.grantedFeatures =
+            ab.grants?.length
+              ? ab.grants
+              : [];
 
+        });
+        /*
+  ==========================================
+  Формирование списка особенностей
+  ==========================================
+*/
 
-              //Наподобие подкласса Жреца
-              ab.options.forEach(s => {
-                if (s.subFeature) {
-                  const sub = s.subFeature;
-                  SubFeature = List.filter(s => sub.includes(s.key));
-                  s.subFeature = SubFeature;
+        ability.forEach(tal => {
+
+          // пропускаем особенности с массивом уровней
+          if (Array.isArray(tal.level))
+            return;
+
+          /*
+            FlagFeatures (Doctrine и подобное)
+          */
+
+          if (tal.flagFeatures?.length) {
+
+            tal.flagFeatures.forEach(flag => {
+
+              const features =
+                Object.values(flag.value);
+
+              tal.flagOptions =
+                List.filter(item =>
+                  features.includes(item.key)
+                );
+
+            });
+
+          }
+
+          /*
+            Action
+          */
+
+          let action;
+
+          if (tal.item) {
+            action = this.actionList.find(
+              ac => ac.key === tal.item.key
+            );
+          }
+
+          /*
+            Skill Choice
+          */
+
+          if (tal.skill?.includes("all")) {
+
+            tal.options = skill;
+            tal.type = "Skill Choice";
+
+          }
+
+          /*
+            Weapon Choice
+          */
+
+          if (tal.weapon?.includes("all")) {
+
+            tal.options = weapon;
+            tal.type = "Weapon Choice";
+
+          }
+
+          abilityList.push({
+
+            name: tal.name,
+
+            key: tal.key,
+
+            description:
+              tal.description ||
+              tal.snippet ||
+              "",
+
+            level:
+              typeof tal.level === "object"
+                ? tal.level.value
+                : tal.level,
+
+            type: tal.type,
+
+            options:
+              tal.options || [],
+
+            selected:
+              tal.selected || "",
+
+            oldValue:
+              tal.oldValue || "",
+
+            grants:
+              (tal.grantedFeatures || []).map(g => {
+
+                if (
+                  typeof g === "string" &&
+                  g.includes("{item|flags.system.rulesSelections.")
+                ) {
+
+                  return tal.selected;
+
                 }
 
+                return g;
 
-              })
-            }
+              }),
 
+            choiceSet:
+              tal.choiceSet || [],
+
+            rules:
+              tal.rules || [],
+
+            action,
+
+            value:
+              tal.value
 
           });
 
-          //Выкидываем из списка особенности, уровень которых перечислен в массиве
-          ability = ability.filter((ab) => !Array.isArray(ab.level));
+        });
 
-          let abilityList = [];
-          let ac = this.actionList;
-          ability.forEach((tal) => {
-            let action;
-            if (tal.item)
-              action = ac.find(ac => ac.key === tal.item.key)
-            const ability1 = {
-              name: tal.name,
-              key: tal.key,
-              description: tal.snippet,
-              modification: tal.modification,
-              level: tal.level,
-              subFeature: tal.subFeature,
-              options: tal.options,
-              selected: tal.selected,
-              action: action ? action : undefined,
-              type: tal.type,
-              value: tal.value,
-            };
-            if (ability1.level <= level) abilityList.push(ability1);
-          }
+        /*
+
+        /*
+      ==========================================
+      Оставляем доступные по уровню
+      ==========================================
+    */
+
+        finalData.archetypeFeatures = abilityList
+          .filter(feature => feature.level <= level)
+          .sort((a, b) => a.level - b.level);
+
+        /*
+          ==========================================
+          Восстанавливаем выборы персонажа
+          ==========================================
+        */
+
+        finalData.archetypeFeatures.forEach(feature => {
+
+          const saved = enc.find(
+            e => e.key === feature.key
           );
-          //Смотрим все особенности, и делаем их по тем уровням, что в массиве
-          abilityInArray.forEach((ab) => {
-            const tal = ab;
-            ab.level.forEach((talent) => {
-              const ability1 = {
-                name: tal.name,
-                key: tal.key + talent,
-                description: tal.snippet,
-                modification: tal.modification,
-                subFeature: tal.subFeature,
-                level: talent,
-                options: tal.options,
-                selected: tal.selected,
-                type: tal.type,
-                value: tal.value,
-              };
 
-              //Кладем в общий "пул"
-              if (talent <= level) abilityList.push(ability1);
-            });
-          });
+          if (!saved)
+            return;
 
-          // abilityList = [
-          //     ...abilityList, ...SubFeature
-          //   ]
+          feature.selected =
+            saved.selected || "";
 
-          if (ability.length > 0) {
-            //Если нашли все особенности, то кладем их в каждый класс
-            finalData.archetypeFeatures = abilityList;
-          }
-          finalData.archetypeFeatures = abilityList.filter(t => t.level <= level).sort((a, b) => a.level - b.level);
-          this.characterArchetype = finalData;
+          feature.selectedOptions =
+            saved.selectedOptions || [];
+
+        });
+
+        /*
+          ==========================================
+          Выдаем эффекты новых особенностей
+          ==========================================
+        */
+
+        this.characterArchetype = finalData;
+
+
+        /*
+          ==========================================
+          Обновляем список особенностей
+          ==========================================
+        */
+
+        this.$set(
+          this.characterArchetype,
+          "archetypeFeatures",
+          [...finalData.archetypeFeatures]
+        );
+
+        /*
+          ==========================================
+          Традиция магии
+          ==========================================
+        */
+
+        if (this.characterArchetype) {
+
+          this.characterArchetype.spellTradition =
+            this.$store.getters[
+              "characters/characterSpellTraditionsById"
+            ](this.characterId);
+
         }
+
+        this.loading = false;
+
+      } catch (e) {
+
+        console.error(e);
+
+        this.loading = false;
+
       }
-
-      if (this.characterArchetype)
-        this.characterArchetype.spellTradition = this.$store.getters['characters/characterSpellTraditionsById'](this.characterId);
-
 
     },
     handleClick(e, level, value) {
@@ -4407,10 +4619,43 @@ export default {
       }
     },
     attackModifier(gear) {
+      //Если есть группа оружия у класса
+      const enc = this.$store.getters['characters/characterEnhancementsById'](this.characterId).filter(s => s.level <= this.characterLevel());
+      const group = enc.find(s => s.key === "fighter-weapon-mastery") ? enc.find(s => s.key === "fighter-weapon-mastery") : "";
+      const groupLegend = enc.find(s => s.key === "weapon-legend") ? enc.find(s => s.key === "weapon-legend") : "";
+
+
+      const category = enc.find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (item.key === gear.name));
+      const trait = enc.find(item => item.type === 'Weapon' && item.mode === 'Upgrade' && (gear.traits.includes(item.key)));
 
       const modAbility = gear.range === null ? this.characterAttributesEnhanced["strength"] : this.characterAttributesEnhanced["dexterity"];
 
-      const modProfiency = this.characterArchetype ? this.skillAttack[gear.category] : "U";
+
+      let categoryItem = "";
+
+
+      categoryItem = gear.category ? gear.category : "";
+      // if (trait)
+      //   categoryItem = gear.category === "advanced" ? "martial" : "simple";
+
+      categoryItem = gear.category ? gear.category : "";
+      let modProfiency = "";
+
+      //Группы Оружия и их разбивка
+      if (groupLegend !== "" && groupLegend.selected === gear.group) {
+
+        modProfiency = gear.category !== "advanced" ? "L" : "M"
+      }
+      if (group !== "" && group.selected === gear.group) {
+        //Смотрим проф у класса, если нет особенности с группой -- для воина
+        modProfiency = gear.category !== "advanced" ? "M" : "E"
+        if (this.skillAttack[gear.category] === "L") modProfiency = "L"
+      }
+
+      if (modProfiency === "")
+        modProfiency = this.skillAttack[gear.category] || "U";
+
+
 
       const modLevel = modProfiency !== "U" ? this.characterLevel() : 0;
       const rune = this.weaponRunePotency.find(t => gear.runes && t.key === gear.runes.potency) ? this.weaponRunePotency.find(t => gear.runes && t.key === gear.runes.potency).addItemBonus : 0;

@@ -122,18 +122,7 @@
 
                   <div class="expanded-wrapper">
 
-                    <div class="mb-3">
 
-                      <strong>
-                        {{ item.name }}
-                      </strong>
-
-                      <div class="table-description" v-html="item.description
-                        .split('.')
-                        .find(s => s.trim() !== '') + '.'
-                        " />
-
-                    </div>
 
 
                     <CardItem :item="item" />

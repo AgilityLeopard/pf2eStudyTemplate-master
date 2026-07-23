@@ -568,7 +568,7 @@ export default {
     },
     computed: {
         visibleFields() {
-            console.log('type:', this.editItem.type);
+
             return this.fields.filter(field =>
                 field.showFor.includes(this.editItem.type)
             );

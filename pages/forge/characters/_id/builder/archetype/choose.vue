@@ -160,7 +160,7 @@ export default {
     sources: {
       handler(newVal) {
         if (newVal) {
-          this.getAbilityList(newVal);
+          // this.getAbilityList(newVal);
           this.getArchetypeList(newVal);
           // this.loadFactions(newVal);
         }
@@ -183,8 +183,8 @@ export default {
         },
       };
       const { data } = await this.$axios.get(
-        "/api/abilityAncestry/",
-        config.source
+        "/api/abilityAncestry/"
+        // config.source
       );
       this.abilityList = data;
     },
@@ -199,7 +199,7 @@ export default {
       );
 
       //список архетипов
-      const { data } = await this.$axios.get("/api/archetypes/", config);
+      const { data } = await this.$axios.get("/api/archetypes/")//, config);
 
       if (this.abilityList !== undefined) {
         data.forEach((species) => {
@@ -255,7 +255,7 @@ export default {
       }
       // only those that have a HINT indicating they are not only stubs
 
-      this.itemList = data.filter((i) => i.hint);
+      this.itemList = data;
     },
     async loadSpecies(key) {
       if (key) {
@@ -392,8 +392,8 @@ export default {
         archetype: {
           key: item.key,
           value: item.name,
-          cost: item.costs.archetype,
-          tier: item.tier,
+          // cost: item.costs.archetype,
+          // tier: item.tier,
         },
       });
 
@@ -726,7 +726,7 @@ export default {
     ensurePrerequisites(item) {
       const archetype = item;
 
-      if (archetype && archetype.prerequisites.length > 0) {
+      if (archetype.prerequisites && archetype.prerequisites.length > 0) {
         archetype.prerequisites.forEach((prerequisite) => {
           // { group: 'attributes', value: 'willpower', threshold: 3, }
           switch (prerequisite.group) {

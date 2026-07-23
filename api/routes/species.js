@@ -21,7 +21,11 @@ router.get('/', (request, response) => {
         }
     }
 
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    // response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.set(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.status(200).json(items);
 });
 
@@ -31,6 +35,10 @@ router.get('/:slug', (request, response) => {
 
     const item = speciesRepository.find((archetype) => archetype.key === slug);
 
-    response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    // response.set('Cache-Control', 'public, max-age=3600'); // one hour
+    response.set(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
     response.status(200).json(item);
 });

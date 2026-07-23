@@ -42,7 +42,10 @@
         </v-row>
 
       </v-card>
-
+      <!-- 🧬 TRAITS -->
+      <v-card class="mb-4 pa-4" outlined>
+        <trait-view v-if="item.trait" :item="item" />
+      </v-card>
       <!-- ⚙️ Основные характеристики -->
       <v-row class="d-flex" align="stretch">
         <v-col cols="12" md="6">
@@ -165,36 +168,60 @@
             <v-expansion-panel-content>
               <div class="feature-text text-with-tooltips" v-if="feature.description" v-html="feature.description">
               </div>
+
+              <v-card v-if="feature.grants && feature.grants.length" class="mt-3 pa-3" outlined>
+
+
+                <h4 class="text-subtitle-1">
+                  Получаемые способности
+                </h4>
+
+                <!-- <v-select v-if="feature.options" v-model="feature.selected" :items="feature.options" item-text="name"
+                  item-value="key" @change="changeSelectedOption(feature)" /> -->
+
+                <div v-for="grant in resolveGrantedFeatures(feature)" :key="grant.key">
+
+
+                  <v-btn text small color="primary" @click="openDialogItem(grant)">
+                    {{ grant.name }}
+                  </v-btn>
+
+
+                </div>
+
+
+              </v-card>
+
               <div class="feature-text text-with-tooltips" v-if="feature.snippet" v-html="feature.snippet"></div>
 
-              <div class="feature-text text-with-tooltips" v-if="feature.action"">
-                    <CardItem :item="feature.action" />
+              <div class="feature-text text-with-tooltips" v-if="feature.action">
+                <CardItem :item="feature.action" />
               </div>
 
               <!-- Выбор -->
-              <v-select v-if="feature.options" v-model="feature.selected" :items="feature.options || []"
-                :disabled="!feature.options || !feature.options.length" item-text="name" item-value="key" dense outlined
-                @change="changeSelectedOption(feature, item)" />
+              <v-select v-if="feature.options && feature.options.length" v-model="feature.selected"
+                :items="feature.options || []" :disabled="!feature.options || !feature.options.length" item-text="name"
+                :item-value="getOptionValue" dense outlined @change="changeSelectedOption(feature)" />
 
               <!-- Выбранная опция -->
-              <v-card v-if="feature.selected" class="preview-section" outlined>
+              <v-card v-if="getSelectedOption(feature)" class="preview-section" outlined>
                 <div v-if="getSelectedOption(feature)">
                   <trait-view :item="getSelectedOption(feature)" />
 
-                  <div class="feature-text" v-if="getSelectedOption(feature).snippet"
-                    v-html="getSelectedOption(feature).snippet">
+                  <div class="feature-text" v-if="getSelectedOption(feature).description"
+                    v-html="getSelectedOption(feature).description">
                   </div>
                   <v-divider></v-divider>
 
                   <div class="feature-text" v-if="getSelectedOption(feature).spell">
 
-                    Заклинание Музы: <v-btn text small color="primary" class="pa-0 ml-1"
+                    Заклинание: <v-btn text small color="primary" class="pa-0 ml-1"
                       @click="openDialogItem(GetSpell(getSelectedOption(feature).spell))">
                       {{ SpellName(getSelectedOption(feature).spell) }}
                     </v-btn>
 
 
-                    Черта Музы: <v-btn text small color="primary" class="pa-0 ml-1"
+                    Черта: <v-btn text small color="primary" class="pa-0 ml-1"
                       @click="openDialogItem(GetFeat(getSelectedOption(feature).feat))">
                       {{ GetFeat(getSelectedOption(feature).feat).name }}
                     </v-btn>
@@ -216,16 +243,6 @@
                   <v-divider></v-divider>
                   <p></p>
 
-                  <!-- <div v-for="subItem in selectedOption.subFeature" :key="subItem.key" class="subfeature-option">
-                    <label>
-                      {{ subItem.key }}
-                      <input type="radio" 
-                        v-model="selectedOption.selectedSubFeature" :value="subItem.key"
-                        @input="changeSelectedSubFeature(selectedOption, subItem.key)" />
-                      {{ subItem.name }} (Уровень {{ subItem.level }})
-                    </label>
-                  </div> -->
-
 
 
                   <v-select v-if="getSelectedOption(feature).options" v-model="feature.selectedOptions"
@@ -236,15 +253,31 @@
                       getSelectedOption(feature).options
                     )" />
 
-                  <v-card v-for="sub in getSelectedOption(feature).subFeature" :key="sub.key" class="preview-section">
+                  <v-card v-for="sub in getSelectedOption(feature).grantedFeatures" :key="sub.key"
+                    class="preview-section">
 
                     <div class="feature-header">
                       <span>{{ sub.name }}</span>
                       <span class="grey--text">Ур. {{ sub.level }}</span>
                     </div>
 
-                    <div v-if="sub.snippet" class="feature-text">
-                      {{ sub.snippet }}
+                    <div v-if="sub.description" class="feature-text" v-html="sub.description">
+                    </div>
+
+                    <div v-if="feature.grants && feature.grants.length" class="mt-3">
+
+                      <v-divider></v-divider>
+
+                      <h4 class="mt-2">
+                        Выдаёт:
+                      </h4>
+
+
+                      <v-chip v-for="grant in feature.grants" :key="grant.key || grant" small class="mr-1">
+                        {{ grant.name || grant }}
+                      </v-chip>
+
+
                     </div>
 
 
@@ -256,6 +289,7 @@
                 </div>
               </v-card>
             </v-expansion-panel-content>
+
           </v-expansion-panel>
         </v-expansion-panels>
       </v-card>
@@ -309,6 +343,7 @@ export default {
       deityList: undefined,
       talentList: undefined,
       oldValue: undefined,
+      abilityFeatureCache: [],
       terms: [
         { term: 'Strike', tooltip: 'Тип базовой атаки персонажа.' },
         { term: 'Off-Guard', tooltip: 'Состояние врага, когда он уязвим.' },
@@ -484,17 +519,76 @@ export default {
       this.talentList = data.data;
     },
     async getAbilityList(sources) {
+
       const config = {
         params: {
-          source: sources.join(","),
-        },
+          source: sources.join(",")
+        }
       };
+
+
       const { data } = await this.$axios.get(
-        "/api/abilityAncestry/",
-        config.params
+        "/api/abilityAncestry/"
       );
 
+
+
       this.abilityList = data;
+
+    },
+    normalizeFeatureRules(ab) {
+
+      if (!ab.rules)
+        return ab;
+
+
+      ab.choiceSet = null;
+      ab.flagFeatures = [];
+
+
+      ab.rules.forEach(rule => {
+
+
+        /*
+            ChoiceSet
+        */
+
+
+
+
+        /*
+            flags.system
+        */
+
+        if (
+          rule.key === "ActiveEffectLike" &&
+          rule.path?.startsWith("flags.system.")
+        ) {
+
+
+          ab.flagFeatures.push({
+
+            path:
+              rule.path.replace(
+                "flags.system.",
+                ""
+              ),
+
+            value:
+              rule.value
+
+          });
+
+
+        }
+
+
+      });
+
+
+
+      return ab;
+
     },
     async getActionList(sources) {
       const config = {
@@ -515,213 +609,497 @@ export default {
       });
 
     },
+
+
     async loadArchetype(key) {
       this.loading = true;
 
-      let finalData = {};
-      const { data } = await this.$axios.get(`/api/archetypes/${key}`);
-      finalData = data;
+      try {
+        const { data } = await this.$axios.get(`/api/archetypes/${key}`);
+        const finalData = data;
 
-      // finalData = this.enrichArchetypeFeatures(finalData);
-      const level = this.$store.getters["characters/characterLevelById"](
-        this.characterId
-      );
+        const level = this.$store.getters[
+          "characters/characterLevelById"
+        ](this.characterId);
 
-      const skill = this.skillRepository;
+        const List = this.abilityList || [];
 
-      const weapon = this.wargearList
-        ? this.wargearList.filter((s) => ["melee", "ranged"].includes(s.type))
-        : undefined;
-      const enc = this.$store.getters["characters/characterEnhancementsById"](
-        this.characterId
-      );
+        const enc = this.$store.getters[
+          "characters/characterEnhancementsById"
+        ](this.characterId) || [];
 
-      if (this.abilityList !== undefined && this.actionList !== undefined) {
-        const lowercaseKeywords = finalData.archetypeFeatures.map((s) =>
-          s.toUpperCase()
+        const skill = this.skillRepository;
+
+        const weapon = this.weaponGroup || [];
+
+        /*
+            Новая система:
+
+            archetypeFeatures теперь содержит ключи особенностей.
+            Ищем их в abilityList.
+        */
+
+        const featureKeys = (finalData.archetypeFeatures || [])
+          .map(x => x.toString().toLowerCase());
+
+
+        let ability = List.filter(item =>
+          featureKeys.includes(
+            item.key.toString().toLowerCase()
+          )
         );
 
-        //Список особенностей
-        const List = this.abilityList;
-        let ability = List.filter((talent) =>
-          lowercaseKeywords.includes(talent.key.toString().toUpperCase())
-        );
 
-        const abilityInArray = [];
-        let SubFeature = [];
         let abilityList = [];
 
-        //Сюда кладем то, что дается больше одного раза и смотрим под-опции
 
-        ability.forEach((ab) => {
-          if (Array.isArray(ab.level)) {
-            abilityInArray.push(ab);
+
+        // ==========================================
+        // Обработка Choices и Grants (PF2 Remaster)
+        // ==========================================
+
+        ability.forEach(ab => {
+          // this.normalizeFeatureRules(ab);
+          const saved = enc.find(
+            e => e.key === ab.key
+          );
+
+
+          // сохраняем старый выбор персонажа
+          ab.selected = saved
+            ? saved.selected
+            : "";
+
+
+          ab.oldValue = saved
+            ? saved.selected
+            : "";
+
+
+          //всякие доктрины, музы и прочее
+          const choiseSetRule = ab.rules.find(s => s.key === "ChoiceSet")
+
+          if (choiseSetRule) {
+
+            let tags = [];
+            const choices = choiseSetRule.choices;
+
+            // 1. Список готовых вариантов
+            if (Array.isArray(choices)) {
+              // divineFont и подобные
+              ab.choiceSet = tags;
+              ab.options = choices;
+              return;
+            }
+
+            // 2. Фильтр
+            if (choices?.filter) {
+
+              const filter = choices.filter;
+
+              // Пока поддерживаем только строковые item:tag
+              const tags = filter
+                .filter(f => typeof f === "string")
+                .filter(f => f.startsWith("item:tag:"))
+                .map(f => f.replace("item:tag:", ""));
+              ab.choiceSet = tags;
+              ab.options = List.filter(item =>
+                tags.some(tag =>
+                  item.traits?.includes(tag) ||
+                  item.otherTags?.includes(tag) ||
+                  item.tags?.includes(tag)
+                )
+              );
+
+              return;
+            }
+
+            if (choices && choices === "weaponGroups") {
+
+              // const filter = choices.filter;
+
+              // Пока поддерживаем только строковые item:tag
+              // const tags = filter
+              //   .filter(f => typeof f === "string")
+              //   .filter(f => f.startsWith("item:tag:"))
+              //   .map(f => f.replace("item:tag:", ""));
+
+              // ab.choiceSet = tags;
+              ab.options = weapon;
+
+              return;
+            }
+            // 3. Всё остальное пока игнорируем
+            console.warn("Unsupported ChoiceSet", choiseSetRule);
+
+            // tags = choiseSetRule.choices.filter.map(s => s.replace("item:tag:", ""));
+            //Кладем найденные опции в options
+            ab.choiceSet = tags;
+            ab.options = List.filter(item =>
+              tags.some(tag =>
+                item.traits?.includes(tag) ||
+                item.otherTags?.includes(tag) ||
+                item.tags?.includes(tag)
+              )
+            );
+
+          }
+
+          // if (ab.choiceSet) {
+
+          //   const tags =
+          //     ab.choiceSet.choices;
+
+
+          //   ab.options =
+          //     List.filter(item => {
+
+          //       return tags.some(tag =>
+          //         item.traits?.includes(tag) ||
+          //         item.otherTags?.includes(tag) ||
+          //         item.tags?.includes(tag)
+          //       );
+
+          //     });
+
+
+          //   ab.choice =
+          //   {
+          //     type: "tag",
+          //     flag:
+          //       ab.choiceSet.flag
+          //   };
+
+          // }
+
+
+          /*
+              Grants
+      
+              Например:
+      
+              grants:[
+                  "amulets-abeyance"
+              ]
+      
+              превращаем в реальные объекты
+          */
+
+          if (ab.grants?.length) {
+
+            ab.grantedFeatures =
+              ab.grants;
+
+          }
+          else {
+
+            ab.grantedFeatures = [];
+
           }
 
 
 
-          if (ab.options) {
-            if (ab.type.includes("Weapon Group")) {
-              const options = this.weaponGroup.filter((s) =>
-                ab.options.includes(s.group)
-              );
-              const listOption = [];
-              options.forEach((s) => {
-                const op = {
-                  key: s.group,
-                  ...s,
-                };
-                listOption.push(op);
-                ab.options = listOption;
-              });
-            }
+          /*
+              Если у выбранной опции есть grants,
+              тоже подготавливаем их
+      
+          */
 
-            ab.selectedOptions = enc.find((s) => s.key === ab.key)
-              ? enc.find((s) => s.key === ab.key).selectedOptions
-              : "";
+          if (ab.options?.length) {
 
-            ab.options.forEach((s) => {
-              if (s.subFeature) {
-                const sub = s.subFeature;
-                SubFeature = List.filter((s) => sub.includes(s.key));
-                s.subFeature = SubFeature;
-              }
-            });
+            ab.options.forEach(option => {
 
-            if (ab.type === "Class Feature") {
-              const options = List.filter((ability) =>
-                ab.options.includes(ability.key)
-              );
+              if (option.grants?.length) {
 
-              ab.options = options;
-            }
-
-            ab.selected = enc.find((s) => s.key === ab.key)
-              ? enc.find((s) => s.key === ab.key).selected
-              : "";
-
-
-
-            ab.oldValue = enc.find((s) => s.key === ab.key)
-              ? enc.find((s) => s.key === ab.key).selected
-              : "";
-
-            //Наподобие подкласса Жреца
-            ab.options.forEach((s) => {
-              if (s.skill && !Array.isArray(s.skill)) {
-                s.skill = s.skill ? [s.skill] : [];
-              }
-
-              if (s.subFeature) {
-                const sub = s.subFeature;
-                SubFeature = List.filter((s) => sub.includes(s.key));
-                s.subFeature = SubFeature;
-
-                if (ab.selected && ab.options.find(s => s.key === ab.selected)) {
-
-                  ab.options.find(s => s.key === ab.selected).selectedSubFeature = enc.find((t) => t.key === ab.options.find(s => s.key === ab.selected).key)
-                    ? enc.find((t) => t.key === ab.options.find(s => s.key === ab.selected).key).selected
-                    : "";
-                  ab.options.find(s => s.key === ab.selected).selectedSubFeatureOldValue = enc.find((t) => t.key === ab.options.find(s => s.key === ab.selected).key)
-                    ? enc.find((t) => t.key === ab.options.find(s => s.key === ab.selected).key).selected
-                    : "";
-                }
+                option.subFeature =
+                  option.grantedFeatures;
 
               }
+              else {
+
+                option.grantedFeatures = [];
+
+              }
+
             });
 
           }
+
+
         });
 
-        //Выкидываем из списка особенности, уровень которых перечислен в массиве
-        ability = ability.filter((ab) => !Array.isArray(ab.level));
+        // ==========================================
+        // Формирование списка особенностей персонажа
+        // ==========================================
 
-        let ac = this.actionList;
-        ability.forEach((tal) => {
+        ability.forEach(tal => {
+
+          if (tal.flagFeatures?.length) {
+
+            tal.flagFeatures.forEach(flag => {
+
+
+              const features =
+                Object.values(flag.value);
+
+
+              tal.flagOptions =
+                List.filter(item =>
+                  features.includes(item.key)
+                );
+
+
+            });
+
+
+          }
           let action;
-          if (tal.item) action = ac.find((ac) => ac.key === tal.item.key);
 
-          if (tal.skill) {
-            if (tal.skill?.includes("all")) {
-              tal.options = skill;
-              tal.type = "Skill Choice";
-              tal.selected = enc.find((s) => s.key === tal.key)
-                ? enc.find((s) => s.key === tal.key).selected
-                : "";
-            }
+
+          if (tal.item) {
+            action = this.actionList.find(
+              ac => ac.key === tal.item.key
+            );
           }
-          if (tal.weapon) {
-            if (tal.weapon?.includes("all")) {
-              tal.options = weapon;
-              tal.type = "Weapon Choice";
-              tal.selected = enc.find((s) => s.key === tal.key)
-                ? enc.find((s) => s.key === tal.key).selected
-                : "";
-            }
+
+
+
+          /*
+              Если способность даёт выбор навыка
+      
+              Например:
+              choices -> skill
+      
+          */
+
+          if (tal.skill?.includes("all")) {
+
+            tal.options = skill;
+            tal.type = "Skill Choice";
+
+            const saved = enc.find(
+              s => s.key === tal.key
+            );
+
+            tal.selected = saved
+              ? saved.selected
+              : "";
+
           }
+
+
+
+          /*
+              Если способность выбирает оружие
+          */
+
+          if (tal.weapon?.includes("all")) {
+
+            tal.options = weapon;
+            tal.type = "Weapon Choice";
+
+            const saved = enc.find(
+              s => s.key === tal.key
+            );
+
+            tal.selected = saved
+              ? saved.selected
+              : "";
+
+          }
+
+
 
           const ability1 = {
+
             name: tal.name,
+
             key: tal.key,
-            description: tal.snippet,
-            modification: tal.modification,
-            level: tal.level,
-            subFeature: tal.subFeature,
-            options: tal.options,
-            selected: tal.selected,
-            selectedOptions: tal.selectedOptions,
-            selectedSubFeature: tal.selectedSubFeature || undefined,
-            selectedSubFeatureOldValue: tal.selectedSubFeature || undefined,
-            oldValue: tal.oldValue || undefined,
-            action: action ? action : undefined,
-            type: tal.type,
-            value: tal.value,
+
+            description:
+              tal.description ||
+              tal.snippet ||
+              "",
+
+
+            level:
+              typeof tal.level === "object"
+                ? tal.level.value
+                : tal.level,
+
+
+            type:
+              tal.type,
+
+
+            options:
+              tal.options || [],
+
+
+            selected:
+              tal.selected || "",
+
+
+            oldValue:
+              tal.oldValue || "",
+
+
+
+            /*
+                Новое
+    
+                Все выданные способности
+            */
+
+            grants:
+              (tal.grantedFeatures || []).map(g => {
+
+                if (
+                  typeof g === "string" &&
+                  g.includes("{item|flags.system.rulesSelections.")
+                ) {
+
+                  return tal.selected;
+
+                }
+
+                return g;
+
+              }),
+
+
+            choiceSet: tal.choiceSet || [],
+            /*
+                Оставляем rules
+                если понадобятся дальше
+    
+            */
+
+            rules:
+              tal.rules || [],
+
+
+
+            action:
+              action,
+
+
+            value:
+              tal.value
+
           };
 
-          if (ability1.level <= level) abilityList.push(ability1);
-        });
-        //Смотрим все особенности, и делаем их по тем уровням, что в массиве
-        abilityInArray.forEach((ab) => {
-          const tal = ab;
-          ab.level.forEach((talent) => {
-            const ability1 = {
-              name: tal.name,
-              key: tal.key + talent,
-              description: tal.snippet,
-              modification: tal.modification,
-              subFeature: tal.subFeature,
-              level: talent,
-              options: tal.options,
-              selected: tal.selected,
-              type: tal.type,
-              value: tal.value,
-            };
 
-            //Кладем в общий "пул"
-            if (talent <= level) abilityList.push(ability1);
-          });
+
+          if (ability1.level <= level) {
+
+            abilityList.push(
+              ability1
+            );
+
+          }
+
+
         });
 
 
+        // ==========================================
+        // Финальная обработка списка особенностей
+        // ==========================================
 
-        if (ability.length > 0) {
-          //Если нашли все особенности, то кладем их в каждый класс
-          finalData.archetypeFeatures = abilityList;
-        }
+
+        // оставляем только доступные по уровню
         finalData.archetypeFeatures = abilityList
-          .filter((t) => t.level <= level)
-          .sort((a, b) => a.level - b.level);
+          .filter(feature =>
+            feature.level <= level
+          )
+          .sort((a, b) =>
+            a.level - b.level
+          );
+
+
+
+        // ==========================================
+        // Сохраняем выбранные значения
+        // ==========================================
+
+        finalData.archetypeFeatures.forEach(feature => {
+
+          const saved = enc.find(
+            e => e.key === feature.key
+          );
+
+
+          if (saved) {
+
+            feature.selected =
+              saved.selected || "";
+
+
+            feature.selectedOptions =
+              saved.selectedOptions || [];
+
+
+          }
+
+        });
+
+
+
+        // ==========================================
+        // Установка данных архетипа
+        // ==========================================
+
+        this.item = finalData;
+
+        finalData.archetypeFeatures.forEach(feature => {
+
+
+          const exists =
+            enc.find(e =>
+              e.key === feature.key
+            );
+
+
+
+          if (!exists) {
+
+            this.addFeatureEffects(
+              feature,
+              feature.key
+            );
+          }
+
+
+        });
+
+        this.$set(
+          this.item,
+          "archetypeFeatures",
+          [
+            ...finalData.archetypeFeatures
+          ]
+        );
+
+
+        this.loading = false;
+
+
+
+
+      } catch (e) {
+
+        console.error(
+          e
+        );
+
+        this.loading = false;
+
       }
 
-      this.item = finalData;
-      //this.item.archetypeFeatures = [];
-      this.$set(this.item, "archetypeFeatures", [
-        ...finalData.archetypeFeatures,
-      ]);
-      // this.item.archetypeFeatures = finalData.archetypeFeatures;
 
-      this.loading = false;
     },
+
     highlightedText(text) {
 
 
@@ -736,8 +1114,12 @@ export default {
       return text;
     },
     getSelectedOption(feature) {
-      if (!feature?.options) return null;
-      return feature.options.find(o => o.key === feature.selected) || null;
+      if (!feature?.options?.length || !feature.selected)
+        return null;
+
+      return feature.options.find(
+        o => o.key === feature.selected
+      ) || null;
     },
     SpellName(spell) {
       const key = this.textToKebab(spell);
@@ -785,337 +1167,1704 @@ export default {
         this.characterId
       );
     },
-    removeFeatureEffects(item, feature) {
-      const id = this.characterId;
+    removeFeatureEffects(feature) {
 
-      if (!item) return;
+      const id =
+        this.characterId;
 
-      if (item.focusSpell) {
-        this.$store.commit("characters/removeCharacterFocusSpell", {
-          id,
-          key: this.textToKebab(item.focusSpell),
-          featureKey: feature.key,
-          type: feature.type,
-          source: "archetype"
-        });
-      }
 
-      if (item.skill) {
-        const skills = Array.isArray(item.skill)
-          ? item.skill
-          : [item.skill];
+      if (!feature)
+        return;
 
-        skills.forEach(s => {
-          this.$store.commit("characters/removeSkillSheet", {
-            id,
-            key: s,
-            level: feature.level,
-            type: "skill",
-            optional: true
-          });
-        });
-      }
 
-      if (item.modification) {
-        this.$store.commit(
-          "characters/removeCharacterModificationByFeature",
-          {
-            id,
-            featureKey: feature.key
+
+      const grants =
+        this.resolveGrantedFeatures(feature);
+
+
+
+      /*
+          Удаляем обычные выданные особенности
+      */
+      // сначала применяем профициенси дочерних особенностей
+      grants.forEach(item => {
+
+        const grantedEffects =
+          this.resolveGrantedFeatures(feature);
+
+
+        grantedEffects.forEach(item => {
+
+          if (item.rules) {
+
+            this.removeActiveEffects(item);
+
           }
-        );
-      }
-    },
 
-    addFeatureEffects(item, feature) {
-      const id = this.characterId;
-
-      if (!item) return;
-
-      if (item.focusSpell) {
-        this.$store.commit("characters/addCharacterFocusSpell", {
-          id,
-          key: this.textToKebab(item.focusSpell),
-          featureKey: feature.key,
-          type: feature.type,
-          source: "archetype"
         });
-      }
 
-      if (item.skill) {
-        const skills = Array.isArray(item.skill)
-          ? item.skill
-          : [item.skill];
 
-        skills.forEach(s => {
-          this.$store.commit("characters/addSkillSheet", {
-            id,
-            key: s,
-            level: feature.level,
-            type: "class",
-            optional: true
+      });
+
+      grants.forEach(item => {
+
+
+
+        /*
+            Фокусные заклинания
+        */
+
+        if (item.focusSpell) {
+
+
+          this.$store.commit(
+            "characters/removeCharacterFocusSpell",
+            {
+
+              id,
+
+              key:
+                this.textToKebab(
+                  item.focusSpell
+                ),
+
+              featureKey:
+                feature.key,
+
+              type:
+                feature.type,
+
+              source:
+                "archetype"
+
+            }
+          );
+
+
+        }
+
+        /*
+            Навыки
+        */
+
+        if (item.skill) {
+
+
+          const skills =
+            Array.isArray(item.skill)
+              ? item.skill
+              : [item.skill];
+
+
+
+          skills.forEach(skill => {
+
+
+            this.$store.commit(
+              "characters/removeSkillSheet",
+              {
+
+                id,
+
+                key:
+                  skill,
+
+                level:
+                  feature.level,
+
+                type:
+                  "skill",
+
+                optional:
+                  true
+
+              }
+            );
+
+
           });
+
+
+        }
+
+
+
+
+        /*
+            Модификации
+        */
+        this.removeProficiencyModifiers(feature);
+        if (item.modification) {
+          const grantedSkills = this.collectGrantedSkills(item);
+          grantedSkills.forEach(skill => {
+
+
+            this.$store.commit(
+              "characters/removeSkillSheet",
+              {
+
+                id,
+
+                key:
+                  skill,
+
+                level:
+                  feature.level,
+
+                type:
+                  "class",
+
+                optional:
+                  true
+
+              }
+            );
+
+
+          });
+
+
+
+          this.$store.commit(
+            "characters/removeCharacterModificationByFeature",
+            {
+
+              id,
+
+              featureKey:
+                feature.key
+
+            }
+          );
+
+
+        }
+
+
+      });
+
+
+      this.removeActiveEffects(feature);
+      this.$store.commit(
+        "characters/removeCharacterModificationByFeature",
+        {
+
+          id:
+            this.characterId,
+
+
+          featureKey:
+            feature.key
+
+        }
+      );
+      /*
+          Удаляем PF2 rules
+      */
+
+      if (
+        feature.rules &&
+        feature.rules.length
+      ) {
+
+
+        feature.rules.forEach(rule => {
+
+
+          if (
+            rule.key === "GrantItem"
+          ) {
+
+
+            const key =
+              rule.uuid ||
+              rule.item;
+
+
+
+            this.$store.commit(
+              "characters/removeCharacterClassModFeature",
+              {
+
+                id,
+
+
+                content: {
+
+                  key,
+
+
+                  source:
+                    "archetype",
+
+
+                  featureKey:
+                    feature.key
+
+                }
+
+              }
+            );
+
+
+          }
+
+
         });
+
+
       }
 
-      if (item.modification) {
-        const mods = Array.isArray(item.modification)
-          ? item.modification
-          : [item.modification];
 
-        this.$store.commit("characters/addCharacterModifications", {
-          id,
+
+    },
+    removeProficiencyModifiers(feature) {
+
+
+      this.$store.commit(
+        "characters/removeCharacterModificationByFeature",
+        {
+
+          id:
+            this.characterId,
+
+
+          featureKey:
+            feature.key
+
+        }
+      );
+
+
+    },
+    removeActiveEffects(feature) {
+
+
+      if (!feature?.rules?.length)
+        return;
+
+
+      feature.rules.forEach(rule => {
+
+
+        if (
+          rule.key !== "ActiveEffectLike"
+        )
+          return;
+
+
+        const skillMatch =
+          rule.path.match(
+            /system\.skills\.(.+)\.rank/
+          );
+
+
+        if (skillMatch) {
+
+
+          this.$store.commit(
+            "characters/removeSkillSheet",
+            {
+
+              id:
+                this.characterId,
+
+
+              key:
+                skillMatch[1],
+
+
+              level:
+                feature.level,
+
+
+              type:
+                "class",
+
+
+              optional:
+                true
+
+            }
+          );
+
+
+        }
+
+      });
+
+
+    },
+    resolveGrantedFeatures(feature) {
+
+      if (!feature)
+        return [];
+
+
+      const grants =
+        feature.grants || [];
+
+
+
+      return grants
+        .map(g => {
+
+
+          /*
+              Уже готовый объект
+          */
+
+          if (
+            typeof g === "object"
+          ) {
+
+            return g;
+
+          }
+
+
+
+          /*
+              Строковый ключ
+          */
+
+          if (typeof g === "string") {
+
+            if (g.startsWith("{actor|flags.system.")) {
+
+              const path = g
+                .replace("{actor|flags.system.", "")
+                .replace("}", "");
+
+              const featKey =
+                this.resolveSystemFlag(path);
+
+              return this.abilityList.find(
+                a => a.key === featKey
+              );
+
+            }
+            let key = g;
+
+            // Doctrine и другие ChoiceSet
+            if (
+              key.startsWith("{item|flags.system.rulesSelections.")
+            ) {
+
+              key = feature.selected;
+
+            }
+
+            key = key
+              .replace(
+                "Compendium.pf2e.feats.Item.",
+                ""
+              )
+              .toLowerCase();
+
+            return this.abilityList.find(
+              a =>
+                a.key?.toLowerCase() === key
+            );
+
+          }
+
+
+
+          return null;
+
+
+        })
+        .filter(Boolean);
+
+    },
+    addProficiencyModifiers(item, feature) {
+
+
+      if (!item?.subfeatures?.proficiencies)
+        return;
+
+
+      const proficiencies =
+        item.subfeatures.proficiencies;
+
+
+      const modifications = [];
+
+
+      Object.entries(proficiencies)
+        .forEach(([key, data]) => {
+
+
+          if (!data?.rank)
+            return;
+
+
+
+          modifications.push({
+
+            key,
+
+
+            upgrade:
+              this.rank(data.rank),
+
+
+            mode:
+              "Upgrade",
+
+
+            type:
+              this.getProficiencyType(key),
+
+
+            level:
+              item.level.value,
+
+
+            source:
+              "archetype",
+
+
+            featureKey:
+              feature.key
+
+          });
+
+
+        });
+
+
+
+      if (!modifications.length)
+        return;
+
+
+
+      this.$store.commit(
+        "characters/addCharacterModifications",
+        {
+
+          id: this.characterId,
+
+
           content: {
-            modifications: mods.map(m => ({
-              ...m,
-              featureKey: feature.key
-            })),
+            modifications,
+
             source: "archetype"
           }
-        });
-      }
+
+        }
+      );
+
+
+      this.$store.commit(
+        "characters/clearModification",
+        {
+          id: this.characterId,
+          level: this.characterLevel
+        }
+      );
+
+      this.$store.commit(
+        "characters/setModification",
+        {
+          id: this.characterId,
+          level: this.characterLevel
+        }
+      );
+
     },
-    changeSelectedOption(feature, inx) {
-      const level = this.characterLevel;
-      const id = this.characterId;
 
-      // =========================
-      // COMMON PREP
-      // =========================
-
-      const newOptionFeat = feature.options.find(o => o.key === feature.selected);
-      const oldOptionFeat = feature.options.find(o => o.key === feature.oldValue);
-
-      const mod = {
-        key: feature.key,
-        type: feature.type,
-        selected: feature.selected,
-        value: feature.value,
-        level: feature.level,
-        source: "archetype",
+    rank(value) {
+      const ranks = {
+        0: "U",
+        1: "T",
+        2: "E",
+        3: "M",
+        4: "L"
       };
 
 
-      // Always refresh class-mod feature
-      this.$store.commit("characters/clearCharacterPreparedSpell", { id });
-      if (oldOptionFeat)
-        this.changeSelectedSubFeature(oldOptionFeat, undefined)
-      this.$store.commit("characters/clearCharacterClassModFeature", { id, content: mod });
-      this.$store.commit("characters/addCharacterClassModFeature", { id, content: mod });
+      return ranks[value] ?? value;
+    },
+    // addProficiencyModifiers(feature) {
+
+    //   if (!feature?.subfeatures?.proficiencies)
+    //     return;
 
 
-      // =========================
-      // UNIVERSAL REMOVE OLD OPTION
-      // =========================
-
-      if (oldOptionFeat) {
-        const oldOptionFeatOrNot = oldOptionFeat.subFeature ? oldOptionFeat.subFeature : [oldOptionFeat]
-        oldOptionFeatOrNot.forEach(oldOption => {
+    //   const proficiencies =
+    //     feature.subfeatures.proficiencies;
 
 
-
-          // 1) Focus spell
-          if (oldOption.focusSpell) {
-            this.$store.commit("characters/removeCharacterFocusSpell", {
-              id,
-              key: this.textToKebab(oldOption.focusSpell),
-              featureKey: feature.key,
-              type: feature.type,
-              source: "archetype"
-            });
-          }
-
-          // 2) Skill list
-          if (oldOption.skill) {
-            const list = Array.isArray(oldOption.skill) ? oldOption.skill : [oldOption.skill];
-            list.forEach(s => {
-              this.$store.commit("characters/removeSkillSheetSelected", {
-                id, key: s, level: feature.level,
-                selected: feature.oldValue, type: "class", optional: true
-              });
-              this.$store.commit("characters/removeSkillSheet", {
-                id, key: s, level: feature.level,
-                type: "skill", optional: true
-              });
-            });
-          }
-
-          // 3) Additional trained skill (Skill Choice)
-          if (feature.type === "Skill Choice") {
-            const predSkill = this.$store.getters[
-              "characters/characterTrainedAdditionalSkillClassById"
-            ](id);
-
-            if (predSkill) {
-              this.$store.commit("characters/removeSkillSheet", {
-                id, key: predSkill, level: feature.level,
-                type: "class", optional: true
-              });
-            }
-          }
-
-          // 4) Spell traditions
-          if (oldOption.spellTraditions) {
-            this.$store.commit("characters/clearCharacterSpellTraditions", { id });
-          }
-
-          // 4) Spell traditions
-          if (oldOption.spells) {
-            this.$store.commit("characters/clearCharacterSpellTraditions", { id });
-          }
-
-          // 5) Trait
-          if (oldOption.trait) {
-            this.$store.commit("characters/clearCharacterKeywordsByType", {
-              id,
-              type: "sanctification",
-              cascade: true
-            });
-          }
-
-          // 6) Modifications
-          if (oldOption.modification) {
-            this.$store.commit("characters/removeCharacterModificationByFeature", {
-              id, featureKey: feature.key
-            });
-          }
-        })
-      }
+    //   const modifications = [];
 
 
-      // =========================
-      // UNIVERSAL ADD NEW OPTION
-      // =========================
+    //   Object.keys(proficiencies)
+    //     .forEach(key => {
 
-      // 1) Focus spell
-      if (newOptionFeat) {
-        const newOptionFeatOrNot = newOptionFeat.subFeature ? newOptionFeat.subFeature : [newOptionFeat]
-        this.$store.commit("characters/removeCharacterModificationByFeature", {
-          id,
-          featureKey: feature.key
-        });
-        newOptionFeatOrNot.forEach(newOption => {
 
-          if (newOption?.focusSpell) {
-            this.$store.commit("characters/addCharacterFocusSpell", {
-              id,
-              key: this.textToKebab(newOption.focusSpell),
-              featureKey: feature.key,
-              type: feature.type,
-              source: "archetype"
-            });
-          }
+    //       const data =
+    //         proficiencies[key];
 
-          // 2) Skills array
-          if (newOption?.skill && !newOption.isSelected) {
-            const list = Array.isArray(newOption.skill) ? newOption.skill : [newOption.skill];
-            list.forEach(s => {
-              this.$store.commit("characters/addSkillSheet", {
+
+    //       let type = null;
+
+
+    //       if (
+    //         [
+    //           "light",
+    //           "medium",
+    //           "heavy",
+    //           "unarmored"
+    //         ].includes(key)
+    //       ) {
+
+    //         type = "Defence";
+
+    //       }
+
+
+    //       if (
+    //         [
+    //           "simple",
+    //           "martial",
+    //           "advanced",
+    //           "unarmed"
+    //         ].includes(key)
+    //       ) {
+
+    //         type = "Attack";
+
+    //       }
+
+
+    //       if (
+    //         [
+    //           "fortitude",
+    //           "reflex",
+    //           "will"
+    //         ].includes(key)
+    //       ) {
+
+    //         type = "Save";
+
+    //       }
+
+
+
+    //       if (!type)
+    //         return;
+
+
+
+    //       modifications.push({
+
+    //         key,
+
+    //         upgrade:
+    //           this.rank(data.rank),
+
+    //         mode:
+    //           "Upgrade",
+
+    //         type,
+
+
+    //         level:
+    //           feature.level,
+
+
+    //         source:
+    //           "archetype",
+
+
+    //         featureKey:
+    //           feature.key
+
+    //       });
+
+
+    //     });
+
+
+
+    //   if (!modifications.length)
+    //     return;
+
+
+
+    //   this.$store.commit(
+    //     "characters/addCharacterModifications",
+    //     {
+
+    //       id:
+    //         this.characterId,
+
+
+    //       content: {
+
+    //         modifications,
+
+    //         source:
+    //           "archetype"
+
+    //       }
+
+    //     }
+    //   );
+
+    // },
+    addFeatureEffects(item, feature) {
+
+      const id =
+        this.characterId;
+
+      this.addProficiencyModifiers(
+        item,
+        feature
+      );
+
+      if (!feature)
+        return;
+
+
+
+      const grants =
+        this.resolveGrantedFeatures(feature);
+
+
+
+
+      grants.forEach(item => {
+
+
+
+        /*
+            PF2 способность
+            добавленная через GrantItem
+    
+            НЕ добавляем напрямую,
+            она идёт через rules
+        */
+
+        if (
+          item.rules &&
+          item.rules.length
+        ) {
+
+          return;
+
+        }
+
+
+
+        /*
+            Навыки
+        */
+
+        if (item.skill) {
+
+
+          const skills =
+            Array.isArray(item.skill)
+              ? item.skill
+              : [item.skill];
+
+
+
+          skills.forEach(skill => {
+
+
+            this.$store.commit(
+              "characters/addSkillSheet",
+              {
+
                 id,
-                key: s,
-                level: feature.level,
-                type: "class",
-                optional: true,
-                selected: feature.selected,
-                combinded: false
-              });
-            });
-          }
 
-          // 3) Skill Choice (old PF mechanics)
-          if (feature.type === "Skill Choice") {
-            const key = newOption.key;
+                key:
+                  skill,
 
-            this.$store.commit("characters/setCharacterAdditionalTrainedClassSkill", {
-              id,
-              payload: { key: 1, value: key }
-            });
+                level:
+                  feature.level,
 
-            this.$store.commit("characters/addSkillSheet", {
-              id, key, level: feature.level, type: "class", optional: true
-            });
-          }
+                type:
+                  "class",
 
-          // 3) Spell traditions
-          if (newOption.spells) {
-            this.$store.commit("characters/setCharacterSpell", {
-              id,
-              value: newOption.spells
-            });
-          }
+                optional:
+                  true
 
-          // 4) Spell traditions
-          if (newOption?.spellTraditions && !newOption.isSelected) {
-            this.$store.commit("characters/setCharacterSpellTraditions", {
-              id,
-              value: newOption.spellTraditions
-            });
-          }
-
-          // 5) Trait
-          if (newOption?.trait && newOption.trait !== "Без" && !newOption.isSelected) {
-            this.$store.commit("characters/addCharacterKeyword", {
-              id,
-              keyword: {
-                name: newOption.trait,
-                source: "archetype",
-                type: "sanctification"
               }
-            });
-          }
-
-          // 6) Modifications
-          if (newOption?.modification && !newOption.isSelected) {
-            const mod1 = []
-            const key = feature.key;
+            );
 
 
-            // mod1.push({
-            //   ...newOption.modification,
-            //   featureKey: key,
-            // });
+          });
 
-            const mods = Array.isArray(newOption.modification)
-              ? newOption.modification
-              : [newOption.modification];
 
-            mods.forEach(m => {
-              mod1.push({
-                ...m,
-                featureKey: key
-              });
-            });
-            const second = this.item.archetypeFeatures.find(s => s.key === "Second Path")?.selected;
-            const first = this.item.archetypeFeatures.find(s => s.key === "Perfection Path")?.selected;
-            const match2 = second ? second.match(/^\D+/)[0] : "";
-            const matchNew = newOption.key.match(/^\D+/)[0];
+        }
 
 
 
-            if (
-              feature.key !== "Third Path" ||
-              matchNew === match2 ||
-              matchNew === first
-            ) {
-              this.$store.commit("characters/addCharacterModifications", {
-                id: this.characterId,
-                content: { modifications: mod1, source: "archetype" },
-              });
+
+        /*
+            Модификации
+        */
+
+        if (item.modification) {
+
+
+          const mods =
+            Array.isArray(item.modification)
+              ? item.modification
+              : [item.modification];
+
+
+
+          this.$store.commit(
+            "characters/addCharacterModifications",
+            {
+
+              id,
+
+              content: {
+
+                modifications:
+                  mods.map(m => ({
+
+                    ...m,
+
+                    featureKey:
+                      feature.key
+
+                  })),
+
+
+                source:
+                  "archetype"
+
+              }
 
             }
+          );
 
+
+        }
+
+
+
+        /*
+            Фокусные заклинания
+        */
+
+        if (item.focusSpell) {
+
+
+          this.$store.commit(
+            "characters/addCharacterFocusSpell",
+            {
+
+              id,
+
+              content: {
+
+                key:
+                  this.textToKebab(
+                    item.focusSpell
+                  ),
+
+                source:
+                  "archetype",
+
+                featureKey:
+                  feature.key
+
+              }
+
+            }
+          );
+
+
+        }
+
+
+
+      });
+
+      // ======================================
+      // Doctrine / Bloodline / Muse features
+      // ======================================
+
+      if (item.modifiers?.length) {
+        const grantedSkills = this.collectGrantedSkills(item);
+        grantedSkills.forEach(skill => {
+
+
+          this.$store.commit(
+            "characters/addSkillSheet",
+            {
+
+              id,
+
+              key:
+                skill,
+
+              level:
+                feature.level,
+
+              type:
+                "class",
+
+              optional:
+                true
+
+            }
+          );
+
+
+        });
+
+        item.modifiers.forEach(modifier => {
+
+          if (
+            modifier.key !== "ActiveEffectLike" ||
+            typeof modifier.value !== "object"
+          ) {
+            return;
+          }
+
+          Object.values(modifier.value).forEach(featureKey => {
+
+            const doctrineFeature =
+              this.abilityList.find(a => a.key === featureKey);
+
+            if (!doctrineFeature)
+              return
+
+            this.addProficiencyModifiers(
+              doctrineFeature,
+              feature
+            );
+
+
+
+
+
+          });
+
+        });
+
+      }
+
+
+      /*
+          PF2 Remaster rules
+    
+          GrantItem,
+          ChoiceSet и т.д.
+      */
+      this.applyGrantedFeatures(feature);
+      this.applyRules(feature);
+      this.applyActiveEffects(feature);
+
+    },
+    applyGrantedFeatures(feature) {
+
+      const grants =
+        this.resolveGrantedFeatures(feature);
+
+
+      grants.forEach(item => {
+
+
+        if (!item)
+          return;
+
+
+        /*
+          Добавляем эффекты уже дочерней особенности
+        */
+
+        this.applyActiveEffects(item);
+
+
+      });
+
+    },
+    applyActiveEffects(feature) {
+
+      if (!feature?.rules?.length)
+        return;
+
+
+      feature.rules.forEach(rule => {
+
+
+        if (
+          rule.key !== "ActiveEffectLike"
+        )
+          return;
+
+
+        const path =
+          rule.path;
+
+
+        const value =
+          rule.value;
+
+
+        /*
+            Навыки PF2
+        */
+
+        const skillMatch =
+          path.match(
+            /system\.skills\.(.+)\.rank/
+          );
+
+
+        if (skillMatch) {
+
+
+          const skill =
+            skillMatch[1];
+
+
+          this.$store.commit(
+            "characters/addSkillSheet",
+            {
+
+              id:
+                this.characterId,
+
+
+              key:
+                skill,
+
+
+              level:
+                feature.level,
+
+
+              type:
+                "class",
+
+
+              optional:
+                true,
+
+
+              value
+
+            }
+          );
+
+
+        }
+
+        if (!path)
+          return;
+
+        if (
+          path.startsWith(
+            "system.proficiencies."
+          )
+        ) {
+
+
+          const parts =
+            path.split(".");
+
+
+          const key =
+            parts[parts.length - 2];
+
+
+
+          this.$store.commit(
+            "characters/addCharacterModifications",
+            {
+
+              id: this.characterId,
+
+
+              content: {
+
+                modifications: [
+                  {
+
+                    key,
+
+                    upgrade:
+                      this.rank(rule.value),
+
+                    mode:
+                      "Upgrade",
+
+                    type:
+                      this.getProficiencyType(key),
+
+                    level:
+                      feature.level,
+
+
+                    source:
+                      "archetype",
+
+
+                    featureKey:
+                      feature.key
+
+                  }
+                ],
+
+
+                source:
+                  "archetype"
+
+              }
+
+            }
+          );
+
+
+        }
+
+        if (path.startsWith("flags.system.")) {
+
+          const cleanPath =
+            path.replace("flags.system.", "");
+
+
+          // сохраняем флаг
+          this.$store.commit(
+            "characters/setCharacterSystemFlags",
+            {
+              id: this.characterId,
+              path: cleanPath,
+              value
+            }
+          );
+
+
+          // если это доктрина жреца
+          if (cleanPath === "cleric.firstDoctrine") {
+
+            this.updateDoctrineFeature(
+              value,
+              feature
+            );
 
           }
-        })
-      }
-      // =========================
-      // FINALIZE
-      // =========================
-      this.$store.commit("characters/clearModification", { id, level });
-      this.$store.commit("characters/setModification", { id, level });
-      feature.oldValue = feature.selected || feature.oldValue;
+
+
+          return;
+        }
+
+      });
+
+    },
+    updateDoctrineFeature(key, parentFeature) {
+
+
+      const oldMods =
+        this.$store.getters[
+          "characters/characterEnhancementsById"
+        ](this.characterId)
+          ?.filter(
+            x =>
+              x.featureKey === parentFeature.key
+          )
+        || [];
+
+
+      // удалить старые модификации доктрины
+
+      oldMods.forEach(mod => {
+
+        this.$store.commit(
+          "characters/removeCharacterModificationByFeature",
+          {
+            id: this.characterId,
+            featureKey: parentFeature.key
+          }
+        );
+
+      });
+
+
+
+      const doctrine =
+        this.abilityList.find(
+          x =>
+            x.key === key
+        );
+
+
+      if (!doctrine)
+        return;
+
+
+
+      // добавить новую доктрину
+
+      this.addFeatureEffects(
+        doctrine,
+        parentFeature
+      );
+
+
+    },
+    removeFlagFeature(key, parentFeature) {
+
+      const item =
+        this.abilityList.find(
+          a => a.key === key
+        );
+
+
+      if (!item)
+        return;
+
+
+      this.$store.commit(
+        "characters/removeCharacterModificationByFeature",
+        {
+          id: this.characterId,
+          featureKey:
+            parentFeature.key
+        }
+      );
+
+
     },
 
+    applyFlagBasedFeatures(key, parentFeature) {
+
+
+      const item =
+        this.abilityList.find(
+          a => a.key === key
+        );
+
+
+      if (!item)
+        return;
+
+
+
+      this.addFeatureEffects(
+        item,
+        parentFeature
+      );
+
+
+    },
+
+    getProficiencyType(key) {
+
+      if (
+        [
+          "light",
+          "medium",
+          "heavy",
+          "unarmored"
+        ].includes(key)
+      )
+        return "Defence";
+
+
+      if (
+        [
+          "simple",
+          "martial",
+          "advanced",
+          "unarmed"
+        ].includes(key)
+      )
+        return "Attack";
+
+
+      return "Saving";
+
+    },
+    applyRules(feature) {
+
+
+      if (!feature?.rules?.length)
+        return;
+
+
+
+      feature.rules.forEach(rule => {
+
+
+        if (rule.key !== "GrantItem")
+          return;
+
+
+
+        const granted =
+          this.abilityList.find(
+            a =>
+              a.key === rule.uuid
+          );
+
+
+        let uuid = rule.uuid;
+
+        if (
+          typeof uuid === "string" &&
+          uuid.startsWith("{actor|flags.system")
+        ) {
+
+          const key = uuid
+            .replace("{actor|flags.system.", "")
+            .replace("}", "");
+
+          const path = uuid
+            .replace("{actor|flags.system.", "")
+            .replace("}", "");
+
+          uuid =
+            this.resolveSystemFlag(path);
+
+
+        }
+        /*
+            Если способности нет в базе,
+            сохраняем ключ как раньше
+        */
+
+        if (!granted) {
+
+
+          this.$store.commit(
+            "characters/addCharacterClassModFeature",
+            {
+              id: this.characterId,
+
+              content: {
+
+                key:
+                  rule.uuid,
+
+
+                source:
+                  "archetype",
+
+
+                featureKey:
+                  feature.key
+
+              }
+            }
+          );
+
+
+          return;
+
+        }
+
+
+
+
+        /*
+            Если это обычная способность
+        */
+
+        this.$store.commit(
+          "characters/addCharacterClassModFeature",
+          {
+
+            id:
+              this.characterId,
+
+
+            content: {
+
+              key:
+                granted.key,
+
+
+              name:
+                granted.name,
+
+
+              description:
+                granted.description ||
+                "",
+
+
+              source:
+                "archetype",
+
+
+              featureKey:
+                feature.key
+
+            }
+
+          }
+        );
+
+
+
+      });
+
+
+    },
+    collectGrantedSkills(feature) {
+      const skills = new Set();
+
+      // Старый формат
+      if (feature.skill) {
+        (Array.isArray(feature.skill) ? feature.skill : [feature.skill])
+          .forEach(s => skills.add(s));
+      }
+
+      // Новый PF2
+      const rules = [
+        ...(feature.rules || []),
+        ...(feature.modifiers || [])
+      ];
+
+      rules.forEach(rule => {
+        if (
+          rule.key === "ActiveEffectLike" &&
+          typeof rule.path === "string"
+        ) {
+          const match = rule.path.match(/^system\.skills\.([^.]+)\.rank$/);
+
+          if (match) {
+            skills.add(match[1]);
+          }
+        }
+      });
+
+      return [...skills];
+    },
+    async getArchetypeFeatures(features) {
+
+      if (!features || !features.length) {
+        return [];
+      }
+
+      const keys = features.map(f => {
+        if (typeof f === "string") {
+          return f;
+        }
+
+        return f.key;
+      });
+
+
+      const { data } = await this.$axios.post(
+        "/api/abilityAncestry/search/",
+        {
+          keys
+        }
+      );
+
+
+      return data.map(item => {
+
+        return {
+
+          key: item.key,
+
+          name: item.name,
+
+          description:
+            item.snippet ||
+            item.description ||
+            "",
+
+          level:
+            typeof item.level === "object"
+              ? item.level.value
+              : item.level || 1,
+
+
+          type:
+            item.type ||
+            "Class Feature",
+
+
+          modification:
+            item.modification || [],
+
+
+          options:
+            item.options || [],
+
+
+          value:
+            item.value,
+
+
+          skill:
+            item.skill,
+
+
+          weapon:
+            item.weapon,
+
+
+          focusSpell:
+            item.focusSpell
+
+        };
+
+      });
+
+    },
+    getOptionValue(item) {
+      return item.key || item.group;
+    },
+    changeSelectedOption(feature) {
+
+      const id = this.characterId;
+
+
+      if (!feature || !feature.options)
+        return;
+
+
+      const oldOption =
+        feature.options.find(
+          o => o.key === feature.oldValue
+        );
+
+
+      const newOption =
+        feature.options.find(
+          o => o.key === feature.selected
+        );
+
+
+
+      /*
+          Удаляем старый выбор
+      */
+
+      if (oldOption) {
+
+        this.removeFeatureEffects({
+
+          ...oldOption,
+
+          key:
+            feature.key,
+
+          level:
+            feature.level,
+
+          type:
+            feature.type,
+
+
+          grants:
+            oldOption.grantedFeatures || []
+
+        });
+
+      }
+
+
+
+      /*
+          Добавляем новый выбор
+      */
+
+      if (newOption) {
+
+
+        const doctrine = {
+          ...newOption,
+
+          key:
+            feature.key + "-" + newOption.key,
+
+
+          level:
+            newOption.level?.value ||
+            feature.level,
+
+
+          type:
+            newOption.type,
+
+
+          featureKey:
+            feature.key
+        };
+
+
+        this.addFeatureEffects(
+          doctrine,
+          feature
+        );
+
+
+        /*
+            Новая система ChoiceSet
+      
+            Если это доктрина/наследие,
+            применяем вложенные фичи
+        */
+
+        if (
+          feature.choiceSet &&
+          feature.choiceSet.applyOptions
+        ) {
+
+          const linkedFeatures =
+            this.abilityList.filter(
+              a =>
+                feature.choiceSet.options.includes(a.key)
+            );
+
+
+          linkedFeatures.forEach(item => {
+
+            if (
+              item.key === newOption.key
+            ) {
+
+              this.addFeatureEffects(
+                {
+                  ...item,
+                  key:
+                    feature.key + "-" + item.key,
+                  level:
+                    feature.level,
+                  type:
+                    feature.type
+                },
+                feature
+              );
+
+            }
+
+          });
+
+        }
+
+
+      }
+
+
+
+      /*
+          сохраняем выбор
+      */
+
+      const mod = {
+
+        key: feature.key,
+
+        type: feature.type,
+
+
+        selected:
+          feature.selected || "",
+
+
+        selectedOptions:
+          feature.selectedOptions || [],
+
+
+        value:
+          feature.value,
+
+
+        level:
+          feature.level,
+
+
+        source: "archetype"
+
+      };
+
+
+
+      this.$store.commit(
+        "characters/clearCharacterClassModFeature",
+        {
+          id,
+          content: mod
+        }
+      );
+
+
+      this.$store.commit(
+        "characters/addCharacterClassModFeature",
+        {
+          id,
+          content: mod
+        }
+      );
+
+
+
+      /*
+          Обновляем модификации
+      */
+
+      this.$store.commit(
+        "characters/clearModification",
+        {
+          id,
+          level:
+            this.characterLevel()
+        }
+      );
+
+
+      this.$store.commit(
+        "characters/setModification",
+        {
+          id,
+          level:
+            this.characterLevel()
+        }
+      );
+
+      this.$store.commit('characters/setModification', {
+        id: this.characterId, level:
+          this.characterLevel()
+      });
+
+      feature.oldValue =
+        feature.selected;
+
+
+    },
+    resolveSystemFlag(path) {
+
+      const flags =
+        this.$store.getters[
+          "characters/characterSystemFlagsById"
+        ](this.characterId);
+
+      const parts = path.split(".");
+
+      let current = flags;
+
+      for (const part of parts) {
+
+        if (!current)
+          return null;
+
+        current = current[part];
+
+      }
+
+      return current;
+
+    },
     changeSelectedOptionsFeature(feature, selected, options) {
       const id = this.characterId;
       const level = this.characterLevel;
@@ -1130,117 +2879,135 @@ export default {
       this.$store.commit("characters/updateCharacterModification", { id, mod });
     },
     changeSelectedSubFeature(parentFeature, subItemKey) {
+
       const id = this.characterId;
-      const level = this.characterLevel;
 
-      const newSubItem = subItemKey
-        ? parentFeature.subFeature.find(s => s.key === subItemKey)
-        : null;
-      const oldSubItem = parentFeature.selectedSubFeatureOldValue
-        ? parentFeature.subFeature.find(s => s.key === parentFeature.selectedSubFeatureOldValue)
-        : null;
 
-      const processRemove = (item) => {
-        if (!item) return;
+      if (!parentFeature)
+        return;
 
-        // 1) Focus spell
-        if (item.focusSpell) {
-          this.$store.commit("characters/removeCharacterFocusSpell", {
-            id,
-            key: this.textToKebab(item.focusSpell),
-            featureKey: parentFeature.key,
-            type: parentFeature.type,
-            source: "archetype"
-          });
+
+
+      const selectedOption =
+        this.getSelectedOption(parentFeature);
+
+
+      if (!selectedOption)
+        return;
+
+
+
+      const oldKey =
+        parentFeature.selectedSubFeatureOldValue;
+
+
+
+      const oldItem =
+        selectedOption.grantedFeatures?.find(
+          s => s.key === oldKey
+        );
+
+
+
+      const newItem =
+        selectedOption.grantedFeatures?.find(
+          s => s.key === subItemKey
+        );
+
+
+
+      /*
+          Удаляем старую вложенную способность
+      */
+
+      if (oldItem) {
+
+        this.removeFeatureEffects(
+          {
+            ...oldOption,
+
+            key:
+              feature.key + "-" + oldOption.key,
+
+            level:
+              feature.level,
+
+            type:
+              feature.type,
+
+            grants:
+              oldOption.grantedFeatures || []
+          },
+          feature
+        );
+
+      }
+
+
+
+      /*
+          Добавляем новую вложенную способность
+      */
+
+      if (newItem) {
+
+        this.addFeatureEffects({
+
+          ...newItem,
+
+          key:
+            parentFeature.key,
+
+          type:
+            parentFeature.type,
+
+          level:
+            parentFeature.level,
+
+
+          grants:
+            newItem.grantedFeatures || []
+
+        });
+
+      }
+
+
+
+      /*
+          сохраняем выбор
+      */
+
+      parentFeature.selectedSubFeatureOldValue =
+        subItemKey;
+
+
+
+      /*
+          обновляем модификации
+      */
+
+      this.$store.commit(
+        "characters/clearModification",
+        {
+          id,
+
+          level:
+            this.characterLevel()
         }
+      );
 
-        // 2) Skills
-        if (item.skill) {
-          const skills = Array.isArray(item.skill) ? item.skill : [item.skill];
-          skills.forEach(s => {
-            this.$store.commit("characters/removeSkillSheetSelected", {
-              id, key: s, level: parentFeature.level,
-              selected: parentFeature.selectedSubFeatureOldValue,
-              type: "class", optional: true
-            });
-            this.$store.commit("characters/removeSkillSheet", {
-              id, key: s, level: parentFeature.level,
-              type: "skill", optional: true
-            });
-          });
+
+      this.$store.commit(
+        "characters/setModification",
+        {
+          id,
+
+          level:
+            this.characterLevel()
         }
+      );
 
-        // 3) Spells / traditions
-        if (item.spellTraditions) this.$store.commit("characters/clearCharacterSpellTraditions", { id });
-        if (item.spells) this.$store.commit("characters/clearCharacterSpell", { id });
-
-        // 4) Trait
-        if (item.trait) {
-          this.$store.commit("characters/clearCharacterKeywordsByType", {
-            id, type: "sanctification", cascade: true
-          });
-        }
-
-        // 5) Modifications
-        if (item.modification) {
-          this.$store.commit("characters/removeCharacterModificationByFeature", {
-            id, featureKey: parentFeature.key
-          });
-        }
-      };
-
-      const processAdd = (item) => {
-        if (!item) return;
-
-        // 1) Focus spell
-        if (item.focusSpell) {
-          this.$store.commit("characters/addCharacterFocusSpell", {
-            id,
-            key: this.textToKebab(item.focusSpell),
-            featureKey: parentFeature.key,
-            type: parentFeature.type,
-            source: "archetype"
-          });
-        }
-
-        // 2) Skills
-        if (item.skill) {
-          const skills = Array.isArray(item.skill) ? item.skill : [item.skill];
-          skills.forEach(s => {
-            this.$store.commit("characters/addSkillSheet", {
-              id, key: s, level: parentFeature.level,
-              type: "class", optional: true,
-              selected: item.key, combinded: false
-            });
-          });
-        }
-
-        // 3) Spell traditions / spells
-        if (item.spellTraditions) this.$store.commit("characters/setCharacterSpellTraditions", { id, value: item.spellTraditions });
-        if (item.spells) this.$store.commit("characters/setCharacterSpell", { id, value: item.spells });
-
-        // 4) Trait
-        if (item.trait && item.trait !== "Без") {
-          this.$store.commit("characters/addCharacterKeyword", {
-            id, keyword: { name: item.trait, source: "archetype", type: "sanctification" }
-          });
-        }
-
-        // 5) Modifications
-        if (item.modification) {
-          this.$store.commit("characters/addCharacterModifications", {
-            id,
-            content: { modifications: Array.isArray(item.modification) ? item.modification.map(m => ({ ...m, featureKey: parentFeature.key })) : [{ ...item.modification, featureKey: parentFeature.key }], source: "archetype" }
-          });
-        }
-      };
-
-      // Выполняем очистку старого и добавление нового
-      processRemove(oldSubItem);
-      processAdd(newSubItem);
-
-      // Финализация
-      parentFeature.selectedSubFeatureOldValue = subItemKey;
     },
 
 
